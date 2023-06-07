@@ -1,0 +1,13 @@
+{
+  "gui.jujutsu_kaisen.ability_overlay.name": "Name: ",
+  "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: ",
+
+  "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
+  "key.jujutsu_kaisen.activate": "Activate Ability",
+
+  "ability.jujutsu_kaisen.infinity": "Neutral Limitless: Infinity",
+  "ability.jujutsu_kaisen.infinity.enable": "Activated infinity",
+  "ability.jujutsu_kaisen.infinity.disable": "Deactivated infinity",
+
+  "ability.jujutsu_kaisen.red": "Cursed Technique Reversal: Red"
+}

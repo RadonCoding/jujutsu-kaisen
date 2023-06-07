@@ -1,0 +1,102 @@
+
+plugins {
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+
+group = 'radon'
+version = '1.0-SNAPSHOT'
+
+java {
+    archivesBaseName = 'JujutsuKaisen'
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+minecraft {
+    mappings channel: 'parchment', version: '2023.03.12-1.19.3'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+            
+            mods {
+                jujutsu_kaisen {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+            
+            mods {
+                jujutsu_kaisen {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        gameTestServer {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+
+            mods {
+                jujutsu_kaisen {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'jujutsu_kaisen', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                jujutsu_kaisen {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.3-44.1.23'
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.3:4.0.4')
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "Jujutsu Kaisen",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.jar.archiveVersion,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}

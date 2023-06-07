@@ -1,0 +1,15 @@
+Java Launcher: /home/radon/.jdks/corretto-17.0.7/bin/java
+Arguments: '--task, SRG_TO_MCP, --input, /home/radon/.gradle/caches/modules-2/files-2.1/software.bernie.geckolib/geckolib-forge-1.19/3.1.40/92a447e19afe1a23a33219f5428b2198a58094f4/geckolib-forge-1.19-3.1.40.jar, --output, /home/radon/.gradle/caches/forge_gradle/deobf_dependencies/software/bernie/geckolib/geckolib-forge-1.19/3.1.40_mapped_parchment_2023.03.12-1.19.3/geckolib-forge-1.19-3.1.40_mapped_parchment_2023.03.12-1.19.3.jar, --mcp, /home/radon/.gradle/caches/parchmentgradle/org/parchmentmc/data/parchment-1.19.3/2023.03.12/parchment-1.19.3-2023.03.12.zip, --strip-signatures'
+Classpath:
+ - /home/radon/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/installertools/1.3.2/installertools-1.3.2-fatjar.jar
+Working directory: /home/radon/dev/jujutsu-kaisen/build/_RenameSrg2Mcp_118256187
+Main class: net.minecraftforge.installertools.ConsoleTool
+====================================
+Task: SRG_TO_MCP
+Input:  /home/radon/.gradle/caches/modules-2/files-2.1/software.bernie.geckolib/geckolib-forge-1.19/3.1.40/92a447e19afe1a23a33219f5428b2198a58094f4/geckolib-forge-1.19-3.1.40.jar
+Output: /home/radon/.gradle/caches/forge_gradle/deobf_dependencies/software/bernie/geckolib/geckolib-forge-1.19/3.1.40_mapped_parchment_2023.03.12-1.19.3/geckolib-forge-1.19-3.1.40_mapped_parchment_2023.03.12-1.19.3.jar
+MCP:    /home/radon/.gradle/caches/parchmentgradle/org/parchmentmc/data/parchment-1.19.3/2023.03.12/parchment-1.19.3-2023.03.12.zip
+Loading MCP Data
+Processing ZIP file
+Stripped Manifest of sha digests
+Process complete

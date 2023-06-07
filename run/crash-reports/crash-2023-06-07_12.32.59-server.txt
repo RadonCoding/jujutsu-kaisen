@@ -1,0 +1,129 @@
+---- Minecraft Crash Report ----
+// I just don't know what went wrong :(
+
+Time: 2023-06-07 12:32:59
+Description: Saving entity NBT
+
+java.lang.NullPointerException: Cannot invoke "radon.jujutsu_kaisen.capability.SorcererGrade.ordinal()" because "this.grade" is null
+	at radon.jujutsu_kaisen.capability.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
+	at net.minecraftforge.common.capabilities.CapabilityDispatcher.serializeNBT(CapabilityDispatcher.java:115) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
+	at net.minecraftforge.common.capabilities.CapabilityProvider.serializeCaps(CapabilityProvider.java:132) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
+	at net.minecraft.world.entity.Entity.saveWithoutId(Entity.java:1671) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedPlayerList.save(IntegratedPlayerList.java:29) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.players.PlayerList.remove(PlayerList.java:348) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.network.ServerGamePacketListenerImpl.onDisconnect(ServerGamePacketListenerImpl.java:1169) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.network.Connection.handleDisconnection(Connection.java:496) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.network.Connection.tick(Connection.java:278) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.network.ServerConnectionListener.tick(ServerConnectionListener.java:160) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:920) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:846) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:91) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:682) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:251) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:833) ~[?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at radon.jujutsu_kaisen.capability.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
+	at net.minecraftforge.common.capabilities.CapabilityDispatcher.serializeNBT(CapabilityDispatcher.java:115) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
+	at net.minecraftforge.common.capabilities.CapabilityProvider.serializeCaps(CapabilityProvider.java:132) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
+-- Entity being saved --
+Details:
+	Entity Type: minecraft:player (net.minecraft.server.level.ServerPlayer)
+	Entity ID: 236
+	Entity Name: Dev
+	Entity's Exact location: 1.50, 88.00, -5.50
+	Entity's Block location: World: (1,88,-6), Section: (at 1,8,10 in 0,5,-1; chunk contains blocks 0,-64,-16 to 15,319,-1), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+	Entity's Momentum: 0.00, -0.08, 0.00
+	Entity's Passengers: []
+	Entity's Vehicle: null
+Stacktrace:
+	at net.minecraft.world.entity.Entity.saveWithoutId(Entity.java:1671) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedPlayerList.save(IntegratedPlayerList.java:29) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.players.PlayerList.remove(PlayerList.java:348) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.network.ServerGamePacketListenerImpl.onDisconnect(ServerGamePacketListenerImpl.java:1169) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.network.Connection.handleDisconnection(Connection.java:496) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.network.Connection.tick(Connection.java:278) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.network.ServerConnectionListener.tick(ServerConnectionListener.java:160) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:920) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:846) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:91) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:682) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:251) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:833) ~[?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.19.3
+	Minecraft Version ID: 1.19.3
+	Operating System: Linux (amd64) version 6.1.30-1-lts
+	Java Version: 17.0.7, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Amazon.com Inc.
+	Memory: 978066624 bytes (932 MiB) / 2604662784 bytes (2484 MiB) up to 8355053568 bytes (7968 MiB)
+	CPUs: 20
+	Processor Vendor: GenuineIntel
+	Processor Name: 13th Gen Intel(R) Core(TM) i5-13600K
+	Identifier: Intel64 Family 6 Model 183 Stepping 1
+	Microarchitecture: unknown
+	Frequency (GHz): -0.00
+	Number of physical packages: 1
+	Number of physical CPUs: 14
+	Number of logical CPUs: 20
+	Graphics card #0 name: Raptor Lake-S GT1 [UHD Graphics 770]
+	Graphics card #0 vendor: Intel Corporation (0x8086)
+	Graphics card #0 VRAM (MB): 256.00
+	Graphics card #0 deviceId: 0xa780
+	Graphics card #0 versionInfo: unknown
+	Graphics card #1 name: Navi 22 [Radeon RX 6700/6700 XT/6750 XT / 6800M/6850M XT]
+	Graphics card #1 vendor: Advanced Micro Devices, Inc. [AMD/ATI] (0x1002)
+	Graphics card #1 VRAM (MB): 258.00
+	Graphics card #1 deviceId: 0x73df
+	Graphics card #1 versionInfo: unknown
+	Virtual memory max (MB): 20030.89
+	Virtual memory used (MB): 21853.53
+	Swap memory total (MB): 4096.00
+	Swap memory used (MB): 727.55
+	JVM Flags: 0 total; 
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/236, l='ServerLevel[New World]', x=1.50, y=88.00, z=-5.50]]
+	Data Packs: vanilla, mod:jujutsu_kaisen, mod:forge
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'; Server brand changed to 'forge'
+	Launched Version: MOD_DEV
+	ModLauncher: 10.0.8+10.0.8+main.0ef7e830
+	ModLauncher launch target: forgeclientuserdev
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		mixin-0.8.5.jar mixin PLUGINSERVICE 
+		eventbus-6.0.3.jar eventbus PLUGINSERVICE 
+		fmlloader-1.19.3-44.1.23.jar slf4jfixer PLUGINSERVICE 
+		fmlloader-1.19.3-44.1.23.jar object_holder_definalize PLUGINSERVICE 
+		fmlloader-1.19.3-44.1.23.jar runtime_enum_extender PLUGINSERVICE 
+		fmlloader-1.19.3-44.1.23.jar capability_token_subclass PLUGINSERVICE 
+		accesstransformers-8.0.4.jar accesstransformer PLUGINSERVICE 
+		fmlloader-1.19.3-44.1.23.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-10.0.8.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-10.0.8.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		minecraft@1.0
+		lowcodefml@null
+		javafml@null
+	Mod List: 
+		forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1|Minecraft                     |minecraft                     |1.19.3              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		main                                              |Jujutsu Kaisen                |jujutsu_kaisen                |0.0NONE             |DONE      |Manifest: NOSIGNATURE
+		                                                  |Forge                         |forge                         |44.1.23             |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: 976b8844-c4f3-4ca1-aa01-2b4c18cb2f8f
+	FML: 44.1
+	Forge: net.minecraftforge:44.1.23

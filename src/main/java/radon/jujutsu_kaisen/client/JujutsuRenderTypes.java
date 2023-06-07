@@ -1,0 +1,32 @@
+package radon.jujutsu_kaisen.client;
+
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Function;
+
+public class JujutsuRenderTypes extends RenderType {
+    private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) -> {
+        TextureStateShard shard = new TextureStateShard(pLocation, false, false);
+        return create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+                false, false, CompositeState.builder()
+                        .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setTextureState(shard)
+                        .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                        .setCullState(NO_CULL)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .setOverlayState(OVERLAY)
+                        .createCompositeState(false));
+    });
+
+    public JujutsuRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
+        super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
+    }
+
+    public static RenderType glow(ResourceLocation pLocation) {
+        return GLOW.apply(pLocation);
+    }
+}
