@@ -9,6 +9,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.UnlimitedVoidS2CPacket;
 
 public class PacketHandler {
     private static SimpleChannel INSTANCE;
@@ -21,7 +22,7 @@ public class PacketHandler {
 
     public static void register() {
         INSTANCE = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(JujutsuKaisen.MODID, "messages"))
+                .named(new ResourceLocation(JujutsuKaisen.MOD_ID, "messages"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true).simpleChannel();
@@ -34,6 +35,11 @@ public class PacketHandler {
                 .decoder(TriggerAbilityC2SPacket::new)
                 .encoder(TriggerAbilityC2SPacket::encode)
                 .consumerMainThread(TriggerAbilityC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(UnlimitedVoidS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UnlimitedVoidS2CPacket::new)
+                .encoder(UnlimitedVoidS2CPacket::encode)
+                .consumerMainThread(UnlimitedVoidS2CPacket::handle)
                 .add();
     }
 

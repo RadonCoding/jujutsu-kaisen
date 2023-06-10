@@ -28,7 +28,7 @@ public class SorcererDataHandler {
     }
 
     private static class NarutoDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-        public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MODID, "sorcerer_data");
+        public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_data");
 
         private final ISorcererData cap = new SorcererData();
         private final LazyOptional<ISorcererData> optional = LazyOptional.of(() -> this.cap);

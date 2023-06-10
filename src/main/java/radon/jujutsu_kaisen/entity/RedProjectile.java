@@ -1,113 +1,87 @@
 package radon.jujutsu_kaisen.entity;
 
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.JujutsuParticles;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
+import radon.jujutsu_kaisen.client.particle.SpinningParticle;
 
-public class RedProjectile extends AbstractHurtingProjectile implements GeoAnimatable {
-    private static final float EXPLOSION_MULTIPLIER = 1.0F;
-    private static final float DAMAGE_MULTIPLIER = 5.0F;
+import java.util.List;
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class RedProjectile extends JujutsuProjectile {
+    private static final float LAUNCH_POWER = 25.0F;
+    private static final float EXPLOSIVE_POWER = 5.0F;
+    private static final int DELAY = 20;
+    private static final float DAMAGE = 25.0F;
 
     public RedProjectile(EntityType<? extends RedProjectile> pEntityType, Level level) {
         super(pEntityType, level);
     }
 
-    public RedProjectile(LivingEntity pShooter, double pOffsetX, double pOffsetY, double pOffsetZ) {
-        super(JujutsuEntities.RED.get(), pShooter, pOffsetX, pOffsetY, pOffsetZ, pShooter.level);
+    public RedProjectile(LivingEntity pShooter) {
+        super(JujutsuEntities.RED.get(), pShooter.level, pShooter);
+    }
 
-        this.moveTo(pShooter.getX(), pShooter.getEyeY() - 0.2D, pShooter.getZ(), this.getYRot(), this.getXRot());
-        this.reapplyPosition();
+    private void explode() {
+        Entity owner = this.getOwner();
 
-        double d0 = Math.sqrt(pOffsetX * pOffsetX + pOffsetY * pOffsetY + pOffsetZ * pOffsetZ);
+        if (owner != null) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                float radius = EXPLOSIVE_POWER * (cap.getGrade().ordinal() + 1);
 
-        if (d0 != 0.0D) {
-            this.xPower = pOffsetX / d0 * 1.25D;
-            this.yPower = pOffsetY / d0 * 1.25D;
-            this.zPower = pOffsetZ / d0 * 1.25D;
+                Vec3 explosionPos = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ()).add(this.getLookAngle().scale(7.5D));
+                this.level.explode(owner, explosionPos.x(), explosionPos.y(), explosionPos.z(), radius, Level.ExplosionInteraction.NONE);
+
+                float f2 = radius * 2.0F;
+                int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);
+                int l1 = Mth.floor(explosionPos.x() + (double) f2 + 1.0D);
+                int i2 = Mth.floor(explosionPos.y() - (double) f2 - 1.0D);
+                int i1 = Mth.floor(explosionPos.y() + (double) f2 + 1.0D);
+                int j2 = Mth.floor(explosionPos.z() - (double) f2 - 1.0D);
+                int j1 = Mth.floor(explosionPos.z() + (double) f2 + 1.0D);
+
+                List<Entity> entities = this.level.getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
+
+                Vec3 look = owner.getLookAngle();
+
+                for (Entity entity : entities) {
+                    if (entity != this) {
+                        entity.hurt(DamageSource.indirectMagic(this, owner), DAMAGE * (cap.getGrade().ordinal() + 1));
+                        entity.setDeltaMovement(look.x() * LAUNCH_POWER, look.y() * LAUNCH_POWER, look.z() * LAUNCH_POWER);
+                    }
+                }
+                this.discard();
+            });
         }
     }
 
     @Override
-    protected @NotNull ParticleOptions getTrailParticle() {
-        return JujutsuParticles.EMPTY.get();
-    }
+    public void tick() {
+        super.tick();
 
-    @Override
-    public boolean fireImmune() {
-        return true;
-    }
+        Entity owner = this.getOwner();
 
-    @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
+        if (owner != null) {
+            double x = owner.getX();
+            double y = owner.getEyeY() - (this.getBbHeight() / 2.0F);
+            double z = owner.getZ();
 
-    @Override
-    protected void onHit(@NotNull HitResult pResult) {
-        super.onHit(pResult);
+            Vec3 look = owner.getLookAngle();
+            Vec3 spawnPos = new Vec3(x, y, z).add(look);
+
+            this.moveTo(spawnPos.x(), spawnPos.y(), spawnPos.z(), owner.getYRot(), owner.getXRot());
+            this.reapplyPosition();
+        }
 
         if (!this.level.isClientSide) {
-            Entity owner = this.getOwner();
-
-            if (owner != null) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    float explosion = EXPLOSION_MULTIPLIER * (cap.getGrade().ordinal() + 1);
-                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), explosion,
-                            true, Level.ExplosionInteraction.MOB);
-                    this.discard();
-                });
+            if (this.getTime() >= DELAY) {
+                this.explode();
             }
         }
-    }
-
-    @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-
-        if (!this.level.isClientSide) {
-            Entity target = pResult.getEntity();
-            Entity owner = this.getOwner();
-
-            if (owner != null) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    float damage = DAMAGE_MULTIPLIER * (cap.getGrade().ordinal() + 1);
-                    target.hurt(DamageSource.indirectMagic(this, owner), damage);
-                });
-            }
-        }
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
-
-    @Override
-    public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
     }
 }

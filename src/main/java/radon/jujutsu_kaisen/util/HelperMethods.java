@@ -1,20 +1,43 @@
 package radon.jujutsu_kaisen.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.*;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Quaternionf;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass){
+    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass) {
         int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
         return enumClass.getEnumConstants()[x];
     }
 
     public static Quaternionf getQuaternion(float x, float y, float z, float w) {
-        w *= (float)Math.PI / 180;
+        w *= (float) Math.PI / 180.0D;
         float f = (float) Math.sin(w / 2.0F);
         float i = x * f;
         float j = y * f;
@@ -25,5 +48,35 @@ public class HelperMethods {
 
     public static void rotateQ(float w, float x, float y, float z, PoseStack matrix) {
         matrix.mulPose(getQuaternion(x, y, z, w));
+    }
+
+    public static HitResult getHitResult(Level level, Entity entity, Vec3 start, Vec3 end) {
+        double d0 = Double.MAX_VALUE;
+        Entity entityHit = null;
+
+        for (Entity target : level.getEntities(entity, entity.getBoundingBox().expandTowards(end).inflate(1.0D))) {
+            AABB box = target.getBoundingBox();
+            Optional<Vec3> optional = box.clip(start, end);
+
+            if (optional.isPresent()) {
+                double d1 = start.distanceToSqr(optional.get());
+
+                if (d1 < d0) {
+                    entityHit = target;
+                    d0 = d1;
+                }
+            }
+        }
+
+        if (entityHit != null) {
+            return new EntityHitResult(entityHit);
+        }
+
+        BlockHitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, entity));
+
+        if (blockHit.getType() == HitResult.Type.BLOCK) {
+            return blockHit;
+        }
+        return null;
     }
 }

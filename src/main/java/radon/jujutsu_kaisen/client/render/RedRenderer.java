@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -19,20 +20,19 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RedRenderer extends GeoEntityRenderer<RedProjectile> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MODID, "textures/entity/red.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/red.png");
     private static final RenderType RENDER_TYPE = JujutsuRenderTypes.glow(TEXTURE);
+    private static final float SIZE = 0.1F;
 
     public RedRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, null);
     }
 
     @Override
-    public void render(RedProjectile entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+    public void render(RedProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         Minecraft mc = Minecraft.getInstance();
 
         assert mc.player != null;
-
-        if (entity.isInvisibleTo(mc.player)) return;
 
         poseStack.pushPose();
         poseStack.translate(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
@@ -45,34 +45,54 @@ public class RedRenderer extends GeoEntityRenderer<RedProjectile> {
             HelperMethods.rotateQ(360.0F - yaw, 0.0F, 1.0F, 0.0F, poseStack);
             HelperMethods.rotateQ(pitch + 90.0F, 1.0F, 0.0F, 0.0F, poseStack);
 
-            float texWidth = 0.25F;
-            float texHeight = 0.25F;
-            float x1 = -texWidth;
-            float y1 = -texHeight;
-            float x2 = texWidth;
-            float y2 = texHeight;
+            float width = SIZE;
+            float height = SIZE;
+            float x1 = -width;
+            float y1 = -height;
+            float x2 = width;
+            float y2 = height;
 
             VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
             Matrix4f pose = poseStack.last().pose();
-            consumer.vertex(pose, x1, 0.0F, y1).color(1.0F, 1.0F, 1.0F, 1.0F).uv(0.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY)
+
+            int ticks = entity.tickCount;
+            float brightness = Math.min(1.0F, ticks * 0.1F);
+
+            consumer.vertex(pose, x1, 0.0F, y1)
+                    .color(brightness, brightness, brightness, brightness)
+                    .uv(0.0F, 0.0F)
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, x1, 0.0F, y2).color(1.0F, 1.0F, 1.0F, 1.0F).uv(0.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY)
+            consumer.vertex(pose, x1, 0.0F, y2)
+                    .color(brightness, brightness, brightness, brightness)
+                    .uv(0.0F, 1.0F)
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, x2, 0.0F, y2).color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY)
+            consumer.vertex(pose, x2, 0.0F, y2).
+                    color(brightness, brightness, brightness, brightness)
+                    .uv(1.0F, 1.0F)
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
             consumer.vertex(pose, x2, 0.0F, y1)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY)
+                    .color(brightness, brightness, brightness, brightness)
+                    .uv(1.0F, 0.0F)
+                    .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
             mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
         }
         poseStack.popPose();
+    }
+
+    @Override
+    protected int getBlockLightLevel(@NotNull RedProjectile pEntity, @NotNull BlockPos pPos) {
+        return 15;
     }
 }

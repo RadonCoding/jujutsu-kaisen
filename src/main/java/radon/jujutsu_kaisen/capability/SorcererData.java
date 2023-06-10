@@ -9,34 +9,90 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JujutsuAbilities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
     private CursedTechnique technique;
     private SpecialTrait trait;
-    private SorcererGrade grade;
+    private float experience;
 
     private float energy;
+    private float maxEnergy;
 
-    private final Set<Ability> toggled;
+    private final Set<Ability> toggledAbilities;
+    private final List<DelayedTickEvent> delayedTickEvents = new ArrayList<>();
+    private final Map<Ability, Integer> cooldowns = new HashMap<>();
 
     public SorcererData() {
-        this.grade = SorcererGrade.UNRANKED;
-        this.toggled = new HashSet<>();
+        this.toggledAbilities = new HashSet<>();
     }
 
-    public void tick(LivingEntity entity, boolean isClientSide) {
-        if (isClientSide) {
-            for (Ability toggled : this.toggled) {
-                toggled.runClient(entity);
-            }
-        } else {
-            for (Ability toggled : this.toggled) {
-                toggled.runServer(entity);
+    private void updateCooldowns() {
+        Iterator<Map.Entry<Ability, Integer>> iter = this.cooldowns.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<Ability, Integer> entry = iter.next();
+
+            int remaining = entry.getValue();
+
+            if (remaining > 0) {
+                this.cooldowns.put(entry.getKey(), --remaining);
+            } else {
+                iter.remove();
             }
         }
+    }
+
+    private void updateTickEvents(LivingEntity owner) {
+        Iterator<DelayedTickEvent> iter = this.delayedTickEvents.iterator();
+
+        while (iter.hasNext()) {
+            DelayedTickEvent event = iter.next();
+
+            event.tick();
+
+            if (event.run(owner)) {
+                iter.remove();
+            }
+        }
+    }
+
+    private void disableToggledAbility(LivingEntity owner, Ability ability) {
+        this.toggledAbilities.remove(ability);
+
+        if (ability instanceof Ability.IToggled toggled) {
+            toggled.onDisabled(owner);
+        }
+    }
+
+    private void updateToggledAbilities(LivingEntity owner) {
+        List<Ability> remove = new ArrayList<>();
+
+        for (Ability ability : this.toggledAbilities) {
+            if (ability.checkStatus(owner) != Ability.Status.SUCCESS) {
+                remove.add(ability);
+            } else {
+                ability.run(owner);
+            }
+        }
+
+        for (Ability ability : remove) {
+            disableToggledAbility(owner, ability);
+        }
+    }
+
+    public void tick(LivingEntity owner) {
+        for (Ability ability : this.toggledAbilities) {
+            ability.run(owner);
+        }
+
+        this.updateCooldowns();
+        this.updateTickEvents(owner);
+        this.updateToggledAbilities(owner);
+
+        this.energy = Math.min(this.energy + 1.0F, this.maxEnergy);
     }
 
     public CursedTechnique getTechnique() {
@@ -45,15 +101,64 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public SorcererGrade getGrade() {
-        return this.grade;
+        return SorcererGrade.getGrade(this.experience);
     }
 
-    public void toggleAbility(Ability ability) {
-        if (this.toggled.contains(ability)) {
-            this.toggled.remove(ability);
-        } else {
-            this.toggled.add(ability);
+    @Override
+    public void addExperience(float amount) {
+        this.experience += amount;
+    }
+
+    @Override
+    public SpecialTrait getTrait() {
+        return this.trait;
+    }
+
+    public void toggleAbility(LivingEntity entity, Ability ability) {
+        if (ability instanceof Ability.IToggled toggled) {
+            if (this.toggledAbilities.contains(ability)) {
+                toggled.onDisabled(entity);
+                this.toggledAbilities.remove(ability);
+            } else {
+                toggled.onEnabled(entity);
+                this.toggledAbilities.add(ability);
+            }
         }
+    }
+
+    @Override
+    public void addCooldown(Ability ability) {
+        this.cooldowns.put(ability, ability.getCooldown());
+    }
+
+    @Override
+    public int getRemainingCooldown(Ability ability) {
+        return this.cooldowns.get(ability);
+    }
+
+    @Override
+    public boolean isCooldownDone(Ability ability) {
+        return !this.cooldowns.containsKey(ability);
+    }
+
+    @Override
+    public float getEnergy() {
+        return this.energy;
+    }
+
+    @Override
+    public float getMaxEnergy() {
+        return this.maxEnergy;
+    }
+
+    @Override
+    public void useEnergy(float amount) {
+        this.energy -= amount;
+    }
+
+    @Override
+    public void delayTickEvent(Consumer<LivingEntity> task, int delay) {
+        this.delayedTickEvents.add(new DelayedTickEvent(task, delay));
     }
 
     public boolean isInitialized() {
@@ -64,6 +169,8 @@ public class SorcererData implements ISorcererData {
         this.initialized = true;
 
         this.technique = CursedTechnique.GOJO;
+        this.maxEnergy = this.technique.getMaxEnergy();
+        this.trait = SpecialTrait.HEAVENLY_RESTRICTION;
 
         /*if (HelperMethods.RANDOM.nextInt(10) == 0) {
             this.trait = SpecialTrait.HEAVENLY_RESTRICTION;
@@ -75,8 +182,8 @@ public class SorcererData implements ISorcererData {
         }*/
     }
 
-    public boolean hasToggled(Ability ability) {
-        return this.toggled.contains(ability);
+    public boolean hasToggledAbility(Ability ability) {
+        return this.toggledAbilities.contains(ability);
     }
 
     @Override
@@ -90,15 +197,26 @@ public class SorcererData implements ISorcererData {
         if (this.trait != null) {
             nbt.putInt("trait", this.trait.ordinal());
         }
-        nbt.putInt("grade", this.grade.ordinal());
+        nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
 
         ListTag toggledTag = new ListTag();
 
-        for (Ability ability : this.toggled) {
+        for (Ability ability : this.toggledAbilities) {
             toggledTag.add(StringTag.valueOf(JujutsuAbilities.getKey(ability).toString()));
         }
         nbt.put("toggled", toggledTag);
+
+        ListTag cooldownsTag = new ListTag();
+
+        for (Map.Entry<Ability, Integer> entry : this.cooldowns.entrySet()) {
+            CompoundTag cooldown = new CompoundTag();
+            cooldown.putString("identifier", JujutsuAbilities.getKey(entry.getKey()).toString());
+            cooldown.putInt("cooldown", entry.getValue());
+            cooldownsTag.add(cooldown);
+        }
+        nbt.put("cooldowns", cooldownsTag);
+
         return nbt;
     }
 
@@ -112,11 +230,17 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("trait")) {
             this.trait = SpecialTrait.values()[nbt.getInt("trait")];
         }
-        this.grade = SorcererGrade.values()[nbt.getInt("grade")];
+        this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
 
         for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-            this.toggled.add(JujutsuAbilities.getValue(new ResourceLocation(key.getAsString())));
+            this.toggledAbilities.add(JujutsuAbilities.getValue(new ResourceLocation(key.getAsString())));
+        }
+
+        for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
+            CompoundTag cooldown = (CompoundTag) key;
+            this.cooldowns.put(JujutsuAbilities.getValue(new ResourceLocation(cooldown.getString("identifier"))),
+                    cooldown.getInt("cooldown"));
         }
     }
 }

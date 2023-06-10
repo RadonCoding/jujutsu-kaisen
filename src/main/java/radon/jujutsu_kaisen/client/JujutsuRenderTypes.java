@@ -1,21 +1,36 @@
 package radon.jujutsu_kaisen.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
 
 public class JujutsuRenderTypes extends RenderType {
+    protected static final RenderStateShard.TransparencyStateShard GLOWING_TRANSPARENCY = new RenderStateShard.TransparencyStateShard("glowing_transparency", () -> {
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE,
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
+    }, () -> {
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
+    });
+
     private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) -> {
         TextureStateShard shard = new TextureStateShard(pLocation, false, false);
         return create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                 false, false, CompositeState.builder()
                         .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
                         .setTextureState(shard)
-                        .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                        .setTransparencyState(GLOWING_TRANSPARENCY)
                         .setCullState(NO_CULL)
                         .setWriteMaskState(COLOR_WRITE)
                         .setOverlayState(OVERLAY)

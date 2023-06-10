@@ -2,42 +2,43 @@ package radon.jujutsu_kaisen.client.ability;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.SorcererDataHandler;
 
 public class ClientAbilityHandler {
     public static void trigger(Ability ability) {
         Minecraft mc = Minecraft.getInstance();
-        LocalPlayer entity = mc.player;
+        LocalPlayer owner = mc.player;
 
-        assert entity != null;
+        assert owner != null;
 
-        //Ability.Status status;
+        Ability.Status status;
 
-        /*if ((status = ability.checkStatus(owner)) != Ability.Status.SUCCESS) {
-            owner.getCapability(NinjaPlayerHandler.INSTANCE).ifPresent(cap -> {
+        if ((status = ability.checkStatus(owner)) != Ability.Status.SUCCESS) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 switch (status) {
-                    case NO_CHAKRA -> owner.sendSystemMessage(Component.translatable("ability.fail.not_enough_chakra"));
-                    case NO_POWER -> owner.sendSystemMessage(Component.translatable("ability.fail.not_enough_power"));
-                    case COOLDOWN -> mc.gui.setOverlayMessage(Component.translatable("ability.fail.cooldown",
+                    case ENERGY -> owner.sendSystemMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)));
+                    case COOLDOWN -> mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
                             cap.getRemainingCooldown(ability) / 20), false);
                 }
             });
             return;
-        }*/
+        }
 
         if (ability.getActivationType() == Ability.ActivationType.INSTANT) {
-            ability.runClient(entity);
+            ability.run(owner);
         } else if (ability.getActivationType() == Ability.ActivationType.TOGGLED) {
-            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (ability instanceof Ability.IToggled toggled) {
-                    if (cap.hasToggled(ability)) {
-                        entity.sendSystemMessage(toggled.getDisableMessage());
+                    if (cap.hasToggledAbility(ability)) {
+                        owner.sendSystemMessage(toggled.getDisableMessage());
                     } else {
-                        entity.sendSystemMessage(toggled.getEnableMessage());
+                        owner.sendSystemMessage(toggled.getEnableMessage());
                     }
                 }
-                cap.toggleAbility(ability);
+                cap.toggleAbility(owner, ability);
             });
         }
     }

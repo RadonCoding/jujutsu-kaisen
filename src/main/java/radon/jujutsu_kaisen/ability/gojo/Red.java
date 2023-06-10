@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.gojo;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.RedProjectile;
 
@@ -12,19 +11,18 @@ public class Red extends Ability {
     }
 
     @Override
-    public void runClient(LivingEntity entity) {
-
+    public void run(LivingEntity owner) {
+        RedProjectile red = new RedProjectile(owner);
+        owner.level.addFreshEntity(red);
     }
 
     @Override
-    public void runServer(LivingEntity entity) {
-        Vec3 look = entity.getLookAngle();
-        RedProjectile fireball = new RedProjectile(entity, look.x(), look.y(), look.z());
-        entity.level.addFreshEntity(fireball);
-    }
-
-    @Override
-    public float getCost() {
+    public float getCost(LivingEntity owner) {
         return 100.0F;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 10 * 20;
     }
 }

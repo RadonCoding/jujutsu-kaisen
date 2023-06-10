@@ -5,16 +5,18 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.JujutsuEntities;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
 
 public class JujutsuEventHandler {
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
@@ -66,8 +68,16 @@ public class JujutsuEventHandler {
 
         @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity entity = event.getEntity();
-            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(entity, entity.level.isClientSide));
+            LivingEntity owner = event.getEntity();
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class ModEvents {
+        @SubscribeEvent
+        public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
+            JujutsuEntities.createAttributes(event);
         }
     }
 }

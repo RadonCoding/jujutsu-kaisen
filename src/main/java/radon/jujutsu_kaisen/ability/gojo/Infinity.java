@@ -22,11 +22,13 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JujutsuAbilities;
 import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.SpecialTrait;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Infinity extends Ability implements Ability.IToggled {
     @Override
@@ -35,18 +37,30 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public void runClient(LivingEntity entity) {
+    public void run(LivingEntity owner) {
 
     }
 
     @Override
-    public void runServer(LivingEntity entity) {
+    public float getCost(LivingEntity owner) {
+        AtomicReference<Float> result = new AtomicReference<>(1.0F);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (cap.getTrait() == SpecialTrait.SIX_EYES) {
+                result.set(0.0F);
+            }
+        });
+        return result.get();
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
 
     }
 
     @Override
-    public float getCost() {
-        return 1.0F;
+    public void onDisabled(LivingEntity owner) {
+
     }
 
     public static class FrozenProjectileData extends SavedData {
@@ -78,7 +92,7 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
 
         public void add(LivingEntity source, Projectile target) {
-            if (!this.frozen.containsKey(target.getUUID())) {
+            if (target.getOwner() != source && !this.frozen.containsKey(target.getUUID())) {
                 this.frozen.put(target.getUUID(), new FrozenProjectileNBT(source, target));
                 this.setDirty();
             }
@@ -153,10 +167,12 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
+            if (event.phase != TickEvent.Phase.START) return;
+
             if (event.level instanceof ServerLevel level) {
                 FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                         FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
@@ -173,7 +189,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                                 FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
                         entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            if (cap.hasToggled(JujutsuAbilities.INFINITY.get())) {
+                            if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
                                 Projectile projectile = event.getProjectile();
                                 data.add(entity, projectile);
                                 event.setCanceled(true);
@@ -193,7 +209,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.hasToggled(JujutsuAbilities.INFINITY.get())) {
+                    if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
                         for (Projectile projectile : entity.level.getEntitiesOfClass(Projectile.class, entity.getBoundingBox().inflate(1.0D))) {
                             data.add(entity, projectile);
                         }
@@ -213,7 +229,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     return;
                 }
 
-                if (cap.hasToggled(JujutsuAbilities.INFINITY.get())) {
+                if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
                     event.setCanceled(true);
                 }
             });

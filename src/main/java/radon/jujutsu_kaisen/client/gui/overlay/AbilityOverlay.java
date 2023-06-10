@@ -76,7 +76,7 @@ public class AbilityOverlay {
             Ability ability = getAbility(selected);
 
             MutableComponent name = Component.empty();
-            name.append(Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MODID)));
+            name.append(Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID)));
             name.append(ability.getName());
 
             int x = mc.getWindow().getGuiScaledWidth() - mc.font.width(name) - 20
@@ -87,8 +87,8 @@ public class AbilityOverlay {
             y += mc.font.lineHeight;
 
             MutableComponent cost = Component.empty();
-            cost.append(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MODID)));
-            cost.append(String.format("%.2f", ability.getCost()));
+            cost.append(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID)));
+            cost.append(String.format("%.2f", ability.getCost(player)));
             mc.font.drawShadow(poseStack, cost, x, y, color);
         }
     };
