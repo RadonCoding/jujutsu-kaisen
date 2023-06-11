@@ -12,8 +12,7 @@ public class JujutsuBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<DomainBlock> INFINITE_VOID = BLOCKS.register("infinite_void", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.BARRIER)
+            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
-                    .noLootTable()
-                    .noOcclusion()));
+                    .noLootTable()));
 }

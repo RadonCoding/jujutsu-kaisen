@@ -35,12 +35,6 @@ public class JujutsuEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
                             .toString()));
 
-    public static RegistryObject<EntityType<DomainExpansionEntity>> DOMAIN_EXPANSION_ENTITY = ENTITIES.register("domain_expansion", () ->
-            EntityType.Builder.<DomainExpansionEntity>of(DomainExpansionEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "domain_expansion")
-                            .toString()));
-
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), RugbyFieldCurseEntity.createAttributes().build());
     }

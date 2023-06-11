@@ -5,6 +5,12 @@
     },
     "done": true
   },
+  "minecraft:recipes/redstone/tnt": {
+    "criteria": {
+      "has_gunpowder": "2023-06-11 13:10:38 +0300"
+    },
+    "done": true
+  },
   "minecraft:recipes/redstone/lever": {
     "criteria": {
       "has_cobblestone": "2023-06-10 21:35:15 +0300"
@@ -127,13 +133,18 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:snowy_slopes": "2023-06-11 12:24:08 +0300",
       "minecraft:birch_forest": "2023-06-10 21:17:28 +0300",
+      "minecraft:savanna_plateau": "2023-06-11 12:24:56 +0300",
       "minecraft:dark_forest": "2023-06-10 21:43:02 +0300",
       "minecraft:sparse_jungle": "2023-06-10 21:17:38 +0300",
       "minecraft:river": "2023-06-10 21:17:38 +0300",
+      "minecraft:grove": "2023-06-11 12:23:41 +0300",
       "minecraft:forest": "2023-06-10 21:34:18 +0300",
       "minecraft:jungle": "2023-06-10 21:17:25 +0300",
-      "minecraft:old_growth_birch_forest": "2023-06-10 21:17:33 +0300"
+      "minecraft:old_growth_birch_forest": "2023-06-10 21:17:33 +0300",
+      "minecraft:savanna": "2023-06-11 12:24:49 +0300",
+      "minecraft:plains": "2023-06-11 12:24:10 +0300"
     },
     "done": false
   },
@@ -302,6 +313,12 @@
   "minecraft:recipes/tools/stone_shovel": {
     "criteria": {
       "has_cobblestone": "2023-06-10 21:35:15 +0300"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/firework_rocket_simple": {
+    "criteria": {
+      "has_gunpowder": "2023-06-11 13:10:38 +0300"
     },
     "done": true
   },
