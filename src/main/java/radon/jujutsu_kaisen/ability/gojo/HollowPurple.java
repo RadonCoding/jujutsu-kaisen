@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.ability.gojo;
 
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.entity.HollowPurpleProjectile;
+import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
 
 public class HollowPurple extends Ability {
     @Override

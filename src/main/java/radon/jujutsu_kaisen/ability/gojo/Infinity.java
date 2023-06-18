@@ -20,15 +20,15 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JujutsuAbilities;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.SpecialTrait;
+import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Infinity extends Ability implements Ability.IToggled {
     @Override
@@ -43,14 +43,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        AtomicReference<Float> result = new AtomicReference<>(1.0F);
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == SpecialTrait.SIX_EYES) {
-                result.set(0.0F);
-            }
-        });
-        return result.get();
+        return 3.0F;
     }
 
     @Override
@@ -110,14 +103,28 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (target == null) {
                     iter.remove();
                     this.setDirty();
-                } else if (source == null || source.distanceTo(target) >= 2.5F) {
-                    target.setNoGravity(nbt.isNoGravity());
-                    iter.remove();
-                    this.setDirty();
                 } else {
-                    Vec3 original = nbt.getMovement();
-                    target.setDeltaMovement(original.scale(Double.MIN_VALUE));
-                    target.setNoGravity(true);
+                    AtomicBoolean result = new AtomicBoolean();
+
+                    if (source == null) {
+                        result.set(true);
+                    } else {
+                        source.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            if (!cap.hasToggledAbility(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F) {
+                                result.set(true);
+                            }
+                        });
+                    }
+
+                    if (result.get()) {
+                        target.setNoGravity(nbt.isNoGravity());
+                        iter.remove();
+                        this.setDirty();
+                    } else {
+                        Vec3 original = nbt.getMovement();
+                        target.setDeltaMovement(original.scale(Double.MIN_VALUE));
+                        target.setNoGravity(true);
+                    }
                 }
             }
         }
@@ -189,7 +196,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                                 FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
                         entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
+                            if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
                                 Projectile projectile = event.getProjectile();
                                 data.add(entity, projectile);
                                 event.setCanceled(true);
@@ -209,7 +216,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
+                    if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
                         for (Projectile projectile : entity.level.getEntitiesOfClass(Projectile.class, entity.getBoundingBox().inflate(1.0D))) {
                             data.add(entity, projectile);
                         }
@@ -225,11 +232,17 @@ public class Infinity extends Ability implements Ability.IToggled {
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 DamageSource source = event.getSource();
 
-                if (source.isBypassInvul()) {
+                if (source.isMagic() || source.isBypassInvul()) {
                     return;
                 }
 
-                if (cap.hasToggledAbility(JujutsuAbilities.INFINITY.get())) {
+                if (source.getEntity() instanceof LivingEntity living) {
+                    if (living.swinging && living.getItemInHand(living.swingingArm).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                        return;
+                    }
+                }
+
+                if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
                     event.setCanceled(true);
                 }
             });

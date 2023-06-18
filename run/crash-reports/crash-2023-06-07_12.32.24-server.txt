@@ -7,7 +7,7 @@ Description: Exception in server tick loop
 java.lang.NoClassDefFoundError: Could not initialize class radon.jujutsu_kaisen.capability.CursedTechnique
 	at radon.jujutsu_kaisen.capability.SorcererData.generate(SorcererData.java:53) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.capability.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.JujutsuEventHandler$ForgeEvents.onAttachCapabilities(JujutsuEventHandler.java:62) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onAttachCapabilities(JujutsuEventHandler.java:62) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.__ForgeEvents_onAttachCapabilities_AttachCapabilitiesEvent.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23102!/:?] {}
 	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.3.jar%23102!/:?] {}
@@ -38,7 +38,7 @@ Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.NullPointe
 	at radon.jujutsu_kaisen.capability.CursedTechnique.<clinit>(CursedTechnique.java:10) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.capability.SorcererData.generate(SorcererData.java:53) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.capability.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.JujutsuEventHandler$ForgeEvents.onAttachCapabilities(JujutsuEventHandler.java:62) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onAttachCapabilities(JujutsuEventHandler.java:62) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.__ForgeEvents_onAttachCapabilities_AttachCapabilitiesEvent.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23102!/:?] {}
 	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.3.jar%23102!/:?] {}

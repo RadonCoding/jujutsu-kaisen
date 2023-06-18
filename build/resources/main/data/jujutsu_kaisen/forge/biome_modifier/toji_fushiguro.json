@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#jujutsu_kaisen:is_overworld",
+  "spawners": {
+    "type": "jujutsu_kaisen:toji_fushiguro",
+    "weight": 50,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

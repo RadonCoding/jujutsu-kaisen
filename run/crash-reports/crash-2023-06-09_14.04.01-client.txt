@@ -7,7 +7,7 @@ Description: Unexpected error
 java.lang.ClassCastException: class net.minecraft.client.player.LocalPlayer cannot be cast to class net.minecraft.server.level.ServerPlayer (net.minecraft.client.player.LocalPlayer and net.minecraft.server.level.ServerPlayer are in module minecraft@1.19.3 of loader 'TRANSFORMER' @79a04e5f)
 	at radon.jujutsu_kaisen.ability.gojo.UnlimitedVoid.run(UnlimitedVoid.java:42) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.ability.ClientAbilityHandler.trigger(ClientAbilityHandler.java:30) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.client.ClientEventHandler$ForgeEvents.onKeyInput(ClientEventHandler.java:64) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.client.JJKClientEventHandler$ForgeEvents.onKeyInput(ClientEventHandler.java:64) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.__ForgeEvents_onKeyInput_Key.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar:?] {}
 	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.3.jar:?] {}
@@ -48,7 +48,7 @@ Thread: Render thread
 Stacktrace:
 	at radon.jujutsu_kaisen.ability.gojo.UnlimitedVoid.run(UnlimitedVoid.java:42) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.ability.ClientAbilityHandler.trigger(ClientAbilityHandler.java:30) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.client.ClientEventHandler$ForgeEvents.onKeyInput(ClientEventHandler.java:64) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.client.JJKClientEventHandler$ForgeEvents.onKeyInput(ClientEventHandler.java:64) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.__ForgeEvents_onKeyInput_Key.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23102!/:?] {}
 	at net.minecraftforge.eventbus.EventBus.post(EventBus.java:315) ~[eventbus-6.0.3.jar%23102!/:?] {}

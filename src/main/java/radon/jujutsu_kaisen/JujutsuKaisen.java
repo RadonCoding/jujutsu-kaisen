@@ -4,12 +4,12 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import radon.jujutsu_kaisen.ability.JujutsuAbilities;
-import radon.jujutsu_kaisen.block.JujutsuBlockEntities;
-import radon.jujutsu_kaisen.block.JujutsuBlocks;
-import radon.jujutsu_kaisen.client.particle.JujutsuParticles;
-import radon.jujutsu_kaisen.effect.JujutsuEffects;
-import radon.jujutsu_kaisen.entity.JujutsuEntities;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 
 @Mod(JujutsuKaisen.MOD_ID)
@@ -19,12 +19,12 @@ public class JujutsuKaisen {
     public JujutsuKaisen() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        JujutsuAbilities.ABILITIES.register(bus);
-        JujutsuEntities.ENTITIES.register(bus);
-        JujutsuParticles.PARTICLES.register(bus);
-        JujutsuBlocks.BLOCKS.register(bus);
-        JujutsuEffects.EFFECTS.register(bus);
-        JujutsuBlockEntities.BLOCK_ENTITIES.register(bus);
+        JJKAbilities.ABILITIES.register(bus);
+        JJKEntities.ENTITIES.register(bus);
+        JJKParticles.PARTICLES.register(bus);
+        JJKBlocks.BLOCKS.register(bus);
+        JJKEffects.EFFECTS.register(bus);
+        JJKItems.ITEMS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
     }

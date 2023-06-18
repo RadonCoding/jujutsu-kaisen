@@ -78,7 +78,6 @@ public class SpinningParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-
     public record SpinningParticleOptions(Vector3f color, double radius, float angle, float size) implements ParticleOptions {
         public static Vector3f BLUE_COLOR = Vec3.fromRGB24(30719).toVector3f();
 
@@ -116,7 +115,7 @@ public class SpinningParticle extends TextureSheetParticle {
 
         @Override
         public @NotNull ParticleType<?> getType() {
-            return JujutsuParticles.SPINNING.get();
+            return JJKParticles.SPINNING.get();
         }
 
         @Override

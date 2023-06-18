@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.JujutsuAbilities;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 import java.util.function.Supplier;
 
@@ -28,7 +28,7 @@ public class TriggerAbilityC2SPacket {
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
 
-        Ability ability = JujutsuAbilities.getValue(this.key);
+        Ability ability = JJKAbilities.getValue(this.key);
 
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();

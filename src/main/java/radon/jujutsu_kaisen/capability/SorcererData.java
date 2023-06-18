@@ -4,22 +4,31 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JujutsuAbilities;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
+
     private CursedTechnique technique;
+
+    @Nullable
     private SpecialTrait trait;
+
     private float experience;
 
     private float energy;
-    private float maxEnergy;
+
+    private int burnout;
 
     private final Set<Ability> toggledAbilities;
     private final List<DelayedTickEvent> delayedTickEvents = new ArrayList<>();
@@ -92,10 +101,15 @@ public class SorcererData implements ISorcererData {
         this.updateTickEvents(owner);
         this.updateToggledAbilities(owner);
 
-        this.energy = Math.min(this.energy + 1.0F, this.maxEnergy);
+        if (this.burnout > 0) {
+            this.burnout--;
+        }
+        this.energy = Math.min(this.energy + 1.0F, this.getMaxEnergy());
+
+        SorcererEffects.apply(owner, this.getGrade());
     }
 
-    public CursedTechnique getTechnique() {
+    public @Nullable CursedTechnique getTechnique() {
         return this.technique;
     }
 
@@ -105,30 +119,48 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addExperience(float amount) {
-        this.experience += amount;
+    public void setGrade(SorcererGrade grade) {
+        this.experience = grade.getRequiredExperience();
     }
 
     @Override
-    public SpecialTrait getTrait() {
+    public @Nullable SpecialTrait getTrait() {
         return this.trait;
     }
 
-    public void toggleAbility(LivingEntity entity, Ability ability) {
+    @Override
+    public void setTrait(@Nullable SpecialTrait trait) {
+        this.trait = trait;
+    }
+
+    @Override
+    public void addExperience(LivingEntity owner, float amount) {
+        SorcererGrade oldGrade = this.getGrade();
+        this.experience += amount;
+        SorcererGrade newGrade = this.getGrade();
+
+        if (oldGrade != newGrade) {
+            if (owner instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), newGrade.getComponent()));
+            }
+        }
+    }
+
+    public void toggleAbility(LivingEntity owner, Ability ability) {
         if (ability instanceof Ability.IToggled toggled) {
             if (this.toggledAbilities.contains(ability)) {
-                toggled.onDisabled(entity);
+                toggled.onDisabled(owner);
                 this.toggledAbilities.remove(ability);
             } else {
-                toggled.onEnabled(entity);
+                toggled.onEnabled(owner);
                 this.toggledAbilities.add(ability);
             }
         }
     }
 
     @Override
-    public void addCooldown(Ability ability) {
-        this.cooldowns.put(ability, ability.getCooldown());
+    public void addCooldown(LivingEntity owner, Ability ability) {
+        this.cooldowns.put(ability, ability.getRealCooldown(owner));
     }
 
     @Override
@@ -142,13 +174,31 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void setBurnout(int duration) {
+        this.burnout = duration;
+    }
+
+    @Override
+    public int getBurnout() {
+        return this.burnout;
+    }
+
+    @Override
+    public boolean hasBurnout() {
+        return this.burnout > 0;
+    }
+
+    @Override
     public float getEnergy() {
         return this.energy;
     }
 
     @Override
     public float getMaxEnergy() {
-        return this.maxEnergy;
+        if (this.trait == SpecialTrait.HEAVENLY_RESTRICTION) {
+            return 0.0F;
+        }
+        return this.technique.getMaxEnergy() * this.getGrade().getPower();
     }
 
     @Override
@@ -169,8 +219,7 @@ public class SorcererData implements ISorcererData {
         this.initialized = true;
 
         this.technique = CursedTechnique.GOJO;
-        this.maxEnergy = this.technique.getMaxEnergy();
-        this.trait = SpecialTrait.HEAVENLY_RESTRICTION;
+        this.trait = SpecialTrait.SIX_EYES;
 
         /*if (HelperMethods.RANDOM.nextInt(10) == 0) {
             this.trait = SpecialTrait.HEAVENLY_RESTRICTION;
@@ -199,11 +248,12 @@ public class SorcererData implements ISorcererData {
         }
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
+        nbt.putInt("burnout", this.burnout);
 
         ListTag toggledTag = new ListTag();
 
         for (Ability ability : this.toggledAbilities) {
-            toggledTag.add(StringTag.valueOf(JujutsuAbilities.getKey(ability).toString()));
+            toggledTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
         }
         nbt.put("toggled", toggledTag);
 
@@ -211,7 +261,7 @@ public class SorcererData implements ISorcererData {
 
         for (Map.Entry<Ability, Integer> entry : this.cooldowns.entrySet()) {
             CompoundTag cooldown = new CompoundTag();
-            cooldown.putString("identifier", JujutsuAbilities.getKey(entry.getKey()).toString());
+            cooldown.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
             cooldown.putInt("cooldown", entry.getValue());
             cooldownsTag.add(cooldown);
         }
@@ -232,14 +282,15 @@ public class SorcererData implements ISorcererData {
         }
         this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
+        this.burnout = nbt.getInt("burnout");
 
         for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-            this.toggledAbilities.add(JujutsuAbilities.getValue(new ResourceLocation(key.getAsString())));
+            this.toggledAbilities.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
         }
 
         for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
             CompoundTag cooldown = (CompoundTag) key;
-            this.cooldowns.put(JujutsuAbilities.getValue(new ResourceLocation(cooldown.getString("identifier"))),
+            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(cooldown.getString("identifier"))),
                     cooldown.getInt("cooldown"));
         }
     }

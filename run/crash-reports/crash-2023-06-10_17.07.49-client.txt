@@ -102,7 +102,7 @@ Stacktrace:
 
 -- Renderer details --
 Details:
-	Assigned renderer: radon.jujutsu_kaisen.client.render.RugbyFieldCurseRenderer@3063493e
+	Assigned renderer: radon.jujutsu_kaisen.client.render.entity.RugbyFieldCurseRenderer@3063493e
 	Location: -1.27,-0.41,1.10 - World: (-2,-1,1), Section: (at 14,15,1 in -1,-1,0; chunk contains blocks -16,-64,0 to -1,319,15), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,-64,0 to -1,319,511)
 	Rotation: 0.0
 	Delta: 0.059996843

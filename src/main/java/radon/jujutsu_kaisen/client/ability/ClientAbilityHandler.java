@@ -22,6 +22,8 @@ public class ClientAbilityHandler {
                     case ENERGY -> owner.sendSystemMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)));
                     case COOLDOWN -> mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
                             cap.getRemainingCooldown(ability) / 20), false);
+                    case BURNOUT -> mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
+                            cap.getBurnout() / 20), false);
                 }
             });
             return;

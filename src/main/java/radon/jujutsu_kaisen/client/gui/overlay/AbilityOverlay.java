@@ -67,7 +67,7 @@ public class AbilityOverlay {
         if (abilities.isEmpty()) {
             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 CursedTechnique technique = cap.getTechnique();
-                abilities.addAll(Arrays.asList(technique.getAbilities()));
+                abilities.addAll(technique.getAbilities());
             });
         }
 
@@ -75,21 +75,25 @@ public class AbilityOverlay {
             int color = 16777215;
             Ability ability = getAbility(selected);
 
-            MutableComponent name = Component.empty();
-            name.append(Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID)));
-            name.append(ability.getName());
+            MutableComponent nameText = Component.empty();
+            nameText.append(Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID)));
+            nameText.append(ability.getName());
 
-            int x = mc.getWindow().getGuiScaledWidth() - mc.font.width(name) - 20
-                    + (mc.font.width(name) - mc.font.width(name)) / 2;
+            int x = mc.getWindow().getGuiScaledWidth() - mc.font.width(nameText) - 20
+                    + (mc.font.width(nameText) - mc.font.width(nameText)) / 2;
             int y = 20;
-            mc.font.drawShadow(poseStack, name, x, y, color);
+            mc.font.drawShadow(poseStack, nameText, x, y, color);
 
             y += mc.font.lineHeight;
 
-            MutableComponent cost = Component.empty();
-            cost.append(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID)));
-            cost.append(String.format("%.2f", ability.getCost(player)));
-            mc.font.drawShadow(poseStack, cost, x, y, color);
+            float cost = ability.getRealCost(player);
+
+            if (cost > 0.0F) {
+                MutableComponent costText = Component.empty();
+                costText.append(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID)));
+                costText.append(String.format("%.2f", cost));
+                mc.font.drawShadow(poseStack, costText, x, y, color);
+            }
         }
     };
 }

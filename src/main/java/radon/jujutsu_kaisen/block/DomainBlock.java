@@ -6,6 +6,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -22,7 +23,7 @@ import radon.jujutsu_kaisen.capability.SpecialTrait;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DomainBlock extends BaseEntityBlock {
+public class DomainBlock extends Block {
     public DomainBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -43,7 +44,9 @@ public class DomainBlock extends BaseEntityBlock {
             }
 
             if (result.get()) {
-                return Shapes.empty();
+                if (!pContext.isAbove(Shapes.block(), pPos, true)) {
+                    return Shapes.empty();
+                }
             }
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
@@ -52,17 +55,5 @@ public class DomainBlock extends BaseEntityBlock {
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return SoundType.GLASS;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return new DomainBlockEntity(pPos, pState);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, JujutsuBlockEntities.DOMAIN_BLOCK_ENTITY.get(), DomainBlockEntity::tick);
     }
 }

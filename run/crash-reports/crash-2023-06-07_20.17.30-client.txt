@@ -47,7 +47,7 @@ Stacktrace:
 	at net.minecraft.client.multiplayer.ClientLevel.tickEntities(ClientLevel.java:257) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:runtimedistcleaner:A}
 -- Entity being ticked --
 Details:
-	Entity Type: jujutsu_kaisen:red (radon.jujutsu_kaisen.entity.RedProjectile)
+	Entity Type: jujutsu_kaisen:red (radon.jujutsu_kaisen.entity.projectile.RedProjectile)
 	Entity ID: 495
 	Entity Name: entity.jujutsu_kaisen.red
 	Entity's Exact location: -51.78, 65.42, -49.42
