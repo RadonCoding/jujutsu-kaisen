@@ -23,7 +23,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final double BALL_RADIUS = 1.0D;
     private static final double PULL_RADIUS = 10.0D;
     private static final float PARTICLE_SIZE = 0.075F;
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 5.0F;
     private static final int DURATION = 5 * 20;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {

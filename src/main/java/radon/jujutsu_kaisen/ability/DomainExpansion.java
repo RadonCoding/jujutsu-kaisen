@@ -33,8 +33,6 @@ public abstract class DomainExpansion extends Ability {
                 false, false, false));
         owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, duration, 4,
                 false, false, false));
-        owner.addEffect(new MobEffectInstance(MobEffects.REGENERATION, duration, 4,
-                false, false, false));
     }
 
     @Override
