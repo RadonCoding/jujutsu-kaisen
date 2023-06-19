@@ -82,21 +82,21 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         } else {
             Entity owner = this.getOwner();
 
-            if (owner != null) {
-                if (this.getTime() >= DELAY) {
-                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+            if (owner != null && owner.isAlive()) {
+                double x = owner.getX();
+                double y = owner.getEyeY() - (this.getBbHeight() / 2.0F);
+                double z = owner.getZ();
 
-                    this.hurtEntities();
-                    this.breakBlocks();
-                } else {
-                    double x = owner.getX();
-                    double y = owner.getEyeY() - (this.getBbHeight() / 2.0F);
-                    double z = owner.getZ();
+                Vec3 look = owner.getLookAngle();
+                Vec3 spawn = new Vec3(x, y, z).add(look);
+                this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            }
 
-                    Vec3 look = owner.getLookAngle();
-                    Vec3 spawn = new Vec3(x, y, z).add(look);
-                    this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
-                }
+            if (this.getTime() >= DELAY) {
+                this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+
+                this.hurtEntities();
+                this.breakBlocks();
             }
         }
     }

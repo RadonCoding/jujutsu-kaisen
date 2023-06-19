@@ -68,7 +68,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         Entity owner = this.getOwner();
 
-        if (owner != null) {
+        if (owner != null && owner.isAlive()) {
             double x = owner.getX();
             double y = owner.getEyeY() - (this.getBbHeight() / 2.0F);
             double z = owner.getZ();

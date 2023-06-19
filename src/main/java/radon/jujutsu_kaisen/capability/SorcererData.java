@@ -6,6 +6,8 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -106,7 +108,20 @@ public class SorcererData implements ISorcererData {
         }
         this.energy = Math.min(this.energy + 1.0F, this.getMaxEnergy());
 
-        SorcererEffects.apply(owner, this.getGrade());
+        SorcererGrade grade = this.getGrade();
+        owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(2, grade.ordinal()),
+                false, false, false));
+        owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(3, grade.ordinal()),
+                false, false, false));
+
+        if (this.trait == SpecialTrait.HEAVENLY_RESTRICTION) {
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, 3,
+                    false, false, false));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, 4,
+                    false, false, false));
+            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 4,
+                    false, false, false));
+        }
     }
 
     public @Nullable CursedTechnique getTechnique() {

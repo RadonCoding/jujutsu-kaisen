@@ -318,6 +318,12 @@
     },
     "done": true
   },
+  "minecraft:adventure/avoid_vibration": {
+    "criteria": {
+      "avoid_vibration": "2023-06-19 18:48:08 +0300"
+    },
+    "done": true
+  },
   "minecraft:recipes/decorations/oak_sign": {
     "criteria": {
       "has_planks": "2023-06-18 12:00:47 +0300"
@@ -404,6 +410,7 @@
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
+      "minecraft:taiga": "2023-06-19 18:45:47 +0300",
       "minecraft:birch_forest": "2023-06-19 01:15:24 +0300",
       "minecraft:windswept_hills": "2023-06-18 23:05:38 +0300",
       "minecraft:dark_forest": "2023-06-19 01:15:32 +0300",

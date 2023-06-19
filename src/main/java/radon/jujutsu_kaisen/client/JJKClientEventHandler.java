@@ -95,8 +95,8 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(TojiFushiguroModel.LAYER, TojiFushiguroModel::createBodyLayer);
-            event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, TojiFushiguroModel::createBodyLayer);
-            event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, TojiFushiguroModel::createBodyLayer);
+            event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, TojiFushiguroModel::createInnerLayer);
+            event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, TojiFushiguroModel::createOuterLayer);
         }
 
         @SubscribeEvent
