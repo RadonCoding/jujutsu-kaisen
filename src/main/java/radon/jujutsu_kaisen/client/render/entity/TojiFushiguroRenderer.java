@@ -12,11 +12,11 @@ import radon.jujutsu_kaisen.entity.TojiFushiguroEntity;
 public class TojiFushiguroRenderer extends HumanoidMobRenderer<TojiFushiguroEntity, TojiFushiguroModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/toji_fushiguro.png");
 
-    public TojiFushiguroRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new TojiFushiguroModel(renderManager.bakeLayer(TojiFushiguroModel.LAYER)), 0.5F);
+    public TojiFushiguroRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext, new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.LAYER)), 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new TojiFushiguroModel(renderManager.bakeLayer(TojiFushiguroModel.INNER_LAYER)),
-                new TojiFushiguroModel(renderManager.bakeLayer(TojiFushiguroModel.OUTER_LAYER))));
+        this.addLayer(new HumanoidArmorLayer<>(this, new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.INNER_LAYER)),
+                new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.OUTER_LAYER))));
     }
 
     @Override

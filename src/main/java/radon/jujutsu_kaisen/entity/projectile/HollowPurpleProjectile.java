@@ -42,10 +42,10 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : this.level.getEntities(null, bounds)) {
-                    if (this.canHitEntity(entity) && entity != owner) {
-                        entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
-                    }
+                for (Entity entity : this.level.getEntities(this, bounds)) {
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+
+                    entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                 }
             });
         }

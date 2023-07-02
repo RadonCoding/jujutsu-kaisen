@@ -2,8 +2,6 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -46,13 +44,6 @@ public class SukunaRyomenEntity extends CurseEntity {
     @Override
     public void onInsideDomain(DomainExpansionEntity domain) {
         AbilityHandler.trigger(this, JJKAbilities.MALEVOLENT_SHRINE.get());
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.ATTACK_DAMAGE, 1.0D)
-                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     @Override

@@ -63,6 +63,7 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public abstract AABB getBounds();
+    public abstract boolean isInsideBarrier(Entity entity);
 
     @Override
     public boolean isNoGravity() {

@@ -25,13 +25,13 @@ public class SukunaAttackGoal extends Goal {
             if (JJKAbilities.hasToggledAbility(target, JJKAbilities.INFINITY.get()) || this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.MALEVOLENT_SHRINE.get());
             }
-            else if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {
+            if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.SMASH.get());
             }
-            else if (this.mob.getRandom().nextInt(5) == 0 && distance <= 10.0D) {
+            if (this.mob.getRandom().nextInt(5) == 0 && distance <= 10.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.DISMANTLE.get());
             }
-            else if (this.mob.getRandom().nextInt(5) == 0 && distance < Cleave.RANGE) {
+            if (this.mob.getRandom().nextInt(5) == 0 && distance < Cleave.RANGE) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.CLEAVE.get());
             }
         }

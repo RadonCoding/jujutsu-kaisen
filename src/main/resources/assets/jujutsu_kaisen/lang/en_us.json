@@ -52,5 +52,8 @@
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
-  "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse"
+  "entity.jujutsu_kaisen.gojo_satoru": "Gojo Satoru",
+  "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
+
+  "effect.jujutsu_kaisen.stun": "Stun"
 }

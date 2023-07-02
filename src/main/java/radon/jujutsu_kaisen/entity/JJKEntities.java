@@ -13,6 +13,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
@@ -77,12 +78,13 @@ public class JJKEntities {
                             .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
-        event.put(RUGBY_FIELD_CURSE.get(), RugbyFieldCurseEntity.createAttributes().build());
-        event.put(TOJI_FUSHIGURO.get(), TojiFushiguroEntity.createAttributes().build());
-        event.put(SUKUNA_RYOMEN.get(), SukunaRyomenEntity.createAttributes().build());
-        event.put(CLOSED_DOMAIN_EXPANSION.get(), ClosedDomainExpansionEntity.createMobAttributes().build());
-        event.put(MALEVOLENT_SHRINE.get(), MalevolentShrineEntity.createMobAttributes().build());
-        event.put(GOJO_SATORU.get(), GojoSatoruEntity.createMobAttributes().build());
+        event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
+        event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
+        event.put(GOJO_SATORU.get(), SorcererEntity.createAttributes().build());
+
+        event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
+        event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
     }
 
     private static boolean checkHostileSpawnRules(EntityType<? extends Mob> pType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -95,6 +97,8 @@ public class JJKEntities {
         event.register(TOJI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SUKUNA_RYOMEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(GOJO_SATORU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }

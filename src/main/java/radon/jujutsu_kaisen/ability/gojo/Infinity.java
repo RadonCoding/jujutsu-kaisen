@@ -196,15 +196,22 @@ public class Infinity extends Ability implements Ability.IToggled {
         @SubscribeEvent
         public static void onProjectileImpact(ProjectileImpactEvent event) {
             if (event.getRayTraceResult() instanceof EntityHitResult result) {
-                if (result.getEntity() instanceof LivingEntity entity) {
-                    if (entity.level instanceof ServerLevel level) {
+                if (result.getEntity() instanceof LivingEntity target) {
+                    if (target.level instanceof ServerLevel level) {
                         FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                                 FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
-                        entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            Projectile projectile = event.getProjectile();
+
+                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
+                                if (projectile.getOwner() == domain.getOwner()) {
+                                    return;
+                                }
+                            }
+
                             if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
-                                Projectile projectile = event.getProjectile();
-                                data.add(entity, projectile);
+                                data.add(target, projectile);
                                 event.setCanceled(true);
                             }
                         });
@@ -236,19 +243,29 @@ public class Infinity extends Ability implements Ability.IToggled {
             LivingEntity target = event.getEntity();
 
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                DamageSource source = event.getSource();
+                if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
+                    DamageSource source = event.getSource();
 
-                if (source.getDirectEntity() instanceof DomainExpansionEntity || source.isMagic() || source.isBypassInvul()) {
-                    return;
-                }
+                    if (target.level instanceof ServerLevel level) {
+                        for (DomainExpansionEntity domain : cap.getDomains(level)) {
+                            Entity owner = domain.getOwner();
 
-                if (source.getEntity() instanceof LivingEntity living) {
-                    if (living.swinging && living.getItemInHand(living.swingingArm).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            if (owner == source.getEntity()) {
+                                return;
+                            }
+                        }
+                    }
+
+                    if (source.isMagic() || source.isBypassInvul()) {
                         return;
                     }
-                }
 
-                if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
+                    if (source.getEntity() instanceof LivingEntity living) {
+                        if (living.swinging && living.getItemInHand(living.swingingArm).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            return;
+                        }
+                    }
+
                     event.setCanceled(true);
                 }
             });

@@ -33,9 +33,7 @@ public class RedProjectile extends JujutsuProjectile {
     }
 
     private void explode() {
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
@@ -43,7 +41,7 @@ public class RedProjectile extends JujutsuProjectile {
                 this.level.explode(owner, offset.x(), offset.y(), offset.z(), radius, Level.ExplosionInteraction.NONE);
 
                 float f = radius * 2.0F;
-                List<Entity> entities = this.level.getEntities(owner, new AABB(Mth.floor(offset.x() - (double) f - 1.0D),
+                List<Entity> entities = this.level.getEntities(this, new AABB(Mth.floor(offset.x() - (double) f - 1.0D),
                         Mth.floor(offset.y() - (double) f - 1.0D),
                         Mth.floor(offset.z() - (double) f - 1.0D),
                         Mth.floor(offset.x() + (double) f + 1.0D),
@@ -53,13 +51,13 @@ public class RedProjectile extends JujutsuProjectile {
                 Vec3 look = owner.getLookAngle();
 
                 for (Entity entity : entities) {
-                    if (this.canHitEntity(entity) && entity != this) {
-                        float distance = entity.distanceTo(owner);
-                        float scalar = (radius - distance) / radius;
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                        entity.hurt(DamageSource.explosion(this, owner), (DAMAGE * cap.getGrade().getPower()) * scalar);
-                        entity.setDeltaMovement(look.x() * LAUNCH_POWER, look.y() * LAUNCH_POWER, (look.z() * LAUNCH_POWER) * scalar);
-                    }
+                    float distance = entity.distanceTo(owner);
+                    float scalar = (radius - distance) / radius;
+
+                    entity.hurt(DamageSource.explosion(this, owner), (DAMAGE * cap.getGrade().getPower()) * scalar);
+                    entity.setDeltaMovement(look.x() * LAUNCH_POWER, look.y() * LAUNCH_POWER, (look.z() * LAUNCH_POWER) * scalar);
                 }
                 this.discard();
             });

@@ -100,16 +100,14 @@ public class BlueProjectile extends JujutsuProjectile {
 
         double strength = 0.25D;
 
-        Entity owner = this.getOwner();
+        if (this.getOwner() instanceof LivingEntity owner) {
+            for (Entity entity : this.level.getEntities(this, bounds)) {
+                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-        if (owner != null) {
-            for (LivingEntity entity : this.level.getEntitiesOfClass(LivingEntity.class, bounds)) {
-                if (entity != owner) {
-                    Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ())
-                            .normalize()
-                            .scale(strength);
-                    entity.setDeltaMovement(direction);
-                }
+                Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ())
+                        .normalize()
+                        .scale(strength);
+                entity.setDeltaMovement(direction);
             }
         }
     }
@@ -120,10 +118,10 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : this.level.getEntities(null, bounds)) {
-                    if (this.canHitEntity(entity) && entity != owner) {
-                        entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
-                    }
+                for (Entity entity : this.level.getEntities(this, bounds)) {
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+
+                    entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                 }
             });
         }
