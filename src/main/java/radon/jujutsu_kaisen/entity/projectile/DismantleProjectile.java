@@ -48,7 +48,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (this.canHitEntity(entity) && entity != owner) {
+                if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
                     entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                 }
             });

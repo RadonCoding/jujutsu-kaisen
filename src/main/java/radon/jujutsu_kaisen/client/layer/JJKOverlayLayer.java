@@ -4,9 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -14,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.RequestOverlayDataC2SPacket;
 
@@ -47,8 +46,8 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
             }
 
             for (ResourceLocation overlay : overlays) {
-                VertexConsumer consumer = pBuffer.getBuffer(RenderType.eyes(overlay));
-                this.getParentModel().renderToBuffer(pMatrixStack, consumer, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(overlay));
+                this.getParentModel().renderToBuffer(pMatrixStack, consumer, 0, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             }
         });
     }

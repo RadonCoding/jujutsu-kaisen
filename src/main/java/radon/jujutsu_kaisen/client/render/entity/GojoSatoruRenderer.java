@@ -13,11 +13,11 @@ import radon.jujutsu_kaisen.entity.GojoSatoruEntity;
 public class GojoSatoruRenderer extends HumanoidMobRenderer<GojoSatoruEntity, GojoSatoruModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/gojo_satoru.png");
 
-    public GojoSatoruRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GojoSatoruModel(renderManager.bakeLayer(GojoSatoruModel.LAYER)), 0.5F);
+    public GojoSatoruRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext, new GojoSatoruModel(pContext.bakeLayer(GojoSatoruModel.LAYER)), 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new GojoSatoruModel(renderManager.bakeLayer(GojoSatoruModel.INNER_LAYER)),
-                new GojoSatoruModel(renderManager.bakeLayer(GojoSatoruModel.OUTER_LAYER))));
+        this.addLayer(new HumanoidArmorLayer<>(this, new GojoSatoruModel(pContext.bakeLayer(GojoSatoruModel.INNER_LAYER)),
+                new GojoSatoruModel(pContext.bakeLayer(GojoSatoruModel.OUTER_LAYER))));
         this.addLayer(new JJKOverlayLayer<>(this));
     }
 

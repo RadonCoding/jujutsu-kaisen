@@ -1,19 +1,25 @@
 package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface ISorcererData {
     void tick(LivingEntity owner);
     boolean isInitialized();
     void generate();
+
+    List<DomainExpansionEntity> getDomains(ServerLevel level);
+    void onInsideDomain(DomainExpansionEntity domain);
 
     boolean hasToggledAbility(Ability ability);
     CursedTechnique getTechnique();

@@ -25,7 +25,6 @@ import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
 
@@ -140,12 +139,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return false;
     }
 
-    private <T extends Entity> List<T> getEntitiesInside(Class<T> clazz) {
-        List<T> entities = new ArrayList<>();
+    private List<DomainExpansionEntity> getDomainsInside() {
+        List<DomainExpansionEntity> entities = new ArrayList<>();
 
         AABB bounds = this.getBounds();
 
-        for (T entity : this.level.getEntitiesOfClass(clazz, bounds)) {
+        for (DomainExpansionEntity entity : this.level.getEntitiesOfClass(DomainExpansionEntity.class, bounds)) {
             if (this.isInsideBarrier(entity)) {
                 entities.add(entity);
             }
@@ -153,7 +152,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return entities;
     }
 
-    private boolean isInsideBarrier(Entity entity) {
+    @Override
+    public boolean isInsideBarrier(Entity entity) {
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
 
@@ -253,17 +253,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return super.hurt(pSource, pAmount);
     }
 
-    private void doSureHitEffect(LivingEntity owner) {
+    private void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
-        for (Entity entity : this.level.getEntities(owner, bounds)) {
-            if (entity == this) continue;
+        for (Entity entity : this.level.getEntities(this, bounds)) {
+            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
             if (!this.isInsideBarrier(entity)) continue;
-
-            if (entity instanceof SorcererEntity sorcerer) {
-                sorcerer.onInsideDomain(this);
-            }
 
             AtomicBoolean result = new AtomicBoolean();
 
@@ -274,6 +270,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             });
 
             if (!result.get()) {
+                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
                 this.ability.onHitEntity(this, owner, entity);
             }
         }
@@ -298,7 +295,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private boolean checkSureHitEffect(Entity owner) {
         AtomicBoolean result = new AtomicBoolean(true);
 
-        List<DomainExpansionEntity> domains = this.getEntitiesInside(DomainExpansionEntity.class);
+        List<DomainExpansionEntity> domains = this.getDomainsInside();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (DomainExpansionEntity domain : domains) {

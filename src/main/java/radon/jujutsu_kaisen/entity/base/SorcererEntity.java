@@ -1,12 +1,16 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.Path;
@@ -37,6 +41,13 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoAnimata
         this.updateSwingTime();
 
         super.aiStep();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.ATTACK_DAMAGE, 1.0D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
     public void init(ISorcererData data) {
@@ -71,6 +82,19 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoAnimata
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(this::init);
 
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level.getGameTime() % 20 == 0 && !this.level.isClientSide) {
+            this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level)) {
+                    this.onInsideDomain(domain);
+                }
+            });
+        }
     }
 
     @Override

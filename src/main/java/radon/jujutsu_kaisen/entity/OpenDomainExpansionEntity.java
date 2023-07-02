@@ -41,6 +41,12 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 this.getX() + this.width, this.getY() + this.height - 1.0D, this.getZ() + this.width);
     }
 
+    @Override
+    public boolean isInsideBarrier(Entity entity) {
+        AABB bounds = this.getBounds();
+        return bounds.intersects(entity.getBoundingBox());
+    }
+
     public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, float strength, int width, int height, int duration) {
         super(pEntityType, owner, strength);
 
@@ -94,19 +100,17 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         this.duration = pCompound.getInt("duration");
     }
 
-    private <T extends Entity> List<T> getEntitiesInside(Class<T> clazz) {
-        return this.level.getEntitiesOfClass(clazz, this.getBounds());
+    private List<ClosedDomainExpansionEntity> getDomainsInside() {
+        return this.level.getEntitiesOfClass(ClosedDomainExpansionEntity.class, this.getBounds());
     }
 
-    private void doSureHitEffect(LivingEntity owner) {
+    private void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
-        for (Entity entity : this.level.getEntities(owner, bounds)) {
-            if (entity == this) continue;
+        for (Entity entity : this.level.getEntities(this, bounds)) {
+            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-            if (entity instanceof SorcererEntity sorcerer) {
-                sorcerer.onInsideDomain(this);
-            }
+            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
             this.ability.onHitEntity(this, owner, entity);
         }
 
@@ -120,7 +124,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private boolean checkSureHitEffect(LivingEntity owner) {
         AtomicBoolean result = new AtomicBoolean(true);
 
-        List<ClosedDomainExpansionEntity> domains = this.getEntitiesInside(ClosedDomainExpansionEntity.class);
+        List<ClosedDomainExpansionEntity> domains = this.getDomainsInside();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (ClosedDomainExpansionEntity domain : domains) {

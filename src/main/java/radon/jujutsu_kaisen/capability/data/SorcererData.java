@@ -1,13 +1,12 @@
 package radon.jujutsu_kaisen.capability.data;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -21,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -44,9 +44,9 @@ public class SorcererData implements ISorcererData {
 
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
+    private final Set<UUID> domains;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
-    private static final UUID ARMOR_UUID = UUID.fromString("356c247c-0514-4233-8b09-2b34efa6107b");
 
     private static final float CURSED_ENERGY = 1000.0F;
 
@@ -59,6 +59,7 @@ public class SorcererData implements ISorcererData {
         this.toggledAbilities = new HashSet<>();
         this.delayedTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
+        this.domains = new HashSet<>();
     }
 
     private void updateCooldowns() {
@@ -116,14 +117,6 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void removeModifierIfPresent(LivingEntity owner, Attribute attribute, UUID identifier) {
-        AttributeInstance instance = owner.getAttribute(attribute);
-
-        if (instance != null) {
-            instance.removeModifier(identifier);
-        }
-    }
-
     private boolean applyModifier(LivingEntity owner, Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
         AttributeInstance instance = owner.getAttribute(attribute);
         AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
@@ -145,11 +138,28 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
+    private void updateDomains(LivingEntity owner) {
+        if (owner.level instanceof ServerLevel level) {
+            Iterator<UUID> iter = this.domains.iterator();
+
+            while (iter.hasNext()) {
+                UUID identifier = iter.next();
+                Entity entity = level.getEntity(identifier);
+
+                if (!(entity instanceof DomainExpansionEntity domain) || !entity.isAlive() ||
+                        entity.isRemoved() || !domain.isInsideBarrier(owner)) {
+                    iter.remove();
+                }
+            }
+        }
+    }
+
     public void tick(LivingEntity owner) {
         for (Ability ability : this.toggledAbilities) {
             ability.run(owner);
         }
 
+        this.updateDomains(owner);
         this.updateCooldowns();
         this.updateTickEvents(owner);
         this.updateToggledAbilities(owner);
@@ -166,7 +176,6 @@ public class SorcererData implements ISorcererData {
                     grade.ordinal() * 20.0D, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-
             owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Math.min(4, grade.ordinal()),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(4, grade.ordinal()),
@@ -174,8 +183,10 @@ public class SorcererData implements ISorcererData {
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(2, grade.ordinal()),
                     false, false, false));
         } else {
-            this.removeModifierIfPresent(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID);
-
+            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
+                    grade.ordinal() * 10.0D, AttributeModifier.Operation.ADDITION)) {
+                owner.setHealth(owner.getMaxHealth());
+            }
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(3, grade.ordinal()),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(1, grade.ordinal()),
@@ -340,6 +351,25 @@ public class SorcererData implements ISorcererData {
         this.energy = this.getMaxEnergy();
     }
 
+    @Override
+    public List<DomainExpansionEntity> getDomains(ServerLevel level) {
+        List<DomainExpansionEntity> result = new ArrayList<>();
+
+        for (UUID identifier : this.domains) {
+            Entity entity = level.getEntity(identifier);
+
+            if (entity instanceof DomainExpansionEntity domain) {
+                result.add(domain);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void onInsideDomain(DomainExpansionEntity domain) {
+        this.domains.add(domain.getUUID());
+    }
+
     public boolean hasToggledAbility(Ability ability) {
         return this.toggledAbilities.contains(ability);
     }
@@ -372,6 +402,14 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("cooldowns", cooldownsTag);
 
+        ListTag domainsTag = new ListTag();
+
+        for (UUID identifier : this.domains) {
+            domainsTag.add(LongTag.valueOf(identifier.getLeastSignificantBits()));
+            domainsTag.add(LongTag.valueOf(identifier.getMostSignificantBits()));
+        }
+        nbt.put("domains", domainsTag);
+
         return nbt;
     }
 
@@ -393,6 +431,14 @@ public class SorcererData implements ISorcererData {
             CompoundTag cooldown = (CompoundTag) key;
             this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(cooldown.getString("identifier"))),
                     cooldown.getInt("cooldown"));
+        }
+
+        ListTag domainsTag = nbt.getList("domains", Tag.TAG_COMPOUND);
+
+        for (int i = 0; i < domainsTag.size(); i += 2) {
+            if (domainsTag.get(i) instanceof LongTag least && domainsTag.get(i + 1) instanceof LongTag most) {
+                this.domains.add(new UUID(least.getAsLong(), most.getAsLong()));
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.model.base;
 
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -13,21 +14,21 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 
-public class SkinModel<T extends LivingEntity> extends HumanoidModel<T> {
+public class SkinModel<T extends LivingEntity> extends PlayerModel<T> {
     public SkinModel(ModelPart pRoot) {
-        super(pRoot);
+        super(pRoot, false);
     }
 
     public static LayerDefinition createBodyLayer() {
-        return LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F), 64, 64);
+        return LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64);
     }
 
     public static LayerDefinition createInnerLayer() {
-        return LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32);
+        return LayerDefinition.create(PlayerModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, false), 64, 32);
     }
 
     public static LayerDefinition createOuterLayer() {
-        return LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32);
+        return LayerDefinition.create(PlayerModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, false), 64, 32);
     }
 
     private HumanoidModel.ArmPose getArmPose(T pEntity, InteractionHand pHand) {
