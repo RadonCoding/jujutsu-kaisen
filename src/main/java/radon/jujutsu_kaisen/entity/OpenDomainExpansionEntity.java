@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -43,7 +44,10 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
     public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, float strength, int width, int height, int duration) {
         super(pEntityType, owner, strength);
 
-        this.moveTo(owner.getX(), owner.getY(), owner.getZ());
+        Vec3 pos = owner.position()
+                .subtract(owner.getLookAngle()
+                .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x(), pos.y(), pos.z());
 
         this.ability = ability;
 
