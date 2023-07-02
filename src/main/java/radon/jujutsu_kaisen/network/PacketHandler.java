@@ -7,9 +7,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.TriggerAbilityC2SPacket;
-import radon.jujutsu_kaisen.network.packet.UnlimitedVoidS2CPacket;
+import radon.jujutsu_kaisen.network.packet.*;
 
 public class PacketHandler {
     private static SimpleChannel INSTANCE;
@@ -41,6 +39,21 @@ public class PacketHandler {
                 .encoder(UnlimitedVoidS2CPacket::encode)
                 .consumerMainThread(UnlimitedVoidS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SyncOverlayDataLocalS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncOverlayDataLocalS2CPacket::new)
+                .encoder(SyncOverlayDataLocalS2CPacket::encode)
+                .consumerMainThread(SyncOverlayDataLocalS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SyncOverlayDataRemoteS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncOverlayDataRemoteS2CPacket::new)
+                .encoder(SyncOverlayDataRemoteS2CPacket::encode)
+                .consumerMainThread(SyncOverlayDataRemoteS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RequestOverlayDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RequestOverlayDataC2SPacket::new)
+                .encoder(RequestOverlayDataC2SPacket::encode)
+                .consumerMainThread(RequestOverlayDataC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -49,5 +62,9 @@ public class PacketHandler {
 
     public static <MSG> void sendToClient(MSG message, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    public static <MSG> void broadcast(MSG message) {
+        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 }

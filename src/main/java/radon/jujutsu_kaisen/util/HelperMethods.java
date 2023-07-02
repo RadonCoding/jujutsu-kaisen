@@ -63,4 +63,12 @@ public class HelperMethods {
         }
         return null;
     }
+
+    public static @Nullable EntityHitResult getEntityLookAt(Entity entity, double range) {
+        Vec3 start = entity.getEyePosition();
+        Vec3 look = entity.getLookAngle();
+        Vec3 end = start.add(look.scale(range));
+        return ProjectileUtil.getEntityHitResult(entity.level, entity, start, end, entity.getBoundingBox().expandTowards(look.scale(range)).inflate(1.0D),
+                target -> !target.isSpectator() && target.isPickable());
+    }
 }

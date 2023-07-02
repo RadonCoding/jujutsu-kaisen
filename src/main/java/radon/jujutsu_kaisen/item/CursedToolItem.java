@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.ToolGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public abstract class CursedToolItem extends SwordItem {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
-    protected abstract ToolGrade getGrade();
+    protected abstract SorcererGrade getGrade();
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {

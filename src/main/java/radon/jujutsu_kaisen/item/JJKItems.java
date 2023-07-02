@@ -24,6 +24,13 @@ public class JJKItems {
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.SORCERER, EquipmentSlot.CHEST, new Item.Properties()));
 
+    public static RegistryObject<ArmorItem> SORCERER_CHESTPLATE = ITEMS.register("sorcerer_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.SORCERER, EquipmentSlot.CHEST, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SORCERER_LEGGINGS = ITEMS.register("sorcerer_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.SORCERER, EquipmentSlot.LEGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SORCERER_BOOTS = ITEMS.register("sorcerer_boots",
+            () -> new ArmorItem(JJKArmorMaterials.SORCERER, EquipmentSlot.FEET, new Item.Properties()));
+
     private static class JJKArmorMaterials {
         public static JJKArmorMaterial SORCERER = new JJKArmorMaterial("sorcerer", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);

@@ -4,9 +4,9 @@
 Time: 2023-06-18 11:52:40
 Description: Ticking player
 
-java.lang.NullPointerException: Cannot invoke "radon.jujutsu_kaisen.capability.SorcererGrade.getPower()" because the return value of "radon.jujutsu_kaisen.capability.SorcererData.getGrade()" is null
-	at radon.jujutsu_kaisen.capability.SorcererData.getMaxEnergy(SorcererData.java:202) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererData.tick(SorcererData.java:107) ~[%23186!/:?] {re:classloading}
+java.lang.NullPointerException: Cannot invoke "radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade.getPower()" because the return value of "radon.jujutsu_kaisen.capability.data.SorcererData.getGrade()" is null
+	at radon.jujutsu_kaisen.capability.data.SorcererData.getMaxEnergy(SorcererData.java:202) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererData.tick(SorcererData.java:107) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.lambda$onLivingTick$5(JJKEventHandler.java:79) ~[%23186!/:?] {re:classloading}
 	at net.minecraftforge.common.util.LazyOptional.ifPresent(LazyOptional.java:150) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onLivingTick(JJKEventHandler.java:79) ~[%23186!/:?] {re:classloading}
@@ -35,8 +35,8 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Head --
 Thread: Server thread
 Stacktrace:
-	at radon.jujutsu_kaisen.capability.SorcererData.getMaxEnergy(SorcererData.java:202) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererData.tick(SorcererData.java:107) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererData.getMaxEnergy(SorcererData.java:202) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererData.tick(SorcererData.java:107) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.lambda$onLivingTick$5(JJKEventHandler.java:79) ~[%23186!/:?] {re:classloading}
 	at net.minecraftforge.common.util.LazyOptional.ifPresent(LazyOptional.java:150) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onLivingTick(JJKEventHandler.java:79) ~[%23186!/:?] {re:classloading}

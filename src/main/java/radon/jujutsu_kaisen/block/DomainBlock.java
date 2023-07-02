@@ -3,14 +3,9 @@ package radon.jujutsu_kaisen.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -18,8 +13,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.SpecialTrait;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,7 +32,7 @@ public class DomainBlock extends Block {
 
             if (entity != null) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.getTrait() == SpecialTrait.HEAVENLY_RESTRICTION) {
+                    if (cap.getTrait() == Trait.HEAVENLY_RESTRICTION) {
                         result.set(true);
                     }
                 });

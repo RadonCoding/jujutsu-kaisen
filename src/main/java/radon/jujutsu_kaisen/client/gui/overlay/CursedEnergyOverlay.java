@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class CursedEnergyOverlay {
-    public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/energy_bar.png");
+    public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
 
     public static IGuiOverlay CURSED_ENERY_OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
         LocalPlayer player = gui.getMinecraft().player;

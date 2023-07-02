@@ -1,55 +1,71 @@
 package radon.jujutsu_kaisen.ability.gojo;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.UnlimitedVoidS2CPacket;
 
-public class UnlimitedVoid extends DomainExpansion {
-    private static final int RADIUS = 20;
-    private static final int DURATION = 30 * 20;
-
+public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public float getCost(LivingEntity owner) {
         return 1000.0F;
     }
 
     @Override
-    protected int getRadius() {
-        return RADIUS;
+    public int getRadius() {
+        return 20;
     }
 
     @Override
     protected int getDuration() {
-        return DURATION;
+        return 30 * 20;
     }
 
     @Override
-    protected DomainBlock getBlock() {
+    public DomainBlock getBlock() {
         return JJKBlocks.INFINITE_VOID.get();
     }
 
     @Override
-    public void onHit(Entity entity) {
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
+        int duration = this.getDuration() - domain.getTime();
+
         if (entity instanceof LivingEntity living) {
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), DURATION, 0, false, false, false));
-            living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, DURATION, 4));
+            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), duration, 0, false, false, false));
+            living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 4));
 
             if (living instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new UnlimitedVoidS2CPacket(DURATION), player);
+                PacketHandler.sendToClient(new UnlimitedVoidS2CPacket(duration), player);
             }
         }
     }
 
     @Override
-    public int getCooldown() {
-        return 60 * 20;
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
+
+    }
+
+    @Override
+    protected void createBarrier(LivingEntity owner) {
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            int duration = this.getDuration();
+            int radius = this.getRadius();
+            Block block = this.getBlock();
+
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, cap.getGrade().getPower(), block.defaultBlockState(), radius, duration);
+            owner.level.addFreshEntity(domain);
+        });
     }
 }

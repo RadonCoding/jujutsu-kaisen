@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import radon.jujutsu_kaisen.capability.ToolGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.PlayfulCloudRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -32,8 +32,8 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    protected ToolGrade getGrade() {
-        return ToolGrade.SPECIAL_GRADE;
+    protected SorcererGrade getGrade() {
+        return SorcererGrade.SPECIAL_GRADE;
     }
 
     @Override

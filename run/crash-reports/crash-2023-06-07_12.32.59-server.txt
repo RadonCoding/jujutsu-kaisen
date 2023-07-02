@@ -4,10 +4,10 @@
 Time: 2023-06-07 12:32:59
 Description: Saving entity NBT
 
-java.lang.NullPointerException: Cannot invoke "radon.jujutsu_kaisen.capability.SorcererGrade.ordinal()" because "this.grade" is null
-	at radon.jujutsu_kaisen.capability.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
+java.lang.NullPointerException: Cannot invoke "radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade.ordinal()" because "this.grade" is null
+	at radon.jujutsu_kaisen.capability.data.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler$SorcererDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler$SorcererDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
 	at net.minecraftforge.common.capabilities.CapabilityDispatcher.serializeNBT(CapabilityDispatcher.java:115) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 	at net.minecraftforge.common.capabilities.CapabilityProvider.serializeCaps(CapabilityProvider.java:132) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 	at net.minecraft.world.entity.Entity.saveWithoutId(Entity.java:1671) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
@@ -31,9 +31,9 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Head --
 Thread: Server thread
 Stacktrace:
-	at radon.jujutsu_kaisen.capability.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler$NarutoDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererData.serializeNBT(SorcererData.java:80) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler$SorcererDataProvider.serializeNBT(SorcererDataHandler.java:43) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler$SorcererDataProvider.serializeNBT(SorcererDataHandler.java:30) ~[%23186!/:?] {re:classloading}
 	at net.minecraftforge.common.capabilities.CapabilityDispatcher.serializeNBT(CapabilityDispatcher.java:115) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 	at net.minecraftforge.common.capabilities.CapabilityProvider.serializeCaps(CapabilityProvider.java:132) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23180%23187!/:?] {re:classloading}
 -- Entity being saved --

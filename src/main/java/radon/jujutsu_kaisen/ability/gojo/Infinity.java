@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
@@ -42,8 +43,13 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isTechnique() {
+        return true;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
-        return 3.0F;
+        return 0.3F;
     }
 
     @Override
@@ -232,7 +238,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 DamageSource source = event.getSource();
 
-                if (source.isMagic() || source.isBypassInvul()) {
+                if (source.getDirectEntity() instanceof DomainExpansionEntity || source.isMagic() || source.isBypassInvul()) {
                     return;
                 }
 

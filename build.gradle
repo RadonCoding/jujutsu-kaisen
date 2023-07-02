@@ -1,7 +1,7 @@
-
 plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 
@@ -11,6 +11,11 @@ version = '1.0-SNAPSHOT'
 java {
     archivesBaseName = 'JujutsuKaisen'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+mixin {
+    add sourceSets.main, 'mixins.jujutsu_kaisen.refmap.json'
+    config 'mixins.jujutsu_kaisen.json'
 }
 
 minecraft {
@@ -23,7 +28,8 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
-            
+            args '--username', 'Dev####'
+
             mods {
                 jujutsu_kaisen {
                     source sourceSets.main
@@ -81,6 +87,7 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.19.3-44.1.23'
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.3:4.0.4')
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 
 jar {

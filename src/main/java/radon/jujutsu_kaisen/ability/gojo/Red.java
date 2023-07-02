@@ -25,4 +25,9 @@ public class Red extends Ability {
     public int getCooldown() {
         return 10 * 20;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
 }

@@ -18,7 +18,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BlueRenderer extends EntityRenderer<BlueProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png");

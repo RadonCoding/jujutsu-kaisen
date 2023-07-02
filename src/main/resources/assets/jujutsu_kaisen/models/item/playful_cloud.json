@@ -2,16 +2,7 @@
   "parent": "minecraft:item/handheld",
   "loader": "forge:separate_transforms",
   "base": {
-    "parent": "builtin/entity",
-    "display": {
-      "firstperson_righthand": {
-        "translation": [
-          -9.5,
-          3.85,
-          -2.5
-        ]
-      }
-    }
+    "parent": "builtin/entity"
   },
   "perspectives": {
     "gui": {

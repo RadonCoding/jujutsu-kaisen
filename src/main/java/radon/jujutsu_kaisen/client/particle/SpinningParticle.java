@@ -44,7 +44,7 @@ public class SpinningParticle extends TextureSheetParticle {
 
         this.center = new Vec3(pX, pY, pZ);
         this.radius = options.radius();
-        this.angle = options.angle;
+        this.angle = options.angle();
 
         double radians = Math.toRadians(this.angle);
         double x = this.center.x() + this.radius * Math.cos(radians);

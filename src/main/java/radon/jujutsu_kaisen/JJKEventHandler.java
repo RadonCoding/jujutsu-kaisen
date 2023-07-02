@@ -12,8 +12,9 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import radon.jujutsu_kaisen.capability.CurseGrade;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CurseEntity;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -28,6 +29,9 @@ public class JJKEventHandler {
             if (event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
+
+                player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap ->
+                        cap.sync(player.getUUID()));
             }
         }
 
@@ -57,8 +61,15 @@ public class JJKEventHandler {
             original.getCapability(SorcererDataHandler.INSTANCE).ifPresent(oldCap -> {
                 player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(newCap -> {
                     newCap.deserializeNBT(oldCap.serializeNBT());
+
+                    if (event.isWasDeath()) {
+                        newCap.setEnergy(newCap.getMaxEnergy());
+                        newCap.resetCooldowns();
+                        newCap.resetBurnout();
+                    }
                 });
             });
+
             original.invalidateCaps();
         }
 
@@ -69,6 +80,9 @@ public class JJKEventHandler {
                     if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         SorcererDataHandler.attach(event);
                     }
+                    if (!entity.getCapability(OverlayDataHandler.INSTANCE).isPresent()) {
+                        OverlayDataHandler.attach(event);
+                    }
                 }
             }
         }
@@ -77,6 +91,7 @@ public class JJKEventHandler {
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity owner = event.getEntity();
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
+            owner.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
         }
 
         @SubscribeEvent
@@ -84,11 +99,11 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (victim instanceof CurseEntity curse) {
-                CurseGrade grade = curse.getGrade();
+                CurseGrade grade = CurseGrade.values()[curse.getGrade().ordinal()];
 
                 if (event.getSource().getEntity() instanceof LivingEntity killer) {
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.addExperience(killer, grade.getExperience());
+                        cap.exorcise(killer, grade);
 
                         if (killer instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

@@ -1,18 +1,18 @@
 package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class AbilityHandler {
-    public static void trigger(LivingEntity entity, Ability ability) {
-        if (ability.checkStatus(entity) != Ability.Status.SUCCESS) {
+    public static void trigger(LivingEntity owner, Ability ability) {
+        if (ability.checkStatus(owner) != Ability.Status.SUCCESS) {
             return;
         }
 
         if (ability.getActivationType() == Ability.ActivationType.INSTANT) {
-            ability.run(entity);
+            ability.run(owner);
         } else if (ability.getActivationType() == Ability.ActivationType.TOGGLED) {
-            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.toggleAbility(entity, ability));
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.toggleAbility(owner, ability));
         }
     }
 }

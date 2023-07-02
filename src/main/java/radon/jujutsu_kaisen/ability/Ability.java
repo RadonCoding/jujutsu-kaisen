@@ -2,11 +2,15 @@ package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.SpecialTrait;
+import org.apache.commons.lang3.ArrayUtils;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
+import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -17,6 +21,7 @@ public abstract class Ability {
     }
 
     public enum Status {
+        FAILURE,
         SUCCESS,
         ENERGY,
         COOLDOWN,
@@ -27,31 +32,49 @@ public abstract class Ability {
     public abstract void run(LivingEntity owner);
 
     public int getCooldown() { return 0; }
+    public boolean isTechnique() {
+        return false;
+    }
 
     public int getRealCooldown(LivingEntity owner) {
         AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == SpecialTrait.SIX_EYES) {
+            if (cap.getTrait() == Trait.SIX_EYES) {
                 cooldown.set(cooldown.get() / 2);
             }
         });
         return cooldown.get();
     }
 
-    public Status checkStatus(LivingEntity owner) {
-        AtomicReference<Status> result = new AtomicReference<>(Status.SUCCESS);
+    public boolean checkCost(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean(true);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
                 float cost = this.getRealCost(owner);
 
                 if (cap.getEnergy() < cost) {
-                    result.set(Status.ENERGY);
+                    result.set(false);
                     return;
                 }
+                cap.useEnergy(cost);
+            }
+        });
+        return result.get();
+    }
 
-                if (cap.hasBurnout()) {
+    public Status checkStatus(LivingEntity owner) {
+        AtomicReference<Status> result = new AtomicReference<>(Status.SUCCESS);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (!ArrayUtils.contains(cap.getTechnique().getAbilities(owner), this)) {
+                result.set(Status.FAILURE);
+                return;
+            }
+
+            if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+                if (this.isTechnique() && cap.hasBurnout()) {
                     result.set(Status.BURNOUT);
                     return;
                 }
@@ -61,14 +84,20 @@ public abstract class Ability {
                         result.set(Status.COOLDOWN);
                         return;
                     }
+                }
+
+                if (!this.checkCost(owner)) {
+                    result.set(Status.ENERGY);
+                    return;
+                }
+
+                if (this.getRealCooldown(owner) > 0) {
                     cap.addCooldown(owner, this);
                 }
-                cap.useEnergy(cost);
             }
         });
         return result.get();
     }
-
 
     public Component getName() {
         ResourceLocation key = JJKAbilities.getKey(this);
@@ -81,11 +110,15 @@ public abstract class Ability {
         AtomicReference<Float> cost = new AtomicReference<>(this.getCost(owner));
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == SpecialTrait.SIX_EYES) {
-                cost.set(cost.get() * 0.3F);
+            if (cap.getTrait() == Trait.SIX_EYES) {
+                cost.set(cost.get() / 2);
             }
         });
         return cost.get();
+    }
+
+    public interface IDomainAttack {
+        void perform(LivingEntity owner, @Nullable Entity indirect, @Nullable LivingEntity target);
     }
 
     public interface IToggled {

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
@@ -18,7 +18,7 @@ public class RedProjectile extends JujutsuProjectile {
     private static final float LAUNCH_POWER = 25.0F;
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final int DELAY = 20;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 5.0F;
 
     public RedProjectile(EntityType<? extends RedProjectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -26,6 +26,10 @@ public class RedProjectile extends JujutsuProjectile {
 
     public RedProjectile(LivingEntity pShooter) {
         super(JJKEntities.RED.get(), pShooter.level, pShooter);
+
+        Vec3 look = pShooter.getLookAngle();
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
     private void explode() {
@@ -35,16 +39,16 @@ public class RedProjectile extends JujutsuProjectile {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
-                Vec3 explosionPos = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ()).add(this.getLookAngle().scale(7.5D));
-                this.level.explode(owner, explosionPos.x(), explosionPos.y(), explosionPos.z(), radius, Level.ExplosionInteraction.NONE);
+                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ()).add(this.getLookAngle().scale(7.5D));
+                this.level.explode(owner, offset.x(), offset.y(), offset.z(), radius, Level.ExplosionInteraction.NONE);
 
                 float f = radius * 2.0F;
-                List<Entity> entities = this.level.getEntities(owner, new AABB(Mth.floor(explosionPos.x() - (double) f - 1.0D),
-                        Mth.floor(explosionPos.y() - (double) f - 1.0D),
-                        Mth.floor(explosionPos.z() - (double) f - 1.0D),
-                        Mth.floor(explosionPos.x() + (double) f + 1.0D),
-                        Mth.floor(explosionPos.y() + (double) f + 1.0D),
-                        Mth.floor(explosionPos.z() + (double) f + 1.0D)));
+                List<Entity> entities = this.level.getEntities(owner, new AABB(Mth.floor(offset.x() - (double) f - 1.0D),
+                        Mth.floor(offset.y() - (double) f - 1.0D),
+                        Mth.floor(offset.z() - (double) f - 1.0D),
+                        Mth.floor(offset.x() + (double) f + 1.0D),
+                        Mth.floor(offset.y() + (double) f + 1.0D),
+                        Mth.floor(offset.z() + (double) f + 1.0D)));
 
                 Vec3 look = owner.getLookAngle();
 
@@ -68,15 +72,14 @@ public class RedProjectile extends JujutsuProjectile {
 
         Entity owner = this.getOwner();
 
-        if (owner != null && owner.isAlive()) {
-            double x = owner.getX();
-            double y = owner.getEyeY() - (this.getBbHeight() / 2.0F);
-            double z = owner.getZ();
-
-            Vec3 look = owner.getLookAngle();
-            Vec3 spawnPos = new Vec3(x, y, z).add(look);
-
-            this.moveTo(spawnPos.x(), spawnPos.y(), spawnPos.z(), owner.getYRot(), owner.getXRot());
+        if (owner != null) {
+            if (this.getTime() < DELAY && !owner.isAlive()) {
+                this.discard();
+            } else {
+                Vec3 look = owner.getLookAngle();
+                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+                this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            }
         }
 
         if (!this.level.isClientSide) {

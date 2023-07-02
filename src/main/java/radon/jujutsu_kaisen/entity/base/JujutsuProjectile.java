@@ -6,25 +6,22 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.item.JJKItems;
 
 public class JujutsuProjectile extends Projectile {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
 
-    public JujutsuProjectile(EntityType<? extends JujutsuProjectile> pEntityType, Level pLevel) {
+    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public JujutsuProjectile(EntityType<? extends JujutsuProjectile> pEntityType, Level pLevel, Entity pShooter) {
+    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel, Entity pShooter) {
         super(pEntityType, pLevel);
 
         this.setOwner(pShooter);

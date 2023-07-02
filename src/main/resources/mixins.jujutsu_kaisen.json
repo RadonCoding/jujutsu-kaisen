@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "radon.jujutsu_kaisen.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mixins.jujutsu_kaisen.refmap.json"
+}

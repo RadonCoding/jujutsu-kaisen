@@ -4,9 +4,9 @@
 Time: 2023-06-17 19:19:04
 Description: Exception in server tick loop
 
-java.lang.NoClassDefFoundError: Could not initialize class radon.jujutsu_kaisen.capability.CursedTechnique
-	at radon.jujutsu_kaisen.capability.SorcererData.generate(SorcererData.java:220) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
+java.lang.NoClassDefFoundError: Could not initialize class radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique
+	at radon.jujutsu_kaisen.capability.data.SorcererData.generate(SorcererData.java:220) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onAttachCapabilities(JJKEventHandler.java:73) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.__ForgeEvents_onAttachCapabilities_AttachCapabilitiesEvent.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23102!/:?] {}
@@ -35,10 +35,10 @@ java.lang.NoClassDefFoundError: Could not initialize class radon.jujutsu_kaisen.
 Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.UnsupportedOperationException [in thread "Server thread"]
 	at java.util.AbstractList.add(AbstractList.java:153) ~[?:?] {}
 	at java.util.AbstractList.add(AbstractList.java:111) ~[?:?] {}
-	at radon.jujutsu_kaisen.capability.CursedTechnique.<init>(CursedTechnique.java:26) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.CursedTechnique.<clinit>(CursedTechnique.java:10) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererData.generate(SorcererData.java:220) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.capability.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique.<init>(CursedTechnique.java:26) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique.<clinit>(CursedTechnique.java:10) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererData.generate(SorcererData.java:220) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.capability.data.SorcererDataHandler.attach(SorcererDataHandler.java:27) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.JJKEventHandler$ForgeEvents.onAttachCapabilities(JJKEventHandler.java:73) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.__ForgeEvents_onAttachCapabilities_AttachCapabilitiesEvent.invoke(.dynamic) ~[%23186!/:?] {re:classloading,pl:eventbus:B}
 	at net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:73) ~[eventbus-6.0.3.jar%23102!/:?] {}

@@ -25,4 +25,9 @@ public class HollowPurple extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
 }

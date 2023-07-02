@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.SpinningParticle;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -23,7 +23,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final double BALL_RADIUS = 1.0D;
     private static final double PULL_RADIUS = 10.0D;
     private static final float PARTICLE_SIZE = 0.075F;
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 2.5F;
     private static final int DURATION = 3 * 20;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
@@ -40,10 +40,12 @@ public class BlueProjectile extends JujutsuProjectile {
         HitResult result = HelperMethods.getHitResult(this.level, this, start, end);
 
         Vec3 pos = result == null ? end : result.getLocation();
+        this.moveTo(pos.x(), pos.y(), pos.z(), pShooter.getYRot(), pShooter.getXRot());
+    }
 
-        this.moveTo(pos.x(), pos.y(), pos.z(), this.getYRot(), this.getXRot());
-
-        this.setRot(pShooter.getYRot(), pShooter.getXRot());
+    @Override
+    public boolean ignoreExplosion() {
+        return true;
     }
 
     private void createBall() {
@@ -116,13 +118,11 @@ public class BlueProjectile extends JujutsuProjectile {
         AABB bounds = new AABB(this.getX() - BALL_RADIUS, this.getY() - BALL_RADIUS, this.getZ() - BALL_RADIUS,
                 this.getX() + BALL_RADIUS, this.getY() + BALL_RADIUS, this.getZ() + BALL_RADIUS);
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (Entity entity : this.level.getEntities(null, bounds)) {
                     if (this.canHitEntity(entity) && entity != owner) {
-                        entity.hurt(DamageSource.indirectMagic(this, owner), DAMAGE * cap.getGrade().getPower());
+                        entity.hurt(DamageSource.indirectMobAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                     }
                 }
             });
@@ -130,6 +130,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
+        if (this.level.isClientSide) return;
+
         AABB bounds = new AABB(this.getX() - BALL_RADIUS, this.getY() - BALL_RADIUS, this.getZ() - BALL_RADIUS,
                 this.getX() + BALL_RADIUS, this.getY() + BALL_RADIUS, this.getZ() + BALL_RADIUS);
 
@@ -139,8 +141,8 @@ public class BlueProjectile extends JujutsuProjectile {
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = this.level.getBlockState(pos);
 
-                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F) {
-                        this.level.destroyBlock(pos, true);
+                    if (!state.isAir() && state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F) {
+                        this.level.destroyBlock(pos, false);
                     }
                 }
             }

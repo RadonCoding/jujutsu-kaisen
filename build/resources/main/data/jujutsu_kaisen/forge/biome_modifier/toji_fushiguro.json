@@ -3,7 +3,7 @@
   "biomes": "#jujutsu_kaisen:is_overworld",
   "spawners": {
     "type": "jujutsu_kaisen:toji_fushiguro",
-    "weight": 50,
+    "weight": 25,
     "minCount": 1,
     "maxCount": 1
   }

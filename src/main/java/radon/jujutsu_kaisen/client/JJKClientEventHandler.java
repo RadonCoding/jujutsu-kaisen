@@ -1,29 +1,29 @@
 package radon.jujutsu_kaisen.client;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
+import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
+import radon.jujutsu_kaisen.client.model.GojoSatoruModel;
+import radon.jujutsu_kaisen.client.model.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.TojiFushiguroModel;
+import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.SpinningParticle;
-import radon.jujutsu_kaisen.client.render.*;
+import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.BlueRenderer;
+import radon.jujutsu_kaisen.client.render.entity.projectile.DismantleRenderer;
 import radon.jujutsu_kaisen.client.render.entity.projectile.HollowPurpleRenderer;
 import radon.jujutsu_kaisen.client.render.entity.projectile.RedRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.TriggerAbilityC2SPacket;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -53,34 +53,20 @@ public class JJKClientEventHandler {
                 }
             }
         }
-
-        @SubscribeEvent
-        public static void onKeyInput(InputEvent.Key event) {
-            Minecraft mc = Minecraft.getInstance();
-
-            if (mc.player == null) return;
-
-            if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeyMapping.KEY_ACTIVATE_ABILITY.isDown()) {
-                    Ability ability = AbilityOverlay.getSelected();
-
-                    if (ability != null) {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                        ClientAbilityHandler.trigger(ability);
-                    }
-                }
-
-                if (event.getKey() == InputConstants.KEY_UP) {
-                    AbilityOverlay.scroll(1);
-                } else if (event.getKey() == InputConstants.KEY_DOWN) {
-                    AbilityOverlay.scroll(-1);
-                }
-            }
-        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
+        @SubscribeEvent
+        public static void registerPlayerLayers(EntityRenderersEvent.AddLayers event) {
+            if (event.getSkin("default") instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new JJKOverlayLayer<>(renderer));
+            }
+            if (event.getSkin("slim") instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new JJKOverlayLayer<>(renderer));
+            }
+        }
+
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(JJKKeyMapping.KEY_ACTIVATE_ABILITY);
@@ -94,9 +80,15 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(TojiFushiguroModel.LAYER, TojiFushiguroModel::createBodyLayer);
-            event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, TojiFushiguroModel::createInnerLayer);
-            event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, TojiFushiguroModel::createOuterLayer);
+            event.registerLayerDefinition(TojiFushiguroModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(SukunaRyomenModel.LAYER, SkinModel::createBodyLayer);
+
+            event.registerLayerDefinition(GojoSatoruModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(GojoSatoruModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(GojoSatoruModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -105,8 +97,12 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BLUE.get(), BlueRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.DOMAIN_EXPANSION.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SUKUNA_RYOMEN.get(), SukunaRyomenRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
+            event.registerEntityRenderer(JJKEntities.GOJO_SATORU.get(), GojoSatoruRenderer::new);
         }
 
         @SubscribeEvent

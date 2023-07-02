@@ -1,0 +1,17 @@
+package radon.jujutsu_kaisen.command;
+
+
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+
+@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class JJKCommands {
+    @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event) {
+        SetGradeCommand.register(event.getDispatcher());
+        SetTechniqueCommand.register(event.getDispatcher());
+        SetTraitCommand.register(event.getDispatcher());
+    }
+}

@@ -10,7 +10,7 @@ java.lang.NullPointerException: Cannot invoke "net.minecraft.world.entity.ai.att
 	at net.minecraft.world.entity.LivingEntity.getMaxHealth(LivingEntity.java:1727) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.LivingEntity.<init>(LivingEntity.java:239) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.Mob.<init>(Mob.java:121) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
-	at radon.jujutsu_kaisen.entity.DomainExpansionEntity.<init>(DomainExpansionEntity.java:52) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity.<init>(DomainExpansionEntity.java:52) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.ability.DomainExpansion.createBarrier(DomainExpansion.java:27) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.ability.DomainExpansion.run(DomainExpansion.java:33) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.ability.ClientAbilityHandler.trigger(ClientAbilityHandler.java:31) ~[%23186!/:?] {re:classloading}
@@ -58,7 +58,7 @@ Stacktrace:
 	at net.minecraft.world.entity.LivingEntity.getMaxHealth(LivingEntity.java:1727) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.LivingEntity.<init>(LivingEntity.java:239) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.Mob.<init>(Mob.java:121) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
-	at radon.jujutsu_kaisen.entity.DomainExpansionEntity.<init>(DomainExpansionEntity.java:52) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity.<init>(DomainExpansionEntity.java:52) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.ability.DomainExpansion.createBarrier(DomainExpansion.java:27) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.ability.DomainExpansion.run(DomainExpansion.java:33) ~[%23186!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.client.ability.ClientAbilityHandler.trigger(ClientAbilityHandler.java:31) ~[%23186!/:?] {re:classloading}

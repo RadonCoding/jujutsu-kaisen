@@ -5,8 +5,8 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.SpecialTrait;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -27,7 +27,7 @@ public class CurseRenderer<T extends Entity & GeoAnimatable> extends GeoEntityRe
         AtomicBoolean result = new AtomicBoolean(true);
 
         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == SpecialTrait.HEAVENLY_RESTRICTION) {
+            if (cap.getTrait() == Trait.HEAVENLY_RESTRICTION) {
                 result.set(false);
             }
         });
