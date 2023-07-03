@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import java.util.List;
 
 public class RedProjectile extends JujutsuProjectile {
-    private static final float LAUNCH_POWER = 25.0F;
+    private static final float LAUNCH_POWER = 10.0F;
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final int DELAY = 20;
     private static final float DAMAGE = 5.0F;

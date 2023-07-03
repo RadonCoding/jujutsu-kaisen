@@ -301,6 +301,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             for (DomainExpansionEntity domain : domains) {
                 if (domain.getOwner() == this.getOwner()) continue;
 
+                if (domain instanceof OpenDomainExpansionEntity) {
+                    this.destroyBarrier();
+                }
+
                 if (domain.getStrength() >= this.getStrength()) {
                     result.set(false);
                 }

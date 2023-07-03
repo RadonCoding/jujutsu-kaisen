@@ -1,4 +1,6 @@
 {
+  "itemGroup.jujutsu_kaisen": "Jujutsu Kaisen",
+
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: ",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: ",
 
@@ -14,6 +16,10 @@
 
   "item.jujutsu_kaisen.playful_cloud": "Playful Cloud",
   "item.jujutsu_kaisen.playful_cloud.desc": "Relies on the raw power of its user for attacks.",
+
+  "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
+  "item.jujutsu_kaisen.gojo_satoru_spawn_egg": "Spawn Gojo Satoru",
+  "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %d seconds",
@@ -33,6 +39,7 @@
   "ability.jujutsu_kaisen.red": "Cursed Technique Reversal: Red",
   "ability.jujutsu_kaisen.blue": "Cursed Technique Lapse: Blue",
   "ability.jujutsu_kaisen.hollow_purple": "Hollow Technique: Purple",
+  "ability.jujutsu_kaisen.teleport": "Teleport",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",

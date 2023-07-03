@@ -15,17 +15,15 @@ public class RCT extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.getGameTime() % 5 == 0) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (owner.level.getGameTime() % 5 == 0) {
                 owner.heal(AMOUNT * cap.getGrade().getPower());
+            }              int burnout = cap.getBurnout();
 
-                int burnout = cap.getBurnout();
-
-                if (burnout > 0) {
-                    cap.setBurnout(--burnout);
-                }
-            });
-        }
+            if (burnout > 0) {
+                cap.setBurnout(--burnout);
+            }
+        });
     }
 
     @Override
