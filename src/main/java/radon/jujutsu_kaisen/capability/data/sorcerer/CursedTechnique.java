@@ -12,7 +12,7 @@ import java.util.List;
 public enum CursedTechnique {
     NONE,
     GETO,
-    GOJO(JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.UNLIMITED_VOID.get()),
+    GOJO(JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.TELEPORT.get()),
     SUKUNA(JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.MALEVOLENT_SHRINE.get()),
     TOGE,
     YUJI,

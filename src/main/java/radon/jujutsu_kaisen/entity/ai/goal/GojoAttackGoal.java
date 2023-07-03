@@ -5,6 +5,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.gojo.Teleport;
 
 public class GojoAttackGoal extends Goal {
     private final PathfinderMob mob;
@@ -42,6 +43,9 @@ public class GojoAttackGoal extends Goal {
             }
             if (this.mob.getRandom().nextInt(10) == 0 && distance <= 50.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.HOLLOW_PURPLE.get());
+            }
+            if (distance > 10.0D && distance <= Teleport.RANGE) {
+                AbilityHandler.trigger(this.mob, JJKAbilities.TELEPORT.get());
             }
         }
     }

@@ -105,7 +105,6 @@ public class SorcererData implements ISorcererData {
 
         for (Ability ability : this.toggledAbilities) {
             if (ability.checkStatus(owner) != Ability.Status.SUCCESS) {
-                System.out.println(ability.checkStatus(owner));
                 remove.add(ability);
             } else {
                 ability.run(owner);
@@ -184,7 +183,7 @@ public class SorcererData implements ISorcererData {
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    grade.ordinal() * 10.0D, AttributeModifier.Operation.ADDITION)) {
+                    20 * Math.floor(grade.ordinal() * 10.0D / 20), AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(3, grade.ordinal()),

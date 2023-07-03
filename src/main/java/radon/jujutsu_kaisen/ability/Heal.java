@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class Heal extends Ability {
-    private static final float AMOUNT = 0.25F;
+    private static final float AMOUNT = 1.0F;
 
     @Override
     public ActivationType getActivationType() {
@@ -13,7 +13,9 @@ public class Heal extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.heal(AMOUNT * cap.getGrade().getPower()));
+        if (owner.level.getGameTime() % 5 == 0) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.heal(AMOUNT * cap.getGrade().getPower()));
+        }
     }
 
     @Override

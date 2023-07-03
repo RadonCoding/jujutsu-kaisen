@@ -2,8 +2,12 @@ package radon.jujutsu_kaisen.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -24,6 +28,7 @@ import radon.jujutsu_kaisen.client.render.entity.projectile.HollowPurpleRenderer
 import radon.jujutsu_kaisen.client.render.entity.projectile.RedRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.JJKItems;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -108,6 +113,20 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
             event.register(JJKParticles.SPINNING.get(), SpinningParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterCreativeModeTabs(CreativeModeTabEvent.Register event) {
+            event.registerCreativeModeTab(new ResourceLocation(JujutsuKaisen.MOD_ID),
+                    x -> x.icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
+                            .title(Component.translatable(String.format("itemGroup.%s", JujutsuKaisen.MOD_ID)))
+                            .displayItems((enabledFeatures, entries, operatorEnabled) -> {
+                                entries.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
+                                entries.accept(JJKItems.PLAYFUL_CLOUD.get());
+                                entries.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
+                                entries.accept(JJKItems.GOJO_SATORU_SPAWN_EGG.get());
+                                entries.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
+                            }));
         }
     }
 }

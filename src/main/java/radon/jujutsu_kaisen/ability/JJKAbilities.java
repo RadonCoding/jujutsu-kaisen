@@ -26,6 +26,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> RED = ABILITIES.register("red", Red::new);
     public static RegistryObject<Ability> BLUE = ABILITIES.register("blue", Blue::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
+    public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
