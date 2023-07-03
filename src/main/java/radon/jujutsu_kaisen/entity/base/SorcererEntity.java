@@ -3,10 +3,7 @@ package radon.jujutsu_kaisen.entity.base;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
@@ -18,6 +15,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
+import radon.jujutsu_kaisen.ability.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -61,6 +61,32 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoAnimata
     public abstract CursedTechnique getTechnique();
     public abstract Trait getTrait();
 
+    public abstract @Nullable Ability getDomain();
+
+    public final void tryTriggerDomain() {
+        LivingEntity target = this.getTarget();
+
+        if (target == null) return;
+
+        Ability domain = this.getDomain();
+
+        if (domain == null) return;
+
+        double distance = this.distanceTo(target);
+
+        if (domain instanceof DomainExpansion.IClosedDomain closed) {
+            if (distance >= closed.getRadius() / 2.0F) {
+                return;
+            }
+        }
+        if (domain instanceof DomainExpansion.IOpenDomain open) {
+            if (distance >= open.getWidth() / 2.0F) {
+                return;
+            }
+        }
+        AbilityHandler.trigger(this, domain);
+    }
+
     public void onInsideDomain(DomainExpansionEntity domain) {
         AABB bounds = domain.getBounds();
         double radius = Math.sqrt(bounds.getXsize() * bounds.getXsize() + bounds.getYsize() * bounds.getYsize() + bounds.getZsize() * bounds.getZsize()) / 2;
@@ -88,7 +114,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoAnimata
     public void tick() {
         super.tick();
 
-        if (this.level.getGameTime() % 20 == 0 && !this.level.isClientSide) {
+        if (!this.level.isClientSide) {
             this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level)) {
                     this.onInsideDomain(domain);

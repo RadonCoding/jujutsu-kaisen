@@ -1,17 +1,17 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.sukuna.Cleave;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 
 public class SukunaAttackGoal extends Goal {
-    private final PathfinderMob mob;
+    private final SorcererEntity mob;
     private long lastCanUseCheck;
 
-    public SukunaAttackGoal(PathfinderMob mob) {
+    public SukunaAttackGoal(SorcererEntity mob) {
         this.mob = mob;
     }
 
@@ -23,7 +23,7 @@ public class SukunaAttackGoal extends Goal {
             double distance = this.mob.distanceTo(target);
 
             if (JJKAbilities.hasToggledAbility(target, JJKAbilities.INFINITY.get()) || this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
-                AbilityHandler.trigger(this.mob, JJKAbilities.MALEVOLENT_SHRINE.get());
+                this.mob.tryTriggerDomain();
             }
             if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.SMASH.get());

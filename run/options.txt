@@ -114,7 +114,7 @@ key_key.hotbar.7:key.keyboard.7
 key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
 key_key.jujutsu_kaisen.activate:key.keyboard.r
-soundCategory_master:0.013245033112582781
+soundCategory_master:0.5099337748344371
 soundCategory_music:0.0
 soundCategory_record:1.0
 soundCategory_weather:1.0

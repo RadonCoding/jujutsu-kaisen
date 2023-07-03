@@ -18,14 +18,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class DomainExpansionEntity extends Mob {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
-
-    private float strength;
 
     @Nullable
     private UUID ownerUUID;
@@ -36,11 +36,10 @@ public abstract class DomainExpansionEntity extends Mob {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, float strength) {
+    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner) {
         super(pEntityType, owner.level);
 
         this.setOwner(owner);
-        this.strength = strength;
     }
 
     public void setOwner(@Nullable Entity pOwner) {
@@ -117,16 +116,16 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     public void tick() {
+        super.tick();
+
         Entity owner = this.getOwner();
 
-        if (owner != null && (!owner.isAlive() || owner.isRemoved())) {
+        if (!this.level.isClientSide && (owner == null || !owner.isAlive() || owner.isRemoved())) {
             this.kill();
-        } else {
-            super.tick();
-
-            int time = this.getTime();
-            this.setTime(++time);
         }
+
+        int time = this.getTime();
+        this.setTime(++time);
     }
 
     @Override
@@ -137,7 +136,6 @@ public abstract class DomainExpansionEntity extends Mob {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
-        pCompound.putFloat("strength", this.strength);
     }
 
     @Override
@@ -148,7 +146,6 @@ public abstract class DomainExpansionEntity extends Mob {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
-        this.strength = pCompound.getFloat("strength");
     }
 
     @Override
@@ -176,7 +173,13 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public float getStrength() {
-        return this.strength;
+        AtomicReference<Float> result = new AtomicReference<>(0.0F);
+
+        if (this.getOwner() instanceof LivingEntity owner) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.getGrade().getPower() * (float) Math.log10(owner.getHealth() / owner.getMaxHealth() + 1.0F)));
+        }
+        return result.get();
     }
 
     public int getTime() {
