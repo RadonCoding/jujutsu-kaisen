@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.entity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -106,10 +105,5 @@ public class TojiFushiguroEntity extends SorcererEntity {
             this.pickWeapon(pTarget);
         }
         super.setTarget(pTarget);
-    }
-
-    @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
-        return false;
     }
 }

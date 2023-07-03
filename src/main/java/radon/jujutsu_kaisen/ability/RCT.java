@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RCT extends Ability implements Ability.IToggled {
     private static final float AMOUNT = 1.0F;
+    private static final int DELAY = 20;
 
     @Override
     public ActivationType getActivationType() {
@@ -16,8 +17,8 @@ public class RCT extends Ability implements Ability.IToggled {
     @Override
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (owner.level.getGameTime() % 5 == 0) {
-                owner.heal(AMOUNT * cap.getGrade().getPower());
+            if (owner.level.getGameTime() % (DELAY / (cap.getGrade().ordinal() + 1)) == 0) {
+                owner.heal(AMOUNT);
             }              int burnout = cap.getBurnout();
 
             if (burnout > 0) {

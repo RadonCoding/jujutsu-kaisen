@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class Heal extends Ability {
     private static final float AMOUNT = 1.0F;
+    private static final int DELAY = 20;
 
     @Override
     public ActivationType getActivationType() {
@@ -13,9 +14,11 @@ public class Heal extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.getGameTime() % 5 == 0) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.heal(AMOUNT * cap.getGrade().getPower()));
-        }
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (owner.level.getGameTime() % (DELAY / (cap.getGrade().ordinal() + 1)) == 0) {
+                owner.heal(AMOUNT);
+            }
+        });
     }
 
     @Override

@@ -179,7 +179,9 @@ public class SorcererData implements ISorcererData {
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(4, grade.ordinal()),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(2, grade.ordinal()),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(3, grade.ordinal()),
+                    false, false, false));
+            owner.addEffect(new MobEffectInstance(MobEffects.SATURATION, 2, Math.min(3, grade.ordinal()),
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
