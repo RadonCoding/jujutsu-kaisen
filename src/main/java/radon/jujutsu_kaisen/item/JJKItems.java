@@ -39,6 +39,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.GOJO_SATORU, 16777215, 53503, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SUKUNA_RYOMEN_SPAWN_EGG = ITEMS.register("sukuna_ryomen_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.SUKUNA_RYOMEN, 13405836, 12529712, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 6130842, 8946753, new Item.Properties()));
 
     private static class JJKArmorMaterials {
         public static JJKArmorMaterial SORCERER = new JJKArmorMaterial("sorcerer", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

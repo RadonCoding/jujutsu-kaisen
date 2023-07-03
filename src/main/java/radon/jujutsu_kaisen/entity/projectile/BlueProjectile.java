@@ -5,6 +5,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -103,6 +104,7 @@ public class BlueProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level.getEntities(this, bounds)) {
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ())
                         .normalize()

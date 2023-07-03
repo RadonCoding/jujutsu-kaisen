@@ -31,6 +31,8 @@ public class Dash extends Ability {
             double motionZ = distanceZ / distance * SPEED;
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
+        } else if (owner.isOnGround()) {
+            owner.setDeltaMovement(owner.getLookAngle().scale(SPEED));
         }
     }
 
