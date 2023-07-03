@@ -33,6 +33,7 @@ public enum CursedTechnique {
             } else {
                 abilities.add(JJKAbilities.SMASH.get());
                 abilities.add(JJKAbilities.RCT.get());
+                abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
             }
         });
 

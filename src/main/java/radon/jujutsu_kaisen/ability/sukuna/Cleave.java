@@ -14,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -103,7 +104,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), randomY, target.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 
-            DamageSource source = indirect == null ? DamageSource.mobAttack(owner) : DamageSource.indirectMobAttack(indirect, owner);
+            DamageSource source = indirect == null ? JJKDamageSources.jujutsuAttack(owner) : JJKDamageSources.indirectJujutsuAttack(indirect, owner);
 
             float damage = calculateDamage(target);
             owner.level.playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);

@@ -22,7 +22,18 @@ public class SukunaAttackGoal extends Goal {
         if (target != null) {
             double distance = this.mob.distanceTo(target);
 
-            if (JJKAbilities.hasToggledAbility(target, JJKAbilities.INFINITY.get()) || this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
+            if (distance <= 5.0D && JJKAbilities.hasToggledAbility(target, JJKAbilities.INFINITY.get())) {
+                if (!JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                }
+            } else if (JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            }
+
+            if (this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
+                if (JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                }
                 this.mob.tryTriggerDomain();
             }
             if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {

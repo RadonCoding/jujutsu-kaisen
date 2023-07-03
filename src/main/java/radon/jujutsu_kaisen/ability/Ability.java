@@ -25,7 +25,8 @@ public abstract class Ability {
         SUCCESS,
         ENERGY,
         COOLDOWN,
-        BURNOUT
+        BURNOUT,
+        DOMAIN_AMPLIFICATION
     }
 
     public abstract ActivationType getActivationType();
@@ -76,6 +77,11 @@ public abstract class Ability {
             if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
                 if (this.isTechnique() && cap.hasBurnout()) {
                     result.set(Status.BURNOUT);
+                    return;
+                }
+
+                if (this.isTechnique() && cap.hasToggledAbility(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    result.set(Status.DOMAIN_AMPLIFICATION);
                     return;
                 }
 

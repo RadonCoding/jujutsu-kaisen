@@ -19,7 +19,9 @@ public class RCT extends Ability implements Ability.IToggled {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (owner.level.getGameTime() % (DELAY / (cap.getGrade().ordinal() + 1)) == 0) {
                 owner.heal(AMOUNT);
-            }              int burnout = cap.getBurnout();
+            }
+
+            int burnout = cap.getBurnout();
 
             if (burnout > 0) {
                 cap.setBurnout(--burnout);
@@ -28,17 +30,12 @@ public class RCT extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean checkCost(LivingEntity owner) {
+    public float getCost(LivingEntity owner) {
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(owner.getHealth() == owner.getMaxHealth() && cap.getBurnout() == 0));
-        return result.get() || super.checkCost(owner);
-    }
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 10.0F;
+                result.set(owner.getHealth() < owner.getMaxHealth() || cap.getBurnout() > 0));
+        return result.get() ? 5.0F : 1.0F;
     }
 
     @Override
