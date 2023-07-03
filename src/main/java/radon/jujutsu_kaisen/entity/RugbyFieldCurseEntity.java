@@ -14,6 +14,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -44,6 +46,11 @@ public class RugbyFieldCurseEntity extends CurseEntity {
     @Override
     public Trait getTrait() {
         return Trait.NONE;
+    }
+
+    @Override
+    public @Nullable Ability getDomain() {
+        return null;
     }
 
     @Override

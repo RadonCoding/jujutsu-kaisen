@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -56,12 +57,18 @@ public class GojoSatoruEntity extends SorcererEntity {
     }
 
     @Override
+    public @Nullable Ability getDomain() {
+        return JJKAbilities.UNLIMITED_VOID.get();
+    }
+
+    @Override
     public void onInsideDomain(DomainExpansionEntity domain) {
-        AbilityHandler.trigger(this, JJKAbilities.MALEVOLENT_SHRINE.get());
+        this.tryTriggerDomain();
     }
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
         this.goalSelector.addGoal(1, new GojoAttackGoal(this));

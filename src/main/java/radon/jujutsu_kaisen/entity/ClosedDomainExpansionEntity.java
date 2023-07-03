@@ -57,8 +57,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 this.getX() + radius, this.getY() + (double) (radius / 2), this.getZ() + radius);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, float strength, BlockState block, int radius, int duration) {
-        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, strength);
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, BlockState block, int radius, int duration) {
+        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner);
 
         this.moveTo(owner.getX(), owner.getY(), owner.getZ());
 
@@ -189,6 +189,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     if (distance < radius && distance >= radius - 1) {
                         BlockPos pos = center.offset(x, y, z);
                         BlockState state = this.level.getBlockState(pos);
+
+                        if (state.getBlock() instanceof DomainBlock) continue;
+
                         this.blocks.put(pos, state);
 
                         int delay = radius - y;
@@ -219,6 +222,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 this.level.setBlockAndUpdate(pos, state);
             }
         }
+        this.discard();
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
 
         Entity owner = this.getOwner();
 
@@ -231,7 +240,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 }
             });
         }
-        this.discard();
     }
 
     @Override
@@ -293,6 +301,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private boolean checkSureHitEffect(Entity owner) {
+        if (!this.isAlive() || this.isRemoved()) return false;
+
         AtomicBoolean result = new AtomicBoolean(true);
 
         List<DomainExpansionEntity> domains = this.getDomainsInside();
@@ -301,11 +311,19 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             for (DomainExpansionEntity domain : domains) {
                 if (domain.getOwner() == this.getOwner()) continue;
 
-                if (domain instanceof OpenDomainExpansionEntity) {
+                // If the strength is two times stronger then break
+                // else if the domain is open and the strength is more than or equal then break
+                // else if the strength is more than or equal cancel sure hit
+                if (domain.getStrength() / this.getStrength() > 2) {
                     this.destroyBarrier();
+                    result.set(false);
                 }
-
-                if (domain.getStrength() >= this.getStrength()) {
+                else if (domain instanceof OpenDomainExpansionEntity &&
+                        domain.getStrength() >= this.getStrength()) {
+                    this.destroyBarrier();
+                    result.set(false);
+                }
+                else if (domain.getStrength() >= this.getStrength()) {
                     result.set(false);
                 }
             }

@@ -61,7 +61,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             int width = this.getWidth();
             int height = this.getHeight();
 
-            MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, cap.getGrade().getPower(), width, height, duration);
+            MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height, duration);
             owner.level.addFreshEntity(domain);
         });
     }

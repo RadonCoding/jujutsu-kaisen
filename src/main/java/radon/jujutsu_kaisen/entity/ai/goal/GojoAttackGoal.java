@@ -1,17 +1,17 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.gojo.Teleport;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 
 public class GojoAttackGoal extends Goal {
-    private final PathfinderMob mob;
+    private final SorcererEntity mob;
     private long lastCanUseCheck;
 
-    public GojoAttackGoal(PathfinderMob mob) {
+    public GojoAttackGoal(SorcererEntity mob) {
         this.mob = mob;
     }
 
@@ -30,7 +30,7 @@ public class GojoAttackGoal extends Goal {
             double distance = this.mob.distanceTo(target);
 
             if (this.mob.getHealth() / this.mob.getMaxHealth() <= 0.5F) {
-                AbilityHandler.trigger(this.mob, JJKAbilities.UNLIMITED_VOID.get());
+                this.mob.tryTriggerDomain();
             }
             if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.SMASH.get());

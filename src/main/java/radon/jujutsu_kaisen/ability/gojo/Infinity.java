@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -256,16 +257,15 @@ public class Infinity extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    if (source.isMagic() || source.isBypassInvul()) {
+                    if (source.isBypassInvul()) {
                         return;
                     }
 
                     if (source.getEntity() instanceof LivingEntity living) {
-                        if (living.swinging && living.getItemInHand(living.swingingArm).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                        if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             return;
                         }
                     }
-
                     event.setCanceled(true);
                 }
             });
