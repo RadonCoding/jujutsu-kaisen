@@ -41,6 +41,13 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     @Override
+    protected void onInsideBlock(@NotNull BlockState pState) {
+        if (pState.getBlock().defaultDestroyTime() <= -1.0F) {
+            this.discard();
+        }
+    }
+
+    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
