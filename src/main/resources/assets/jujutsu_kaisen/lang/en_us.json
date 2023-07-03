@@ -26,9 +26,13 @@
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %d seconds",
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
+  "ability.jujutsu_kaisen.fail.domain_amplification": "Can't use a technique while domain amplification is active",
 
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.smash": "Smash",
+  "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
+  "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
+  "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
   "ability.jujutsu_kaisen.rct.enable": "Activated RCT",
   "ability.jujutsu_kaisen.rct.disable": "Deactivated RCT",

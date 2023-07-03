@@ -37,6 +37,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
+    public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
@@ -44,6 +45,15 @@ public class JJKAbilities {
 
     public static Ability getValue(ResourceLocation key) {
         return JJKAbilities.ABILITY_REGISTRY.get().getValue(key);
+    }
+
+    public static boolean hasBurnout(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            result.set(cap.getBurnout() > 0);
+        });
+        return result.get();
     }
 
     public static boolean hasToggledAbility(LivingEntity owner, Ability ability) {

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.particle;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -19,4 +20,7 @@ public class JJKParticles {
                     return SpinningParticle.SpinningParticleOptions.CODEC;
                 }
             });
+
+    public static RegistryObject<SimpleParticleType> CURSED_ENERGY = PARTICLES.register("cursed_energy", () ->
+            new SimpleParticleType(true));
 }

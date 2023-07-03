@@ -20,17 +20,30 @@ public class GojoAttackGoal extends Goal {
         if (!JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.INFINITY.get())) {
             AbilityHandler.trigger(this.mob, JJKAbilities.INFINITY.get());
         }
-        if (!JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.RCT.get())) {
-            AbilityHandler.trigger(this.mob, JJKAbilities.RCT.get());
-        }
 
         LivingEntity target = this.mob.getTarget();
 
         if (target != null) {
             double distance = this.mob.distanceTo(target);
 
-            if (this.mob.getHealth() / this.mob.getMaxHealth() <= 0.5F) {
+            if (JJKAbilities.hasToggledAbility(target, JJKAbilities.INFINITY.get())) {
+                AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            } else if (JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            }
+
+            if (this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
+                if (JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(this.mob, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                }
                 this.mob.tryTriggerDomain();
+            }
+            if (!JJKAbilities.hasToggledAbility(this.mob, JJKAbilities.RCT.get())) {
+                if (JJKAbilities.hasBurnout(this.mob) || this.mob.getHealth() / this.mob.getMaxHealth() <= 0.75F) {
+                    AbilityHandler.trigger(this.mob, JJKAbilities.RCT.get());
+                }
+            } else if (this.mob.getHealth() / this.mob.getMaxHealth() > 0.75F) {
+                AbilityHandler.trigger(this.mob, JJKAbilities.RCT.get());
             }
             if (this.mob.getRandom().nextInt(5) == 0 && distance <= 5.0D) {
                 AbilityHandler.trigger(this.mob, JJKAbilities.SMASH.get());

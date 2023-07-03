@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.client.model.GojoSatoruModel;
 import radon.jujutsu_kaisen.client.model.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.TojiFushiguroModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.SpinningParticle;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
@@ -113,6 +114,7 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
             event.register(JJKParticles.SPINNING.get(), SpinningParticle.Provider::new);
+            event.register(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
         }
 
         @SubscribeEvent

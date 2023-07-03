@@ -247,12 +247,14 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    if (target.level instanceof ServerLevel level) {
-                        for (DomainExpansionEntity domain : cap.getDomains(level)) {
-                            Entity owner = domain.getOwner();
+                    if (source.getMsgId().equals("jujutsu")) {
+                        if (target.level instanceof ServerLevel level) {
+                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
+                                Entity owner = domain.getOwner();
 
-                            if (owner == source.getEntity()) {
-                                return;
+                                if (owner == source.getEntity()) {
+                                    return;
+                                }
                             }
                         }
                     }
@@ -263,6 +265,9 @@ public class Infinity extends Ability implements Ability.IToggled {
 
                     if (source.getEntity() instanceof LivingEntity living) {
                         if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            return;
+                        } else if (source.getDirectEntity() == living &&
+                                JJKAbilities.hasToggledAbility(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;
                         }
                     }
