@@ -23,12 +23,16 @@ public class SkinModel<T extends LivingEntity> extends PlayerModel<T> {
         return LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64);
     }
 
+    public static LayerDefinition createSlimBodyLayer() {
+        return LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, true), 64, 64);
+    }
+
     public static LayerDefinition createInnerLayer() {
-        return LayerDefinition.create(PlayerModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, false), 64, 32);
+        return LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32);
     }
 
     public static LayerDefinition createOuterLayer() {
-        return LayerDefinition.create(PlayerModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, false), 64, 32);
+        return LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32);
     }
 
     private HumanoidModel.ArmPose getArmPose(T pEntity, InteractionHand pHand) {

@@ -25,6 +25,7 @@ public class SetTechniqueCommand {
     public static int setTechnique(ServerPlayer player, CursedTechnique technique) {
         player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             cap.setTechnique(technique);
+            cap.clearToggled();
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         });
         return 1;

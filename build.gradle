@@ -1,17 +1,17 @@
 plugins {
+    id 'eclipse'
+    id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 
-group = 'radon'
 version = '1.0-SNAPSHOT'
+group = 'radon.jujutsu_kaisen'
+archivesBaseName = 'jujutsu_kaisen'
 
-java {
-    archivesBaseName = 'JujutsuKaisen'
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 mixin {
     add sourceSets.main, 'mixins.jujutsu_kaisen.refmap.json'
@@ -19,7 +19,7 @@ mixin {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: '2023.03.12-1.19.3'
+    mappings channel: 'parchment', version: '2023.06.26-1.19.4'
 
     runs {
         client {
@@ -82,12 +82,17 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url "https://cursemaven.com" }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.3-44.1.23'
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.3:4.0.4')
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    minecraft 'net.minecraftforge:forge:1.19.4-45.1.0'
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.4:4.2')
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    runtimeOnly fg.deobf('curse.maven:spark-361579:4505309')
+    runtimeOnly fg.deobf('curse.maven:rubidium-574856:4448053')
+    runtimeOnly fg.deobf('curse.maven:oculus-581495:4451142')
 }
 
 jar {

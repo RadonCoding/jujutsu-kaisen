@@ -5,11 +5,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.Random;
 
 public class HelperMethods {
@@ -34,41 +33,28 @@ public class HelperMethods {
         matrix.mulPose(getQuaternion(x, y, z, w));
     }
 
-    public static HitResult getHitResult(Level level, Entity entity, Vec3 start, Vec3 end) {
-        double d0 = Double.MAX_VALUE;
-        Entity entityHit = null;
+    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
+        Level level = entity.level;
 
-        for (Entity target : level.getEntities(entity, entity.getBoundingBox().expandTowards(end).inflate(1.0D))) {
-            AABB box = target.getBoundingBox();
-            Optional<Vec3> optional = box.clip(start, end);
+        HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
 
-            if (optional.isPresent()) {
-                double d1 = start.distanceToSqr(optional.get());
-
-                if (d1 < d0) {
-                    entityHit = target;
-                    d0 = d1;
-                }
-            }
+        if (blockHit.getType() != HitResult.Type.MISS) {
+            end = blockHit.getLocation();
         }
+
+        HitResult entityHit = ProjectileUtil.getEntityHitResult(level, entity, start, end, entity.getBoundingBox()
+                .expandTowards(end.subtract(start)).inflate(1.0D), target -> !target.isSpectator() && target.isPickable());
 
         if (entityHit != null) {
-            return new EntityHitResult(entityHit);
+            return entityHit;
         }
-
-        BlockHitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, entity));
-
-        if (blockHit.getType() == HitResult.Type.BLOCK) {
-            return blockHit;
-        }
-        return null;
+        return blockHit;
     }
 
-    public static @Nullable EntityHitResult getEntityLookAt(Entity entity, double range) {
+    public static HitResult getLookAtHit(Entity entity, double range) {
         Vec3 start = entity.getEyePosition();
         Vec3 look = entity.getLookAngle();
         Vec3 end = start.add(look.scale(range));
-        return ProjectileUtil.getEntityHitResult(entity.level, entity, start, end, entity.getBoundingBox().expandTowards(look.scale(range)).inflate(1.0D),
-                target -> !target.isSpectator() && target.isPickable());
+        return getHitResult(entity, start, end);
     }
 }

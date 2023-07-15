@@ -29,14 +29,20 @@ public class UnlimitedVoidOverlay {
         return sb.toString();
     }
 
-
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
 
         if (time-- > 0) {
             Minecraft mc = Minecraft.getInstance();
-            mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
+
+            assert mc.player != null;
+
+            if (!mc.player.isAlive()) {
+                time = 0;
+            } else {
+                mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
+            }
         }
     }
 }

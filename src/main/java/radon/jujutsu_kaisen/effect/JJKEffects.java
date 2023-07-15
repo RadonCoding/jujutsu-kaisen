@@ -11,4 +11,5 @@ public class JJKEffects {
     public static DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<MobEffect> STUN = EFFECTS.register("stun", () -> new StunEffect(MobEffectCategory.HARMFUL, 0));
+    public static RegistryObject<MobEffect> UNLIMITED_VOID = EFFECTS.register("unlimited_void", () -> new StunEffect(MobEffectCategory.HARMFUL, 0));
 }

@@ -61,7 +61,7 @@ public class OverlayData implements IOverlayData {
     @Override
     public void tick(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == Trait.SIX_EYES) {
+            if (cap.hasTrait(Trait.SIX_EYES)) {
                 this.addLocalOverlay(owner, SIX_EYES);
             } else if (this.local.contains(SIX_EYES)) {
                 this.removeLocalOverlay(owner, SIX_EYES);

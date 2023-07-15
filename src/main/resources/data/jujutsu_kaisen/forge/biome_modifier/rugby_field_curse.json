@@ -1,6 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "#jujutsu_kaisen:is_overworld",
+  "biomes": "#jujutsu_kaisen:has_cursed_energy",
   "spawners": {
     "type": "jujutsu_kaisen:rugby_field_curse",
     "weight": 10,

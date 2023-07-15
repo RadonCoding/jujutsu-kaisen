@@ -23,4 +23,6 @@ public class JJKParticles {
 
     public static RegistryObject<SimpleParticleType> CURSED_ENERGY = PARTICLES.register("cursed_energy", () ->
             new SimpleParticleType(true));
+    public static RegistryObject<SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
+            new SimpleParticleType(true));
 }

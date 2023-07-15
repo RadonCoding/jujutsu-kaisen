@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -48,7 +47,8 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
 
             for (ResourceLocation overlay : overlays) {
                 VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.eyes(overlay));
-                this.getParentModel().renderToBuffer(pMatrixStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                this.getParentModel().renderToBuffer(pMatrixStack, consumer, 15728640, OverlayTexture.NO_OVERLAY,
+                        1.0F, 1.0F, 1.0F, 1.0F);
             }
         });
     }

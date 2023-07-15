@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.render.entity;
 
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -7,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.model.TojiFushiguroModel;
-import radon.jujutsu_kaisen.entity.TojiFushiguroEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 
 public class TojiFushiguroRenderer extends HumanoidMobRenderer<TojiFushiguroEntity, TojiFushiguroModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/toji_fushiguro.png");
@@ -15,8 +16,8 @@ public class TojiFushiguroRenderer extends HumanoidMobRenderer<TojiFushiguroEnti
     public TojiFushiguroRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.LAYER)), 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.INNER_LAYER)),
-                new TojiFushiguroModel(pContext.bakeLayer(TojiFushiguroModel.OUTER_LAYER))));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(TojiFushiguroModel.INNER_LAYER)),
+                new HumanoidModel<>(pContext.bakeLayer(TojiFushiguroModel.OUTER_LAYER)), pContext.getModelManager()));
     }
 
     @Override

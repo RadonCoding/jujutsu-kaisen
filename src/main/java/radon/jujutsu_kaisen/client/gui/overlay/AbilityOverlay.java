@@ -3,20 +3,17 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AbilityOverlay {
     private static int selected;
-    private static final List<Ability> abilities = new ArrayList<>();
+    private static List<Ability> abilities = new ArrayList<>();
 
     public static boolean scroll(int direction) {
         int i = -(int) Math.signum(direction);
@@ -39,8 +36,10 @@ public class AbilityOverlay {
     }
 
     public static Ability getSelected() {
-        if (abilities.size() > selected) {
-            return abilities.get(selected);
+        int index = getIndex();
+
+        if (abilities.size() > index) {
+            return abilities.get(index);
         }
         return null;
     }
@@ -60,35 +59,38 @@ public class AbilityOverlay {
         return index;
     }
 
-    public static IGuiOverlay ABILITY_OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
+    public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
         LocalPlayer player = mc.player;
 
         assert player != null;
 
-        player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            CursedTechnique technique = cap.getTechnique();
-            abilities.clear();
-            abilities.addAll(Arrays.asList(technique.getAbilities(player)));
-        });
+        abilities = JJKAbilities.getAbilities(player);
+        abilities.removeIf(ability -> !ability.isDisplayed());
 
         if (!abilities.isEmpty()) {
             int index = getIndex();
             Ability ability = abilities.get(index);
-            float cost = ability.getRealCost(player);
 
             List<Component> lines = new ArrayList<>();
 
-            MutableComponent nameText = Component.empty();
-            nameText.append(Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID)));
-            nameText.append(ability.getName());
+            Component nameText = Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID), ability.getName());
             lines.add(nameText);
 
+            float cost = ability.getRealCost(player);
+
             if (cost > 0.0F) {
-                MutableComponent costText = Component.empty();
-                costText.append(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID)));
-                costText.append(String.format("%.2f", cost));
+                Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost);
                 lines.add(costText);
+            }
+
+            if (ability instanceof Ability.IToggled toggled) {
+                int duration = toggled.getRealDuration(player);
+
+                if (duration > 0) {
+                    Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), duration / 20);
+                    lines.add(durationText);
+                }
             }
 
             int offset = 0;
@@ -99,8 +101,8 @@ public class AbilityOverlay {
                 }
             }
 
-            int x = width - offset - 20;
-            int y = 20;
+            int x = 20;
+            int y = height - (20 + 22 + 24) - ((lines.size() - 1) * mc.font.lineHeight + 2);
 
             for (Component line : lines) {
                 mc.font.drawShadow(poseStack, line, x, y, 16777215);

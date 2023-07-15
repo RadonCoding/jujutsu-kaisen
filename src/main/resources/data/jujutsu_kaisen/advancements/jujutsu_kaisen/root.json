@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "jujutsu_kaisen:inverted_spear_of_heaven"
+    },
+    "title": {
+      "translate": "advancements.jujutsu_kaisen.root.title"
+    },
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.root.description"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

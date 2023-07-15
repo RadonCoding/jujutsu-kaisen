@@ -8,5 +8,8 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "mixins.jujutsu_kaisen.refmap.json"
+  "refmap": "mixins.jujutsu_kaisen.refmap.json",
+  "mixins": [
+    "common.MobMixin"
+  ]
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$/../../build/generated/sources/annotationProcessor/java/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
+    </content>
+  </component>
   <component name="FacetManager">
     <facet type="minecraft" name="Minecraft">
       <configuration>
@@ -12,14 +17,10 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="mappingFile" value="$MODULE_DIR$/../../build/createMcpToSrg/output.tsrg" />
-    <option name="mcpVersion" value="parchment_2023.03.12-1.19.3" />
-    <option name="minecraftVersion" value="1.19.3" />
-    <option name="platformVersion" value="44.1.23" />
+    <option name="mappingFile" value="C:\Users\Radon\Desktop\Projects\jujutsu-kaisen\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="parchment_2023.06.26-1.19.4" />
+    <option name="minecraftVersion" value="1.19.4" />
+    <option name="platformVersion" value="45.1.0" />
     <option name="srgType" value="TSRG" />
-  </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

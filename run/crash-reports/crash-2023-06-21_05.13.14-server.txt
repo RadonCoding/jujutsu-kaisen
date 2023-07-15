@@ -59,7 +59,7 @@ Stacktrace:
 	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:310) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B}
 -- Entity being ticked --
 Details:
-	Entity Type: jujutsu_kaisen:rugby_field_curse (radon.jujutsu_kaisen.entity.RugbyFieldCurseEntity)
+	Entity Type: jujutsu_kaisen:rugby_field_curse (radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity)
 	Entity ID: 9
 	Entity Name: Rugby Field Curse
 	Entity's Exact location: 9.50, 62.00, 40.50

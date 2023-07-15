@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen.item;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.PlayfulCloudRenderer;
@@ -59,12 +57,6 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         if (entity.level instanceof ServerLevel level) {
             triggerAnim(entity, GeoItem.getOrAssignId(stack, level), "swing_controller", "swing");
-
-            Vec3 look = entity.getLookAngle();
-            Vec3 particlePos = new Vec3(entity.getX(), entity.getEyeY() - 0.2D, entity.getZ())
-                    .add(look.scale(2.5D));
-
-            level.sendParticles(ParticleTypes.SWEEP_ATTACK, particlePos.x(), particlePos.y(), particlePos.z(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
         return super.onEntitySwing(stack, entity);
     }
