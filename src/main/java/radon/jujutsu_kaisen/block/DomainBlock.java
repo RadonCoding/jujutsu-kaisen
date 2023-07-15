@@ -32,7 +32,7 @@ public class DomainBlock extends Block {
 
             if (entity != null) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.getTrait() == Trait.HEAVENLY_RESTRICTION) {
+                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                         result.set(true);
                     }
                 });

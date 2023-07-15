@@ -6,8 +6,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
@@ -19,10 +21,12 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -33,6 +37,11 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Infinity extends Ability implements Ability.IToggled {
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return true;
+    }
+
     @Override
     public ActivationType getActivationType() {
         return ActivationType.TOGGLED;
@@ -50,7 +59,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.3F;
+        return 0.5F;
     }
 
     @Override
@@ -117,7 +126,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         result.set(true);
                     } else {
                         source.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            if (!cap.hasToggledAbility(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F) {
+                            if (!cap.hasToggled(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F) {
                                 result.set(true);
                             }
                         });
@@ -206,12 +215,10 @@ public class Infinity extends Ability implements Ability.IToggled {
                             Projectile projectile = event.getProjectile();
 
                             for (DomainExpansionEntity domain : cap.getDomains(level)) {
-                                if (projectile.getOwner() == domain.getOwner()) {
-                                    return;
-                                }
+                                if (projectile.getOwner() == domain.getOwner()) return;
                             }
 
-                            if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
+                            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                                 data.add(target, projectile);
                                 event.setCanceled(true);
                             }
@@ -223,16 +230,19 @@ public class Infinity extends Ability implements Ability.IToggled {
 
         @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity entity = event.getEntity();
+            LivingEntity target = event.getEntity();
 
-            if (entity.level instanceof ServerLevel level) {
+            if (target.level instanceof ServerLevel level) {
                 FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                         FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
-                        for (Projectile projectile : entity.level.getEntitiesOfClass(Projectile.class, entity.getBoundingBox().inflate(1.0D))) {
-                            data.add(entity, projectile);
+                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
+                        for (Projectile projectile : target.level.getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
+                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
+                                if (projectile.getOwner() == domain.getOwner()) return;
+                            }
+                            data.add(target, projectile);
                         }
                     }
                 });
@@ -244,10 +254,10 @@ public class Infinity extends Ability implements Ability.IToggled {
             LivingEntity target = event.getEntity();
 
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasToggledAbility(JJKAbilities.INFINITY.get())) {
+                if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    if (source.getMsgId().equals("jujutsu")) {
+                    if (source.is(JJKDamageSources.JUJUTSU)) {
                         if (target.level instanceof ServerLevel level) {
                             for (DomainExpansionEntity domain : cap.getDomains(level)) {
                                 Entity owner = domain.getOwner();
@@ -259,15 +269,16 @@ public class Infinity extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    if (source.isBypassInvul()) {
+                    if (source.is(DamageTypes.OUT_OF_WORLD)) {
                         return;
                     }
 
-                    if (source.getEntity() instanceof LivingEntity living) {
+                    if (source.getEntity() instanceof LivingEntity living &&
+                            source.getDirectEntity() == source.getEntity() &&
+                            (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
                         if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             return;
-                        } else if (source.getDirectEntity() == living &&
-                                JJKAbilities.hasToggledAbility(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;
                         }
                     }

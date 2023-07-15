@@ -20,14 +20,13 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile> {
     private static final RenderType RED = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/red.png"));
     private static final RenderType BLUE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
     private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
-    private static final float SIZE = 0.5F;
+    private static final float SIZE = 1.0F;
     private static final float ANIMATION_DURATION = 20.0F;
 
     public HollowPurpleRenderer(EntityRendererProvider.Context renderManager) {
@@ -40,8 +39,8 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
             this.render(entity, partialTick, poseStack, PURPLE, SIZE);
         } else {
             float fraction = (entity.tickCount + partialTick) / ANIMATION_DURATION;
-            float size = Mth.lerp(fraction, 0.1F, 0.5F);
-            float offset = Mth.lerp(fraction, 0.5F, 0.0F);
+            float size = Mth.lerp(fraction, 0.1F, SIZE);
+            float offset = Mth.lerp(fraction, SIZE, 0.0F);
             Entity viewer = Minecraft.getInstance().getCameraEntity();
 
             if (viewer != null) {

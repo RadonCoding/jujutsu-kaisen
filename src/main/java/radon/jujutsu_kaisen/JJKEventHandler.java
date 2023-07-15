@@ -10,16 +10,19 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.CurseEntity;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -52,6 +55,14 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
+            Player player = event.getEntity();
+
+            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    cap.setEnergy(cap.getMaxEnergy()));
+        }
+
+        @SubscribeEvent
         public static void onPlayerClone(PlayerEvent.Clone event) {
             Player original = event.getOriginal();
             Player player = event.getEntity();
@@ -66,17 +77,18 @@ public class JJKEventHandler {
                         newCap.setEnergy(newCap.getMaxEnergy());
                         newCap.resetCooldowns();
                         newCap.resetBurnout();
+                        newCap.clearToggled();
+                        newCap.setCopied(null);
                     }
                 });
             });
-
             original.invalidateCaps();
         }
 
         @SubscribeEvent
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof LivingEntity entity) {
-                if (entity instanceof Player || entity instanceof SorcererEntity) {
+                if (entity instanceof Player || entity instanceof ISorcerer) {
                     if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         SorcererDataHandler.attach(event);
                     }
@@ -97,19 +109,42 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
+            LivingEntity source = (LivingEntity) event.getSource().getEntity();
 
-            if (victim instanceof CurseEntity curse) {
-                CurseGrade grade = CurseGrade.values()[curse.getGrade().ordinal()];
+            if (source == null) return;
 
-                if (event.getSource().getEntity() instanceof LivingEntity killer) {
-                    killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.exorcise(killer, grade);
+            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(curseCap -> {
+                if (curseCap.isCurse()) {
+                    CurseGrade grade = CurseGrade.values()[curseCap.getGrade().ordinal()];
+                    LivingEntity killer;
+
+                    if (source instanceof SummonEntity summon) {
+                        LivingEntity owner = summon.getOwner();
+                        killer = owner == null ? source : owner;
+                    } else {
+                        killer = source;
+                    }
+
+                    killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
+                        killerCap.exorcise(killer, grade);
 
                         if (killer instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
                         }
                     });
                 }
+            });
+
+            if (HelperMethods.RANDOM.nextInt(100) == 0) {
+                victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    if (!cap.isCurse()) {
+                        if (!cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
+                            victim.setHealth(victim.getMaxHealth() / 2);
+                            cap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+                            event.setCanceled(true);
+                        }
+                    }
+                });
             }
         }
     }

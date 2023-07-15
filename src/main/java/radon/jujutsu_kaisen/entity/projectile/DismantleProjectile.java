@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -23,6 +24,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 5;
+    private static final float SPEED = 5.0F;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -34,6 +36,8 @@ public class DismantleProjectile extends JujutsuProjectile {
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(pShooter.getLookAngle());
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+
+        this.shootFromRotation(pShooter, pShooter.getXRot(), pShooter.getYRot(), 0.0F, SPEED, 1.0F);
 
         if (!this.level.isClientSide) {
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
@@ -85,7 +89,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
             BlockState state = this.level.getBlockState(pos);
 
-            if (!state.isAir() && state.getBlock().defaultDestroyTime() > -1.0F) {
+            if (state.getFluidState().isEmpty() &&  state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 this.level.destroyBlock(pos, false);
             }
         }
@@ -96,6 +100,8 @@ public class DismantleProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getTime() >= DURATION) {
+            this.discard();
+        } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
             this.discard();
         }
     }

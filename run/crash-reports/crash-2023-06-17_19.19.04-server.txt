@@ -55,7 +55,7 @@ Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.Unsupporte
 	at net.minecraft.world.entity.PathfinderMob.<init>(PathfinderMob.java:14) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.monster.Monster.<init>(Monster.java:31) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at radon.jujutsu_kaisen.entity.base.SorcererEntity.<init>(SorcererEntity.java:11) ~[%23186!/:?] {re:classloading}
-	at radon.jujutsu_kaisen.entity.TojiFushiguroEntity.<init>(TojiEntity.java:28) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity.<init>(TojiEntity.java:28) ~[%23186!/:?] {re:classloading}
 	at net.minecraft.world.entity.EntityType.create(EntityType.java:520) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at net.minecraft.world.entity.EntityType.lambda$create$4(EntityType.java:525) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading}
 	at java.util.Optional.map(Optional.java:260) ~[?:?] {}

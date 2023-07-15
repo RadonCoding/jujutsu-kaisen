@@ -14,10 +14,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
-import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
-import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
-import radon.jujutsu_kaisen.entity.projectile.RedProjectile;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
+import radon.jujutsu_kaisen.entity.projectile.*;
+import radon.jujutsu_kaisen.entity.sorcerer.GojoSatoruEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
 
 public class JJKEntities {
     public static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JujutsuKaisen.MOD_ID);
@@ -38,6 +41,18 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
                             .toString()));
+    public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
+            EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
+                    .fireImmune()
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "closed_domain_expansion")
+                            .toString()));
+
+    public static RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
+            EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)
+                    .sized(3.0F, 4.0F)
+                    .fireImmune()
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")
+                            .toString()));
 
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.MONSTER)
@@ -45,19 +60,8 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
                             .toString()));
 
-    public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
-            EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "closed_domain_expansion")
-                            .toString()));
-
-    public static RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
-            EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)
-                    .sized(3.0F, 4.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")
-                            .toString()));
-
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
-            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.MONSTER)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
                             .toString()));
 
@@ -67,8 +71,13 @@ public class JJKEntities {
                             .toString()));
 
     public static RegistryObject<EntityType<GojoSatoruEntity>> GOJO_SATORU = ENTITIES.register("gojo_satoru", () ->
-            EntityType.Builder.<GojoSatoruEntity>of(GojoSatoruEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.<GojoSatoruEntity>of(GojoSatoruEntity::new, MobCategory.MONSTER)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "gojo_satoru")
+                            .toString()));
+
+    public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
+            EntityType.Builder.<YutaOkkotsuEntity>of(YutaOkkotsuEntity::new, MobCategory.MONSTER)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu")
                             .toString()));
 
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
@@ -77,11 +86,31 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dismantle")
                             .toString()));
 
+    public static RegistryObject<EntityType<FireArrowProjectile>> FIRE_ARROW = ENTITIES.register("fire_arrow", () ->
+            EntityType.Builder.<FireArrowProjectile>of(FireArrowProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")
+                            .toString()));
+
+    public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
+            EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 3.875F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
+                            .toString()));
+
+    public static RegistryObject<EntityType<PureLoveProjectile>> PURE_LOVE = ENTITIES.register("pure_love", () ->
+            EntityType.Builder.<PureLoveProjectile>of(PureLoveProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")
+                            .toString()));
+
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
         event.put(GOJO_SATORU.get(), SorcererEntity.createAttributes().build());
+        event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
+        event.put(RIKA.get(), RikaEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

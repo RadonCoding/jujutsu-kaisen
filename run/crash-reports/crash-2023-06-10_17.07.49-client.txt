@@ -9,7 +9,7 @@ software.bernie.geckolib.GeckoLibException: jujutsu_kaisen:animations/entity/fir
 	at software.bernie.geckolib.core.animation.AnimationProcessor.buildAnimationQueue(AnimationProcessor.java:45) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.setAnimation(AnimationController.java:326) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationState.setAndContinue(AnimationState.java:129) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
-	at radon.jujutsu_kaisen.entity.RugbyFieldCurseEntity.movePredicate(RugbyFieldCurseEntity.java:37) ~[main/:?] {re:classloading}
+	at radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity.movePredicate(RugbyFieldCurseEntity.java:37) ~[main/:?] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.handleAnimationState(AnimationController.java:383) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.process(AnimationController.java:407) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationProcessor.tickAnimation(AnimationProcessor.java:83) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar:4.0.4] {re:classloading}
@@ -52,7 +52,7 @@ Stacktrace:
 	at software.bernie.geckolib.core.animation.AnimationProcessor.buildAnimationQueue(AnimationProcessor.java:45) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.setAnimation(AnimationController.java:326) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationState.setAndContinue(AnimationState.java:129) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
-	at radon.jujutsu_kaisen.entity.RugbyFieldCurseEntity.movePredicate(RugbyFieldCurseEntity.java:37) ~[%23186!/:?] {re:classloading}
+	at radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity.movePredicate(RugbyFieldCurseEntity.java:37) ~[%23186!/:?] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.handleAnimationState(AnimationController.java:383) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationController.process(AnimationController.java:407) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
 	at software.bernie.geckolib.core.animation.AnimationProcessor.tickAnimation(AnimationProcessor.java:83) ~[geckolib-forge-1.19.3-4.0.4_mapped_parchment_2023.03.12-1.19.3.jar%23188!/:4.0.4] {re:classloading}
@@ -67,7 +67,7 @@ Stacktrace:
 	at net.minecraft.client.renderer.GameRenderer.renderLevel(GameRenderer.java:1101) ~[forge-1.19.3-44.1.23_mapped_parchment_2023.03.12-1.19.3-recomp.jar%23181!/:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
 -- Entity being rendered --
 Details:
-	Entity Type: jujutsu_kaisen:rugby_field_curse (radon.jujutsu_kaisen.entity.RugbyFieldCurseEntity)
+	Entity Type: jujutsu_kaisen:rugby_field_curse (radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity)
 	Entity ID: 535
 	Entity Name: entity.jujutsu_kaisen.rugby_field_curse
 	Entity's Exact location: 337.22, 103.00, 183.76

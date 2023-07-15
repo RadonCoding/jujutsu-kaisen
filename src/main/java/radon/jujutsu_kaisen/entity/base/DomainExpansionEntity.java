@@ -7,17 +7,17 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import javax.annotation.Nullable;
@@ -30,19 +30,26 @@ public abstract class DomainExpansionEntity extends Mob {
     @Nullable
     private UUID ownerUUID;
     @Nullable
-    private Entity cachedOwner;
+    private LivingEntity cachedOwner;
+
+    protected DomainExpansion ability;
+    protected int duration;
+    protected boolean warned;
 
     protected DomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner) {
+    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int duration) {
         super(pEntityType, owner.level);
 
         this.setOwner(owner);
+
+        this.ability = ability;
+        this.duration = duration;
     }
 
-    public void setOwner(@Nullable Entity pOwner) {
+    public void setOwner(@Nullable LivingEntity pOwner) {
         if (pOwner != null) {
             this.ownerUUID = pOwner.getUUID();
             this.cachedOwner = pOwner;
@@ -50,11 +57,11 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     @Nullable
-    public Entity getOwner() {
+    public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
         } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = ((ServerLevel) this.level).getEntity(this.ownerUUID);
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -63,30 +70,11 @@ public abstract class DomainExpansionEntity extends Mob {
 
     public abstract AABB getBounds();
     public abstract boolean isInsideBarrier(Entity entity);
-
-    @Override
-    public boolean isNoGravity() {
-        return true;
-    }
-
-    @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
-        return false;
-    }
+    public abstract void warn();
 
     @Override
     public boolean isInWall() {
         return false;
-    }
-
-    @Override
-    public boolean isAffectedByPotions() {
-        return false;
-    }
-
-    @Override
-    public @NotNull Vec3 getDeltaMovement() {
-        return Vec3.ZERO;
     }
 
     @Override
@@ -95,37 +83,39 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     @Override
-    public boolean canDrownInFluidType(FluidType type) {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean canCollideWith(@NotNull Entity pEntity) {
-        return false;
-    }
-
-    @Override
-    public boolean fireImmune() {
-        return true;
-    }
-
-    @Override
     public void tick() {
-        super.tick();
-
         Entity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || !owner.isAlive() || owner.isRemoved())) {
-            this.kill();
-        }
+        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+            this.discard();
+        } else {
+            super.tick();
 
-        int time = this.getTime();
-        this.setTime(++time);
+            if (!this.level.isClientSide) {
+                int time = this.getTime();
+
+                if (time >= this.duration) {
+                    this.discard();
+                    return;
+                }
+                this.setTime(++time);
+            }
+        }
+    }
+
+    protected boolean isAffected(Entity entity) {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null || entity == owner) {
+            return false;
+        }
+        if (entity instanceof LivingEntity living) {
+            if (!owner.canAttack(living) || (!this.ability.bypassSimpleDomain() &&
+                    JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()))) {
+                return false;
+            }
+        }
+        return this.isInsideBarrier(entity);
     }
 
     @Override
@@ -136,6 +126,9 @@ public abstract class DomainExpansionEntity extends Mob {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
+        pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
+        pCompound.putInt("duration", this.duration);
+        pCompound.putBoolean("warned", this.warned);
     }
 
     @Override
@@ -146,6 +139,9 @@ public abstract class DomainExpansionEntity extends Mob {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
+        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
+        this.duration = pCompound.getInt("duration");
+        this.warned = pCompound.getBoolean("warned");
     }
 
     @Override
@@ -165,7 +161,7 @@ public abstract class DomainExpansionEntity extends Mob {
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        Entity owner = this.level.getEntity(pPacket.getData());
+        LivingEntity owner = (LivingEntity) this.level.getEntity(pPacket.getData());
 
         if (owner != null) {
             this.setOwner(owner);
@@ -175,9 +171,11 @@ public abstract class DomainExpansionEntity extends Mob {
     public float getStrength() {
         AtomicReference<Float> result = new AtomicReference<>(0.0F);
 
-        if (this.getOwner() instanceof LivingEntity owner) {
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getGrade().getPower() * (float) Math.log10(owner.getHealth() / owner.getMaxHealth() + 1.0F)));
+                    result.set(cap.getGrade().getPower() * (owner.getHealth() / owner.getMaxHealth())));
         }
         return result.get();
     }

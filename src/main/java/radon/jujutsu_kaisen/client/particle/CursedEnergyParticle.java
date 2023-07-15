@@ -11,25 +11,31 @@ import org.jetbrains.annotations.NotNull;
 public class CursedEnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
-    protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, SpriteSet pSprites) {
+    protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
-        this.quadSize = 0.5F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F;
-        this.lifetime = (int)(4.0F / (this.random.nextFloat() * 0.9F + 0.1F));
+        this.quadSize = 0.75F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F;
+        this.lifetime = 1;
+
+        this.xd = pXSpeed;
+        this.yd = this.random.nextFloat() * pYSpeed;
+        this.zd = pZSpeed;
+        this.alpha = 0.5F;
 
         this.rCol = 0.0F;
         this.gCol = 0.86F;
         this.bCol = 1.0F;
 
         this.sprites = pSprites;
+
+        this.setSprite(this.sprites.get(this.level.random));
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.setSpriteFromAge(this.sprites);
-        this.alpha = (-(0.25F / (float) this.lifetime) * this.age + 0.25F);
+        this.setSprite(this.sprites.get(this.level.random));
     }
 
     @Override
@@ -45,8 +51,9 @@ public class CursedEnergyParticle extends TextureSheetParticle {
         }
 
         @Override
-        public CursedEnergyParticle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            CursedEnergyParticle particle = new CursedEnergyParticle(level, x, y, z,  this.sprites);
+        public CursedEnergyParticle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z,
+                                                   double xSpeed, double ySpeed, double zSpeed) {
+            CursedEnergyParticle particle = new CursedEnergyParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites);
             particle.pickSprite(this.sprites);
             return particle;
         }

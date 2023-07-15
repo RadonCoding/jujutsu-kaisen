@@ -13,20 +13,20 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.GojoSatoruModel;
 import radon.jujutsu_kaisen.client.model.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.TojiFushiguroModel;
+import radon.jujutsu_kaisen.client.model.YutaOkkotsuModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
+import radon.jujutsu_kaisen.client.particle.BlackFlashParticle;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.SpinningParticle;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
-import radon.jujutsu_kaisen.client.render.entity.projectile.BlueRenderer;
-import radon.jujutsu_kaisen.client.render.entity.projectile.DismantleRenderer;
-import radon.jujutsu_kaisen.client.render.entity.projectile.HollowPurpleRenderer;
-import radon.jujutsu_kaisen.client.render.entity.projectile.RedRenderer;
+import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -40,7 +40,7 @@ public class JJKClientEventHandler {
 
             if (mc.player == null) return;
 
-            if (mc.player.hasEffect(JJKEffects.STUN.get())) {
+            if (mc.player.hasEffect(JJKEffects.STUN.get()) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                 mc.player.input.forwardImpulse = 0.0F;
                 mc.player.input.leftImpulse = 0.0F;
                 mc.player.input.jumping = false;
@@ -53,7 +53,7 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-                if (mc.player.hasEffect(JJKEffects.STUN.get())) {
+                if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
                 }
@@ -64,7 +64,7 @@ public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
         @SubscribeEvent
-        public static void registerPlayerLayers(EntityRenderersEvent.AddLayers event) {
+        public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {
             if (event.getSkin("default") instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
@@ -75,13 +75,17 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-            event.register(JJKKeyMapping.KEY_ACTIVATE_ABILITY);
+            event.register(JJKKeyMapping.ACTIVATE_ABILITY);
+            event.register(JJKKeyMapping.ABILITY_LEFT);
+            event.register(JJKKeyMapping.ABILITY_RIGHT);
+            event.register(JJKKeyMapping.ABILITY_SCROLL);
         }
 
         @SubscribeEvent
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("ability_overlay", AbilityOverlay.ABILITY_OVERLAY);
-            event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.CURSED_ENERY_OVERLAY);
+            event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
+            event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
+            event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
         }
 
         @SubscribeEvent
@@ -91,10 +95,14 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(SukunaRyomenModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(SukunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(SukunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(GojoSatoruModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(GojoSatoruModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(GojoSatoruModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(YutaOkkotsuModel.LAYER, SkinModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -109,25 +117,44 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.GOJO_SATORU.get(), GojoSatoruRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.YUTA_OKKOTSU.get(), YutaOkkotsuRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);
         }
 
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
-            event.register(JJKParticles.SPINNING.get(), SpinningParticle.Provider::new);
-            event.register(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SPINNING.get(), SpinningParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
         }
 
         @SubscribeEvent
         public static void onRegisterCreativeModeTabs(CreativeModeTabEvent.Register event) {
             event.registerCreativeModeTab(new ResourceLocation(JujutsuKaisen.MOD_ID),
-                    x -> x.icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
+                    builder -> builder.icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
                             .title(Component.translatable(String.format("itemGroup.%s", JujutsuKaisen.MOD_ID)))
-                            .displayItems((enabledFeatures, entries, operatorEnabled) -> {
-                                entries.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
-                                entries.accept(JJKItems.PLAYFUL_CLOUD.get());
-                                entries.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
-                                entries.accept(JJKItems.GOJO_SATORU_SPAWN_EGG.get());
-                                entries.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
+                            .displayItems((pParameters, pOutput) -> {
+                                pOutput.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
+                                pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
+                                pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
+                                pOutput.accept(JJKItems.INVENTORY_CURSE.get());
+
+                                pOutput.accept(JJKItems.GOJO_BLINDFOLD.get());
+                                pOutput.accept(JJKItems.GOJO_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.GOJO_LEGGINGS.get());
+                                pOutput.accept(JJKItems.GOJO_BOOTS.get());
+
+                                pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.YUJI_LEGGINGS.get());
+                                pOutput.accept(JJKItems.YUJI_BOOTS.get());
+
+                                pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.GOJO_SATORU_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                             }));
         }
     }

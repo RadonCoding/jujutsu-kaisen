@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.item.armor;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +14,13 @@ public record JJKArmorMaterial(String name, int durabilityMultiplier, int[] slot
     private static final int[] HEALTH_PER_SLOT = new int[] { 13, 15, 16, 11 };
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot pSlot) {
-        return HEALTH_PER_SLOT[pSlot.getIndex()] * this.durabilityMultiplier;
+    public int getDurabilityForType(ArmorItem.@NotNull Type pType) {
+        return HEALTH_PER_SLOT[pType.getSlot().getIndex()] * this.durabilityMultiplier;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot pSlot) {
-        return this.slotProtections[pSlot.getIndex()];
+    public int getDefenseForType(ArmorItem.@NotNull Type pType) {
+        return this.slotProtections[pType.getSlot().getIndex()];
     }
 
     @Override

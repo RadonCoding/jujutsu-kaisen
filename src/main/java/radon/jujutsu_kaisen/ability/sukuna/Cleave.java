@@ -3,11 +3,11 @@ package radon.jujutsu_kaisen.ability.sukuna;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -15,11 +15,17 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+    }
 
     @Override
     public ActivationType getActivationType() {
@@ -30,15 +36,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         LivingEntity result = null;
 
         if (owner instanceof Player) {
-            EntityHitResult hit = HelperMethods.getEntityLookAt(owner, RANGE);
-
-            if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                result = target;
-            }
-        } else if (owner instanceof Mob mob) {
-            LivingEntity target = mob.getTarget();
-
-            if (target != null && mob.getSensing().hasLineOfSight(target)) {
+            if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
                 result = target;
             }
         }
@@ -54,16 +52,17 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     private static float calculateDamage(LivingEntity target) {
-        float damage = target.getHealth() + target.getAbsorptionAmount();
+        float damage = target.getMaxHealth() + target.getAbsorptionAmount();
         float armor = getArmorAbsorptionFactor(target, damage);
-        return Math.min(50.0F, Math.max(1.0F, damage / armor));
+        return Math.min(25.0F, damage / armor);
     }
 
     @Override
     public void run(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
-        if (target != null && target.isAlive()) {
+        if (target != null) {
+            owner.swing(InteractionHand.MAIN_HAND);
             this.perform(owner, null, target);
         }
     }
@@ -79,22 +78,17 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status checkTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
-        if (target == null || !target.isAlive()) {
+        if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkStatus(owner);
+        return super.checkTriggerable(owner);
     }
 
     @Override
-    public int getCooldown() {
-        return 10 * 20;
-    }
-
-    @Override
-    public void perform(LivingEntity owner, @Nullable Entity indirect, @Nullable LivingEntity target) {
+    public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target != null && owner.level instanceof ServerLevel level) {
             AABB bounds = target.getBoundingBox();
             double minY = bounds.minY;
@@ -104,12 +98,17 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), randomY, target.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 
-            DamageSource source = indirect == null ? JJKDamageSources.jujutsuAttack(owner) : JJKDamageSources.indirectJujutsuAttack(indirect, owner);
+            DamageSource source = domain == null ? JJKDamageSources.jujutsuAttack(owner) : JJKDamageSources.indirectJujutsuAttack(domain, owner);
 
             float damage = calculateDamage(target);
             owner.level.playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             target.hurt(source, damage);
         }
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5 * 20;
     }
 
     @Override

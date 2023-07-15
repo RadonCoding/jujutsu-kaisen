@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -12,7 +13,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 public class CursedEnergyOverlay {
     public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
 
-    public static IGuiOverlay CURSED_ENERY_OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
+    public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
         LocalPlayer player = gui.getMinecraft().player;
 
         assert player != null;
@@ -29,7 +30,7 @@ public class CursedEnergyOverlay {
 
             GuiComponent.blit(poseStack, 20, 20, 0, 0, 93, 9, 93, 16);
 
-            float chakraWidth = (cap.getEnergy() / cap.getMaxEnergy()) * 94.0F;
+            float chakraWidth = (Mth.clamp(cap.getEnergy(), 0.0F, cap.getMaxEnergy()) / cap.getMaxEnergy()) * 94.0F;
             GuiComponent.blit(poseStack, 20, 21, 0, 9, (int) chakraWidth, 7, 93, 16);
             poseStack.pushPose();
             poseStack.scale(0.5F, 0.5F, 0.5F);

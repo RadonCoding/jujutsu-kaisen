@@ -7,7 +7,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -43,11 +43,13 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         int duration = this.getDuration() - domain.getTime();
 
         if (entity instanceof LivingEntity living) {
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), duration, 0, false, false, false));
-            living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 4));
+            if (!living.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), duration, 0, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 4));
 
-            if (living instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new UnlimitedVoidS2CPacket(duration), player);
+                if (living instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new UnlimitedVoidS2CPacket(duration), player);
+                }
             }
         }
     }
@@ -67,5 +69,10 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, block.defaultBlockState(), radius, duration);
             owner.level.addFreshEntity(domain);
         });
+    }
+
+    @Override
+    public boolean bypassSimpleDomain() {
+        return true;
     }
 }

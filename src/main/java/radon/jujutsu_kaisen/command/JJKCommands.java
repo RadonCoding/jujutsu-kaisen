@@ -12,6 +12,6 @@ public class JJKCommands {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         SetGradeCommand.register(event.getDispatcher());
         SetTechniqueCommand.register(event.getDispatcher());
-        SetTraitCommand.register(event.getDispatcher());
+        TraitCommand.register(event.getDispatcher());
     }
 }

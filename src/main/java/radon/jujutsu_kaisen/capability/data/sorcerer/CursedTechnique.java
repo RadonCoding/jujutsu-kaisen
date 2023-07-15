@@ -1,50 +1,36 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.base.CurseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public enum CursedTechnique {
-    NONE,
-    GETO,
-    GOJO(JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.TELEPORT.get()),
-    SUKUNA(JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.MALEVOLENT_SHRINE.get()),
-    TOGE,
-    YUJI,
-    YUTA;
+    GETO(null),
+    GOJO(JJKAbilities.UNLIMITED_VOID.get(),JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
+    SUKUNA(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.FIRE_ARROW.get()),
+    TOGE(null),
+    YUJI(null),
+    YUTA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get());
 
+    private final @Nullable Ability domain;
     private final Ability[] abilities;
 
-    CursedTechnique(Ability... abilities) {
+    CursedTechnique(@Nullable Ability domain, Ability... abilities) {
+        this.domain = domain;
         this.abilities = abilities;
     }
 
-    public Ability[] getAbilities(LivingEntity owner) {
-        List<Ability> abilities = new ArrayList<>();
+    public @Nullable Ability getDomain() {
+        return this.domain;
+    }
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getTrait() == Trait.HEAVENLY_RESTRICTION) {
-                abilities.add(JJKAbilities.DASH.get());
-            } else {
-                abilities.add(JJKAbilities.SMASH.get());
-                abilities.add(JJKAbilities.RCT.get());
-                abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
-            }
-        });
+    public Ability[] getAbilities() {
+        return this.abilities;
+    }
 
-        if (owner instanceof CurseEntity) {
-            abilities.add(JJKAbilities.HEAL.get());
-        }
-
-        Ability[] result = new Ability[abilities.size() + this.abilities.length];
-        System.arraycopy(abilities.toArray(new Ability[0]), 0, result, 0, abilities.size());
-        System.arraycopy(this.abilities, 0, result, abilities.size(), this.abilities.length);
-
-        return result;
+    public Component getComponent() {
+        return Component.translatable(String.format("cursed_technique.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
 }

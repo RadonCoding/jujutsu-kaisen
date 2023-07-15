@@ -1,10 +1,20 @@
 package radon.jujutsu_kaisen.ability.gojo;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.RedProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Red extends Ability {
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+    }
+
     @Override
     public ActivationType getActivationType() {
         return ActivationType.INSTANT;
@@ -14,6 +24,11 @@ public class Red extends Ability {
     public void run(LivingEntity owner) {
         RedProjectile red = new RedProjectile(owner);
         owner.level.addFreshEntity(red);
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+        return JJKAbilities.hasTrait(owner, Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

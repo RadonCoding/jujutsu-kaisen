@@ -6,9 +6,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DomainExpansion;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
@@ -28,7 +29,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        if (domain.getRandom().nextInt(10) == 0) {
+        if (domain.getRandom().nextInt(5) == 0) {
             if (entity instanceof LivingEntity living) {
                 Ability cleave = JJKAbilities.CLEAVE.get();
 
@@ -48,7 +49,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, pos.getX(), pos.getY(), pos.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 
-            if (state.getBlock().defaultDestroyTime() > -1.0F) {
+            if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 owner.level.destroyBlock(pos, false);
             }
         }
@@ -68,11 +69,11 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public int getWidth() {
-        return 100;
+        return 50;
     }
 
     @Override
     public int getHeight() {
-        return 15;
+        return 10;
     }
 }

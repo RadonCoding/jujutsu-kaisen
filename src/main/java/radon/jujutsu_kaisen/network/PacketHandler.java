@@ -54,6 +54,16 @@ public class PacketHandler {
                 .encoder(RequestOverlayDataC2SPacket::encode)
                 .consumerMainThread(RequestOverlayDataC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(RequestSorcererDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RequestSorcererDataC2SPacket::new)
+                .encoder(RequestSorcererDataC2SPacket::encode)
+                .consumerMainThread(RequestSorcererDataC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ReceiveSorcererDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ReceiveSorcererDataS2CPacket::new)
+                .encoder(ReceiveSorcererDataS2CPacket::encode)
+                .consumerMainThread(ReceiveSorcererDataS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

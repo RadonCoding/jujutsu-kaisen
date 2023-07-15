@@ -1,13 +1,21 @@
 {
   "itemGroup.jujutsu_kaisen": "Jujutsu Kaisen",
 
-  "gui.jujutsu_kaisen.ability_overlay.name": "Name: ",
-  "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: ",
+  "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
+  "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
+  "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$ds",
 
-  "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: ",
+  "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
+  "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
+  "gui.jujutsu_kaisen.six_eyes_overlay.energy": "Energy: %1$f/%2$f",
 
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
-  "key.jujutsu_kaisen.activate": "Activate Ability",
+  "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
+  "key.jujutsu_kaisen.ability_right": "Switch Ability Right",
+  "key.jujutsu_kaisen.ability_left": "Switch Ability Left",
+  "key.jujutsu_kaisen.ability_scroll": "Cycle Abilities With Scroll Wheel",
+  "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
+  "key.jujutsu_kaisen.activate_simple_domain": "Activate Simple Domain",
 
   "item.jujutsu_kaisen.cursed_tool.grade": "Grade: %1$s",
 
@@ -17,25 +25,35 @@
   "item.jujutsu_kaisen.playful_cloud": "Playful Cloud",
   "item.jujutsu_kaisen.playful_cloud.desc": "Relies on the raw power of its user for attacks.",
 
+  "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta Okkotsu's Sword",
+
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.gojo_satoru_spawn_egg": "Spawn Gojo Satoru",
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
+  "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
 
+  "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
+
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
-  "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %d seconds",
-  "ability.jujutsu_kaisen.fail.burnout": "Burnout: %d seconds",
+  "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
+  "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
-  "ability.jujutsu_kaisen.fail.domain_amplification": "Can't use a technique while domain amplification is active",
+  "ability.jujutsu_kaisen.fail.domain_amplification": "Can't use a innate technique while domain amplification is active",
+  "ability.jujutsu_kaisen.fail.simple_domain": "Can't use a technique while simple domain is active",
 
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.smash": "Smash",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
   "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
+  "ability.jujutsu_kaisen.simple_domain": "New Shadow Style: Simple Domain",
+  "ability.jujutsu_kaisen.simple_domain.enable": "Activated simple domain",
+  "ability.jujutsu_kaisen.simple_domain.disable": "Deactivated simple domain",
+
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
-  "ability.jujutsu_kaisen.rct.enable": "Activated RCT",
-  "ability.jujutsu_kaisen.rct.disable": "Deactivated RCT",
+
+  "ability.jujutsu_kaisen.heal": "Heal",
 
   "ability.jujutsu_kaisen.infinity": "Neutral Limitless: Infinity",
   "ability.jujutsu_kaisen.infinity.enable": "Activated infinity",
@@ -49,7 +67,18 @@
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
   "ability.jujutsu_kaisen.cleave": "Cleave",
+  "ability.jujutsu_kaisen.fire_arrow": "Fire Arrow",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
+
+  "ability.jujutsu_kaisen.rika": "Summon Rika",
+  "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
+  "ability.jujutsu_kaisen.rika.disable": "Released Rika",
+
+  "ability.jujutsu_kaisen.pure_love": "Pure Love",
+
+  "ability.jujutsu_kaisen.copy": "Copy",
+  "ability.jujutsu_kaisen.copy.enable": "Activated copy",
+  "ability.jujutsu_kaisen.copy.disable": "Deactivated copy",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
@@ -60,12 +89,51 @@
   "grade.jujutsu_kaisen.special_grade_1": "Special Grade 1",
   "grade.jujutsu_kaisen.special_grade": "Special Grade",
 
+  "cursed_technique.jujutsu_kaisen.none": "None",
+  "cursed_technique.jujutsu_kaisen.geto": "Geto",
+  "cursed_technique.jujutsu_kaisen.gojo": "Gojo",
+  "cursed_technique.jujutsu_kaisen.sukuna": "Sukuna",
+  "cursed_technique.jujutsu_kaisen.toge": "Toge",
+  "cursed_technique.jujutsu_kaisen.yuji": "Yuji",
+  "cursed_technique.jujutsu_kaisen.yuta": "Yuta",
+  "cursed_technique.jujutsu_kaisen.rika": "Rika",
+
+  "chat.jujutsu_kaisen.exorcise": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
   "entity.jujutsu_kaisen.gojo_satoru": "Gojo Satoru",
+  "entity.jujutsu_kaisen.yuta_okkotsu": "Yuta Okkotsu",
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
+  "entity.jujutsu_kaisen.rika": "Rika",
 
-  "effect.jujutsu_kaisen.stun": "Stun"
+  "effect.jujutsu_kaisen.stun": "Stun",
+  "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
+
+  "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
+
+  "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
+  "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",
+
+  "advancements.jujutsu_kaisen.black_flash.title": "Black Flash",
+  "advancements.jujutsu_kaisen.black_flash.description": "Perform the black flash.",
+
+  "advancements.jujutsu_kaisen.simple_domain.title": "Simple Domain",
+  "advancements.jujutsu_kaisen.simple_domain.description": "Learn barrier and anti-domain techniques.",
+
+  "advancements.jujutsu_kaisen.domain_expansion.title": "Domain Expansion",
+  "advancements.jujutsu_kaisen.domain_expansion.description": "Reach the pinnacle of jujutsu sorcery.",
+
+  "advancements.jujutsu_kaisen.heavenly_restriction.title": "Heavenly Restriction",
+  "advancements.jujutsu_kaisen.heavenly_restriction.description": "You were granted unrivaled physical abilities in exchange for your cursed energy.",
+
+  "advancements.jujutsu_kaisen.reverse_cursed_technique.title": "Reverse Cursed Technique",
+  "advancements.jujutsu_kaisen.reverse_cursed_technique.description": "Negative times negative equals positive.",
+
+  "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
+  "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
+
+  "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
+  "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes."
 }
