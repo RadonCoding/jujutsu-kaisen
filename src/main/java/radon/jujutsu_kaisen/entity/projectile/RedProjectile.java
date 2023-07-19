@@ -5,21 +5,24 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 import java.util.List;
 
 public class RedProjectile extends JujutsuProjectile {
-    private static final float LAUNCH_POWER = 10.0F;
+    private static final float LAUNCH_POWER = 2.5F;
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final int DELAY = 20;
-    private static final float DAMAGE = 10.0F;
 
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -41,26 +44,49 @@ public class RedProjectile extends JujutsuProjectile {
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ()).add(this.getLookAngle().scale(7.5D));
                 this.level.explode(owner, offset.x(), offset.y(), offset.z(), radius, Level.ExplosionInteraction.NONE);
 
-                double f = radius * 2.0D;
-                List<Entity> entities = this.level.getEntities(this, new AABB(Mth.floor(offset.x() - f - 1.0D),
-                        Mth.floor(offset.x() + f + 1.0D),
-                        Mth.floor(offset.y() - f - 1.0D),
-                        Mth.floor(offset.y() + f + 1.0D),
-                        Mth.floor(offset.z() - f - 1.0D),
-                        Mth.floor(offset.z() + f + 1.0D)));
-
-                Vec3 look = owner.getLookAngle();
+                float f = radius * 2.0F;
+                int k1 = Mth.floor(offset.x() - (double) f - 1.0D);
+                int l1 = Mth.floor(offset.x() + (double) f + 1.0D);
+                int i2 = Mth.floor(offset.y() - (double) f - 1.0D);
+                int i1 = Mth.floor(offset.y() + (double) f + 1.0D);
+                int j2 = Mth.floor(offset.z() - (double) f - 1.0D);
+                int j1 = Mth.floor(offset.z() + (double) f + 1.0D);
+                List<Entity> entities = this.level.getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
 
                 for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-
-                    float distance = entity.distanceTo(owner);
-                    float scalar = (radius - distance) / radius;
-
-                    entity.hurt(this.damageSources().explosion(this, owner), (DAMAGE * cap.getGrade().getPower()) * scalar);
-
                     if (!entity.ignoreExplosion()) {
-                        entity.setDeltaMovement(look.x() * LAUNCH_POWER, look.y() * LAUNCH_POWER, (look.z() * LAUNCH_POWER) * scalar);
+                        double d = Math.sqrt(entity.distanceToSqr(offset)) / (double) f;
+
+                        if (d <= 1.0D) {
+                            double d0 = entity.getX() - offset.x();
+                            double d1 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - offset.y();
+                            double d2 = entity.getZ() - offset.z();
+                            double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+
+                            if (d3 != 0.0D) {
+                                d0 /= d3;
+                                d1 /= d3;
+                                d2 /= d3;
+                                double d4 = Explosion.getSeenPercent(offset, entity);
+                                double d5 = (1.0D - d) * d4;
+                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner),
+                                        (float) ((int) ((d5 * d5 + d5) / 2.0D * 7.0D * (double) f + 1.0D)) * cap.getGrade().getPower());
+
+                                double d6;
+
+                                if (entity instanceof LivingEntity living) {
+                                    d6 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d5);
+                                } else {
+                                    d6 = d5;
+                                }
+
+                                d0 *= d6;
+                                d1 *= d6;
+                                d2 *= d6;
+                                Vec3 vec31 = new Vec3(d0, d1, d2).scale(LAUNCH_POWER);
+                                entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
+                            }
+                        }
                     }
                 }
                 this.discard();

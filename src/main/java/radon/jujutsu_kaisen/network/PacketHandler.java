@@ -2,12 +2,14 @@ package radon.jujutsu_kaisen.network;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.network.packet.*;
+import radon.jujutsu_kaisen.network.packet.c2s.*;
+import radon.jujutsu_kaisen.network.packet.s2c.*;
 
 public class PacketHandler {
     private static SimpleChannel INSTANCE;
@@ -64,6 +66,16 @@ public class PacketHandler {
                 .encoder(ReceiveSorcererDataS2CPacket::encode)
                 .consumerMainThread(ReceiveSorcererDataS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(OpenInventoryCurseC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(OpenInventoryCurseC2SPacket::new)
+                .encoder(OpenInventoryCurseC2SPacket::encode)
+                .consumerMainThread(OpenInventoryCurseC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ShootPistolC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ShootPistolC2SPacket::new)
+                .encoder(ShootPistolC2SPacket::encode)
+                .consumerMainThread(ShootPistolC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -74,7 +86,9 @@ public class PacketHandler {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
-    public static <MSG> void broadcast(MSG message) {
-        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+    public static <MSG> void broadcastNearby(MSG message, LivingEntity entity) {
+        INSTANCE.send(PacketDistributor.NEAR.with(() ->
+                new PacketDistributor.TargetPoint(entity.getX(), entity.getY(), entity.getZ(),
+                        64, entity.level.dimension())), message);
     }
 }

@@ -24,12 +24,9 @@ import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
@@ -130,7 +127,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isInsideBarrier(Entity entity) {
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
         BlockPos relative = entity.blockPosition().subtract(center);
         return relative.distSqr(Vec3i.ZERO) < radius * radius;
     }
@@ -139,7 +136,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.block == null) return;
 
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
@@ -184,7 +181,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     public void destroyBarrier() {
-        for (Map.Entry<BlockPos, BlockState> entry : this.blocks.entrySet()) {
+        Iterator<Map.Entry<BlockPos, BlockState>> iter = this.blocks.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<BlockPos, BlockState> entry = iter.next();
+
             BlockPos pos = entry.getKey();
             BlockState state = entry.getValue();
 
@@ -195,6 +196,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             } else {
                 this.level.setBlockAndUpdate(pos, state);
             }
+            iter.remove();
         }
     }
 
@@ -243,7 +245,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius, 0);
+        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
@@ -270,12 +272,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             // If the domain is open and the strength is more than or equal then break
             // else if the strength is more than or equal cancel sure hit
-            if (domain.getStrength() >= this.getStrength()) {
-                if (domain instanceof OpenDomainExpansionEntity) {
-                    if (isCompleted) {
-                        this.discard();
-                    }
+            if (domain.getStrength() > this.getStrength()) {
+                if (isCompleted) {
+                    this.discard();
                 }
+                return false;
+            } else if (domain.getStrength() == this.getStrength()) {
                 return false;
             }
         }
@@ -283,9 +285,21 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public void onRemovedFromWorld() {
+    public void remove(@NotNull RemovalReason pReason) {
         if (!this.level.isClientSide) {
-            this.destroyBarrier();
+            if (!this.blocks.isEmpty()) {
+                this.destroyBarrier();
+            }
+        }
+        super.remove(pReason);
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        if (!this.level.isClientSide) {
+            //this.destroyBarrier();
 
             LivingEntity owner = this.getOwner();
 
@@ -299,7 +313,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 });
             }
         }
-        super.onRemovedFromWorld();
     }
 
     @Override

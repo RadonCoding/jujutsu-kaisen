@@ -17,8 +17,6 @@ import java.util.function.Consumer;
 
 public interface ISorcererData {
     void tick(LivingEntity owner);
-    boolean isInitialized();
-    void generate();
 
     List<DomainExpansionEntity> getDomains(ServerLevel level);
     void onInsideDomain(DomainExpansionEntity domain);

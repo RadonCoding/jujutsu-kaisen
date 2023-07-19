@@ -11,15 +11,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RCT extends Ability {
-    private static final float AMOUNT = 1.0F;
+    private static final float AMOUNT = 0.5F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         AtomicBoolean result = new AtomicBoolean();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            result.set(owner.getHealth() < owner.getMaxHealth() || cap.hasTrait(Trait.SIX_EYES) && cap.getBurnout() > 0);
-        });
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set((owner.getHealth() / owner.getMaxHealth()) < 0.75F || cap.hasTrait(Trait.SIX_EYES) && cap.getBurnout() > 0));
         return result.get();
     }
 

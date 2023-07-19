@@ -6,6 +6,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.client.layer.overlay.JJKOverlays;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -21,6 +22,8 @@ public class JujutsuKaisen {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         JJKAbilities.ABILITIES.register(bus);
+        JJKOverlays.OVERLAYS.register(bus);
+
         JJKEntities.ENTITIES.register(bus);
         JJKParticles.PARTICLES.register(bus);
         JJKBlocks.BLOCKS.register(bus);

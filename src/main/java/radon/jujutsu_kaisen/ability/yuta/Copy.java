@@ -14,7 +14,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class Copy extends Ability implements Ability.IToggled {
     @Override
@@ -78,7 +78,7 @@ public class Copy extends Ability implements Ability.IToggled {
                             if (copied == null || current == null) return;
 
                             if (!current.equals(copied)) {
-                                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.copy", JujutsuKaisen.MOD_ID), copied.getComponent()));
+                                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.copy", JujutsuKaisen.MOD_ID), copied.getName()));
 
                                 attackerCap.setCopied(copied);
                                 attackerCap.toggle(attacker, JJKAbilities.COPY.get());

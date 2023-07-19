@@ -17,11 +17,11 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.JJKKeyMapping;
+import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 
 public class ClientAbilityHandler {
     private static @Nullable Ability channeled;
@@ -69,14 +69,14 @@ public class ClientAbilityHandler {
             if (mc.player == null) return;
 
             if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeyMapping.ACTIVATE_ABILITY.isDown()) {
+                if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
                     Ability ability = AbilityOverlay.getSelected();
 
                     if (ability != null) {
                         if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
                             mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
-                                current = JJKKeyMapping.ACTIVATE_ABILITY;
+                                current = JJKKeys.ACTIVATE_ABILITY;
                             });
                         } else {
                             PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
@@ -85,21 +85,16 @@ public class ClientAbilityHandler {
                     }
                 }
 
-                if (JJKKeyMapping.ACTIVATE_RCT_OR_HEAL.isDown()) {
+                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                     mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
-                        current = JJKKeyMapping.ACTIVATE_RCT_OR_HEAL;
+                        current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
                     });
                 }
 
-                if (JJKKeyMapping.ACTIVATE_SIMPLE_DOMAIN.isDown()) {
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.SIMPLE_DOMAIN.get())));
-                    ClientAbilityHandler.trigger(JJKAbilities.SIMPLE_DOMAIN.get());
-                }
-
-                if (JJKKeyMapping.ABILITY_RIGHT.isDown()) {
+                if (JJKKeys.ABILITY_RIGHT.isDown()) {
                     AbilityOverlay.scroll(1);
-                } else if (JJKKeyMapping.ABILITY_LEFT.isDown()) {
+                } else if (JJKKeys.ABILITY_LEFT.isDown()) {
                     AbilityOverlay.scroll(-1);
                 }
             }

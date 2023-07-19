@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.model.YutaOkkotsuModel;
+import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
 import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
 
 public class YutaOkkotsuRenderer extends HumanoidMobRenderer<YutaOkkotsuEntity, YutaOkkotsuModel> {

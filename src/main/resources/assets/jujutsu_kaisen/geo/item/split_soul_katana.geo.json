@@ -1,0 +1,26 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.split_soul_katana",
+				"texture_width": 32,
+				"texture_height": 32,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, -6.5, 0.4], "size": [1, 8, 2], "uv": [6, 5]},
+						{"origin": [0.0625, 2.5, -0.5875], "size": [0, 24, 3], "uv": [0, 0]},
+						{"origin": [-1.6875, 1.5, -0.65], "size": [3.25, 1, 4], "uv": [6, 0]}
+					]
+				}
+			]
+		}
+	]
+}

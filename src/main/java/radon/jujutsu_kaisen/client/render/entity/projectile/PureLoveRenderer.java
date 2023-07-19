@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.render.entity.projectile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +18,6 @@ import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.PureLoveProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class PureLoveRenderer extends EntityRenderer<PureLoveProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
@@ -33,59 +33,51 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveProjectile> {
     public void render(PureLoveProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         Minecraft mc = Minecraft.getInstance();
 
-        assert mc.player != null;
-
         poseStack.pushPose();
         poseStack.translate(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
 
         Entity viewer = mc.getCameraEntity();
 
-        if (viewer != null) {
-            float yaw = viewer.getViewYRot(partialTick);
-            float pitch = viewer.getViewXRot(partialTick);
-            HelperMethods.rotateQ(360.0F - yaw, 0.0F, 1.0F, 0.0F, poseStack);
-            HelperMethods.rotateQ(pitch + 90.0F, 1.0F, 0.0F, 0.0F, poseStack);
+        if (viewer == null) return;
 
-            float width = SIZE;
-            float height = SIZE;
-            float x1 = -width;
-            float y1 = -height;
-            float x2 = width;
-            float y2 = height;
+        float yaw = viewer.getViewYRot(partialTick);
+        float pitch = viewer.getViewXRot(partialTick);
+        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
 
-            VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
-            Matrix4f pose = poseStack.last().pose();
+        VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
+        Matrix4f pose = poseStack.last().pose();
 
-            consumer.vertex(pose, x1, 0.0F, y1)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
-                    .uv(0.0F, 0.0F)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(LightTexture.FULL_SKY)
-                    .normal(0.0F, 1.0F, 0.0F)
-                    .endVertex();
-            consumer.vertex(pose, x1, 0.0F, y2)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
-                    .uv(0.0F, 1.0F)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(LightTexture.FULL_SKY)
-                    .normal(0.0F, 1.0F, 0.0F)
-                    .endVertex();
-            consumer.vertex(pose, x2, 0.0F, y2)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
-                    .uv(1.0F, 1.0F)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(LightTexture.FULL_SKY)
-                    .normal(0.0F, 1.0F, 0.0F)
-                    .endVertex();
-            consumer.vertex(pose, x2, 0.0F, y1)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
-                    .uv(1.0F, 0.0F)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(LightTexture.FULL_SKY)
-                    .normal(0.0F, 1.0F, 0.0F)
-                    .endVertex();
-            mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
-        }
+        consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
+                .color(1.0F, 1.0F, 1.0F, 1.0F)
+                .uv(0.0F, 0.0F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(LightTexture.FULL_SKY)
+                .normal(0.0F, 1.0F, 0.0F)
+                .endVertex();
+        consumer.vertex(pose, -SIZE, 0.0F, SIZE)
+                .color(1.0F, 1.0F, 1.0F, 1.0F)
+                .uv(0.0F, 1.0F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(LightTexture.FULL_SKY)
+                .normal(0.0F, 1.0F, 0.0F)
+                .endVertex();
+        consumer.vertex(pose, SIZE, 0.0F, SIZE)
+                .color(1.0F, 1.0F, 1.0F, 1.0F)
+                .uv(1.0F, 1.0F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(LightTexture.FULL_SKY)
+                .normal(0.0F, 1.0F, 0.0F)
+                .endVertex();
+        consumer.vertex(pose, SIZE, 0.0F, -SIZE)
+                .color(1.0F, 1.0F, 1.0F, 1.0F)
+                .uv(1.0F, 0.0F)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(LightTexture.FULL_SKY)
+                .normal(0.0F, 1.0F, 0.0F)
+                .endVertex();
+        mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
+
         poseStack.popPose();
     }
 

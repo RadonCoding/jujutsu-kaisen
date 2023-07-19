@@ -38,7 +38,7 @@ public abstract class DomainExpansion extends Ability {
         }
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            result.set(owner.getHealth() / owner.getMaxHealth() < 0.75F || target.getHealth() > owner.getHealth());
+            result.set(owner.getHealth() / owner.getMaxHealth() < 0.75F || target.getHealth() / owner.getHealth() > 2);
 
             for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
                 result.set(true);

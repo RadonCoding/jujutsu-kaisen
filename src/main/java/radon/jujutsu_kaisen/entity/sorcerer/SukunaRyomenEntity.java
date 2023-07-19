@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -73,11 +72,11 @@ public class SukunaRyomenEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
         this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.YUJI_CHESTPLATE.get()));
         this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.YUJI_LEGGINGS.get()));
         this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.YUJI_BOOTS.get()));
-
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 }

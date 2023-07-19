@@ -22,7 +22,7 @@ public class MouseHandler {
             return;
         }
 
-        if (JJKKeyMapping.ABILITY_SCROLL.isDown()) {
+        if (JJKKeys.ABILITY_SCROLL.isDown()) {
             if (AbilityOverlay.scroll(i)) {
                 event.setCanceled(true);
             }

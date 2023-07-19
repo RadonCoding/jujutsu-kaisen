@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.UnlimitedVoidS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.UnlimitedVoidS2CPacket;
 
 public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
@@ -35,7 +35,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
 
     @Override
     public DomainBlock getBlock() {
-        return JJKBlocks.INFINITE_VOID.get();
+        return JJKBlocks.UNLIMITED_VOID.get();
     }
 
     @Override

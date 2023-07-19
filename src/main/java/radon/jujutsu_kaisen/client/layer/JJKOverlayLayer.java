@@ -8,13 +8,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
-import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.RequestOverlayDataC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.RequestOverlayDataC2SPacket;
 
 import java.util.Set;
 
@@ -32,7 +31,7 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
         boolean remote = pLivingEntity != mc.player;
 
         mc.player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
-            Set<ResourceLocation> overlays;
+            Set<Overlay> overlays;
 
             if (remote) {
                 if (cap.isSynced(pLivingEntity.getUUID())) {
@@ -45,9 +44,9 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
                 overlays = cap.getLocalOverlays();
             }
 
-            for (ResourceLocation overlay : overlays) {
-                VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.eyes(overlay));
-                this.getParentModel().renderToBuffer(pMatrixStack, consumer, 15728640, OverlayTexture.NO_OVERLAY,
+            for (Overlay overlay : overlays) {
+                VertexConsumer consumer = pBuffer.getBuffer(overlay.getRenderType());
+                this.getParentModel().renderToBuffer(pMatrixStack, consumer, overlay.getPackedLight(), OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
             }
         });

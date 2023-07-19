@@ -4,7 +4,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -22,10 +21,6 @@ public class SorcererDataHandler {
     public static void attach(AttachCapabilitiesEvent<Entity> event) {
         SorcererDataProvider provider = new SorcererDataProvider();
         event.addCapability(SorcererDataProvider.IDENTIFIER, provider);
-
-        if (event.getObject() instanceof Player && !provider.cap.isInitialized()) {
-            provider.cap.generate();
-        }
     }
 
     private static class SorcererDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {

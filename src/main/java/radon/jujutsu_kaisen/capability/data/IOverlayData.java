@@ -1,21 +1,21 @@
 package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
 
 import java.util.Set;
 import java.util.UUID;
 
 public interface IOverlayData {
-    void sync(UUID identifier);
+    void sync(LivingEntity owner);
 
-    void addLocalOverlay(LivingEntity owner, ResourceLocation overlay);
-    void removeLocalOverlay(LivingEntity owner, ResourceLocation overlay);
+    void addLocalOverlay(LivingEntity owner, Overlay overlay);
+    void removeLocalOverlay(LivingEntity owner, Overlay overlay);
 
-    Set<ResourceLocation> getLocalOverlays();
+    Set<Overlay> getLocalOverlays();
 
-    Set<ResourceLocation> getRemoteOverlays(UUID identifier);
+    Set<Overlay> getRemoteOverlays(UUID identifier);
     boolean isSynced(UUID identifier);
 
     void tick(LivingEntity owner);

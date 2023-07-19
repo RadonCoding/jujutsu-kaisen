@@ -9,11 +9,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Heal extends Ability {
-    private static final float AMOUNT = 1.0F;
+    private static final float AMOUNT = 0.25F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getHealth() < owner.getMaxHealth();
+        return (owner.getHealth() / owner.getMaxHealth()) < 0.75F;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class Heal extends Ability {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (owner.getHealth() < owner.getMaxHealth()) {
-                result.set(10.0F);
+                result.set(5.0F);
             }
         });
         return result.get();

@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
 
@@ -126,7 +126,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
             // If the strength of the other domain is two times stronger then break
             // else if the strength is more than or equal cancel sure hit
             if (domain.getStrength() / this.getStrength() > 2) {
-                this.kill();
+                this.discard();
                 return false;
             } else if (domain.getStrength() >= this.getStrength()) {
                 return false;
