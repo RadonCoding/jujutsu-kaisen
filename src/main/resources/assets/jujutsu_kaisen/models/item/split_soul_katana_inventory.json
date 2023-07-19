@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "jujutsu_kaisen:item/split_soul_katana_inventory"
+  }
+}

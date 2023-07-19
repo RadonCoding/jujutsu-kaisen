@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -21,6 +22,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
@@ -41,6 +43,11 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableCurseGoal(this, true));
+    }
+
+    @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        return !(pTarget instanceof RikaEntity rika && rika.getOwner() == this) && super.canAttack(pTarget);
     }
 
     @Override

@@ -33,8 +33,7 @@ public class PureLoveProjectile extends JujutsuProjectile {
         super(JJKEntities.PURE_LOVE.get(), pShooter.level, pShooter);
 
         Vec3 look = pShooter.getLookAngle();
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(look.scale(OFFSET));
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 

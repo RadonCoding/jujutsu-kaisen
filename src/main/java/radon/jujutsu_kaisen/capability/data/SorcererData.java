@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -259,7 +260,11 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
-        if (owner instanceof Player) {
+        if (owner instanceof Player player) {
+            if (!this.initialized) {
+                this.generate(player);
+                this.initialized = true;
+            }
             if (!owner.level.isClientSide) {
                 this.checkAdvancements((ServerPlayer) owner);
             }
@@ -281,11 +286,11 @@ public class SorcererData implements ISorcererData {
                     Math.ceil((grade.ordinal() * 10.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Math.min(4, grade.ordinal() - 1),
+            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(4, grade.ordinal() - 1),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(2, grade.ordinal() - 1),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.SATURATION, 2, 0,
                     false, false, false));
@@ -294,9 +299,9 @@ public class SorcererData implements ISorcererData {
                     Math.ceil((grade.ordinal() * 5.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Math.min(3, grade.ordinal() - 1),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Math.min(1, grade.ordinal() - 1),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
         }
     }
@@ -363,7 +368,7 @@ public class SorcererData implements ISorcererData {
                     this.experience, next.getRequiredExperience()));
         }
 
-        // If the sorcerer has enough experience and the curse exorcised was higher rank than the current rank of the sorcerer
+        // If the sorcerer has enough experience and the curse/sorcerer exorcised was higher rank than the current rank of the curse/sorcerer
         if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
             this.grade = next;
 
@@ -571,12 +576,7 @@ public class SorcererData implements ISorcererData {
         return null;
     }
 
-    public boolean isInitialized() {
-        return this.initialized;
-    }
-
-    @Override
-    public void generate() {
+    private void generate(Player player) {
         this.initialized = true;
 
         if (HelperMethods.RANDOM.nextInt(10) == 0) {
@@ -586,6 +586,15 @@ public class SorcererData implements ISorcererData {
                 this.addTrait(Trait.SIX_EYES);
             }
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+            this.curse = HelperMethods.RANDOM.nextInt(5) == 0;
+
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
+
+            if (this.curse) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
+            } else {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
+            }
         }
         this.energy = this.getMaxEnergy();
     }

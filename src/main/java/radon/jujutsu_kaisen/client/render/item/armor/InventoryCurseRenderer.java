@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.client.render.item.armor;
 
-import radon.jujutsu_kaisen.client.model.InventoryCurseModel;
+import radon.jujutsu_kaisen.client.model.item.armor.InventoryCurseModel;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 

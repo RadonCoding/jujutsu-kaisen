@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +17,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class DismantleProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 10.0F;
@@ -38,10 +36,6 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
 
         this.shootFromRotation(pShooter, pShooter.getXRot(), pShooter.getYRot(), 0.0F, SPEED, 1.0F);
-
-        if (!this.level.isClientSide) {
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        }
     }
 
     @Override

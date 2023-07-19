@@ -32,8 +32,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public FireArrowProjectile(LivingEntity pShooter) {
         super(JJKEntities.FIRE_ARROW.get(), pShooter.level, pShooter);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(pShooter.getLookAngle());
+        Vec3 look = pShooter.getLookAngle();
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
@@ -59,15 +59,12 @@ public class FireArrowProjectile extends JujutsuProjectile {
         Vec3 dir = this.getDeltaMovement().normalize();
 
         for (int i = 0; i < 50; i++) {
-            float yaw = this.random.nextFloat() * 360.0F;
-            Vec3 yawRot = dir.yRot(yaw);
+            Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
+            Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
 
-            float pitch = this.random.nextFloat() * 180.0F - 90.0F;
-            Vec3 pitchRot = yawRot.xRot(pitch);
-
-            double dx = pitchRot.x + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dy = pitchRot.y + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dz = pitchRot.z + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
             if (!this.level.isClientSide) {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);

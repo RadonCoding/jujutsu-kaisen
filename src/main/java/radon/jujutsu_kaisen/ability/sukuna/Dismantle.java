@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.ability.sukuna;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Dismantle extends Ability {
@@ -25,6 +27,10 @@ public class Dismantle extends Ability {
 
         DismantleProjectile dismantle = new DismantleProjectile(owner);
         owner.level.addFreshEntity(dismantle);
+
+        if (!owner.level.isClientSide) {
+            owner.level.playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        }
     }
 
     @Override

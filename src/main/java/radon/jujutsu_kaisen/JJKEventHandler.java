@@ -9,6 +9,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,12 +17,13 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class JJKEventHandler {
@@ -34,7 +36,7 @@ public class JJKEventHandler {
                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
 
                 player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap ->
-                        cap.sync(player.getUUID()));
+                        cap.sync(player));
             }
         }
 
@@ -107,39 +109,50 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onFall(LivingFallEvent event) {
+            event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    float distance = event.getDistance();
+                    event.setDistance(distance * 0.25F);
+                }
+            });
+        }
+
+        @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
             LivingEntity source = (LivingEntity) event.getSource().getEntity();
 
             if (source == null) return;
 
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(curseCap -> {
-                if (curseCap.isCurse()) {
-                    CurseGrade grade = CurseGrade.values()[curseCap.getGrade().ordinal()];
-                    LivingEntity killer;
+            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
+                LivingEntity killer;
 
-                    if (source instanceof SummonEntity summon) {
-                        LivingEntity owner = summon.getOwner();
-                        killer = owner == null ? source : owner;
-                    } else {
-                        killer = source;
-                    }
+                if (source instanceof SummonEntity summon) {
+                    LivingEntity owner = summon.getOwner();
+                    killer = owner == null ? source : owner;
+                } else {
+                    killer = source;
+                }
 
-                    killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
+                killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
+                    if (killerCap.isCurse() != victimCap.isCurse()) {
+                        CurseGrade grade = CurseGrade.values()[victimCap.getGrade().ordinal()];
+
                         killerCap.exorcise(killer, grade);
 
                         if (killer instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
                         }
-                    });
-                }
+                    }
+                });
             });
 
             if (HelperMethods.RANDOM.nextInt(100) == 0) {
                 victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (!cap.isCurse()) {
+                    if (!cap.isCurse() && cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
                         if (!cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
-                            victim.setHealth(victim.getMaxHealth() / 2);
+                            victim.heal(1.0F);
                             cap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
                             event.setCanceled(true);
                         }

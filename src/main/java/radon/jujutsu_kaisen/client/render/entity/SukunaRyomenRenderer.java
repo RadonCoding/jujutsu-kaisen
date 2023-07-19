@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.model.SukunaRyomenModel;
+import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 
 public class SukunaRyomenRenderer extends HumanoidMobRenderer<SukunaRyomenEntity, SukunaRyomenModel> {

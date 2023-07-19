@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.RequestSorcererDataC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.RequestSorcererDataC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.AbstractMap;
@@ -55,13 +55,15 @@ public class SixEyesOverlay {
                     if (target.getUUID().equals(identifier)) {
                         ISorcererData data = current.getValue();
 
+                        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
+
                         List<Component> lines = new ArrayList<>();
 
                         CursedTechnique technique = data.getTechnique();
 
                         if (technique != null) {
                             Component cursedTechniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                                    technique.getComponent());
+                                    technique.getName());
                             lines.add(cursedTechniqueText);
                         }
 

@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "builtin/entity"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "jujutsu_kaisen:item/pistol_inventory"
+    },
+    "ground": {
+      "parent": "jujutsu_kaisen:item/pistol_inventory"
+    },
+    "fixed": {
+      "parent": "jujutsu_kaisen:item/pistol_inventory"
+    }
+  }
+}

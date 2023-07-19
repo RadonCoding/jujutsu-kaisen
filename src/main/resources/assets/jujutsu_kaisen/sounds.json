@@ -3,5 +3,10 @@
     "sounds": [
       "jujutsu_kaisen:slash"
     ]
+  },
+  "gun": {
+    "sounds": [
+      "jujutsu_kaisen:gun"
+    ]
   }
 }

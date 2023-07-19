@@ -10,8 +10,8 @@ public enum SorcererGrade {
     GRADE_2(500.0F, 1.3F),
     SEMI_GRADE_1(1000.0F, 1.4F),
     GRADE_1(1500.0F, 1.5F),
-    SPECIAL_GRADE_1(2000.0F, 1.75F),
-    SPECIAL_GRADE(2500.0F, 2.0F);
+    SPECIAL_GRADE_1(2000.0F, 2.5F),
+    SPECIAL_GRADE(2500.0F, 3.0F);
 
     private final float required;
     private final float power;

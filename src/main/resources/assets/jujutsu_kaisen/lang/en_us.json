@@ -15,25 +15,37 @@
   "key.jujutsu_kaisen.ability_left": "Switch Ability Left",
   "key.jujutsu_kaisen.ability_scroll": "Cycle Abilities With Scroll Wheel",
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
-  "key.jujutsu_kaisen.activate_simple_domain": "Activate Simple Domain",
+  "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
 
   "item.jujutsu_kaisen.cursed_tool.grade": "Grade: %1$s",
 
   "item.jujutsu_kaisen.inverted_spear_of_heaven": "Inverted Spear of Heaven",
   "item.jujutsu_kaisen.inverted_spear_of_heaven.desc": "Nullifies all cursed techniques on contact.",
-
   "item.jujutsu_kaisen.playful_cloud": "Playful Cloud",
   "item.jujutsu_kaisen.playful_cloud.desc": "Relies on the raw power of its user for attacks.",
-
+  "item.jujutsu_kaisen.split_soul_katana": "Split Soul Katana",
+  "item.jujutsu_kaisen.split_soul_katana.desc": "Bypasses all resistance and cuts directly at the soul.",
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta Okkotsu's Sword",
+  "item.jujutsu_kaisen.pistol": "Pistol",
+
+  "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
+  "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
+
+  "item.jujutsu_kaisen.gojo_blindfold": "Gojo Blindfold",
+  "item.jujutsu_kaisen.gojo_chestplate": "Gojo Chestplate",
+  "item.jujutsu_kaisen.gojo_leggings": "Gojo Leggings",
+  "item.jujutsu_kaisen.gojo_boots": "Gojo Boots",
+
+  "item.jujutsu_kaisen.yuji_chestplate": "Yuji Chestplate",
+  "item.jujutsu_kaisen.yuji_leggings": "Yuji Leggings",
+  "item.jujutsu_kaisen.yuji_boots": "Yuji Boots",
 
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.gojo_satoru_spawn_egg": "Spawn Gojo Satoru",
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
-
-  "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
+  "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
@@ -80,6 +92,10 @@
   "ability.jujutsu_kaisen.copy.enable": "Activated copy",
   "ability.jujutsu_kaisen.copy.disable": "Deactivated copy",
 
+  "ability.jujutsu_kaisen.ember_insects": "Ember Insects",
+  "ability.jujutsu_kaisen.volcano": "Volcano",
+  "ability.jujutsu_kaisen.coffin_of_iron_mountain": "Coffin of Iron Mountain",
+
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
   "grade.jujutsu_kaisen.semi_grade_2": "Semi-Grade 2",
@@ -97,7 +113,11 @@
   "cursed_technique.jujutsu_kaisen.yuji": "Yuji",
   "cursed_technique.jujutsu_kaisen.yuta": "Yuta",
   "cursed_technique.jujutsu_kaisen.rika": "Rika",
+  "cursed_technique.jujutsu_kaisen.jogo": "Jogo",
 
+  "chat.jujutsu_kaisen.technique": "You were born with %1$s's technique",
+  "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
+  "chat.jujutsu_kaisen.sorcerer": "You're a jujutsu sorcerer",
   "chat.jujutsu_kaisen.exorcise": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
 
@@ -107,6 +127,7 @@
   "entity.jujutsu_kaisen.yuta_okkotsu": "Yuta Okkotsu",
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
   "entity.jujutsu_kaisen.rika": "Rika",
+  "entity.jujutsu_kaisen.jogo": "Jogo",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

@@ -10,7 +10,7 @@ import net.minecraftforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class SetGradeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {

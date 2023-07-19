@@ -8,6 +8,9 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.gojo.*;
+import radon.jujutsu_kaisen.ability.jogo.CoffinOfIronMountain;
+import radon.jujutsu_kaisen.ability.jogo.EmberInsects;
+import radon.jujutsu_kaisen.ability.jogo.Volcano;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.yuta.Copy;
 import radon.jujutsu_kaisen.ability.yuta.PureLove;
@@ -48,6 +51,10 @@ public class JJKAbilities {
     public static RegistryObject<Ability> RIKA = ABILITIES.register("rika", Rika::new);
     public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
     public static RegistryObject<Ability> COPY = ABILITIES.register("copy", Copy::new);
+
+    public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
+    public static RegistryObject<Ability> VOLCANO = ABILITIES.register("volcano", Volcano::new);
+    public static RegistryObject<Ability> COFFIN_OF_IRON_MOUNTAIN = ABILITIES.register("coffin_of_iron_mountain", CoffinOfIronMountain::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);

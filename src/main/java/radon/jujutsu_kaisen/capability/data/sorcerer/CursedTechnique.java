@@ -12,7 +12,8 @@ public enum CursedTechnique {
     SUKUNA(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.FIRE_ARROW.get()),
     TOGE(null),
     YUJI(null),
-    YUTA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get());
+    YUTA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
+    JOGO(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;
@@ -30,7 +31,7 @@ public enum CursedTechnique {
         return this.abilities;
     }
 
-    public Component getComponent() {
+    public Component getName() {
         return Component.translatable(String.format("cursed_technique.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
 }

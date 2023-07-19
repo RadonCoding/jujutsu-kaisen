@@ -14,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.curse.JogoEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
@@ -80,6 +81,17 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu")
                             .toString()));
 
+    public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
+            EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 3.875F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
+                            .toString()));
+
+    public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
+            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.MONSTER)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
+                            .toString()));
+
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
             EntityType.Builder.<DismantleProjectile>of(DismantleProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
@@ -92,16 +104,34 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")
                             .toString()));
 
-    public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
-            EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 3.875F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
-                            .toString()));
-
     public static RegistryObject<EntityType<PureLoveProjectile>> PURE_LOVE = ENTITIES.register("pure_love", () ->
             EntityType.Builder.<PureLoveProjectile>of(PureLoveProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")
+                            .toString()));
+
+    public static RegistryObject<EntityType<BulletProjectile>> BULLET = ENTITIES.register("bullet", () ->
+            EntityType.Builder.<BulletProjectile>of(BulletProjectile::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "bullet")
+                            .toString()));
+
+    public static RegistryObject<EntityType<EmberInsectProjectile>> EMBER_INSECT = ENTITIES.register("ember_insect", () ->
+            EntityType.Builder.<EmberInsectProjectile>of(EmberInsectProjectile::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")
+                            .toString()));
+
+    public static RegistryObject<EntityType<VolcanoEntity>> VOLCANO = ENTITIES.register("volcano", () ->
+            EntityType.Builder.<VolcanoEntity>of(VolcanoEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "volcano")
+                            .toString()));
+
+    public static RegistryObject<EntityType<LavaProjectile>> LAVA = ENTITIES.register("lava", () ->
+            EntityType.Builder.<LavaProjectile>of(LavaProjectile::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lava")
                             .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
@@ -111,6 +141,7 @@ public class JJKEntities {
         event.put(GOJO_SATORU.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
+        event.put(JOGO.get(), SorcererEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

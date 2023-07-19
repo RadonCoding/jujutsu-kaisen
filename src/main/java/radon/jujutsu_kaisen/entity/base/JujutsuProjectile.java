@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -96,5 +99,32 @@ public class JujutsuProjectile extends Projectile {
 
     private void setTime(int time) {
         this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
+
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+        d0 *= 64.0D * getViewScale();
+        return pDistance < d0 * d0;
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        Entity entity = this.getOwner();
+        int i = entity == null ? 0 : entity.getId();
+        return new ClientboundAddEntityPacket(this.getId(), this.getUUID(), this.getX(), this.getY(), this.getZ(),
+                this.getXRot(), this.getYRot(), this.getType(), i, this.getDeltaMovement(), 0.0D);
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        this.moveTo(pPacket.getX(), pPacket.getY(), pPacket.getZ(), pPacket.getYRot(), pPacket.getXRot());
+        this.setDeltaMovement(pPacket.getXa(), pPacket.getYa(), pPacket.getZa());
     }
 }

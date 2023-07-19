@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,6 +27,8 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target != null || owner.getHealth() / owner.getMaxHealth() < 0.5F) return false;
+
         AtomicBoolean result = new AtomicBoolean();
 
         if (!owner.level.isClientSide) {
@@ -62,12 +64,12 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
     @Override
     public int getDuration() {
-        return 5 * 20;
+        return 20;
     }
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 10 * 20;
     }
 
     @Override

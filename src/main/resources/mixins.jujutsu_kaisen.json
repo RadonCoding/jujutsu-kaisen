@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "radon.jujutsu_kaisen.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": [],
+  "client": [
+    "client.HumanoidModelMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
@@ -47,6 +48,16 @@ public abstract class DomainExpansionEntity extends Mob {
 
         this.ability = ability;
         this.duration = duration;
+    }
+
+    @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
+    }
+
+    @Override
+    protected boolean updateInWaterStateAndDoFluidPushing() {
+        return false;
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
@@ -175,7 +186,7 @@ public abstract class DomainExpansionEntity extends Mob {
 
         if (owner != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getGrade().getPower() * (owner.getHealth() / owner.getMaxHealth())));
+                    result.set(cap.getGrade().getPower() + (owner.getHealth() / owner.getMaxHealth()) + (cap.getEnergy() / cap.getMaxEnergy())));
         }
         return result.get();
     }
