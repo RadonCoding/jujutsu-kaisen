@@ -25,7 +25,7 @@ public enum SorcererGrade {
         return this.required;
     }
 
-    public Component getComponent() {
+    public Component getName() {
         return Component.translatable(String.format("grade.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
 

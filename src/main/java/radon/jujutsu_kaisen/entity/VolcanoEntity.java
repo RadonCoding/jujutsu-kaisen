@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,11 +47,17 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             this.discard();
         } else if (this.getTime() >= DELAY) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                Vec3 pos = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+                Vec3 pos = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())
+                        .subtract(this.getLookAngle());
                 LavaProjectile lava = new LavaProjectile(owner, pos.x(), pos.y(), pos.z());
                 lava.shootFromRotation(owner, this.getXRot(), this.getYRot(), 0.0F, LavaProjectile.SPEED, 0.0F);
                 this.level.addFreshEntity(lava);
             }
+        }
+
+        if (this.getTime() % 5 == 0) {
+            Vec3 speed = this.getLookAngle().scale(0.25D);
+            this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
         }
     }
 

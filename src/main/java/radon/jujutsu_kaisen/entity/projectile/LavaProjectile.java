@@ -23,7 +23,7 @@ public class LavaProjectile extends JujutsuProjectile {
     public LavaProjectile(LivingEntity pShooter, double x, double y, double z) {
         super(JJKEntities.LAVA.get(), pShooter.level, pShooter);
 
-        this.moveTo(x, y, z);
+        this.moveTo(x, y - (this.getBbHeight() / 2.0F), z);
     }
 
     private void hurtEntities() {
