@@ -99,9 +99,6 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     }
 
     private void pickWeapon(LivingEntity target) {
-        this.goalSelector.removeGoal(this.melee);
-        this.goalSelector.removeGoal(this.ranged);
-
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -122,8 +119,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         }
 
         if (stack.is(JJKItems.PISTOL.get())) {
+            this.goalSelector.removeGoal(this.melee);
             this.goalSelector.addGoal(1, this.ranged);
         } else {
+            this.goalSelector.removeGoal(this.ranged);
             this.goalSelector.addGoal(1, this.melee);
         }
     }
@@ -142,7 +141,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
 
         LivingEntity target = this.getTarget();
 
-        if (target != null && this.tickCount % 5 == 0) {
+        if (target != null) {
             this.pickWeapon(target);
         }
     }

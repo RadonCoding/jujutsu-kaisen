@@ -286,11 +286,11 @@ public class SorcererData implements ISorcererData {
                     Math.ceil((grade.ordinal() * 10.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0,
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.SATURATION, 2, 0,
                     false, false, false));
@@ -299,7 +299,7 @@ public class SorcererData implements ISorcererData {
                     Math.ceil((grade.ordinal() * 5.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(2.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
@@ -373,7 +373,7 @@ public class SorcererData implements ISorcererData {
             this.grade = next;
 
             if (owner instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getComponent()));
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getName()));
             }
         }
     }

@@ -68,7 +68,7 @@ public class SixEyesOverlay {
                         }
 
                         Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                                data.getGrade().getComponent());
+                                data.getGrade().getName());
                         lines.add(gradeText);
 
                         Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
