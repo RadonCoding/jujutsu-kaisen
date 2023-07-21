@@ -28,7 +28,7 @@ public class MeteorEntity extends Entity {
     public static final int SIZE = 10;
     public static final int HEIGHT = 30;
 
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 40.0F;
     private static final int EXPLOSION_DURATION = SIZE * 10;
     private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
     private static final float MAX_EXPLOSION = 20.0F;
@@ -247,8 +247,10 @@ public class MeteorEntity extends Entity {
 
             if (owner != null) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
+                    if (this.explosionTime == 0) {
+                        for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
+                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
+                        }
                     }
 
                     if (this.isOnGround()) {
