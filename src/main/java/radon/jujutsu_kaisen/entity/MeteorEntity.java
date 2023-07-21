@@ -26,10 +26,12 @@ import java.util.UUID;
 
 public class MeteorEntity extends Entity {
     public static final int SIZE = 10;
-    private static final int HEIGHT = 30;
-    private static final int DAMAGE = 100;
+    public static final int HEIGHT = 30;
+
+    private static final int DAMAGE = 10;
     private static final int EXPLOSION_DURATION = SIZE * 10;
     private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
+    private static final float MAX_EXPLOSION = 15.0F;
 
     private int explosionTime;
 
@@ -58,7 +60,6 @@ public class MeteorEntity extends Entity {
         this.setOwner(owner);
 
         this.setPos(owner.position().add(0.0D, HEIGHT, 0.0D));
-
         owner.startRiding(this);
     }
 
@@ -246,13 +247,13 @@ public class MeteorEntity extends Entity {
 
             if (owner != null) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -SIZE, 0.0D))) {
+                    for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                     }
 
                     if (this.isOnGround()) {
                         if (this.explosionTime == 0) {
-                            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), SIZE * cap.getGrade().getPower(), EXPLOSION_DURATION, owner);
+                            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getPower()), EXPLOSION_DURATION, owner);
                             this.explosionTime++;
                         }
                     }
