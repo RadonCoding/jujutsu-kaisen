@@ -9,7 +9,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Heal extends Ability {
-    private static final float AMOUNT = 0.25F;
+    private static final float AMOUNT = 0.1F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

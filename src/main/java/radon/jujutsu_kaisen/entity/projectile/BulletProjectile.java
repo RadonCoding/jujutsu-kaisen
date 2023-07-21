@@ -23,9 +23,8 @@ public class BulletProjectile extends JujutsuProjectile {
     public BulletProjectile(LivingEntity pShooter) {
         super(JJKEntities.BULLET.get(), pShooter.level, pShooter);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(pShooter.getLookAngle());
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ());
+        this.setPos(spawn.x(), spawn.y(), spawn.z());
     }
 
     @Override

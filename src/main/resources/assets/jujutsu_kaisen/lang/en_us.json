@@ -56,6 +56,8 @@
 
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.smash": "Smash",
+  "ability.jujutsu_kaisen.air_punch": "Air Punch",
+  "ability.jujutsu_kaisen.uppercut": "Uppercut",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
   "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
@@ -131,8 +133,10 @@
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
+  "effect.jujutsu_kaisen.undetectable": "Undetectable",
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
+  "death.attack.jujutsu_projectile": "%1$s was killed by %2$s using jujutsu",
 
   "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
   "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",

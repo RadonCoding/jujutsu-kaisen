@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.concurrent.Callable;
 
 public interface ISorcererData {
     void tick(LivingEntity owner);
@@ -64,7 +64,8 @@ public interface ISorcererData {
     long getLastBlackFlashTime();
     boolean isInZone(LivingEntity owner);
 
-    void delayTickEvent(Consumer<LivingEntity> task, int delay);
+    void delayTickEvent(Runnable task, int delay);
+    void scheduleTickEvent(Callable<Boolean> task, int duration);
 
     void setCopied(@Nullable CursedTechnique technique);
     @Nullable CursedTechnique getCopied();

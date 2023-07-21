@@ -154,9 +154,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         int delay = radius - (pos.getY() - center.getY());
 
                         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            cap.delayTickEvent((ownerClone) -> {
+                            cap.delayTickEvent(() -> {
                                 if (!this.isRemoved()) {
-                                    ownerClone.level.setBlockAndUpdate(pos, this.block);
+                                    owner.level.setBlockAndUpdate(pos, this.block);
                                 }
                             }, delay);
                         });

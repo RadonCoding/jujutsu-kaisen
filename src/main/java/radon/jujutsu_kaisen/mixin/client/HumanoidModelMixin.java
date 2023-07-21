@@ -17,8 +17,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     private void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
         HumanoidModel<T> model = (HumanoidModel<T>) (Object) this;
 
-        if (pEntity.getMainHandItem().getItem() instanceof PistolItem)
-        {
+        if (pEntity.getMainHandItem().getItem() instanceof PistolItem) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.options.mainHand().get() == HumanoidArm.RIGHT) {

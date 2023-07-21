@@ -104,9 +104,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
                 if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
-                Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ())
-                        .normalize()
-                        .scale(PULL_STRENGTH);
+                Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).scale(PULL_STRENGTH);
                 entity.setDeltaMovement(direction);
             }
         }

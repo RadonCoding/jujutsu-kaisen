@@ -1,14 +1,10 @@
 package radon.jujutsu_kaisen.capability.data;
 
-import net.minecraft.world.entity.LivingEntity;
-
-import java.util.function.Consumer;
-
 public class DelayedTickEvent {
-    private final Consumer<LivingEntity> task;
+    private final Runnable task;
     private int delay;
 
-    public DelayedTickEvent(Consumer<LivingEntity> task, int delay) {
+    public DelayedTickEvent(Runnable task, int delay) {
         this.task = task;
         this.delay = delay;
     }
@@ -17,9 +13,9 @@ public class DelayedTickEvent {
         this.delay--;
     }
 
-    public boolean run(LivingEntity entity) {
+    public boolean run() {
         if (this.delay <= 0) {
-            this.task.accept(entity);
+            this.task.run();
             return true;
         }
         return false;

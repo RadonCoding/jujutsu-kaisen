@@ -58,6 +58,8 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
+    public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
+    public static RegistryObject<Ability> UPPERCUT = ABILITIES.register("uppercut", Uppercut::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", radon.jujutsu_kaisen.ability.misc.RCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
@@ -103,6 +105,9 @@ public class JJKAbilities {
         if (owner instanceof RikaEntity) abilities.add(JJKAbilities.PURE_LOVE.get());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            abilities.add(JJKAbilities.AIR_PUNCH.get());
+            abilities.add(JJKAbilities.UPPERCUT.get());
+
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 abilities.add(JJKAbilities.DASH.get());
             } else {

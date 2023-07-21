@@ -7,17 +7,12 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public class UnlimitedVoidOverlay {
+public class UnlimitedVoidHandler {
     private static final String[] SYMBOLS = {"⍑", "ʖ", "ᓵ", "╎", "ᒷ", "⍊", "⍋", "ᒲ", "リ", "ᔑ", "ꖎ", "ᒣ", "ᓭ", "ᘉ", "⨅", "╎⨅", "ᓵ⍑", "⍙", "ᔑ⨅", "ꖌ", "⍜", "⍀", "∷", "⨇", "ᒲ⍑", "ꖇ", "㇣", "˥", "˩", "˧˥˧", "ʢ", "ʖ̇ ", "˩˥ ", "ʖ̬ ", "ʖ̥"};
-
-    private static int time;
-
-    public static void trigger(int duration) {
-        time = duration;
-    }
 
     private static String generateRandomSGAText(int length) {
         StringBuilder sb = new StringBuilder();
@@ -31,16 +26,10 @@ public class UnlimitedVoidOverlay {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
+        Minecraft mc = Minecraft.getInstance();
 
-        if (time-- > 0) {
-            Minecraft mc = Minecraft.getInstance();
-
-            assert mc.player != null;
-
-            if (!mc.player.isAlive()) {
-                time = 0;
-            } else {
+        if (mc.player != null) {
+            if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                 mc.gui.setOverlayMessage(Component.literal(generateRandomSGAText(HelperMethods.RANDOM.nextInt(20, 100))), false);
             }
         }

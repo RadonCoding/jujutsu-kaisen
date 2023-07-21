@@ -47,7 +47,7 @@ public class BlackFlash {
 
                         if (!target.level.isClientSide) {
                             for (int i = 0; i < 12; i++) {
-                                cap.delayTickEvent(ignored -> {
+                                cap.delayTickEvent(() -> {
                                     for (int j = 0; j < 32; j++) {
                                         double d0 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
                                         double d1 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;

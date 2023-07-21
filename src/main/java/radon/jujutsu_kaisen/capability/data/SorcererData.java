@@ -27,13 +27,14 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.Callable;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
@@ -59,6 +60,7 @@ public class SorcererData implements ISorcererData {
 
     private final Set<Trait> traits;
     private final List<DelayedTickEvent> delayedTickEvents;
+    private final List<ScheduledTickEvent> scheduledTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
     private final Set<UUID> domains;
@@ -75,6 +77,7 @@ public class SorcererData implements ISorcererData {
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
         this.delayedTickEvents = new ArrayList<>();
+        this.scheduledTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
         this.durations = new HashMap<>();
         this.domains = new HashSet<>();
@@ -117,16 +120,28 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateTickEvents(LivingEntity owner) {
-        Iterator<DelayedTickEvent> iter = this.delayedTickEvents.iterator();
+    private void updateTickEvents() {
+        Iterator<DelayedTickEvent> delayed = this.delayedTickEvents.iterator();
 
-        while (iter.hasNext()) {
-            DelayedTickEvent event = iter.next();
+        while (delayed.hasNext()) {
+            DelayedTickEvent event = delayed.next();
 
             event.tick();
 
-            if (event.run(owner)) {
-                iter.remove();
+            if (event.run()) {
+                delayed.remove();
+            }
+        }
+
+        Iterator<ScheduledTickEvent> scheduled = this.scheduledTickEvents.iterator();
+
+        while (scheduled.hasNext()) {
+            ScheduledTickEvent event = scheduled.next();
+
+            event.tick();
+
+            if (event.run()) {
+                scheduled.remove();
             }
         }
     }
@@ -256,7 +271,7 @@ public class SorcererData implements ISorcererData {
 
         this.updateCooldowns();
         this.updateDurations(owner);
-        this.updateTickEvents(owner);
+        this.updateTickEvents();
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
@@ -286,13 +301,15 @@ public class SorcererData implements ISorcererData {
                     Math.ceil((grade.ordinal() * 10.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0,
+            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2,  Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.SATURATION, 2, 0,
+                    false, false, false));
+            owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0,
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
@@ -488,8 +505,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void delayTickEvent(Consumer<LivingEntity> task, int delay) {
+    public void delayTickEvent(Runnable task, int delay) {
         this.delayedTickEvents.add(new DelayedTickEvent(task, delay));
+    }
+
+    @Override
+    public void scheduleTickEvent(Callable<Boolean> task, int duration) {
+        this.scheduledTickEvents.add(new ScheduledTickEvent(task, duration));
     }
 
     @Override

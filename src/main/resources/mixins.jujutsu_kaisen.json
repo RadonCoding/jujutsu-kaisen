@@ -4,7 +4,8 @@
   "package": "radon.jujutsu_kaisen.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.HumanoidModelMixin"
+    "client.HumanoidModelMixin",
+    "client.EntityRendererMixin"
   ],
   "server": [],
   "injectors": {

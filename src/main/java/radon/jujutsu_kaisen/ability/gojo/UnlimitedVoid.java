@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.gojo;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -14,8 +13,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.UnlimitedVoidS2CPacket;
 
 public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
@@ -46,10 +43,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
             if (!living.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                 living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), duration, 0, false, false, false));
                 living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 4));
-
-                if (living instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new UnlimitedVoidS2CPacket(duration), player);
-                }
             }
         }
     }
