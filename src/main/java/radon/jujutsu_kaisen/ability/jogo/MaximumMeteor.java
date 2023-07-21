@@ -3,6 +3,10 @@ package radon.jujutsu_kaisen.ability.jogo;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.MeteorEntity;
@@ -19,12 +23,20 @@ public class MaximumMeteor extends Ability {
         return ActivationType.INSTANT;
     }
 
+    private boolean canSpawn(LivingEntity owner) {
+        Vec3 offset = owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.SIZE, 0.0D);
+        BlockHitResult hit = owner.level.clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        return hit.getType() != HitResult.Type.BLOCK;
+    }
+
     @Override
     public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+        if (this.canSpawn(owner)) {
+            owner.swing(InteractionHand.MAIN_HAND);
 
-        MeteorEntity meteor = new MeteorEntity(owner);
-        owner.level.addFreshEntity(meteor);
+            MeteorEntity meteor = new MeteorEntity(owner);
+            owner.level.addFreshEntity(meteor);
+        }
     }
 
     @Override
@@ -36,6 +48,15 @@ public class MaximumMeteor extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
+
+    @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        if (!this.canSpawn(owner)) {
+            return Status.FAILURE;
+        }
+        return super.checkTriggerable(owner);
+    }
+
 
     @Override
     public boolean isTechnique() {
