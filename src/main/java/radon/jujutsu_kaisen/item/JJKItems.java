@@ -44,7 +44,7 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
 
     public static RegistryObject<Item> PISTOL = ITEMS.register("pistol",
-            () -> new PistolItem(new Item.Properties().durability(250)));
+            () -> new PistolItem(new Item.Properties().durability(64)));
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 2960685, 14145495, new Item.Properties()));
