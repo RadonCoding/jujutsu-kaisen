@@ -35,7 +35,7 @@ public class SpinningParticle extends TextureSheetParticle {
         this.zd = pZSpeed;
 
         this.quadSize = options.size();
-        this.lifetime = 20;
+        this.lifetime = options.lifetime();
 
         Vector3f color = options.color();
         this.rCol = color.x();
@@ -78,25 +78,26 @@ public class SpinningParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public record SpinningParticleOptions(Vector3f color, double radius, float angle, float size) implements ParticleOptions {
+    public record SpinningParticleOptions(Vector3f color, double radius, float angle, float size, int lifetime) implements ParticleOptions {
         public static Vector3f BLUE_COLOR = Vec3.fromRGB24(30719).toVector3f();
 
         public static Deserializer<SpinningParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull SpinningParticle.SpinningParticleOptions fromCommand(@NotNull ParticleType<SpinningParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f color = SpinningParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new SpinningParticleOptions(color, reader.readDouble(), reader.readFloat(), reader.readFloat());
+                return new SpinningParticleOptions(color, reader.readDouble(), reader.readFloat(), reader.readFloat(), reader.readInt());
             }
 
             public @NotNull SpinningParticle.SpinningParticleOptions fromNetwork(@NotNull ParticleType<SpinningParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new SpinningParticleOptions(SpinningParticleOptions.readColorFromNetwork(buf), buf.readDouble(), buf.readFloat(), buf.readFloat());
+                return new SpinningParticleOptions(SpinningParticleOptions.readColorFromNetwork(buf), buf.readDouble(), buf.readFloat(), buf.readFloat(), buf.readInt());
             }
         };
         public static final Codec<SpinningParticleOptions> CODEC = RecordCodecBuilder.create((builder) ->
                 builder.group(ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(options -> options.color),
                                 Codec.DOUBLE.fieldOf("radius").forGetter(options -> options.radius),
                                 Codec.FLOAT.fieldOf("angle").forGetter(options -> options.angle),
-                                Codec.FLOAT.fieldOf("size").forGetter(options -> options.size))
+                                Codec.FLOAT.fieldOf("size").forGetter(options -> options.size),
+                                Codec.INT.fieldOf("lifetime").forGetter(options -> options.lifetime))
                         .apply(builder, SpinningParticleOptions::new));
 
         public static Vector3f readColorVector3f(StringReader reader) throws CommandSyntaxException {
@@ -126,12 +127,13 @@ public class SpinningParticle extends TextureSheetParticle {
             buf.writeDouble(this.radius);
             buf.writeFloat(this.angle);
             buf.writeFloat(this.size);
+            buf.writeInt(this.lifetime);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.radius, this.angle, this.size);
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+                    this.color.x(), this.color.y(), this.color.z(), this.radius, this.angle, this.size, this.lifetime);
         }
     }
 

@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.gojo.*;
 import radon.jujutsu_kaisen.ability.jogo.CoffinOfIronMountain;
 import radon.jujutsu_kaisen.ability.jogo.EmberInsects;
+import radon.jujutsu_kaisen.ability.jogo.MaximumMeteor;
 import radon.jujutsu_kaisen.ability.jogo.Volcano;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.yuta.Copy;
@@ -39,6 +40,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> INFINITY = ABILITIES.register("infinity", Infinity::new);
     public static RegistryObject<Ability> RED = ABILITIES.register("red", Red::new);
     public static RegistryObject<Ability> BLUE = ABILITIES.register("blue", Blue::new);
+    public static RegistryObject<Ability> MAXIMUM_BLUE = ABILITIES.register("maximum_blue", MaximumBlue::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
     public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
@@ -54,6 +56,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
     public static RegistryObject<Ability> VOLCANO = ABILITIES.register("volcano", Volcano::new);
+    public static RegistryObject<Ability> MAXIMUM_METEOR = ABILITIES.register("maximum_meteor", MaximumMeteor::new);
     public static RegistryObject<Ability> COFFIN_OF_IRON_MOUNTAIN = ABILITIES.register("coffin_of_iron_mountain", CoffinOfIronMountain::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);

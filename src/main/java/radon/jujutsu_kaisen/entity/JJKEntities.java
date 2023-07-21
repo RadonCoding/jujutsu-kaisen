@@ -37,6 +37,12 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")
                             .toString()));
 
+    public static RegistryObject<EntityType<MaximumBlueProjectile>> MAXIMUM_BLUE = ENTITIES.register("maximum_blue", () ->
+            EntityType.Builder.<MaximumBlueProjectile>of(MaximumBlueProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_blue")
+                            .toString()));
+
     public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
             EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
@@ -132,6 +138,12 @@ public class JJKEntities {
             EntityType.Builder.<LavaProjectile>of(LavaProjectile::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lava")
+                            .toString()));
+
+    public static RegistryObject<EntityType<MeteorEntity>> METEOR = ENTITIES.register("meteor", () ->
+            EntityType.Builder.<MeteorEntity>of(MeteorEntity::new, MobCategory.MISC)
+                    .sized(MeteorEntity.SIZE * 2, MeteorEntity.SIZE * 2)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meteor")
                             .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {

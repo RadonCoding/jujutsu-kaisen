@@ -272,12 +272,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             // If the domain is open and the strength is more than or equal then break
             // else if the strength is more than or equal cancel sure hit
-            if (domain.getStrength() > this.getStrength()) {
+            if (domain.getStrength() >= this.getStrength()) {
                 if (isCompleted) {
-                    this.discard();
+                    if (domain instanceof OpenDomainExpansionEntity) {
+                        this.discard();
+                    }
                 }
-                return false;
-            } else if (domain.getStrength() == this.getStrength()) {
                 return false;
             }
         }

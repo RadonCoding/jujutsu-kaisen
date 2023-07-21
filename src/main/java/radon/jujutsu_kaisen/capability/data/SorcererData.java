@@ -30,6 +30,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -275,14 +277,12 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
-        if (owner instanceof Player player) {
+        if (owner instanceof ServerPlayer player) {
             if (!this.initialized) {
-                this.generate(player);
                 this.initialized = true;
+                this.generate(player);
             }
-            if (!owner.level.isClientSide) {
-                this.checkAdvancements((ServerPlayer) owner);
-            }
+            this.checkAdvancements(player);
         }
 
         if (this.burnout > 0) {
@@ -598,7 +598,7 @@ public class SorcererData implements ISorcererData {
         return null;
     }
 
-    private void generate(Player player) {
+    private void generate(ServerPlayer player) {
         this.initialized = true;
 
         if (HelperMethods.RANDOM.nextInt(10) == 0) {
@@ -619,6 +619,8 @@ public class SorcererData implements ISorcererData {
             }
         }
         this.energy = this.getMaxEnergy();
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
     }
 
     @Override

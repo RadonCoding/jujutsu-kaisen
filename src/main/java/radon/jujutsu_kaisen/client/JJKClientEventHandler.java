@@ -140,6 +140,7 @@ public class JJKClientEventHandler {
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(JJKEntities.RED.get(), RedRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLUE.get(), BlueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), BlueRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
@@ -157,6 +158,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.LAVA.get(), LavaRenderer::new);
+            event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
         }
 
         @SubscribeEvent
