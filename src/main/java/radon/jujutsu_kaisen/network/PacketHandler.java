@@ -36,11 +36,6 @@ public class PacketHandler {
                 .encoder(TriggerAbilityC2SPacket::encode)
                 .consumerMainThread(TriggerAbilityC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(UnlimitedVoidS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(UnlimitedVoidS2CPacket::new)
-                .encoder(UnlimitedVoidS2CPacket::encode)
-                .consumerMainThread(UnlimitedVoidS2CPacket::handle)
-                .add();
         INSTANCE.messageBuilder(SyncOverlayDataLocalS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SyncOverlayDataLocalS2CPacket::new)
                 .encoder(SyncOverlayDataLocalS2CPacket::encode)

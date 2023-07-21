@@ -4,14 +4,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Teleport extends Ability {
-    public static final double RANGE = 100.0D;
+    private static final double RANGE = 100.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -24,14 +23,10 @@ public class Teleport extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        Entity result = null;
-
-        if (owner instanceof Player) {
-            if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
-                result = hit.getEntity();
-            }
+        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
+            return hit.getEntity();
         }
-        return result;
+        return null;
     }
 
     @Override

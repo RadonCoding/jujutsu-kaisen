@@ -111,13 +111,11 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             }
         }
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
-                this.level.explode(owner, location.x(), location.y(), location.z(),
-                        EXPLOSIVE_POWER * cap.getGrade().getPower(), Level.ExplosionInteraction.NONE);
+                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner), null, location,
+                        EXPLOSIVE_POWER * cap.getGrade().getPower(), false, Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();

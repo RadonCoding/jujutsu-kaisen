@@ -20,7 +20,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import java.util.List;
 
 public class RedProjectile extends JujutsuProjectile {
-    private static final float LAUNCH_POWER = 2.5F;
+    private static final double LAUNCH_POWER = 3.0D;
     private static final float EXPLOSIVE_POWER = 5.0F;
     private static final int DELAY = 20;
 
@@ -41,8 +41,8 @@ public class RedProjectile extends JujutsuProjectile {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
-                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ()).add(this.getLookAngle().scale(7.5D));
-                this.level.explode(owner, offset.x(), offset.y(), offset.z(), radius, Level.ExplosionInteraction.NONE);
+                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner), null, offset, radius, false, Level.ExplosionInteraction.NONE);
 
                 float f = radius * 2.0F;
                 int k1 = Mth.floor(offset.x() - (double) f - 1.0D);
@@ -69,8 +69,6 @@ public class RedProjectile extends JujutsuProjectile {
                                 d2 /= d3;
                                 double d4 = Explosion.getSeenPercent(offset, entity);
                                 double d5 = (1.0D - d) * d4;
-                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner),
-                                        (float) ((int) ((d5 * d5 + d5) / 2.0D * 7.0D * (double) f + 1.0D)) * cap.getGrade().getPower());
 
                                 double d6;
 
@@ -79,12 +77,8 @@ public class RedProjectile extends JujutsuProjectile {
                                 } else {
                                     d6 = d5;
                                 }
-
-                                d0 *= d6;
-                                d1 *= d6;
-                                d2 *= d6;
-                                Vec3 vec31 = new Vec3(d0, d1, d2).scale(LAUNCH_POWER);
-                                entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
+                                Vec3 movement = new Vec3(d0 * d6, d1 * d6, d2 * d6).scale(LAUNCH_POWER);
+                                entity.setDeltaMovement(entity.getDeltaMovement().add(movement));
                             }
                         }
                     }

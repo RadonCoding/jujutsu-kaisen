@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -102,7 +103,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
+            if (cap.getEnergy() / cap.getMaxEnergy() > 0.5F || cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 result.set(INVERTED_SPEAR_OF_HEAVEN);
             }
         });
@@ -124,6 +125,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         } else {
             this.goalSelector.removeGoal(this.ranged);
             this.goalSelector.addGoal(1, this.melee);
+        }
+
+        if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+            this.startUsingItem(InteractionHand.MAIN_HAND);
         }
     }
 
@@ -151,11 +156,13 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
 
         BulletProjectile bullet = new BulletProjectile(this);
-        double d0 = pTarget.getX() - this.getX();
-        double d1 = pTarget.getY(0.3333333333333333D) - bullet.getY();
-        double d2 = pTarget.getZ() - this.getZ();
+        double d0 = pTarget.getX() - bullet.getX();
+        double d1 = pTarget.getY() + (pTarget.getBbHeight() / 2.0F) - bullet.getY();
+        double d2 = pTarget.getZ() - bullet.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        bullet.shoot(d0, d1 + d3 * (double)0.2F, d2, BulletProjectile.SPEED, 0.0F);
+        bullet.shootFromRotation(this, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / Mth.PI)))),
+                Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / Mth.PI)) - 90.0F),
+                0.0F, BulletProjectile.SPEED, 0.0F);
         this.level.addFreshEntity(bullet);
 
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(),

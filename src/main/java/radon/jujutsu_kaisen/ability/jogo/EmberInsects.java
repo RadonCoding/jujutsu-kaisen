@@ -25,7 +25,7 @@ public class EmberInsects extends Ability {
             for (int i = 0; i < 12; i++) {
                 int delay = i * 2;
 
-                cap.delayTickEvent(ownerClone -> {
+                cap.delayTickEvent(() -> {
                     EmberInsectProjectile insect = new EmberInsectProjectile(owner,
                             HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
                             HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));

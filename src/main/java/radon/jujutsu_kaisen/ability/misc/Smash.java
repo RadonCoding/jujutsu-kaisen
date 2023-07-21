@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 public class Smash extends Ability {
     private static final float EXPLOSIVE_POWER = 1.5F;
@@ -30,7 +31,7 @@ public class Smash extends Ability {
             float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
             Vec3 explosionPos = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(owner.getLookAngle());
-            owner.level.explode(owner, explosionPos.x(), explosionPos.y(), explosionPos.z(), radius, Level.ExplosionInteraction.NONE);
+            owner.level.explode(owner, JJKDamageSources.jujutsuAttack(owner), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
         });
     }
 
