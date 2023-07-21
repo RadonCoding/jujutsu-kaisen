@@ -13,5 +13,6 @@ public class JJKCommands {
         SetGradeCommand.register(event.getDispatcher());
         SetTechniqueCommand.register(event.getDispatcher());
         TraitCommand.register(event.getDispatcher());
+        SetCurseCommand.register(event.getDispatcher());
     }
 }

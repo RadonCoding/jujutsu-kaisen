@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
     private static final float SPEED = 2.5F;
-    private static final float DAMAGE = 35.0F;
+    private static final float DAMAGE = 40.0F;
     private static final int DURATION = 10 * 20;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {

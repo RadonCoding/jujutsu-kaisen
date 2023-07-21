@@ -91,8 +91,6 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     runtimeOnly fg.deobf('curse.maven:spark-361579:4505309')
-    runtimeOnly fg.deobf('curse.maven:rubidium-574856:4448053')
-    runtimeOnly fg.deobf('curse.maven:oculus-581495:4451142')
 }
 
 jar {
