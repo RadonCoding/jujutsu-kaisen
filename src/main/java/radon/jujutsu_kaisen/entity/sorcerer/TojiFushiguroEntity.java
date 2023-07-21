@@ -126,18 +126,6 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
             this.goalSelector.removeGoal(this.ranged);
             this.goalSelector.addGoal(1, this.melee);
         }
-
-        if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-            this.startUsingItem(InteractionHand.MAIN_HAND);
-        }
-    }
-
-    @Override
-    public void setTarget(@Nullable LivingEntity pTarget) {
-        if (pTarget != null && this.getTarget() != pTarget) {
-            this.pickWeapon(pTarget);
-        }
-        super.setTarget(pTarget);
     }
 
     @Override
@@ -148,6 +136,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
 
         if (target != null) {
             this.pickWeapon(target);
+        }
+
+        if (!this.isUsingItem() && this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+            this.startUsingItem(InteractionHand.MAIN_HAND);
         }
     }
 

@@ -8,12 +8,12 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public enum CursedTechnique {
     GETO(null),
-    GOJO(JJKAbilities.UNLIMITED_VOID.get(),JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
+    GOJO(JJKAbilities.UNLIMITED_VOID.get(),JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(), JJKAbilities.MAXIMUM_BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
     SUKUNA(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.FIRE_ARROW.get()),
     TOGE(null),
     YUJI(null),
     YUTA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
-    JOGO(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get());
+    JOGO(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(), JJKAbilities.MAXIMUM_METEOR.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;

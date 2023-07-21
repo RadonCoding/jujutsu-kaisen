@@ -21,13 +21,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class BlueProjectile extends JujutsuProjectile {
     private static final double RANGE = 10.0D;
 
-    private static final double BALL_RADIUS = 2.0D;
-    private static final double PULL_RADIUS = BALL_RADIUS * 2;
-    private static final double RING_RADIUS = BALL_RADIUS + 0.5D;
     private static final double PULL_STRENGTH = 0.25D;
     private static final float PARTICLE_SIZE = 0.1F;
-    private static final float DAMAGE = 2.5F;
-    private static final int DURATION = 3 * 20;
     private static final double X_STEP = 0.15D;
     private static final double Y_STEP = 0.25D;
 
@@ -35,8 +30,12 @@ public class BlueProjectile extends JujutsuProjectile {
         super(pEntityType, level);
     }
 
+    public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level, LivingEntity pShooter) {
+        super(pEntityType, level, pShooter);
+    }
+
     public BlueProjectile(LivingEntity pShooter) {
-        super(JJKEntities.BLUE.get(), pShooter.level, pShooter);
+        this(JJKEntities.BLUE.get(), pShooter.level, pShooter);
 
         Vec3 start = pShooter.getEyePosition();
         Vec3 look = pShooter.getLookAngle();
@@ -44,12 +43,32 @@ public class BlueProjectile extends JujutsuProjectile {
         HitResult result = HelperMethods.getHitResult(pShooter, start, end);
 
         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-        this.moveTo(pos.x(), pos.y(), pos.z(), pShooter.getYRot(), pShooter.getXRot());
+        this.setPos(pos);
     }
 
-    @Override
-    public boolean ignoreExplosion() {
-        return true;
+    protected double getBallRadius() {
+        return 2.0D;
+    }
+
+    protected double getPullRadius() {
+        return this.getBallRadius() * 2;
+    }
+
+    protected double getRingRadius() {
+        double radius = this.getBallRadius();
+        return radius + (radius / 4);
+    }
+
+    protected int getInterval() {
+        return 20;
+    }
+
+    protected int getDuration() {
+        return 3 * 20;
+    }
+
+    protected float getDamage() {
+        return 2.5F;
     }
 
     private void createBall() {
@@ -59,7 +78,7 @@ public class BlueProjectile extends JujutsuProjectile {
             float angle = (float) (Math.cos(phi) * 360.0F);
 
             SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, RING_RADIUS, angle, PARTICLE_SIZE);
+                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, PARTICLE_SIZE, this.getInterval());
 
             this.level.addParticle(options, true, center.x(), center.y() + (Y_STEP / 2.0D), center.z(),
                     0.0D, 0.0D, 0.0D);
@@ -69,20 +88,20 @@ public class BlueProjectile extends JujutsuProjectile {
             float angle = (float) (Math.cos(phi) * 360.0F);
 
             SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, RING_RADIUS, angle, PARTICLE_SIZE);
+                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, PARTICLE_SIZE, this.getInterval());
 
             this.level.addParticle(options, true, center.x(), center.y() - (Y_STEP / 2.0D), center.z(),
                     0.0D, 0.0D, 0.0D);
         }
 
         for (double theta = -2.0D * Math.PI; theta < 2.0D * Math.PI; theta += Y_STEP) {
-            float radius = (float) (BALL_RADIUS * Math.cos(theta));
+            float radius = (float) (this.getBallRadius() * Math.cos(theta));
 
             for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
                 float angle = (float) (Math.cos(phi) * 360.0F);
 
                 SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                        SpinningParticle.SpinningParticleOptions.BLUE_COLOR, radius, angle, PARTICLE_SIZE);
+                        SpinningParticle.SpinningParticleOptions.BLUE_COLOR, radius, angle, PARTICLE_SIZE, this.getInterval());
 
                 double x = center.x();
                 double y = center.y() + radius * Math.tan(theta);
@@ -94,8 +113,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullEntities() {
-        AABB bounds = new AABB(this.getX() - PULL_RADIUS, this.getY() - PULL_RADIUS, this.getZ() - PULL_RADIUS,
-                this.getX() + PULL_RADIUS, this.getY() + PULL_RADIUS, this.getZ() + PULL_RADIUS);
+        AABB bounds = new AABB(this.getX() - this.getPullRadius(), this.getY() - this.getPullRadius(), this.getZ() - this.getPullRadius(),
+                this.getX() + this.getPullRadius(), this.getY() + this.getPullRadius(), this.getZ() + this.getPullRadius());
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
@@ -111,22 +130,22 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void hurtEntities() {
-        AABB bounds = new AABB(this.getX() - BALL_RADIUS, this.getY() - BALL_RADIUS, this.getZ() - BALL_RADIUS,
-                this.getX() + BALL_RADIUS, this.getY() + BALL_RADIUS, this.getZ() + BALL_RADIUS);
+        AABB bounds = new AABB(this.getX() - this.getBallRadius(), this.getY() - this.getBallRadius(), this.getZ() - this.getBallRadius(),
+                this.getX() + this.getBallRadius(), this.getY() + this.getBallRadius(), this.getZ() + this.getBallRadius());
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (Entity entity : this.level.getEntities(this, bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), this.getDamage() * cap.getGrade().getPower());
                 }
             });
         }
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox().inflate(BALL_RADIUS);
+        AABB bounds = this.getBoundingBox().inflate(this.getBallRadius());
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
@@ -139,7 +158,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= BALL_RADIUS) {
+                    if (distance <= this.getBallRadius()) {
                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             this.level.destroyBlock(pos, false);
                         }
@@ -151,10 +170,10 @@ public class BlueProjectile extends JujutsuProjectile {
 
     @Override
     public void tick() {
-        if (this.getTime() >= DURATION) {
+        if (this.getTime() >= this.getDuration()) {
             this.discard();
         } else {
-            if (this.getTime() % 20 == 0) {
+            if (this.getTime() % this.getInterval() == 0) {
                 this.createBall();
             }
             this.pullEntities();
