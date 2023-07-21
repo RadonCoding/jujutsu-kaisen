@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 public class PureLoveProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
     private static final float SPEED = 2.5F;
-    private static final float DAMAGE = 35.0F;
+    private static final float DAMAGE = 40.0F;
     private static final int DURATION = 10 * 20;
     private static final double OFFSET = 2.5D;
 

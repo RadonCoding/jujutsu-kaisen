@@ -3,9 +3,12 @@ package radon.jujutsu_kaisen.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -18,7 +21,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DomainBlock extends Block {
+public class DomainBlock extends Block implements EntityBlock {
     public DomainBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -50,5 +53,17 @@ public class DomainBlock extends Block {
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return SoundType.GLASS;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        return JJKBlockEntities.DOMAIN_BLOCK_ENTITY.get().create(pPos, pState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_BLOCK_ENTITY.get(), DomainBlockEntity::tick);
     }
 }
