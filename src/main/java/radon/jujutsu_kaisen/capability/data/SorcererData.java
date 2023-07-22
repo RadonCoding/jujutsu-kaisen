@@ -49,6 +49,7 @@ public class SorcererData implements ISorcererData {
     private SorcererGrade grade;
 
     private float energy;
+    private float used;
 
     private boolean curse;
 
@@ -277,6 +278,13 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
+        if (this.used >= 5000.0F) {
+            this.traits.add(Trait.DOMAIN_EXPANSION);
+        }
+        if (this.used >= 2500.0F) {
+            this.traits.add(Trait.SIMPLE_DOMAIN);
+        }
+
         if (owner instanceof ServerPlayer player) {
             if (!this.initialized) {
                 this.initialized = true;
@@ -476,6 +484,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void useEnergy(float amount) {
         this.energy -= amount;
+        this.used += amount;
     }
 
     @Override
@@ -658,6 +667,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("copied_timer", this.copiedTimer);
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
+        nbt.putFloat("used", this.used);
         nbt.putBoolean("curse", this.curse);
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("grade", this.grade.ordinal());
@@ -732,6 +742,7 @@ public class SorcererData implements ISorcererData {
         this.copiedTimer = nbt.getInt("copied_timer");
         this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
+        this.used = nbt.getFloat("used");
         this.curse = nbt.getBoolean("curse");
         this.burnout = nbt.getInt("burnout");
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];

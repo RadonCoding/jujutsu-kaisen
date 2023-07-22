@@ -10,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AirPunch extends Ability {
@@ -51,7 +52,8 @@ public class AirPunch extends Ability {
                     cap.scheduleTickEvent(() -> {
                         if (owner.distanceTo(target) < 3.0D) {
                             owner.swing(InteractionHand.MAIN_HAND);
-                            owner.level.explode(owner, owner.getX(), owner.getY(), owner.getZ(), 1.0F, Level.ExplosionInteraction.NONE);
+                            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null,
+                                    owner.getX(), owner.getY(), owner.getZ(), 1.0F, false, Level.ExplosionInteraction.NONE);
                             return true;
                         }
                         return false;

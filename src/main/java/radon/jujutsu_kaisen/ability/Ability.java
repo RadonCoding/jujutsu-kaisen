@@ -5,9 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import org.apache.commons.lang3.ArrayUtils;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -44,19 +42,6 @@ public abstract class Ability {
     public int getCooldown() { return 0; }
     public boolean isTechnique() {
         return false;
-    }
-
-    private boolean isCopied(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            CursedTechnique technique = cap.getCopied();
-
-            if (technique != null) {
-                result.set(ArrayUtils.contains(cap.getCopied().getAbilities(), this));
-            }
-        });
-        return result.get();
     }
 
     public int getRealCooldown(LivingEntity owner) {
@@ -176,9 +161,6 @@ public abstract class Ability {
         AtomicReference<Float> cost = new AtomicReference<>(this.getCost(owner));
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (this.isCopied(owner)) {
-                cost.set(cost.get() * 2);
-            }
             if (cap.hasTrait(Trait.SIX_EYES)) {
                 cost.set(cost.get() / 2);
             }

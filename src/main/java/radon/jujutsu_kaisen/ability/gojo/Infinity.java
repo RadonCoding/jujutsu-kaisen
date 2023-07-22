@@ -257,7 +257,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    if (source.is(JJKDamageSources.JUJUTSU_PROJECTILE) || source.is(JJKDamageSources.JUJUTSU)) {
+                    if (source.is(JJKDamageSources.JUJUTSU)) {
                         if (target.level instanceof ServerLevel level) {
                             for (DomainExpansionEntity domain : cap.getDomains(level)) {
                                 Entity owner = domain.getOwner();

@@ -134,8 +134,8 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
-            if (event.getSource().is(JJKDamageSources.JUJUTSU_PROJECTILE)) {
+        public static void onLivingAttack(LivingAttackEvent event) {
+            if (event.getSource().isIndirect() && event.getSource().is(JJKDamageSources.JUJUTSU)) {
                 LivingEntity owner = event.getEntity();
                 ItemStack stack = owner.getUseItem();
 
@@ -158,7 +158,7 @@ public class JJKEventHandler {
                     } else {
                         owner.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.4F);
                     }
-                    event.setAmount(event.getAmount() / 2);
+                    event.setCanceled(true);
                 }
             }
         }

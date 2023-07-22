@@ -237,14 +237,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             int radius = this.getRadius();
             boolean isCompleted = this.getTime() >= radius * 2;
 
-            // If the domain is open and the strength is more than or equal then break
-            // else if the strength is more than or equal cancel sure hit
-            if (domain.getStrength() >= this.getStrength()) {
+            if (domain instanceof OpenDomainExpansionEntity && this.getStrength() < domain.getStrength() * 2) {
                 if (isCompleted) {
-                    if (domain instanceof OpenDomainExpansionEntity) {
-                        this.discard();
-                    }
+                    this.discard();
                 }
+                return false;
+            } else if (domain.getStrength() >= this.getStrength()) {
                 return false;
             }
         }

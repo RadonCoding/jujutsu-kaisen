@@ -140,7 +140,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
             this.pickWeapon(target);
         }
 
-        if (!this.isUsingItem() && this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+        if (this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
             this.startUsingItem(InteractionHand.MAIN_HAND);
         }
     }
