@@ -235,6 +235,11 @@ public class MeteorEntity extends Entity {
     }
 
     @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 

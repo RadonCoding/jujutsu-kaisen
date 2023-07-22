@@ -76,8 +76,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
         if (owner != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
-                this.level.explode(owner, location.x(), location.y(), location.z(),
-                        EXPLOSIVE_POWER * cap.getGrade().getPower(), Level.ExplosionInteraction.NONE);
+                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null,
+                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(), false, Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();

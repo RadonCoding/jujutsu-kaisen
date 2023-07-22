@@ -18,7 +18,7 @@ public class RCT extends Ability {
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set((owner.getHealth() / owner.getMaxHealth()) < 0.75F || cap.hasTrait(Trait.SIX_EYES) && cap.getBurnout() > 0));
+                result.set((owner.getHealth() / owner.getMaxHealth()) < 0.75F || (cap.hasTrait(Trait.SIX_EYES) && cap.getBurnout() > 0)));
         return result.get();
     }
 
@@ -35,7 +35,7 @@ public class RCT extends Ability {
             int burnout = cap.getBurnout();
 
             if (burnout > 0) {
-                cap.setBurnout(--burnout);
+                cap.setBurnout((burnout / 2) - 1);
             }
         });
     }

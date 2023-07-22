@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -43,7 +44,7 @@ public class AvoidDomainsGoal extends Goal {
     }
 
     public AvoidDomainsGoal(PathfinderMob pMob, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
-        this(pMob, (entity) -> true, pWalkSpeedModifier, pSprintSpeedModifier, pPredicateOnAvoidEntity);
+        this(pMob, entity -> true, pWalkSpeedModifier, pSprintSpeedModifier, pPredicateOnAvoidEntity);
     }
     
     public boolean canUse() {
@@ -63,7 +64,8 @@ public class AvoidDomainsGoal extends Goal {
         if (this.toAvoid == null) {
             return false;
         } else {
-            Vec3 pos = DefaultRandomPos.getPosAway(this.mob, 16, 7, this.toAvoid.position());
+            AABB bounds = this.toAvoid.getBounds();
+            Vec3 pos = DefaultRandomPos.getPosAway(this.mob, (int) bounds.getXsize(), (int) bounds.getYsize(), this.toAvoid.position());
 
             if (pos == null) {
                 return false;

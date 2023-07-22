@@ -9,14 +9,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 import javax.annotation.Nullable;
 
 public class JJKDamageSources {
     public static final ResourceKey<DamageType> JUJUTSU = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu"));
-    public static final ResourceKey<DamageType> JUJUTSU_PROJECTILE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu_projectile"));
 
     public static DamageSource jujutsuAttack(LivingEntity mob) {
         RegistryAccess registry = mob.level.registryAccess();
@@ -27,7 +25,6 @@ public class JJKDamageSources {
     public static DamageSource indirectJujutsuAttack(Entity source, @Nullable LivingEntity indirect) {
         RegistryAccess registry = source.level.registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-        return source instanceof Projectile ? new DamageSource(types.getHolderOrThrow(JUJUTSU_PROJECTILE), source, indirect) :
-                new DamageSource(types.getHolderOrThrow(JUJUTSU), source, indirect);
+        return new DamageSource(types.getHolderOrThrow(JUJUTSU), source, indirect);
     }
 }

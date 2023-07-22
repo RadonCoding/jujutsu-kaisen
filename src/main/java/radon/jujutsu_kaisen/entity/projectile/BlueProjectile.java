@@ -70,7 +70,7 @@ public class BlueProjectile extends JujutsuProjectile {
     protected float getDamage() {
         return 2.5F;
     }
-
+    
     private void createBall() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
