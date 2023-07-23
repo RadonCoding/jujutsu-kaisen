@@ -304,12 +304,17 @@ public class SorcererData implements ISorcererData {
 
         SorcererGrade grade = this.getGrade();
 
+
+        if (this.technique == CursedTechnique.JOGO) {
+            owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
+        }
+
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
                     Math.ceil((grade.ordinal() * 10.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2,  Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(4.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
@@ -605,7 +610,8 @@ public class SorcererData implements ISorcererData {
         return null;
     }
 
-    private void generate(ServerPlayer player) {
+    @Override
+    public void generate(ServerPlayer player) {
         this.initialized = true;
 
         if (HelperMethods.RANDOM.nextInt(10) == 0) {

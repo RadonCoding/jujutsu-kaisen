@@ -35,7 +35,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 .add(pShooter.getLookAngle());
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
 
-        this.shootFromRotation(pShooter, pShooter.getXRot(), pShooter.getYRot(), 0.0F, SPEED, 1.0F);
+        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
     }
 
     @Override

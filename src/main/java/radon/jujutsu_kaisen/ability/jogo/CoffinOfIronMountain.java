@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -36,11 +37,12 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        entity.setSecondsOnFire(15);
-
         if (owner.level.getGameTime() % 20 == 0) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    entity.hurt(owner.level.damageSources().onFire(), DAMAGE * cap.getGrade().getPower()));
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner), DAMAGE * cap.getGrade().getPower())) {
+                    entity.setSecondsOnFire(15);
+                }
+            });
         }
     }
 

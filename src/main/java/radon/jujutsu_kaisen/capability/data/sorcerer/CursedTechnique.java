@@ -13,7 +13,7 @@ public enum CursedTechnique {
     TOGE(null),
     YUJI(null),
     YUTA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
-    JOGO(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(), JJKAbilities.MAXIMUM_METEOR.get());
+    JOGO(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(), JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;

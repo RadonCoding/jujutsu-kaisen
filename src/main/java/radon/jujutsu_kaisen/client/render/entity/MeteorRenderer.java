@@ -59,7 +59,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
                             renderer.renderSingleBlock(state,
                                     poseStack,
                                     bufferSource,
-                                    packedLight,
+                                    (mc.level.getMaxLocalRawBrightness(pos) << 20) | (state.getLightEmission(mc.level, pos) << 4),
                                     OverlayTexture.NO_OVERLAY,
                                     ModelData.EMPTY,
                                     type);

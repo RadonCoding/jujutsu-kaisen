@@ -14,6 +14,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -139,7 +140,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         original = be.getOriginal();
                                     }
 
-                                    owner.level.setBlockAndUpdate(pos, this.block);
+                                    owner.level.setBlock(pos, this.block, Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
                                         be.create(this.uuid, this.duration, original == null ? state : original);

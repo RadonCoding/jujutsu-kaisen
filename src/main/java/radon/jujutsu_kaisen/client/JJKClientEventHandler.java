@@ -5,8 +5,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -88,6 +91,28 @@ public class JJKClientEventHandler {
                 }
             }
         }
+
+        @SubscribeEvent
+        public static void onRenderLiving(RenderLivingEvent<?, ?> event) {
+            LivingEntity target = event.getEntity();
+
+            if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
+                Entity viewer = Minecraft.getInstance().getCameraEntity();
+
+                if (viewer != null && target != viewer) {
+                    Vec3 look = viewer.getLookAngle();
+                    Vec3 start = viewer.getEyePosition();
+                    Vec3 result = target.getEyePosition().subtract(start);
+
+                    double angle = Math.acos(look.normalize().dot(result.normalize()));
+
+                    if (angle > 0.5D) {
+                        event.setCanceled(true);
+                    }
+                }
+            }
+        }
+
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -157,7 +182,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
-            event.registerEntityRenderer(JJKEntities.LAVA.get(), LavaRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
         }
 

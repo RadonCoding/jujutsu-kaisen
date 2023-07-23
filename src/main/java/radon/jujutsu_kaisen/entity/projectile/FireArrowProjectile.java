@@ -56,7 +56,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
-        Vec3 dir = this.getDeltaMovement().normalize();
+        Vec3 dir = this.getDeltaMovement();
 
         for (int i = 0; i < 50; i++) {
             Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
@@ -101,15 +101,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
                     this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }
             } else if (this.getTime() >= DELAY) {
-                if (this.getTime() > DELAY && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                if (this.getTime() == DELAY) {
+                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                    this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
-                } else {
-                    if (this.getTime() == DELAY) {
-                        this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
-                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                    } else {
-                        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
-                    }
                 }
             }
         }

@@ -151,10 +151,10 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                     this.applyOffset();
                 }
             } else if (this.getTime() >= DELAY) {
-                if (this.getTime() > DELAY && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                if (this.getTime() == DELAY) {
+                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
-                } else {
-                    this.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, SPEED, 1.0F);
                 }
             }
         }

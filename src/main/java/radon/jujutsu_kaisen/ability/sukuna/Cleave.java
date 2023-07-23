@@ -37,7 +37,9 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
         if (owner instanceof Player) {
             if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-                result = target;
+                if (owner.canAttack(target)) {
+                    result = target;
+                }
             }
         }
         return result;

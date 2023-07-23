@@ -134,12 +134,6 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "volcano")
                             .toString()));
 
-    public static RegistryObject<EntityType<LavaProjectile>> LAVA = ENTITIES.register("lava", () ->
-            EntityType.Builder.<LavaProjectile>of(LavaProjectile::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lava")
-                            .toString()));
-
     public static RegistryObject<EntityType<MeteorEntity>> METEOR = ENTITIES.register("meteor", () ->
             EntityType.Builder.<MeteorEntity>of(MeteorEntity::new, MobCategory.MISC)
                     .sized(MeteorEntity.SIZE * 2, MeteorEntity.SIZE * 2)

@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.ai.goal.AvoidDomainsGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -43,7 +42,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     private static final int PISTOL = 2;
 
     private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, false);
-    private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, 10, 15.0F);
+    private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, 20, 15.0F);
 
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -88,11 +87,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new AvoidDomainsGoal(this, 1.0D, 1.0D));
-        this.goalSelector.addGoal(3, new SorcererGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new SorcererGoal(this));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -123,16 +121,16 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
 
         if (stack.is(JJKItems.PISTOL.get())) {
             this.goalSelector.removeGoal(this.melee);
-            this.goalSelector.addGoal(2, this.ranged);
+            this.goalSelector.addGoal(1, this.ranged);
         } else {
             this.goalSelector.removeGoal(this.ranged);
-            this.goalSelector.addGoal(2, this.melee);
+            this.goalSelector.addGoal(1, this.melee);
         }
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
 
         LivingEntity target = this.getTarget();
 
