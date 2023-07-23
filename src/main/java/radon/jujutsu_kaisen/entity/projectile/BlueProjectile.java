@@ -22,7 +22,6 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final double RANGE = 10.0D;
 
     private static final double PULL_STRENGTH = 0.25D;
-    private static final float PARTICLE_SIZE = 0.1F;
     private static final double X_STEP = 0.15D;
     private static final double Y_STEP = 0.25D;
 
@@ -46,8 +45,8 @@ public class BlueProjectile extends JujutsuProjectile {
         this.setPos(pos);
     }
 
-    protected double getBallRadius() {
-        return 2.0D;
+    public float getBallRadius() {
+        return 3.0F;
     }
 
     protected double getPullRadius() {
@@ -70,25 +69,33 @@ public class BlueProjectile extends JujutsuProjectile {
     protected float getDamage() {
         return 2.5F;
     }
+
+    private float getParticleSize() {
+        return (float) (this.getBallRadius() * 0.04D);
+    }
+
+    protected float getStartAngle() {
+        return 0.0F;
+    }
     
     private void createBall() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
-            float angle = (float) (Math.cos(phi) * 360.0F);
+            float angle = this.getStartAngle() + (float) (Math.cos(phi) * 360.0F);
 
             SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, PARTICLE_SIZE, this.getInterval());
+                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, this.getParticleSize(), this.getInterval());
 
             this.level.addParticle(options, true, center.x(), center.y() + (Y_STEP / 2.0D), center.z(),
                     0.0D, 0.0D, 0.0D);
         }
 
         for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
-            float angle = (float) (Math.cos(phi) * 360.0F);
+            float angle = this.getStartAngle() + (float) (Math.cos(phi) * 360.0F);
 
             SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, PARTICLE_SIZE, this.getInterval());
+                    SpinningParticle.SpinningParticleOptions.BLUE_COLOR, this.getRingRadius(), angle, this.getParticleSize(), this.getInterval());
 
             this.level.addParticle(options, true, center.x(), center.y() - (Y_STEP / 2.0D), center.z(),
                     0.0D, 0.0D, 0.0D);
@@ -98,10 +105,10 @@ public class BlueProjectile extends JujutsuProjectile {
             float radius = (float) (this.getBallRadius() * Math.cos(theta));
 
             for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
-                float angle = (float) (Math.cos(phi) * 360.0F);
+                float angle = this.getStartAngle() + (float) (Math.cos(phi) * 360.0F);
 
                 SpinningParticle.SpinningParticleOptions options = new SpinningParticle.SpinningParticleOptions(
-                        SpinningParticle.SpinningParticleOptions.BLUE_COLOR, radius, angle, PARTICLE_SIZE, this.getInterval());
+                        SpinningParticle.SpinningParticleOptions.BLUE_COLOR, radius, angle, this.getParticleSize(), this.getInterval());
 
                 double x = center.x();
                 double y = center.y() + radius * Math.tan(theta);

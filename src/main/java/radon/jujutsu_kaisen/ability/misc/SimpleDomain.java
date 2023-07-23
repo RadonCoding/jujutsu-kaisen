@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SimpleDomain extends Ability implements Ability.IToggled {
     private static final float PARTICLE_SIZE = 0.075F;
     private static final double X_STEP = 0.25D;
+    private static final double RADIUS = 2.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -53,9 +54,9 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
         if (!owner.level.isClientSide) {
             for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
-                double x = owner.getX() + Math.cos(phi);
+                double x = owner.getX() + RADIUS * Math.cos(phi);
                 double y = owner.getY() + PARTICLE_SIZE;
-                double z = owner.getZ() + Math.sin(phi);
+                double z = owner.getZ() + RADIUS * Math.sin(phi);
 
                 ((ServerLevel) owner.level).sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
@@ -64,7 +65,7 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
     @Override
     public int getDuration() {
-        return 20;
+        return 3 * 20;
     }
 
     @Override

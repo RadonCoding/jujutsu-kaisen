@@ -7,32 +7,28 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
-public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 1000.0F;
-    }
+import java.util.List;
 
+public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public int getRadius() {
         return 20;
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 30 * 20;
     }
 
     @Override
-    public DomainBlock getBlock() {
-        return JJKBlocks.UNLIMITED_VOID.get();
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
 
     @Override
@@ -57,15 +53,15 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             int duration = this.getDuration();
             int radius = this.getRadius();
-            Block block = this.getBlock();
+            List<Block> blocks = this.getBlocks();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, block.defaultBlockState(), radius, duration);
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius, duration);
             owner.level.addFreshEntity(domain);
         });
     }
 
     @Override
-    public boolean bypassSimpleDomain() {
+    public boolean bypass() {
         return true;
     }
 }

@@ -3,91 +3,162 @@ package radon.jujutsu_kaisen.client.render.entity.projectile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.entity.projectile.PureLoveProjectile;
+import radon.jujutsu_kaisen.entity.PureLoveBeam;
 
-public class PureLoveRenderer extends EntityRenderer<PureLoveProjectile> {
+public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
-    private static final RenderType RENDER_TYPE = JJKRenderTypes.glow(TEXTURE);
+    private static final float TEXTURE_WIDTH = 256;
+    private static final float TEXTURE_HEIGHT = 32;
+    private static final float START_RADIUS = 1.3f;
+    private static final float BEAM_RADIUS = 1;
+    private boolean clearerView = false;
 
-    private static final float SIZE = 1.0F;
-
-    public PureLoveRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager);
+    public PureLoveRenderer(EntityRendererProvider.Context mgr) {
+        super(mgr);
     }
 
     @Override
-    public void render(PureLoveProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        Minecraft mc = Minecraft.getInstance();
+    public @NotNull ResourceLocation getTextureLocation(@NotNull PureLoveBeam pEntity) {
+        return TEXTURE;
+    }
 
+    @Override
+    public void render(PureLoveBeam pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        Entity owner = pEntity.getOwner();
+        this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
+                Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
+
+        double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
+        double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
+        double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
+        double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
+        double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
+        double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
+        float yaw = pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick;
+        float pitch = pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick;
+
+        float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
+        int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
+        
+        if (frame < 0) {
+            frame = 6;
+        }
+        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(getTextureLocation(pEntity)));
+
+        this.renderStart(frame, pPoseStack, consumer, pPackedLight);
+        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+
+        pPoseStack.pushPose();
+        pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);
+        this.renderEnd(frame, pEntity.side, pPoseStack, consumer, pPackedLight);
+        pPoseStack.popPose();
+    }
+
+    private void renderFlatQuad(int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+        float minU = 16.0F / TEXTURE_WIDTH * frame;
+        float minV = 0.0F;
+        float maxU = minU + 16.0F / TEXTURE_WIDTH;
+        float maxV = minV + 16.0F / TEXTURE_HEIGHT;
+        PoseStack.Pose pose = poseStack.last();
+        Matrix4f matrix4f = pose.pose();
+        Matrix3f matrix3f = pose.normal();
+        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, -START_RADIUS, 0, minU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1, packedLight);
+    }
+
+    private void renderStart(int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+        if (this.clearerView) {
+            return;
+        }
         poseStack.pushPose();
-        poseStack.translate(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-
-        Entity viewer = mc.getCameraEntity();
-
-        if (viewer == null) return;
-
-        float yaw = viewer.getViewYRot(partialTick);
-        float pitch = viewer.getViewXRot(partialTick);
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
-
-        VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
-        Matrix4f pose = poseStack.last().pose();
-
-        consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
-                .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(0.0F, 0.0F)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_SKY)
-                .normal(0.0F, 1.0F, 0.0F)
-                .endVertex();
-        consumer.vertex(pose, -SIZE, 0.0F, SIZE)
-                .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(0.0F, 1.0F)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_SKY)
-                .normal(0.0F, 1.0F, 0.0F)
-                .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, SIZE)
-                .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(1.0F, 1.0F)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_SKY)
-                .normal(0.0F, 1.0F, 0.0F)
-                .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, -SIZE)
-                .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(1.0F, 0.0F)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_SKY)
-                .normal(0.0F, 1.0F, 0.0F)
-                .endVertex();
-        mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
-
+        Quaternionf q = this.entityRenderDispatcher.cameraOrientation();
+        poseStack.mulPose(q);
+        this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull PureLoveProjectile pEntity) {
-        return null;
+    private void renderEnd(int frame, Direction side, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+        poseStack.pushPose();
+        Quaternionf q0 = this.entityRenderDispatcher.cameraOrientation();
+        poseStack.mulPose(q0);
+        this.renderFlatQuad(frame, poseStack, consumer, packedLight);
+        poseStack.popPose();
+
+        if (side == null) {
+            return;
+        }
+        poseStack.pushPose();
+        Quaternionf q1 = side.getRotation();
+        q1.mul(Axis.XP.rotationDegrees(90.0F));
+        poseStack.mulPose(q1);
+        poseStack.translate(0, 0, -0.01f);
+        this.renderFlatQuad(frame, poseStack, consumer, packedLight);
+        poseStack.popPose();
     }
 
-    @Override
-    protected int getBlockLightLevel(@NotNull PureLoveProjectile pEntity, @NotNull BlockPos pPos) {
-        return 15;
+    private void drawBeam(float length, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+        float minU = 0;
+        float minV = 16 / TEXTURE_HEIGHT + 1 / TEXTURE_HEIGHT * frame;
+        float maxU = minU + 20 / TEXTURE_WIDTH;
+        float maxV = minV + 1 / TEXTURE_HEIGHT;
+        PoseStack.Pose pose = poseStack.last();
+        Matrix4f matrix4f = pose.pose();
+        Matrix3f matrix3f = pose.normal();
+        float offset = this.clearerView ? -1 : 0;
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, 0, minU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, 0, minU, maxV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, 0, maxU, maxV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, 0, maxU, minV, 1, packedLight);
+    }
+
+    private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90F));
+        poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
+        poseStack.pushPose();
+
+        if (!this.clearerView) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + 90.0F));
+        }
+        this.drawBeam(length, frame, poseStack, consumer, packedLight);
+        poseStack.popPose();
+
+        if (!this.clearerView) {
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YN.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() - 90.0F));
+            this.drawBeam(length, frame, poseStack, consumer, packedLight);
+            poseStack.popPose();
+        }
+        poseStack.popPose();
+    }
+
+    public void drawVertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer consumer, float x, float y, float z, float u, float v, float alpha, int packedLight) {
+        consumer.vertex(matrix4f, x, y, z)
+                .color(1.0F, 1.0F, 1.0F, alpha)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(matrix3f, 0.0F, 1.0F, 0.0F)
+                .endVertex();
     }
 }

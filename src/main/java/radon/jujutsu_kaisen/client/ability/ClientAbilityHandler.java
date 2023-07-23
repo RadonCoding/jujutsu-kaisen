@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client.ability;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -68,35 +67,33 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
-                    Ability ability = AbilityOverlay.getSelected();
+            if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
+                Ability ability = AbilityOverlay.getSelected();
 
-                    if (ability != null) {
-                        if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
-                            mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
-                                current = JJKKeys.ACTIVATE_ABILITY;
-                            });
-                        } else {
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            ClientAbilityHandler.trigger(ability);
-                        }
+                if (ability != null) {
+                    if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
+                        mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
+                            current = JJKKeys.ACTIVATE_ABILITY;
+                        });
+                    } else {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                        ClientAbilityHandler.trigger(ability);
                     }
                 }
+            }
 
-                if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
-                    mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
-                        current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
-                    });
-                }
+            if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
+                mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
+                    current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
+                });
+            }
 
-                if (JJKKeys.ABILITY_RIGHT.isDown()) {
-                    AbilityOverlay.scroll(1);
-                } else if (JJKKeys.ABILITY_LEFT.isDown()) {
-                    AbilityOverlay.scroll(-1);
-                }
+            if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
+                AbilityOverlay.scroll(1);
+            } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {
+                AbilityOverlay.scroll(-1);
             }
         }
     }

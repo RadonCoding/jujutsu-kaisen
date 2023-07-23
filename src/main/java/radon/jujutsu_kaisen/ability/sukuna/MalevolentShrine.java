@@ -18,12 +18,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
     @Override
-    public float getCost(LivingEntity owner) {
-        return 1000;
-    }
-
-    @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 30 * 20;
     }
 

@@ -63,7 +63,7 @@ public abstract class Ability {
         return true;
     }
 
-    protected Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown) {
+    protected Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         AtomicReference<Status> result = new AtomicReference<>(Status.SUCCESS);
@@ -97,7 +97,7 @@ public abstract class Ability {
                         result.set(Status.ENERGY);
                         return;
                     }
-                } else if (this instanceof IToggled) {
+                } else if (duration && this instanceof IToggled) {
                     if (((IToggled) this).getRealDuration(owner) > 0) {
                         cap.addDuration(owner, this);
                     }
@@ -115,19 +115,19 @@ public abstract class Ability {
 
     public Status checkTriggerable(LivingEntity owner) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) return Status.SIMPLE_DOMAIN;
-        return this.getStatus(owner, true, true, true);
+        return this.getStatus(owner, true, true, true, true);
     }
 
     public Status checkToggleable(LivingEntity owner) {
-        return this.getStatus(owner, !((IToggled) this).isPassive(), false, true);
+        return this.getStatus(owner, !((IToggled) this).isPassive(), false, true, false);
     }
 
     public Status checkChannelable(LivingEntity owner) {
-        return this.getStatus(owner, true, false, true);
+        return this.getStatus(owner, true, false, true, false);
     }
 
     public Status checkStatus(LivingEntity owner) {
-        return this.getStatus(owner, true, true, true);
+        return this.getStatus(owner, true, true, true, false);
     }
 
     public boolean checkCost(LivingEntity owner, boolean use) {
@@ -175,6 +175,10 @@ public abstract class Ability {
     public interface IToggled {
         void onEnabled(LivingEntity owner);
         void onDisabled(LivingEntity owner);
+
+        default boolean shouldLog() {
+            return true;
+        }
 
         default int getDuration() { return 0; }
         default int getRealDuration(LivingEntity owner) {

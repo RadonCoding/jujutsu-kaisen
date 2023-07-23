@@ -10,7 +10,12 @@ public class JJKBlockEntities {
     public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<BlockEntityType<DomainBlockEntity>> DOMAIN_BLOCK_ENTITY = BLOCK_ENTITIES.register("domain", () ->
-            BlockEntityType.Builder.of(DomainBlockEntity::new, JJKBlocks.UNLIMITED_VOID.get(), JJKBlocks.COFFIN_OF_IRON_MOUNTAIN.get()).build(null));
+            BlockEntityType.Builder.of(DomainBlockEntity::new,
+                    JJKBlocks.UNLIMITED_VOID.get(),
+                    JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_ONE.get(),
+                    JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_TWO.get(),
+                    JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_THREE.get())
+                    .build(null));
 
 
 }

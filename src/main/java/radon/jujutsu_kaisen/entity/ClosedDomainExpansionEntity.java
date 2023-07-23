@@ -4,7 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -30,21 +32,21 @@ import java.util.List;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-    private static final float STRENGTH = 100.0F;
+    private static final float STRENGTH = 10.0F;
 
-    private BlockState block;
+    private final List<Block> blocks = new ArrayList<>();
 
 
     public ClosedDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, BlockState block, int radius, int duration) {
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, List<Block> blocks, int radius, int duration) {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, duration);
 
         this.moveTo(owner.getX(), owner.getY() - (double) (radius / 2), owner.getZ());
 
-        this.block = block;
+        this.blocks.addAll(blocks);
 
         this.entityData.set(DATA_RADIUS, radius);
 
@@ -76,8 +78,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.block = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), pCompound.getCompound("block"));
-
+        for (Tag tag : pCompound.getList("blocks", Tag.TAG_COMPOUND)) {
+            BlockState state = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), (CompoundTag) tag);
+            this.blocks.add(state.getBlock());
+        }
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
     }
 
@@ -85,7 +89,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.put("block", NbtUtils.writeBlockState(this.block));
+        ListTag blocksTag = new ListTag();
+
+        for (Block block : this.blocks) {
+            blocksTag.add(NbtUtils.writeBlockState(block.defaultBlockState()));
+        }
+        pCompound.put("blocks", blocksTag);
+
         pCompound.putInt("radius", this.getRadius());
     }
 
@@ -115,7 +125,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void createBarrier(Entity owner) {
-        if (this.block == null) return;
+        if (this.blocks == null) return;
 
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
@@ -140,7 +150,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         original = be.getOriginal();
                                     }
 
-                                    owner.level.setBlock(pos, this.block, Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                    Block block = this.blocks.get(this.random.nextInt(this.blocks.size()));
+                                    owner.level.setBlock(pos, block.defaultBlockState(),
+                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
                                         be.create(this.uuid, this.duration, original == null ? state : original);
@@ -196,10 +208,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public boolean hurt(DamageSource pSource, float pAmount) {
         Entity entity = pSource.getDirectEntity();
 
-        int radius = this.getRadius();
-        boolean isCompleted = this.getTime() >= radius * 2;
-
-        if (!isCompleted || entity != null && this.isInsideBarrier(entity)) {
+        if (!this.isRemovable() || entity != null && this.isInsideBarrier(entity)) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -236,10 +245,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (domain.getOwner() == this.getOwner()) continue;
 
             int radius = this.getRadius();
-            boolean isCompleted = this.getTime() >= radius * 2;
 
             if (domain instanceof OpenDomainExpansionEntity && this.getStrength() < domain.getStrength() * 2) {
-                if (isCompleted) {
+                if (this.isRemovable()) {
                     this.discard();
                 }
                 return false;
@@ -270,6 +278,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
+    public boolean isRemovable() {
+        int radius = this.getRadius();
+        return this.getTime() >= radius * 2;
+    }
+
+    @Override
     public void tick() {
         this.refreshDimensions();
 
@@ -277,21 +291,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (owner != null) {
             if (!this.level.isClientSide) {
-                int radius = this.getRadius();
-                boolean isCompleted = this.getTime() >= radius * 2;
-
                 if (this.checkSureHitEffect()) {
                     if (!this.warned || this.getTime() % 5 == 0) {
                         this.warn();
                     }
-                    if (isCompleted) {
+                    if (this.isRemovable()) {
                         this.doSureHitEffect(owner);
                     }
                 }
 
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
-                } else if (isCompleted && !this.isInsideBarrier(owner)) {
+                } else if (this.isRemovable() && !this.isInsideBarrier(owner)) {
                     this.discard();
                 }
             }

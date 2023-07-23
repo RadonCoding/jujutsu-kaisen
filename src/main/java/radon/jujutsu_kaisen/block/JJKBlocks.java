@@ -33,11 +33,24 @@ public class JJKBlocks {
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
-    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN = BLOCKS.register("coffin_of_iron_mountain", () ->
+
+    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
                     .lightLevel((pState) -> 3)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
+
+    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_iron_mountain_two", () ->
+            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(-1.0F, 3600000.8F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()));
+
+    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_iron_mountain_three", () ->
+            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(-1.0F, 3600000.8F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()));
 }

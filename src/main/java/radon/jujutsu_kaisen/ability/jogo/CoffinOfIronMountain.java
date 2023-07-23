@@ -5,20 +5,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
+import java.util.List;
+
 public class CoffinOfIronMountain extends DomainExpansion implements DomainExpansion.IClosedDomain {
     private static final float DAMAGE = 10.0F;
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 1000.0F;
-    }
 
     @Override
     public int getRadius() {
@@ -26,13 +22,14 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 30 * 20;
     }
 
-    @Override
-    public DomainBlock getBlock() {
-        return JJKBlocks.COFFIN_OF_IRON_MOUNTAIN.get();
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_ONE.get(),
+                JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_TWO.get(),
+                JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_THREE.get());
     }
 
     @Override
@@ -56,9 +53,9 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             int duration = this.getDuration();
             int radius = this.getRadius();
-            Block block = this.getBlock();
+            List<Block> blocks = this.getBlocks();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, block.defaultBlockState(), radius, duration);
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius, duration);
             owner.level.addFreshEntity(domain);
         });
     }

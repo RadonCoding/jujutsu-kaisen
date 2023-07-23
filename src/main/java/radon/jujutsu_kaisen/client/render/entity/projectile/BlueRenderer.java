@@ -22,7 +22,6 @@ import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
 public class BlueRenderer extends EntityRenderer<BlueProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png");
     private static final RenderType RENDER_TYPE = JJKRenderTypes.glow(TEXTURE);
-    private static final float SIZE = 0.25F;
 
     public BlueRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -47,28 +46,30 @@ public class BlueRenderer extends EntityRenderer<BlueProjectile> {
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
         Matrix4f pose = poseStack.last().pose();
 
-        consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
+        float size = entity.getBallRadius() * 0.2F;
+
+        consumer.vertex(pose, -size, 0.0F, -size)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, -SIZE, 0.0F, SIZE)
+        consumer.vertex(pose, -size, 0.0F, size)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(0.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, SIZE)
+        consumer.vertex(pose, size, 0.0F, size)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 1.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
-        consumer.vertex(pose, SIZE, 0.0F, -SIZE)
+        consumer.vertex(pose, size, 0.0F, -size)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
                 .uv(1.0F, 0.0F)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
