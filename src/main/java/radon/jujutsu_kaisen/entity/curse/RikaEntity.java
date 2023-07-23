@@ -169,7 +169,7 @@ public class RikaEntity extends SummonEntity {
         LivingEntity owner = this.getOwner();
 
         if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                !JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()))) {
+                (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get())))) {
             this.discard();
         } else {
             super.tick();
