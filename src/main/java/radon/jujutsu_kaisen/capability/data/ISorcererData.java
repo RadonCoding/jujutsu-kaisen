@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -72,6 +73,8 @@ public interface ISorcererData {
 
     void channel(LivingEntity owner, @Nullable Ability ability);
     boolean isChanneling(Ability ability);
+
+    void generate(ServerPlayer player);
 
     <T extends SummonEntity> void addSummon(T entity);
     <T extends SummonEntity> void unsummonByClass(ServerLevel level, Class<T> clazz);

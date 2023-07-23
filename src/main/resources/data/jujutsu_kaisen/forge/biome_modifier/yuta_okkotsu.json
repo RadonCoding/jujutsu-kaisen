@@ -3,7 +3,7 @@
   "biomes": "#jujutsu_kaisen:has_cursed_energy",
   "spawners": {
     "type": "jujutsu_kaisen:yuta_okkotsu",
-    "weight": 5,
+    "weight": 3,
     "minCount": 1,
     "maxCount": 1
   }

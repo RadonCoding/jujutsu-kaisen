@@ -1,11 +1,11 @@
 package radon.jujutsu_kaisen.ability.jogo;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -38,8 +38,8 @@ public class Volcano extends Ability {
             return (BlockHitResult) result;
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
-            return new BlockHitResult(new Vec3(owner.getX(), owner.getY(), owner.getZ()), Direction.UP,
-                    entity.blockPosition().subtract(new Vec3i(0,1,0)), false);
+            Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
+            return owner.level.clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         }
         return null;
     }

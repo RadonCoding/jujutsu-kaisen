@@ -4,13 +4,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.projectile.LavaProjectile;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -19,6 +22,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
+    private static final float DAMAGE = 5.0F;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -46,12 +50,26 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         if (this.getTime() >= DURATION) {
             this.discard();
         } else if (this.getTime() >= DELAY) {
+            Vec3 look = this.getLookAngle();
+
+            for (int i = 0; i < 50; i++) {
+                Vec3 speed = look.add((this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D);
+                this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
+            }
+
             if (this.getOwner() instanceof LivingEntity owner) {
-                Vec3 pos = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())
-                        .subtract(this.getLookAngle());
-                LavaProjectile lava = new LavaProjectile(owner, pos.x(), pos.y(), pos.z());
-                lava.shootFromRotation(owner, this.getXRot(), this.getYRot(), 0.0F, LavaProjectile.SPEED, 0.0F);
-                this.level.addFreshEntity(lava);
+                Vec3 length = look.scale(5.0D);
+                AABB bounds = this.getBoundingBox().inflate(0.0D, length.y(), 0.0D);
+
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    for (Entity entity : this.level.getEntities(owner, bounds)) {
+                        if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
+
+                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower())) {
+                            entity.setSecondsOnFire(5);
+                        }
+                    }
+                });
             }
         }
 

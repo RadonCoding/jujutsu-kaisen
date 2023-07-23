@@ -113,11 +113,10 @@ public class PureLoveProjectile extends JujutsuProjectile {
                     this.breakBlocks();
 
                     if (this.getTime() == DELAY) {
-                        this.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, SPEED, 1.0F);
-
-                        if (!this.level.isClientSide) {
-                            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                        }
+                        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                    } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                        this.discard();
                     }
                 }
             }

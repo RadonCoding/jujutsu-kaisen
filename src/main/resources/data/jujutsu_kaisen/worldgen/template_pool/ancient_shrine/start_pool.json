@@ -1,0 +1,15 @@
+{
+  "name": "jujutsu_kaisen:ancient_shrine/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "jujutsu_kaisen:ancient_shrine",
+        "processors": "jujutsu_kaisen:ancient_shrine_processors",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

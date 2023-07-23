@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
@@ -32,6 +33,7 @@ public class JujutsuKaisen {
         JJKEffects.EFFECTS.register(bus);
         JJKItems.ITEMS.register(bus);
         JJKSounds.SOUNDS.register(bus);
+        JJKProcessors.PROCESSORS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
     }

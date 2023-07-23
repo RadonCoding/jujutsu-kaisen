@@ -109,8 +109,8 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity owner = event.getEntity();
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
-            owner.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
+             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
+             owner.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
         }
 
         @SubscribeEvent
