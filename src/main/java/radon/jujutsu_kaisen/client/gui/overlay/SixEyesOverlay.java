@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestSorcererDataC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -37,7 +39,7 @@ public class SixEyesOverlay {
         assert mc.player != null;
 
         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.SIX_EYES)) {
+            if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.GOJO_BLINDFOLD.get())) {
                 if (HelperMethods.getLookAtHit(mc.player, RANGE) instanceof EntityHitResult hit) {
                     Entity target = hit.getEntity();
 

@@ -29,7 +29,7 @@ public class InvertedSpearOfHeavenItem extends CursedToolItem {
 
     @Override
     public int getUseDuration(@NotNull ItemStack pStack) {
-        return 1;
+        return 72000;
     }
 
     @Override

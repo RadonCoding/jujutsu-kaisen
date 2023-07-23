@@ -3,16 +3,14 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -138,8 +136,14 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
             this.pickWeapon(target);
         }
 
-        if (this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-            this.startUsingItem(InteractionHand.MAIN_HAND);
+        for (Entity entity : this.level.getEntities(this, this.getBoundingBox().inflate(3.0D))) {
+            if (entity instanceof Projectile) {
+                if (this.random.nextInt(3) == 0) {
+                    if (this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                        this.startUsingItem(InteractionHand.MAIN_HAND);
+                    }
+                }
+            }
         }
     }
 

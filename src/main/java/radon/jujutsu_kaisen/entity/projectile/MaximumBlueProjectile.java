@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 public class MaximumBlueProjectile extends BlueProjectile {
-    private static final double SPIN_RADIUS = 5.0D;
+    private static final double SPIN_RADIUS = 15.0D;
 
-    private double angle;
+    private float angle;
 
     public MaximumBlueProjectile(EntityType<? extends MaximumBlueProjectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -25,8 +25,8 @@ public class MaximumBlueProjectile extends BlueProjectile {
     }
 
     @Override
-    protected double getBallRadius() {
-        return super.getBallRadius() * 1.5D;
+    public float getBallRadius() {
+        return super.getBallRadius() * 2.0F;
     }
 
     @Override
@@ -36,21 +36,26 @@ public class MaximumBlueProjectile extends BlueProjectile {
 
     @Override
     protected float getDamage() {
-        return super.getDamage() * 1.5F;
+        return super.getDamage() * 2.0F;
+    }
+
+    @Override
+    protected float getStartAngle() {
+        return -this.angle;
     }
 
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putDouble("angle", this.angle);
+        pCompound.putFloat("angle", this.angle);
     }
 
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.angle = pCompound.getDouble("angle");
+        this.angle = pCompound.getFloat("angle");
     }
 
     private void spin() {

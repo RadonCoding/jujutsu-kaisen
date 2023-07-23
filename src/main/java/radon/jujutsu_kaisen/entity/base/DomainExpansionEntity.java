@@ -50,6 +50,10 @@ public abstract class DomainExpansionEntity extends Mob {
         this.duration = duration;
     }
 
+    public boolean isRemovable() {
+        return true;
+    }
+
     @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
@@ -95,7 +99,7 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     public void tick() {
-        Entity owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
 
         if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
@@ -108,6 +112,11 @@ public abstract class DomainExpansionEntity extends Mob {
                 if (time >= this.duration) {
                     this.discard();
                     return;
+                } else if (owner != null) {
+                    if (this.isRemovable() && !JJKAbilities.hasToggled(owner, this.ability)) {
+                        this.discard();
+                        return;
+                    }
                 }
                 this.setTime(++time);
             }
@@ -121,8 +130,9 @@ public abstract class DomainExpansionEntity extends Mob {
             return false;
         }
         if (entity instanceof LivingEntity living) {
-            if (!owner.canAttack(living) || (!this.ability.bypassSimpleDomain() &&
-                    JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()))) {
+            if (!owner.canAttack(living) || (!this.ability.bypass() &&
+                    JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) ||
+                    JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get()))) {
                 return false;
             }
         }

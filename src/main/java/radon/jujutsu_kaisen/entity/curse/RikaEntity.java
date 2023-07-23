@@ -152,6 +152,11 @@ public class RikaEntity extends SummonEntity {
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
+    @Override
+    protected Ability getAbility() {
+        return JJKAbilities.RIKA.get();
+    }
+
     private void breakBlocks() {
         AABB bounds = this.getBoundingBox();
 

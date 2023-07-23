@@ -12,6 +12,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -97,6 +99,25 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity, I
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    protected abstract Ability getAbility();
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        super.remove(pReason);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            Ability ability = this.getAbility();
+
+            if (JJKAbilities.hasToggled(owner, ability)) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.toggle(owner, ability);
+                });
+            }
+        }
     }
 
     @Override

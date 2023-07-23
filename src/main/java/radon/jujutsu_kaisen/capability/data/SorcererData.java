@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -30,6 +31,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -72,7 +74,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
 
     private static final float MAX_CURSED_ENERGY = 2500.0F;
-    private static final float ENERGY_AMOUNT = 0.75F;
+    private static final float ENERGY_AMOUNT = 0.25F;
 
     public SorcererData() {
         this.grade = SorcererGrade.GRADE_4;
@@ -214,22 +216,6 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateSummons(LivingEntity owner) {
-        if (owner.level instanceof ServerLevel level) {
-            Iterator<UUID> iter = this.summons.iterator();
-
-            while (iter.hasNext()) {
-                UUID identifier = iter.next();
-                Entity entity = level.getEntity(identifier);
-
-                if (entity == null || !entity.isAlive() ||
-                        entity.isRemoved()) {
-                    iter.remove();
-                }
-            }
-        }
-    }
-
     private void updateCopied(LivingEntity owner) {
         if (this.copied != null) {
             if (++this.copiedTimer == 5 * 60 * 20) {
@@ -269,7 +255,6 @@ public class SorcererData implements ISorcererData {
 
     public void tick(LivingEntity owner) {
         this.updateDomains(owner);
-        this.updateSummons(owner);
         this.updateCopied(owner);
 
         this.updateCooldowns();
@@ -307,6 +292,10 @@ public class SorcererData implements ISorcererData {
 
         if (this.technique == CursedTechnique.JOGO) {
             owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
+        }
+
+        if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.GOJO_BLINDFOLD.get())) {
+            owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2, 0, false, false, false));
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
@@ -408,10 +397,12 @@ public class SorcererData implements ISorcererData {
 
     public void toggle(LivingEntity owner, Ability ability) {
         if (owner.level.isClientSide) {
-            if (this.hasToggled(ability)) {
-                owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
-            } else {
-                owner.sendSystemMessage(((Ability.IToggled) ability).getEnableMessage());
+            if (((Ability.IToggled) ability).shouldLog()) {
+                if (this.hasToggled(ability)) {
+                    owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
+                } else {
+                    owner.sendSystemMessage(((Ability.IToggled) ability).getEnableMessage());
+                }
             }
         }
         if (this.toggled.contains(ability)) {
@@ -791,7 +782,7 @@ public class SorcererData implements ISorcererData {
 
         this.domains.clear();
 
-        ListTag domainsTag = nbt.getList("domains", Tag.TAG_COMPOUND);
+        ListTag domainsTag = nbt.getList("domains", Tag.TAG_LONG);
 
         for (int i = 0; i < domainsTag.size(); i += 2) {
             if (domainsTag.get(i) instanceof LongTag least && domainsTag.get(i + 1) instanceof LongTag most) {
@@ -801,7 +792,7 @@ public class SorcererData implements ISorcererData {
 
         this.summons.clear();
 
-        ListTag summonsTag = nbt.getList("summons", Tag.TAG_COMPOUND);
+        ListTag summonsTag = nbt.getList("summons", Tag.TAG_LONG);
 
         for (int i = 0; i < summonsTag.size(); i += 2) {
             if (summonsTag.get(i) instanceof LongTag least && summonsTag.get(i + 1) instanceof LongTag most) {

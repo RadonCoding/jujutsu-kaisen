@@ -4,6 +4,7 @@
   "package": "radon.jujutsu_kaisen.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin"
   ],
   "server": [],

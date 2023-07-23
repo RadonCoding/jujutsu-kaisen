@@ -59,7 +59,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 12303653, 3870468, new Item.Properties()));
 
-    private static class JJKArmorMaterials {
+    public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 37, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial GOJO_BLINDFOLD = new JJKArmorMaterial("gojo_blindfold", 37, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

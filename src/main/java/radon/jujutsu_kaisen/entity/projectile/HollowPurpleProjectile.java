@@ -60,9 +60,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         double radius = 3.0D;
 
         AABB bounds = this.getBoundingBox().inflate(radius);
-        double centerX = bounds.getCenter().x;
-        double centerY = bounds.getCenter().y;
-        double centerZ = bounds.getCenter().z;
+        double centerX = bounds.getCenter().x();
+        double centerY = bounds.getCenter().y();
+        double centerZ = bounds.getCenter().z();
 
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {

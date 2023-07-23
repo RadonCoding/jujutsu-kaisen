@@ -26,7 +26,7 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
     private static final RenderType BLUE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
     private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
-    private static final float SIZE = 1.0F;
+    private static final float SIZE = 1.5F;
     private static final float ANIMATION_DURATION = 20.0F;
 
     public HollowPurpleRenderer(EntityRendererProvider.Context renderManager) {
@@ -39,7 +39,7 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
             this.render(entity, partialTick, poseStack, PURPLE, SIZE);
         } else {
             float fraction = (entity.tickCount + partialTick) / ANIMATION_DURATION;
-            float size = Mth.lerp(fraction, 0.1F, SIZE);
+            float size = Mth.lerp(fraction, 0.1F, SIZE / 2);
             float offset = Mth.lerp(fraction, SIZE, 0.0F);
             Entity viewer = Minecraft.getInstance().getCameraEntity();
 

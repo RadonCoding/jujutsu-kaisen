@@ -4,10 +4,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.entity.PureLoveBeam;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.entity.projectile.PureLoveProjectile;
 
 public class PureLove extends Ability {
+    private static final int DURATION = 10 * 20;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!(owner instanceof RikaEntity rika)) return false;
@@ -21,8 +23,8 @@ public class PureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        PureLoveProjectile purple = new PureLoveProjectile(owner);
-        owner.level.addFreshEntity(purple);
+        PureLoveBeam beam = new PureLoveBeam(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F), DURATION);
+        owner.level.addFreshEntity(beam);
     }
 
     @Override

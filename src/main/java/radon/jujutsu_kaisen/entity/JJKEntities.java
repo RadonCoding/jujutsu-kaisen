@@ -45,7 +45,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
             EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
+                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
                             .toString()));
     public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
@@ -110,8 +110,8 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")
                             .toString()));
 
-    public static RegistryObject<EntityType<PureLoveProjectile>> PURE_LOVE = ENTITIES.register("pure_love", () ->
-            EntityType.Builder.<PureLoveProjectile>of(PureLoveProjectile::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<PureLoveBeam>> PURE_LOVE = ENTITIES.register("pure_love", () ->
+            EntityType.Builder.<PureLoveBeam>of(PureLoveBeam::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")
                             .toString()));
