@@ -241,47 +241,51 @@ public class MeteorEntity extends Entity {
 
     @Override
     public void tick() {
-        super.tick();
+        LivingEntity owner = this.getOwner();
 
-        if (!this.isRemoved()) {
-            this.aiStep();
-        }
+        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+            this.discard();
+        } else {
+            super.tick();
 
-        if (!this.level.isClientSide) {
-            LivingEntity owner = this.getOwner();
+            if (!this.isRemoved()) {
+                this.aiStep();
+            }
 
-            if (owner != null) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (this.explosionTime == 0) {
-                        for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
-                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
-                        }
-                    }
-
-                    if (this.isOnGround()) {
+            if (!this.level.isClientSide) {
+                if (owner != null) {
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         if (this.explosionTime == 0) {
-                            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getPower()), EXPLOSION_DURATION, owner);
-                            this.explosionTime++;
-                        }
-                    }
-
-                    if (this.explosionTime > 0) {
-                        if (this.explosionTime >= MAXIMUM_TIME) {
-                            this.discard();
-                        } else {
-                            if (this.explosionTime < MAXIMUM_TIME / 4) {
-                                BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
-                                    BlockState state = this.level.getBlockState(pos);
-
-                                    if (state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
-                                        this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                                    }
-                                });
+                            for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
+                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
                             }
-                            this.explosionTime++;
                         }
-                    }
-                });
+
+                        if (this.isOnGround()) {
+                            if (this.explosionTime == 0) {
+                                ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getPower()), EXPLOSION_DURATION, owner);
+                                this.explosionTime++;
+                            }
+                        }
+
+                        if (this.explosionTime > 0) {
+                            if (this.explosionTime >= MAXIMUM_TIME) {
+                                this.discard();
+                            } else {
+                                if (this.explosionTime < MAXIMUM_TIME / 4) {
+                                    BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
+                                        BlockState state = this.level.getBlockState(pos);
+
+                                        if (state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                                            this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                                        }
+                                    });
+                                }
+                                this.explosionTime++;
+                            }
+                        }
+                    });
+                }
             }
         }
     }
