@@ -62,7 +62,7 @@ public class MaximumBlueProjectile extends BlueProjectile {
         Entity owner = this.getOwner();
 
         if (owner != null) {
-            this.angle += 360.0F / 20;
+            this.angle += 360.0F / this.getDuration();
             double radians = Math.toRadians(this.angle);
             Vec3 center = owner.position();
             double x = center.x() + SPIN_RADIUS * Math.cos(radians);
