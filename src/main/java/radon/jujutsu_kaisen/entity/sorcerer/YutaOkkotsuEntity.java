@@ -71,6 +71,11 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
+    public float getMaxEnergy() {
+        return 5000.0F;
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return null;
     }

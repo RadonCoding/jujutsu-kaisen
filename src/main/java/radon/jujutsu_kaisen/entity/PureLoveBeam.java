@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +230,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
                 .inflate(1.0D);
 
-        for (Entity entity : this.level.getEntities(this.getOwner(), bounds)) {
+        for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);

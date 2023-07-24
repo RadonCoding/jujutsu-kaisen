@@ -58,6 +58,7 @@ public interface ISorcererData {
 
     float getEnergy();
     float getMaxEnergy();
+    void setMaxEnergy(float maxEnergy);
     void useEnergy(float amount);
     void setEnergy(float energy);
 

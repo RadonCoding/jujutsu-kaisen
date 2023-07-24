@@ -4,9 +4,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.mixin.common.ILevelAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class HelperMethods {
@@ -40,5 +44,16 @@ public class HelperMethods {
         Vec3 look = entity.getLookAngle();
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end);
+    }
+
+    public static List<Entity> getEntityCollisions(Level pLevel, AABB pCollisionBox) {
+        List<Entity> collisions = new ArrayList<>();
+
+        for (Entity entity : ((ILevelAccessor) pLevel).getEntitiesInvoker().getAll()) {
+            if (entity.getBoundingBox().intersects(pCollisionBox)) {
+                collisions.add(entity);
+            }
+        }
+        return collisions;
     }
 }

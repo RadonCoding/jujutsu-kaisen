@@ -51,6 +51,7 @@ public class SorcererData implements ISorcererData {
     private SorcererGrade grade;
 
     private float energy;
+    private float maxEnergy;
     private float used;
 
     private boolean curse;
@@ -340,6 +341,10 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setGrade(SorcererGrade grade) {
         this.grade = grade;
+
+        if (!this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+            this.maxEnergy = MAX_CURSED_ENERGY * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length);
+        }
     }
 
     @Override
@@ -471,10 +476,12 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            return 0.0F;
-        }
-        return MAX_CURSED_ENERGY * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length);
+        return this.maxEnergy;
+    }
+
+    @Override
+    public void setMaxEnergy(float maxEnergy) {
+        this.maxEnergy = maxEnergy;
     }
 
     @Override
@@ -666,6 +673,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("copied_timer", this.copiedTimer);
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
+        nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("used", this.used);
         nbt.putBoolean("curse", this.curse);
         nbt.putInt("burnout", this.burnout);
@@ -741,6 +749,7 @@ public class SorcererData implements ISorcererData {
         this.copiedTimer = nbt.getInt("copied_timer");
         this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
+        this.maxEnergy = nbt.getFloat("max_energy");
         this.used = nbt.getFloat("used");
         this.curse = nbt.getBoolean("curse");
         this.burnout = nbt.getInt("burnout");

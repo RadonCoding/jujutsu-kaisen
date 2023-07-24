@@ -71,6 +71,11 @@ public class JogoEntity extends SorcererEntity {
     }
 
     @Override
+    public float getMaxEnergy() {
+        return 3000.0F;
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get();
     }

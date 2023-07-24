@@ -14,6 +14,7 @@ public interface ISorcerer {
     @Nullable CursedTechnique getTechnique();
     List<Trait> getTraits();
     boolean isCurse();
+    float getMaxEnergy();
 
     @Nullable Ability getDomain();
 
@@ -21,7 +22,13 @@ public interface ISorcerer {
         data.setGrade(this.getGrade());
         data.setTechnique(this.getTechnique());
         data.addTraits(this.getTraits());
-        data.setEnergy(data.getMaxEnergy());
         data.setCurse(this.isCurse());
+
+        float maxEnergy = this.getMaxEnergy();
+
+        if (maxEnergy > 0.0F) {
+            data.setMaxEnergy(maxEnergy);
+        }
+        data.setEnergy(data.getMaxEnergy());
     }
 }
