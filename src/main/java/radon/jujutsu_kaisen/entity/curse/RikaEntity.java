@@ -183,11 +183,8 @@ public class RikaEntity extends SummonEntity {
                 this.breakBlocks();
 
                 if (owner != null) {
-                    if (owner.getHealth() / owner.getMaxHealth() < 0.5F) {
-                        this.setOpen(true);
-                    } else if (this.getTarget() == null) {
-                        this.setOpen(false);
-                    }
+                    LivingEntity target = this.getTarget();
+                    this.setOpen(target != null && owner.getHealth() / owner.getMaxHealth() < 0.5F);
                 }
             }
         }
