@@ -22,8 +22,8 @@ public class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidM
         ItemStack stack = entity.getItemBySlot(slot);
 
         if (stack.getItem() instanceof ArmorItem armor) {
-            return armor.getMaterial() == JJKItems.JJKArmorMaterials.GOJO_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.GOJO_BLINDFOLD ||
+            return armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_OUTFIT ||
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_BLINDFOLD ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.YUJI_OUTFIT;
         }
         return false;

@@ -24,30 +24,30 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
     private static final RenderType RENDER_TYPE = JJKRenderTypes.glow(TEXTURE);
     private static final float SIZE = 0.1F;
 
-    public RedRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager);
+    public RedRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext);
     }
 
     @Override
-    public void render(RedProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+    public void render(RedProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         Minecraft mc = Minecraft.getInstance();
 
-        poseStack.pushPose();
-        poseStack.translate(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+        pPoseStack.pushPose();
+        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
         Entity viewer = mc.getCameraEntity();
 
         if (viewer == null) return;
 
-        float yaw = viewer.getViewYRot(partialTick);
-        float pitch = viewer.getViewXRot(partialTick);
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
+        float yaw = viewer.getViewYRot(pPartialTick);
+        float pitch = viewer.getViewXRot(pPartialTick);
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
-        Matrix4f pose = poseStack.last().pose();
+        Matrix4f pose = pPoseStack.last().pose();
 
-        int ticks = entity.getTime();
+        int ticks = pEntity.getTime();
         float brightness = Math.min(1.0F, ticks * 0.1F);
 
         consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
@@ -80,7 +80,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
                 .endVertex();
         mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
 
-        poseStack.popPose();
+        pPoseStack.popPose();
     }
 
     @Override

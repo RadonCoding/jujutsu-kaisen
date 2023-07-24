@@ -61,6 +61,7 @@ public class SorcererData implements ISorcererData {
     private long lastBlackFlashTime;
 
     private @Nullable Ability channeled;
+    private @Nullable UUID domain;
 
     private final Set<Ability> toggled;
 
@@ -252,6 +253,7 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE)) this.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.SIMPLE_DOMAIN)) this.giveAdvancement(player, "simple_domain");
         if (this.traits.contains(Trait.DOMAIN_EXPANSION)) this.giveAdvancement(player, "domain_expansion");
+        if (this.traits.contains(Trait.STRONGEST)) this.giveAdvancement(player, "strongest");
     }
 
     public void tick(LivingEntity owner) {
@@ -295,7 +297,7 @@ public class SorcererData implements ISorcererData {
             owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
         }
 
-        if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.GOJO_BLINDFOLD.get())) {
+        if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2, 0, false, false, false));
         }
 
@@ -591,18 +593,17 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends SummonEntity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz) {
-        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+    public void setDomain(DomainExpansionEntity domain) {
+        this.domain = domain.getUUID();
+    }
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+    @Override
+    public DomainExpansionEntity getDomain(ServerLevel level) {
+        if (this.domain != null) {
+            Entity entity = level.getEntity(this.domain);
 
-            if (entity == null) continue;
-
-            T summon = test.tryCast(entity);
-
-            if (summon != null) {
-                return summon;
+            if (entity instanceof DomainExpansionEntity) {
+                return (DomainExpansionEntity) entity;
             }
         }
         return null;
@@ -622,6 +623,8 @@ public class SorcererData implements ISorcererData {
             }
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
             this.curse = HelperMethods.RANDOM.nextInt(5) == 0;
+
+            assert this.technique != null;
 
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
 
@@ -643,8 +646,8 @@ public class SorcererData implements ISorcererData {
         for (UUID identifier : this.domains) {
             Entity entity = level.getEntity(identifier);
 
-            if (entity instanceof DomainExpansionEntity domain) {
-                result.add(domain);
+            if (entity instanceof DomainExpansionEntity) {
+                result.add((DomainExpansionEntity) entity);
             }
         }
         return result;
@@ -678,6 +681,10 @@ public class SorcererData implements ISorcererData {
         nbt.putBoolean("curse", this.curse);
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("grade", this.grade.ordinal());
+
+        if (this.domain != null) {
+            nbt.putUUID("domain", this.domain);
+        }
 
         if (this.channeled != null) {
             nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
@@ -754,6 +761,10 @@ public class SorcererData implements ISorcererData {
         this.curse = nbt.getBoolean("curse");
         this.burnout = nbt.getInt("burnout");
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];
+
+        if (nbt.hasUUID("domain")) {
+            this.domain = nbt.getUUID("domain");
+        }
 
         if (nbt.contains("channeled")) {
             this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));

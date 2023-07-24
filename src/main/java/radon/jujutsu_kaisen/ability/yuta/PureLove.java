@@ -29,8 +29,8 @@ public class PureLove extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        if (!(owner instanceof RikaEntity rika)) return Status.FAILURE;
-        if (!rika.isOpen()) return Status.FAILURE;
+        /*if (!(owner instanceof RikaEntity rika)) return Status.FAILURE;
+        if (!rika.isOpen()) return Status.FAILURE;*/
         return super.checkTriggerable(owner);
     }
 

@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -55,5 +56,22 @@ public class HelperMethods {
             }
         }
         return collisions;
+    }
+
+    public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level pLevel, AABB pCollisionBox) {
+        List<Entity> collisions = getEntityCollisions(pLevel, pCollisionBox);
+
+        List<T> result = new ArrayList<>();
+
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        for (Entity collision : collisions) {
+            T casted = test.tryCast(collision);
+
+            if (casted != null) {
+                result.add(casted);
+            }
+        }
+        return result;
     }
 }

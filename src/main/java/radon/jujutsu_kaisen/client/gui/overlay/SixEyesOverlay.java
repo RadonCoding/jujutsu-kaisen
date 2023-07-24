@@ -39,7 +39,7 @@ public class SixEyesOverlay {
         assert mc.player != null;
 
         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.GOJO_BLINDFOLD.get())) {
+            if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
                 if (HelperMethods.getLookAtHit(mc.player, RANGE) instanceof EntityHitResult hit) {
                     Entity target = hit.getEntity();
 

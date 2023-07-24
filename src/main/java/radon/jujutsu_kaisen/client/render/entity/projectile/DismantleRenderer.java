@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -19,15 +20,9 @@ import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 
 public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
     private static final float SIZE = 1.0F;
-    private static final ResourceLocation[] TEXTURES = new ResourceLocation[8];
-
-    static {
-        for (int i = 0; i < TEXTURES.length; i++) {
-            TEXTURES[i] = new ResourceLocation(JujutsuKaisen.MOD_ID, String.format("textures/entity/dismantle_%d.png", i));
-        }
-    }
-
-    private int index;
+    private static final int TEXTURE_WIDTH = 128;
+    private static final int TEXTURE_HEIGHT = 32;
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/dismantle.png");
 
     public DismantleRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -49,39 +44,46 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch + 90.0F));
 
-        if (pEntity.getTime() % 2 == 0 && ++this.index == 8) {
-            this.index = 0;
-        }
-
-        RenderType type = RenderType.entityCutoutNoCull(TEXTURES[this.index]);
+        RenderType type = RenderType.entityCutoutNoCull(this.getTextureLocation(pEntity));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = pPoseStack.last().pose();
 
+        int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
+
+        if (frame < 0) {
+            frame = DismantleProjectile.FRAMES * 2;
+        }
+
+        float minU = 32.0F / TEXTURE_WIDTH * frame;
+        float minV = 0.0F;
+        float maxU = minU + 32.0F / TEXTURE_WIDTH;
+        float maxV = minV + 32.0F / TEXTURE_HEIGHT;
+
         consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(0.0F, 0.0F)
+                .uv(minU, minV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
         consumer.vertex(pose, -SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(0.0F, 1.0F)
+                .uv(minU, maxV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
         consumer.vertex(pose, SIZE, 0.0F, SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(1.0F, 1.0F)
+                .uv(maxU, maxV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
                 .endVertex();
         consumer.vertex(pose, SIZE, 0.0F, -SIZE)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
-                .uv(1.0F, 0.0F)
+                .uv(maxU, minV)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(LightTexture.FULL_SKY)
                 .normal(0.0F, 1.0F, 0.0F)
@@ -93,6 +95,6 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull DismantleProjectile pEntity) {
-        return null;
+        return TEXTURE;
     }
 }

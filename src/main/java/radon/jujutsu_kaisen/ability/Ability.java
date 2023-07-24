@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -80,7 +81,8 @@ public abstract class Ability {
                     return;
                 }
 
-                if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasTrait(Trait.STRONGEST))) &&
+                        cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                     result.set(Status.DOMAIN_AMPLIFICATION);
                     return;
                 }

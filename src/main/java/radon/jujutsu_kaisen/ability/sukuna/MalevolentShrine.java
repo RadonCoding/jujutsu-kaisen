@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -57,8 +58,11 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             int width = this.getWidth();
             int height = this.getHeight();
 
-            MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height, duration);
+            MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height, duration,
+                    cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
             owner.level.addFreshEntity(domain);
+
+            cap.setDomain(domain);
         });
     }
 

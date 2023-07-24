@@ -19,11 +19,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class DomainExpansionEntity extends Mob {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
@@ -37,17 +35,20 @@ public abstract class DomainExpansionEntity extends Mob {
     protected int duration;
     protected boolean warned;
 
+    private float strength;
+
     protected DomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int duration) {
+    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int duration, float strength) {
         super(pEntityType, owner.level);
 
         this.setOwner(owner);
 
         this.ability = ability;
         this.duration = duration;
+        this.strength = strength;
     }
 
     public boolean isRemovable() {
@@ -150,6 +151,7 @@ public abstract class DomainExpansionEntity extends Mob {
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putInt("duration", this.duration);
         pCompound.putBoolean("warned", this.warned);
+        pCompound.putFloat("strength", this.strength);
     }
 
     @Override
@@ -163,6 +165,7 @@ public abstract class DomainExpansionEntity extends Mob {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.duration = pCompound.getInt("duration");
         this.warned = pCompound.getBoolean("warned");
+        this.strength = pCompound.getFloat("strength");
     }
 
     @Override
@@ -190,15 +193,11 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public float getStrength() {
-        AtomicReference<Float> result = new AtomicReference<>(0.0F);
+        return this.strength;
+    }
 
-        LivingEntity owner = this.getOwner();
-
-        if (owner != null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getGrade().getPower() + (owner.getHealth() / owner.getMaxHealth()) + (cap.getEnergy() / cap.getMaxEnergy())));
-        }
-        return result.get();
+    public void setStrength(float strength) {
+        this.strength = strength;
     }
 
     public int getTime() {

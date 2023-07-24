@@ -25,7 +25,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (JJKAbilities.hasToggled(owner, this)) {
             result.set(target != null);
         } else {
-            if (!owner.isOnGround() || target == null) return false;
+            if (target == null) return false;
 
             double distance = owner.distanceTo(target);
 
@@ -42,7 +42,9 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             }
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                result.set(owner.getHealth() / owner.getMaxHealth() < 0.75F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) || target.getHealth() > owner.getHealth() * 2);
+                result.set(owner.getHealth() / owner.getMaxHealth() < 0.75F ||
+                        cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
+                        target.getHealth() > owner.getHealth() * 2);
 
                 for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
                     result.set(true);

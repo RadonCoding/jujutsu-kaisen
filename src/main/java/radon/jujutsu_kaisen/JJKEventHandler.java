@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -24,8 +25,10 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -164,6 +167,26 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (!victim.level.isClientSide) {
+                float factor = event.getAmount() / victim.getMaxHealth();
+
+                if (factor > 0.5F) {
+                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        DomainExpansionEntity domain = cap.getDomain((ServerLevel) victim.level);
+
+                        if (domain != null) {
+                            float strength = domain.getStrength();
+                            domain.setStrength(strength - factor);
+                        }
+                    });
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -179,6 +202,10 @@ public class JJKEventHandler {
                     }
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
+                        if (victim instanceof SukunaRyomenEntity) {
+                            killerCap.addTrait(Trait.STRONGEST);
+                        }
+
                         if (killerCap.isCurse() != victimCap.isCurse()) {
                             CurseGrade grade = CurseGrade.values()[victimCap.getGrade().ordinal()];
 

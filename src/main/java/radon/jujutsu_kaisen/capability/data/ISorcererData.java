@@ -80,7 +80,9 @@ public interface ISorcererData {
     <T extends SummonEntity> void addSummon(T entity);
     <T extends SummonEntity> void unsummonByClass(ServerLevel level, Class<T> clazz);
     <T extends SummonEntity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
-    <T extends SummonEntity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz);
+
+    void setDomain(DomainExpansionEntity domain);
+    @Nullable DomainExpansionEntity getDomain(ServerLevel level);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

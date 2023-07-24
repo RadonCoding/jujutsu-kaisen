@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.entity.curse.JogoEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
-import radon.jujutsu_kaisen.entity.sorcerer.GojoSatoruEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
@@ -39,7 +39,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<MaximumBlueProjectile>> MAXIMUM_BLUE = ENTITIES.register("maximum_blue", () ->
             EntityType.Builder.<MaximumBlueProjectile>of(MaximumBlueProjectile::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
+                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_blue")
                             .toString()));
 
@@ -47,6 +47,12 @@ public class JJKEntities {
             EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
+                            .toString()));
+
+    public static RegistryObject<EntityType<MaximumHollowPurpleProjectile>> MAXIMUM_PURPLE_HOLLOW = ENTITIES.register("maximum_hollow_purple", () ->
+            EntityType.Builder.<MaximumHollowPurpleProjectile>of(MaximumHollowPurpleProjectile::new, MobCategory.MISC)
+                    .sized(2.0F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_hollow_purple")
                             .toString()));
     public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
             EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
@@ -77,9 +83,9 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna_ryomen")
                             .toString()));
 
-    public static RegistryObject<EntityType<GojoSatoruEntity>> GOJO_SATORU = ENTITIES.register("gojo_satoru", () ->
-            EntityType.Builder.<GojoSatoruEntity>of(GojoSatoruEntity::new, MobCategory.MONSTER)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "gojo_satoru")
+    public static RegistryObject<EntityType<SaturoGojoEntity>> SATORU_GOJO = ENTITIES.register("saturo_gojo", () ->
+            EntityType.Builder.<SaturoGojoEntity>of(SaturoGojoEntity::new, MobCategory.MONSTER)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "saturo_gojo")
                             .toString()));
 
     public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
@@ -144,7 +150,7 @@ public class JJKEntities {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
-        event.put(GOJO_SATORU.get(), SorcererEntity.createAttributes().build());
+        event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
@@ -164,7 +170,7 @@ public class JJKEntities {
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SUKUNA_RYOMEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(GOJO_SATORU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        event.register(SATORU_GOJO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(YUTA_OKKOTSU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);

@@ -41,8 +41,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, pLevel);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, List<Block> blocks, int radius, int duration) {
-        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, duration);
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, List<Block> blocks, int radius, int duration, float strength) {
+        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, duration, strength);
 
         this.moveTo(owner.getX(), owner.getY() - (double) (radius / 2), owner.getZ());
 
@@ -135,31 +135,33 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < radius && distance >= radius - 1) {
+                    if (distance < radius) {
                         BlockPos pos = center.offset(x, y, z);
                         BlockState state = this.level.getBlockState(pos);
 
                         int delay = radius - (pos.getY() - center.getY());
 
-                        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            cap.delayTickEvent(() -> {
-                                if (!this.isRemoved()) {
-                                    BlockState original = null;
+                        if (!state.isAir() || distance >= radius - 1) {
+                            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                cap.delayTickEvent(() -> {
+                                    if (!this.isRemoved()) {
+                                        BlockState original = null;
 
-                                    if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        original = be.getOriginal();
+                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                            original = be.getOriginal();
+                                        }
+
+                                        Block block = this.blocks.get(this.random.nextInt(this.blocks.size()));
+                                        owner.level.setBlock(pos, block.defaultBlockState(),
+                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                            be.create(this.uuid, this.duration, original == null ? state : original);
+                                        }
                                     }
-
-                                    Block block = this.blocks.get(this.random.nextInt(this.blocks.size()));
-                                    owner.level.setBlock(pos, block.defaultBlockState(),
-                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-
-                                    if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, this.duration, original == null ? state : original);
-                                    }
-                                }
-                            }, delay);
-                        });
+                                }, delay);
+                            });
+                        }
                     }
                 }
             }
@@ -244,14 +246,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         for (DomainExpansionEntity domain : domains) {
             if (domain.getOwner() == this.getOwner()) continue;
 
-            int radius = this.getRadius();
-
-            if (domain instanceof OpenDomainExpansionEntity && this.getStrength() < domain.getStrength() * 2) {
-                if (this.isRemovable()) {
-                    this.discard();
-                }
+            if (domain.getStrength() > this.getStrength()) {
+                this.discard();
                 return false;
-            } else if (domain.getStrength() >= this.getStrength()) {
+            } else if (domain.getStrength() == this.getStrength()) {
                 return false;
             }
         }
@@ -303,7 +301,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
                 } else if (this.isRemovable() && !this.isInsideBarrier(owner)) {
-                    //this.discard();
+                    this.discard();
                 }
             }
         }

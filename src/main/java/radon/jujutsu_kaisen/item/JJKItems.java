@@ -28,14 +28,14 @@ public class JJKItems {
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
-    public static RegistryObject<ArmorItem> GOJO_BLINDFOLD = ITEMS.register("gojo_blindfold",
-            () -> new ArmorItem(JJKArmorMaterials.GOJO_BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
-    public static RegistryObject<ArmorItem> GOJO_CHESTPLATE = ITEMS.register("gojo_chestplate",
-            () -> new ArmorItem(JJKArmorMaterials.GOJO_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
-    public static RegistryObject<ArmorItem> GOJO_LEGGINGS = ITEMS.register("gojo_leggings",
-            () -> new ArmorItem(JJKArmorMaterials.GOJO_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
-    public static RegistryObject<ArmorItem> GOJO_BOOTS = ITEMS.register("gojo_boots",
-            () -> new ArmorItem(JJKArmorMaterials.GOJO_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SATORU_BLINDFOLD = ITEMS.register("satoru_blindfold",
+            () -> new ArmorItem(JJKArmorMaterials.SATORU_BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SATORU_CHESTPLATE = ITEMS.register("satoru_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.SATORU_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SATORU_LEGGINGS = ITEMS.register("satoru_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.SATORU_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SATORU_BOOTS = ITEMS.register("satoru_boots",
+            () -> new ArmorItem(JJKArmorMaterials.SATORU_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<ArmorItem> YUJI_CHESTPLATE = ITEMS.register("yuji_chestplate",
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> YUJI_LEGGINGS = ITEMS.register("yuji_leggings",
@@ -48,8 +48,8 @@ public class JJKItems {
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 2960685, 14145495, new Item.Properties()));
-    public static RegistryObject<ForgeSpawnEggItem> GOJO_SATORU_SPAWN_EGG = ITEMS.register("gojo_satoru_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.GOJO_SATORU, 16777215, 53503, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> SATORU_SATORU_SPAWN_EGG = ITEMS.register("satoru_satoru_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.SATORU_GOJO, 16777215, 53503, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SUKUNA_RYOMEN_SPAWN_EGG = ITEMS.register("sukuna_ryomen_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.SUKUNA_RYOMEN, 13405836, 12529712, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> YUTA_OKKOTSU_SPAWN_EGG = ITEMS.register("yuta_okkotsu_spawn_egg",
@@ -62,9 +62,9 @@ public class JJKItems {
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 37, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial GOJO_BLINDFOLD = new JJKArmorMaterial("gojo_blindfold", 37, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial SATORU_BLINDFOLD = new JJKArmorMaterial("satoru_blindfold", 37, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial GOJO_OUTFIT = new JJKArmorMaterial("gojo_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial SATORU_OUTFIT = new JJKArmorMaterial("satoru_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial YUJI_OUTFIT = new JJKArmorMaterial("yuji_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);

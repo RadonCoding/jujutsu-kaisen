@@ -20,8 +20,8 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import java.util.List;
 
 public class RedProjectile extends JujutsuProjectile {
-    private static final double LAUNCH_POWER = 3.0D;
-    private static final float EXPLOSIVE_POWER = 2.5F;
+    private static final double LAUNCH_POWER = 5.0D;
+    private static final float EXPLOSIVE_POWER = 3.0F;
     private static final int DELAY = 20;
 
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
