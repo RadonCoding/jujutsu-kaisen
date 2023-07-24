@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-    private static final float STRENGTH = 10.0F;
+    private static final float STRENGTH = 50.0F;
 
     private final List<Block> blocks = new ArrayList<>();
 
@@ -303,7 +303,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
                 } else if (this.isRemovable() && !this.isInsideBarrier(owner)) {
-                    this.discard();
+                    //this.discard();
                 }
             }
         }

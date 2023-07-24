@@ -18,12 +18,14 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
     private static final float SPEED = 2.5F;
     private static final float DAMAGE = 40.0F;
     private static final int DURATION = 10 * 20;
+    private static final double RADIUS = 3.0D;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -43,11 +45,11 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void hurtEntities() {
-        AABB bounds = this.getBoundingBox().inflate(1.5D);
+        AABB bounds = this.getBoundingBox().inflate(RADIUS);
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : this.level.getEntities(this, bounds)) {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
@@ -57,9 +59,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
-        double radius = 3.0D;
-
-        AABB bounds = this.getBoundingBox().inflate(radius);
+        AABB bounds = this.getBoundingBox().inflate(RADIUS);
         double centerX = bounds.getCenter().x();
         double centerY = bounds.getCenter().y();
         double centerZ = bounds.getCenter().z();
@@ -72,7 +72,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= radius) {
+                    if (distance <= RADIUS) {
                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             this.level.destroyBlock(pos, false);
                         }

@@ -51,6 +51,11 @@ public class SukunaRyomenEntity extends SorcererEntity {
     }
 
     @Override
+    public float getMaxEnergy() {
+        return 10000.0F;
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.MALEVOLENT_SHRINE.get();
     }

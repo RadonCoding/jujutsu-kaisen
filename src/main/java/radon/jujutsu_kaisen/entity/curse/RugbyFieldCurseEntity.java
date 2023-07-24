@@ -56,6 +56,11 @@ public class RugbyFieldCurseEntity extends SorcererEntity {
     }
 
     @Override
+    public float getMaxEnergy() {
+        return 0;
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return null;
     }

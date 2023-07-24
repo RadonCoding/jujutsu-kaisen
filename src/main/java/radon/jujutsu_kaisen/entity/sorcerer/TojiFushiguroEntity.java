@@ -67,6 +67,11 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     }
 
     @Override
+    public float getMaxEnergy() {
+        return 0;
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return null;
     }

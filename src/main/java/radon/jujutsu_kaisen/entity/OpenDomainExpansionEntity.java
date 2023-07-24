@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import java.util.List;
 
 public class OpenDomainExpansionEntity extends DomainExpansionEntity {
-    private static final float STRENGTH = 1000.0F;
+    private static final float STRENGTH = 100.0F;
 
     private int width;
     private int height;

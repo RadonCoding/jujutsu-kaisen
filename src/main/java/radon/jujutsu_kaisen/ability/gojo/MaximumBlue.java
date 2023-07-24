@@ -34,7 +34,7 @@ public class MaximumBlue extends Ability {
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 30 * 20;
     }
 
     @Override
