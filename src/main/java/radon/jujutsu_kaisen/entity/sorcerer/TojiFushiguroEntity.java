@@ -39,7 +39,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     private static final int INVERTED_SPEAR_OF_HEAVEN = 1;
     private static final int PISTOL = 2;
 
-    private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, false);
+    private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, true);
     private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, 20, 15.0F);
 
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
@@ -96,10 +96,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Monster.class, true));
-        this.targetSelector.addGoal(4, new NearestAttackableCurseGoal(this, true));
-        this.targetSelector.addGoal(5, new NearestAttackableSorcererGoal(this,true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Monster.class, false));
+        this.targetSelector.addGoal(4, new NearestAttackableCurseGoal(this, false));
+        this.targetSelector.addGoal(5, new NearestAttackableSorcererGoal(this,false));
     }
 
     private void pickWeapon(LivingEntity target) {

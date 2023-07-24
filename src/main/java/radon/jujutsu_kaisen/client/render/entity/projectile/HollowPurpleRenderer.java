@@ -26,40 +26,41 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
     private static final RenderType BLUE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
     private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
-    private static final float SIZE = 1.5F;
     private static final float ANIMATION_DURATION = 20.0F;
 
-    public HollowPurpleRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager);
+    public HollowPurpleRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext);
     }
 
     @Override
-    public void render(@NotNull HollowPurpleProjectile entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (entity.tickCount >= ANIMATION_DURATION) {
-            this.render(entity, partialTick, poseStack, PURPLE, SIZE);
+    public void render(@NotNull HollowPurpleProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        float size = pEntity.getSize();
+
+        if (pEntity.tickCount >= ANIMATION_DURATION) {
+            this.render(pEntity, pPartialTick, pPoseStack, PURPLE, size);
         } else {
-            float fraction = (entity.tickCount + partialTick) / ANIMATION_DURATION;
-            float size = Mth.lerp(fraction, 0.1F, SIZE / 2);
-            float offset = Mth.lerp(fraction, SIZE, 0.0F);
+            float fraction = (pEntity.tickCount + pPartialTick) / ANIMATION_DURATION;
+            float current = Mth.lerp(fraction, 0.1F, size / 2);
+            float offset = Mth.lerp(fraction, current, 0.0F);
             Entity viewer = Minecraft.getInstance().getCameraEntity();
 
             if (viewer != null) {
-                float yaw = viewer.getViewYRot(partialTick);
-                float pitch = viewer.getViewXRot(partialTick);
+                float yaw = viewer.getViewYRot(pPartialTick);
+                float pitch = viewer.getViewXRot(pPartialTick);
 
                 Vec3 look = Vec3.directionFromRotation(new Vec2(pitch, yaw));
                 Vec3 right = new Vec3(-Math.sin(Math.toRadians(yaw)), 0.0D, Math.cos(Math.toRadians(yaw)));
                 Vec3 pos = look.cross(right).normalize().scale(offset);
 
-                poseStack.pushPose();
-                poseStack.translate(pos.x(), pos.y(), pos.z());
-                this.render(entity, partialTick, poseStack, RED, size);
-                poseStack.popPose();
+                pPoseStack.pushPose();
+                pPoseStack.translate(pos.x(), pos.y(), pos.z());
+                this.render(pEntity, pPartialTick, pPoseStack, RED, current);
+                pPoseStack.popPose();
 
-                poseStack.pushPose();
-                poseStack.translate(-pos.x(), -pos.y(), -pos.z());
-                this.render(entity, partialTick, poseStack, BLUE, size);
-                poseStack.popPose();
+                pPoseStack.pushPose();
+                pPoseStack.translate(-pos.x(), -pos.y(), -pos.z());
+                this.render(pEntity, pPartialTick, pPoseStack, BLUE, current);
+                pPoseStack.popPose();
             }
         }
     }

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class DomainBlockEntity extends BlockEntity {
+    private boolean initialized;
     private UUID identifier;
     private int duration;
     private BlockState original;
@@ -52,6 +53,7 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     public void create(UUID identifier, int duration, BlockState state) {
+        this.initialized = true;
         this.identifier = identifier;
         this.duration = duration;
         this.original = state;
@@ -62,17 +64,25 @@ public class DomainBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
 
-        this.identifier = nbt.getUUID("identifier");
-        this.duration = nbt.getInt("duration");
-        this.deferred = nbt.getCompound("original");
+        this.initialized = nbt.getBoolean("initialized");
+
+        if (this.initialized) {
+            this.identifier = nbt.getUUID("identifier");
+            this.duration = nbt.getInt("duration");
+            this.deferred = nbt.getCompound("original");
+        }
     }
 
     @Override
     public void saveAdditional(@NotNull CompoundTag nbt) {
         super.saveAdditional(nbt);
 
-        nbt.putUUID("identifier", this.identifier);
-        nbt.putInt("duration", this.duration);
-        nbt.put("original", NbtUtils.writeBlockState(this.original));
+        nbt.putBoolean("initialized", this.initialized);
+
+        if (this.initialized) {
+            nbt.putUUID("identifier", this.identifier);
+            nbt.putInt("duration", this.duration);
+            nbt.put("original", NbtUtils.writeBlockState(this.original));
+        }
     }
 }

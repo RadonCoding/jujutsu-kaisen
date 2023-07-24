@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class PureLoveBeam extends JujutsuProjectile {
+    public static final int FRAMES = 3;
     private static final double RADIUS = 20;
-    private static final int DURATION = 3;
     private static final float DAMAGE = 10.0F;
 
     public double endPosX, endPosY, endPosZ;
@@ -106,7 +106,7 @@ public class PureLoveBeam extends JujutsuProjectile {
             }
 
             if (this.on && this.getTime() > 20) {
-                if (this.animation < DURATION) {
+                if (this.animation < FRAMES) {
                     this.animation++;
                 }
             } else {

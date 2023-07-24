@@ -18,11 +18,12 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
 public class OpenDomainExpansionEntity extends DomainExpansionEntity {
-    private static final float STRENGTH = 100.0F;
+    private static final float STRENGTH = 1000.0F;
 
     private int width;
     private int height;
@@ -31,8 +32,8 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, pLevel);
     }
 
-    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height, int duration) {
-        super(pEntityType, owner, ability, duration);
+    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height, int duration, float strength) {
+        super(pEntityType, owner, ability, duration, strength);
 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
@@ -100,7 +101,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private List<ClosedDomainExpansionEntity> getClosedDomainsInside() {
-        return this.level.getEntitiesOfClass(ClosedDomainExpansionEntity.class, this.getBounds());
+        return HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox());
     }
 
     private void doSureHitEffect(@NotNull LivingEntity owner) {
@@ -123,12 +124,10 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         for (ClosedDomainExpansionEntity domain : domains) {
             if (!domain.isInsideBarrier(this)) continue;
 
-            // If the strength of the other domain is two times stronger then break
-            // else if the strength is more than or equal cancel sure hit
-            if (domain.getStrength() / this.getStrength() > 2) {
+            if (domain.getStrength() > this.getStrength()) {
                 this.discard();
                 return false;
-            } else if (domain.getStrength() >= this.getStrength()) {
+            } else if (domain.getStrength() == this.getStrength()) {
                 return false;
             }
         }

@@ -167,13 +167,14 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BLUE.get(), BlueRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), BlueRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_PURPLE_HOLLOW.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.SUKUNA_RYOMEN.get(), SukunaRyomenRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
-            event.registerEntityRenderer(JJKEntities.GOJO_SATORU.get(), GojoSatoruRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUTA_OKKOTSU.get(), YutaOkkotsuRenderer::new);
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
@@ -205,17 +206,17 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.PISTOL.get());
                                 pOutput.accept(JJKItems.INVENTORY_CURSE.get());
 
-                                pOutput.accept(JJKItems.GOJO_BLINDFOLD.get());
-                                pOutput.accept(JJKItems.GOJO_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.GOJO_LEGGINGS.get());
-                                pOutput.accept(JJKItems.GOJO_BOOTS.get());
+                                pOutput.accept(JJKItems.SATORU_BLINDFOLD.get());
+                                pOutput.accept(JJKItems.SATORU_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.SATORU_LEGGINGS.get());
+                                pOutput.accept(JJKItems.SATORU_BOOTS.get());
 
                                 pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
                                 pOutput.accept(JJKItems.YUJI_LEGGINGS.get());
                                 pOutput.accept(JJKItems.YUJI_BOOTS.get());
 
                                 pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.GOJO_SATORU_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.SATORU_SATORU_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());

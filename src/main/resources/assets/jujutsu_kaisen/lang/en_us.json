@@ -31,17 +31,17 @@
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
   "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
 
-  "item.jujutsu_kaisen.gojo_blindfold": "Gojo Blindfold",
-  "item.jujutsu_kaisen.gojo_chestplate": "Gojo Chestplate",
-  "item.jujutsu_kaisen.gojo_leggings": "Gojo Leggings",
-  "item.jujutsu_kaisen.gojo_boots": "Gojo Boots",
+  "item.jujutsu_kaisen.satoru_blindfold": "Satoru Blindfold",
+  "item.jujutsu_kaisen.satoru_chestplate": "Satoru Chestplate",
+  "item.jujutsu_kaisen.satoru_leggings": "Satoru Leggings",
+  "item.jujutsu_kaisen.satoru_boots": "Satoru Boots",
 
   "item.jujutsu_kaisen.yuji_chestplate": "Yuji Chestplate",
   "item.jujutsu_kaisen.yuji_leggings": "Yuji Leggings",
   "item.jujutsu_kaisen.yuji_boots": "Yuji Boots",
 
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
-  "item.jujutsu_kaisen.gojo_satoru_spawn_egg": "Spawn Gojo Satoru",
+  "item.jujutsu_kaisen.satoru_satoru_spawn_egg": "Spawn Satoru Gojo",
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
@@ -77,6 +77,7 @@
   "ability.jujutsu_kaisen.blue": "Cursed Technique Lapse: Blue",
   "ability.jujutsu_kaisen.maximum_blue": "Cursed Technique Amplification - Maximum Output: Blue",
   "ability.jujutsu_kaisen.hollow_purple": "Hollow Technique: Purple",
+  "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Technique: Hollow Purple",
   "ability.jujutsu_kaisen.teleport": "Teleport",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 
@@ -128,7 +129,7 @@
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
-  "entity.jujutsu_kaisen.gojo_satoru": "Gojo Satoru",
+  "entity.jujutsu_kaisen.satoru_gojo": "Satoru Gojo",
   "entity.jujutsu_kaisen.yuta_okkotsu": "Yuta Okkotsu",
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
   "entity.jujutsu_kaisen.rika": "Rika",
@@ -161,6 +162,9 @@
 
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
+
+  "advancements.jujutsu_kaisen.strongest.title": "The Strongest",
+  "advancements.jujutsu_kaisen.strongest.description": "Beat Sukuna Ryomen.",
 
   "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
   "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes."

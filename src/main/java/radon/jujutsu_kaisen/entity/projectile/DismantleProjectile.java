@@ -19,10 +19,14 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 public class DismantleProjectile extends JujutsuProjectile {
+    public static final int FRAMES = 2;
     private static final float DAMAGE = 10.0F;
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 5;
     private static final float SPEED = 5.0F;
+
+    public int animation;
+    public boolean on = true;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -93,10 +97,24 @@ public class DismantleProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getTime() >= DURATION) {
+        if (!this.on && this.animation == 0) {
             this.discard();
         } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
             this.discard();
+        }
+
+        if (this.on) {
+            if (this.animation < FRAMES) {
+                this.animation++;
+            }
+        } else {
+            if (this.animation > 0) {
+                this.animation--;
+            }
+        }
+
+        if (this.getTime() - DURATION / 2 > DURATION) {
+            this.on = false;
         }
     }
 }

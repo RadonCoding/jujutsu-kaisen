@@ -29,22 +29,22 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GojoSatoruEntity extends SorcererEntity {
-    public GojoSatoruEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+public class SaturoGojoEntity extends SorcererEntity {
+    public SaturoGojoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new SorcererGoal(this));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableCurseGoal(this, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableCurseGoal(this, false));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GojoSatoruEntity extends SorcererEntity {
 
     @Override
     public @Nullable List<Trait> getTraits() {
-        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
+        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN, Trait.STRONGEST);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class GojoSatoruEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.GOJO_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.GOJO_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.GOJO_BOOTS.get()));
+        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.SATORU_CHESTPLATE.get()));
+        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.SATORU_LEGGINGS.get()));
+        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.SATORU_BOOTS.get()));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class GojoSatoruEntity extends SorcererEntity {
                     this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                 }
             } else if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.GOJO_BLINDFOLD.get()));
+                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
             }
         }
     }

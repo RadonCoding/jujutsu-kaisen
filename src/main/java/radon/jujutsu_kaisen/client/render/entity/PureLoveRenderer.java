@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.render.entity.projectile;
+package radon.jujutsu_kaisen.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -24,14 +24,14 @@ import radon.jujutsu_kaisen.entity.PureLoveBeam;
 
 public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
-    private static final float TEXTURE_WIDTH = 256;
-    private static final float TEXTURE_HEIGHT = 32;
-    private static final float START_RADIUS = 1.3f;
+    private static final int TEXTURE_WIDTH = 256;
+    private static final int TEXTURE_HEIGHT = 32;
+    private static final float START_RADIUS = 1.3F;
     private static final float BEAM_RADIUS = 1;
     private boolean clearerView = false;
 
-    public PureLoveRenderer(EntityRendererProvider.Context mgr) {
-        super(mgr);
+    public PureLoveRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext);
     }
 
     @Override
@@ -56,11 +56,12 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
 
         float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
-        
+
         if (frame < 0) {
-            frame = 6;
+            frame = PureLoveBeam.FRAMES * 2;
         }
-        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(getTextureLocation(pEntity)));
+
+        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 
         this.renderStart(frame, pPoseStack, consumer, pPackedLight);
         this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
@@ -110,16 +111,16 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         Quaternionf q1 = side.getRotation();
         q1.mul(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(q1);
-        poseStack.translate(0, 0, -0.01f);
+        poseStack.translate(0, 0, -0.01F);
         this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
     }
 
     private void drawBeam(float length, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
-        float minU = 0;
-        float minV = 16 / TEXTURE_HEIGHT + 1 / TEXTURE_HEIGHT * frame;
-        float maxU = minU + 20 / TEXTURE_WIDTH;
-        float maxV = minV + 1 / TEXTURE_HEIGHT;
+        float minU = 0.0F;
+        float minV = 16.0F / TEXTURE_HEIGHT + 1.0F / TEXTURE_HEIGHT * frame;
+        float maxU = minU + 20.0F / TEXTURE_WIDTH;
+        float maxV = minV + 1.0F / TEXTURE_HEIGHT;
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
