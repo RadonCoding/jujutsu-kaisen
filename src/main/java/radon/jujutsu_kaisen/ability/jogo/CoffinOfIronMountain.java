@@ -22,11 +22,6 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
         return 20;
     }
 
-    @Override
-    public int getDuration() {
-        return 30 * 20;
-    }
-
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_ONE.get(),
                 JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_TWO.get(),

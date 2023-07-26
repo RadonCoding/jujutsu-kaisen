@@ -23,11 +23,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    public int getDuration() {
-        return 30 * 20;
-    }
-
-    @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
