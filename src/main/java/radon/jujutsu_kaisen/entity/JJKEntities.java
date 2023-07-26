@@ -83,9 +83,9 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna_ryomen")
                             .toString()));
 
-    public static RegistryObject<EntityType<SaturoGojoEntity>> SATORU_GOJO = ENTITIES.register("saturo_gojo", () ->
+    public static RegistryObject<EntityType<SaturoGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
             EntityType.Builder.<SaturoGojoEntity>of(SaturoGojoEntity::new, MobCategory.MONSTER)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "saturo_gojo")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "satoru_gojo")
                             .toString()));
 
     public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->

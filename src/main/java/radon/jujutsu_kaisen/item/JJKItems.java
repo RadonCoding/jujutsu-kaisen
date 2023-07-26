@@ -48,7 +48,7 @@ public class JJKItems {
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 2960685, 14145495, new Item.Properties()));
-    public static RegistryObject<ForgeSpawnEggItem> SATORU_SATORU_SPAWN_EGG = ITEMS.register("satoru_satoru_spawn_egg",
+    public static RegistryObject<ForgeSpawnEggItem> SATORU_GOJO_SPAWN_EGG = ITEMS.register("satoru_gojo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.SATORU_GOJO, 16777215, 53503, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SUKUNA_RYOMEN_SPAWN_EGG = ITEMS.register("sukuna_ryomen_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.SUKUNA_RYOMEN, 13405836, 12529712, new Item.Properties()));

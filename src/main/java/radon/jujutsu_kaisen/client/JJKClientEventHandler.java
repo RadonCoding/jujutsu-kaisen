@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
-import radon.jujutsu_kaisen.client.model.entity.GojoSatoruModel;
+import radon.jujutsu_kaisen.client.model.entity.SatoruGojoModel;
 import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.entity.TojiFushiguroModel;
 import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
@@ -154,9 +154,9 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SukunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SukunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
-            event.registerLayerDefinition(GojoSatoruModel.LAYER, SkinModel::createBodyLayer);
-            event.registerLayerDefinition(GojoSatoruModel.INNER_LAYER, SkinModel::createInnerLayer);
-            event.registerLayerDefinition(GojoSatoruModel.OUTER_LAYER, SkinModel::createOuterLayer);
+            event.registerLayerDefinition(SatoruGojoModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(SatoruGojoModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(SatoruGojoModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(YutaOkkotsuModel.LAYER, SkinModel::createBodyLayer);
         }
@@ -216,7 +216,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.YUJI_BOOTS.get());
 
                                 pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.SATORU_SATORU_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
