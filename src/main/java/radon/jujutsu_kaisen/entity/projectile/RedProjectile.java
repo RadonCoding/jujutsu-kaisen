@@ -21,8 +21,10 @@ import java.util.List;
 
 public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 5.0D;
-    private static final float EXPLOSIVE_POWER = 3.0F;
+    private static final float EXPLOSIVE_POWER = 1.0F;
     private static final int DELAY = 20;
+    private static final int DURATION = 3 * 20;
+    private static final float SPEED = 5.0F;
 
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -83,7 +85,6 @@ public class RedProjectile extends JujutsuProjectile {
                         }
                     }
                 }
-                this.discard();
             });
         }
     }
@@ -93,19 +94,29 @@ public class RedProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY && !owner.isAlive()) {
-                this.discard();
-            } else {
-                owner.swing(InteractionHand.MAIN_HAND);
-
-                Vec3 look = owner.getLookAngle();
-                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            if (this.getTime() < DELAY) {
+                if ( !owner.isAlive()) {
+                    this.discard();
+                } else {
+                    if (this.getTime() % 5 == 0) {
+                        owner.swing(InteractionHand.MAIN_HAND);
+                    }
+                    Vec3 look = owner.getLookAngle();
+                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+                    this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                }
             }
         }
 
         if (!this.level.isClientSide) {
-            if (this.getTime() >= DELAY) {
+            if (this.getTime() >= DURATION) {
+                this.discard();
+            } else if (this.getTime() >= DELAY) {
+                if (this.getTime() == DELAY) {
+                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                    this.discard();
+                }
                 this.explode();
             }
         }

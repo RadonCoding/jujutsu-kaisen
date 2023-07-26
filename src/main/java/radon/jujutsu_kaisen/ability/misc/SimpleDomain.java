@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SimpleDomain extends Ability implements Ability.IToggled {
     private static final float PARTICLE_SIZE = 0.075F;
     private static final double X_STEP = 0.25D;
-    private static final double RADIUS = 2.0D;
+    private static final double RADIUS = 3.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

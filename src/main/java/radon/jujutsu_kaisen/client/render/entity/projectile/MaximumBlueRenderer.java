@@ -17,18 +17,18 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
+import radon.jujutsu_kaisen.entity.projectile.MaximumBlueProjectile;
 
-public class BlueRenderer extends EntityRenderer<BlueProjectile> {
+public class MaximumBlueRenderer extends EntityRenderer<MaximumBlueProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png");
     private static final RenderType RENDER_TYPE = JJKRenderTypes.glow(TEXTURE);
 
-    public BlueRenderer(EntityRendererProvider.Context pContext) {
+    public MaximumBlueRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
 
     @Override
-    public void render(BlueProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(MaximumBlueProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         Minecraft mc = Minecraft.getInstance();
 
         pPoseStack.pushPose();
@@ -46,7 +46,7 @@ public class BlueRenderer extends EntityRenderer<BlueProjectile> {
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
         Matrix4f pose = pPoseStack.last().pose();
 
-        float size = pEntity.getBallRadius() * 0.3F;
+        float size = pEntity.getRadius() * 0.1F;
 
         consumer.vertex(pose, -size, 0.0F, -size)
                 .color(1.0F, 1.0F, 1.0F, 1.0F)
@@ -82,12 +82,12 @@ public class BlueRenderer extends EntityRenderer<BlueProjectile> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull BlueProjectile pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull MaximumBlueProjectile pEntity) {
         return null;
     }
 
     @Override
-    protected int getBlockLightLevel(@NotNull BlueProjectile pEntity, @NotNull BlockPos pPos) {
+    protected int getBlockLightLevel(@NotNull MaximumBlueProjectile pEntity, @NotNull BlockPos pPos) {
         return 15;
     }
 }
