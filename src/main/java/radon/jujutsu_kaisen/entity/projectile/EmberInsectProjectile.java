@@ -146,8 +146,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    owner.swing(InteractionHand.MAIN_HAND);
-
+                    if (this.getTime() % 5 == 0) {
+                        owner.swing(InteractionHand.MAIN_HAND);
+                    }
                     this.applyOffset();
                 }
             } else if (this.getTime() >= DELAY) {
