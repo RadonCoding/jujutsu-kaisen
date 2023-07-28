@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKParticles {
@@ -15,4 +17,12 @@ public class JJKParticles {
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
             new SimpleParticleType(true));
+
+    public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
+            new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
+                @Override
+                public @NotNull Codec<TravelParticle.TravelParticleOptions> codec() {
+                    return TravelParticle.TravelParticleOptions.CODEC;
+                }
+            });
 }

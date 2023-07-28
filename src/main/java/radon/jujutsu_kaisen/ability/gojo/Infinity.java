@@ -59,17 +59,22 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 0.25F;
     }
 
     @Override
     public void onEnabled(LivingEntity owner) {
-
+        /*if (owner instanceof Player player) {
+            player.getAbilities().mayfly = true;
+        }*/
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-
+        /*if (owner instanceof Player player) {
+            player.getAbilities().mayfly = false;
+            player.getAbilities().flying = false;
+        }*/
     }
 
     public static class FrozenProjectileData extends SavedData {

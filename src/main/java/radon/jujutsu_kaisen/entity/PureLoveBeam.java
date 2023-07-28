@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class PureLoveBeam extends JujutsuProjectile {
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
             this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
 
-            if (!this.on && this.animation == 0) {
+            if (!((RikaEntity) owner).isOpen() || !this.on && this.animation == 0) {
                 this.discard();
             }
 

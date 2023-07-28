@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +22,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
     private static final float SPEED = 5.0F;
-    private static final int DURATION = 10 * 20;
+    private static final int DURATION = 5 * 20;
     private static final double OFFSET = 3.0D;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
@@ -116,10 +115,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
-                        owner.swing(InteractionHand.MAIN_HAND);
-
-                        Vec3 look = owner.getLookAngle();
-                        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
+                        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                                .add(owner.getLookAngle().scale(OFFSET));
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else if (this.getTime() >= DELAY) {

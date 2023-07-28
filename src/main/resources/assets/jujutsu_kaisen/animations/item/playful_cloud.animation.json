@@ -44,5 +44,6 @@
 				}
 			}
 		}
-	}
+	},
+	"geckolib_format_version": 2
 }

@@ -32,11 +32,11 @@ public class RCT extends Ability {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             owner.heal(AMOUNT * cap.getGrade().getPower());
 
-            if (cap.hasTrait(Trait.SIX_EYES)) {
+            if (cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) {
                 int burnout = cap.getBurnout();
 
                 if (burnout > 0) {
-                    cap.setBurnout(Math.min(0, burnout - 3));
+                    cap.setBurnout(Math.max(0, burnout - 3));
                 }
             }
         });
@@ -47,7 +47,7 @@ public class RCT extends Ability {
         AtomicReference<Float> result = new AtomicReference<>(0.0F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (owner.getHealth() < owner.getMaxHealth() || (cap.hasTrait(Trait.SIX_EYES) && cap.getBurnout() > 0)) {
+            if (owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) && cap.getBurnout() > 0)) {
                 result.set(10.0F);
             }
         });

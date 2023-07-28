@@ -32,8 +32,8 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, pLevel);
     }
 
-    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height, int duration, float strength) {
-        super(pEntityType, owner, ability, duration, strength);
+    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
+        super(pEntityType, owner, ability, strength);
 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
@@ -111,7 +111,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
             this.ability.onHitEntity(this, owner, entity);
         }
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, (((this.width * this.height * 4) / this.duration) * this.getTime()) / 4,
+        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, (this.width * this.height) / 4,
                 (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int)
                         bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             this.ability.onHitBlock(this, owner, pos);

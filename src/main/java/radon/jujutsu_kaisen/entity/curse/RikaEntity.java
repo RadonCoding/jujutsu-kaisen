@@ -211,11 +211,6 @@ public class RikaEntity extends SummonEntity {
     }
 
     @Override
-    public float getMaxEnergy() {
-        return 50000.0F;
-    }
-
-    @Override
     public @Nullable Ability getDomain() {
         return null;
     }

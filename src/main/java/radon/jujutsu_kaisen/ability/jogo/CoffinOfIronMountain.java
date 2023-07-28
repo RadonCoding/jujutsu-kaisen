@@ -47,11 +47,10 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int duration = this.getDuration();
             int radius = this.getRadius();
             List<Block> blocks = this.getBlocks();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius, duration,
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius,
                     cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
             owner.level.addFreshEntity(domain);
 

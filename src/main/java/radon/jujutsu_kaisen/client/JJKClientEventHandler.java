@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.entity.TojiFushiguroModel;
 import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
 import radon.jujutsu_kaisen.client.particle.BlackFlashParticle;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
@@ -164,7 +165,7 @@ public class JJKClientEventHandler {
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(JJKEntities.RED.get(), RedRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLUE.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), MaximumBlueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_PURPLE_HOLLOW.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
@@ -189,6 +190,7 @@ public class JJKClientEventHandler {
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
             event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
         }
 
         @SubscribeEvent
@@ -212,6 +214,10 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
                                 pOutput.accept(JJKItems.YUJI_LEGGINGS.get());
                                 pOutput.accept(JJKItems.YUJI_BOOTS.get());
+
+                                pOutput.accept(JJKItems.MEGUMI_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.MEGUMI_LEGGINGS.get());
+                                pOutput.accept(JJKItems.MEGUMI_BOOTS.get());
 
                                 pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());

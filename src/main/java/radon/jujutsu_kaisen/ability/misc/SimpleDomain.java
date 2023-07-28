@@ -52,15 +52,19 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
 
-        if (!owner.level.isClientSide) {
-            for (double phi = -Math.PI; phi < Math.PI; phi += X_STEP) {
-                double x = owner.getX() + RADIUS * Math.cos(phi);
-                double y = owner.getY() + PARTICLE_SIZE;
-                double z = owner.getZ() + RADIUS * Math.sin(phi);
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            float factor = (float) cap.getRemaining(this) / (float) this.getDuration();
 
-                ((ServerLevel) owner.level).sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            if (!owner.level.isClientSide) {
+                for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
+                    double x = owner.getX() + RADIUS * Math.cos(phi);
+                    double y = owner.getY() + PARTICLE_SIZE;
+                    double z = owner.getZ() + RADIUS * Math.sin(phi);
+
+                    ((ServerLevel) owner.level).sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                }
             }
-        }
+        });
     }
 
     @Override

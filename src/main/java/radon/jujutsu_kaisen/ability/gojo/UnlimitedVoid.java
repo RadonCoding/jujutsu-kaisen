@@ -29,12 +29,10 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        int duration = this.getDuration() - domain.getTime();
-
         if (entity instanceof LivingEntity living) {
             if (!living.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), duration, 0, false, false, false));
-                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 4));
+                living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), 30 * 20, 0, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30 * 20, 4));
             }
         }
     }
@@ -47,11 +45,10 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int duration = this.getDuration();
             int radius = this.getRadius();
             List<Block> blocks = this.getBlocks();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius, duration,
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, blocks, radius,
                     cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
             owner.level.addFreshEntity(domain);
 
