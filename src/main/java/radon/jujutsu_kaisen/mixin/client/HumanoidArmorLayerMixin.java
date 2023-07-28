@@ -24,7 +24,8 @@ public class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidM
         if (stack.getItem() instanceof ArmorItem armor) {
             return armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_OUTFIT ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_BLINDFOLD ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.YUJI_OUTFIT;
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.YUJI_OUTFIT ||
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.MEGUMI_OUTFIT;
         }
         return false;
     }
@@ -33,7 +34,7 @@ public class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidM
     public void renderArmorPieceHead(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
         if (jujutsu_kaisen$isScaled(pLivingEntity, pSlot)) {
             float scale = switch (pSlot) {
-                case CHEST, FEET -> 0.92F;
+                case CHEST, FEET -> 0.93F;
                 case HEAD -> 0.8F;
                 default -> 1.0F;
             };

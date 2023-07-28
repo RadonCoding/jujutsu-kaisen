@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.gojo;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,8 @@ public class HollowPurple extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         HollowPurpleProjectile purple = new HollowPurpleProjectile(owner);
         owner.level.addFreshEntity(purple);
     }

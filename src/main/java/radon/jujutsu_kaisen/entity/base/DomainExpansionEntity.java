@@ -32,7 +32,6 @@ public abstract class DomainExpansionEntity extends Mob {
     private LivingEntity cachedOwner;
 
     protected DomainExpansion ability;
-    protected int duration;
     protected boolean warned;
 
     private float strength;
@@ -41,18 +40,13 @@ public abstract class DomainExpansionEntity extends Mob {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int duration, float strength) {
+    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, float strength) {
         super(pEntityType, owner.level);
 
         this.setOwner(owner);
 
         this.ability = ability;
-        this.duration = duration;
         this.strength = strength;
-    }
-
-    public boolean isRemovable() {
-        return true;
     }
 
     @Override
@@ -110,11 +104,8 @@ public abstract class DomainExpansionEntity extends Mob {
             if (!this.level.isClientSide) {
                 int time = this.getTime();
 
-                if (time >= this.duration) {
-                    this.discard();
-                    return;
-                } else if (owner != null) {
-                    if (this.isRemovable() && !JJKAbilities.hasToggled(owner, this.ability)) {
+                if (owner != null) {
+                    if (!JJKAbilities.hasToggled(owner, this.ability)) {
                         this.discard();
                         return;
                     }
@@ -149,7 +140,6 @@ public abstract class DomainExpansionEntity extends Mob {
         }
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
-        pCompound.putInt("duration", this.duration);
         pCompound.putBoolean("warned", this.warned);
         pCompound.putFloat("strength", this.strength);
     }
@@ -163,7 +153,6 @@ public abstract class DomainExpansionEntity extends Mob {
         }
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
-        this.duration = pCompound.getInt("duration");
         this.warned = pCompound.getBoolean("warned");
         this.strength = pCompound.getFloat("strength");
     }

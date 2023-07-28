@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -68,11 +69,6 @@ public class JogoEntity extends SorcererEntity {
     @Override
     public boolean isCurse() {
         return true;
-    }
-
-    @Override
-    public float getMaxEnergy() {
-        return 3000.0F;
     }
 
     @Override

@@ -99,7 +99,9 @@ public abstract class Ability {
                         result.set(Status.ENERGY);
                         return;
                     }
-                } else if (duration && this instanceof IToggled) {
+                }
+
+                if (duration) {
                     if (((IToggled) this).getRealDuration(owner) > 0) {
                         cap.addDuration(owner, this);
                     }
@@ -117,11 +119,11 @@ public abstract class Ability {
 
     public Status checkTriggerable(LivingEntity owner) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) return Status.SIMPLE_DOMAIN;
-        return this.getStatus(owner, true, true, true, true);
+        return this.getStatus(owner, true, true, true, false);
     }
 
     public Status checkToggleable(LivingEntity owner) {
-        return this.getStatus(owner, !((IToggled) this).isPassive(), false, true, false);
+        return this.getStatus(owner, !((IToggled) this).isPassive(), false, true, true);
     }
 
     public Status checkChannelable(LivingEntity owner) {

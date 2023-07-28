@@ -2,18 +2,16 @@ package radon.jujutsu_kaisen;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,13 +21,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -127,43 +123,6 @@ public class JJKEventHandler {
                     event.setDistance(distance * 0.5F);
                 }
             });
-        }
-
-        @SubscribeEvent
-        public static void onShieldBlock(ShieldBlockEvent event) {
-            if (event.getEntity().getUseItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                event.setCanceled(true);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            if (event.getSource().isIndirect() && event.getSource().is(JJKDamageSources.JUJUTSU)) {
-                LivingEntity owner = event.getEntity();
-                ItemStack stack = owner.getUseItem();
-
-                if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                    int i = 1 + Mth.floor(event.getAmount());
-                    InteractionHand hand = owner.getUsedItemHand();
-                    stack.hurtAndBreak(i, owner, entity -> {
-                        entity.broadcastBreakEvent(hand);
-                        owner.stopUsingItem();
-                    });
-
-                    if (stack.isEmpty()) {
-                        if (hand == InteractionHand.MAIN_HAND) {
-                            owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                        } else {
-                            owner.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-                        }
-                        owner.stopUsingItem();
-                        owner.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.4F);
-                    } else {
-                        owner.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.4F);
-                    }
-                    event.setCanceled(true);
-                }
-            }
         }
 
         @SubscribeEvent

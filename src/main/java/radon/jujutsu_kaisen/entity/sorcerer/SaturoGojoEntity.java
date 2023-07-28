@@ -68,11 +68,6 @@ public class SaturoGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public float getMaxEnergy() {
-        return 3500.0F;
-    }
-
-    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.UNLIMITED_VOID.get();
     }

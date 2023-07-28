@@ -54,17 +54,16 @@ public class DisasterFlames extends Ability {
         double z = entity.getZ();
 
         for (int i = 0; i < count; i++) {
-            Vec3 vec = new Vec3(HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian()).normalize();
+            double scale = HelperMethods.RANDOM.nextDouble() * 0.5D + 0.5D;
+            Vec3 speed = new Vec3(HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian())
+                    .normalize().scale(scale);
 
-            double scale = HelperMethods.RANDOM.nextDouble() * 0.5 + 0.5;
-            vec = vec.scale(scale);
-
-            double offsetX = x + vec.x();
-            double offsetY = y + vec.y();
-            double offsetZ = z + vec.z();
+            double offsetX = x + speed.x();
+            double offsetY = y + speed.y();
+            double offsetZ = z + speed.z();
 
             ((ServerLevel) entity.level).sendParticles((ParticleOptions) ParticleTypes.FLAME, offsetX, offsetY, offsetZ, 0,
-                    vec.x(), vec.y(), vec.z(), 1.0D);
+                    speed.x(), speed.y(), speed.z(), 1.0D);
             entity.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
         }
     }

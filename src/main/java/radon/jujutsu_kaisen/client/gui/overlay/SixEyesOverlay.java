@@ -2,8 +2,8 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
@@ -41,59 +41,59 @@ public class SixEyesOverlay {
         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
                 if (HelperMethods.getLookAtHit(mc.player, RANGE) instanceof EntityHitResult hit) {
-                    Entity target = hit.getEntity();
+                    if (hit.getEntity() instanceof LivingEntity target) {
+                        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-                    if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-                    if (current == null) {
-                        PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
-                        return;
-                    } else if (mc.level.getGameTime() % 20 == 0) {
-                        PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
-                    }
-
-                    UUID identifier = current.getKey();
-
-                    if (target.getUUID().equals(identifier)) {
-                        ISorcererData data = current.getValue();
-
-                        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
-
-                        List<Component> lines = new ArrayList<>();
-
-                        CursedTechnique technique = data.getTechnique();
-
-                        if (technique != null) {
-                            Component cursedTechniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                                    technique.getName());
-                            lines.add(cursedTechniqueText);
+                        if (current == null) {
+                            PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
+                            return;
+                        } else if (mc.level.getGameTime() % 20 == 0) {
+                            PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
                         }
 
-                        Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                                data.getGrade().getName());
-                        lines.add(gradeText);
+                        UUID identifier = current.getKey();
 
-                        Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
-                                data.getEnergy(), data.getMaxEnergy());
-                        lines.add(energyText);
+                        if (target.getUUID().equals(identifier)) {
+                            ISorcererData data = current.getValue();
 
-                        int offset = 0;
+                            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
-                        for (Component line : lines) {
-                            if (mc.font.width(line) > offset) {
-                                offset = mc.font.width(line);
+                            List<Component> lines = new ArrayList<>();
+
+                            CursedTechnique technique = data.getTechnique();
+
+                            if (technique != null) {
+                                Component cursedTechniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
+                                        technique.getName());
+                                lines.add(cursedTechniqueText);
                             }
-                        }
 
-                        int x = width - offset - 20;
-                        int y = height - 20 - ((lines.size() - 1) * mc.font.lineHeight + 2);
+                            Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
+                                    data.getGrade().getName());
+                            lines.add(gradeText);
 
-                        for (Component line : lines) {
-                            mc.font.drawShadow(poseStack, line, x, y, 53503);
-                            y += mc.font.lineHeight;
+                            Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
+                                    data.getEnergy(), data.getMaxEnergy());
+                            lines.add(energyText);
+
+                            int offset = 0;
+
+                            for (Component line : lines) {
+                                if (mc.font.width(line) > offset) {
+                                    offset = mc.font.width(line);
+                                }
+                            }
+
+                            int x = width - offset - 20;
+                            int y = height - 20 - ((lines.size() - 1) * mc.font.lineHeight + 2);
+
+                            for (Component line : lines) {
+                                mc.font.drawShadow(poseStack, line, x, y, 53503);
+                                y += mc.font.lineHeight;
+                            }
+                        } else {
+                            PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
                         }
-                    } else {
-                        PacketHandler.sendToServer(new RequestSorcererDataC2SPacket(target.getUUID()));
                     }
                 }
             }

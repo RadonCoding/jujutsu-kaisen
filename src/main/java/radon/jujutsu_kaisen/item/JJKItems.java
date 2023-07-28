@@ -42,9 +42,14 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> YUJI_BOOTS = ITEMS.register("yuji_boots",
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
-
+    public static RegistryObject<ArmorItem> MEGUMI_CHESTPLATE = ITEMS.register("megumi_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> MEGUMI_LEGGINGS = ITEMS.register("megumi_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> MEGUMI_BOOTS = ITEMS.register("megumi_boots",
+            () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<Item> PISTOL = ITEMS.register("pistol",
-            () -> new PistolItem(new Item.Properties().durability(64)));
+            () -> new PistolItem(new Item.Properties().durability(15)));
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 2960685, 14145495, new Item.Properties()));
@@ -67,6 +72,8 @@ public class JJKItems {
         public static JJKArmorMaterial SATORU_OUTFIT = new JJKArmorMaterial("satoru_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial YUJI_OUTFIT = new JJKArmorMaterial("yuji_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+                3.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial MEGUMI_OUTFIT = new JJKArmorMaterial("megumi_outfit", 37, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
     }
 }

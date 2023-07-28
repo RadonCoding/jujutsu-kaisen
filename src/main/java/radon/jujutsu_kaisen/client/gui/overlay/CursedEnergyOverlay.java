@@ -30,11 +30,12 @@ public class CursedEnergyOverlay {
 
             GuiComponent.blit(poseStack, 20, 20, 0, 0, 93, 9, 93, 16);
 
-            float chakraWidth = (Mth.clamp(cap.getEnergy(), 0.0F, cap.getMaxEnergy()) / cap.getMaxEnergy()) * 94.0F;
-            GuiComponent.blit(poseStack, 20, 21, 0, 9, (int) chakraWidth, 7, 93, 16);
+            float maxEnergy = cap.getMaxEnergy();
+            float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
+            GuiComponent.blit(poseStack, 20, 21, 0, 9, (int) energyWidth, 7, 93, 16);
             poseStack.pushPose();
             poseStack.scale(0.5F, 0.5F, 0.5F);
-            gui.getFont().drawShadow(poseStack, String.format("%.1f / %.1f", cap.getEnergy(), cap.getMaxEnergy()),
+            gui.getFont().drawShadow(poseStack, String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
                     (20.0F * 2.0F) + 5.0F, (20.0F * 2.0F) + 5.5F, 16777215);
             poseStack.popPose();
 

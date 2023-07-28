@@ -48,6 +48,7 @@ public interface ISorcererData {
     boolean isCooldownDone(Ability ability);
 
     void addDuration(LivingEntity owner, Ability ability);
+    int getRemaining(Ability ability);
 
     void setBurnout(int duration);
     int getBurnout();

@@ -17,7 +17,6 @@ import java.util.UUID;
 public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
     private UUID identifier;
-    private int duration;
     private BlockState original;
 
     private CompoundTag deferred;
@@ -29,7 +28,7 @@ public class DomainBlockEntity extends BlockEntity {
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
         Entity domain = ((ServerLevel) pLevel).getEntity(pBlockEntity.identifier);
 
-        if (--pBlockEntity.duration == 0 || domain == null || domain.isRemoved() || !domain.isAlive()) {
+        if (domain == null || domain.isRemoved() || !domain.isAlive()) {
             BlockState original = pBlockEntity.getOriginal();
 
             if (original != null) {
@@ -40,7 +39,6 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             }
         }
-        pBlockEntity.setChanged();
     }
 
     public @Nullable BlockState getOriginal() {
@@ -52,10 +50,9 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID identifier, int duration, BlockState state) {
+    public void create(UUID identifier, BlockState state) {
         this.initialized = true;
         this.identifier = identifier;
-        this.duration = duration;
         this.original = state;
         this.setChanged();
     }
@@ -68,7 +65,6 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             this.identifier = nbt.getUUID("identifier");
-            this.duration = nbt.getInt("duration");
             this.deferred = nbt.getCompound("original");
         }
     }
@@ -81,7 +77,6 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             nbt.putUUID("identifier", this.identifier);
-            nbt.putInt("duration", this.duration);
             nbt.put("original", NbtUtils.writeBlockState(this.original));
         }
     }

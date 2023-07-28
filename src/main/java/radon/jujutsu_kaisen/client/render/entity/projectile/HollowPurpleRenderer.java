@@ -26,7 +26,7 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
     private static final RenderType BLUE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
     private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
-    private static final float ANIMATION_DURATION = 20.0F;
+    private static final int ANIMATION_DURATION = 20;
 
     public HollowPurpleRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -40,8 +40,8 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
             this.render(pEntity, pPartialTick, pPoseStack, PURPLE, size);
         } else {
             float fraction = (pEntity.tickCount + pPartialTick) / ANIMATION_DURATION;
-            float current = Mth.lerp(fraction, 0.1F, size / 2);
-            float offset = Mth.lerp(fraction, current, 0.0F);
+            fraction = fraction < 0.5F ? 2 * fraction * fraction : fraction;
+            float offset = Mth.lerp(fraction, size * 2, 0.0F);
             Entity viewer = Minecraft.getInstance().getCameraEntity();
 
             if (viewer != null) {
@@ -54,12 +54,12 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
 
                 pPoseStack.pushPose();
                 pPoseStack.translate(pos.x(), pos.y(), pos.z());
-                this.render(pEntity, pPartialTick, pPoseStack, RED, current);
+                this.render(pEntity, pPartialTick, pPoseStack, RED, size / 2);
                 pPoseStack.popPose();
 
                 pPoseStack.pushPose();
                 pPoseStack.translate(-pos.x(), -pos.y(), -pos.z());
-                this.render(pEntity, pPartialTick, pPoseStack, BLUE, current);
+                this.render(pEntity, pPartialTick, pPoseStack, BLUE, size / 2);
                 pPoseStack.popPose();
             }
         }

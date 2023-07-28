@@ -28,7 +28,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<RedProjectile>> RED = ENTITIES.register("red", () ->
             EntityType.Builder.<RedProjectile>of(RedProjectile::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.15F, 0.15F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")
                             .toString()));
     public static RegistryObject<EntityType<BlueProjectile>> BLUE = ENTITIES.register("blue", () ->

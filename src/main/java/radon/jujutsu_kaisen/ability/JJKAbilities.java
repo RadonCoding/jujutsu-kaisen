@@ -141,6 +141,11 @@ public class JJKAbilities {
                 CursedTechnique copied = cap.getCopied();
 
                 if (copied != null) {
+                    Ability domain = copied.getDomain();
+
+                    if (domain != null) {
+                        abilities.add(copied.getDomain());
+                    }
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
                 }
             }

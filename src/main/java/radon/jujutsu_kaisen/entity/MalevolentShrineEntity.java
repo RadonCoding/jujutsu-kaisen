@@ -18,8 +18,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         super(pEntityType, pLevel);
     }
 
-    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height, int duration, float strength) {
-        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height, duration, strength);
+    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
+        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height, strength);
     }
 
     @Override

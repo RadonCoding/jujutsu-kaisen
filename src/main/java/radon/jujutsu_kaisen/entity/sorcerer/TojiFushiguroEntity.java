@@ -3,14 +3,16 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -64,11 +67,6 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     @Override
     public boolean isCurse() {
         return false;
-    }
-
-    @Override
-    public float getMaxEnergy() {
-        return 0;
     }
 
     @Override
@@ -140,15 +138,23 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         if (target != null) {
             this.pickWeapon(target);
         }
+    }
 
-        for (Entity entity : this.level.getEntities(this, this.getBoundingBox().inflate(3.0D))) {
-            if (entity instanceof Projectile) {
-                if (this.random.nextInt(3) == 0) {
-                    if (this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                        this.startUsingItem(InteractionHand.MAIN_HAND);
-                    }
-                }
+    @Override
+    public void tick() {
+        super.tick();
+
+        for (ClosedDomainExpansionEntity ignored : HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox())) {
+            if (!this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
+                ItemStack stack = InventoryCurseItem.getItem(inventory, INVERTED_SPEAR_OF_HEAVEN);
+                this.setItemInHand(InteractionHand.MAIN_HAND, stack);
             }
+
+            if (!this.isUsingItem()) {
+                this.startUsingItem(InteractionHand.MAIN_HAND);
+            }
+            break;
         }
     }
 

@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
@@ -75,11 +76,10 @@ public class SorcererData implements ISorcererData {
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
 
-    private static final float MAX_CURSED_ENERGY = 2500.0F;
     private static final float ENERGY_AMOUNT = 0.25F;
 
     public SorcererData() {
-        this.grade = SorcererGrade.GRADE_4;
+        this.setGrade(SorcererGrade.GRADE_4);
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -210,8 +210,8 @@ public class SorcererData implements ISorcererData {
                 UUID identifier = iter.next();
                 Entity entity = level.getEntity(identifier);
 
-                if (!(entity instanceof DomainExpansionEntity domain) || !entity.isAlive() ||
-                        entity.isRemoved() || !domain.isInsideBarrier(owner)) {
+                if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
+                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner)) {
                     iter.remove();
                 }
             }
@@ -343,10 +343,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setGrade(SorcererGrade grade) {
         this.grade = grade;
-
-        if (!this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            this.maxEnergy = MAX_CURSED_ENERGY * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length);
-        }
     }
 
     @Override
@@ -394,7 +390,7 @@ public class SorcererData implements ISorcererData {
 
         // If the sorcerer has enough experience and the curse/sorcerer exorcised was higher rank than the current rank of the curse/sorcerer
         if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
-            this.grade = next;
+            this.setGrade(next);
 
             if (owner instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getName()));
@@ -447,6 +443,14 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getRemaining(Ability ability) {
+        if (!this.durations.containsKey(ability)) {
+            return 0;
+        }
+        return this.durations.get(ability);
+    }
+
+    @Override
     public void setBurnout(int duration) {
         this.burnout = duration;
     }
@@ -478,7 +482,10 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        return this.maxEnergy;
+        if (this.maxEnergy == 0.0F) {
+            this.maxEnergy = ConfigHolder.SERVER.maxCursedEnergyDefault.get();
+        }
+        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length);
     }
 
     @Override
