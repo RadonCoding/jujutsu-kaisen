@@ -146,6 +146,12 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meteor")
                             .toString()));
 
+    public static RegistryObject<EntityType<ChainItemProjectile>> CHAIN_ITEM = ENTITIES.register("chain_item", () ->
+            EntityType.Builder.<ChainItemProjectile>of(ChainItemProjectile::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chain_item")
+                            .toString()));
+
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());

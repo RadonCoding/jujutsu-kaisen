@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.projectile.ChainItemProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
@@ -219,6 +220,10 @@ public class Infinity extends Ability implements Ability.IToggled {
                         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             Projectile projectile = event.getProjectile();
 
+                            if (projectile instanceof ChainItemProjectile chain) {
+                                if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return;
+                            }
+
                             for (DomainExpansionEntity domain : cap.getDomains(level)) {
                                 if (projectile.getOwner() == domain.getOwner()) return;
                             }
@@ -284,6 +289,10 @@ public class Infinity extends Ability implements Ability.IToggled {
                         if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             return;
                         } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            return;
+                        }
+                    } else if (source.getDirectEntity() instanceof ChainItemProjectile chain) {
+                        if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             return;
                         }
                     }

@@ -22,6 +22,8 @@ public class JJKItems {
             () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL,13, 0.0F, new Item.Properties()));
     public static RegistryObject<Item> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",
             () -> new SplitSoulKatana(JJKTiers.CURSED_TOOL,9, 0.0F, new Item.Properties()));
+    public static RegistryObject<Item> CHAIN = ITEMS.register("chain",
+            () -> new ChainItem(JJKTiers.CURSED_TOOL,9, 0.0F, new Item.Properties()));
 
     public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
             () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 13, 0.0F, new Item.Properties()));
