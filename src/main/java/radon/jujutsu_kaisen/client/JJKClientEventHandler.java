@@ -26,9 +26,9 @@ import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
 import radon.jujutsu_kaisen.client.model.entity.TojiFushiguroModel;
 import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
 import radon.jujutsu_kaisen.client.particle.BlackFlashParticle;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
@@ -184,6 +184,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CHAIN_ITEM.get(), ChainItemRenderer::new);
         }
 
         @SubscribeEvent
@@ -202,6 +203,8 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
                                 pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
                                 pOutput.accept(JJKItems.SPLIT_SOUL_KATANA.get());
+                                pOutput.accept(JJKItems.CHAIN.get());
+
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
                                 pOutput.accept(JJKItems.PISTOL.get());
                                 pOutput.accept(JJKItems.INVENTORY_CURSE.get());

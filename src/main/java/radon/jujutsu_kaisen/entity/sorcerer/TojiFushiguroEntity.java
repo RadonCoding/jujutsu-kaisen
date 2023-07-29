@@ -81,7 +81,6 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-        InventoryCurseItem.addItem(inventory, PISTOL, new ItemStack(JJKItems.PISTOL.get()));
         this.setItemSlot(EquipmentSlot.CHEST, inventory);
     }
 
@@ -104,7 +103,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getEnergy() / cap.getMaxEnergy() > 0.5F || cap.hasToggled(JJKAbilities.INFINITY.get())) {
+            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 result.set(INVERTED_SPEAR_OF_HEAVEN);
             }
         });
@@ -114,13 +113,13 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         }
 
         ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
-        ItemStack stack = InventoryCurseItem.getItem(inventory, result.get());
+        ItemStack main = InventoryCurseItem.getItem(inventory, result.get());
 
-        if (!this.getMainHandItem().is(stack.getItem())) {
-            this.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        if (!this.getMainHandItem().is(main.getItem())) {
+            this.setItemInHand(InteractionHand.MAIN_HAND, main);
         }
 
-        if (stack.is(JJKItems.PISTOL.get())) {
+        if (main.is(JJKItems.PISTOL.get())) {
             this.goalSelector.removeGoal(this.melee);
             this.goalSelector.addGoal(1, this.ranged);
         } else {

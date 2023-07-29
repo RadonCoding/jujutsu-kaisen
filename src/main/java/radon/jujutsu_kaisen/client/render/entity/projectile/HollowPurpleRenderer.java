@@ -18,13 +18,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.HollowPurpleProjectile;
 
 public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile> {
-    private static final RenderType RED = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/red.png"));
-    private static final RenderType BLUE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
-    private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
+    private static final RenderType RED = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/red.png"));
+    private static final RenderType BLUE = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/blue.png"));
+    private static final RenderType PURPLE = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
     private static final int ANIMATION_DURATION = 20;
 
