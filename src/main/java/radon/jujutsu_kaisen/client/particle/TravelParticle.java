@@ -30,7 +30,7 @@ public class TravelParticle extends TextureSheetParticle {
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
-        this.center = new Vec3(options.center());
+        this.center = new Vec3(options.target());
 
         Vector3f color = options.color();
         this.rCol = color.x();
@@ -65,9 +65,11 @@ public class TravelParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public record TravelParticleOptions(Vector3f center, Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
+    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
         public static Vector3f DARK_BLUE_COLOR = Vec3.fromRGB24(255).toVector3f();
         public static Vector3f LIGHT_BLUE_COLOR = Vec3.fromRGB24(38143).toVector3f();
+        public static Vector3f PURPLE_COLOR = Vec3.fromRGB24(12781547).toVector3f();
+        public static Vector3f RED_COLOR = Vec3.fromRGB24(16711680).toVector3f();
 
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticle.TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
@@ -84,7 +86,7 @@ public class TravelParticle extends TextureSheetParticle {
         };
 
         public static final Codec<TravelParticleOptions> CODEC = RecordCodecBuilder.create((builder) ->
-                builder.group(ExtraCodecs.VECTOR3F.fieldOf("center").forGetter(options -> options.center),
+                builder.group(ExtraCodecs.VECTOR3F.fieldOf("target").forGetter(options -> options.target),
                                 ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(options -> options.color),
                                 Codec.FLOAT.fieldOf("scalar").forGetter(options -> options.scalar),
                                 Codec.FLOAT.fieldOf("opacity").forGetter(options -> options.opacity),
@@ -126,9 +128,9 @@ public class TravelParticle extends TextureSheetParticle {
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeDouble(this.center.x());
-            buf.writeDouble(this.center.y());
-            buf.writeDouble(this.center.z());
+            buf.writeDouble(this.target.x());
+            buf.writeDouble(this.target.y());
+            buf.writeDouble(this.target.z());
             buf.writeFloat(this.color.x());
             buf.writeFloat(this.color.y());
             buf.writeFloat(this.color.z());
@@ -140,7 +142,7 @@ public class TravelParticle extends TextureSheetParticle {
         @Override
         public @NotNull String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.center.x(), this.center.y(), this.center.z(), this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.lifetime);
+                    this.target.x(), this.target.y(), this.target.z(), this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.lifetime);
         }
     }
 

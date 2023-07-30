@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -56,6 +57,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
+        if (this.level.isClientSide) return;
+
         Vec3 dir = this.getDeltaMovement();
 
         for (int i = 0; i < 50; i++) {
@@ -66,9 +69,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
-            if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
-            }
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
         }
 
         Entity owner = this.getOwner();
@@ -77,7 +78,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
                 this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null,
-                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(), false, Level.ExplosionInteraction.NONE);
+                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(), false,
+                        this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();

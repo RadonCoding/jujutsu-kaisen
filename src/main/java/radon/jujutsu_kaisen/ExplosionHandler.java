@@ -9,8 +9,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
@@ -73,12 +73,13 @@ public class ExplosionHandler {
                             BlockState state = event.level.getBlockState(pos);
 
                             if (state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
-                                event.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                                if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                                    event.level.destroyBlock(pos, false);
 
-                                if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                                    ((ServerLevel) event.level).sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                                    if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                                        ((ServerLevel) event.level).sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                                    }
                                 }
-
                                 for (Entity entity : event.level.getEntities(explosion.source, new AABB(pos).inflate(1.0D))) {
                                     entity.hurt(event.level.damageSources().explosion(explosion.source, null), explosion.radius);
                                 }

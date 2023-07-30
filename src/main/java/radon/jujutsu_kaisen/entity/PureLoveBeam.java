@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -131,25 +132,27 @@ public class PureLoveBeam extends JujutsuProjectile {
                 });
 
                 if (!this.level.isClientSide) {
-                    double radius = 3.0D;
+                    if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                        double radius = 3.0D;
 
-                    AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
-                            this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                    double centerX = bounds.getCenter().x();
-                    double centerY = bounds.getCenter().y();
-                    double centerZ = bounds.getCenter().z();
+                        AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
+                                this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
+                        double centerX = bounds.getCenter().x();
+                        double centerY = bounds.getCenter().y();
+                        double centerZ = bounds.getCenter().z();
 
-                    for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                        for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                            for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                                BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = this.level.getBlockState(pos);
+                        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                                    BlockPos pos = new BlockPos(x, y, z);
+                                    BlockState state = this.level.getBlockState(pos);
 
-                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                                if (distance <= radius) {
-                                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                        this.level.destroyBlock(pos, false);
+                                    if (distance <= radius) {
+                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                                            this.level.destroyBlock(pos, false);
+                                        }
                                     }
                                 }
                             }

@@ -4,6 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -287,15 +289,20 @@ public class Infinity extends Ability implements Ability.IToggled {
                             source.getDirectEntity() == source.getEntity() &&
                             (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
                         if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                             return;
                         } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;
                         }
                     } else if (source.getDirectEntity() instanceof ChainItemProjectile chain) {
                         if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                             return;
                         }
                     }
+
+                    target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+
                     event.setCanceled(true);
                 }
             });

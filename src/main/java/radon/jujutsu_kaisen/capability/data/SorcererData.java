@@ -477,6 +477,9 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getEnergy() {
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
+            return 0.0F;
+        }
         return this.energy;
     }
 

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,7 +69,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (this.level.isClientSide) return;
+        if (this.level.isClientSide || !this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
 
         BlockPos center = pResult.getBlockPos();
         Direction direction = pResult.getDirection();
@@ -87,7 +88,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
             BlockState state = this.level.getBlockState(pos);
 
-            if (state.getFluidState().isEmpty() &&  state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+            if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 this.level.destroyBlock(pos, false);
             }
         }

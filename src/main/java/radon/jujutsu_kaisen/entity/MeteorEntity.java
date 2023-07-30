@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -70,6 +71,11 @@ public class MeteorEntity extends Entity {
 
     @Override
     public boolean shouldRiderSit() {
+        return false;
+    }
+
+    @Override
+    public boolean isPushedByFluid(FluidType type) {
         return false;
     }
 

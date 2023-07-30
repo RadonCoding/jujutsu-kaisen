@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -118,7 +119,7 @@ public class BlueProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         float radius = this.getRadius();
-        int count = (int) (radius * 2);
+        int count = (int) (radius * 4);
 
         for (int i = 0; i < count; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -166,7 +167,9 @@ public class BlueProjectile extends JujutsuProjectile {
             this.spawnParticles();
 
             if (!this.level.isClientSide) {
-                this.breakBlocks();
+                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    this.breakBlocks();
+                }
             }
         }
     }

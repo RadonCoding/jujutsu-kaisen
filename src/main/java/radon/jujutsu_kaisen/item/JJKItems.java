@@ -67,7 +67,7 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 12303653, 3870468, new Item.Properties()));
 
     public static class JJKArmorMaterials {
-        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 37, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial SATORU_BLINDFOLD = new JJKArmorMaterial("satoru_blindfold", 37, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 3.0F, 0.1F, () -> Ingredient.EMPTY);

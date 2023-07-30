@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -115,7 +116,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
                 this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner), null, location,
-                        EXPLOSIVE_POWER * cap.getGrade().getPower(), false, Level.ExplosionInteraction.NONE);
+                        EXPLOSIVE_POWER * cap.getGrade().getPower(), false,
+                        this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();

@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -87,6 +88,21 @@ public class ClientAbilityHandler {
                 mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
                     current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
+                });
+            }
+
+            if (JJKKeys.ACTIVATE_DOMAIN.consumeClick()) {
+                mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    CursedTechnique technique = cap.getTechnique();
+
+                    if (technique != null) {
+                        Ability domain = technique.getDomain();
+
+                        if (domain != null) {
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(domain)));
+                            ClientAbilityHandler.trigger(domain);
+                        }
+                    }
                 });
             }
 
