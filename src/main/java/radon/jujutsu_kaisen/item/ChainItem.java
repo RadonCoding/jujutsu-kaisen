@@ -36,6 +36,9 @@ public class ChainItem extends CursedToolItem {
         ItemStack sword = pLivingEntity.getOffhandItem();
 
         if (sword.getItem() instanceof SwordItem && pRemainingUseDuration == this.getUseDuration(pStack)) {
+            if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
+                sword.hurtAndBreak(1, pLivingEntity, entity -> entity.broadcastBreakEvent(InteractionHand.OFF_HAND));
+            }
             ChainItemProjectile projectile = new ChainItemProjectile(pLivingEntity, sword.copy());
             pLevel.addFreshEntity(projectile);
 

@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -46,6 +47,11 @@ public class ChainItemProjectile extends AbstractArrow {
         this.entityData.set(DATA_ITEM, stack);
     }
 
+    @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return true;
+    }
+
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }
@@ -69,9 +75,11 @@ public class ChainItemProjectile extends AbstractArrow {
         DamageSource source = this.damageSources().arrow(this, owner == null ? this : owner);
         this.dealtDamage = true;
 
+        double speed = this.getDeltaMovement().length();
+
         SwordItem sword = (SwordItem) this.getStack().getItem();
-        target.hurt(source, sword.getDamage());
-}
+        target.hurt(source, (float) (sword.getDamage() * speed));
+    }
 
     @Override
     public void tick() {
@@ -102,6 +110,7 @@ public class ChainItemProjectile extends AbstractArrow {
                     Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
                             .xRot(pitch).yRot(-yaw);
                     Vec3 position = owner.position().add(owner.getLookAngle().scale(2.5D)).add(offset);
+
                     this.setPos(position.x(), position.y(), position.z());
                     this.setRot((float) Math.toDegrees(Math.atan2(offset.x(), offset.z())),
                             -(float) Math.toDegrees(Math.asin(offset.y() / offset.length())));
@@ -122,6 +131,11 @@ public class ChainItemProjectile extends AbstractArrow {
                 super.tick();
             }
         }
+    }
+
+    @Override
+    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
+        return SoundEvents.TRIDENT_HIT_GROUND;
     }
 
     @Override

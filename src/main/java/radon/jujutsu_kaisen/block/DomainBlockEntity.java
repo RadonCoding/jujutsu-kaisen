@@ -77,7 +77,12 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             nbt.putUUID("identifier", this.identifier);
-            nbt.put("original", NbtUtils.writeBlockState(this.original));
+
+            if (this.original != null) {
+                nbt.put("original", NbtUtils.writeBlockState(this.original));
+            } else {
+                nbt.put("original", this.deferred);
+            }
         }
     }
 }

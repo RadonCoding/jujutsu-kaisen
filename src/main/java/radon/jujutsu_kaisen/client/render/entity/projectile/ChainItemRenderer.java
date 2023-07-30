@@ -35,18 +35,16 @@ public class ChainItemRenderer extends EntityRenderer<ChainItemProjectile> {
 
     @Override
     public void render(@NotNull ChainItemProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        float scale = 1.5F;
+
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
-
-        /*float yaw = 90.0F + pEntity.yRotO + (pEntity.getYRot() - pEntity.yRotO) * pPartialTick;
-        float pitch = 135.0F - pEntity.xRotO + (pEntity.getXRot() - pEntity.xRotO) * pPartialTick;
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));*/
-
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * scale / 1.25F, 0.0F);
+        pPoseStack.scale(scale, scale, scale);
         pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot())));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot())));
 
         ItemStack stack = pEntity.getStack();
+
         BakedModel model = this.itemRenderer.getModel(stack, null, null, pEntity.getId());
         this.itemRenderer.render(stack, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
         pPoseStack.popPose();
@@ -56,8 +54,8 @@ public class ChainItemRenderer extends EntityRenderer<ChainItemProjectile> {
         if (owner != null) {
             pPoseStack.pushPose();
             pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-            Vec3 ownerPos = getPosition(owner, owner.getBbHeight() * 0.4F, pPartialTick)
-                    .add(owner.getLookAngle().yRot(90.0F).scale(-0.4D));
+            Vec3 ownerPos = getPosition(owner, owner.getBbHeight() * 0.45F, pPartialTick)
+                    .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
             Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() * 0.5F, pPartialTick);
             Vec3 relative = ownerPos.subtract(projectilePos);
             float f0 = (float) relative.length();

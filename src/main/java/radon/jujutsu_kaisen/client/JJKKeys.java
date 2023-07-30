@@ -15,9 +15,11 @@ public class JJKKeys {
     public static KeyMapping ABILITY_SCROLL = createKeyMapping("ability_scroll",
             InputConstants.KEY_LALT);
     public static KeyMapping ACTIVATE_RCT_OR_HEAL = createKeyMapping("activate_rct_or_heal",
-            InputConstants.KEY_F);
-    public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",
             InputConstants.KEY_X);
+    public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",
+            InputConstants.KEY_B);
+    public static KeyMapping ACTIVATE_DOMAIN = createKeyMapping("activate_domain",
+            InputConstants.KEY_G);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {
         return new KeyMapping(String.format("key.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);
