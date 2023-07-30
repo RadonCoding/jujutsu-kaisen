@@ -132,8 +132,6 @@ public class JJKEventHandler {
             if (!victim.level.isClientSide) {
                 float factor = event.getAmount() / victim.getMaxHealth();
 
-                System.out.println(factor);
-
                 if (factor > 0.25F) {
                     victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         DomainExpansionEntity domain = cap.getDomain((ServerLevel) victim.level);
