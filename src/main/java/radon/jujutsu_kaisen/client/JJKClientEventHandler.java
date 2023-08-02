@@ -16,6 +16,8 @@ import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
@@ -94,25 +96,32 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRenderLiving(RenderLivingEvent<?, ?> event) {
-            LivingEntity target = event.getEntity();
+            Minecraft mc = Minecraft.getInstance();
 
-            if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
-                Entity viewer = Minecraft.getInstance().getCameraEntity();
+            assert mc.player != null;
 
-                if (viewer != null && target != viewer) {
-                    Vec3 look = viewer.getLookAngle();
-                    Vec3 start = viewer.getEyePosition();
-                    Vec3 result = target.getEyePosition().subtract(start);
+            mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (!cap.hasTrait(Trait.SIX_EYES)) {
+                    LivingEntity target = event.getEntity();
 
-                    double angle = Math.acos(look.normalize().dot(result.normalize()));
+                    if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
+                        Entity viewer = Minecraft.getInstance().getCameraEntity();
 
-                    if (angle > 0.5D) {
-                        event.setCanceled(true);
+                        if (viewer != null && target != viewer) {
+                            Vec3 look = viewer.getLookAngle();
+                            Vec3 start = viewer.getEyePosition();
+                            Vec3 result = target.getEyePosition().subtract(start);
+
+                            double angle = Math.acos(look.normalize().dot(result.normalize()));
+
+                            if (angle > 0.5D) {
+                                event.setCanceled(true);
+                            }
+                        }
                     }
                 }
-            }
+            });
         }
-
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
