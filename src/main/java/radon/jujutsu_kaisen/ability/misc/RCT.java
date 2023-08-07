@@ -23,7 +23,7 @@ public class RCT extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.CHANNELED;
     }
 

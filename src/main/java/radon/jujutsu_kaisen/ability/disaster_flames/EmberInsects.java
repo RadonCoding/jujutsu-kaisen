@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.jogo;
+package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -15,7 +15,7 @@ public class EmberInsects extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -48,5 +48,10 @@ public class EmberInsects extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.DISASTER_FLAMES;
     }
 }

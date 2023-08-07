@@ -72,7 +72,7 @@ public class ExplosionHandler {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
 
-                            if (state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                            if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
                                 if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                     event.level.destroyBlock(pos, false);
 

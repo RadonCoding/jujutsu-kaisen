@@ -10,8 +10,8 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
@@ -37,7 +37,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
         if (owner.level instanceof ServerLevel level) {
             BlockState state = owner.level.getBlockState(pos);
 
-            owner.level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 0.05F, 1.0F);
+            owner.level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
+                    1.0F, 1.0F);
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, pos.getX(), pos.getY(), pos.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 

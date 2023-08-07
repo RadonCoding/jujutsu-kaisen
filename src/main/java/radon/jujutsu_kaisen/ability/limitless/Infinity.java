@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.gojo;
+package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -46,7 +46,7 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }
 
@@ -78,6 +78,11 @@ public class Infinity extends Ability implements Ability.IToggled {
             player.getAbilities().mayfly = false;
             player.getAbilities().flying = false;
         }*/
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIMITLESS;
     }
 
     public static class FrozenProjectileData extends SavedData {
@@ -265,13 +270,13 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
+            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
+                if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
                     if (source.is(JJKDamageSources.JUJUTSU)) {
                         if (target.level instanceof ServerLevel level) {
-                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
+                            for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
                                 Entity owner = domain.getOwner();
 
                                 if (owner == source.getEntity()) {
@@ -292,6 +297,18 @@ public class Infinity extends Ability implements Ability.IToggled {
                             target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                             return;
                         } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            return;
+                        }
+
+                        AtomicBoolean result = new AtomicBoolean();
+
+                        living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                            if (attackerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                                result.set(true);
+                            }
+                        });
+
+                        if (result.get()) {
                             return;
                         }
                     } else if (source.getDirectEntity() instanceof ChainItemProjectile chain) {

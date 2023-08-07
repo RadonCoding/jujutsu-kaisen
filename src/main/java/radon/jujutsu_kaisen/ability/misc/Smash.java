@@ -19,7 +19,7 @@ public class Smash extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -31,7 +31,7 @@ public class Smash extends Ability {
             float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
             Vec3 explosionPos = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(owner.getLookAngle());
-            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
+            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
         });
     }
 
@@ -43,5 +43,10 @@ public class Smash extends Ability {
     @Override
     public int getCooldown() {
         return 3 * 20;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.MELEE;
     }
 }

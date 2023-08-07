@@ -10,10 +10,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -35,6 +32,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
+import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -44,7 +42,9 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class RikaEntity extends SummonEntity {
+public class RikaEntity extends SummonEntity implements ICommandable {
+    private static final int DURATION = 10 * 20;
+
     public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
@@ -55,8 +55,10 @@ public class RikaEntity extends SummonEntity {
         super(pEntityType, pLevel);
     }
 
-    public RikaEntity(LivingEntity owner) {
+    public RikaEntity(LivingEntity owner, boolean tame) {
         super(JJKEntities.RIKA.get(), owner.level);
+
+        this.setTame(tame);
 
         this.setOwner(owner);
 
@@ -78,11 +80,6 @@ public class RikaEntity extends SummonEntity {
             speed *= 5.0F;
         }
         return speed;
-    }
-
-    @Override
-    public boolean isTame() {
-        return true;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -109,7 +106,7 @@ public class RikaEntity extends SummonEntity {
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-        // this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
@@ -148,8 +145,8 @@ public class RikaEntity extends SummonEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Idle", 10, state -> state.setAndContinue(IDLE)));
-        controllerRegistrar.add(new AnimationController<>(this, "Open", 5, this::openPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Idle", state -> state.setAndContinue(IDLE)));
+        controllerRegistrar.add(new AnimationController<>(this, "Open", this::openPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
@@ -179,6 +176,10 @@ public class RikaEntity extends SummonEntity {
             this.discard();
         } else {
             super.tick();
+
+            if (!this.isTame() && this.getTime() >= DURATION) {
+                this.discard();
+            }
 
             if (!this.level.isClientSide) {
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
@@ -215,5 +216,12 @@ public class RikaEntity extends SummonEntity {
     @Override
     public @Nullable Ability getDomain() {
         return null;
+    }
+
+    @Override
+    public void changeTarget(LivingEntity target) {
+        if (this.isTame()) {
+            this.setTarget(target);
+        }
     }
 }

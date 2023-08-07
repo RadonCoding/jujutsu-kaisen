@@ -1,8 +1,12 @@
 package radon.jujutsu_kaisen.capability.data;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -11,9 +15,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 public interface ISorcererData {
@@ -78,12 +82,24 @@ public interface ISorcererData {
 
     void generate(ServerPlayer player);
 
-    <T extends SummonEntity> void addSummon(T entity);
-    <T extends SummonEntity> void unsummonByClass(ServerLevel level, Class<T> clazz);
-    <T extends SummonEntity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
+    void addSummon(Entity entity);
+    List<Entity> getSummons(ServerLevel level);
+    <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz);
+    <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz);
+    <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
+    boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);
+    void tame(Registry<EntityType<?>> registry, EntityType<?> entity);
 
     void setDomain(DomainExpansionEntity domain);
     @Nullable DomainExpansionEntity getDomain(ServerLevel level);
+
+    Set<Ability.Classification> getAdapted();
+    void adaptAll(Set<Ability.Classification> adaptations);
+
+    boolean isAdaptedTo(DamageSource source);
+    boolean isAdaptedTo(Ability ability);
+
+    boolean tryAdapt(DamageSource source);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

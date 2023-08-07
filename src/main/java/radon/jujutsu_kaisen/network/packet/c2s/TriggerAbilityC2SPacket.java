@@ -32,6 +32,7 @@ public class TriggerAbilityC2SPacket {
 
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
+            assert player != null;
             AbilityHandler.trigger(player, ability);
         });
         ctx.setPacketHandled(true);

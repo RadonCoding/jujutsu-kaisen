@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.yuta;
+package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -12,12 +12,11 @@ public class PureLove extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!(owner instanceof RikaEntity rika)) return false;
-        return rika.isOpen();
+        return ((RikaEntity) owner).isOpen();
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -29,8 +28,7 @@ public class PureLove extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        if (!(owner instanceof RikaEntity rika)) return Status.FAILURE;
-        if (!rika.isOpen()) return Status.FAILURE;
+        if (!((RikaEntity) owner).isOpen()) return Status.FAILURE;
         return super.checkTriggerable(owner);
     }
 
@@ -42,5 +40,10 @@ public class PureLove extends Ability {
     @Override
     public int getCooldown() {
         return 30 * 20;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.PURE_LOVE;
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -46,7 +47,7 @@ public class RedProjectile extends JujutsuProjectile {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower())) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * cap.getGrade().getPower())) {
                         entity.setDeltaMovement(this.getLookAngle().scale(LAUNCH_POWER));
                     }
                 }
@@ -65,7 +66,7 @@ public class RedProjectile extends JujutsuProjectile {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner), null, offset, radius, false,
+                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
                         this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }

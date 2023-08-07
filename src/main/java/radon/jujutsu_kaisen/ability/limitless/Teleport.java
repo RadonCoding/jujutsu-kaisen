@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.gojo;
+package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +18,7 @@ public class Teleport extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 

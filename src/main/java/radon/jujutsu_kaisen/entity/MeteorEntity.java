@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
@@ -263,7 +264,7 @@ public class MeteorEntity extends Entity {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         if (this.explosionTime == 0) {
                             for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
-                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
+                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getGrade().getPower());
                             }
                         }
 

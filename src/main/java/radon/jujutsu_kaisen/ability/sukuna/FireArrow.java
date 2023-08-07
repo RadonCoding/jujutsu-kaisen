@@ -16,7 +16,7 @@ public class FireArrow extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -41,5 +41,10 @@ public class FireArrow extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.DISASTER_FLAMES;
     }
 }

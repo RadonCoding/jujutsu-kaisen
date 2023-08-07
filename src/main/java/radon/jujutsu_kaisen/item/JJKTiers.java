@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.item;
 
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;

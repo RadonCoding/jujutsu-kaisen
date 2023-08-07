@@ -28,7 +28,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -100,7 +100,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), randomY, target.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 
-            DamageSource source = domain == null ? JJKDamageSources.jujutsuAttack(owner) : JJKDamageSources.indirectJujutsuAttack(domain, owner);
+            DamageSource source = domain == null ? JJKDamageSources.jujutsuAttack(owner, this) : JJKDamageSources.indirectJujutsuAttack(domain, owner, this);
 
             float damage = calculateDamage(target);
             owner.level.playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
@@ -116,5 +116,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.SLASH;
     }
 }

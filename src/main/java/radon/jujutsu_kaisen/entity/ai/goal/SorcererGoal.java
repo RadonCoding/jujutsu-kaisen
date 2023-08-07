@@ -23,7 +23,7 @@ public class SorcererGoal extends Goal {
         for (Ability ability : abilities) {
             boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
 
-            if (ability.getActivationType() == Ability.ActivationType.TOGGLED) {
+            if (ability.getActivationType(this.mob) == Ability.ActivationType.TOGGLED) {
                 if (success) {
                     if (!JJKAbilities.hasToggled(this.mob, ability)) {
                         AbilityHandler.trigger(this.mob, ability);
@@ -31,7 +31,7 @@ public class SorcererGoal extends Goal {
                 } else if (JJKAbilities.hasToggled(this.mob, ability)) {
                     AbilityHandler.trigger(this.mob, ability);
                 }
-            } else if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
+            } else if (ability.getActivationType(this.mob) == Ability.ActivationType.CHANNELED) {
                 if (success) {
                     if (!JJKAbilities.isChanneling(this.mob, ability)) {
                         AbilityHandler.trigger(this.mob, ability);

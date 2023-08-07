@@ -44,7 +44,7 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }
 

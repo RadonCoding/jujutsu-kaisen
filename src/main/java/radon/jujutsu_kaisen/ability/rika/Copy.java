@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.yuta;
+package radon.jujutsu_kaisen.ability.rika;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +23,7 @@ public class Copy extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }
 

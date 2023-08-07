@@ -66,7 +66,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }
 

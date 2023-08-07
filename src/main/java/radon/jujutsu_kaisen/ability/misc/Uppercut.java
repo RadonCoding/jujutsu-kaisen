@@ -31,7 +31,7 @@ public class Uppercut extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -44,9 +44,9 @@ public class Uppercut extends Ability {
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 cap.scheduleTickEvent(() -> {
-                    if (owner.distanceTo(target) <= 1.0D) {
+                    if (owner.distanceTo(target) <= 2.0D) {
                         owner.swing(InteractionHand.MAIN_HAND);
-                        owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null,
+                        owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null,
                                 owner.getX(), owner.getY(), owner.getZ(), 1.0F, false, Level.ExplosionInteraction.NONE);
                         target.setDeltaMovement(owner.getLookAngle().multiply(LAUNCH, 0.0D, LAUNCH).add(0.0D, JUMP, 0.0D));
                         return true;
@@ -55,7 +55,9 @@ public class Uppercut extends Ability {
                 }, 20);
 
                 cap.scheduleTickEvent(() -> {
-                    owner.setDeltaMovement(target.position().subtract(owner.getX(), owner.getY(), owner.getZ()));
+                    if (owner.hasLineOfSight(target)) {
+                        owner.setDeltaMovement(target.position().subtract(owner.getX(), owner.getY(), owner.getZ()));
+                    }
                     return false;
                 }, 20);
             });
@@ -80,5 +82,10 @@ public class Uppercut extends Ability {
             return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.MELEE;
     }
 }

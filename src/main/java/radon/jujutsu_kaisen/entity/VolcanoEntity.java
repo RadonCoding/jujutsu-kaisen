@@ -11,6 +11,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -65,7 +66,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                     for (Entity entity : this.level.getEntities(owner, bounds)) {
                         if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
 
-                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower())) {
+                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * cap.getGrade().getPower())) {
                             entity.setSecondsOnFire(5);
                         }
                     }

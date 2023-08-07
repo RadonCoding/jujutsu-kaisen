@@ -20,6 +20,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -127,7 +128,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     for (Entity entity : entities) {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner), DAMAGE * cap.getGrade().getPower());
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.PURE_LOVE.get()), DAMAGE * cap.getGrade().getPower());
                     }
                 });
 

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
@@ -42,6 +43,8 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.ShootPistolC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -77,6 +80,12 @@ public class JJKClientEventHandler {
                     event.getKeyMapping().setDown(false);
                     event.setCanceled(true);
                     event.setSwingHand(false);
+                } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
+                    if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
+                        if (hit.getEntity() instanceof LivingEntity target) {
+                            PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
+                        }
+                    }
                 }
             }
         }
@@ -144,6 +153,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ABILITY_SCROLL);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
+            event.register(JJKKeys.ACTIVATE_DOMAIN);
         }
 
         @SubscribeEvent
@@ -194,6 +204,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHAIN_ITEM.get(), ChainItemRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAHORAGA.get(), MahoragaRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
         }
 
         @SubscribeEvent

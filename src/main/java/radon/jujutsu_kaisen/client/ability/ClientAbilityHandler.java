@@ -37,7 +37,7 @@ public class ClientAbilityHandler {
             if (mc.player == null) return;
 
             if (current != null) {
-                boolean possiblyChanneling = channeled != null && channeled.getActivationType() == Ability.ActivationType.CHANNELED;
+                boolean possiblyChanneling = channeled != null && channeled.getActivationType(mc.player) == Ability.ActivationType.CHANNELED;
 
                 if (possiblyChanneling) {
                     boolean isHeld = current.isDown();
@@ -72,7 +72,7 @@ public class ClientAbilityHandler {
                 Ability ability = AbilityOverlay.getSelected();
 
                 if (ability != null) {
-                    if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
+                    if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
                         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
                             current = JJKKeys.ACTIVATE_ABILITY;
@@ -143,12 +143,12 @@ public class ClientAbilityHandler {
 
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return;
 
-        if (ability.getActivationType() == Ability.ActivationType.INSTANT) {
+        if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
             if (!isFailure(ability, ability.checkTriggerable(owner))) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
                 ability.run(owner);
             }
-        } else if (ability.getActivationType() == Ability.ActivationType.TOGGLED) {
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.hasToggled(ability)) {
                     if (isFailure(ability, ability.checkToggleable(owner))) {
@@ -158,7 +158,7 @@ public class ClientAbilityHandler {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
                 cap.toggle(owner, ability);
             });
-        } else if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.isChanneling(ability)) {
                     if (isFailure(ability, ability.checkChannelable(owner))) {

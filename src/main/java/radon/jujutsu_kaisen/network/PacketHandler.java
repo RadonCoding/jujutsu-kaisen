@@ -76,6 +76,16 @@ public class PacketHandler {
                 .encoder(CameraShakeS2CPacket::encode)
                 .consumerMainThread(CameraShakeS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(CommandableTargetC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(CommandableTargetC2SPacket::new)
+                .encoder(CommandableTargetC2SPacket::encode)
+                .consumerMainThread(CommandableTargetC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SetOverlayMessageS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SetOverlayMessageS2CPacket::new)
+                .encoder(SetOverlayMessageS2CPacket::encode)
+                .consumerMainThread(SetOverlayMessageS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
