@@ -13,5 +13,15 @@
     "sounds": [
       "jujutsu_kaisen:explosion"
     ]
+  },
+  "wheel": {
+    "sounds": [
+      "jujutsu_kaisen:wheel"
+    ]
+  },
+  "wolf_howling": {
+    "sounds": [
+      "jujutsu_kaisen:wolf_howling"
+    ]
   }
 }

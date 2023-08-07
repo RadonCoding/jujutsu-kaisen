@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -9,9 +10,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,9 +32,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -73,6 +76,10 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability, Integer> durations;
     private final Set<UUID> domains;
     private final Set<UUID> summons;
+    private final Set<ResourceLocation> tamed;
+
+    private final Set<Ability.Classification> adapted;
+    private final Map<Ability.Classification, Integer> adapting;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
 
@@ -89,6 +96,10 @@ public class SorcererData implements ISorcererData {
         this.durations = new HashMap<>();
         this.domains = new HashSet<>();
         this.summons = new HashSet<>();
+        this.tamed = new HashSet<>();
+
+        this.adapted = new HashSet<>();
+        this.adapting = new HashMap<>();
     }
 
     private void updateCooldowns() {
@@ -293,7 +304,7 @@ public class SorcererData implements ISorcererData {
         SorcererGrade grade = this.getGrade();
 
 
-        if (this.technique == CursedTechnique.JOGO) {
+        if (this.technique == CursedTechnique.DISASTER_FLAMES) {
             owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
         }
 
@@ -558,12 +569,44 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends SummonEntity> void addSummon(T entity) {
+    public void addSummon(Entity entity) {
         this.summons.add(entity.getUUID());
     }
 
     @Override
-    public <T extends SummonEntity> void unsummonByClass(ServerLevel level, Class<T> clazz) {
+    public List<Entity> getSummons(ServerLevel level) {
+        List<Entity> entities = new ArrayList<>();
+
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
+
+            if (entity == null) continue;
+
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    @Override
+    public <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz) {
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        for (UUID identifier : this.summons) {
+            Entity entity = level.getEntity(identifier);
+
+            if (entity == null) continue;
+
+            T summon = test.tryCast(entity);
+
+            if (summon != null) {
+                return summon;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         Iterator<UUID> iter = this.summons.iterator();
@@ -585,7 +628,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends SummonEntity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz) {
+    public <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
         for (UUID identifier : this.summons) {
@@ -603,6 +646,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity) {
+        return this.tamed.contains(registry.getKey(entity));
+    }
+
+    @Override
+    public void tame(Registry<EntityType<?>> registry, EntityType<?> entity) {
+        this.tamed.add(registry.getKey(entity));
+    }
+
+    @Override
     public void setDomain(DomainExpansionEntity domain) {
         this.domain = domain.getUUID();
     }
@@ -617,6 +670,60 @@ public class SorcererData implements ISorcererData {
             }
         }
         return null;
+    }
+
+    @Override
+    public Set<Ability.Classification> getAdapted() {
+        return this.adapted;
+    }
+
+    @Override
+    public void adaptAll(Set<Ability.Classification> adaptations) {
+        this.adapted.addAll(adaptations);
+    }
+
+    private @Nullable Ability.Classification getClassification(DamageSource source) {
+        Ability ability;
+
+        if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && (ability = jujutsu.getAbility()) != null) {
+            return ability.getClassification();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isAdaptedTo(DamageSource source) {
+        Ability.Classification classification = this.getClassification(source);
+        return classification != null && this.adapted.contains(classification);
+    }
+
+    @Override
+    public boolean isAdaptedTo(Ability ability) {
+        return this.adapted.contains(ability.getClassification());
+    }
+
+    @Override
+    public boolean tryAdapt(DamageSource source) {
+        Ability.Classification classification = this.getClassification(source);
+
+        if (classification == null) return false;
+
+        if (!this.adapting.containsKey(classification)) {
+            this.adapting.put(classification, 1);
+        } else {
+            int stage = this.adapting.get(classification);
+
+            stage++;
+
+            if (stage >= 3) {
+                this.adapting.remove(classification);
+                this.adapted.add(classification);
+                return true;
+            } else {
+                this.adapting.put(classification, stage);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -750,6 +857,31 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("summons", summonsTag);
 
+        ListTag tamedTag = new ListTag();
+
+        for (ResourceLocation key : this.tamed) {
+            tamedTag.add(StringTag.valueOf(key.toString()));
+        }
+        nbt.put("tamed", tamedTag);
+
+        ListTag adaptedTag = new ListTag();
+
+        for (Ability.Classification classification : this.adapted) {
+            adaptedTag.add(IntTag.valueOf(classification.ordinal()));
+        }
+        nbt.put("adapted", adaptedTag);
+
+        ListTag adaptingTag = new ListTag();
+
+        for (Map.Entry<Ability.Classification, Integer> entry : this.adapting.entrySet()) {
+            CompoundTag adaptation = new CompoundTag();
+            adaptation.putInt("stage", entry.getValue());
+            adaptation.putInt("classification", entry.getKey().ordinal());
+            adaptingTag.add(adaptation);
+
+        }
+        nbt.put("adapting", adaptingTag);
+
         return nbt;
     }
 
@@ -828,6 +960,25 @@ public class SorcererData implements ISorcererData {
             if (summonsTag.get(i) instanceof LongTag least && summonsTag.get(i + 1) instanceof LongTag most) {
                 this.summons.add(new UUID(least.getAsLong(), most.getAsLong()));
             }
+        }
+
+        this.tamed.clear();
+
+        for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
+            this.tamed.add(new ResourceLocation(key.getAsString()));
+        }
+
+        this.adapted.clear();
+
+        for (Tag key : nbt.getList("adapted", Tag.TAG_INT)) {
+            this.adapted.add(Ability.Classification.values()[((IntTag) key).getAsInt()]);
+        }
+
+        this.adapting.clear();
+
+        for (Tag key : nbt.getList("adapting", Tag.TAG_COMPOUND)) {
+            CompoundTag adaptation = (CompoundTag) key;
+            this.adapting.put(Ability.Classification.values()[adaptation.getInt("classification")], adaptation.getInt("stage"));
         }
     }
 }

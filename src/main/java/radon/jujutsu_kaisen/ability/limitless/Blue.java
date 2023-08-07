@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.gojo;
+package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +15,7 @@ public class Blue extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -40,5 +40,10 @@ public class Blue extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIMITLESS;
     }
 }

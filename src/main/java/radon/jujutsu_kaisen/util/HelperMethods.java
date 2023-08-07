@@ -47,19 +47,44 @@ public class HelperMethods {
         return getHitResult(entity, start, end);
     }
 
-    public static List<Entity> getEntityCollisions(Level pLevel, AABB pCollisionBox) {
+    public static Iterable<Entity> getEntities(Level level) {
+        return ((ILevelAccessor) level).getEntitiesInvoker().getAll();
+    }
+
+    public static <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, Level level) {
+        Iterable<Entity> entities = getEntities(level);
+
+        List<T> result = new ArrayList<>();
+
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        for (Entity collision : entities) {
+            T casted = test.tryCast(collision);
+
+            if (casted != null) {
+                result.add(casted);
+            }
+        }
+        return result;
+    }
+
+    public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
         List<Entity> collisions = new ArrayList<>();
 
-        for (Entity entity : ((ILevelAccessor) pLevel).getEntitiesInvoker().getAll()) {
-            if (entity.getBoundingBox().intersects(pCollisionBox)) {
+        Vec3 center = bounds.getCenter();
+        AABB area = new AABB(center.x() - 32.0D, center.y() - 32.0D, center.z() - 32.0D,
+                center.x() + 32.0D, center.y() + 32.0D, center.z() + 32.0D);
+
+        for (Entity entity : level.getEntities(null, area)) {
+            if (entity.getBoundingBox().intersects(bounds)) {
                 collisions.add(entity);
             }
         }
         return collisions;
     }
 
-    public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level pLevel, AABB pCollisionBox) {
-        List<Entity> collisions = getEntityCollisions(pLevel, pCollisionBox);
+    public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level level, AABB bounds) {
+        List<Entity> collisions = getEntityCollisions(level, bounds);
 
         List<T> result = new ArrayList<>();
 

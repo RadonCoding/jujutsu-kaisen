@@ -1,11 +1,16 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,10 +19,13 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.SetOverlayMessageS2CPacket;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -27,6 +35,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class SummonEntity extends TamableAnimal implements GeoEntity, ISorcerer {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(SummonEntity.class, EntityDataSerializers.INT);
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Nullable
@@ -80,6 +90,11 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity, I
         super.onAddedToWorld();
 
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(this::init);
+
+        if (this instanceof ICommandable && this.getOwner() instanceof ServerPlayer player && this.isTame()) {
+            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target_info", JujutsuKaisen.MOD_ID)),
+                    false), player);
+        }
     }
 
     @Override
@@ -89,6 +104,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity, I
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
+        pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
     @Override
@@ -98,6 +114,35 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity, I
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
+        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_TIME, 0);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    private void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        int time = this.getTime();
+        this.setTime(++time);
     }
 
     @Nullable

@@ -24,7 +24,7 @@ public class AirPunch extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -52,7 +52,7 @@ public class AirPunch extends Ability {
                     cap.scheduleTickEvent(() -> {
                         if (owner.distanceTo(target) < 3.0D) {
                             owner.swing(InteractionHand.MAIN_HAND);
-                            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null), null,
+                            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null,
                                     owner.getX(), owner.getY(), owner.getZ(), 1.0F, false, Level.ExplosionInteraction.NONE);
                             return true;
                         }
@@ -80,5 +80,10 @@ public class AirPunch extends Ability {
             return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.MELEE;
     }
 }

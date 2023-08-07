@@ -37,7 +37,7 @@ public class SukunaRyomenEntity extends SorcererEntity {
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.SUKUNA;
+        return CursedTechnique.DISMANTLE_AND_CLEAVE;
     }
 
     @Override

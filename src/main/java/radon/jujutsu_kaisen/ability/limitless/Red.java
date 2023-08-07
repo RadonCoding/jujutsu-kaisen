@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.gojo;
+package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -16,7 +16,7 @@ public class Red extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -44,5 +44,10 @@ public class Red extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIMITLESS;
     }
 }

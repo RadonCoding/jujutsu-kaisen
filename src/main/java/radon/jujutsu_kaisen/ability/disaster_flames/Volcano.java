@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.jogo;
+package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +24,7 @@ public class Volcano extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -80,5 +80,10 @@ public class Volcano extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.DISASTER_FLAMES;
     }
 }

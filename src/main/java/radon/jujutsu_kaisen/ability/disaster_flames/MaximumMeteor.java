@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.jogo;
+package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +20,7 @@ public class MaximumMeteor extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -58,9 +58,13 @@ public class MaximumMeteor extends Ability {
         return super.checkTriggerable(owner);
     }
 
-
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.DISASTER_FLAMES;
     }
 }

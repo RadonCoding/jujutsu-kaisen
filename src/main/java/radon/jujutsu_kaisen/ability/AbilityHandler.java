@@ -12,7 +12,7 @@ public class AbilityHandler {
         AtomicReference<Ability.Status> result = new AtomicReference<>(Ability.Status.SUCCESS);
 
         if (!owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-            if (ability.getActivationType() == Ability.ActivationType.INSTANT) {
+            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
                 Ability.Status status;
 
                 if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS) {
@@ -20,7 +20,7 @@ public class AbilityHandler {
                     ability.run(owner);
                 }
                 result.set(status);
-            } else if (ability.getActivationType() == Ability.ActivationType.TOGGLED) {
+            } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     Ability.Status status;
 
@@ -30,7 +30,7 @@ public class AbilityHandler {
                     }
                     result.set(status);
                 });
-            } else if (ability.getActivationType() == Ability.ActivationType.CHANNELED) {
+            } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     Ability.Status status;
 

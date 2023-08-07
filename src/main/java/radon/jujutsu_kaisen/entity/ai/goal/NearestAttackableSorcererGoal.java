@@ -42,6 +42,7 @@ public class NearestAttackableSorcererGoal extends TargetGoal {
         this.targetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector(pTargetPredicate);
     }
 
+    @Override
     public boolean canUse() {
         if (this.randomInterval > 0 && this.mob.getRandom().nextInt(this.randomInterval) != 0) {
             return false;
@@ -63,6 +64,7 @@ public class NearestAttackableSorcererGoal extends TargetGoal {
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }
 
+    @Override
     public void start() {
         this.mob.setTarget(this.target);
         super.start();

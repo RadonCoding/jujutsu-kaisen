@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class SixEyesOverlay {
-    public static final double RANGE = 100.0D;
-
     private static @Nullable AbstractMap.SimpleEntry<UUID, ISorcererData> current;
 
     public static void setCurrent(UUID identifier, @NotNull ISorcererData data) {
@@ -40,7 +38,7 @@ public class SixEyesOverlay {
 
         mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-                if (HelperMethods.getLookAtHit(mc.player, RANGE) instanceof EntityHitResult hit) {
+                if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                     if (hit.getEntity() instanceof LivingEntity target) {
                         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 

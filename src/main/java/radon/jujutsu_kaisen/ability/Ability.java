@@ -34,10 +34,23 @@ public abstract class Ability {
         SIMPLE_DOMAIN
     }
 
+    public enum Classification {
+        NONE,
+        MELEE,
+        DISASTER_FLAMES,
+        SLASH,
+        PURE_LOVE,
+        LIMITLESS
+    }
+
+    public Classification getClassification() {
+        return Classification.NONE;
+    }
+
     // Used for AI
     public abstract boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target);
 
-    public abstract ActivationType getActivationType();
+    public abstract ActivationType getActivationType(LivingEntity owner);
     public abstract void run(LivingEntity owner);
 
     public int getCooldown() { return 0; }

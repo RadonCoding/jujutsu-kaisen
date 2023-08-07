@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.jogo;
+package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,7 +31,7 @@ public class DisasterFlames extends Ability {
     }
 
     @Override
-    public ActivationType getActivationType() {
+    public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
 
@@ -91,7 +91,7 @@ public class DisasterFlames extends Ability {
 
             if (target == null) {
                 for (Entity entity : this.getTargets(owner)) {
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null), DAMAGE * cap.getGrade().getPower())) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), DAMAGE * cap.getGrade().getPower())) {
                         entity.setSecondsOnFire(5);
 
                         if (!owner.level.isClientSide) {
@@ -100,7 +100,7 @@ public class DisasterFlames extends Ability {
                     }
                 }
             } else {
-                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null), (DAMAGE * 2) * cap.getGrade().getPower())) {
+                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), (DAMAGE * 2) * cap.getGrade().getPower())) {
                     target.setSecondsOnFire(10);
 
                     if (!owner.level.isClientSide) {
@@ -119,5 +119,10 @@ public class DisasterFlames extends Ability {
     @Override
     public int getCooldown() {
         return 15 * 20;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.DISASTER_FLAMES;
     }
 }

@@ -25,6 +25,7 @@ public class JJKConfig {
 
         Map<ResourceLocation, Float> amounts = new HashMap<>();
         amounts.put(JJKEntities.RIKA.getId(), 250000.0F);
+        amounts.put(JJKEntities.MAHORAGA.getId(), 250000.0F);
         amounts.put(JJKEntities.JOGO.getId(), 3000.0F);
         amounts.put(JJKEntities.SUKUNA_RYOMEN.getId(), 10000.0F);
         amounts.put(JJKEntities.SATORU_GOJO.getId(), 5000.0F);

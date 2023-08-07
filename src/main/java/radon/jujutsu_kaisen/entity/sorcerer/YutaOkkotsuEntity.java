@@ -57,7 +57,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.YUTA;
+        return CursedTechnique.RIKA;
     }
 
     @Override

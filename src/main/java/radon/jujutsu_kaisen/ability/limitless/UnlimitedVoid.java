@@ -1,6 +1,8 @@
-package radon.jujutsu_kaisen.ability.jogo;
+package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
@@ -8,34 +10,30 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
 
-public class CoffinOfIronMountain extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    private static final float DAMAGE = 10.0F;
-
+public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public int getRadius() {
         return 20;
     }
 
+    @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_ONE.get(),
-                JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_TWO.get(),
-                JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_THREE.get());
+        return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        if (owner.level.getGameTime() % 20 == 0) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner), DAMAGE * cap.getGrade().getPower())) {
-                    entity.setSecondsOnFire(15);
-                }
-            });
+        if (entity instanceof LivingEntity living) {
+            if (!living.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), 30 * 20, 0, false, false, false));
+                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30 * 20, 4));
+            }
         }
     }
 
@@ -56,5 +54,15 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
 
             cap.setDomain(domain);
         });
+    }
+
+    @Override
+    public boolean bypass() {
+        return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIMITLESS;
     }
 }

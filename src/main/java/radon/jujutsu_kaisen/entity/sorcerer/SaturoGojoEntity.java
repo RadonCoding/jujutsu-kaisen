@@ -54,7 +54,7 @@ public class SaturoGojoEntity extends SorcererEntity {
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.GOJO;
+        return CursedTechnique.LIMITLESS;
     }
 
     @Override

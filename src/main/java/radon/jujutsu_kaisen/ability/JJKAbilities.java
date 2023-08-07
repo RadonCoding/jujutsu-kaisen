@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.DeferredRegister;
@@ -7,19 +8,21 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.gojo.*;
-import radon.jujutsu_kaisen.ability.jogo.*;
+import radon.jujutsu_kaisen.ability.disaster_flames.*;
+import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
-import radon.jujutsu_kaisen.ability.yuta.Copy;
-import radon.jujutsu_kaisen.ability.yuta.PureLove;
+import radon.jujutsu_kaisen.ability.rika.Copy;
+import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.sukuna.Cleave;
 import radon.jujutsu_kaisen.ability.sukuna.Dismantle;
 import radon.jujutsu_kaisen.ability.sukuna.FireArrow;
 import radon.jujutsu_kaisen.ability.sukuna.MalevolentShrine;
-import radon.jujutsu_kaisen.ability.yuta.Rika;
+import radon.jujutsu_kaisen.ability.ten_shadows.Mahoraga;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.curse.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 import java.util.ArrayList;
@@ -67,6 +70,10 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
 
+    public static RegistryObject<Ability> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
+
+    public static RegistryObject<Ability> WHEEL = ABILITIES.register("wheel", Wheel::new);
+
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
     }
@@ -105,6 +112,7 @@ public class JJKAbilities {
         List<Ability> abilities = new ArrayList<>();
 
         if (owner instanceof RikaEntity) abilities.add(JJKAbilities.PURE_LOVE.get());
+        if (owner instanceof MahoragaEntity) abilities.add(JJKAbilities.WHEEL.get());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             abilities.add(JJKAbilities.AIR_PUNCH.get());
@@ -147,6 +155,10 @@ public class JJKAbilities {
                         abilities.add(copied.getDomain());
                     }
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
+                }
+
+                if (cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
+                    abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
         });
