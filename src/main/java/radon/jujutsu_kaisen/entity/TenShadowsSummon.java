@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -26,6 +27,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -79,7 +82,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             for (LivingEntity participant : this.level.getEntitiesOfClass(LivingEntity.class, area)) {
                 if (participant == this) continue;
 
-                if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent() || !this.canAttack(participant)) continue;
+                if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
                 this.participants.add(participant.getUUID());
             }
@@ -121,8 +124,15 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         LivingEntity owner = this.getOwner();
 
         if (owner != null && pCause.getEntity() == owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType()));
+            if (!owner.level.isClientSide) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    }
+                });
+            }
         }
     }
 

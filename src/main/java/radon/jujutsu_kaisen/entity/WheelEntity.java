@@ -92,6 +92,7 @@ public class WheelEntity extends Entity implements GeoAnimatable {
                     yRot += STEP / SPIN_TIME * (SPIN_TIME - spin);
                     this.entityData.set(DATA_SPIN, --spin);
                 }
+
                 Vec3 movement = owner.getDeltaMovement();
                 this.moveTo(owner.getX() + movement.x(), owner.getY() + movement.y() + owner.getBbHeight() + OFFSET, owner.getZ() + movement.z(),
                         yRot, 0.0F);
