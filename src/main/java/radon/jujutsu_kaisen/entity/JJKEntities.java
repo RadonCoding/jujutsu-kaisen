@@ -15,7 +15,8 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoEntity;
-import radon.jujutsu_kaisen.entity.curse.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
@@ -128,10 +129,10 @@ public class JJKEntities {
                     .sized(MeteorEntity.SIZE * 2, MeteorEntity.SIZE * 2)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meteor")
                             .toString()));
-    public static RegistryObject<EntityType<ChainItemProjectile>> CHAIN_ITEM = ENTITIES.register("chain_item", () ->
-            EntityType.Builder.<ChainItemProjectile>of(ChainItemProjectile::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<ThrownChainItemProjectile>> THROWN_CHAIN_ITEM = ENTITIES.register("throw_chain_item", () ->
+            EntityType.Builder.<ThrownChainItemProjectile>of(ThrownChainItemProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chain_item")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "throw_chain_item")
                             .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
@@ -145,6 +146,11 @@ public class JJKEntities {
                     .sized(1.4F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga")
                             .toString()));
+    public static RegistryObject<EntityType<DivineDogEntity>> DIVINE_DOG = ENTITIES.register("divine_dog", () ->
+            EntityType.Builder.<DivineDogEntity>of(DivineDogEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")
+                            .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
@@ -155,6 +161,7 @@ public class JJKEntities {
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build());
+        event.put(DIVINE_DOG.get(), DivineDogEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

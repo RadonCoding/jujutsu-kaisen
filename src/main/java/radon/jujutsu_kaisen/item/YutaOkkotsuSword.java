@@ -4,15 +4,14 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import radon.jujutsu_kaisen.client.render.item.YutaOkkotsuSwordRenderer;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.function.Consumer;
 
-public class YutaOkkotsuSword extends SwordItem implements GeoAnimatable {
+public class YutaOkkotsuSword extends SwordItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public YutaOkkotsuSword(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
@@ -40,10 +39,5 @@ public class YutaOkkotsuSword extends SwordItem implements GeoAnimatable {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
     }
 }

@@ -52,7 +52,7 @@ public class AirPunch extends Ability {
                     cap.scheduleTickEvent(() -> {
                         if (owner.distanceTo(target) < 3.0D) {
                             owner.swing(InteractionHand.MAIN_HAND);
-                            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null,
+                            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null,
                                     owner.getX(), owner.getY(), owner.getZ(), 1.0F, false, Level.ExplosionInteraction.NONE);
                             return true;
                         }

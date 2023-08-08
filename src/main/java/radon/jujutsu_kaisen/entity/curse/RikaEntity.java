@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -42,7 +43,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class RikaEntity extends SummonEntity implements ICommandable {
+public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
     private static final int DURATION = 10 * 20;
 
     public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
@@ -219,9 +220,11 @@ public class RikaEntity extends SummonEntity implements ICommandable {
     }
 
     @Override
-    public void changeTarget(LivingEntity target) {
+    public boolean changeTarget(LivingEntity target) {
         if (this.isTame()) {
             this.setTarget(target);
+            return true;
         }
+        return false;
     }
 }

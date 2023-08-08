@@ -12,17 +12,20 @@ import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.rika.Copy;
+import radon.jujutsu_kaisen.ability.rika.PureLove;
 import radon.jujutsu_kaisen.ability.rika.Rika;
-import radon.jujutsu_kaisen.ability.sukuna.Cleave;
-import radon.jujutsu_kaisen.ability.sukuna.Dismantle;
-import radon.jujutsu_kaisen.ability.sukuna.FireArrow;
-import radon.jujutsu_kaisen.ability.sukuna.MalevolentShrine;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Dismantle;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.FireArrow;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.ability.ten_shadows.DivineDogs;
 import radon.jujutsu_kaisen.ability.ten_shadows.Mahoraga;
+import radon.jujutsu_kaisen.ability.ten_shadows.Wheel;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 import java.util.ArrayList;
@@ -71,6 +74,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
 
     public static RegistryObject<Ability> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
+    public static RegistryObject<Ability> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
 
     public static RegistryObject<Ability> WHEEL = ABILITIES.register("wheel", Wheel::new);
 

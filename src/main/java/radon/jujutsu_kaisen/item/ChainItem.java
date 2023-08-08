@@ -8,13 +8,36 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.projectile.ChainItemProjectile;
+import radon.jujutsu_kaisen.client.render.item.ChainRenderer;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class ChainItem extends CursedToolItem {
+import java.util.function.Consumer;
+
+public class ChainItem extends CursedToolItem implements GeoItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public ChainItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+            private ChainRenderer renderer;
+
+            @Override
+            public ChainRenderer getCustomRenderer() {
+                if (this.renderer == null) this.renderer = new ChainRenderer();
+                return this.renderer;
+            }
+        });
     }
 
     @Override
@@ -33,23 +56,21 @@ public class ChainItem extends CursedToolItem {
     public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration) {
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
 
-        ItemStack sword = pLivingEntity.getOffhandItem();
+        ItemStack item = pLivingEntity.getOffhandItem();
 
-        if (sword.getItem() instanceof SwordItem && pRemainingUseDuration == this.getUseDuration(pStack)) {
-            if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
-                sword.hurtAndBreak(1, pLivingEntity, entity -> entity.broadcastBreakEvent(InteractionHand.OFF_HAND));
-            }
-            ChainItemProjectile projectile = new ChainItemProjectile(pLivingEntity, sword.copy());
+        if (item.getItem() instanceof SwordItem || item.isEmpty() && pRemainingUseDuration == this.getUseDuration(pStack)) {
+            ThrownChainItemProjectile projectile = new ThrownChainItemProjectile(pLivingEntity, item.copy());
             pLevel.addFreshEntity(projectile);
 
-            sword.shrink(1);
+            if (!item.isEmpty()) {
+                if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
+                    item.hurtAndBreak(1, pLivingEntity, entity -> entity.broadcastBreakEvent(InteractionHand.OFF_HAND));
+                }
+                item.shrink(1);
 
-            if (sword.isEmpty()) {
-                pLivingEntity.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-            }
-
-            if (!(pLivingEntity instanceof Player player && player.getAbilities().instabuild)) {
-                pStack.hurtAndBreak(1, pLivingEntity, entity -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+                if (item.isEmpty()) {
+                    pLivingEntity.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+                }
             }
         }
     }
@@ -57,5 +78,15 @@ public class ChainItem extends CursedToolItem {
     @Override
     protected SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

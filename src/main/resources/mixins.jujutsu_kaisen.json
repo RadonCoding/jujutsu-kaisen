@@ -13,7 +13,6 @@
   },
   "refmap": "mixins.jujutsu_kaisen.refmap.json",
   "mixins": [
-    "common.ILevelAccessor",
     "common.MobMixin"
   ]
 }

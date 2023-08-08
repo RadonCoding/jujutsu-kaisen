@@ -31,7 +31,7 @@ public class Smash extends Ability {
             float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
             Vec3 explosionPos = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(owner.getLookAngle());
-            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
+            owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
         });
     }
 

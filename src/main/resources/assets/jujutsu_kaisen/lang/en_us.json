@@ -113,6 +113,10 @@
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.disable": "Released Mahoraga",
 
+  "ability.jujutsu_kaisen.divine_dogs": "Summon Divine Dogs",
+  "ability.jujutsu_kaisen.divine_dogs.enable": "Summoned Divine Dogs",
+  "ability.jujutsu_kaisen.divine_dogs.disable": "Released Divine Dogs",
+
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
@@ -149,6 +153,7 @@
   "entity.jujutsu_kaisen.rika": "Rika",
   "entity.jujutsu_kaisen.jogo": "Jogo",
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
+  "entity.jujutsu_kaisen.divine_dog": "Divine Dog",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

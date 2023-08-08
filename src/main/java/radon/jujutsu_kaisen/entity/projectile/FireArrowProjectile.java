@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 public class FireArrowProjectile extends JujutsuProjectile {
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 45.0F;
     private static final float SPEED = 5.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
     private static final int DELAY = 20;
@@ -73,12 +73,10 @@ public class FireArrowProjectile extends JujutsuProjectile {
             ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
         }
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
-                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, JJKAbilities.FIRE_ARROW.get()), null,
+                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
                         location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(), false,
                         this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });

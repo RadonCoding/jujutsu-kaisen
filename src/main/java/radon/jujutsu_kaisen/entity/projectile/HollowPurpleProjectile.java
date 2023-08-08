@@ -48,7 +48,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     protected float getDamage() {
-        return 30.0F;
+        return 50.0F;
     }
 
     protected double getRadius() {

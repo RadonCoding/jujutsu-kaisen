@@ -46,7 +46,7 @@ public class Uppercut extends Ability {
                 cap.scheduleTickEvent(() -> {
                     if (owner.distanceTo(target) <= 2.0D) {
                         owner.swing(InteractionHand.MAIN_HAND);
-                        owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, null, this), null,
+                        owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null,
                                 owner.getX(), owner.getY(), owner.getZ(), 1.0F, false, Level.ExplosionInteraction.NONE);
                         target.setDeltaMovement(owner.getLookAngle().multiply(LAUNCH, 0.0D, LAUNCH).add(0.0D, JUMP, 0.0D));
                         return true;

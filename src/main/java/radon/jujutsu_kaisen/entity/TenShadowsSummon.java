@@ -14,17 +14,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -36,7 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class TenShadowsSummon extends SummonEntity implements ICommandable {
-    private final List<UUID> participants = new ArrayList<>();
+    protected final List<UUID> participants = new ArrayList<>();
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -62,10 +58,12 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     @Override
-    public void changeTarget(LivingEntity target) {
+    public boolean changeTarget(LivingEntity target) {
         if (this.isTame()) {
             this.setTarget(target);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -87,27 +85,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                 this.participants.add(participant.getUUID());
             }
         }
-
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
-                    entity -> this.participants.contains(entity.getUUID())));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -126,10 +103,12 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         if (owner != null && pCause.getEntity() == owner) {
             if (!owner.level.isClientSide) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                    if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS) {
+                        cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
-                    if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        }
                     }
                 });
             }
@@ -154,7 +133,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (this.isTame() && !this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (this.isTame() && !this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
+                (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, this.getAbility())))) {
             this.discard();
         } else {
             super.tick();

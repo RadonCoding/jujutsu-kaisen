@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.client.model.entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.curse.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;

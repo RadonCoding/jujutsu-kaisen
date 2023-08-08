@@ -16,16 +16,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class WheelEntity extends Entity implements GeoAnimatable {
+public class WheelEntity extends Entity implements GeoEntity {
     private static final double OFFSET = 0.1D;
     private static final int SPIN_TIME = 20;
     private static final float STEP = -45.0F;
@@ -146,10 +145,5 @@ public class WheelEntity extends Entity implements GeoAnimatable {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
     }
 }
