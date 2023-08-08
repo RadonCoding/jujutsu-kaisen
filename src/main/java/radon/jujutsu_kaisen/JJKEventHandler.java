@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -26,7 +27,7 @@ import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.entity.curse.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -131,7 +132,15 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
+            Entity attacker = event.getSource().getEntity();
             LivingEntity victim = event.getEntity();
+
+            if (attacker instanceof TamableAnimal tamable) {
+                if (tamable.getOwner() == victim) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
 
             if (!(victim instanceof MahoragaEntity)) return;
 

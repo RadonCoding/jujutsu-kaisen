@@ -11,15 +11,14 @@ import radon.jujutsu_kaisen.client.render.item.PistolRenderer;
 import radon.jujutsu_kaisen.entity.projectile.BulletProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.function.Consumer;
 
-public class PistolItem extends Item implements GeoAnimatable {
+public class PistolItem extends Item implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PistolItem(Properties pProperties) {
@@ -73,10 +72,5 @@ public class PistolItem extends Item implements GeoAnimatable {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public double getTick(Object o) {
-        return RenderUtils.getCurrentTick();
     }
 }

@@ -24,7 +24,7 @@ public class JJKConfig {
         builder.push("NPC");
 
         Map<ResourceLocation, Float> amounts = new HashMap<>();
-        amounts.put(JJKEntities.RIKA.getId(), 250000.0F);
+        amounts.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
         amounts.put(JJKEntities.MAHORAGA.getId(), 250000.0F);
         amounts.put(JJKEntities.JOGO.getId(), 3000.0F);
         amounts.put(JJKEntities.SUKUNA_RYOMEN.getId(), 10000.0F);

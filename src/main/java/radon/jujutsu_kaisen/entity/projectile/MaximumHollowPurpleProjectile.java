@@ -22,7 +22,7 @@ public class MaximumHollowPurpleProjectile extends HollowPurpleProjectile {
 
     @Override
     protected float getDamage() {
-        return super.getDamage() * 1.25F;
+        return super.getDamage() * 2.0F;
     }
 
     @Override

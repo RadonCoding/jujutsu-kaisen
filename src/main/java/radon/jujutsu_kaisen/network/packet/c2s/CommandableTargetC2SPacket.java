@@ -46,9 +46,12 @@ public class CommandableTargetC2SPacket {
 
                 for (Entity summon : cap.getSummons(level)) {
                     if (summon instanceof ICommandable commandable) {
-                        commandable.changeTarget(target);
-                        PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target", JujutsuKaisen.MOD_ID),
-                                summon.getName()), false), player);
+                        if (target == summon) continue;
+
+                        if (commandable.changeTarget(target)) {
+                            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target", JujutsuKaisen.MOD_ID),
+                                    summon.getName()), false), player);
+                        }
                     }
                 }
             });

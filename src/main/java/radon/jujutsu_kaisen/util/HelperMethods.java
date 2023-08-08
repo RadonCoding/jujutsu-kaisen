@@ -8,7 +8,6 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.mixin.common.ILevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,27 +44,6 @@ public class HelperMethods {
         Vec3 look = entity.getLookAngle();
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end);
-    }
-
-    public static Iterable<Entity> getEntities(Level level) {
-        return ((ILevelAccessor) level).getEntitiesInvoker().getAll();
-    }
-
-    public static <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, Level level) {
-        Iterable<Entity> entities = getEntities(level);
-
-        List<T> result = new ArrayList<>();
-
-        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
-
-        for (Entity collision : entities) {
-            T casted = test.tryCast(collision);
-
-            if (casted != null) {
-                result.add(casted);
-            }
-        }
-        return result;
     }
 
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {

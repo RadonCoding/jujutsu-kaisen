@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.projectile.ChainItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
@@ -227,7 +227,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             Projectile projectile = event.getProjectile();
 
-                            if (projectile instanceof ChainItemProjectile chain) {
+                            if (projectile instanceof ThrownChainItemProjectile chain) {
                                 if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return;
                             }
 
@@ -311,7 +311,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         if (result.get()) {
                             return;
                         }
-                    } else if (source.getDirectEntity() instanceof ChainItemProjectile chain) {
+                    } else if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
                         if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                             return;

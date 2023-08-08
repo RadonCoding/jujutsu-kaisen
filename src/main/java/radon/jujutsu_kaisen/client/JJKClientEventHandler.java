@@ -203,9 +203,10 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CHAIN_ITEM.get(), ChainItemRenderer::new);
+            event.registerEntityRenderer(JJKEntities.THROWN_CHAIN_ITEM.get(), ThrownChainItemRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAHORAGA.get(), MahoragaRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DIVINE_DOG.get(), DivineDogRenderer::new);
         }
 
         @SubscribeEvent

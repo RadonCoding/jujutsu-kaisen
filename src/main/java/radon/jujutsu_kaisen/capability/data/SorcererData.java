@@ -84,6 +84,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
 
     private static final float ENERGY_AMOUNT = 0.25F;
+    private static final int REQUIRED_ADAPTATION = 5;
 
     public SorcererData() {
         this.setGrade(SorcererGrade.GRADE_4);
@@ -303,7 +304,6 @@ public class SorcererData implements ISorcererData {
 
         SorcererGrade grade = this.getGrade();
 
-
         if (this.technique == CursedTechnique.DISASTER_FLAMES) {
             owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
         }
@@ -332,8 +332,8 @@ public class SorcererData implements ISorcererData {
             }
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(2.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
                     false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(2.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 3.0F : 2.0F)
+                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
         }
     }
 
@@ -715,7 +715,7 @@ public class SorcererData implements ISorcererData {
 
             stage++;
 
-            if (stage >= 3) {
+            if (stage >= REQUIRED_ADAPTATION) {
                 this.adapting.remove(classification);
                 this.adapted.add(classification);
                 return true;
