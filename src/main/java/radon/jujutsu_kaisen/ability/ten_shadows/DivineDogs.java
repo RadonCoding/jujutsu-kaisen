@@ -31,7 +31,7 @@ public class DivineDogs extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 0.25F;
     }
 
     @Override
@@ -52,11 +52,11 @@ public class DivineDogs extends Ability implements Ability.IToggled {
     public void onEnabled(LivingEntity owner) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                DivineDogEntity white = new DivineDogEntity(owner, DivineDogEntity.Variant.WHITE);
+                DivineDogEntity white = new DivineDogEntity(owner, DivineDogEntity.Variant.WHITE, false);
                 owner.level.addFreshEntity(white);
                 cap.addSummon(white);
 
-                DivineDogEntity black = new DivineDogEntity(owner, DivineDogEntity.Variant.BLACK);
+                DivineDogEntity black = new DivineDogEntity(owner, DivineDogEntity.Variant.BLACK, false);
                 owner.level.addFreshEntity(black);
                 cap.addSummon(black);
             });

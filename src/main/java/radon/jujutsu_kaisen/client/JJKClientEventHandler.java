@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -207,6 +208,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAHORAGA.get(), MahoragaRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG.get(), DivineDogRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
         }
 
         @SubscribeEvent

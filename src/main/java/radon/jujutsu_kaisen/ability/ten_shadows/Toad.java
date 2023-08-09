@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,40 +7,31 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Mahoraga extends Ability implements Ability.IToggled {
+public class Toad  extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getHealth() / owner.getMaxHealth() <= 0.1F;
+        return owner.getHealth() / owner.getMaxHealth() <= 0.9F;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return this.isTamed(owner) ? ActivationType.TOGGLED : ActivationType.INSTANT;
+        return ActivationType.TOGGLED;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (!this.isTamed(owner)) {
-            if (!owner.level.isClientSide) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    MahoragaEntity mahoraga = new MahoragaEntity(owner, false);
-                    owner.level.addFreshEntity(mahoraga);
-                    cap.addSummon(mahoraga);
-                });
-            }
-        }
+
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 1.0F : 1000.0F;
+        return 0.1F;
     }
 
     @Override
@@ -50,7 +40,7 @@ public class Mahoraga extends Ability implements Ability.IToggled {
 
         if (owner.level instanceof ServerLevel level) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.hasSummonOfClass(level, MahoragaEntity.class)) {
+                if (!cap.hasSummonOfClass(level, ToadEntity.class)) {
                     result.set(true);
                 }
             });
@@ -58,21 +48,13 @@ public class Mahoraga extends Ability implements Ability.IToggled {
         return result.get() ? Status.FAILURE : super.checkStatus(owner);
     }
 
-    private boolean isTamed(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())));
-        return result.get();
-    }
-
     @Override
     public void onEnabled(LivingEntity owner) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                MahoragaEntity mahoraga = new MahoragaEntity(owner, true);
-                owner.level.addFreshEntity(mahoraga);
-                cap.addSummon(mahoraga);
+                ToadEntity toad = new ToadEntity(owner, false);
+                owner.level.addFreshEntity(toad);
+                cap.addSummon(toad);
             });
         }
     }
@@ -81,7 +63,7 @@ public class Mahoraga extends Ability implements Ability.IToggled {
     public void onDisabled(LivingEntity owner) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                cap.unsummonByClass((ServerLevel) owner.level, MahoragaEntity.class);
+                cap.unsummonByClass((ServerLevel) owner.level, ToadEntity.class);
 
                 if (owner instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

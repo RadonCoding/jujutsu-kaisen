@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
 
 public class JJKEntities {
     public static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JujutsuKaisen.MOD_ID);
@@ -144,12 +146,26 @@ public class JJKEntities {
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
                     .sized(1.4F, 3.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga")
-                            .toString()));
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
     public static RegistryObject<EntityType<DivineDogEntity>> DIVINE_DOG = ENTITIES.register("divine_dog", () ->
             EntityType.Builder.<DivineDogEntity>of(DivineDogEntity::new, MobCategory.MISC)
                     .sized(1.6F, 1.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")
+                            .toString()));
+    public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
+            EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
+                            .toString()));
+    public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
+            EntityType.Builder.<ToadTongueProjectile>of(ToadTongueProjectile::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_tongue")
+                            .toString()));
+    public static RegistryObject<EntityType<RabbitEscapeEntity>> RABBIT_ESCAPE = ENTITIES.register("rabbit_escape", () ->
+            EntityType.Builder.<RabbitEscapeEntity>of(RabbitEscapeEntity::new, MobCategory.MISC)
+                    .sized(0.4F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rabbit_escape")
                             .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
@@ -162,6 +178,8 @@ public class JJKEntities {
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build());
         event.put(DIVINE_DOG.get(), DivineDogEntity.createAttributes().build());
+        event.put(TOAD.get(), ToadEntity.createAttributes().build());
+        event.put(RABBIT_ESCAPE.get(), RabbitEscapeEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

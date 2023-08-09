@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.level.Level;
@@ -32,11 +31,13 @@ import software.bernie.geckolib.core.object.PlayState;
 public class DivineDogEntity extends TenShadowsSummon {
     private static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_LEAP = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(DivineDogEntity.class, EntityDataSerializers.INT);
 
-    public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
-    public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    public static final RawAnimation LEAP = RawAnimation.begin().thenPlay("attack.leap");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
+    private static final RawAnimation LEAP = RawAnimation.begin().thenPlay("attack.leap");
+    private static final RawAnimation HOWL = RawAnimation.begin().thenPlayAndHold("misc.howl");
 
     private static final int LEAP_DURATION = 10;
 
@@ -44,23 +45,58 @@ public class DivineDogEntity extends TenShadowsSummon {
         super(pEntityType, pLevel);
     }
 
-    public DivineDogEntity(LivingEntity owner, Variant variant) {
+    public DivineDogEntity(LivingEntity owner, Variant variant, boolean ritual) {
         super(JJKEntities.DIVINE_DOG.get(), owner.level);
 
         this.setTame(true);
         this.setOwner(owner);
 
-        Vec3 pos = owner.position()
+        Vec3 pos = ritual ? owner.position() : owner.position()
                 .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(owner.getLookAngle().yRot(90.0F).scale(variant == Variant.WHITE ? -0.45D : 0.45D));
-        this.moveTo(pos.x(), pos.y(), pos.z());
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
 
         this.entityData.set(DATA_VARIANT, variant.ordinal());
-
-        this.createGoals();
     }
 
-    private void createGoals() {
+    public void setRitual(int index, int duration) {
+        this.setNoAi(true);
+        this.entityData.set(DATA_RITUAL, duration);
+
+        double x = this.getX();
+        double y = this.getY();
+        double z = this.getZ();
+
+        double distance = this.getBbWidth() * 2;
+        Vec3 look = this.getLookAngle();
+        Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
+        Vec3 side = look.cross(up);
+        Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
+                .add(look.scale(1.5D + (index % 3) * 3.0D));
+        this.setPos(x + offset.x(), y, z + offset.z());
+
+        float yRot = this.getYRot();
+
+        if (index < 3) {
+            yRot -= 90.0F;
+        } else {
+            yRot += 90.0F;
+        }
+        this.setYRot(yRot);
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+    }
+
+    @Override
+    protected boolean shouldToggleOnDeath() {
+        return false;
+    }
+
+    @Override
+    protected void registerGoals() {
         int target = 1;
         int goal = 1;
 
@@ -69,25 +105,18 @@ public class DivineDogEntity extends TenShadowsSummon {
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
-                    entity -> this.participants.contains(entity.getUUID())));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 4.0D);
+                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 
     @Override
@@ -96,6 +125,7 @@ public class DivineDogEntity extends TenShadowsSummon {
 
         this.entityData.define(DATA_VARIANT, -1);
         this.entityData.define(DATA_LEAP, 0);
+        this.entityData.define(DATA_RITUAL, 0);
     }
 
     @Override
@@ -103,6 +133,7 @@ public class DivineDogEntity extends TenShadowsSummon {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("variant", this.entityData.get(DATA_VARIANT));
+        pCompound.putInt("ritual", this.entityData.get(DATA_RITUAL));
     }
 
     @Override
@@ -110,6 +141,7 @@ public class DivineDogEntity extends TenShadowsSummon {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_VARIANT, pCompound.getInt("variant"));
+        this.entityData.set(DATA_RITUAL, pCompound.getInt("ritual"));
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<DivineDogEntity> animationState) {
@@ -121,10 +153,16 @@ public class DivineDogEntity extends TenShadowsSummon {
     }
 
     private PlayState leapPredicate(AnimationState<DivineDogEntity> animationState) {
-        int slash = this.entityData.get(DATA_LEAP);
-
-        if (slash > 0) {
+        if (this.entityData.get(DATA_LEAP) > 0) {
             return animationState.setAndContinue(LEAP);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
+    private PlayState howlPredicate(AnimationState<DivineDogEntity> animationState) {
+        if (this.entityData.get(DATA_RITUAL) > 0) {
+            return animationState.setAndContinue(HOWL);
         }
         animationState.getController().forceAnimationReset();
         return PlayState.STOP;
@@ -134,8 +172,8 @@ public class DivineDogEntity extends TenShadowsSummon {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Idle", this::walkRunIdlePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Leap", this::leapPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Howl", this::howlPredicate));
     }
-
 
     public Variant getVariant() {
         return Variant.values()[this.entityData.get(DATA_VARIANT)];
@@ -154,6 +192,21 @@ public class DivineDogEntity extends TenShadowsSummon {
 
         if (leap > 0) {
             this.entityData.set(DATA_LEAP, --leap);
+        }
+    }
+
+    @Override
+    public void tick() {
+        int ritual = this.entityData.get(DATA_RITUAL);
+
+        if (ritual > 0) {
+            this.entityData.set(DATA_RITUAL, --ritual);
+
+            if (ritual == 0) {
+                this.discard();
+            }
+        } else {
+            super.tick();
         }
     }
 

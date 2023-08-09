@@ -48,9 +48,9 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    public static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
-    public static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public RikaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

@@ -39,6 +39,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -54,16 +55,17 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
     public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
     public static EntityDataAccessor<Boolean> DATA_POSITIVE_SWORD = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
-    public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    public static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
-    public static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
+    private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
 
     private static final double SWING_LAUNCH = 10.0D;
     private static final float SWING_EXPLOSION = 2.5F;
 
     private static final int SLASH_DURATION = 20;
+    private static final int RITUAL_DURATION = 3 * 20;
 
     public MahoragaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -80,7 +82,10 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z());
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
 
         this.createGoals();
     }
@@ -226,14 +231,29 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        LivingEntity owner = this.getOwner();
+        if (this.isTame()) {
+            LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                    dstCap.adaptAll(srcCap.getAdapted());
+            if (owner != null) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
+                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
+                        dstCap.adaptAll(srcCap.getAdapted());
+                    });
                 });
-            });
+            }
+        } else {
+            this.playSound(JJKSounds.WOLF_HOWLING.get(), 5.0F, 1.0F);
+
+            for (int i = 0; i < 6; i++) {
+                DivineDogEntity dog = new DivineDogEntity(this, DivineDogEntity.Variant.BLACK, true);
+                dog.setRitual(i, RITUAL_DURATION);
+                this.level.addFreshEntity(dog);
+            }
+            for (int i = 0; i < 6; i++) {
+                ToadEntity dog = new ToadEntity(this, true);
+                dog.setRitual(i, RITUAL_DURATION);
+                this.level.addFreshEntity(dog);
+            }
         }
     }
 
@@ -241,14 +261,16 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
 
-        LivingEntity owner = this.getOwner();
+        if (this.isTame()) {
+            LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                    dstCap.adaptAll(srcCap.getAdapted());
+            if (owner != null) {
+                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
+                        dstCap.adaptAll(srcCap.getAdapted());
+                    });
                 });
-            });
+            }
         }
     }
 
@@ -267,6 +289,8 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
     @Override
     public void tick() {
         super.tick();
+
+        this.setNoAi(this.getTime() <= RITUAL_DURATION);
 
         if (!this.level.isClientSide) {
             if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

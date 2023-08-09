@@ -41,20 +41,16 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     private void spawnParticles() {
         this.playSound(SoundEvents.FISHING_BOBBER_SPLASH, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
 
-        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 16; i++) {
-                cap.delayTickEvent(() -> {
-                    for (int j = 0; j < this.getBbHeight() * this.getBbHeight(); j++) {
-                        this.level.addParticle(ParticleTypes.SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
-                                this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
-                                this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
-                        this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
-                                this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
-                                this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
-                    }
-                }, i);
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < this.getBbHeight() * this.getBbHeight(); j++) {
+                this.level.addParticle(ParticleTypes.SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
+                        this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
+                        this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
+                this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
+                        this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
+                        this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
             }
-        });
+        }
     }
 
     @Override

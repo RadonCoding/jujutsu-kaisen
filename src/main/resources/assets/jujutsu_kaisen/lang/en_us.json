@@ -117,6 +117,12 @@
   "ability.jujutsu_kaisen.divine_dogs.enable": "Summoned Divine Dogs",
   "ability.jujutsu_kaisen.divine_dogs.disable": "Released Divine Dogs",
 
+  "ability.jujutsu_kaisen.toad": "Summon Toad",
+  "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
+  "ability.jujutsu_kaisen.toad.disable": "Released Toad",
+
+  "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
+
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",

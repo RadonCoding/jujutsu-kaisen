@@ -30,7 +30,7 @@ public class FireArrow extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 350.0F;
     }
 
     @Override

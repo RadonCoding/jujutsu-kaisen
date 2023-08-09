@@ -84,7 +84,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
 
     private static final float ENERGY_AMOUNT = 0.25F;
-    private static final int REQUIRED_ADAPTATION = 5;
+    private static final int REQUIRED_ADAPTATION = 3;
 
     public SorcererData() {
         this.setGrade(SorcererGrade.GRADE_4);
@@ -143,11 +143,11 @@ public class SorcererData implements ISorcererData {
         Iterator<DelayedTickEvent> delayed = this.delayedTickEvents.iterator();
 
         while (delayed.hasNext()) {
-            DelayedTickEvent event = delayed.next();
+            DelayedTickEvent current = delayed.next();
 
-            event.tick();
+            current.tick();
 
-            if (event.run()) {
+            if (current.run()) {
                 delayed.remove();
             }
         }
@@ -155,11 +155,11 @@ public class SorcererData implements ISorcererData {
         Iterator<ScheduledTickEvent> scheduled = this.scheduledTickEvents.iterator();
 
         while (scheduled.hasNext()) {
-            ScheduledTickEvent event = scheduled.next();
+            ScheduledTickEvent current = scheduled.next();
 
-            event.tick();
+            current.tick();
 
-            if (event.run()) {
+            if (current.run()) {
                 scheduled.remove();
             }
         }
