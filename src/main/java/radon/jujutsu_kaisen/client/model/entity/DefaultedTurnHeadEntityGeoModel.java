@@ -2,31 +2,22 @@ package radon.jujutsu_kaisen.client.model.entity;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import net.minecraft.world.entity.Mob;
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class MahoragaModel extends DefaultedEntityGeoModel<MahoragaEntity> {
-    //private static final int WHEEL_TURN_TIME = 20;
-
-    public MahoragaModel() {
-        super(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga"));
+public class DefaultedTurnHeadEntityGeoModel<T extends Mob & GeoAnimatable> extends DefaultedEntityGeoModel<T> {
+    public DefaultedTurnHeadEntityGeoModel(ResourceLocation assetSubpath) {
+        super(assetSubpath);
     }
 
     @Override
-    public void setCustomAnimations(MahoragaEntity animatable, long instanceId, AnimationState<MahoragaEntity> animationState) {
-        /*CoreGeoBone wheel = this.getBone("wheel").orElseThrow();
-
-        float current = wheel.getRotY();
-        float required = animatable.getWheelSpin() * -45.0F;
-
-        if (current != required) {
-            wheel.setRotY(current + (required / WHEEL_TURN_TIME));
-        }*/
+    public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
+        if (animatable.isNoAi()) return;
 
         CoreGeoBone head = this.getBone("head").orElseThrow();
 

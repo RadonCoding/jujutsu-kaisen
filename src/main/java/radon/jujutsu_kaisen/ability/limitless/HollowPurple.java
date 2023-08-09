@@ -52,6 +52,6 @@ public class HollowPurple extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.LIMITLESS;
+        return Classification.LIMITLESS_ERASING;
     }
 }

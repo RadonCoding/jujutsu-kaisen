@@ -7,31 +7,25 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 
-public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProjectile> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/chain_link.png");
+public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/toad_tongue.png");
 
-    private final ItemRenderer itemRenderer;
+    private static final float SIZE = 1.0F;
 
-    public ThrownChainItemRenderer(EntityRendererProvider.Context pContext) {
+    public ToadTongueRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
-
-        this.itemRenderer = pContext.getItemRenderer();
     }
 
     private Vec3 calculateViewVector(float pYRot) {
@@ -44,26 +38,11 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProje
     }
 
     @Override
-    public void render(@NotNull ThrownChainItemProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        float scale = 1.5F;
-
-        pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * scale / 1.25F, 0.0F);
-        pPoseStack.scale(scale, scale, scale);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot())));
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot())));
-
-        ItemStack stack = pEntity.getStack();
-
-        BakedModel model = this.itemRenderer.getModel(stack, null, null, pEntity.getId());
-        this.itemRenderer.render(stack, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
-        pPoseStack.popPose();
-
+    public void render(@NotNull ToadTongueProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         if (pEntity.getOwner() instanceof LivingEntity owner) {
             pPoseStack.pushPose();
             pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-            Vec3 ownerPos = getPosition(owner, owner.getBbHeight() * 0.35F, pPartialTick)
-                    .add(this.calculateViewVector(owner.yBodyRot).yRot(90.0F).scale(-0.45D));
+            Vec3 ownerPos = getPosition(owner, owner.getEyeHeight() - 0.1D, pPartialTick);
             Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() * 0.5F, pPartialTick);
             Vec3 relative = ownerPos.subtract(projectilePos);
             float f0 = (float) relative.length();
@@ -127,7 +106,7 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProje
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull ThrownChainItemProjectile pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ToadTongueProjectile pEntity) {
         return null;
     }
 }

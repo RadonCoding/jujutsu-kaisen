@@ -4,13 +4,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.model.entity.DefaultedTurnHeadEntityGeoModel;
 import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
-import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DivineDogRenderer extends GeoEntityRenderer<DivineDogEntity> {
     public DivineDogRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")));
+        super(renderManager, new DefaultedTurnHeadEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")));
     }
 
     @Override

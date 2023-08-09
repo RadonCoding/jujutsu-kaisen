@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -93,7 +94,7 @@ public class WheelEntity extends Entity implements GeoEntity {
                 }
 
                 Vec3 movement = owner.getDeltaMovement();
-                this.moveTo(owner.getX() + movement.x(), owner.getY() + movement.y() + owner.getBbHeight() + OFFSET, owner.getZ() + movement.z(),
+                this.moveTo(owner.getX() + movement.x(), owner.getY() + owner.getBbHeight() + OFFSET, owner.getZ() + movement.z(),
                         yRot, 0.0F);
             }
         }
@@ -118,6 +119,21 @@ public class WheelEntity extends Entity implements GeoEntity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("spin", this.entityData.get(DATA_SPIN));
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        super.remove(pReason);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    cap.toggle(owner, JJKAbilities.WHEEL.get());
+                });
+            }
+        }
     }
 
     @Override

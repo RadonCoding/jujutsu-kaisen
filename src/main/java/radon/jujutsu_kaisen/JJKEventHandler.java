@@ -27,8 +27,8 @@ import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -203,12 +203,14 @@ public class JJKEventHandler {
                 victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
                     LivingEntity killer;
 
-                    if (source instanceof SummonEntity summon) {
-                        LivingEntity owner = summon.getOwner();
+                    if (source instanceof TamableAnimal tamable) {
+                        LivingEntity owner = tamable.getOwner();
                         killer = owner == null ? source : owner;
                     } else {
                         killer = source;
                     }
+
+                    if (victim instanceof SummonEntity) return;
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
                         if (victim instanceof SukunaRyomenEntity) {

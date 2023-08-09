@@ -26,7 +26,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class RugbyFieldCurseEntity extends SorcererEntity {
-    public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
 
     public RugbyFieldCurseEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

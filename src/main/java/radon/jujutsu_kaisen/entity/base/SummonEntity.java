@@ -149,20 +149,25 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     }
 
     protected abstract Ability getAbility();
+    protected boolean shouldToggleOnDeath() {
+        return true;
+    }
 
     @Override
     public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
 
-        LivingEntity owner = this.getOwner();
+        if (this.shouldToggleOnDeath()) {
+            LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            Ability ability = this.getAbility();
+            if (owner != null) {
+                Ability ability = this.getAbility();
 
-            if (JJKAbilities.hasToggled(owner, ability)) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.toggle(owner, ability);
-                });
+                if (JJKAbilities.hasToggled(owner, ability)) {
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        cap.toggle(owner, ability);
+                    });
+                }
             }
         }
     }

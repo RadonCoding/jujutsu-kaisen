@@ -18,9 +18,7 @@ import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Dismantle;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.FireArrow;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
-import radon.jujutsu_kaisen.ability.ten_shadows.DivineDogs;
-import radon.jujutsu_kaisen.ability.ten_shadows.Mahoraga;
-import radon.jujutsu_kaisen.ability.ten_shadows.Wheel;
+import radon.jujutsu_kaisen.ability.ten_shadows.*;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -75,6 +73,8 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Ability> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
+    public static RegistryObject<Ability> TOAD = ABILITIES.register("toad", Toad::new);
+    public static RegistryObject<Ability> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
 
     public static RegistryObject<Ability> WHEEL = ABILITIES.register("wheel", Wheel::new);
 

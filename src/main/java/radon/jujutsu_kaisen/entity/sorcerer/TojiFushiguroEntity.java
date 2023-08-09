@@ -42,8 +42,10 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     private static final int INVERTED_SPEAR_OF_HEAVEN = 1;
     private static final int PISTOL = 2;
 
+    private static final int SHOOT_INTERVAL = 10 * 20;
+
     private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, true);
-    private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, 20, 15.0F);
+    private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, SHOOT_INTERVAL, 15.0F);
 
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -81,6 +83,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
+        InventoryCurseItem.addItem(inventory, PISTOL, new ItemStack(JJKItems.PISTOL.get()));
         this.setItemSlot(EquipmentSlot.CHEST, inventory);
     }
 
@@ -174,5 +177,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(),
                 JJKSounds.GUN.get(), SoundSource.MASTER, 2.0F, 1.0F / (HelperMethods.RANDOM.nextFloat() * 0.4F + 0.8F));
         stack.hurtAndBreak(1, this, entity -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+
+        this.setTarget(null);
     }
 }
