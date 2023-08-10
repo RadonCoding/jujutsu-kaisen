@@ -18,7 +18,7 @@ public class JJKKeys {
             InputConstants.KEY_X);
     public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",
             InputConstants.KEY_B);
-    public static KeyMapping ACTIVATE_DOMAIN = createKeyMapping("activate_domain",
+    public static KeyMapping ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN = createKeyMapping("activate_domain_or_simple_domain",
             InputConstants.KEY_G);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {

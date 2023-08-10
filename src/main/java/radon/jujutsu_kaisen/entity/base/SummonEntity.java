@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetOverlayMessageS2CPacket;
@@ -148,7 +149,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         return this.cache;
     }
 
-    protected abstract Ability getAbility();
+    protected abstract Summon<?> getAbility();
     protected boolean shouldToggleOnDeath() {
         return true;
     }

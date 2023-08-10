@@ -61,6 +61,9 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.SUKUNA_RYOMEN, 13405836, 12529712, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> YUTA_OKKOTSU_SPAWN_EGG = ITEMS.register("yuta_okkotsu_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.YUTA_OKKOTSU, 16185078, 3750460, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> MEGUMI_FUSHIGURO_SPAWN_EGG = ITEMS.register("megumi_fushiguro_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.MEGUMI_FUSHIGURO, 2237748, 7692077, new Item.Properties()));
+
     public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 6130842, 8946753, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",

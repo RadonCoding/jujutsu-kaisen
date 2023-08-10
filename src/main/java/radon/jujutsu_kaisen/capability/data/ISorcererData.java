@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -42,7 +41,7 @@ public interface ISorcererData {
     void setCurse(boolean curse);
     boolean isCurse();
 
-    void exorcise(LivingEntity owner, CurseGrade grade);
+    void exorcise(LivingEntity owner, SorcererGrade grade);
 
     void toggle(LivingEntity owner, Ability ability);
     void clearToggled();
@@ -87,8 +86,12 @@ public interface ISorcererData {
     <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz);
     <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz);
     <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
+
     boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);
     void tame(Registry<EntityType<?>> registry, EntityType<?> entity);
+
+    boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
+    void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
 
     void setDomain(DomainExpansionEntity domain);
     @Nullable DomainExpansionEntity getDomain(ServerLevel level);
@@ -100,6 +103,7 @@ public interface ISorcererData {
     boolean isAdaptedTo(Ability ability);
 
     boolean tryAdapt(DamageSource source);
+    boolean tryAdapt(Ability ability);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

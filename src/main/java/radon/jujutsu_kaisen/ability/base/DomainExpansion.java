@@ -2,13 +2,14 @@ package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -90,7 +91,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return 2.5F;
     }
 
-    public abstract void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity);
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+        MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this));
+    }
+
     public abstract void onHitBlock(DomainExpansionEntity domain, LivingEntity owner,  BlockPos pos);
 
     protected abstract void createBarrier(LivingEntity owner);

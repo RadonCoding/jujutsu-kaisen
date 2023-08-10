@@ -15,17 +15,11 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
-import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.YutaOkkotsuEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.*;
+import radon.jujutsu_kaisen.entity.ten_shadows.*;
 
 public class JJKEntities {
     public static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JujutsuKaisen.MOD_ID);
@@ -86,6 +80,10 @@ public class JJKEntities {
     public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
             EntityType.Builder.<YutaOkkotsuEntity>of(YutaOkkotsuEntity::new, MobCategory.MONSTER)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu")
+                            .toString()));
+    public static RegistryObject<EntityType<MegumiFushiguroEntity>> MEGUMI_FUSHIGURO = ENTITIES.register("megumi_fushiguro", () ->
+            EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.MONSTER)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "megumi_fushiguro")
                             .toString()));
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -173,6 +171,7 @@ public class JJKEntities {
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
         event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
+        event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
@@ -190,8 +189,6 @@ public class JJKEntities {
     }
 
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(TOJI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SUKUNA_RYOMEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -199,6 +196,11 @@ public class JJKEntities {
         event.register(SATORU_GOJO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(YUTA_OKKOTSU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(MEGUMI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        event.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(JOGO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);

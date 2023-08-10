@@ -25,10 +25,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
-import radon.jujutsu_kaisen.client.model.entity.SatoruGojoModel;
-import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
-import radon.jujutsu_kaisen.client.model.entity.TojiFushiguroModel;
-import radon.jujutsu_kaisen.client.model.entity.YutaOkkotsuModel;
+import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.BlackFlashParticle;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
@@ -154,7 +151,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ABILITY_SCROLL);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
-            event.register(JJKKeys.ACTIVATE_DOMAIN);
+            event.register(JJKKeys.ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN);
         }
 
         @SubscribeEvent
@@ -179,6 +176,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SatoruGojoModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(YutaOkkotsuModel.LAYER, SkinModel::createBodyLayer);
+
+            event.registerLayerDefinition(MegumiFushiguroModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(MegumiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -211,6 +212,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
             event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
         }
 
         @SubscribeEvent
@@ -252,6 +254,8 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.MEGUMI_FUSHIGURO_SPAWN_EGG.get());
+
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                             }));

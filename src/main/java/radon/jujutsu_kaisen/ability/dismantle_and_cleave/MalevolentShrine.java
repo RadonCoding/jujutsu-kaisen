@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -20,14 +19,14 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        if (domain.getRandom().nextInt(5) == 0) {
-            if (entity instanceof LivingEntity living) {
-                Ability cleave = JJKAbilities.CLEAVE.get();
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+        super.onHitEntity(domain, owner, entity);
 
-                if (cleave instanceof IDomainAttack attack) {
-                    attack.perform(owner, domain, living);
-                }
+        if (domain.getRandom().nextInt(5) == 0) {
+            Ability cleave = JJKAbilities.CLEAVE.get();
+
+            if (cleave instanceof IDomainAttack attack) {
+                attack.perform(owner, domain, entity);
             }
         }
     }
