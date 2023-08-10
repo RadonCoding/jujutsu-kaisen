@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
@@ -29,7 +28,9 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
     }
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+        super.onHitEntity(domain, owner, entity);
+
         if (owner.level.getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getPower())) {

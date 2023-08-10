@@ -27,7 +27,6 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -77,6 +76,7 @@ public class SorcererData implements ISorcererData {
     private final Set<UUID> domains;
     private final Set<UUID> summons;
     private final Set<ResourceLocation> tamed;
+    private final Set<ResourceLocation> dead;
 
     private final Set<Ability.Classification> adapted;
     private final Map<Ability.Classification, Integer> adapting;
@@ -98,6 +98,7 @@ public class SorcererData implements ISorcererData {
         this.domains = new HashSet<>();
         this.summons = new HashSet<>();
         this.tamed = new HashSet<>();
+        this.dead = new HashSet<>();
 
         this.adapted = new HashSet<>();
         this.adapting = new HashMap<>();
@@ -387,19 +388,19 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void exorcise(LivingEntity owner, CurseGrade grade) {
+    public void exorcise(LivingEntity owner, SorcererGrade grade) {
         if (this.grade == SorcererGrade.SPECIAL_GRADE) return;
 
         SorcererGrade next = SorcererGrade.values()[this.grade.ordinal() + 1];
 
-        this.experience += grade.getExperience();
+        this.experience += grade.getReward();
 
         if (owner instanceof Player player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise", JujutsuKaisen.MOD_ID), grade.getExperience(),
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise", JujutsuKaisen.MOD_ID), grade.getReward(),
                     this.experience, next.getRequiredExperience()));
         }
 
-        // If the sorcerer has enough experience and the curse/sorcerer exorcised was higher rank than the current rank of the curse/sorcerer
+        // If the owner has enough experience and the curse/sorcerer exorcised was higher or equal to the next rank
         if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
             this.setGrade(next);
 
@@ -656,6 +657,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity) {
+        return this.dead.contains(registry.getKey(entity));
+    }
+
+    @Override
+    public void kill(Registry<EntityType<?>> registry, EntityType<?> entity) {
+        this.dead.add(registry.getKey(entity));
+    }
+
+    @Override
     public void setDomain(DomainExpansionEntity domain) {
         this.domain = domain.getUUID();
     }
@@ -702,10 +713,7 @@ public class SorcererData implements ISorcererData {
         return this.adapted.contains(ability.getClassification());
     }
 
-    @Override
-    public boolean tryAdapt(DamageSource source) {
-        Ability.Classification classification = this.getClassification(source);
-
+    private boolean tryAdapt(@Nullable Ability.Classification classification) {
         if (classification == null) return false;
 
         if (!this.adapting.containsKey(classification)) {
@@ -724,6 +732,18 @@ public class SorcererData implements ISorcererData {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean tryAdapt(DamageSource source) {
+        Ability.Classification classification = this.getClassification(source);
+        return this.tryAdapt(classification);
+    }
+
+    @Override
+    public boolean tryAdapt(Ability ability) {
+        Ability.Classification classification = ability.getClassification();
+        return this.tryAdapt(classification);
     }
 
     @Override
@@ -864,6 +884,13 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("tamed", tamedTag);
 
+        ListTag deadTag = new ListTag();
+
+        for (ResourceLocation key : this.dead) {
+            deadTag.add(StringTag.valueOf(key.toString()));
+        }
+        nbt.put("dead", deadTag);
+
         ListTag adaptedTag = new ListTag();
 
         for (Ability.Classification classification : this.adapted) {
@@ -966,6 +993,12 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
             this.tamed.add(new ResourceLocation(key.getAsString()));
+        }
+
+        this.dead.clear();
+
+        for (Tag key : nbt.getList("dead", Tag.TAG_STRING)) {
+            this.dead.add(new ResourceLocation(key.getAsString()));
         }
 
         this.adapted.clear();

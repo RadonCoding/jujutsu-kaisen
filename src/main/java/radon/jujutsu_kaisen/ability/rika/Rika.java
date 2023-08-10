@@ -1,28 +1,25 @@
 package radon.jujutsu_kaisen.ability.rika;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Rika extends Ability implements Ability.IToggled {
-    @Override
-    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return true;
+public class Rika extends Summon<RikaEntity> {
+    public Rika() {
+        super(RikaEntity.class);
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return true;
     }
 
     @Override
@@ -31,48 +28,27 @@ public class Rika extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public float getCost(LivingEntity owner) {
-        return 0;
+    public EntityType<RikaEntity> getType() {
+        return JJKEntities.RIKA.get();
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    protected boolean isTamed(LivingEntity owner) {
         AtomicBoolean result = new AtomicBoolean();
 
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.hasSummonOfClass(level, RikaEntity.class)) {
-                    result.set(true);
-                }
-            });
-        }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()));
+        return result.get();
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
-        if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                RikaEntity rika = new RikaEntity(owner, cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal());
-                owner.level.addFreshEntity(rika);
-                cap.addSummon(rika);
-            });
-        }
+    public float getCost(LivingEntity owner) {
+        return 0.0F;
     }
 
     @Override
-    public void onDisabled(LivingEntity owner) {
-        if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                    cap.unsummonByClass((ServerLevel) owner.level, RikaEntity.class);
-
-                    if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                    }
-                }
-            });
-        }
+    protected RikaEntity summon(int index, LivingEntity owner) {
+        return new RikaEntity(owner, this.isTamed(owner));
     }
 
     @Override

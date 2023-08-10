@@ -16,7 +16,7 @@
   "key.jujutsu_kaisen.ability_scroll": "Cycle Abilities With Scroll Wheel",
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
   "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
-  "key.jujutsu_kaisen.activate_domain": "Activate Domain",
+  "key.jujutsu_kaisen.activate_domain_or_simple_domain": "Activate Domain or Simple Domain",
 
   "item.jujutsu_kaisen.cursed_tool.grade": "Grade: %1$s",
 
@@ -51,6 +51,8 @@
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
+  "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
+
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
 
@@ -160,6 +162,8 @@
   "entity.jujutsu_kaisen.jogo": "Jogo",
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
   "entity.jujutsu_kaisen.divine_dog": "Divine Dog",
+  "entity.jujutsu_kaisen.toad": "Toad",
+  "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

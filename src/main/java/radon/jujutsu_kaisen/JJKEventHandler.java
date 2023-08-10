@@ -17,9 +17,9 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CurseGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -196,6 +196,27 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
+
+            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (!cap.isAdaptedTo(event.getAbility())) {
+                    if (!cap.tryAdapt(event.getAbility())) return;
+
+                    if (!victim.level.isClientSide) {
+                        WheelEntity wheel = cap.getSummonByClass((ServerLevel) victim.level, WheelEntity.class);
+
+                        if (wheel != null) {
+                            wheel.spin();
+                        }
+                    }
+                }
+            });
+        }
+
+        @SubscribeEvent
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -218,7 +239,7 @@ public class JJKEventHandler {
                         }
 
                         if (killerCap.isCurse() != victimCap.isCurse()) {
-                            CurseGrade grade = CurseGrade.values()[victimCap.getGrade().ordinal()];
+                            SorcererGrade grade = SorcererGrade.values()[victimCap.getGrade().ordinal()];
 
                             killerCap.exorcise(killer, grade);
 

@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -152,7 +153,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    protected Ability getAbility() {
+    protected Summon<?> getAbility() {
         return JJKAbilities.RIKA.get();
     }
 

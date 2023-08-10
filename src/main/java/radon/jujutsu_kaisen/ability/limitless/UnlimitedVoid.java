@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.limitless;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
@@ -28,12 +27,12 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, Entity entity) {
-        if (entity instanceof LivingEntity living) {
-            if (!living.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                living.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), 30 * 20, 0, false, false, false));
-                living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30 * 20, 4));
-            }
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+        super.onHitEntity(domain, owner, entity);
+
+        if (!entity.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+            entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), 30 * 20, 0, false, false, false));
+            entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30 * 20, 4));
         }
     }
 

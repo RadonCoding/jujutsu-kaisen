@@ -224,7 +224,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         AABB bounds = this.getBounds();
 
         for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
-            this.ability.onHitEntity(this, owner, entity);
+            if (entity instanceof LivingEntity living) {
+                this.ability.onHitEntity(this, owner, living);
+            }
         }
 
         int radius = this.getRadius();

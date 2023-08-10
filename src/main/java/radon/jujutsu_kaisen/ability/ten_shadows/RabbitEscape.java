@@ -1,17 +1,32 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class RabbitEscape extends Ability {
+public class RabbitEscape extends Summon<RabbitEscapeEntity> {
+    public RabbitEscape() {
+        super(RabbitEscapeEntity.class);
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && HelperMethods.RANDOM.nextInt(3) == 0 && owner.getLastHurtByMobTimestamp() - owner.tickCount == 0;
+    }
+
+    @Override
+    public EntityType<RabbitEscapeEntity> getType() {
+        return JJKEntities.RABBIT_ESCAPE.get();
+    }
+
+    @Override
+    protected int getCount() {
+        return 16;
     }
 
     @Override
@@ -20,20 +35,8 @@ public class RabbitEscape extends Ability {
     }
 
     @Override
-    public void run(LivingEntity owner) {
-        if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (int i = 0; i < 8; i++) {
-                    cap.delayTickEvent(() -> {
-                        for (int j = 0; j < 16; j++) {
-                            RabbitEscapeEntity rabbit = new RabbitEscapeEntity(owner);
-                            owner.level.addFreshEntity(rabbit);
-                            cap.addSummon(rabbit);
-                        }
-                    }, i * 2);
-                }
-            });
-        }
+    protected RabbitEscapeEntity summon(int index, LivingEntity owner) {
+        return new RabbitEscapeEntity(owner);
     }
 
     @Override

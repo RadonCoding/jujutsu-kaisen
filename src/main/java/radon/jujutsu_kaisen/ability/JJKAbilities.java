@@ -52,7 +52,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
-    public static RegistryObject<Ability> RIKA = ABILITIES.register("rika", Rika::new);
+    public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
     public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
     public static RegistryObject<Ability> COPY = ABILITIES.register("copy", Copy::new);
 
@@ -71,12 +71,12 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
 
-    public static RegistryObject<Ability> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
-    public static RegistryObject<Ability> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
-    public static RegistryObject<Ability> TOAD = ABILITIES.register("toad", Toad::new);
-    public static RegistryObject<Ability> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
+    public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
+    public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
+    public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
+    public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
 
-    public static RegistryObject<Ability> WHEEL = ABILITIES.register("wheel", Wheel::new);
+    public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
@@ -165,8 +165,9 @@ public class JJKAbilities {
                     abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
+            abilities.removeIf(ability -> !ability.isUnlocked(owner) || (ability instanceof Summon<?> summon &&
+                    cap.isDead(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), summon.getType())));
         });
-        abilities.removeIf(ability -> !ability.isUnlocked(owner));
         return abilities;
     }
 }

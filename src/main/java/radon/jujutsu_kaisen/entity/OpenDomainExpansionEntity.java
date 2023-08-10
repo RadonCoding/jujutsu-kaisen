@@ -108,7 +108,9 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         AABB bounds = this.getBounds();
 
         for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
-            this.ability.onHitEntity(this, owner, entity);
+            if (entity instanceof LivingEntity living) {
+                this.ability.onHitEntity(this, owner, living);
+            }
         }
 
         for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, (this.width * this.height) / 4,

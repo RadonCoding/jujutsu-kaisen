@@ -98,6 +98,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
+        if (this.level.isClientSide) return;
+
         Vec3 dir = this.getDeltaMovement().normalize();
 
         for (int i = 0; i < 50; i++) {
@@ -108,9 +110,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
-            if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
-            }
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {

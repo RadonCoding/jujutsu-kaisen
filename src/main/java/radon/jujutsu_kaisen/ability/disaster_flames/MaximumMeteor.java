@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class MaximumMeteor extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && target.getMaxHealth() > Player.MAX_HEALTH && owner.hasLineOfSight(target);
+        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.distanceTo(target) <= 5.0D && target.getMaxHealth() > Player.MAX_HEALTH && owner.hasLineOfSight(target);
     }
 
     @Override

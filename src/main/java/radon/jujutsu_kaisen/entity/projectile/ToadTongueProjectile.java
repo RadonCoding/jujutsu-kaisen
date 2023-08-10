@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
 
 public class ToadTongueProjectile extends JujutsuProjectile {
     public static final float SPEED = 1.0F;
@@ -61,6 +62,17 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         this.discard();
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        Entity owner = this.getOwner();
+
+        if (owner instanceof ToadEntity toad) {
+            toad.canShoot = true;
+        }
     }
 
     @Override

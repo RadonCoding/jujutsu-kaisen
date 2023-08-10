@@ -759,7 +759,7 @@
 		},
 		"misc.howl": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 1,
+			"animation_length": 0.5,
 			"bones": {
 				"body": {
 					"position": {
