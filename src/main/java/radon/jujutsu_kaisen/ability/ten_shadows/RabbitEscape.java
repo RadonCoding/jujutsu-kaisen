@@ -43,4 +43,9 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     public float getCost(LivingEntity owner) {
         return 50.0F;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
 }
