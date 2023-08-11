@@ -175,7 +175,7 @@ public class ClientAbilityHandler {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Ability.Status status;
 
-                if (isSuccess(ability, status = ability.checkChannelable(owner)) && !cap.isChanneling(ability)) {
+                if (isSuccess(ability, status = ability.checkChannelable(owner))) {
                     cap.channel(owner, ability);
                 }
                 result.set(status);

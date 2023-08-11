@@ -32,7 +32,7 @@ public class AbilityHandler {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     Ability.Status status;
 
-                    if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS && !cap.isChanneling(ability)) {
+                    if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS) {
                         cap.channel(owner, ability);
                     }
                     result.set(status);
