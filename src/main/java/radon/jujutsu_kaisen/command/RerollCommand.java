@@ -15,7 +15,7 @@ public class RerollCommand {
                 .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
                         reroll(EntityArgument.getPlayer(ctx, "player")))));
 
-        dispatcher.register(Commands.literal("trait").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("reroll").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
     public static int reroll(ServerPlayer player) {

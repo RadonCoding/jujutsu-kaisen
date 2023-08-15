@@ -209,7 +209,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        Entity entity = pSource.getDirectEntity();
+        Entity entity = pSource.getEntity();
 
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;

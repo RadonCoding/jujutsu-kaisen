@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 public class DismantleProjectile extends JujutsuProjectile {
     public static final int FRAMES = 2;
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 25.0F;
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 5;
     private static final float SPEED = 5.0F;

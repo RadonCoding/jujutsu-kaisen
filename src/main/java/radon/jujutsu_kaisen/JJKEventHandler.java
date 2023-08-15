@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -136,7 +137,7 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (attacker instanceof TamableAnimal tamable) {
-                if (tamable.getOwner() == victim) {
+                if (tamable.isTame() && tamable.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
                 }
@@ -234,7 +235,7 @@ public class JJKEventHandler {
                     if (victim instanceof SummonEntity) return;
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
-                        if (victim instanceof SukunaRyomenEntity) {
+                        if (killerCap.isCurse() ? victim instanceof SaturoGojoEntity : victim instanceof SukunaRyomenEntity) {
                             killerCap.addTrait(Trait.STRONGEST);
                         }
 

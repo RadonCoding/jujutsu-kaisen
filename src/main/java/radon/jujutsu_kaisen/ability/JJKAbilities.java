@@ -65,7 +65,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
     public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
-    public static RegistryObject<Ability> UPPERCUT = ABILITIES.register("uppercut", Uppercut::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", radon.jujutsu_kaisen.ability.misc.RCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
@@ -75,6 +74,8 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
     public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
+    public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
+    public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
 
     public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 
@@ -120,7 +121,6 @@ public class JJKAbilities {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             abilities.add(JJKAbilities.AIR_PUNCH.get());
-            abilities.add(JJKAbilities.UPPERCUT.get());
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 abilities.add(JJKAbilities.DASH.get());
@@ -161,12 +161,12 @@ public class JJKAbilities {
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
                 }
 
-                if (cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
+                if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS && cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
                     abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
             abilities.removeIf(ability -> !ability.isUnlocked(owner) || (ability instanceof Summon<?> summon &&
-                    cap.isDead(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), summon.getType())));
+                    summon.isDead(owner)));
         });
         return abilities;
     }

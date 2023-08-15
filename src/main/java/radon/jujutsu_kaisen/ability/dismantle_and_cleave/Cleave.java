@@ -24,7 +24,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
+        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     private static float calculateDamage(LivingEntity target) {
         float damage = target.getMaxHealth() + target.getAbsorptionAmount();
         float armor = getArmorAbsorptionFactor(target, damage);
-        return Math.min(25.0F, damage / armor);
+        return Math.min(50.0F, damage / armor);
     }
 
     @Override

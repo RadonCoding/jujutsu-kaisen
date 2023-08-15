@@ -44,6 +44,6 @@ public class MaximumBlue extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.LIMITLESS_ATTRACTION;
+        return Classification.LIMITLESS;
     }
 }

@@ -17,16 +17,16 @@ public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<Item> INVERTED_SPEAR_OF_HEAVEN = ITEMS.register("inverted_spear_of_heaven", () ->
-            new InvertedSpearOfHeavenItem(JJKTiers.CURSED_TOOL, 9, -2.0F, new Item.Properties()));
+            new InvertedSpearOfHeavenItem(JJKTiers.CURSED_TOOL, 6, -3.0F, new Item.Properties()));
     public static RegistryObject<Item> PLAYFUL_CLOUD = ITEMS.register("playful_cloud",
-            () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL,13, 0.0F, new Item.Properties()));
+            () -> new PlayfulCloudItem(JJKTiers.CURSED_TOOL,9, -3.0F, new Item.Properties()));
     public static RegistryObject<Item> SPLIT_SOUL_KATANA = ITEMS.register("split_soul_katana",
-            () -> new SplitSoulKatana(JJKTiers.CURSED_TOOL,9, 0.0F, new Item.Properties()));
+            () -> new SplitSoulKatana(JJKTiers.CURSED_TOOL,6, -3.0F, new Item.Properties()));
     public static RegistryObject<Item> CHAIN = ITEMS.register("chain",
-            () -> new ChainItem(JJKTiers.CURSED_TOOL,9, 0.0F, new Item.Properties()));
+            () -> new ChainItem(JJKTiers.CURSED_TOOL,0, 0.0F, new Item.Properties()));
 
     public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
-            () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 13, 0.0F, new Item.Properties()));
+            () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 9, -3.0F, new Item.Properties()));
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));

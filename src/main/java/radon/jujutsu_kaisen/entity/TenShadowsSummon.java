@@ -9,19 +9,23 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -30,12 +34,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class TenShadowsSummon extends SummonEntity implements ICommandable {
+public abstract class TenShadowsSummon extends SummonEntity implements ICommandable, ISorcerer {
     protected final List<UUID> participants = new ArrayList<>();
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return super.getDimensions(pPose).scale(this.getScale());
     }
 
     private void spawnParticles() {
@@ -45,21 +55,22 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             for (int j = 0; j < this.getBbHeight() * this.getBbHeight(); j++) {
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
                         this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
-                        this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
+                        this.random.nextGaussian() * 0.075D, this.random.nextGaussian() * 0.25D, this.random.nextGaussian() * 0.075D);
                 this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
                         this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
-                        this.random.nextGaussian() * 0.075F, this.random.nextGaussian() * 0.25F, this.random.nextGaussian() * 0.075F);
+                        this.random.nextGaussian() * 0.075D, this.random.nextGaussian() * 0.25D, this.random.nextGaussian() * 0.075D);
             }
         }
     }
 
     @Override
-    public boolean changeTarget(LivingEntity target) {
-        if (this.isTame()) {
-            this.setTarget(target);
-            return true;
-        }
-        return false;
+    public boolean canChangeTarget() {
+        return this.isTame();
+    }
+
+    @Override
+    public void changeTarget(LivingEntity target) {
+        this.setTarget(target);
     }
 
     @Override
@@ -75,9 +86,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
             for (LivingEntity participant : this.level.getEntitiesOfClass(LivingEntity.class, area)) {
                 if (participant == this) continue;
-
                 if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
-
                 this.participants.add(participant.getUUID());
             }
         }
@@ -179,5 +188,41 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     @Override
     public boolean isOwnedBy(@NotNull LivingEntity pEntity) {
         return this.isTame() && super.is(pEntity);
+    }
+
+    @Override
+    public boolean isCurse() {
+        return true;
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        AtomicReference<SorcererGrade> result = new AtomicReference<>(SorcererGrade.GRADE_4);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                SorcererGrade grade = cap.getGrade();
+                int index = Mth.clamp(grade.ordinal() - 1, 0, SorcererGrade.values().length - 1);
+                result.set(SorcererGrade.values()[index]);
+            });
+        }
+        return result.get();
+    }
+
+    @Override
+    public @Nullable CursedTechnique getTechnique() {
+        return null;
+    }
+
+    @Override
+    public @NotNull List<Trait> getTraits() {
+        return List.of();
+    }
+
+    @Override
+    public @Nullable Ability getDomain() {
+        return null;
     }
 }

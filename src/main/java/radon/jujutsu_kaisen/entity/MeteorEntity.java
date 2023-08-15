@@ -57,7 +57,7 @@ public class MeteorEntity extends Entity {
     }
 
     public MeteorEntity(LivingEntity owner) {
-        super(JJKEntities.METEOR.get(), owner.level);
+        this(JJKEntities.METEOR.get(), owner.level);
 
         this.setOwner(owner);
 

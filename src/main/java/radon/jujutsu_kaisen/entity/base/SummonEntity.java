@@ -79,7 +79,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
             this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(sorcerer::init);
         }
 
-        if (this instanceof ICommandable && this.getOwner() instanceof ServerPlayer player && this.isTame()) {
+        if (this instanceof ICommandable commandable && commandable.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target_info", JujutsuKaisen.MOD_ID)),
                     false), player);
         }

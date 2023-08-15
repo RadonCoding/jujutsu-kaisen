@@ -8,7 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -20,10 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -47,8 +43,8 @@ public class DivineDogEntity extends TenShadowsSummon {
         super(pEntityType, pLevel);
     }
 
-    public DivineDogEntity(LivingEntity owner, Variant variant, boolean ritual) {
-        super(JJKEntities.DIVINE_DOG.get(), owner.level);
+    public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, Variant variant, boolean ritual) {
+        super(type, owner.level);
 
         this.setTame(true);
         this.setOwner(owner);
@@ -62,13 +58,6 @@ public class DivineDogEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
 
         this.entityData.set(DATA_VARIANT, variant.ordinal());
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(
-                    new AttributeModifier("Max Health", cap.getGrade().getPower(), AttributeModifier.Operation.MULTIPLY_BASE));
-            this.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(
-                    new AttributeModifier("Attack Damage", cap.getGrade().getPower(), AttributeModifier.Operation.MULTIPLY_BASE));
-        });
     }
 
     public void setRitual(int index, int duration) {
@@ -106,25 +95,21 @@ public class DivineDogEntity extends TenShadowsSummon {
 
     @Override
     protected void registerGoals() {
-        int target = 1;
-        int goal = 1;
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.6F));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.6F));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
+                .add(Attributes.MAX_HEALTH, 4 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 

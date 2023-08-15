@@ -4,14 +4,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 public class RabbitEscapeEntity extends Rabbit {
@@ -22,7 +20,7 @@ public class RabbitEscapeEntity extends Rabbit {
     }
 
     public RabbitEscapeEntity(LivingEntity owner) {
-        super(JJKEntities.RABBIT_ESCAPE.get(), owner.level);
+        this(JJKEntities.RABBIT_ESCAPE.get(), owner.level);
 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
@@ -37,13 +35,6 @@ public class RabbitEscapeEntity extends Rabbit {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(
-                    new AttributeModifier("Max Health", cap.getGrade().getPower(), AttributeModifier.Operation.MULTIPLY_BASE));
-            this.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(
-                    new AttributeModifier("Attack Damage", cap.getGrade().getPower(), AttributeModifier.Operation.MULTIPLY_BASE));
-        });
     }
 
     @Override

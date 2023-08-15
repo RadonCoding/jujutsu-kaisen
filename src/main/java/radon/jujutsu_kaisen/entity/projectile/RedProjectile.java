@@ -13,7 +13,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -78,26 +77,6 @@ public class RedProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            Vec3 src = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-
-            // Get the entity's velocity vector
-            Vec3 dir = this.getLookAngle().normalize();
-
-            for (int i = 0; i < 16; i++) {
-                // Generate some random offsets along the x, y and z axes
-                double offsetX = this.random.nextGaussian();
-                double offsetY = this.random.nextGaussian();
-                double offsetZ = this.random.nextGaussian();
-
-                // Subtract the direction vector from the source position and add the offsets
-                Vec3 dst = src.subtract(dir).add(offsetX, offsetY, offsetZ);
-
-                // Spawn a particle at the destination position
-                this.level.addParticle(new TravelParticle.TravelParticleOptions(dst.toVector3f(), TravelParticle.TravelParticleOptions.RED_COLOR,
-                        0.1F, 1.0F, 5), src.x(), src.y(), src.z(), 0.0D, 0.0D, 0.0D);
-            }
-
-
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();

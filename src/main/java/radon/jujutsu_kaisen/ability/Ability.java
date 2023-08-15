@@ -40,10 +40,7 @@ public abstract class Ability {
         DISASTER_FLAMES,
         SLASH,
         PURE_LOVE,
-        LIMITLESS,
-        LIMITLESS_ATTRACTION,
-        LIMITLESS_REPULSION,
-        LIMITLESS_ERASING
+        LIMITLESS
     }
 
     public Classification getClassification() {

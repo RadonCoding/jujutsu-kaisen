@@ -37,7 +37,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             BlockState state = owner.level.getBlockState(pos);
 
             owner.level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
-                    1.0F, 1.0F);
+                    0.01F, 1.0F);
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, pos.getX(), pos.getY(), pos.getZ(),
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
 
@@ -65,7 +65,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public int getWidth() {
-        return 100;
+        return 64;
     }
 
     @Override

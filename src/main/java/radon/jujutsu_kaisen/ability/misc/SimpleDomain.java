@@ -28,8 +28,6 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target != null || owner.getHealth() / owner.getMaxHealth() < 0.5F) return false;
-
         AtomicBoolean result = new AtomicBoolean();
 
         if (!owner.level.isClientSide) {

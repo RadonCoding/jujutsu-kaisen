@@ -829,34 +829,6 @@
 						}
 					}
 				},
-				"left_leg": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [15, 0, 0]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [-1, -3.45, 2]
-						}
-					}
-				},
-				"left_foot": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [2.5, 0, 0]
-						}
-					}
-				},
 				"lower_body": {
 					"rotation": {
 						"0.0": {
@@ -864,26 +836,6 @@
 						},
 						"0.5": {
 							"vector": [-10, 0, 0]
-						}
-					}
-				},
-				"right_backleg": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [-15, 0, 0]
-						}
-					}
-				},
-				"right_backfoot": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [22.5, 0, 0]
 						}
 					}
 				},

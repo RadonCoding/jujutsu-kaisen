@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -19,10 +18,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -49,7 +46,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     }
 
     public ToadEntity(LivingEntity owner, boolean ritual) {
-        super(JJKEntities.TOAD.get(), owner.level);
+        this(JJKEntities.TOAD.get(), owner.level);
 
         this.setTame(true);
         this.setOwner(owner);
@@ -60,11 +57,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(
-                    new AttributeModifier("Max Health", cap.getGrade().getPower(), AttributeModifier.Operation.MULTIPLY_BASE));
-        });
     }
 
     public void setRitual(int index, int duration) {
@@ -118,20 +110,18 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.MAX_HEALTH, 20.0D);
+        return Mob.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
     @Override
     protected void registerGoals() {
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new RangedAttackGoal(this, 1.0D, PULL_INTERVAL, RANGE));
-        this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, PULL_INTERVAL, RANGE));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
     }
 
     private PlayState walkPredicate(AnimationState<ToadEntity> animationState) {

@@ -113,7 +113,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, (this.width * this.height) / 4,
+        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, this.width * this.height / 4,
                 (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int)
                         bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             this.ability.onHitBlock(this, owner, pos);

@@ -153,16 +153,16 @@ public class ClientAbilityHandler {
 
         assert owner != null;
 
-        if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
-            Ability.Status status;
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
+                Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
-                ability.run(owner);
-            }
-            result.set(status);
-        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    ability.run(owner);
+                }
+                result.set(status);
+            } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
                 Ability.Status status;
 
                 if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
@@ -170,17 +170,15 @@ public class ClientAbilityHandler {
                     cap.toggle(owner, ability);
                 }
                 result.set(status);
-            });
-        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
                 Ability.Status status;
 
                 if (isSuccess(ability, status = ability.checkChannelable(owner))) {
                     cap.channel(owner, ability);
                 }
                 result.set(status);
-            });
-        }
+            }
+        });
         return result.get();
     }
 }

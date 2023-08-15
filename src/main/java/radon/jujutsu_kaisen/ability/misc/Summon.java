@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Summon<T extends Entity> extends Ability implements Ability.IToggled {
     private final Class<T> clazz;
 
-    protected Summon(Class<T> clazz) {
+    public Summon(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -44,6 +44,21 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return result.get();
     }
 
+    public boolean isDead(LivingEntity owner) {
+        return this.isDead(owner, this.getType());
+    }
+
+    protected boolean isDead(LivingEntity owner, EntityType<?> type) {
+        if (!this.canDie()) return false;
+
+        AtomicBoolean result = new AtomicBoolean();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.isDead(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type)));
+        return result.get();
+    }
+
+
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
@@ -62,6 +77,20 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                 });
             }
         }
+    }
+
+    @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.hasSummonOfClass(level, this.clazz)) {
+                    result.set(true);
+                }
+            });
+        }
+        return result.get() ? Status.FAILURE : super.checkTriggerable(owner);
     }
 
     @Override

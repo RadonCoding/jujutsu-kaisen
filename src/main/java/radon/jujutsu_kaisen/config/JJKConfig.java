@@ -17,7 +17,7 @@ public class JJKConfig {
 
         this.maxCursedEnergyDefault = builder
                 .comment("Maximum default cursed energy")
-                        .define("value", 2500.0F);
+                        .define("maxCursedEnergyDefault", 2500.0F);
 
         builder.pop();
 
@@ -33,7 +33,7 @@ public class JJKConfig {
 
         this.maxCursedEnergyNPC = builder
                 .comment("Maximum cursed energy for NPCs")
-                .defineList("value", amounts
+                .defineList("maxCursedEnergyNPC", amounts
                         .entrySet()
                         .stream()
                         .map(x -> String.format("%s=%f", x.getKey().toString(), x.getValue()))

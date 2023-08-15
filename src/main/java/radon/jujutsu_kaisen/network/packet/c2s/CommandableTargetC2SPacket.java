@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -44,13 +45,15 @@ public class CommandableTargetC2SPacket {
 
                 if (target == null) return;
 
-                for (Entity summon : cap.getSummons(level)) {
-                    if (summon instanceof ICommandable commandable) {
-                        if (target == summon) continue;
+                for (Entity entity : cap.getSummons(level)) {
+                    if (entity instanceof ICommandable commandable) {
+                        if (target == entity || (target instanceof TamableAnimal tamable && tamable.getOwner() == player)) continue;
 
-                        if (commandable.changeTarget(target)) {
+                        if (commandable.canChangeTarget()) {
+                            commandable.changeTarget(target);
+
                             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target", JujutsuKaisen.MOD_ID),
-                                    summon.getName()), false), player);
+                                    entity.getName()), false), player);
                         }
                     }
                 }

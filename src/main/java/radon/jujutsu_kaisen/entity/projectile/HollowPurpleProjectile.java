@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -48,7 +49,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     protected float getDamage() {
-        return 50.0F;
+        return 45.0F;
     }
 
     protected double getRadius() {
@@ -105,6 +106,15 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         }
     }
 
+    private void spawnParticles() {
+        Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
+
+        if (this.getTime() >= DELAY) {
+            this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+            this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        }
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -113,6 +123,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             this.discard();
         } else {
             if (this.getOwner() instanceof LivingEntity owner) {
+                this.spawnParticles();
+
                 if (this.getTime() < DELAY) {
                     if (!owner.isAlive()) {
                         this.discard();

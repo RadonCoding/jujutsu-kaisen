@@ -66,7 +66,6 @@
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.smash": "Smash",
   "ability.jujutsu_kaisen.air_punch": "Air Punch",
-  "ability.jujutsu_kaisen.uppercut": "Uppercut",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
   "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
@@ -125,6 +124,14 @@
 
   "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
+  "ability.jujutsu_kaisen.nue": "Summon Nue",
+  "ability.jujutsu_kaisen.nue.enable": "Summoned Nue",
+  "ability.jujutsu_kaisen.nue.disable": "Released Nue",
+
+  "ability.jujutsu_kaisen.great_serpent": "Summon Great Serpent",
+  "ability.jujutsu_kaisen.great_serpent.enable": "Summoned Great Serpent",
+  "ability.jujutsu_kaisen.great_serpent.disable": "Released Great Serpent",
+
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
@@ -160,10 +167,14 @@
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
   "entity.jujutsu_kaisen.rika": "Rika",
   "entity.jujutsu_kaisen.jogo": "Jogo",
+  "entity.jujutsu_kaisen.megumi_fushiguro": "Megumi Fushiguro",
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
-  "entity.jujutsu_kaisen.divine_dog": "Divine Dog",
+  "entity.jujutsu_kaisen.divine_dog_white": "Divine Dog White",
+  "entity.jujutsu_kaisen.divine_dog_black": "Divine Dog Black",
   "entity.jujutsu_kaisen.toad": "Toad",
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
+  "entity.jujutsu_kaisen.nue": "Nue",
+  "entity.jujutsu_kaisen.great_serpent": "Great Serpent",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

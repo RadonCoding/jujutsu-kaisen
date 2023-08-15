@@ -26,23 +26,24 @@ import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
-import radon.jujutsu_kaisen.client.particle.BlackFlashParticle;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
+import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.PistolItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.ShootPistolC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.awt.event.KeyEvent;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -97,6 +98,15 @@ public class JJKClientEventHandler {
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
+                }
+                if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(true));
+                    listener.setJump(true);
+                }
+            } else if (event.getAction() == InputConstants.RELEASE) {
+                if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(false));
+                    listener.setJump(false);
                 }
             }
         }
@@ -208,11 +218,14 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.THROWN_CHAIN_ITEM.get(), ThrownChainItemRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAHORAGA.get(), MahoragaRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
-            event.registerEntityRenderer(JJKEntities.DIVINE_DOG.get(), DivineDogRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DIVINE_DOG_WHITE.get(), DivineDogRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DIVINE_DOG_BLACK.get(), DivineDogRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
             event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
+            event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
         }
 
         @SubscribeEvent
@@ -220,6 +233,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
         }
 
         @SubscribeEvent

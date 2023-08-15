@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -14,6 +13,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -67,9 +67,8 @@ public class BlueProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : this.level.getEntities(this, bounds)) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-                if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
+            for (LivingEntity entity : this.level.getEntitiesOfClass(LivingEntity.class, bounds)) {
+                if (!owner.canAttack(entity) || entity == owner) continue;
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).scale(PULL_STRENGTH);
                 entity.setDeltaMovement(direction);
@@ -134,7 +133,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), TravelParticle.TravelParticleOptions.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -150,7 +149,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), TravelParticle.TravelParticleOptions.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
