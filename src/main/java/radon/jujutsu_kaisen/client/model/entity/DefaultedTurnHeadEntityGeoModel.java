@@ -22,7 +22,6 @@ public class DefaultedTurnHeadEntityGeoModel<T extends Mob & GeoAnimatable> exte
         CoreGeoBone head = this.getBone("head").orElseThrow();
 
         EntityModelData data = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-
         head.setRotX(head.getInitialSnapshot().getRotX() + data.headPitch() * Mth.DEG_TO_RAD);
         head.setRotY(head.getInitialSnapshot().getRotY() + data.netHeadYaw() * Mth.DEG_TO_RAD);
     }

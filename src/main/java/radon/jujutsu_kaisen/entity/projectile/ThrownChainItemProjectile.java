@@ -24,11 +24,13 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import javax.annotation.Nullable;
 
 public class ThrownChainItemProjectile extends AbstractArrow {
-    private boolean released;
-    private boolean dealtDamage;
+    private static final double PULL_STRENGTH = 5.0D;
 
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainItemProjectile.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainItemProjectile.class, EntityDataSerializers.INT);
+
+    private boolean released;
+    private boolean dealtDamage;
 
     public ThrownChainItemProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -73,7 +75,7 @@ public class ThrownChainItemProjectile extends AbstractArrow {
 
         if (this.getStack().isEmpty()) {
             if (owner != null) {
-                owner.setDeltaMovement(this.position().subtract(owner.position()));
+                owner.setDeltaMovement(this.position().subtract(owner.position()).normalize().scale(PULL_STRENGTH));
                 owner.hurtMarked = true;
                 this.discard();
             }
@@ -88,7 +90,7 @@ public class ThrownChainItemProjectile extends AbstractArrow {
 
         if (this.getStack().isEmpty()) {
             if (owner != null) {
-                target.setDeltaMovement(owner.position().subtract(target.position()));
+                target.setDeltaMovement(owner.position().subtract(target.position()).normalize().scale(PULL_STRENGTH));
                 target.hurtMarked = true;
                 this.discard();
             }

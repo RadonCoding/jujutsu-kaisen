@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.network;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -86,6 +87,16 @@ public class PacketHandler {
                 .encoder(SetOverlayMessageS2CPacket::encode)
                 .consumerMainThread(SetOverlayMessageS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UpdateMultipartS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UpdateMultipartS2CPacket::new)
+                .encoder(UpdateMultipartS2CPacket::encode)
+                .consumerMainThread(UpdateMultipartS2CPacket.Handler::onMessage)
+                .add();
+        INSTANCE.messageBuilder(JumpInputListenerC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(JumpInputListenerC2SPacket::new)
+                .encoder(JumpInputListenerC2SPacket::encode)
+                .consumerMainThread(JumpInputListenerC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -94,6 +105,10 @@ public class PacketHandler {
 
     public static <MSG> void sendToClient(MSG message, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    public static <MSG> void sendTracking(MSG message, Entity entity) {
+        INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
     }
 
     public static <MSG> void broadcastNearby(MSG message, LivingEntity entity) {

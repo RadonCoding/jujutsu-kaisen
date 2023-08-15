@@ -15,7 +15,8 @@ public enum CursedTechnique {
     RIKA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get()),
-    TEN_SHADOWS(null, JJKAbilities.MAHORAGA.get(), JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.TOAD.get(), JJKAbilities.RABBIT_ESCAPE.get());
+    TEN_SHADOWS(null, JJKAbilities.MAHORAGA.get(), JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.TOAD.get(), JJKAbilities.RABBIT_ESCAPE.get(),
+            JJKAbilities.NUE.get(), JJKAbilities.GREAT_SERPENT.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;

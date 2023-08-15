@@ -4,8 +4,10 @@
   "package": "radon.jujutsu_kaisen.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.EntityRenderDispatcherMixin",
     "client.HumanoidArmorLayerMixin",
-    "client.HumanoidModelMixin"
+    "client.HumanoidModelMixin",
+    "client.LevelRendererMixin"
   ],
   "server": [],
   "injectors": {
@@ -13,6 +15,7 @@
   },
   "refmap": "mixins.jujutsu_kaisen.refmap.json",
   "mixins": [
-    "common.MobMixin"
+    "common.MobMixin",
+    "server.ServerEntityMixin"
   ]
 }

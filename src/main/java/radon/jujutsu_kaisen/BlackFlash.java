@@ -41,9 +41,9 @@ public class BlackFlash {
                         event.setAmount(event.getAmount() * 5.0F);
 
                         target.level.playSound(null, target.getX(), target.getY(), target.getZ(),
-                                SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 3.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                                SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
                         target.level.playSound(null, target.getX(), target.getY(), target.getZ(),
-                                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 2.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
                         if (!target.level.isClientSide) {
                             for (int i = 0; i < 12; i++) {

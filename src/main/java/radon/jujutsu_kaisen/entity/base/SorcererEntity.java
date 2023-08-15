@@ -20,6 +20,11 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    public int getMaxHeadXRot() {
+        return 90;
+    }
+
+    @Override
     public void aiStep() {
         this.updateSwingTime();
 

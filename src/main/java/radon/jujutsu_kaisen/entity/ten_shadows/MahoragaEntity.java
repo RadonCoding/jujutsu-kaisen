@@ -7,7 +7,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -26,20 +25,15 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -48,11 +42,9 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.EnumSet;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
+public class MahoragaEntity extends TenShadowsSummon {
     public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
     public static EntityDataAccessor<Boolean> DATA_POSITIVE_SWORD = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -70,12 +62,10 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
 
     public MahoragaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-
-        this.setPathfindingMalus(BlockPathTypes.BLOCKED, 0.0F);
     }
 
     public MahoragaEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.MAHORAGA.get(), owner.level);
+        this(JJKEntities.MAHORAGA.get(), owner.level);
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -88,6 +78,8 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+
         this.createGoals();
     }
 
@@ -96,9 +88,8 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
         int goal = 1;
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.6F));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
         this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
@@ -113,6 +104,11 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
                     entity -> this.participants.contains(entity.getUUID())));
         }
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+    }
+
+    @Override
+    public float getStepHeight() {
+        return 2.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -246,7 +242,7 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
             this.playSound(JJKSounds.WOLF_HOWLING.get(), 5.0F, 1.0F);
 
             for (int i = 0; i < 6; i++) {
-                DivineDogEntity dog = new DivineDogEntity(this, DivineDogEntity.Variant.BLACK, true);
+                DivineDogBlackEntity dog = new DivineDogBlackEntity(this, true);
                 dog.setRitual(i, RITUAL_DURATION);
                 this.level.addFreshEntity(dog);
             }
@@ -306,79 +302,7 @@ public class MahoragaEntity extends TenShadowsSummon implements ISorcerer {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return null;
-    }
-
-    @Override
-    public List<Trait> getTraits() {
-        return List.of();
-    }
-
-    @Override
-    public boolean isCurse() {
-        return true;
-    }
-
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
-
-    @Override
     protected Summon<?> getAbility() {
         return JJKAbilities.MAHORAGA.get();
-    }
-
-    private static class CustomLeapAtTargetGoal extends Goal {
-        private final Mob mob;
-        private LivingEntity target;
-        private final float yd;
-
-        public CustomLeapAtTargetGoal(Mob pMob, float pYd) {
-            this.mob = pMob;
-            this.yd = pYd;
-            this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (this.mob.isVehicle()) {
-                return false;
-            } else {
-                this.target = this.mob.getTarget();
-                if (this.target == null) {
-                    return false;
-                } else {
-                    double d0 = this.mob.distanceToSqr(this.target);
-
-                    if (!(d0 < 4.0D) && !(d0 > 32.0D)) {
-                        if (!this.mob.isOnGround()) {
-                            return false;
-                        } else {
-                            return this.mob.getRandom().nextInt(reducedTickDelay(5)) == 0;
-                        }
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return !this.mob.isOnGround();
-        }
-
-        @Override
-        public void start() {
-            Vec3 vec3 = this.mob.getDeltaMovement();
-            Vec3 vec31 = new Vec3(this.target.getX() - this.mob.getX(), 0.0D, this.target.getZ() - this.mob.getZ());
-
-            if (vec31.lengthSqr() > 1.0E-7D) {
-                vec31 = vec31.normalize().scale(0.4D).add(vec3.scale(0.2D));
-            }
-            this.mob.setDeltaMovement(vec31.x, this.yd, vec31.z);
-        }
     }
 }

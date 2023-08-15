@@ -17,6 +17,8 @@ public class JJKParticles {
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
             new SimpleParticleType(true));
+    public static RegistryObject<SimpleParticleType> LIGHTNING = PARTICLES.register("lightning", () ->
+            new SimpleParticleType(true));
 
     public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
             new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {

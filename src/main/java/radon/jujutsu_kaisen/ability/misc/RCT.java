@@ -36,7 +36,7 @@ public class RCT extends Ability {
                 int burnout = cap.getBurnout();
 
                 if (burnout > 0) {
-                    cap.setBurnout(Math.max(0, burnout - 3));
+                    cap.setBurnout(Math.max(0, burnout - 10));
                 }
             }
         });

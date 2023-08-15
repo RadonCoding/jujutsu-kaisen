@@ -3,7 +3,7 @@
   "biomes": "#jujutsu_kaisen:has_cursed_energy",
   "spawners": {
     "type": "jujutsu_kaisen:toji_fushiguro",
-    "weight": 3,
+    "weight": 1,
     "minCount": 1,
     "maxCount": 1
   }

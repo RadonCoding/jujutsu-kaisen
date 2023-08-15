@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +34,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -53,15 +56,16 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
+    private boolean tame;
+
     public RikaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     public RikaEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.RIKA.get(), owner.level);
+        this(JJKEntities.RIKA.get(), owner.level);
 
-        this.setTame(tame);
-
+        this.setTame(true);
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
@@ -69,7 +73,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z());
 
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+
         this.moveControl = new FlyingMoveControl(this, 20, true);
+
+        this.tame = tame;
     }
 
     @Override
@@ -86,8 +94,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.FLYING_SPEED)
-                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.FLYING_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE);
     }
@@ -108,7 +115,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
@@ -153,6 +161,20 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("tame", this.tame);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.tame = pCompound.getBoolean("tame");
+    }
+
+    @Override
     protected Summon<?> getAbility() {
         return JJKAbilities.RIKA.get();
     }
@@ -179,7 +201,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         } else {
             super.tick();
 
-            if (!this.isTame() && this.getTime() >= DURATION) {
+            if (!this.tame && this.getTime() >= DURATION) {
                 this.discard();
             }
 
@@ -206,7 +228,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public List<Trait> getTraits() {
+    public @NotNull List<Trait> getTraits() {
         return List.of();
     }
 
@@ -221,11 +243,12 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public boolean changeTarget(LivingEntity target) {
-        if (this.isTame()) {
-            this.setTarget(target);
-            return true;
-        }
-        return false;
+    public boolean canChangeTarget() {
+        return this.tame;
+    }
+
+    @Override
+    public void changeTarget(LivingEntity target) {
+        this.setTarget(target);
     }
 }

@@ -66,11 +66,6 @@ public class TravelParticle extends TextureSheetParticle {
     }
 
     public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
-        public static Vector3f DARK_BLUE_COLOR = Vec3.fromRGB24(255).toVector3f();
-        public static Vector3f LIGHT_BLUE_COLOR = Vec3.fromRGB24(38143).toVector3f();
-        public static Vector3f PURPLE_COLOR = Vec3.fromRGB24(12781547).toVector3f();
-        public static Vector3f RED_COLOR = Vec3.fromRGB24(16711680).toVector3f();
-
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticle.TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f center = TravelParticleOptions.readCenterVector3f(reader);

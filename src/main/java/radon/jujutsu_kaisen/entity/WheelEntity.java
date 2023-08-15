@@ -44,7 +44,7 @@ public class WheelEntity extends Entity implements GeoEntity {
     }
 
     public WheelEntity(LivingEntity owner) {
-        super(JJKEntities.WHEEL.get(), owner.level);
+        this(JJKEntities.WHEEL.get(), owner.level);
 
         this.setOwner(owner);
 

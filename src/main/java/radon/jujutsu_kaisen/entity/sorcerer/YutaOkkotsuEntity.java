@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -19,10 +18,10 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
@@ -38,16 +37,12 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new SorcererGoal(this));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(5, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableCurseGoal(this, false));
-    }
-
-    @Override
-    public boolean canAttack(@NotNull LivingEntity pTarget) {
-        return !(pTarget instanceof RikaEntity rika && rika.getOwner() == this) && super.canAttack(pTarget);
     }
 
     @Override
@@ -61,7 +56,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable List<Trait> getTraits() {
+    public @NotNull List<Trait> getTraits() {
         return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.SIMPLE_DOMAIN, Trait.DOMAIN_EXPANSION);
     }
 

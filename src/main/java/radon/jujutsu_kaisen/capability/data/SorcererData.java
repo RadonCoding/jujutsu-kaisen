@@ -194,6 +194,7 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+
     private boolean applyModifier(LivingEntity owner, Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
         AttributeInstance instance = owner.getAttribute(attribute);
         AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
@@ -225,6 +226,22 @@ public class SorcererData implements ISorcererData {
 
                 if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
                         entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner)) {
+                    iter.remove();
+                }
+            }
+        }
+    }
+
+    private void updateSummons(LivingEntity owner) {
+        if (owner.level instanceof ServerLevel level) {
+            Iterator<UUID> iter = this.summons.iterator();
+
+            while (iter.hasNext()) {
+                UUID identifier = iter.next();
+
+                Entity entity = level.getEntity(identifier);
+
+                if (entity == null || !entity.isAlive() || entity.isRemoved()) {
                     iter.remove();
                 }
             }
@@ -271,6 +288,7 @@ public class SorcererData implements ISorcererData {
 
     public void tick(LivingEntity owner) {
         this.updateDomains(owner);
+        this.updateSummons(owner);
         this.updateCopied(owner);
 
         this.updateCooldowns();
@@ -664,6 +682,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void kill(Registry<EntityType<?>> registry, EntityType<?> entity) {
         this.dead.add(registry.getKey(entity));
+    }
+
+    @Override
+    public void revive() {
+        this.dead.clear();
     }
 
     @Override

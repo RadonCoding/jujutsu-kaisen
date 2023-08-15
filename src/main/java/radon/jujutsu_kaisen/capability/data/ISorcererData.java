@@ -92,6 +92,7 @@ public interface ISorcererData {
 
     boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
     void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
+    void revive();
 
     void setDomain(DomainExpansionEntity domain);
     @Nullable DomainExpansionEntity getDomain(ServerLevel level);

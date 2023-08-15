@@ -2,8 +2,8 @@
   "type": "forge:add_spawns",
   "biomes": "#jujutsu_kaisen:has_cursed_energy",
   "spawners": {
-    "type": "jujutsu_kaisen:satoru_satoru",
-    "weight": 3,
+    "type": "jujutsu_kaisen:satoru_gojo",
+    "weight": 1,
     "minCount": 1,
     "maxCount": 1
   }

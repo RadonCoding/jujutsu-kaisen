@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,14 +22,14 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.projectile.BulletProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.PistolItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -62,7 +60,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     }
 
     @Override
-    public @Nullable List<Trait> getTraits() {
+    public @NotNull List<Trait> getTraits() {
         return List.of(Trait.HEAVENLY_RESTRICTION);
     }
 
@@ -89,11 +87,11 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SorcererGoal(this));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
@@ -165,21 +163,6 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         if (this.random.nextInt(5) != 0) return;
 
         ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
-
-        BulletProjectile bullet = new BulletProjectile(this);
-        double d0 = pTarget.getX() - bullet.getX();
-        double d1 = pTarget.getY() + (pTarget.getBbHeight() / 2.0F) - bullet.getY();
-        double d2 = pTarget.getZ() - bullet.getZ();
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        bullet.shootFromRotation(this, Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / Mth.PI)))),
-                Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / Mth.PI)) - 90.0F),
-                0.0F, BulletProjectile.SPEED, 0.0F);
-        this.level.addFreshEntity(bullet);
-
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(),
-                JJKSounds.GUN.get(), SoundSource.MASTER, 2.0F, 1.0F / (HelperMethods.RANDOM.nextFloat() * 0.4F + 0.8F));
-        stack.hurtAndBreak(1, this, entity -> entity.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-
-        this.setTarget(null);
+        PistolItem.shoot(stack, this);
     }
 }

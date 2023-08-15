@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -26,7 +28,14 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
     @Override
     protected int getCount() {
-        return 16;
+        return 64;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        super.run(owner);
+
+        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 3 * 20, 0, false, false, false));
     }
 
     @Override

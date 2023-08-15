@@ -4,9 +4,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.PlayfulCloudRenderer;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -57,8 +62,20 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         if (entity.level instanceof ServerLevel level) {
             triggerAnim(entity, GeoItem.getOrAssignId(stack, level), "swing_controller", "swing");
+
+            Vec3 pos = entity.getEyePosition().add(entity.getLookAngle());
+            level.explode(entity, JJKDamageSources.indirectJujutsuAttack(entity, entity, null), null,
+                    pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
         }
         return super.onEntitySwing(stack, entity);
+    }
+
+    @Override
+    public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+        if (enchantment == Enchantments.KNOCKBACK) {
+            return 10;
+        }
+        return super.getEnchantmentLevel(stack, enchantment);
     }
 
     @Override

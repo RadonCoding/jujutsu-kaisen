@@ -48,6 +48,6 @@ public class Red extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.LIMITLESS_REPULSION;
+        return Classification.LIMITLESS;
     }
 }

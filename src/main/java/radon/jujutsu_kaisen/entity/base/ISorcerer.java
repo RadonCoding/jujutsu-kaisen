@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.base;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -17,7 +18,7 @@ import java.util.Map;
 public interface ISorcerer {
     SorcererGrade getGrade();
     @Nullable CursedTechnique getTechnique();
-    List<Trait> getTraits();
+    @NotNull List<Trait> getTraits();
     boolean isCurse();
 
     @Nullable Ability getDomain();

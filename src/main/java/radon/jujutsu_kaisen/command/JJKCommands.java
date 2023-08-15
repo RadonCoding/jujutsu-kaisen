@@ -15,5 +15,6 @@ public class JJKCommands {
         TraitCommand.register(event.getDispatcher());
         SetCurseCommand.register(event.getDispatcher());
         RerollCommand.register(event.getDispatcher());
+        ResetSummonsCommand.register(event.getDispatcher());
     }
 }

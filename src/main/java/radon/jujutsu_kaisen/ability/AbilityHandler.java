@@ -10,6 +10,7 @@ public class AbilityHandler {
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
         AtomicReference<Ability.Status> result = new AtomicReference<>(Ability.Status.SUCCESS);
 
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
                 Ability.Status status;
 
@@ -19,25 +20,22 @@ public class AbilityHandler {
                 }
                 result.set(status);
             } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    Ability.Status status;
+                Ability.Status status;
 
-                    if ((status = ability.checkToggleable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
-                        MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
-                        cap.toggle(owner, ability);
-                    }
-                    result.set(status);
-                });
+                if ((status = ability.checkToggleable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    cap.toggle(owner, ability);
+                }
+                result.set(status);
             } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    Ability.Status status;
+                Ability.Status status;
 
-                    if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS) {
-                        cap.channel(owner, ability);
-                    }
-                    result.set(status);
-                });
+                if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS) {
+                    cap.channel(owner, ability);
+                }
+                result.set(status);
             }
+        });
         return result.get();
     }
 }

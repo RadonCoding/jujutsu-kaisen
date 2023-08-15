@@ -62,7 +62,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.MONSTER)
-                    .sized(1.0F, 1.0F)
+                    .sized(2.0F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
                             .toString()));
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
@@ -145,10 +145,15 @@ public class JJKEntities {
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
                     .sized(1.4F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
-    public static RegistryObject<EntityType<DivineDogEntity>> DIVINE_DOG = ENTITIES.register("divine_dog", () ->
-            EntityType.Builder.<DivineDogEntity>of(DivineDogEntity::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
+            EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)
                     .sized(1.6F, 1.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_white")
+                            .toString()));
+    public static RegistryObject<EntityType<DivineDogBlackEntity>> DIVINE_DOG_BLACK = ENTITIES.register("divine_dog_black", () ->
+            EntityType.Builder.<DivineDogBlackEntity>of(DivineDogBlackEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_black")
                             .toString()));
     public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
             EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
@@ -165,6 +170,16 @@ public class JJKEntities {
                     .sized(0.4F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rabbit_escape")
                             .toString()));
+    public static RegistryObject<EntityType<NueEntity>> NUE = ENTITIES.register("nue", () ->
+            EntityType.Builder.<NueEntity>of(NueEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 1.4F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue")
+                            .toString()));
+    public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
+            EntityType.Builder.<GreatSerpentEntity>of(GreatSerpentEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 0.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
+                            .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
@@ -176,9 +191,12 @@ public class JJKEntities {
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build());
-        event.put(DIVINE_DOG.get(), DivineDogEntity.createAttributes().build());
+        event.put(DIVINE_DOG_WHITE.get(), DivineDogEntity.createAttributes().build());
+        event.put(DIVINE_DOG_BLACK.get(), DivineDogEntity.createAttributes().build());
         event.put(TOAD.get(), ToadEntity.createAttributes().build());
         event.put(RABBIT_ESCAPE.get(), RabbitEscapeEntity.createAttributes().build());
+        event.put(NUE.get(), NueEntity.createAttributes().build());
+        event.put(GREAT_SERPENT.get(), GreatSerpentEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
