@@ -38,9 +38,9 @@ import radon.jujutsu_kaisen.item.PistolItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.ShootPistolC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
@@ -131,7 +131,7 @@ public class JJKClientEventHandler {
 
                             double angle = Math.acos(look.normalize().dot(result.normalize()));
 
-                            if (angle > 0.5D) {
+                            if (angle > 1.0D) {
                                 event.setCanceled(true);
                             }
                         }
@@ -162,6 +162,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
             event.register(JJKKeys.ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN);
+            event.register(JJKKeys.ACTIVATE_WATER_WALKING);
         }
 
         @SubscribeEvent
@@ -190,6 +191,8 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MegumiFushiguroModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(TojiZeninModel.LAYER, SkinModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -226,6 +229,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOJI_ZENIN.get(), TojiZeninRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
         }
 
         @SubscribeEvent
@@ -269,6 +274,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.MEGUMI_FUSHIGURO_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.TOJI_ZENIN_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());

@@ -9,6 +9,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.JJKFluidTypes;
+import radon.jujutsu_kaisen.block.JJKFluids;
 import radon.jujutsu_kaisen.client.layer.overlay.JJKOverlays;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -31,15 +33,25 @@ public class JujutsuKaisen {
         ctx.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
+
         JJKOverlays.OVERLAYS.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
+
         JJKParticles.PARTICLES.register(bus);
+
         JJKBlocks.BLOCKS.register(bus);
+        JJKFluids.FLUIDS.register(bus);
+        JJKFluidTypes.FLUID_TYPES.register(bus);
+
         JJKBlockEntities.BLOCK_ENTITIES.register(bus);
+
         JJKEffects.EFFECTS.register(bus);
+
         JJKItems.ITEMS.register(bus);
+
         JJKSounds.SOUNDS.register(bus);
+
         JJKProcessors.PROCESSORS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);

@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -82,6 +81,9 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability.Classification, Integer> adapting;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
+    private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
+    private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
+    private static final UUID ARMOR_UUID = UUID.fromString("0d2808de-a7be-4b37-8038-b2c4d41dec6f");
 
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 3;
@@ -333,26 +335,29 @@ public class SorcererData implements ISorcererData {
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    (this.traits.contains(Trait.STRONGEST) ? 20.0F : 0.0F) + Math.ceil((grade.ordinal() * 10.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 20.0D : 15.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 4.0F : 5.0F) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 4.0F : 5.0F) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(3.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
+            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F), AttributeModifier.Operation.ADDITION);
+            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.15F : 0.1F), AttributeModifier.Operation.ADDITION);
+            this.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor",
+                    (this.traits.contains(Trait.STRONGEST) ? 30.0D : 20.0D) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length),
+                    AttributeModifier.Operation.ADDITION);
+
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0,
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    (this.traits.contains(Trait.STRONGEST) ? 20.0F : 0.0F) + Math.ceil((grade.ordinal() * 5.0D) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 2, Mth.floor(2.0F * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 3.0F : 2.0F)
-                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
+            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F) / 2.0F, AttributeModifier.Operation.ADDITION);
+            this.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor",
+                    (this.traits.contains(Trait.STRONGEST) ? 15.0D : 5.0D) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length),
+                    AttributeModifier.Operation.ADDITION);
         }
     }
 

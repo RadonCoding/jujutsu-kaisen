@@ -40,7 +40,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
     private static final int INVERTED_SPEAR_OF_HEAVEN = 1;
     private static final int PISTOL = 2;
 
-    private static final int SHOOT_INTERVAL = 5 * 20;
+    private static final int SHOOT_INTERVAL = 20;
 
     private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, true);
     private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, SHOOT_INTERVAL, 15.0F);
@@ -160,7 +160,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
 
     @Override
     public void performRangedAttack(@NotNull LivingEntity pTarget, float pVelocity) {
-        if (this.random.nextInt(5) != 0) return;
+        if (this.random.nextInt(10) != 0) return;
 
         ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
         PistolItem.shoot(stack, this);

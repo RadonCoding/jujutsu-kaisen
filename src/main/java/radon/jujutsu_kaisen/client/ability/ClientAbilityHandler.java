@@ -116,6 +116,11 @@ public class ClientAbilityHandler {
                 });
             }
 
+            if (JJKKeys.ACTIVATE_WATER_WALKING.consumeClick()) {
+                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.WATER_WALKING.get())));
+                ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
+            }
+
             if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
                 AbilityOverlay.scroll(1);
             } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {

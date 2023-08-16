@@ -35,7 +35,7 @@ public class FireArrow extends Ability {
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 30 * 20;
     }
 
     @Override

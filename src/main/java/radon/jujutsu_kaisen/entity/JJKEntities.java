@@ -60,6 +60,12 @@ public class JJKEntities {
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")
                             .toString()));
+
+    public static RegistryObject<EntityType<ChimeraShadowGardenEntity>> CHIMERA_SHADOW_GARDEN = ENTITIES.register("chimera_shadow_garden", () ->
+            EntityType.Builder.<ChimeraShadowGardenEntity>of(ChimeraShadowGardenEntity::new, MobCategory.MISC)
+                    .fireImmune()
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
+                            .toString()));
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.MONSTER)
                     .sized(2.0F, 2.4F)
@@ -181,6 +187,11 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
                             .toString()));
 
+    public static RegistryObject<EntityType<TojiZeninEntity>> TOJI_ZENIN = ENTITIES.register("toji_zenin", () ->
+            EntityType.Builder.<TojiZeninEntity>of(TojiZeninEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_zenin")
+                            .toString()));
+
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
@@ -188,6 +199,8 @@ public class JJKEntities {
         event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
         event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
+        event.put(TOJI_ZENIN.get(), SorcererEntity.createAttributes().build());
+
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build());
@@ -200,6 +213,7 @@ public class JJKEntities {
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
+        event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
     }
 
     private static boolean checkHostileSpawnRules(EntityType<? extends Mob> pType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -216,6 +230,8 @@ public class JJKEntities {
         event.register(YUTA_OKKOTSU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(MEGUMI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(TOJI_ZENIN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
         event.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,

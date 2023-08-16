@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 public class FireArrowProjectile extends JujutsuProjectile {
-    private static final float DAMAGE = 45.0F;
+    private static final float DAMAGE = 25.0F;
     private static final float SPEED = 5.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
     private static final int DELAY = 20;
@@ -70,7 +70,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
+                    dx, dy, dz, 1.0D);
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
@@ -88,9 +89,18 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
-
         if (this.getOwner() instanceof LivingEntity owner) {
+            this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
+
+            for (int i = 0; i < 8; i++) {
+                Vec3 dir = owner.getLookAngle().reverse().scale(0.1D);
+                double dx = dir.x() + ((this.random.nextDouble() - 0.5D) * 0.1D);
+                double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.1D);
+                double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.1D);
+
+                this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
+            }
+
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
