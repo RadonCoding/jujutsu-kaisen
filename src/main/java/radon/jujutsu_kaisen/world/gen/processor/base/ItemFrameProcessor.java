@@ -1,6 +1,5 @@
-package radon.jujutsu_kaisen.world.gen.processor;
+package radon.jujutsu_kaisen.world.gen.processor.base;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -19,17 +18,11 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.world.gen.processor.base.ItemFrameProcessor;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class AncientShrineProcessor extends ItemFrameProcessor {
-    private static final ResourceLocation LOOT_TABLE = new ResourceLocation(JujutsuKaisen.MOD_ID, "structures/cursed_tools");
-
-    public static final Codec<AncientShrineProcessor> CODEC = Codec.unit(AncientShrineProcessor::new);
-
+public abstract class ItemFrameProcessor extends StructureProcessor {
     @Override
     public StructureTemplate.@NotNull StructureEntityInfo processEntity(@NotNull LevelReader world, @NotNull BlockPos seedPos, StructureTemplate.@NotNull StructureEntityInfo rawEntityInfo, StructureTemplate.@NotNull StructureEntityInfo entityInfo, @NotNull StructurePlaceSettings placementSettings, @NotNull StructureTemplate template) {
         AtomicReference<CompoundTag> result = new AtomicReference<>(entityInfo.nbt);
@@ -38,7 +31,7 @@ public class AncientShrineProcessor extends ItemFrameProcessor {
 
         EntityType.create(entityInfo.nbt, level).ifPresent(entity -> {
             if (entity instanceof ItemFrame frame) {
-                LootTable loot = level.getServer().getLootTables().get(LOOT_TABLE);
+                LootTable loot = level.getServer().getLootTables().get(this.getLootTable());
                 List<ItemStack> items = loot.getRandomItems(new LootContext.Builder(level)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(entityInfo.blockPos))
                         .create(LootContextParamSets.CHEST));
@@ -49,13 +42,5 @@ public class AncientShrineProcessor extends ItemFrameProcessor {
         return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, result.get());
     }
 
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LOOT_TABLE;
-    }
-
-    @Override
-    protected @NotNull StructureProcessorType<?> getType() {
-        return JJKProcessors.ANCIENT_SHRINE.get();
-    }
+    protected abstract ResourceLocation getLootTable();
 }
