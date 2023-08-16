@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,10 +26,10 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class OpenDomainExpansionEntity extends DomainExpansionEntity {
-    private static final float STRENGTH = 1000.0F;
+    private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
-    private int width;
-    private int height;
+    private static final float STRENGTH = 1000.0F;
 
     public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -40,8 +43,8 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z());
 
-        this.width = width;
-        this.height = height;
+        this.entityData.set(DATA_WIDTH, width);
+        this.entityData.set(DATA_HEIGHT, height);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
@@ -53,10 +56,28 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         });
     }
 
+    protected int getWidth() {
+        return this.entityData.get(DATA_WIDTH);
+    }
+
+    protected int getHeight() {
+        return this.entityData.get(DATA_HEIGHT);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_WIDTH, 0);
+        this.entityData.define(DATA_HEIGHT, 0);
+    }
+
     @Override
     public AABB getBounds() {
-        return new AABB(this.getX() - (double) (this.width / 2), this.getY() - 1.0D, this.getZ() - (double) (this.width / 2),
-                this.getX() + (double) (this.width / 2), this.getY() + this.height - 1.0D, this.getZ() + (double) (this.width / 2));
+        int width = this.getWidth();
+        int height = this.getHeight();
+        return new AABB(this.getX() - (double) (width / 2), this.getY() - 1.0D, this.getZ() - (double) (width / 2),
+                this.getX() + (double) (width / 2), this.getY() + height - 1.0D, this.getZ() + (double) (width / 2));
     }
 
     @Override
@@ -88,16 +109,16 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("width", this.width);
-        pCompound.putInt("height", this.height);
+        pCompound.putInt("width", this.getWidth());
+        pCompound.putInt("height", this.getHeight());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.width = pCompound.getInt("width");
-        this.height = pCompound.getInt("height");
+        this.entityData.set(DATA_WIDTH, pCompound.getInt("width"));
+        this.entityData.set(DATA_HEIGHT, pCompound.getInt("height"));
     }
 
     private List<ClosedDomainExpansionEntity> getClosedDomainsInside() {
@@ -113,7 +134,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, this.width * this.height / 4,
+        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, this.getWidth() * this.getHeight() / 4,
                 (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int)
                         bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             this.ability.onHitBlock(this, owner, pos);

@@ -69,6 +69,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
+    public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
@@ -76,6 +77,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
     public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
+    public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
     public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 
@@ -126,6 +128,7 @@ public class JJKAbilities {
                 abilities.add(JJKAbilities.DASH.get());
             } else {
                 abilities.add(JJKAbilities.SMASH.get());
+                abilities.add(JJKAbilities.WATER_WALKING.get());
 
                 if (cap.isCurse()) {
                     abilities.add(JJKAbilities.HEAL.get());

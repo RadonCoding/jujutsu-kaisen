@@ -52,6 +52,7 @@
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
+  "item.jujutsu_kaisen.toji_zenin_spawn_egg": "Spawn Toji Zenin",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -72,6 +73,9 @@
   "ability.jujutsu_kaisen.simple_domain": "New Shadow Style: Simple Domain",
   "ability.jujutsu_kaisen.simple_domain.enable": "Activated simple domain",
   "ability.jujutsu_kaisen.simple_domain.disable": "Deactivated simple domain",
+  "ability.jujutsu_kaisen.water_walking": "Water Walking",
+  "ability.jujutsu_kaisen.water_walking.enable": "Activated water walking",
+  "ability.jujutsu_kaisen.water_walking.disable": "Deactivated water walking",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
 
@@ -132,6 +136,8 @@
   "ability.jujutsu_kaisen.great_serpent.enable": "Summoned Great Serpent",
   "ability.jujutsu_kaisen.great_serpent.disable": "Released Great Serpent",
 
+  "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
+
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
@@ -175,6 +181,7 @@
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
   "entity.jujutsu_kaisen.nue": "Nue",
   "entity.jujutsu_kaisen.great_serpent": "Great Serpent",
+  "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

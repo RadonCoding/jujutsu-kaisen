@@ -157,7 +157,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, original == null ? state : original);
+                                            be.create(this.uuid, this.getId(), original == null ? state : original);
                                         }
                                     }
                                 }, delay);

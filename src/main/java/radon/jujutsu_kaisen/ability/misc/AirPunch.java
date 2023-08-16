@@ -21,7 +21,7 @@ public class AirPunch extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && HelperMethods.RANDOM.nextInt(3) == 0 && owner.hasLineOfSight(target);
+        return target != null && HelperMethods.RANDOM.nextInt(3) == 0 && (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() == target);
     }
 
     @Override

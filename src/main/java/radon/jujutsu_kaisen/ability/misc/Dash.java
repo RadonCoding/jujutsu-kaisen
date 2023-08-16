@@ -14,7 +14,7 @@ public class Dash extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.hasLineOfSight(target);
+        return target != null && (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() == target);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Dash extends Ability {
             double motionZ = distanceZ / distance * SPEED;
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
-        } else if (owner.isOnGround()) {
+        } else if (owner.isInWater() || owner.isOnGround()) {
             owner.setDeltaMovement(owner.getLookAngle().scale(SPEED));
         }
     }

@@ -20,6 +20,8 @@ public class JJKKeys {
             InputConstants.KEY_B);
     public static KeyMapping ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN = createKeyMapping("activate_domain_or_simple_domain",
             InputConstants.KEY_V);
+    public static KeyMapping ACTIVATE_WATER_WALKING = createKeyMapping("activate_water_walking",
+            InputConstants.KEY_Z);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {
         return new KeyMapping(String.format("key.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);

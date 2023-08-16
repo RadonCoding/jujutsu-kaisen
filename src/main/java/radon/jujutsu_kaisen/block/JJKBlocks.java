@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,4 +54,7 @@ public class JJKBlocks {
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
+
+    public static RegistryObject<DomainFluidBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
+            new DomainFluidBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 }
