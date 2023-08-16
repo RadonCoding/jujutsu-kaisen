@@ -14,6 +14,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
+
+    private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
+        return (double)(owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth());
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         AtomicBoolean result = new AtomicBoolean();
@@ -29,7 +34,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (result.get()) {
             return true;
         }
-        return target != null && owner.distanceTo(target) < 3.0D && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && this.getAttackReachSqr(owner, target) >= owner.distanceToSqr(target) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override

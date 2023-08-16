@@ -1,0 +1,7 @@
+{
+  "processors": [
+    {
+      "processor_type": "jujutsu_kaisen:temple_processor"
+    }
+  ]
+}
