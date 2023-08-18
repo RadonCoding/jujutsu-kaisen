@@ -114,16 +114,16 @@ public abstract class Ability {
                     }
                 }
 
-                if (duration) {
-                    if (((IToggled) this).getRealDuration(owner) > 0) {
-                        cap.addDuration(owner, this);
-                    }
-                }
-
                 if (cooldown) {
                     if (this.getRealCooldown(owner) > 0) {
                         cap.addCooldown(owner, this);
                     }
+                }
+            }
+
+            if (duration) {
+                if (((IToggled) this).getRealDuration(owner) > 0) {
+                    cap.addDuration(owner, this);
                 }
             }
         });

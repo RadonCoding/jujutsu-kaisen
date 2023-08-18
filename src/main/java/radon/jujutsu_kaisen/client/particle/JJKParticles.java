@@ -24,7 +24,7 @@ public class JJKParticles {
             new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
                 @Override
                 public @NotNull Codec<TravelParticle.TravelParticleOptions> codec() {
-                    return TravelParticle.TravelParticleOptions.CODEC;
+                    return null;
                 }
             });
 }

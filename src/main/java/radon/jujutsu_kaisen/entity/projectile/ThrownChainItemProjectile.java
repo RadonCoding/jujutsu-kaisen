@@ -90,8 +90,10 @@ public class ThrownChainItemProjectile extends AbstractArrow {
 
         if (this.getStack().isEmpty()) {
             if (owner != null) {
-                target.setDeltaMovement(owner.position().subtract(target.position()).normalize().scale(PULL_STRENGTH));
-                target.hurtMarked = true;
+                if (target.isPushable()) {
+                    target.setDeltaMovement(owner.position().subtract(target.position()).normalize().scale(PULL_STRENGTH));
+                    target.hurtMarked = true;
+                }
                 this.discard();
             }
         } else {

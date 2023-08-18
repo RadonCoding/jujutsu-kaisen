@@ -46,6 +46,10 @@ public class DomainBlockEntity extends BlockEntity {
         }
     }
 
+    public UUID getIdentifier() {
+        return this.identifier;
+    }
+
     public @Nullable BlockState getOriginal() {
         if (this.original == null && this.deferred != null) {
             this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);

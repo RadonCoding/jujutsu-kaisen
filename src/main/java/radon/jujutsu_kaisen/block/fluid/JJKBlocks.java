@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.block;
+package radon.jujutsu_kaisen.block.fluid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -14,6 +14,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.block.ChimeraShadowGardenBlock;
+import radon.jujutsu_kaisen.block.DomainBlock;
 
 import javax.annotation.Nullable;
 
@@ -55,6 +57,6 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static RegistryObject<DomainFluidBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
-            new DomainFluidBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static RegistryObject<ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
+            new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 }

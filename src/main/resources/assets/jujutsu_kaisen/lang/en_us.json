@@ -17,6 +17,7 @@
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
   "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
   "key.jujutsu_kaisen.activate_domain_or_simple_domain": "Activate Domain or Simple Domain",
+  "key.jujutsu_kaisen.activate_water_walking": "Activate Water Walking",
 
   "item.jujutsu_kaisen.cursed_tool.grade": "Grade: %1$s",
 
@@ -53,6 +54,7 @@
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
   "item.jujutsu_kaisen.toji_zenin_spawn_egg": "Spawn Toji Zenin",
+  "item.jujutsu_kaisen.meguna_ryomen_spawn_egg": "Spawn Meguna Ryomen",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -165,6 +167,7 @@
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
   "chat.jujutsu_kaisen.set_target": "Changed %1$s's target",
   "chat.jujutsu_kaisen.set_target_info": "Press shift + right click to set the target",
+  "chat.jujutsu_kaisen.become_curse": "You've become a cursed spirit after dying",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -182,6 +185,7 @@
   "entity.jujutsu_kaisen.nue": "Nue",
   "entity.jujutsu_kaisen.great_serpent": "Great Serpent",
   "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
+  "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
@@ -194,7 +198,7 @@
   "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",
 
   "advancements.jujutsu_kaisen.black_flash.title": "Black Flash",
-  "advancements.jujutsu_kaisen.black_flash.description": "Perform the black flash.",
+  "advancements.jujutsu_kaisen.black_flash.description": "The sparks of Black Flash do not choose whom to bless.",
 
   "advancements.jujutsu_kaisen.simple_domain.title": "Simple Domain",
   "advancements.jujutsu_kaisen.simple_domain.description": "Learn barrier and anti-domain techniques.",

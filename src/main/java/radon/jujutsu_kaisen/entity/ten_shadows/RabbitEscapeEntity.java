@@ -25,7 +25,7 @@ public class RabbitEscapeEntity extends Rabbit {
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.setPos(pos.x(), pos.y(), pos.z());
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         Vec3 look = owner.getLookAngle();
 

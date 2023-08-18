@@ -156,7 +156,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.NUE.get();
     }
 

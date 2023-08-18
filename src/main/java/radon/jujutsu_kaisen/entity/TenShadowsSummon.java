@@ -6,6 +6,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -37,10 +40,22 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class TenShadowsSummon extends SummonEntity implements ICommandable, ISorcerer {
+    private static final EntityDataAccessor<Boolean> DATA_CLONE = SynchedEntityData.defineId(TenShadowsSummon.class, EntityDataSerializers.BOOLEAN);
+
     protected final List<UUID> participants = new ArrayList<>();
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        return super.canAttack(pTarget) && !(pTarget.getType() == this.getType() && ((TenShadowsSummon) pTarget).isClone()) &&
+                !(pTarget instanceof TamableAnimal tamable && tamable.getOwner() == this.getOwner() && tamable.isTame() == this.isTame());
+    }
+
+    public void setClone(boolean clone) {
+        this.entityData.set(DATA_CLONE, clone);
     }
 
     @Override
@@ -61,6 +76,13 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                         this.random.nextGaussian() * 0.075D, this.random.nextGaussian() * 0.25D, this.random.nextGaussian() * 0.075D);
             }
         }
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_CLONE, false);
     }
 
     @Override
@@ -85,11 +107,15 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     center.x() + 16.0D, center.y() + 16.0D, center.z() + 16.0D);
 
             for (LivingEntity participant : this.level.getEntitiesOfClass(LivingEntity.class, area)) {
-                if (participant == this) continue;
+                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this) continue;
                 if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
                 this.participants.add(participant.getUUID());
             }
         }
+    }
+
+    public boolean isClone() {
+        return this.entityData.get(DATA_CLONE);
     }
 
     @Override
@@ -107,7 +133,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner != null && !owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS) {
+                if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS || cap.getAdditional() == CursedTechnique.TEN_SHADOWS) {
                     if (!this.isTame()) {
                         if (pCause.getEntity() == owner) {
                             cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
@@ -160,6 +186,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                         this.discard();
                     }
                 }
+
+                if (owner != null && this.isClone() && !JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
+                    this.discard();
+                }
             }
         }
     }
@@ -174,6 +204,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             participantsTag.add(NbtUtils.createUUID(identifier));
         }
         pCompound.put("participants", participantsTag);
+
+        pCompound.putBoolean("clone", this.entityData.get(DATA_CLONE));
     }
 
     @Override
@@ -183,6 +215,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         for (Tag key : pCompound.getList("participants", Tag.TAG_INT_ARRAY)) {
             this.participants.add(NbtUtils.loadUUID(key));
         }
+        this.entityData.set(DATA_CLONE, pCompound.getBoolean("clone"));
     }
 
     @Override

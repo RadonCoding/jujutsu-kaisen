@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DomainAmplification extends Ability implements Ability.IToggled {
 
     private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
-        return (double)(owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth());
+        return owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth();
     }
 
     @Override
@@ -25,6 +25,8 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+
                 for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
                     result.set(true);
                     break;
@@ -34,7 +36,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (result.get()) {
             return true;
         }
-        return target != null && this.getAttackReachSqr(owner, target) >= owner.distanceToSqr(target) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && this.getAttackReachSqr(owner, target) * 2.0D >= owner.distanceToSqr(target) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override

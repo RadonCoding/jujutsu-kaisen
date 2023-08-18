@@ -89,7 +89,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.6D, true));
         this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
@@ -287,7 +287,9 @@ public class MahoragaEntity extends TenShadowsSummon {
     public void tick() {
         super.tick();
 
-        this.setNoAi(this.getTime() <= RITUAL_DURATION);
+        if (!this.isTame()) {
+            this.setNoAi(this.getTime() <= RITUAL_DURATION);
+        }
 
         if (!this.level.isClientSide) {
             if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
@@ -302,7 +304,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.MAHORAGA.get();
     }
 }

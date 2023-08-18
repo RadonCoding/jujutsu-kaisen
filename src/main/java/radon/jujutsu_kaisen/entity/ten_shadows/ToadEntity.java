@@ -157,7 +157,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.TOAD.get();
     }
 

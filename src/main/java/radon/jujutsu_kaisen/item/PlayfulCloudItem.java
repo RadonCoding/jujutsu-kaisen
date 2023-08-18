@@ -60,7 +60,7 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        if (entity.level instanceof ServerLevel level) {
+        if (!entity.swinging && entity.level instanceof ServerLevel level) {
             triggerAnim(entity, GeoItem.getOrAssignId(stack, level), "swing_controller", "swing");
 
             Vec3 pos = entity.getEyePosition().add(entity.getLookAngle());

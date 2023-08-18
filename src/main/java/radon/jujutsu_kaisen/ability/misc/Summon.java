@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -109,17 +110,25 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     protected abstract T summon(int index, LivingEntity owner);
 
-    @Override
-    public void onEnabled(LivingEntity owner) {
+    public void spawn(LivingEntity owner, boolean clone) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (int i = 0; i < this.getCount(); i++) {
                     T summon = this.summon(i, owner);
+
+                    if (summon instanceof TenShadowsSummon) {
+                        ((TenShadowsSummon) summon).setClone(clone);
+                    }
                     owner.level.addFreshEntity(summon);
                     cap.addSummon(summon);
                 }
             });
         }
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+        this.spawn(owner, false);
     }
 
     @Override

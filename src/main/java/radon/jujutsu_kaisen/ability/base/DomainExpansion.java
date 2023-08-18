@@ -24,7 +24,16 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         AtomicBoolean result = new AtomicBoolean();
 
         if (JJKAbilities.hasToggled(owner, this)) {
-            result.set(target != null);
+            if (target != null) {
+                result.set(true);
+
+                if (this instanceof IOpenDomain) {
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
+                        result.set(domain != null && domain.isInsideBarrier(target.blockPosition()));
+                    });
+                }
+            }
         } else {
             if (target == null) return false;
 
@@ -64,6 +73,20 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             });
         }
         return result.get();
+    }
+
+    @Override
+    public Status checkStatus(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                if (cap.getDomain(level) == null) {
+                    result.set(true);
+                }
+            });
+        }
+        return result.get() ? Status.FAILURE : super.checkStatus(owner);
     }
 
     @Override

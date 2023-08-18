@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class OpenDomainExpansionEntity extends DomainExpansionEntity {
+public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
@@ -70,20 +70,6 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.define(DATA_WIDTH, 0);
         this.entityData.define(DATA_HEIGHT, 0);
-    }
-
-    @Override
-    public AABB getBounds() {
-        int width = this.getWidth();
-        int height = this.getHeight();
-        return new AABB(this.getX() - (double) (width / 2), this.getY() - 1.0D, this.getZ() - (double) (width / 2),
-                this.getX() + (double) (width / 2), this.getY() + height - 1.0D, this.getZ() + (double) (width / 2));
-    }
-
-    @Override
-    public boolean isInsideBarrier(Entity entity) {
-        AABB bounds = this.getBounds();
-        return bounds.intersects(entity.getBoundingBox());
     }
 
     @Override
@@ -134,10 +120,39 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
             }
         }
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, this.getWidth() * this.getHeight() / 4,
-                (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int)
-                        bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-            this.ability.onHitBlock(this, owner, pos);
+        if (this.first) {
+            BlockPos center = this.blockPosition();
+
+            int width = this.getWidth();
+            int height = this.getHeight();
+
+            for (int i = 0; i < width / 3; i++) {
+                for (int j = 0; j < height; j++) {
+                    int delay = i * 4;
+
+                    int horizontal = i;
+                    int vertical = j;
+
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        cap.delayTickEvent(() -> {
+                            if (this.isRemoved()) return;
+
+                            for (int x = -horizontal; x <= horizontal; x++) {
+                                for (int z = -horizontal; z <= horizontal; z++) {
+                                    double distance = Math.sqrt(x * x + vertical * vertical + z * z);
+
+                                    if (distance < horizontal && distance >= horizontal - 1) {
+                                        BlockPos pos = center.offset(x, vertical, z);
+                                        if (this.level.getBlockState(pos).isAir()) continue;
+                                        this.ability.onHitBlock(this, owner, pos);
+                                    }
+                                }
+                            }
+                        }, delay);
+                    });
+                }
+            }
+            this.first = false;
         }
     }
 
@@ -145,7 +160,7 @@ public class OpenDomainExpansionEntity extends DomainExpansionEntity {
         List<ClosedDomainExpansionEntity> domains = this.getClosedDomainsInside();
 
         for (ClosedDomainExpansionEntity domain : domains) {
-            if (!domain.isInsideBarrier(this)) continue;
+            if (!domain.isInsideBarrier(this.blockPosition())) continue;
 
             if (domain.getStrength() > this.getStrength()) {
                 this.discard();

@@ -2,8 +2,6 @@ package radon.jujutsu_kaisen.client.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -13,7 +11,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -79,14 +76,6 @@ public class TravelParticle extends TextureSheetParticle {
                 return new TravelParticleOptions(TravelParticleOptions.readCenterFromNetwork(buf), TravelParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readInt());
             }
         };
-
-        public static final Codec<TravelParticleOptions> CODEC = RecordCodecBuilder.create((builder) ->
-                builder.group(ExtraCodecs.VECTOR3F.fieldOf("target").forGetter(options -> options.target),
-                                ExtraCodecs.VECTOR3F.fieldOf("color").forGetter(options -> options.color),
-                                Codec.FLOAT.fieldOf("scalar").forGetter(options -> options.scalar),
-                                Codec.FLOAT.fieldOf("opacity").forGetter(options -> options.opacity),
-                                Codec.INT.fieldOf("lifetime").forGetter(options -> options.lifetime))
-                        .apply(builder, TravelParticleOptions::new));
 
         @Override
         public @NotNull ParticleType<?> getType() {

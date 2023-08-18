@@ -191,7 +191,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         int goal = 1;
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.6D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.8D, true));
         this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
 
@@ -216,7 +216,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.GREAT_SERPENT.get();
     }
 }

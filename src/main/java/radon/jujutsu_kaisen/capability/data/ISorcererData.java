@@ -76,6 +76,9 @@ public interface ISorcererData {
     void setCopied(@Nullable CursedTechnique technique);
     @Nullable CursedTechnique getCopied();
 
+    void setAdditional(@Nullable CursedTechnique technique);
+    @Nullable CursedTechnique getAdditional();
+
     void channel(LivingEntity owner, @Nullable Ability ability);
     boolean isChanneling(Ability ability);
 
@@ -102,6 +105,7 @@ public interface ISorcererData {
 
     boolean isAdaptedTo(DamageSource source);
     boolean isAdaptedTo(Ability ability);
+    boolean isAdaptedTo(CursedTechnique technique);
 
     boolean tryAdapt(DamageSource source);
     boolean tryAdapt(Ability ability);

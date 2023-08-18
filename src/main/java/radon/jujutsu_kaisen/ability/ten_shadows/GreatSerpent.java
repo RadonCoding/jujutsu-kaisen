@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
@@ -15,6 +16,9 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return target != null;
+        }
         return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.5F;
     }
 
@@ -39,8 +43,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
 
     @Override
     protected GreatSerpentEntity summon(int index, LivingEntity owner) {
-        boolean tamed = this.isTamed(owner);
-        return new GreatSerpentEntity(owner, tamed);
+        return new GreatSerpentEntity(owner, this.isTamed(owner));
     }
 
     @Override

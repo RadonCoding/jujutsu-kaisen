@@ -175,7 +175,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.RIKA.get();
     }
 
@@ -201,11 +201,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         } else {
             super.tick();
 
-            if (!this.tame && this.getTime() >= DURATION) {
-                this.discard();
-            }
-
             if (!this.level.isClientSide) {
+                if (!this.tame && this.getTime() >= DURATION) {
+                    this.discard();
+                }
+
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
