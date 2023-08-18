@@ -97,7 +97,7 @@ public class DivineDogEntity extends TenShadowsSummon {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.6F));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.4D, true));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
@@ -174,7 +174,7 @@ public class DivineDogEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected Summon<?> getAbility() {
+    public Summon<?> getAbility() {
         return JJKAbilities.DIVINE_DOGS.get();
     }
 

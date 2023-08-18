@@ -1,9 +1,11 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -22,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -30,7 +33,9 @@ import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.item.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -136,8 +141,13 @@ public class JJKEventHandler {
             Entity attacker = event.getSource().getEntity();
             LivingEntity victim = event.getEntity();
 
-            if (attacker instanceof TamableAnimal tamable) {
+            if (attacker instanceof SummonEntity tamable) {
                 if (tamable.isTame() && tamable.getOwner() == victim) {
+                    event.setCanceled(true);
+                    return;
+                }
+            } else if (victim instanceof SummonEntity tamable) {
+                if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
                 }
@@ -179,7 +189,8 @@ public class JJKEventHandler {
                 }
             }
 
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
+            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) || JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get()) ||
+                    !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.isAdaptedTo(event.getSource())) {
@@ -249,19 +260,29 @@ public class JJKEventHandler {
                             }
                         }
                     });
-                });
 
-                if (HelperMethods.RANDOM.nextInt(100) == 0) {
-                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        if (!cap.isCurse() && cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                            if (!cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
+                    if (HelperMethods.RANDOM.nextInt(100) == 0) {
+                        if (!victimCap.isCurse() && victimCap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+                            if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
                                 victim.setHealth(victim.getMaxHealth() / 2);
-                                cap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+                                victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
                                 event.setCanceled(true);
+                                return;
                             }
                         }
-                    });
-                }
+                    }
+
+                    if (!event.getSource().is(JJKDamageSources.JUJUTSU) && !(killer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof CursedToolItem) &&
+                            !victimCap.isCurse() && HelperMethods.RANDOM.nextInt(10) == 0) {
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.become_curse",
+                                    JujutsuKaisen.MOD_ID)), false), player);
+                        }
+                        victim.setHealth(victim.getMaxHealth() / 2);
+                        victimCap.setCurse(true);
+                        event.setCanceled(true);
+                    }
+                });
             }
         }
     }

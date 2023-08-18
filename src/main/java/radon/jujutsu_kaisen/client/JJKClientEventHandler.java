@@ -193,6 +193,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MegumiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(TojiZeninModel.LAYER, SkinModel::createBodyLayer);
+
+            event.registerLayerDefinition(MegunaRyomenModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(MegunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(MegunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -231,6 +235,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_ZENIN.get(), TojiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
         }
 
         @SubscribeEvent
@@ -275,6 +280,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.MEGUMI_FUSHIGURO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.TOJI_ZENIN_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.MEGUNA_RYOMEN_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());

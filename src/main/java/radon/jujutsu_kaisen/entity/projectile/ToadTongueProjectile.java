@@ -53,7 +53,9 @@ public class ToadTongueProjectile extends JujutsuProjectile {
         Entity owner = this.getOwner();
 
         if (owner != null) {
-            target.moveTo(owner.position());
+            if (target.isPushable()) {
+                target.moveTo(owner.position());
+            }
             this.discard();
         }
     }

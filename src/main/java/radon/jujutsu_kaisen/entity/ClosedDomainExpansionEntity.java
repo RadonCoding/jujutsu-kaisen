@@ -110,7 +110,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         AABB bounds = this.getBounds();
 
         for (DomainExpansionEntity entity : this.level.getEntitiesOfClass(DomainExpansionEntity.class, bounds)) {
-            if (this.isInsideBarrier(entity)) {
+            if (this.isInsideBarrier(entity.blockPosition())) {
                 entities.add(entity);
             }
         }
@@ -118,10 +118,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isInsideBarrier(Entity entity) {
+    public boolean isInsideBarrier(BlockPos pos) {
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
-        BlockPos relative = entity.blockPosition().subtract(center);
+        BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < radius * radius;
     }
 
@@ -214,7 +214,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;
 
-        if (!completed || entity != null && this.isInsideBarrier(entity)) {
+        if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -303,7 +303,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
-                } else if (completed && !this.isInsideBarrier(owner)) {
+                } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();
                 }
             }

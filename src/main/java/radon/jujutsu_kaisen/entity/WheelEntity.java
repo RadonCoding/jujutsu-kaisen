@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -92,10 +91,7 @@ public class WheelEntity extends Entity implements GeoEntity {
                     yRot += STEP / SPIN_TIME * (SPIN_TIME - spin);
                     this.entityData.set(DATA_SPIN, --spin);
                 }
-
-                Vec3 movement = owner.getDeltaMovement();
-                this.moveTo(owner.getX() + movement.x(), owner.getY() + owner.getBbHeight() + OFFSET, owner.getZ() + movement.z(),
-                        yRot, 0.0F);
+                this.moveTo(owner.getX(), owner.getY() + owner.getBbHeight() + OFFSET, owner.getZ(), yRot, 0.0F);
             }
         }
     }

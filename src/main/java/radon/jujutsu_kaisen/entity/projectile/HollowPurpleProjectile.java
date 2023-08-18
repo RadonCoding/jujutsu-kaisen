@@ -11,6 +11,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -90,8 +91,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= this.getRadius()) {
-                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                            this.level.destroyBlock(pos, false);
+                        if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                            if (state.getFluidState().isEmpty()) {
+                                this.level.destroyBlock(pos, false);
+                            } else {
+                                this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                            }
                         }
                     }
                 }

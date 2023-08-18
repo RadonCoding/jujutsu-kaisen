@@ -1,20 +1,41 @@
 package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.DomainBlockEntity;
-import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.fluid.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
     public ChimeraShadowGardenEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    public AABB getBounds() {
+        int width = this.getWidth();
+        int height = this.getHeight();
+        return new AABB(this.getX() - width, this.getY(), this.getZ() - width,
+                this.getX() + width, this.getY() - height, this.getZ() + width);
+    }
+
+    @Override
+    public boolean isInsideBarrier(BlockPos pos) {
+        BlockPos center = this.blockPosition().below();
+
+        int width = this.getWidth();
+        int height = this.getHeight();
+
+        BlockPos relative = pos.subtract(center);
+        return relative.distSqr(Vec3i.ZERO) < width * height;
     }
 
     public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
@@ -27,7 +48,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
         int width = this.getWidth();
         int height = this.getHeight();
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < width / 3; i++) {
             for (int j = 0; j < height; j++) {
                 int delay = i;
 
@@ -36,11 +57,11 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
 
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.delayTickEvent(() -> {
-                        for (int x = -horizontal / 2; x < horizontal / 2; x++) {
-                            for (int z = -horizontal / 2; z < horizontal / 2; z++) {
-                                double distance = Math.sqrt(x * x + z * z);
+                        for (int x = -horizontal; x <= horizontal; x++) {
+                            for (int z = -horizontal; z <= horizontal; z++) {
+                                double distance = Math.sqrt(x * x + -vertical * -vertical + z * z);
 
-                                if (distance < horizontal - 1) {
+                                if (distance < horizontal && distance >= horizontal - 1) {
                                     BlockPos pos = center.offset(x, -vertical, z);
 
                                     BlockState state = this.level.getBlockState(pos);
@@ -69,11 +90,6 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
                 });
             }
         }
-    }
-
-    @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return EntityDimensions.fixed(this.getWidth(), this.getHeight());
     }
 
     @Override

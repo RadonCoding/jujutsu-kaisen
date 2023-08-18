@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -34,6 +35,7 @@ public abstract class DomainExpansionEntity extends Mob {
 
     protected DomainExpansion ability;
     protected boolean warned;
+    protected boolean first = true;
 
     private float strength;
 
@@ -84,7 +86,7 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public abstract AABB getBounds();
-    public abstract boolean isInsideBarrier(Entity entity);
+    public abstract boolean isInsideBarrier(BlockPos pos);
     public abstract void warn();
 
     @Override
@@ -128,12 +130,12 @@ public abstract class DomainExpansionEntity extends Mob {
         }
         if (entity instanceof LivingEntity living) {
             if (!owner.canAttack(living) || (!this.ability.bypass() &&
-                    JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) ||
-                    JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get()))) {
+                    (JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) ||
+                    JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())))) {
                 return false;
             }
         }
-        return this.isInsideBarrier(entity);
+        return this.isInsideBarrier(entity.blockPosition());
     }
 
     @Override
@@ -146,6 +148,7 @@ public abstract class DomainExpansionEntity extends Mob {
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("warned", this.warned);
+        pCompound.putBoolean("first", this.first);
         pCompound.putFloat("strength", this.strength);
     }
 
@@ -159,6 +162,7 @@ public abstract class DomainExpansionEntity extends Mob {
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.warned = pCompound.getBoolean("warned");
+        this.first = pCompound.getBoolean("first");
         this.strength = pCompound.getFloat("strength");
     }
 

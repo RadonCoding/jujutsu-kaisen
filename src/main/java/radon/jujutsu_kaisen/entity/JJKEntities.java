@@ -63,6 +63,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<ChimeraShadowGardenEntity>> CHIMERA_SHADOW_GARDEN = ENTITIES.register("chimera_shadow_garden", () ->
             EntityType.Builder.<ChimeraShadowGardenEntity>of(ChimeraShadowGardenEntity::new, MobCategory.MISC)
+                    .sized(3.0F, 4.0F)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
                             .toString()));
@@ -91,6 +92,14 @@ public class JJKEntities {
             EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.MONSTER)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "megumi_fushiguro")
                             .toString()));
+    public static RegistryObject<EntityType<TojiZeninEntity>> TOJI_ZENIN = ENTITIES.register("toji_zenin", () ->
+            EntityType.Builder.<TojiZeninEntity>of(TojiZeninEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_zenin")
+                            .toString()));
+    public static RegistryObject<EntityType<MegunaRyomenEntity>> MEGUNA_RYOMEN = ENTITIES.register("meguna_ryomen", () ->
+            EntityType.Builder.<MegunaRyomenEntity>of(MegunaRyomenEntity::new, MobCategory.MONSTER)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meguna_ryomen")
+                            .toString()));
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
                     .sized(1.4F, 3.875F)
@@ -100,6 +109,7 @@ public class JJKEntities {
             EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.MONSTER)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
                             .toString()));
+
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
             EntityType.Builder.<DismantleProjectile>of(DismantleProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
@@ -187,11 +197,6 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
                             .toString()));
 
-    public static RegistryObject<EntityType<TojiZeninEntity>> TOJI_ZENIN = ENTITIES.register("toji_zenin", () ->
-            EntityType.Builder.<TojiZeninEntity>of(TojiZeninEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_zenin")
-                            .toString()));
-
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
@@ -200,6 +205,7 @@ public class JJKEntities {
         event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_ZENIN.get(), SorcererEntity.createAttributes().build());
+        event.put(MEGUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());

@@ -22,9 +22,9 @@ public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 10.0D;
     private static final float EXPLOSIVE_POWER = 1.0F;
     private static final int DELAY = 20;
-    private static final int DURATION = 5 * 20;
+    private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 30.0F;
 
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -46,7 +46,9 @@ public class RedProjectile extends JujutsuProjectile {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * cap.getGrade().getPower())) {
+                    float factor = 1.0F - (float) this.getTime() / DURATION;
+
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower())) {
                         entity.setDeltaMovement(this.getLookAngle().scale(LAUNCH_POWER));
                     }
                 }

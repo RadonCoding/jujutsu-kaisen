@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.block;
+package radon.jujutsu_kaisen.block.fluid;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -17,6 +17,6 @@ public class JJKFluidTypes {
     public static DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, JujutsuKaisen.MOD_ID);
 
     public static final RegistryObject<FluidType> CHIMERA_SHADOW_GARDEN = FLUID_TYPES.register("chimera_shadow_garden",
-            () -> new JJKFluidType(WATER_STILL, WATER_FLOWING, WATER_OVERLAY, 0x2B2B2B,
-                    Vec3.fromRGB24(0x000000).toVector3f(), FluidType.Properties.create()));
+            () -> new JJKFluidType(WATER_STILL, WATER_FLOWING, WATER_OVERLAY, 0x141414,
+                    Vec3.fromRGB24(0x000000).toVector3f(), FluidType.Properties.create().canSwim(false)));
 }

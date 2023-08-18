@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -46,6 +47,7 @@ public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private @Nullable CursedTechnique technique;
+    private @Nullable CursedTechnique additional;
     private @Nullable CursedTechnique copied;
     private int copiedTimer;
 
@@ -89,7 +91,7 @@ public class SorcererData implements ISorcererData {
     private static final int REQUIRED_ADAPTATION = 3;
 
     public SorcererData() {
-        this.setGrade(SorcererGrade.GRADE_4);
+        this.grade = SorcererGrade.GRADE_4;
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -227,7 +229,7 @@ public class SorcererData implements ISorcererData {
                 Entity entity = level.getEntity(identifier);
 
                 if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
-                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner)) {
+                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner.blockPosition())) {
                     iter.remove();
                 }
             }
@@ -249,6 +251,19 @@ public class SorcererData implements ISorcererData {
             }
         }
     }
+
+    private void updateDomain(LivingEntity owner) {
+        if (this.domain == null) return;
+
+        if (owner.level instanceof ServerLevel level) {
+            Entity entity = level.getEntity(this.domain);
+
+            if (entity == null || !entity.isAlive() || entity.isRemoved()) {
+                this.domain = null;
+            }
+        }
+    }
+
 
     private void updateCopied(LivingEntity owner) {
         if (this.copied != null) {
@@ -289,6 +304,7 @@ public class SorcererData implements ISorcererData {
     }
 
     public void tick(LivingEntity owner) {
+        this.updateDomain(owner);
         this.updateDomains(owner);
         this.updateSummons(owner);
         this.updateCopied(owner);
@@ -339,13 +355,12 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 15.0F : 10.0F), AttributeModifier.Operation.ADDITION);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                     this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.15F : 0.1F), AttributeModifier.Operation.ADDITION);
-            this.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor",
-                    (this.traits.contains(Trait.STRONGEST) ? 30.0D : 20.0D) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length),
-                    AttributeModifier.Operation.ADDITION);
 
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F)
+                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0,
                     false, false, false));
         } else {
@@ -354,10 +369,10 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F) / 2.0F, AttributeModifier.Operation.ADDITION);
-            this.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor",
-                    (this.traits.contains(Trait.STRONGEST) ? 15.0D : 5.0D) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length),
-                    AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 10.0F : 5.0F) / 2.0F, AttributeModifier.Operation.ADDITION);
+
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F)
+                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
         }
     }
 
@@ -523,7 +538,7 @@ public class SorcererData implements ISorcererData {
         if (this.maxEnergy == 0.0F) {
             this.maxEnergy = ConfigHolder.SERVER.maxCursedEnergyDefault.get();
         }
-        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length);
+        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length) * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F);
     }
 
     @Override
@@ -580,6 +595,16 @@ public class SorcererData implements ISorcererData {
     @Override
     public @Nullable CursedTechnique getCopied() {
         return this.copied;
+    }
+
+    @Override
+    public void setAdditional(@Nullable CursedTechnique technique) {
+        this.additional = technique;
+    }
+
+    @Override
+    public @Nullable CursedTechnique getAdditional() {
+        return this.additional;
     }
 
     @Override
@@ -741,6 +766,14 @@ public class SorcererData implements ISorcererData {
         return this.adapted.contains(ability.getClassification());
     }
 
+    @Override
+    public boolean isAdaptedTo(CursedTechnique technique) {
+        for (Ability ability : technique.getAbilities()) {
+            if (this.isAdaptedTo(ability)) return true;
+        }
+        return false;
+    }
+
     private boolean tryAdapt(@Nullable Ability.Classification classification) {
         if (classification == null) return false;
 
@@ -837,6 +870,9 @@ public class SorcererData implements ISorcererData {
         }
         if (this.copied != null) {
             nbt.putInt("copied", this.copied.ordinal());
+        }
+        if (this.additional != null) {
+            nbt.putInt("additional", this.additional.ordinal());
         }
         nbt.putInt("copied_timer", this.copiedTimer);
         nbt.putFloat("experience", this.experience);
@@ -949,6 +985,9 @@ public class SorcererData implements ISorcererData {
         }
         if (nbt.contains("copied")) {
             this.copied = CursedTechnique.values()[nbt.getInt("copied")];
+        }
+        if (nbt.contains("additional")) {
+            this.additional = CursedTechnique.values()[nbt.getInt("additional")];
         }
         this.copiedTimer = nbt.getInt("copied_timer");
         this.experience = nbt.getFloat("experience");

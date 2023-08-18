@@ -1,12 +1,12 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class UpdateMultipartS2CPacket {
     public static class Handler {
         public static void onMessage(UpdateMultipartS2CPacket message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                Level level = Minecraft.getInstance().level;
+                Level level = ClientWrapper.getLevel();
 
                 if (level == null) return;
 

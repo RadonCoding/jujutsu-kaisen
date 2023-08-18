@@ -18,6 +18,9 @@ import java.util.Map;
 public interface ISorcerer {
     SorcererGrade getGrade();
     @Nullable CursedTechnique getTechnique();
+    default @Nullable CursedTechnique getAdditional() {
+        return null;
+    }
     @NotNull List<Trait> getTraits();
     boolean isCurse();
 
@@ -26,6 +29,7 @@ public interface ISorcerer {
     default void init(ISorcererData data) {
         data.setGrade(this.getGrade());
         data.setTechnique(this.getTechnique());
+        data.setAdditional(this.getAdditional());
         data.addTraits(this.getTraits());
         data.setCurse(this.isCurse());
 

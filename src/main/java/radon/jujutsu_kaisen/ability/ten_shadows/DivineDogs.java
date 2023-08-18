@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -25,6 +26,9 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return target != null;
+        }
         return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.9F;
     }
 
@@ -54,16 +58,18 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
+    public void spawn(LivingEntity owner, boolean clone) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!this.isDead(owner, JJKEntities.DIVINE_DOG_WHITE.get())) {
                     DivineDogWhiteEntity white = new DivineDogWhiteEntity(owner, false);
+                    white.setClone(clone);
                     owner.level.addFreshEntity(white);
                     cap.addSummon(white);
                 }
                 if (!this.isDead(owner, JJKEntities.DIVINE_DOG_BLACK.get())) {
                     DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
+                    black.setClone(clone);
                     owner.level.addFreshEntity(black);
                     cap.addSummon(black);
                 }

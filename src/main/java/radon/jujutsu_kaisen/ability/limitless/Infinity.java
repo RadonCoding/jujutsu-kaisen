@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
@@ -290,31 +291,39 @@ public class Infinity extends Ability implements Ability.IToggled {
                         return;
                     }
 
-                    if (source.getEntity() instanceof LivingEntity living &&
-                            source.getDirectEntity() == source.getEntity() &&
-                            (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
-                        if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                            target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-                            return;
-                        } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    if (source.getEntity() instanceof LivingEntity living) {
+                        if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null &&
+                                src.getAbility().getClassification() == Classification.MELEE && JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                             return;
                         }
 
-                        AtomicBoolean result = new AtomicBoolean();
-
-                        living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                            if (attackerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
-                                result.set(true);
+                        if (source.getDirectEntity() == source.getEntity() &&
+                                (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
+                            if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                                target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                                return;
+                            } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                                return;
                             }
-                        });
 
-                        if (result.get()) {
-                            return;
-                        }
-                    } else if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
-                        if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                            target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-                            return;
+                            if (living instanceof MahoragaEntity) {
+                                AtomicBoolean result = new AtomicBoolean();
+
+                                living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                                    if (attackerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                                        result.set(true);
+                                    }
+                                });
+
+                                if (result.get()) {
+                                    return;
+                                }
+                            }
+                        } else if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
+                            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                                target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                                return;
+                            }
                         }
                     }
 

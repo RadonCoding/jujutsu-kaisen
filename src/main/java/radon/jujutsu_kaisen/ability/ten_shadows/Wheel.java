@@ -20,7 +20,16 @@ public class Wheel extends Summon<WheelEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return true;
+        if (target == null) return false;
+
+        AtomicBoolean result = new AtomicBoolean();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
+            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
+                result.set(targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique()));
+            });
+        });
+        return result.get();
     }
 
     @Override
@@ -57,10 +66,5 @@ public class Wheel extends Summon<WheelEntity> {
     @Override
     public boolean shouldLog() {
         return false;
-    }
-
-    @Override
-    public boolean isTechnique() {
-        return true;
     }
 }

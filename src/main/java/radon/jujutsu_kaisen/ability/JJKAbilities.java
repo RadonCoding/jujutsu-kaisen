@@ -26,9 +26,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -116,7 +114,7 @@ public class JJKAbilities {
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
-        List<Ability> abilities = new ArrayList<>();
+        Set<Ability> abilities = new HashSet<>();
 
         if (owner instanceof RikaEntity) abilities.add(JJKAbilities.PURE_LOVE.get());
         if (owner instanceof MahoragaEntity) abilities.add(JJKAbilities.WHEEL.get());
@@ -137,13 +135,12 @@ public class JJKAbilities {
                 }
 
                 if (cap.hasTrait(Trait.SIMPLE_DOMAIN)) abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
+                if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
 
                 CursedTechnique technique = cap.getTechnique();
 
                 if (technique != null) {
                     if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
-                        abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
-
                         Ability domain = technique.getDomain();
 
                         if (domain != null) {
@@ -151,6 +148,19 @@ public class JJKAbilities {
                         }
                     }
                     abilities.addAll(Arrays.asList(technique.getAbilities()));
+                }
+
+                CursedTechnique additional = cap.getAdditional();
+
+                if (additional != null) {
+                    /*if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
+                        Ability domain = additional.getDomain();
+
+                        if (domain != null) {
+                            abilities.add(domain);
+                        }
+                    }*/
+                    abilities.addAll(Arrays.asList(additional.getAbilities()));
                 }
 
                 CursedTechnique copied = cap.getCopied();
@@ -164,13 +174,14 @@ public class JJKAbilities {
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
                 }
 
-                if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS && cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
+                if ((cap.getTechnique() == CursedTechnique.TEN_SHADOWS || cap.getAdditional() == CursedTechnique.TEN_SHADOWS) &&
+                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
                     abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
             abilities.removeIf(ability -> !ability.isUnlocked(owner) || (ability instanceof Summon<?> summon &&
                     summon.isDead(owner)));
         });
-        return abilities;
+        return new ArrayList<>(abilities);
     }
 }

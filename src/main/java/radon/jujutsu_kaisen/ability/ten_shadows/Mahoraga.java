@@ -4,9 +4,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Mahoraga extends Summon<MahoragaEntity> {
     public Mahoraga() {
@@ -15,7 +19,20 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.getHealth() / owner.getMaxHealth() <= 0.1F;
+        AtomicBoolean result = new AtomicBoolean(owner.getHealth() / owner.getMaxHealth() <= 0.1F);
+
+        if (this.isTamed(owner)) {
+            if (JJKAbilities.hasToggled(owner, this)) {
+                result.set(target != null);
+            } else if (target != null) {
+                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
+                    target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
+                        result.set(targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique()));
+                    });
+                });
+            }
+        }
+        return result.get();
     }
 
     @Override
@@ -25,7 +42,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 1.0F : 1000.0F;
+        return this.isTamed(owner) ? 0.3F : 1000.0F;
     }
 
     @Override
@@ -40,6 +57,11 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
     @Override
     protected boolean canTame() {
+        return true;
+    }
+
+    @Override
+    public boolean canDie() {
         return true;
     }
 
