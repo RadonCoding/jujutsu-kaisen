@@ -29,13 +29,11 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        BlockPos center = this.blockPosition().below();
-
         int width = this.getWidth();
         int height = this.getHeight();
-
+        BlockPos center = this.blockPosition().below(height / 2);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < width * height;
+        return relative.distSqr(Vec3i.ZERO) < width * width + height * height;
     }
 
     public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
@@ -48,7 +46,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
         int width = this.getWidth();
         int height = this.getHeight();
 
-        for (int i = 0; i < width / 3; i++) {
+        for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 int delay = i;
 
@@ -61,7 +59,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
                             for (int z = -horizontal; z <= horizontal; z++) {
                                 double distance = Math.sqrt(x * x + -vertical * -vertical + z * z);
 
-                                if (distance < horizontal && distance >= horizontal - 1) {
+                                if (distance <= horizontal && distance >= horizontal - 1) {
                                     BlockPos pos = center.offset(x, -vertical, z);
 
                                     BlockState state = this.level.getBlockState(pos);

@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/template_anvil",
+  "parent": "jujutsu_kaisen:block/template_altar",
   "textures": {
-    "top": "minecraft:block/anvil_top"
+    "top": "minecraft:block/stone"
   }
 }

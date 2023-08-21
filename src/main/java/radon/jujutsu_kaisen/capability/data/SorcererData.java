@@ -448,6 +448,29 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    @Override
+    public void consume(LivingEntity owner, SorcererGrade grade) {
+        if (this.grade == SorcererGrade.SPECIAL_GRADE) return;
+
+        SorcererGrade next = SorcererGrade.values()[this.grade.ordinal() + 1];
+
+        this.experience += grade.getReward();
+
+        if (owner instanceof Player player) {
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.consume", JujutsuKaisen.MOD_ID), grade.getReward(),
+                    this.experience, next.getRequiredExperience()));
+        }
+
+        // If the owner has enough experience and the cursed object consumed was higher or equal to the next rank
+        if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
+            this.setGrade(next);
+
+            if (owner instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getName()));
+            }
+        }
+    }
+
     public void toggle(LivingEntity owner, Ability ability) {
         if (owner.level.isClientSide) {
             if (((Ability.IToggled) ability).shouldLog()) {

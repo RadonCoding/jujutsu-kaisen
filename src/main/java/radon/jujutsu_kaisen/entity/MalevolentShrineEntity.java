@@ -32,13 +32,11 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        BlockPos center = this.blockPosition();
-
         int width = this.getWidth();
         int height = this.getHeight();
-
+        BlockPos center = this.blockPosition().above(height / 2);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < width * height;
+        return relative.distSqr(Vec3i.ZERO) < width * width + height * height;
     }
 
     public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
@@ -55,7 +53,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             int width = this.getWidth();
             int height = this.getHeight();
 
-            for (int i = 0; i < width / 3; i++) {
+            for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     int delay = i * 4;
 

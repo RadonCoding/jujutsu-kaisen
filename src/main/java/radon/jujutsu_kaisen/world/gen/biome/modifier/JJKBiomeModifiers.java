@@ -8,9 +8,9 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKBiomeModifiers {
-    public static final DeferredRegister<Codec<? extends BiomeModifier>> MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, JujutsuKaisen.MOD_ID);
+    public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, JujutsuKaisen.MOD_ID);
 
-    public static final RegistryObject<Codec<? extends BiomeModifier>> MOB_SPAWN = MODIFIERS.register("mob_spawn",
+    public static final RegistryObject<Codec<? extends BiomeModifier>> MOB_SPAWN = BIOME_MODIFIERS.register("mob_spawn",
             () -> MobSpawnBiomeModifier.CODEC);
 
 }

@@ -2,12 +2,14 @@ package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +31,7 @@ import java.util.List;
 
 public class RugbyFieldCurseEntity extends SorcererEntity {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
 
     public RugbyFieldCurseEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -63,27 +66,31 @@ public class RugbyFieldCurseEntity extends SorcererEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new HealingGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.4D, true));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(5, new NearestAttackableSorcererGoal(this, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, false));
     }
 
-    private PlayState movePredicate(AnimationState<RugbyFieldCurseEntity> animationState) {
+    private PlayState walkRunPredicate(AnimationState<RugbyFieldCurseEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(WALK);
+            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         }
         return PlayState.STOP;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Move", this::movePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        this.setSprinting(this.moveControl.getSpeedModifier() > 1.0D);
     }
 }

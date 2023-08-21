@@ -64,7 +64,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public int getWidth() {
-        return 96;
+        return 48;
     }
 
     @Override

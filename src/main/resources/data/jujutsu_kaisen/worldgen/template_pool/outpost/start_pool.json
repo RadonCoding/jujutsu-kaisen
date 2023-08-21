@@ -1,0 +1,15 @@
+{
+  "name": "jujutsu_kaisen:outpost/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 20,
+      "element": {
+        "location": "jujutsu_kaisen:outpost",
+        "processors": "jujutsu_kaisen:outpost_processors",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
