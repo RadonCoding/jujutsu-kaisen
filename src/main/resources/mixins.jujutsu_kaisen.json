@@ -7,6 +7,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
+    "client.ItemRendererMixin",
     "client.LevelRendererMixin"
   ],
   "server": [],
@@ -15,6 +16,7 @@
   },
   "refmap": "mixins.jujutsu_kaisen.refmap.json",
   "mixins": [
+    "client.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",
     "server.ServerEntityMixin"

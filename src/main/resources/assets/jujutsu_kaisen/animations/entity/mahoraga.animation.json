@@ -625,6 +625,9 @@
 							"vector": [40, 0, 0],
 							"easing": "linear"
 						},
+						"0.25": {
+							"vector": [90, 0, 0]
+						},
 						"0.2917": {
 							"vector": [0, 0, 0],
 							"easing": "linear"

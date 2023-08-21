@@ -35,7 +35,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return 1;
     }
 
-    protected boolean isTamed(LivingEntity owner) {
+    public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return false;
 
         AtomicBoolean result = new AtomicBoolean();

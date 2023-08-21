@@ -34,7 +34,8 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
-                for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
+                for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
+                    if (!domain.checkSureHitEffect()) continue;
                     result.set(true);
                     break;
                 }

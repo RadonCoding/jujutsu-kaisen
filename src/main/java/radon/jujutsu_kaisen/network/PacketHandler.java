@@ -97,6 +97,16 @@ public class PacketHandler {
                 .encoder(JumpInputListenerC2SPacket::encode)
                 .consumerMainThread(JumpInputListenerC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetFrequencyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetFrequencyC2SPacket::new)
+                .encoder(SetFrequencyC2SPacket::encode)
+                .consumerMainThread(SetFrequencyC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SetFrequencyS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SetFrequencyS2CPacket::new)
+                .encoder(SetFrequencyS2CPacket::encode)
+                .consumerMainThread(SetFrequencyS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

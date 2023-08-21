@@ -20,7 +20,8 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.block.fluid.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.function.Supplier;
@@ -33,11 +34,11 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DOMAIN_BLOCK_ENTITY.get().create(pPos, pState);
+        return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
     }
 
     @Override
-    public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext ctx) {
             if (ctx.getEntity() instanceof LivingEntity entity && pLevel.getBlockEntity(pPos) instanceof DomainBlockEntity be &&
                     pLevel instanceof ServerLevel level && level.getEntity(be.getIdentifier()) instanceof DomainExpansionEntity domain &&
@@ -51,6 +52,6 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN_BLOCK_ENTITY.get(), DomainBlockEntity::tick);
+        return pLevel.isClientSide ? null : JJKBlocks.createTickerHelper(pBlockEntityType, JJKBlockEntities.DOMAIN.get(), DomainBlockEntity::tick);
     }
 }

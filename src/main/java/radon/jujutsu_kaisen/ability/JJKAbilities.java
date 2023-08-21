@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
+import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.rika.Copy;
@@ -76,6 +77,8 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
     public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
+
+    public static RegistryObject<Ability> DIVERGENT_FIST = ABILITIES.register("divergent_fist", DivergentFist::new);
 
     public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 

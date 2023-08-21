@@ -129,6 +129,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void die(@NotNull DamageSource pCause) {
         super.die(pCause);
 
+        if (this.isClone()) return;
+
         LivingEntity owner = this.getOwner();
 
         if (owner != null && !owner.level.isClientSide) {

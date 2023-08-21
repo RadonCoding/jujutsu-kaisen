@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class InvertedSpearOfHeavenItem extends CursedToolItem {

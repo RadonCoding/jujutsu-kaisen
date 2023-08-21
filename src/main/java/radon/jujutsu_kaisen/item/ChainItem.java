@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.ChainRenderer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;

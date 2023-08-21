@@ -1,0 +1,38 @@
+package radon.jujutsu_kaisen.item.veil;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+
+public class ColorModifier extends Modifier {
+    private final DyeColor color;
+
+    public ColorModifier(DyeColor color) {
+        super(Type.COLOR);
+
+        this.color = color;
+    }
+
+    public ColorModifier(CompoundTag nbt) {
+        super(nbt);
+
+        this.color = DyeColor.values()[nbt.getInt("color")];
+    }
+
+    public DyeColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.translatable(String.format("item.%s.veil_rod.color", JujutsuKaisen.MOD_ID), this.color.getName());
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        CompoundTag nbt = super.serialize();
+        nbt.putInt("color", this.color.ordinal());
+        return nbt;
+    }
+}

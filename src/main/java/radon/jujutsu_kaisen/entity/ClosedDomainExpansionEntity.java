@@ -2,11 +2,7 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -17,12 +13,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
-import radon.jujutsu_kaisen.block.DomainBlockEntity;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -35,19 +33,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final float STRENGTH = 50.0F;
 
-    private final List<Block> blocks = new ArrayList<>();
-
-
     public ClosedDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, List<Block> blocks, int radius, float strength) {
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius, float strength) {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, strength);
 
         this.moveTo(owner.getX(), owner.getY() - (double) (radius / 2), owner.getZ());
-
-        this.blocks.addAll(blocks);
 
         this.entityData.set(DATA_RADIUS, radius);
 
@@ -79,23 +72,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        for (Tag tag : pCompound.getList("blocks", Tag.TAG_COMPOUND)) {
-            BlockState state = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), (CompoundTag) tag);
-            this.blocks.add(state.getBlock());
-        }
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-
-        ListTag blocksTag = new ListTag();
-
-        for (Block block : this.blocks) {
-            blocksTag.add(NbtUtils.writeBlockState(block.defaultBlockState()));
-        }
-        pCompound.put("blocks", blocksTag);
 
         pCompound.putInt("radius", this.getRadius());
     }
@@ -140,7 +122,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         int delay = radius - (pos.getY() - center.getY());
 
-                        if (!state.isAir() || distance >= radius - 1) {
+                        if (!state.is(JJKBlocks.VEIL_ROD.get()) && !state.isAir() || distance >= radius - 1) {
                             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 cap.delayTickEvent(() -> {
                                     if (!this.isRemoved()) {
@@ -152,7 +134,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                             return;
                                         }
 
-                                        Block block = this.blocks.get(this.random.nextInt(this.blocks.size()));
+                                        List<Block> blocks = ((DomainExpansion.IClosedDomain) this.ability).getBlocks();
+                                        List<Block> filler = ((DomainExpansion.IClosedDomain) this.ability).getFillBlocks();
+                                        Block block = state.isAir() ? blocks.get(this.random.nextInt(blocks.size())) :
+                                                state.is(JJKBlocks.VEIL.get()) ? Blocks.AIR : filler.get(this.random.nextInt(filler.size()));
                                         owner.level.setBlock(pos, block.defaultBlockState(),
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
@@ -246,7 +231,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    private boolean checkSureHitEffect() {
+    @Override
+    public boolean checkSureHitEffect() {
         List<DomainExpansionEntity> domains = this.getDomainsInside();
 
         for (DomainExpansionEntity domain : domains) {

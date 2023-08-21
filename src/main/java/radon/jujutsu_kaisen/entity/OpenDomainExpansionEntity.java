@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -111,7 +110,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         return HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox());
     }
 
-    private void doSureHitEffect(@NotNull LivingEntity owner) {
+    protected void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
         for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
@@ -119,44 +118,10 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 this.ability.onHitEntity(this, owner, living);
             }
         }
-
-        if (this.first) {
-            BlockPos center = this.blockPosition();
-
-            int width = this.getWidth();
-            int height = this.getHeight();
-
-            for (int i = 0; i < width / 3; i++) {
-                for (int j = 0; j < height; j++) {
-                    int delay = i * 4;
-
-                    int horizontal = i;
-                    int vertical = j;
-
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.delayTickEvent(() -> {
-                            if (this.isRemoved()) return;
-
-                            for (int x = -horizontal; x <= horizontal; x++) {
-                                for (int z = -horizontal; z <= horizontal; z++) {
-                                    double distance = Math.sqrt(x * x + vertical * vertical + z * z);
-
-                                    if (distance < horizontal && distance >= horizontal - 1) {
-                                        BlockPos pos = center.offset(x, vertical, z);
-                                        if (this.level.getBlockState(pos).isAir()) continue;
-                                        this.ability.onHitBlock(this, owner, pos);
-                                    }
-                                }
-                            }
-                        }, delay);
-                    });
-                }
-            }
-            this.first = false;
-        }
     }
 
-    private boolean checkSureHitEffect() {
+    @Override
+    public boolean checkSureHitEffect() {
         List<ClosedDomainExpansionEntity> domains = this.getClosedDomainsInside();
 
         for (ClosedDomainExpansionEntity domain : domains) {

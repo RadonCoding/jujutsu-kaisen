@@ -28,7 +28,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
-            args '--username', 'Dev####'
+            args '--username', 'RadonCoding'
 
             mods {
                 jujutsu_kaisen {
@@ -83,6 +83,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     maven { url "https://cursemaven.com" }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
