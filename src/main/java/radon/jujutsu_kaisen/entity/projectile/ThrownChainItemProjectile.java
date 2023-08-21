@@ -77,7 +77,8 @@ public class ThrownChainItemProjectile extends AbstractArrow {
             if (owner != null) {
                 owner.setDeltaMovement(this.position().subtract(owner.position()).normalize().scale(PULL_STRENGTH));
                 owner.hurtMarked = true;
-                this.discard();
+
+                this.dealtDamage = true;
             }
         }
     }
@@ -93,8 +94,9 @@ public class ThrownChainItemProjectile extends AbstractArrow {
                 if (target.isPushable()) {
                     target.setDeltaMovement(owner.position().subtract(target.position()).normalize().scale(PULL_STRENGTH));
                     target.hurtMarked = true;
+
+                    this.dealtDamage = true;
                 }
-                this.discard();
             }
         } else {
             DamageSource source = this.damageSources().arrow(this, owner == null ? this : owner);

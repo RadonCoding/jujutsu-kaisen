@@ -13,4 +13,6 @@ public class JJKProcessors {
             () -> () -> AncientShrineProcessor.CODEC);
     public static final RegistryObject<StructureProcessorType<TempleProcessor>> TEMPLE = PROCESSORS.register("temple_processor",
             () -> () -> TempleProcessor.CODEC);
+    public static final RegistryObject<StructureProcessorType<OutpostProcessor>> OUTPOST = PROCESSORS.register("outpost_processor",
+            () -> () -> OutpostProcessor.CODEC);
 }

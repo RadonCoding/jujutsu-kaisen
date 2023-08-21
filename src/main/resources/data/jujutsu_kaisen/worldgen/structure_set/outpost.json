@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "jujutsu_kaisen:outpost",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 1431447170,
+    "spacing": 40,
+    "separation": 10,
+    "type": "minecraft:random_spread"
+  }
+}

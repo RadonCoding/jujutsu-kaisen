@@ -42,6 +42,7 @@ public interface ISorcererData {
     boolean isCurse();
 
     void exorcise(LivingEntity owner, SorcererGrade grade);
+    void consume(LivingEntity owner, SorcererGrade grade);
 
     void toggle(LivingEntity owner, Ability ability);
     void clearToggled();

@@ -6,6 +6,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -32,6 +34,7 @@ import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
@@ -137,7 +140,8 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
-            Entity attacker = event.getSource().getEntity();
+            DamageSource source = event.getSource();
+            Entity attacker = source.getEntity();
             LivingEntity victim = event.getEntity();
 
             if (attacker instanceof SummonEntity tamable) {
@@ -149,6 +153,13 @@ public class JJKEventHandler {
                 if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
+                }
+            }
+
+            if (attacker instanceof LivingEntity living) {
+                if (source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK)) && living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    victim.hurt(victim.level.damageSources().outOfWorld(), event.getAmount());
+                    event.setCanceled(true);
                 }
             }
 

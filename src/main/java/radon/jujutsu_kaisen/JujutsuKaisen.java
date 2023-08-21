@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
+import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 
 @Mod(JujutsuKaisen.MOD_ID)
@@ -61,7 +62,8 @@ public class JujutsuKaisen {
         JJKSounds.SOUNDS.register(bus);
 
         JJKProcessors.PROCESSORS.register(bus);
-        JJKBiomeModifiers.MODIFIERS.register(bus);
+        JJKBiomeModifiers.BIOME_MODIFIERS.register(bus);
+        JJKLootModifiers.LOOT_MODIFIERS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);

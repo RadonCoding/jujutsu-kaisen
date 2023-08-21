@@ -1,0 +1,21 @@
+{
+  "type": "jujutsu_kaisen:add_items",
+  "conditions": [
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:stronghold"
+    }
+  ],
+  "items": [
+    "jujutsu_kaisen:satoru_blindfold",
+    "jujutsu_kaisen:satoru_chestplate",
+    "jujutsu_kaisen:satoru_leggings",
+    "jujutsu_kaisen:satoru_boots",
+    "jujutsu_kaisen:yuji_chestplate",
+    "jujutsu_kaisen:yuji_leggings",
+    "jujutsu_kaisen:yuji_boots",
+    "jujutsu_kaisen:megumi_chestplate",
+    "jujutsu_kaisen:megumi_leggings",
+    "jujutsu_kaisen:megumi_boots"
+  ]
+}
