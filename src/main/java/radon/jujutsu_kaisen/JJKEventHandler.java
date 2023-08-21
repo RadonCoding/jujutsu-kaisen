@@ -12,7 +12,6 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
@@ -33,9 +32,9 @@ import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
-import radon.jujutsu_kaisen.item.CursedToolItem;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.SetOverlayMessageS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -292,11 +291,6 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
             JJKEntities.createAttributes(event);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterSpawnPlacements(SpawnPlacementRegisterEvent event) {
-            JJKEntities.registerSpawnPlacements(event);
         }
     }
 }

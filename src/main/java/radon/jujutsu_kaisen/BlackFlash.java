@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.entity.sorcerer.YujiItadoriEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlackFlash {
@@ -30,7 +31,7 @@ public class BlackFlash {
                         int seconds = (int) (owner.level.getGameTime() - lastBlackFlashTime) / 20;
 
                         if (lastBlackFlashTime == 0 || seconds > 1) {
-                            if (HelperMethods.RANDOM.nextInt(cap.isInZone(owner) ? 3 : 250) != 0) {
+                            if (HelperMethods.RANDOM.nextInt(cap.isInZone(owner) ? 3 : owner instanceof YujiItadoriEntity ? 50 : 250) != 0) {
                                 return;
                             }
                         } else {

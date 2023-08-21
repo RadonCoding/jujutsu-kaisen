@@ -1,16 +1,21 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.block.JJKBlockEntities;
-import radon.jujutsu_kaisen.block.fluid.JJKBlocks;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
+import radon.jujutsu_kaisen.block.menu.JJKMenus;
+import radon.jujutsu_kaisen.client.gui.scren.AltarScreen;
+import radon.jujutsu_kaisen.client.gui.scren.VeilRodScreen;
 import radon.jujutsu_kaisen.client.layer.overlay.JJKOverlays;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -19,6 +24,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 
 @Mod(JujutsuKaisen.MOD_ID)
@@ -40,6 +46,8 @@ public class JujutsuKaisen {
 
         JJKParticles.PARTICLES.register(bus);
 
+        JJKMenus.MENUS.register(bus);
+
         JJKBlocks.BLOCKS.register(bus);
         JJKFluids.FLUIDS.register(bus);
         JJKFluidTypes.FLUID_TYPES.register(bus);
@@ -53,11 +61,20 @@ public class JujutsuKaisen {
         JJKSounds.SOUNDS.register(bus);
 
         JJKProcessors.PROCESSORS.register(bus);
+        JJKBiomeModifiers.MODIFIERS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
+        bus.addListener(JujutsuKaisen::onClientSetup);
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         PacketHandler.register();
+    }
+
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() ->
+                MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new));
+        event.enqueueWork(() ->
+                MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new));
     }
 }

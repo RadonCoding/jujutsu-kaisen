@@ -144,6 +144,9 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public interface IClosedDomain {
         int getRadius();
         List<Block> getBlocks();
+        default List<Block> getFillBlocks() {
+            return this.getBlocks();
+        }
     }
 
     public interface IOpenDomain {

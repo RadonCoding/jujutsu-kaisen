@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -42,7 +43,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
             if (owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                    owner.level.destroyBlock(pos, false);
+                    owner.level.setBlock(pos, Blocks.AIR.defaultBlockState(),
+                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                     if (HelperMethods.RANDOM.nextInt(10) == 0) {
                         ((ServerLevel) owner.level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,

@@ -13,7 +13,7 @@ public class Heal extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return (owner.getHealth() / owner.getMaxHealth()) < 0.75F;
+        return owner.getHealth() < owner.getMaxHealth();
     }
 
     @Override

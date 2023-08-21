@@ -50,7 +50,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
                 List<TenShadowsSummon> summons = new ArrayList<>();
 
                 for (Entity entity : cap.getSummons(level)) {
-                    if (entity instanceof TenShadowsSummon summon) summons.add(summon);
+                    if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
                 }
 
                 for (TenShadowsSummon summon : summons) {
@@ -107,7 +107,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
             LivingEntity owner = event.getEntity();
 
             if (JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
-                if (event.getAbility() instanceof Summon<?> summon) {
+                if (event.getAbility() instanceof Summon<?> summon && summon.isTamed(owner)) {
                     summon.spawn(owner, true);
                 }
             }

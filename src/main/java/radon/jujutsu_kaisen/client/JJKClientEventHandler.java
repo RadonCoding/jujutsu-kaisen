@@ -18,18 +18,23 @@ import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
+import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
+import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
@@ -144,6 +149,13 @@ public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
         @SubscribeEvent
+        public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+            event.register((pState, pLevel, pPos, pTintIndex) ->
+                    pState.getValue(VeilBlock.COLOR).getMaterialColor().col,
+                    JJKBlocks.VEIL.get());
+        }
+
+        @SubscribeEvent
         public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {
             if (event.getSkin("default") instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
@@ -197,6 +209,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MegunaRyomenModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MegunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MegunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(YujiItadoriModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(YujiItadoriModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(YujiItadoriModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -236,6 +252,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TOJI_ZENIN.get(), TojiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.YUJI_IDATORI.get(), YujiItadoriRenderer::new);
         }
 
         @SubscribeEvent
@@ -284,6 +302,11 @@ public class JJKClientEventHandler {
 
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
+
+                                pOutput.accept(JJKItems.DISPLAY_CASE.get());
+                                pOutput.accept(JJKItems.ALTAR.get());
+                                pOutput.accept(JJKItems.VEIL_ROD.get());
+                                pOutput.accept(JJKItems.SUKUNA_FINGER.get());
                             }));
         }
     }

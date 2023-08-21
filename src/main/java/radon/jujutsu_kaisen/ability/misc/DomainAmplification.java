@@ -3,7 +3,11 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -15,19 +19,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
 
-    private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
-        return owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth();
-    }
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         AtomicBoolean result = new AtomicBoolean();
 
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+                if (JJKAbilities.SIMPLE_DOMAIN.get().getStatus(owner, true, false, false, false) == Status.SUCCESS) return;
 
-                for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
+                for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
+                    if (!domain.checkSureHitEffect()) continue;
                     result.set(true);
                     break;
                 }
@@ -36,7 +37,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (result.get()) {
             return true;
         }
-        return target != null && this.getAttackReachSqr(owner, target) * 2.0D >= owner.distanceToSqr(target) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) < 5.0D && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -59,7 +60,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.0F;
+        return 0.1F;
     }
 
     @Override
@@ -70,5 +71,17 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
+            LivingEntity owner = event.getEntity();
+
+            if (JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                event.setAmount(event.getAmount() * 0.75F);
+            }
+        }
     }
 }

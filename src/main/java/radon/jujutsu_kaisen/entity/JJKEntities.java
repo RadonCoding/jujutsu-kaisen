@@ -68,28 +68,28 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
                             .toString()));
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
-            EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.CREATURE)
                     .sized(2.0F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
                             .toString()));
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
-            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
                             .toString()));
     public static RegistryObject<EntityType<SukunaRyomenEntity>> SUKUNA_RYOMEN = ENTITIES.register("sukuna_ryomen", () ->
-            EntityType.Builder.<SukunaRyomenEntity>of(SukunaRyomenEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<SukunaRyomenEntity>of(SukunaRyomenEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna_ryomen")
                             .toString()));
     public static RegistryObject<EntityType<SaturoGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
-            EntityType.Builder.<SaturoGojoEntity>of(SaturoGojoEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<SaturoGojoEntity>of(SaturoGojoEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "satoru_gojo")
                             .toString()));
     public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
-            EntityType.Builder.<YutaOkkotsuEntity>of(YutaOkkotsuEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<YutaOkkotsuEntity>of(YutaOkkotsuEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu")
                             .toString()));
     public static RegistryObject<EntityType<MegumiFushiguroEntity>> MEGUMI_FUSHIGURO = ENTITIES.register("megumi_fushiguro", () ->
-            EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "megumi_fushiguro")
                             .toString()));
     public static RegistryObject<EntityType<TojiZeninEntity>> TOJI_ZENIN = ENTITIES.register("toji_zenin", () ->
@@ -97,8 +97,12 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_zenin")
                             .toString()));
     public static RegistryObject<EntityType<MegunaRyomenEntity>> MEGUNA_RYOMEN = ENTITIES.register("meguna_ryomen", () ->
-            EntityType.Builder.<MegunaRyomenEntity>of(MegunaRyomenEntity::new, MobCategory.MONSTER)
+            EntityType.Builder.<MegunaRyomenEntity>of(MegunaRyomenEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meguna_ryomen")
+                            .toString()));
+    public static RegistryObject<EntityType<YujiItadoriEntity>> YUJI_IDATORI = ENTITIES.register("yuji_itadori", () ->
+            EntityType.Builder.<YujiItadoriEntity>of(YujiItadoriEntity::new, MobCategory.CREATURE)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuji_itadori")
                             .toString()));
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -206,6 +210,7 @@ public class JJKEntities {
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(MEGUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
+        event.put(YUJI_IDATORI.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
@@ -222,27 +227,16 @@ public class JJKEntities {
         event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
     }
 
-    private static boolean checkHostileSpawnRules(EntityType<? extends Mob> pType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    private static boolean checkSpawnRules(EntityType<? extends Mob> pType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         return pLevel.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(pType, pLevel, pSpawnType, pPos, pRandom);
     }
 
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(TOJI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(SUKUNA_RYOMEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SATORU_GOJO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+                JJKEntities::checkSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(YUTA_OKKOTSU.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+                JJKEntities::checkSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(MEGUMI_FUSHIGURO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(TOJI_ZENIN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-
-        event.register(RUGBY_FIELD_CURSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(JOGO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                JJKEntities::checkHostileSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+                JJKEntities::checkSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }

@@ -33,7 +33,7 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    protected boolean isTamed(LivingEntity owner) {
+    public boolean isTamed(LivingEntity owner) {
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->

@@ -346,7 +346,7 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-            owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2, 0, false, false, false));
+            owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
@@ -434,7 +434,7 @@ public class SorcererData implements ISorcererData {
         this.experience += grade.getReward();
 
         if (owner instanceof Player player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise", JujutsuKaisen.MOD_ID), grade.getReward(),
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise_%s", JujutsuKaisen.MOD_ID, this.curse ? "sorcerer" : "curse"), grade.getReward(),
                     this.experience, next.getRequiredExperience()));
         }
 

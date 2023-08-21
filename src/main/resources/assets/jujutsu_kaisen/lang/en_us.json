@@ -19,7 +19,7 @@
   "key.jujutsu_kaisen.activate_domain_or_simple_domain": "Activate Domain or Simple Domain",
   "key.jujutsu_kaisen.activate_water_walking": "Activate Water Walking",
 
-  "item.jujutsu_kaisen.cursed_tool.grade": "Grade: %1$s",
+  "item.jujutsu_kaisen.grade": "Grade: %1$s",
 
   "item.jujutsu_kaisen.inverted_spear_of_heaven": "Inverted Spear of Heaven",
   "item.jujutsu_kaisen.inverted_spear_of_heaven.desc": "Nullifies all cursed techniques on contact.",
@@ -31,6 +31,7 @@
   "item.jujutsu_kaisen.chain.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta Okkotsu's Sword",
   "item.jujutsu_kaisen.pistol": "Pistol",
+  "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
 
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
   "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
@@ -58,6 +59,15 @@
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
+
+  "block.jujutsu_kaisen.display_case": "Display Case",
+  "block.jujutsu_kaisen.veil_rod": "Veil Rod",
+  "block.jujutsu_kaisen.altar": "Altar",
+
+  "item.jujutsu_kaisen.veil_rod_item.modifiers": "Modifiers: ",
+  "item.jujutsu_kaisen.veil_rod.blacklist": "Blacklist: %1$s",
+  "item.jujutsu_kaisen.veil_rod.color": "Color: %1$s",
+  "item.jujutsu_kaisen.veil_rod.transparent": "Transparent",
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
@@ -142,6 +152,8 @@
 
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
+  "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
+
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
   "grade.jujutsu_kaisen.semi_grade_2": "Semi-Grade 2",
@@ -159,11 +171,13 @@
   "cursed_technique.jujutsu_kaisen.rika": "Rika",
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
+  "cursed_technique.jujutsu_kaisen.divergent_fist": "Divergent Fist",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
   "chat.jujutsu_kaisen.sorcerer": "You're a jujutsu sorcerer",
-  "chat.jujutsu_kaisen.exorcise": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",
+  "chat.jujutsu_kaisen.exorcise_curse": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",
+  "chat.jujutsu_kaisen.exorcise_sorcerer": "Exorcised sorcerer +%1$f experience! Required: %2$f/%3$f",
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
   "chat.jujutsu_kaisen.set_target": "Changed %1$s's target",
   "chat.jujutsu_kaisen.set_target_info": "Press shift + right click to set the target",
@@ -219,5 +233,7 @@
   "advancements.jujutsu_kaisen.strongest.description": "Beat Sukuna Ryomen.",
 
   "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
-  "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes."
+  "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes.",
+
+  "container.jujutsu_kaisen.altar": "Altar"
 }

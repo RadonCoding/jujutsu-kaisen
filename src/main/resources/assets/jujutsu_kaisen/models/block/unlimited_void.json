@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "jujutsu_kaisen:block/unlimited_void"
+    "all": "jujutsu_kaisen:block/black"
   }
 }

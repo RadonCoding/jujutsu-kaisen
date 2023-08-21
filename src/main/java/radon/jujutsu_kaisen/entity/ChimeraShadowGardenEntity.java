@@ -10,8 +10,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.DomainBlock;
-import radon.jujutsu_kaisen.block.DomainBlockEntity;
-import radon.jujutsu_kaisen.block.fluid.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.item;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -9,6 +10,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.item.armor.JJKArmorMaterial;
@@ -52,6 +54,14 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<Item> PISTOL = ITEMS.register("pistol",
             () -> new PistolItem(new Item.Properties().durability(15)));
+    public static RegistryObject<Item> DISPLAY_CASE = ITEMS.register("display_case",
+            () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
+    public static RegistryObject<Item> SUKUNA_FINGER = ITEMS.register("sukuna_finger",
+            () -> new SukunaFingerItem(new Item.Properties()));
+    public static RegistryObject<Item> VEIL_ROD = ITEMS.register("veil_rod",
+            () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));
+    public static RegistryObject<Item> ALTAR = ITEMS.register("altar",
+            () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 0x2D2D2D, 0xD7D7D7, new Item.Properties()));

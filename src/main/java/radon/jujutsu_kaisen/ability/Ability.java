@@ -77,7 +77,7 @@ public abstract class Ability {
         return true;
     }
 
-    protected Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
+    public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         AtomicReference<Status> result = new AtomicReference<>(Status.SUCCESS);
