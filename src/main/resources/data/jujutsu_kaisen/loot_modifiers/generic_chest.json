@@ -4,6 +4,42 @@
     {
       "condition": "minecraft:location_check",
       "structure_type": "minecraft:stronghold"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:village"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:desert_pyramid"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:jungle_temple"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:igloo"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:swamp_hut"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:pillager_outpost"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:ocean_ruin"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:bastion_remnant"
+    },
+    {
+      "condition": "minecraft:location_check",
+      "structure_type": "minecraft:end_city"
     }
   ],
   "items": [
