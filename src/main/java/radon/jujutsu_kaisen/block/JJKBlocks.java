@@ -85,7 +85,7 @@ public class JJKBlocks {
 
     public static RegistryObject<Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(100.0F, 9.0F)
+                    .strength(100.0F, 12.0F)
                     .isViewBlocking(JJKBlocks::always)
                     .noOcclusion()));
 }

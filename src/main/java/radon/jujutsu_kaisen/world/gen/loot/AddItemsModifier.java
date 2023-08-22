@@ -31,7 +31,7 @@ public class AddItemsModifier extends LootModifier {
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         for (Item item : this.items) {
-            if (context.getRandom().nextInt(100) == 0) {
+            if (context.getRandom().nextInt(15) == 0) {
                 generatedLoot.add(new ItemStack(item));
             }
         }
