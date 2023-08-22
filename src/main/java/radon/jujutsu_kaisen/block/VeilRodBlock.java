@@ -33,7 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
-import radon.jujutsu_kaisen.block.menu.VeilRodMenu;
+import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetFrequencyS2CPacket;
 
@@ -71,7 +71,7 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
     @Override
     @Nullable
     public MenuProvider getMenuProvider(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
-        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new VeilRodMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), Component.empty());
+        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new VeilRodMenu(pContainerId, ContainerLevelAccess.create(pLevel, pPos)), Component.empty());
     }
 
     @Override

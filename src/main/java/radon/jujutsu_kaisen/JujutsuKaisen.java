@@ -13,7 +13,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
-import radon.jujutsu_kaisen.block.menu.JJKMenus;
+import radon.jujutsu_kaisen.client.gui.scren.BountyScreen;
+import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.client.gui.scren.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.scren.VeilRodScreen;
 import radon.jujutsu_kaisen.client.layer.overlay.JJKOverlays;
@@ -78,5 +79,7 @@ public class JujutsuKaisen {
                 MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new));
         event.enqueueWork(() ->
                 MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new));
+        event.enqueueWork(() ->
+                MenuScreens.register(JJKMenus.BOUNTY.get(), BountyScreen::new));
     }
 }

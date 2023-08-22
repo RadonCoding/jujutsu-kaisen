@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -209,10 +210,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
-                if (owner != null) {
-                    LivingEntity target = this.getTarget();
-                    this.setOpen(target != null && owner.getHealth() / owner.getMaxHealth() < 0.5F);
-                }
+                LivingEntity target = this.getTarget();
+                this.setOpen(target != null && target.getMaxHealth() > Player.MAX_HEALTH);
             }
         }
     }

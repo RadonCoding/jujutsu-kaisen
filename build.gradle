@@ -28,7 +28,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
-            args '--username', 'RadonCoding'
+            args '--username', 'Dev####'
 
             mods {
                 jujutsu_kaisen {
