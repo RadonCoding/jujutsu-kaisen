@@ -20,8 +20,8 @@ public record BiomeMatcher(Optional<List<HolderSet<Biome>>> ifAll, Optional<List
     @Override
     public boolean test(Holder<Biome> biome) {
         if (this.ifAll.isPresent()) {
-            for (HolderSet<Biome> biomeSet : this.ifAll.get()) {
-                if (!biomeSet.contains(biome))
+            for (HolderSet<Biome> biomes : this.ifAll.get()) {
+                if (!biomes.contains(biome))
                     return false;
             }
         }
@@ -29,25 +29,21 @@ public record BiomeMatcher(Optional<List<HolderSet<Biome>>> ifAll, Optional<List
         if (this.ifAny.isPresent()) {
             boolean found = false;
 
-            for (HolderSet<Biome> biomeSet : this.ifAny.get()) {
-                if (biomeSet.contains(biome)) {
+            for (HolderSet<Biome> biomes : this.ifAny.get()) {
+                if (biomes.contains(biome)) {
                     found = true;
-
                     break;
                 }
             }
 
-            if (!found)
-                return false;
+            if (!found) return false;
         }
 
         if (this.excluding.isPresent()) {
-            for (HolderSet<Biome> biomeSet : this.excluding.get()) {
-                if (biomeSet.contains(biome))
-                    return false;
+            for (HolderSet<Biome> biomes : this.excluding.get()) {
+                if (biomes.contains(biome)) return false;
             }
         }
-
         return true;
     }
 }
