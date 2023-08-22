@@ -107,6 +107,21 @@ public class PacketHandler {
                 .encoder(SetFrequencyS2CPacket::encode)
                 .consumerMainThread(SetFrequencyS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetCostS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SetCostS2CPacket::new)
+                .encoder(SetCostS2CPacket::encode)
+                .consumerMainThread(SetCostS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RequestCostC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RequestCostC2SPacket::new)
+                .encoder(RequestCostC2SPacket::encode)
+                .consumerMainThread(RequestCostC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SetTojiBountyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetTojiBountyC2SPacket::new)
+                .encoder(SetTojiBountyC2SPacket::encode)
+                .consumerMainThread(SetTojiBountyC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

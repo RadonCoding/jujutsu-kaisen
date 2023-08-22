@@ -23,8 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.block.menu.AltarMenu;
+import radon.jujutsu_kaisen.menu.AltarMenu;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +38,6 @@ public class AltarBlock extends Block {
     private static final VoxelShape Z_TOP = Block.box(3.0D, 10.0D, 0.0D, 13.0D, 16.0D, 16.0D);
     private static final VoxelShape X_AXIS_AABB = Shapes.or(BASE, X_LEG1, X_LEG2, X_TOP);
     private static final VoxelShape Z_AXIS_AABB = Shapes.or(BASE, Z_LEG1, Z_LEG2, Z_TOP);
-    private static final Component CONTAINER_TITLE = Component.translatable(String.format("container.%s.altar", JujutsuKaisen.MOD_ID));
 
     public AltarBlock(Properties pProperties) {
         super(pProperties);
@@ -70,7 +68,8 @@ public class AltarBlock extends Block {
     @Override
     @Nullable
     public MenuProvider getMenuProvider(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
-        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new AltarMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), CONTAINER_TITLE);
+        return new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) -> new AltarMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)),
+                Component.empty());
     }
 
     @Override

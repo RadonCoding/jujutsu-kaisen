@@ -1,0 +1,27 @@
+{
+  "type": "jujutsu_kaisen:mob_spawn",
+  "biomes": {
+    "excluding": [
+      "#forge:no_mob_spawns"
+    ],
+    "if_all": [
+      "#minecraft:is_overworld"
+    ],
+    "if_any": [
+      "#minecraft:has_structure/village_desert",
+      "#minecraft:has_structure/village_plains",
+      "#minecraft:has_structure/village_savanna",
+      "#minecraft:has_structure/village_snowy",
+      "#minecraft:has_structure/village_taiga",
+      "#minecraft:has_structure/woodland_mansion"
+    ]
+  },
+  "spawners": [
+    {
+      "type": "jujutsu_kaisen:toji_fushiguro",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

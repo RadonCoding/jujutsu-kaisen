@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.block.menu.VeilRodMenu;
+import radon.jujutsu_kaisen.menu.VeilRodMenu;
 
 import java.util.function.Supplier;
 

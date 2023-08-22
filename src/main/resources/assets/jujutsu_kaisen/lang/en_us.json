@@ -183,6 +183,9 @@
   "chat.jujutsu_kaisen.set_target": "Changed %1$s's target",
   "chat.jujutsu_kaisen.set_target_info": "Press shift + right click to set the target",
   "chat.jujutsu_kaisen.become_curse": "You've become a cursed spirit after dying",
+  "chat.jujutsu_kaisen.bounty_success": "Successfully completed the bounty set on %1$s.",
+  "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
+  "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -231,10 +234,12 @@
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
 
   "advancements.jujutsu_kaisen.strongest.title": "The Strongest",
-  "advancements.jujutsu_kaisen.strongest.description": "Beat Sukuna Ryomen.",
+  "advancements.jujutsu_kaisen.strongest.description": "Defeat the strongest.",
 
   "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
   "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes.",
 
-  "container.jujutsu_kaisen.altar": "Altar"
+  "container.jujutsu_kaisen.altar": "Altar",
+  "container.jujutsu_kaisen.bounty.target": "Target",
+  "container.jujutsu_kaisen.bounty.accept": "Accept"
 }

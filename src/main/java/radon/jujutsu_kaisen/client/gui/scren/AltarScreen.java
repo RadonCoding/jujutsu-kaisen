@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.block.menu.AltarMenu;
+import radon.jujutsu_kaisen.menu.AltarMenu;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
@@ -18,9 +18,6 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
 
     public AltarScreen(AltarMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, TEXTURE);
-
-        this.titleLabelX = 29;
-        this.titleLabelY = 6;
     }
 
     private void renderSlot(PoseStack pPoseStack, Slot pSlot) {

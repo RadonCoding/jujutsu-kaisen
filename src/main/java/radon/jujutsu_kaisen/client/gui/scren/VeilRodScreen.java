@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.block.menu.VeilRodMenu;
+import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetFrequencyC2SPacket;
 
@@ -68,7 +68,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.slider = new ForgeSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(), 0.0D, 100.0D, 0, true);
-        this.addWidget(this.slider);
+        this.addRenderableWidget(this.slider);
         this.setInitialFocus(this.slider);
     }
 
@@ -76,7 +76,6 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.slider.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
