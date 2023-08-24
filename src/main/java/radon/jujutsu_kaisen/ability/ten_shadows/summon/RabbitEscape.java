@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.ten_shadows;
+package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -29,6 +29,11 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     @Override
     protected int getCount() {
         return 64;
+    }
+
+    @Override
+    public boolean isTenShadows() {
+        return true;
     }
 
     @Override

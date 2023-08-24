@@ -60,8 +60,16 @@
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
 
+  "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
+  "block.jujutsu_kaisen.coffin_of_iron_mountain_one": "Coffin of Iron Mountain One",
+  "block.jujutsu_kaisen.coffin_of_iron_mountain_two": "Coffin of Iron Mountain Two",
+  "block.jujutsu_kaisen.coffin_of_iron_mountain_three": "Coffin of Iron Mountain Three",
+  "block.jujutsu_kaisen.unlimited_void": "Unlimited Void",
+  "block.jujutsu_kaisen.unlimited_void_fill": "Unlimited Void Fill",
+
   "block.jujutsu_kaisen.display_case": "Display Case",
   "block.jujutsu_kaisen.veil_rod": "Veil Rod",
+  "block.jujutsu_kaisen.veil": "Veil",
   "block.jujutsu_kaisen.altar": "Altar",
 
   "item.jujutsu_kaisen.veil_rod_item.modifiers": "Modifiers: ",
@@ -134,6 +142,10 @@
   "ability.jujutsu_kaisen.divine_dogs.enable": "Summoned Divine Dogs",
   "ability.jujutsu_kaisen.divine_dogs.disable": "Released Divine Dogs",
 
+  "ability.jujutsu_kaisen.divine_dog_totality": "Summon Divine Dog: Totality",
+  "ability.jujutsu_kaisen.divine_dog_totality.enable": "Summoned Divine Dog: Totality",
+  "ability.jujutsu_kaisen.divine_dog_totality.disable": "Released Divine Dog: Totality",
+
   "ability.jujutsu_kaisen.toad": "Summon Toad",
   "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
   "ability.jujutsu_kaisen.toad.disable": "Released Toad",
@@ -150,7 +162,11 @@
 
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
+  "ability.jujutsu_kaisen.release": "Release",
+  "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
+
   "ability.jujutsu_kaisen.wheel": "Wheel",
+  "ability.jujutsu_kaisen.nue_lightning": "Nue Lighting",
 
   "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
 
@@ -186,6 +202,7 @@
   "chat.jujutsu_kaisen.bounty_success": "Successfully completed the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
+  "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s mode",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -198,12 +215,16 @@
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
   "entity.jujutsu_kaisen.divine_dog_white": "Divine Dog White",
   "entity.jujutsu_kaisen.divine_dog_black": "Divine Dog Black",
+  "entity.jujutsu_kaisen.divine_dog_totality": "Divine Dog Totality",
   "entity.jujutsu_kaisen.toad": "Toad",
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
   "entity.jujutsu_kaisen.nue": "Nue",
   "entity.jujutsu_kaisen.great_serpent": "Great Serpent",
   "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
   "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
+  "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
+
+  "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
@@ -239,7 +260,8 @@
   "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
   "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes.",
 
-  "container.jujutsu_kaisen.altar": "Altar",
+  "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
+
   "container.jujutsu_kaisen.bounty.target": "Target",
   "container.jujutsu_kaisen.bounty.accept": "Accept"
 }

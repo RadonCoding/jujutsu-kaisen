@@ -1,11 +1,11 @@
-package radon.jujutsu_kaisen.ability.ten_shadows;
+package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 
@@ -44,6 +44,11 @@ public class Nue extends Summon<NueEntity> {
 
     @Override
     public boolean canDie() {
+        return true;
+    }
+
+    @Override
+    public boolean isTenShadows() {
         return true;
     }
 

@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -82,16 +83,18 @@ public class SorcererData implements ISorcererData {
     private final Set<Ability.Classification> adapted;
     private final Map<Ability.Classification, Integer> adapting;
 
+    private TenShadowsMode mode;
+
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
-    private static final UUID ARMOR_UUID = UUID.fromString("0d2808de-a7be-4b37-8038-b2c4d41dec6f");
 
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 3;
 
     public SorcererData() {
         this.grade = SorcererGrade.GRADE_4;
+        this.mode = TenShadowsMode.SUMMON;
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -740,6 +743,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void revive() {
         this.dead.clear();
+        this.tamed.clear();
     }
 
     @Override
@@ -831,6 +835,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public TenShadowsMode getMode() {
+        return this.mode;
+    }
+
+    @Override
+    public void setMode(TenShadowsMode mode) {
+        this.mode = mode;
+    }
+
+    @Override
     public void generate(ServerPlayer player) {
         this.initialized = true;
 
@@ -905,6 +919,7 @@ public class SorcererData implements ISorcererData {
         nbt.putBoolean("curse", this.curse);
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("grade", this.grade.ordinal());
+        nbt.putInt("mode", this.mode.ordinal());
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1020,6 +1035,7 @@ public class SorcererData implements ISorcererData {
         this.curse = nbt.getBoolean("curse");
         this.burnout = nbt.getInt("burnout");
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];
+        this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");

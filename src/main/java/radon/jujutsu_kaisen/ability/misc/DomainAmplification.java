@@ -10,33 +10,13 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (JJKAbilities.SIMPLE_DOMAIN.get().getStatus(owner, true, false, false, false) == Status.SUCCESS) return;
-
-                for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
-                    if (!domain.checkSureHitEffect()) continue;
-                    result.set(true);
-                    break;
-                }
-            });
-        }
-        if (result.get()) {
-            return true;
-        }
         return target != null && owner.distanceTo(target) < 5.0D && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 

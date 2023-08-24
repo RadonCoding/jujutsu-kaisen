@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.misc;
+package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -35,6 +36,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return 1;
     }
 
+    public abstract boolean isTenShadows();
+
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return false;
 
@@ -47,6 +50,21 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     public boolean isDead(LivingEntity owner) {
         return this.isDead(owner, this.getType());
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+        if (this.isTenShadows()) {
+            AtomicBoolean result = new AtomicBoolean();
+
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.getMode() == TenShadowsMode.SUMMON));
+
+            if (!result.get()) {
+                return false;
+            }
+        }
+        return !this.isDead(owner);
     }
 
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {

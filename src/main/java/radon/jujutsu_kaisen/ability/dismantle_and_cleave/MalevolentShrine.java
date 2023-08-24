@@ -26,10 +26,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
         if (domain.getRandom().nextInt(5) == 0) {
             Ability cleave = JJKAbilities.CLEAVE.get();
-
-            if (cleave instanceof IDomainAttack attack) {
-                attack.perform(owner, domain, entity);
-            }
+            ((IDomainAttack) cleave).perform(owner, domain, entity);
         }
     }
 

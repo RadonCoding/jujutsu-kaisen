@@ -43,6 +43,21 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
     }
 
     @Override
+    protected void renderLabels(@NotNull PoseStack pPoseStack, int pX, int pY) {
+        super.renderLabels(pPoseStack, pX, pY);
+
+        int i = this.menu.getCost();
+
+        if (i > 0) {
+            Component component = Component.translatable(String.format("container.%s.altar.cost", JujutsuKaisen.MOD_ID), i);
+
+            int k = this.imageWidth - 42 - this.font.width(component) - 2;
+            fill(pPoseStack, k - 2, 16, this.imageWidth - 42, 28, 1325400064);
+            this.font.drawShadow(pPoseStack, component, (float)k, 18, 53503);
+        }
+    }
+
+    @Override
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
 

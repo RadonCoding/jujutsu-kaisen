@@ -1,9 +1,12 @@
 package radon.jujutsu_kaisen.block.fluid;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -13,6 +16,13 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
     protected ChimeraShadowGardenFluid(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected boolean canSpreadTo(@NotNull BlockGetter pLevel, @NotNull BlockPos pFromPos, @NotNull BlockState pFromBlockState,
+                                  @NotNull Direction pDirection, @NotNull BlockPos pToPos, @NotNull BlockState pToBlockState,
+                                  @NotNull FluidState pToFluidState, @NotNull Fluid pFluid) {
+        return false;
     }
 
     @Override

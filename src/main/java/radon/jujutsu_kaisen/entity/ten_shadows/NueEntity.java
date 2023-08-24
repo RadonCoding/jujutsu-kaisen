@@ -1,11 +1,7 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,14 +20,12 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.misc.Summon;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -71,18 +65,8 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     public boolean doHurtTarget(@NotNull Entity pEntity) {
         if (super.doHurtTarget(pEntity)) {
             if (pEntity instanceof LivingEntity living) {
-                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
-
-                this.level.playSound(null, living.getX(), living.getY(), living.getZ(),
-                        SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                for (int i = 0; i < 32; i++) {
-                    double offsetX = this.random.nextGaussian() * 1.5D;
-                    double offsetY = this.random.nextGaussian() * 1.5D;
-                    double offsetZ = this.random.nextGaussian() * 1.5D;
-                    ((ServerLevel) this.level).sendParticles(JJKParticles.LIGHTNING.get(), living.getX() + offsetX, living.getY() + offsetY, living.getZ() + offsetZ,
-                            0, 0.0D, 0.0D, 0.0D, 0.0D);
-                }
+                Ability lightning = JJKAbilities.NUE_LIGHTNING.get();
+                ((Ability.ITenShadowsAttack) lightning).perform(this, living);
             }
             return true;
         }
@@ -118,9 +102,9 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.FLYING_SPEED)
-                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
+                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
 

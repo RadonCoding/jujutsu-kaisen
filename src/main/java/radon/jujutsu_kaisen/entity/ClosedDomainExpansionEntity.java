@@ -130,6 +130,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                                         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
                                             original = be.getOriginal();
+                                        } else if (this.level.getBlockEntity(pos) != null) {
+                                            return;
                                         } else if (state.getBlock() instanceof DomainBlock) {
                                             return;
                                         }

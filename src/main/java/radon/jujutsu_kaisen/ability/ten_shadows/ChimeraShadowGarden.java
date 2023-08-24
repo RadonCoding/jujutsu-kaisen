@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
@@ -64,7 +64,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public int getWidth() {
-        return 48;
+        return 32;
     }
 
     @Override

@@ -1,24 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " i ",
-    " G ",
-    "ISI"
-  ],
   "key": {
-    "i": {
+    "I": {
       "item": "minecraft:iron_ingot"
     },
     "G": {
       "item": "minecraft:glass"
     },
-    "I": {
-      "item": "minecraft:iron_nugget"
-    },
-    "S": {
-      "item": "minecraft:stone"
+    "P": {
+      "tag": "minecraft:planks"
     }
   },
+  "pattern": [
+    "GIG",
+    "G G",
+    "PPP"
+  ],
   "result": {
     "item": "jujutsu_kaisen:display_case"
   }

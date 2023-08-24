@@ -66,9 +66,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                     if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                         cap.toggle(owner, JJKAbilities.SIMPLE_DOMAIN.get());
                     }
-                    if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                        cap.toggle(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                    }
                 }
             });
         }
@@ -121,10 +118,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public abstract void onHitBlock(DomainExpansionEntity domain, LivingEntity owner,  BlockPos pos);
 
     protected abstract void createBarrier(LivingEntity owner);
-
-    public boolean bypass() {
-        return false;
-    }
 
     @Override
     public boolean isTechnique() {

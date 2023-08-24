@@ -39,13 +39,11 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.PistolItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.ShootPistolC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
@@ -72,16 +70,8 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-                ItemStack stack = mc.player.getMainHandItem();
 
                 if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                    event.setCanceled(true);
-                    event.setSwingHand(false);
-                } else if (event.isAttack() && stack.getItem() instanceof PistolItem) {
-                    PistolItem.shoot(stack, mc.player);
-                    PacketHandler.sendToServer(new ShootPistolC2SPacket(mc.player.getXRot(), mc.player.getYRot()));
-
-                    event.getKeyMapping().setDown(false);
                     event.setCanceled(true);
                     event.setSwingHand(false);
                 } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
@@ -253,7 +243,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.YUJI_IDATORI.get(), YujiItadoriRenderer::new);
+            event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DIVINE_DOG_TOTALITY.get(), DivineDogTotalityRenderer::new);
         }
 
         @SubscribeEvent
@@ -276,7 +267,6 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.CHAIN.get());
 
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
-                                pOutput.accept(JJKItems.PISTOL.get());
                                 pOutput.accept(JJKItems.INVENTORY_CURSE.get());
 
                                 pOutput.accept(JJKItems.SATORU_BLINDFOLD.get());

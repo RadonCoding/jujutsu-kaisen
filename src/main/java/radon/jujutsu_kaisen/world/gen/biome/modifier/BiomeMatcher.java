@@ -21,8 +21,7 @@ public record BiomeMatcher(Optional<List<HolderSet<Biome>>> ifAll, Optional<List
     public boolean test(Holder<Biome> biome) {
         if (this.ifAll.isPresent()) {
             for (HolderSet<Biome> biomes : this.ifAll.get()) {
-                if (!biomes.contains(biome))
-                    return false;
+                if (!biomes.contains(biome)) return false;
             }
         }
 
@@ -35,7 +34,6 @@ public record BiomeMatcher(Optional<List<HolderSet<Biome>>> ifAll, Optional<List
                     break;
                 }
             }
-
             if (!found) return false;
         }
 
