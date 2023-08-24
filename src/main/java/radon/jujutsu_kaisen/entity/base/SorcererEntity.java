@@ -38,7 +38,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 
-        if (pDamageSource.getEntity() instanceof LivingEntity attacker) {
+        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker)) {
             this.setTarget(attacker);
         }
     }

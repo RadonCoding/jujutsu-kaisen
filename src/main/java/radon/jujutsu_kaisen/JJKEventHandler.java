@@ -220,6 +220,8 @@ public class JJKEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (victim.is(event.getEntity())) return;
+
             if (victim instanceof Mob mob) mob.setTarget(event.getEntity());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
