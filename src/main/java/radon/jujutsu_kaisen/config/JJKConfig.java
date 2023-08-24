@@ -6,6 +6,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class JJKConfig {
@@ -37,7 +38,7 @@ public class JJKConfig {
                 .defineList("maxCursedEnergyNPC", amounts
                         .entrySet()
                         .stream()
-                        .map(x -> String.format("%s=%f", x.getKey().toString(), x.getValue()))
+                        .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().toString(), x.getValue()))
                         .toList(), obj -> obj instanceof String);
 
         builder.pop();

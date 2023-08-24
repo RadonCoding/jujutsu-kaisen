@@ -67,11 +67,6 @@ public class PacketHandler {
                 .encoder(OpenInventoryCurseC2SPacket::encode)
                 .consumerMainThread(OpenInventoryCurseC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(ShootPistolC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(ShootPistolC2SPacket::new)
-                .encoder(ShootPistolC2SPacket::encode)
-                .consumerMainThread(ShootPistolC2SPacket::handle)
-                .add();
         INSTANCE.messageBuilder(CameraShakeS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(CameraShakeS2CPacket::new)
                 .encoder(CameraShakeS2CPacket::encode)

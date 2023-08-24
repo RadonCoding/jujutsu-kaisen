@@ -189,6 +189,10 @@ public abstract class Ability {
         void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target);
     }
 
+    public interface ITenShadowsAttack {
+        void perform(LivingEntity owner, @Nullable LivingEntity target);
+    }
+
     public interface IToggled {
         void onEnabled(LivingEntity owner);
         void onDisabled(LivingEntity owner);

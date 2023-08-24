@@ -54,7 +54,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                 BlockPos relative = current.relative(direction, i);
 
                 if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == pBlockEntity.frequency &&
-                        ((be.modifiers == null && pBlockEntity.modifiers == null) || be.modifiers.equals(pBlockEntity.modifiers))) {
+                        ((be.modifiers == null && pBlockEntity.modifiers == null) || be.modifiers != null && be.modifiers.equals(pBlockEntity.modifiers))) {
                     nodes.add(relative);
                     current.set(relative);
                     success = true;

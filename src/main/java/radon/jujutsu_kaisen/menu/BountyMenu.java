@@ -5,6 +5,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,12 +16,14 @@ import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 public class BountyMenu extends AbstractContainerMenu {
     private final @Nullable TojiFushiguroEntity entity;
     private final Container container;
+    private final ContainerLevelAccess access;
 
     private int cost;
 
-    public BountyMenu(int pContainerId, Inventory pPlayerInventory, @Nullable TojiFushiguroEntity entity) {
+    public BountyMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess, @Nullable TojiFushiguroEntity entity) {
         super(JJKMenus.BOUNTY.get(), pContainerId);
 
+        this.access = pAccess;
         this.entity = entity;
         this.container = new SimpleContainer(1) {
             public void setChanged() {
@@ -48,7 +51,7 @@ public class BountyMenu extends AbstractContainerMenu {
     }
 
     public BountyMenu(int pContainerId, Inventory pPlayerInventory) {
-        this(pContainerId, pPlayerInventory, null);
+        this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL, null);
     }
 
     public boolean charge() {
@@ -121,6 +124,9 @@ public class BountyMenu extends AbstractContainerMenu {
     @Override
     public void removed(@NotNull Player pPlayer) {
         super.removed(pPlayer);
+
+        this.access.execute((level, pos) ->
+                this.clearContainer(pPlayer, this.container));
 
         if (this.entity != null) {
             this.entity.stopTrading();

@@ -27,7 +27,7 @@ public class LiquidBlockMixin {
                 pLevel.getBlockState(pPos.above()).isAir()) {
             if ((owner instanceof TamableAnimal tamable && tamable.isTame() && pLevel.getBlockEntity(pPos) instanceof DomainBlockEntity be &&
                     pLevel instanceof ServerLevel level && level.getEntity(be.getIdentifier()) instanceof DomainExpansionEntity domain &&
-                    domain.getOwner() == tamable.getOwner()) || JJKAbilities.hasToggled(owner, JJKAbilities.WATER_WALKING.get())) {
+                    domain.getOwner() == tamable.getOwner()) || JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.WATER_WALKING.get())) {
                 cir.setReturnValue(Shapes.block());
             }
         }

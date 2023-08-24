@@ -52,8 +52,6 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> MEGUMI_BOOTS = ITEMS.register("megumi_boots",
             () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
-    public static RegistryObject<Item> PISTOL = ITEMS.register("pistol",
-            () -> new PistolItem(new Item.Properties().durability(15)));
     public static RegistryObject<Item> DISPLAY_CASE = ITEMS.register("display_case",
             () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
     public static RegistryObject<Item> SUKUNA_FINGER = ITEMS.register("sukuna_finger",

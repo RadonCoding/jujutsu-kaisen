@@ -61,11 +61,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    public boolean bypass() {
-        return true;
-    }
-
-    @Override
     public Classification getClassification() {
         return Classification.LIMITLESS;
     }

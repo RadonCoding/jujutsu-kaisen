@@ -131,9 +131,7 @@ public abstract class DomainExpansionEntity extends Mob {
             return false;
         }
         if (entity instanceof LivingEntity living) {
-            if (!owner.canAttack(living) || (!this.ability.bypass() &&
-                    (JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) ||
-                    JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())))) {
+            if (!owner.canAttack(living) || JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get())) {
                 return false;
             }
         }

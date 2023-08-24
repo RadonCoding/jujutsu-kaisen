@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
@@ -68,17 +69,17 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        /*if (owner instanceof Player player) {
+        if (owner instanceof Player player) {
             player.getAbilities().mayfly = true;
-        }*/
+        }
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        /*if (owner instanceof Player player) {
+        if (owner instanceof Player player) {
             player.getAbilities().mayfly = false;
             player.getAbilities().flying = false;
-        }*/
+        }
     }
 
     @Override

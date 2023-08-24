@@ -75,11 +75,8 @@ public class JujutsuKaisen {
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() ->
-                MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new));
-        event.enqueueWork(() ->
-                MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new));
-        event.enqueueWork(() ->
-                MenuScreens.register(JJKMenus.BOUNTY.get(), BountyScreen::new));
+        MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new);
+        MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new);
+        MenuScreens.register(JJKMenus.BOUNTY.get(), BountyScreen::new);
     }
 }

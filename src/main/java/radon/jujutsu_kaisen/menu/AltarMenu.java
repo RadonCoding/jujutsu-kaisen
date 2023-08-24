@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.*;
@@ -26,6 +27,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AltarMenu extends ItemCombinerMenu {
     private static final Map<Item, ResourceLocation> ENTITY_DROPS = new HashMap<>();
@@ -67,13 +69,34 @@ public class AltarMenu extends ItemCombinerMenu {
                 .build();
     }
 
+    public int getCost() {
+        int cost = 0;
+
+        for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
+            ItemStack slot = this.inputSlots.getItem(i);
+
+            if (!slot.isEmpty()) cost++;
+        }
+        return cost * 100;
+    }
+
     @Override
     protected boolean mayPickup(@NotNull Player pPlayer, boolean pHasStack) {
-        return true;
+        AtomicReference<Float> energy = new AtomicReference<>();
+
+        pPlayer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            energy.set(cap.getEnergy());
+        });
+        return (pPlayer.getAbilities().instabuild || energy.get() >= this.getCost()) && this.getCost() > 0;
     }
 
     @Override
     protected void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
+        if (!pPlayer.getAbilities().instabuild) {
+            pPlayer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    cap.useEnergy(this.getCost()));
+        }
+
         for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
             ItemStack slot = this.inputSlots.getItem(i);
 

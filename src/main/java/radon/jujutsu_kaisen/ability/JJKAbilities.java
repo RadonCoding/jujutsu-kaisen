@@ -8,6 +8,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
@@ -19,7 +20,11 @@ import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Dismantle;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.FireArrow;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
-import radon.jujutsu_kaisen.ability.ten_shadows.*;
+import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
+import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
+import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
+import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
+import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -72,11 +77,16 @@ public class JJKAbilities {
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
+    public static RegistryObject<Summon<?>> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
     public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
+    public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
+    public static RegistryObject<Ability> RELEASE = ABILITIES.register("release", Release::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
+
+    public static RegistryObject<Ability> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
 
     public static RegistryObject<Ability> DIVERGENT_FIST = ABILITIES.register("divergent_fist", DivergentFist::new);
 
@@ -182,8 +192,7 @@ public class JJKAbilities {
                     abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
-            abilities.removeIf(ability -> !ability.isUnlocked(owner) || (ability instanceof Summon<?> summon &&
-                    summon.isDead(owner)));
+            abilities.removeIf(ability -> !ability.isUnlocked(owner));
         });
         return new ArrayList<>(abilities);
     }

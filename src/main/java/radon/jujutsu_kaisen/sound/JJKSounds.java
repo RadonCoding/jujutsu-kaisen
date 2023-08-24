@@ -12,8 +12,6 @@ public class JJKSounds {
 
     public static final RegistryObject<SoundEvent> SLASH = SOUNDS.register("slash", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slash")));
-    public static final RegistryObject<SoundEvent> GUN = SOUNDS.register("gun", () ->
-            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "gun")));
     public static RegistryObject<SoundEvent> EXPLOSION = SOUNDS.register("explosion", () ->
                     SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "explosion")));
     public static RegistryObject<SoundEvent> WHEEL = SOUNDS.register("wheel", () ->

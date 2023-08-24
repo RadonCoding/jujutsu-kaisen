@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -110,6 +111,9 @@ public interface ISorcererData {
 
     boolean tryAdapt(DamageSource source);
     boolean tryAdapt(Ability ability);
+
+    TenShadowsMode getMode();
+    void setMode(TenShadowsMode mode);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

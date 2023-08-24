@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -10,6 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -25,7 +25,6 @@ import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -36,9 +35,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -99,6 +96,7 @@ public class JJKEventHandler {
                         newCap.resetBurnout();
                         newCap.clearToggled();
                         newCap.setCopied(null);
+                        newCap.revive();
                     }
                 });
             });
@@ -222,6 +220,7 @@ public class JJKEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (victim instanceof Mob mob) mob.setTarget(event.getEntity());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -259,6 +258,10 @@ public class JJKEventHandler {
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
                         if (killerCap.isCurse() ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {
                             killerCap.addTrait(Trait.STRONGEST);
+
+                            if (killer instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
+                            }
                         }
 
                         if (killerCap.isCurse() != victimCap.isCurse()) {
@@ -272,18 +275,22 @@ public class JJKEventHandler {
                         }
                     });
 
-                    if (HelperMethods.RANDOM.nextInt(100) == 0) {
+                    if (HelperMethods.RANDOM.nextInt(10) == 0) {
                         if (!victimCap.isCurse() && victimCap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
                             if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
                                 victim.setHealth(victim.getMaxHealth() / 2);
                                 victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
                                 event.setCanceled(true);
+
+                                if (victim instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                                }
                                 return;
                             }
                         }
                     }
 
-                    if (!event.getSource().is(JJKDamageSources.JUJUTSU) && !(killer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof CursedToolItem) &&
+                    /*if (!event.getSource().is(JJKDamageSources.JUJUTSU) && !(killer.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof CursedToolItem) &&
                             !victimCap.isCurse() && HelperMethods.RANDOM.nextInt(10) == 0) {
                         if (victim instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.become_curse",
@@ -292,7 +299,7 @@ public class JJKEventHandler {
                         victim.setHealth(victim.getMaxHealth() / 2);
                         victimCap.setCurse(true);
                         event.setCanceled(true);
-                    }
+                    }*/
                 });
             }
         }

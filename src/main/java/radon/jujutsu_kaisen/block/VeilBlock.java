@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
@@ -23,8 +24,10 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 public class VeilBlock extends Block implements EntityBlock {
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
@@ -48,6 +51,7 @@ public class VeilBlock extends Block implements EntityBlock {
         if (pContext instanceof EntityCollisionContext ctx) {
             if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return Shapes.empty();
             Entity entity = ctx.getEntity();
+            if (entity instanceof LivingEntity living && JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION)) return Shapes.empty();
             if (entity instanceof Projectile projectile) entity = projectile.getOwner();
             return be.isBlacklisted(entity) ? Shapes.block() : Shapes.empty();
         }

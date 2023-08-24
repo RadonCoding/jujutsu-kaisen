@@ -4,7 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.misc.Summon;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -30,6 +30,11 @@ public class Rika extends Summon<RikaEntity> {
     @Override
     public EntityType<RikaEntity> getType() {
         return JJKEntities.RIKA.get();
+    }
+
+    @Override
+    public boolean isTenShadows() {
+        return false;
     }
 
     @Override

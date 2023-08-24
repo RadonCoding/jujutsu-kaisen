@@ -10,10 +10,13 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +28,10 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.PistolItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -39,18 +40,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-// On right-click as for X amount of emeralds depending on target strength
-// After a while toji spawns near the target player and takes care of business
-public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackMob {
+public class TojiFushiguroEntity extends SorcererEntity {
     private static final int PLAYFUL_CLOUD = 0;
     private static final int INVERTED_SPEAR_OF_HEAVEN = 1;
-    private static final int PISTOL = 2;
 
-    private static final int SHOOT_INTERVAL = 20;
     private static final int TELEPORT_RADIUS = 32;
-
-    private final MeleeAttackGoal melee = new MeleeAttackGoal(this, 1.0D, true);
-    private final RangedAttackGoal ranged = new RangedAttackGoal(this, 1.0D, SHOOT_INTERVAL, 15.0F);
 
     @Nullable
     private UUID bountyUUID;
@@ -157,7 +151,7 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         if (!pPlayer.isSecondaryUseActive() && pHand == InteractionHand.MAIN_HAND) {
             this.setCurrentCustomer(pPlayer);
             pPlayer.openMenu(new SimpleMenuProvider((pContainerId, pPlayerInventory, ignored) ->
-                    new BountyMenu(pContainerId, pPlayerInventory, this), Component.empty()));
+                    new BountyMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pPlayer.level, this.blockPosition()), this), Component.empty()));
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
         return super.mobInteract(pPlayer, pHand);
@@ -195,17 +189,17 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-        InventoryCurseItem.addItem(inventory, PISTOL, new ItemStack(JJKItems.PISTOL.get()));
         this.setItemSlot(EquipmentSlot.CHEST, inventory);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new SorcererGoal(this));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(3, new SorcererGoal(this));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
@@ -219,23 +213,11 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
             }
         });
 
-        if (this.distanceTo(target) >= 10.0D) {
-            result.set(PISTOL);
-        }
-
         ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
         ItemStack main = InventoryCurseItem.getItem(inventory, result.get());
 
         if (!this.getMainHandItem().is(main.getItem())) {
             this.setItemInHand(InteractionHand.MAIN_HAND, main);
-        }
-
-        if (main.is(JJKItems.PISTOL.get())) {
-            this.goalSelector.removeGoal(this.melee);
-            this.goalSelector.addGoal(1, this.ranged);
-        } else {
-            this.goalSelector.removeGoal(this.ranged);
-            this.goalSelector.addGoal(1, this.melee);
         }
     }
 
@@ -302,31 +284,5 @@ public class TojiFushiguroEntity extends SorcererEntity implements RangedAttackM
         if (issuer != null && bounty != null) {
             issuer.sendSystemMessage(Component.translatable(String.format("chat.%s.bounty_fail", JujutsuKaisen.MOD_ID), bounty.getName()));
         }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        for (ClosedDomainExpansionEntity ignored : HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox())) {
-            if (!this.getMainHandItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
-                ItemStack stack = InventoryCurseItem.getItem(inventory, INVERTED_SPEAR_OF_HEAVEN);
-                this.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            }
-
-            if (!this.isUsingItem()) {
-                this.startUsingItem(InteractionHand.MAIN_HAND);
-            }
-            break;
-        }
-    }
-
-    @Override
-    public void performRangedAttack(@NotNull LivingEntity pTarget, float pVelocity) {
-        if (this.random.nextInt(3) != 0) return;
-
-        ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
-        PistolItem.shoot(stack, this);
     }
 }
