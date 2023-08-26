@@ -15,7 +15,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class EmberInsectRenderer extends GeoEntityRenderer<EmberInsectProjectile> {
     public EmberInsectRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect"), false));
+        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")));
     }
 
     @Override
@@ -23,8 +23,8 @@ public class EmberInsectRenderer extends GeoEntityRenderer<EmberInsectProjectile
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
         float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

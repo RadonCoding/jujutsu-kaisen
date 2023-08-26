@@ -258,6 +258,25 @@
 							"vector": [0, 0, 0]
 						}
 					}
+				},
+				"right_cape": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.0833": {
+							"vector": [45, 0, 65],
+							"easing": "linear"
+						},
+						"0.1667": {
+							"vector": [-84.6809, -19.92066, 63.18307],
+							"easing": "linear"
+						},
+						"0.25": {
+							"vector": [0, 0, 0],
+							"easing": "linear"
+						}
+					}
 				}
 			}
 		}

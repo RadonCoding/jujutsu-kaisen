@@ -8,7 +8,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public enum CursedTechnique {
     CURSE_MANIPULATION(null),
-    LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE.get(),
+    LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.MAXIMUM_RED.get(), JJKAbilities.BLUE.get(),
             JJKAbilities.MAXIMUM_BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
     DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null),
@@ -21,8 +21,8 @@ public enum CursedTechnique {
 
             JJKAbilities.NUE_LIGHTNING.get(),
 
-            JJKAbilities.MAHORAGA.get(), JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(),
-            JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.NUE.get(), JJKAbilities.GREAT_SERPENT.get()),
+            JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(),
+            JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.NUE.get(), JJKAbilities.GREAT_SERPENT.get(), JJKAbilities.MAHORAGA.get()),
     DIVERGENT_FIST(null, JJKAbilities.DIVERGENT_FIST.get());
 
     private final @Nullable Ability domain;

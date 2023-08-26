@@ -1,11 +1,14 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterWalking extends Ability implements Ability.IToggled {
@@ -22,11 +25,13 @@ public class WaterWalking extends Ability implements Ability.IToggled {
     @Override
     public void run(LivingEntity owner) {
         if (owner.level instanceof ServerLevel level) {
-            level.sendParticles(JJKParticles.CURSED_ENERGY.get(), owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) + 0.15D,
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.CURSED_ENERGY_COLOR, 1.0F, 0.5F, false, 3);
+
+            level.sendParticles(particle, owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) + 0.15D,
                     owner.getY(),
                     owner.getZ() + HelperMethods.RANDOM.nextGaussian() * 0.1D,
                     0, 0.0D, 0.23D, 0.0D, -0.1D);
-            level.sendParticles(JJKParticles.CURSED_ENERGY.get(), owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - 0.15D,
+            level.sendParticles(particle, owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - 0.15D,
                     owner.getY(),
                     owner.getZ() + HelperMethods.RANDOM.nextGaussian() * 0.1D,
                     0, 0.0D, 0.23D, 0.0D, -0.1D);
@@ -35,7 +40,7 @@ public class WaterWalking extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.001F;
+        return 0;
     }
 
     @Override
@@ -49,7 +54,7 @@ public class WaterWalking extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isDisplayed() {
-        return false;
+    public DisplayType getDisplayType() {
+        return DisplayType.NONE;
     }
 }

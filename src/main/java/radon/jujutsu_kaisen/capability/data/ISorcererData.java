@@ -83,6 +83,7 @@ public interface ISorcererData {
 
     void channel(LivingEntity owner, @Nullable Ability ability);
     boolean isChanneling(Ability ability);
+    int getCharge();
 
     void generate(ServerPlayer player);
 

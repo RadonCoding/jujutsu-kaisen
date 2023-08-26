@@ -6,6 +6,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Dash extends Ability {
@@ -45,5 +46,10 @@ public class Dash extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 0;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -11,10 +12,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +36,8 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getMode() == TenShadowsMode.ABILITY));
+                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
+                        cap.getMode() == TenShadowsMode.ABILITY));
         return result.get();
     }
 
@@ -99,5 +103,10 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
             ((ServerLevel) owner.level).sendParticles(JJKParticles.LIGHTNING.get(), target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

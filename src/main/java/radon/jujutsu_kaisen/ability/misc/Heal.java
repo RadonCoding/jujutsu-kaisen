@@ -4,11 +4,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Heal extends Ability {
+public class Heal extends Ability implements Ability.IChannelened {
     private static final float AMOUNT = 0.25F;
 
     @Override
@@ -33,14 +34,19 @@ public class Heal extends Ability {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (owner.getHealth() < owner.getMaxHealth()) {
-                result.set(5.0F);
+                result.set(2.5F);
             }
         });
         return result.get();
     }
 
     @Override
-    public boolean isDisplayed() {
-        return false;
+    public DisplayType getDisplayType() {
+        return DisplayType.NONE;
+    }
+
+    @Override
+    public void onRelease(LivingEntity owner, int charge) {
+
     }
 }

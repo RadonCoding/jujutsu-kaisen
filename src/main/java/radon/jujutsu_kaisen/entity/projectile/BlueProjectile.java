@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class BlueProjectile extends JujutsuProjectile {
     private static final double RANGE = 10.0D;
     private static final double PULL_STRENGTH = 0.25D;
+    private static final int DELAY = 20;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -35,23 +37,14 @@ public class BlueProjectile extends JujutsuProjectile {
     public BlueProjectile(LivingEntity pShooter) {
         this(JJKEntities.BLUE.get(), pShooter.level, pShooter);
 
-        Vec3 start = pShooter.getEyePosition();
         Vec3 look = pShooter.getLookAngle();
-        Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = HelperMethods.getHitResult(pShooter, start, end);
-
-        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-        this.setPos(pos);
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
     public float getRadius() {
-        return 4.0F;
+        return 3.0F;
     }
-
-    protected double getPullRadius() {
-        return this.getRadius() * 2;
-    }
-
     protected int getDuration() {
         return 3 * 20;
     }
@@ -61,8 +54,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullEntities() {
-        AABB bounds = new AABB(this.getX() - this.getPullRadius(), this.getY() - this.getPullRadius(), this.getZ() - this.getPullRadius(),
-                this.getX() + this.getPullRadius(), this.getY() + this.getPullRadius(), this.getZ() + this.getPullRadius());
+        AABB bounds = new AABB(this.getX() - this.getRadius(), this.getY() - this.getRadius(), this.getZ() - this.getRadius(),
+                this.getX() + this.getRadius(), this.getY() + this.getRadius(), this.getZ() + this.getRadius());
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
@@ -77,8 +70,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void hurtEntities() {
-        AABB bounds = new AABB(this.getX() - this.getRadius(), this.getY() - this.getRadius(), this.getZ() - this.getRadius(),
-                this.getX() + this.getRadius(), this.getY() + this.getRadius(), this.getZ() + this.getRadius());
+        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -161,14 +153,38 @@ public class BlueProjectile extends JujutsuProjectile {
         if (this.getTime() >= this.getDuration()) {
             this.discard();
         } else {
-            this.pullEntities();
-            this.hurtEntities();
-
             this.spawnParticles();
 
-            if (!this.level.isClientSide) {
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    this.breakBlocks();
+            if (this.getOwner() instanceof LivingEntity owner) {
+                if (this.getTime() < DELAY) {
+                    if (!owner.isAlive()) {
+                        this.discard();
+                    } else {
+                        if (this.getTime() % 5 == 0) {
+                            owner.swing(InteractionHand.MAIN_HAND);
+                        }
+                        Vec3 look = owner.getLookAngle();
+                        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+                        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                    }
+                } else {
+                    if (this.getTime() == DELAY) {
+                        Vec3 start = owner.getEyePosition();
+                        Vec3 look = owner.getLookAngle();
+                        Vec3 end = start.add(look.scale(RANGE));
+                        HitResult result = HelperMethods.getHitResult(owner, start, end);
+
+                        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
+                        this.setPos(pos);
+                    }
+                    this.pullEntities();
+                    this.hurtEntities();
+
+                    if (!this.level.isClientSide) {
+                        if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                            this.breakBlocks();
+                        }
+                    }
                 }
             }
         }

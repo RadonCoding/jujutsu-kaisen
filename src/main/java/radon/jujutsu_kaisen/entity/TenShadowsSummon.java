@@ -147,6 +147,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     } else {
                         if (this.getAbility().canDie()) {
                             cap.kill(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+
+                            if (owner instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
                         }
                     }
                 }

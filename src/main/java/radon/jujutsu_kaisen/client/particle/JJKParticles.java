@@ -13,13 +13,18 @@ public class JJKParticles {
     public static DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES,
             JujutsuKaisen.MOD_ID);
 
-    public static RegistryObject<SimpleParticleType> CURSED_ENERGY = PARTICLES.register("cursed_energy", () ->
-            new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> LIGHTNING = PARTICLES.register("lightning", () ->
             new SimpleParticleType(true));
 
+    public static RegistryObject<ParticleType<VaporParticle.VaporParticleOptions>> VAPOR = PARTICLES.register("vapor", () ->
+            new ParticleType<>(false, VaporParticle.VaporParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<VaporParticle.VaporParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
             new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
                 @Override

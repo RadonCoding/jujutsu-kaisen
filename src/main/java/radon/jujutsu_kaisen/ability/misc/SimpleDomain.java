@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -91,6 +92,11 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.DOMAIN;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

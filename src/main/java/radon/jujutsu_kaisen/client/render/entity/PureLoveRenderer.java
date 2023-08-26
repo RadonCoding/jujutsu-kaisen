@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.PureLoveBeam;
@@ -61,14 +60,22 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
             frame = PureLoveBeam.FRAMES * 2;
         }
 
+        pPoseStack.pushPose();
+        pPoseStack.scale(PureLoveBeam.SCALE, PureLoveBeam.SCALE, PureLoveBeam.SCALE);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 
         this.renderStart(frame, pPoseStack, consumer, pPackedLight);
-        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
-        pPoseStack.pushPose();
-        pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);
-        this.renderEnd(frame, pEntity.side, pPoseStack, consumer, pPackedLight);
+        if (pEntity.getTime() > PureLoveBeam.CHARGE) {
+            this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+
+            pPoseStack.pushPose();
+            pPoseStack.translate(collidePosX - posX, collidePosY - posY, collidePosZ - posZ);
+            this.renderEnd(frame, pEntity.side, pPoseStack, consumer, pPackedLight);
+            pPoseStack.popPose();
+        }
         pPoseStack.popPose();
     }
 
@@ -91,16 +98,14 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
             return;
         }
         poseStack.pushPose();
-        Quaternionf q = this.entityRenderDispatcher.cameraOrientation();
-        poseStack.mulPose(q);
+        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
     }
 
     private void renderEnd(int frame, Direction side, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         poseStack.pushPose();
-        Quaternionf q0 = this.entityRenderDispatcher.cameraOrientation();
-        poseStack.mulPose(q0);
+        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
 
@@ -108,9 +113,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
             return;
         }
         poseStack.pushPose();
-        Quaternionf q1 = side.getRotation();
-        q1.mul(Axis.XP.rotationDegrees(90.0F));
-        poseStack.mulPose(q1);
+        poseStack.mulPose(side.getRotation().mul(Axis.XP.rotationDegrees(90.0F)));
         poseStack.translate(0, 0, -0.01F);
         this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
@@ -134,7 +137,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
     private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));
         poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
         poseStack.pushPose();
 

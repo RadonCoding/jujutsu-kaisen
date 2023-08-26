@@ -10,6 +10,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -90,5 +91,10 @@ public class AirPunch extends Ability {
     @Override
     public Classification getClassification() {
         return Classification.MELEE;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

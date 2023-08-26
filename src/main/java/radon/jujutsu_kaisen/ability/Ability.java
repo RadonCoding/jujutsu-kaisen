@@ -69,8 +69,8 @@ public abstract class Ability {
         return cooldown.get();
     }
 
-    public boolean isDisplayed() {
-        return true;
+    public DisplayType getDisplayType() {
+        return DisplayType.RADIAL;
     }
 
     public boolean isUnlocked(LivingEntity owner) {
@@ -191,6 +191,10 @@ public abstract class Ability {
 
     public interface ITenShadowsAttack {
         void perform(LivingEntity owner, @Nullable LivingEntity target);
+    }
+
+    public interface IChannelened {
+        void onRelease(LivingEntity owner, int charge);
     }
 
     public interface IToggled {

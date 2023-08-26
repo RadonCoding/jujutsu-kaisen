@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -43,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TojiFushiguroEntity extends SorcererEntity {
     private static final int PLAYFUL_CLOUD = 0;
     private static final int INVERTED_SPEAR_OF_HEAVEN = 1;
+    private static final int SPLIT_SOUL_KATANA = 2;
 
     private static final int TELEPORT_RADIUS = 32;
 
@@ -189,6 +191,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         ItemStack inventory = new ItemStack(JJKItems.INVENTORY_CURSE.get());
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
+        InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
         this.setItemSlot(EquipmentSlot.CHEST, inventory);
     }
 
@@ -206,6 +209,10 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
     private void pickWeapon(LivingEntity target) {
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
+
+        if (target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+            result.set(SPLIT_SOUL_KATANA);
+        }
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (cap.hasToggled(JJKAbilities.INFINITY.get())) {

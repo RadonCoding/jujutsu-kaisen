@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -132,6 +133,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     @Override
     public boolean shouldLog() {
         return false;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.DOMAIN;
     }
 
     public interface IClosedDomain {

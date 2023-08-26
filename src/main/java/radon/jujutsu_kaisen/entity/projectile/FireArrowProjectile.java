@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +26,12 @@ public class FireArrowProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 25.0F;
     private static final float SPEED = 5.0F;
     private static final float EXPLOSIVE_POWER = 2.5F;
-    private static final int DELAY = 20;
+    public static final int DELAY = 20;
+    public static final int STILL_FRAMES = 2;
+    public static final int STARTUP_FRAMES = 4;
+    private static final double OFFSET = 2.0D;
+
+    public int animation;
 
     public FireArrowProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -35,7 +41,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
         super(JJKEntities.FIRE_ARROW.get(), pShooter.level, pShooter);
 
         Vec3 look = pShooter.getLookAngle();
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look.scale(OFFSET));
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
@@ -89,17 +95,36 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
+        if (this.getTime() >= DELAY) {
+            if (this.animation < STILL_FRAMES) {
+                this.animation++;
+            } else {
+                this.animation = 0;
+            }
+        } else {
+            if (this.getTime() > 0 && this.getTime() % (DELAY / STARTUP_FRAMES) == 0) {
+                if (this.animation < STARTUP_FRAMES) {
+                    this.animation++;
+                }
+            }
+        }
 
-            for (int i = 0; i < 8; i++) {
+        if (this.getOwner() instanceof LivingEntity owner) {
+            for (int i = 0; i < 2; i++) {
                 Vec3 dir = owner.getLookAngle().reverse().scale(0.1D);
-                double dx = dir.x() + ((this.random.nextDouble() - 0.5D) * 0.1D);
-                double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.1D);
-                double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.1D);
+                double dx = dir.x() + ((this.random.nextDouble() - 0.5D) * 0.5D);
+                double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.5D);
+                double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.5D);
 
                 this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
+
+            Vec3 look = owner.getLookAngle();
+            double d0 = look.horizontalDistance();
+            this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
+            this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
 
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
@@ -108,13 +133,14 @@ public class FireArrowProjectile extends JujutsuProjectile {
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = owner.getLookAngle();
-                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                    this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
+                    this.setPos(spawn.x(), spawn.y(), spawn.z());
+                    this.xRotO = this.getXRot();
+                    this.yRotO = this.getYRot();
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                     this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();

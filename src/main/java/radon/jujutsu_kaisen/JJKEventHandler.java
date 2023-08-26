@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -157,7 +158,7 @@ public class JJKEventHandler {
 
             if (attacker instanceof LivingEntity living) {
                 if (source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK)) && living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    victim.hurt(victim.level.damageSources().outOfWorld(), event.getAmount());
+                    victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
                     event.setCanceled(true);
                 }
             }

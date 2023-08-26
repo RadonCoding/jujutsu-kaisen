@@ -33,7 +33,7 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
         Minecraft mc = Minecraft.getInstance();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
         Entity viewer = mc.getCameraEntity();
 

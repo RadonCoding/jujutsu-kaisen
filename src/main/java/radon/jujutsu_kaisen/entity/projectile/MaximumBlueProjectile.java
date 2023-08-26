@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -10,6 +9,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 
 public class MaximumBlueProjectile extends BlueProjectile {
     private static final double OFFSET = 10.0D;
+    private static final int DELAY = 20;
 
     public MaximumBlueProjectile(EntityType<? extends MaximumBlueProjectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -18,7 +18,9 @@ public class MaximumBlueProjectile extends BlueProjectile {
     public MaximumBlueProjectile(LivingEntity pShooter) {
         super(JJKEntities.MAXIMUM_BLUE.get(), pShooter.level, pShooter);
 
-        this.spin();
+        Vec3 look = pShooter.getLookAngle();
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
     @Override
@@ -32,9 +34,10 @@ public class MaximumBlueProjectile extends BlueProjectile {
     }
 
     private void spin() {
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
+            }
             Vec3 center = owner.getEyePosition();
             Vec3 pos = center.add(owner.getLookAngle().scale(OFFSET));
             this.setPos(pos.x(), pos.y() - (this.getBbHeight() / 2.0F), pos.z());
@@ -45,11 +48,8 @@ public class MaximumBlueProjectile extends BlueProjectile {
     public void tick() {
         super.tick();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() % 5 == 0) {
-                owner.swing(InteractionHand.MAIN_HAND);
-            }
+        if (this.getTime() >= DELAY) {
+            this.spin();
         }
-        this.spin();
     }
 }

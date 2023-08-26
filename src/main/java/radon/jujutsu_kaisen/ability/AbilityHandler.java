@@ -23,7 +23,9 @@ public class AbilityHandler {
                 Ability.Status status;
 
                 if ((status = ability.checkToggleable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    if (!cap.hasToggled(ability)) {
+                        MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    }
                     cap.toggle(owner, ability);
                 }
                 result.set(status);

@@ -39,7 +39,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public abstract boolean isTenShadows();
 
     public boolean isTamed(LivingEntity owner) {
-        if (!this.canTame()) return false;
+        if (!this.canTame()) return true;
 
         AtomicBoolean result = new AtomicBoolean();
 
