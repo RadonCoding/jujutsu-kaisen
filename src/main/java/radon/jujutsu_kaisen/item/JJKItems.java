@@ -79,7 +79,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xBBBD25, 0x3B0F04, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xC1BA50, 0x3B0F04, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

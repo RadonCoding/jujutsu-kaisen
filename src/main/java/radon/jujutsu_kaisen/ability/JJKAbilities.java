@@ -44,6 +44,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> INFINITY = ABILITIES.register("infinity", Infinity::new);
     public static RegistryObject<Ability> RED = ABILITIES.register("red", Red::new);
+    public static RegistryObject<Ability> MAXIMUM_RED = ABILITIES.register("maximum_red", MaximumRed::new);
     public static RegistryObject<Ability> BLUE = ABILITIES.register("blue", Blue::new);
     public static RegistryObject<Ability> MAXIMUM_BLUE = ABILITIES.register("maximum_blue", MaximumBlue::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);

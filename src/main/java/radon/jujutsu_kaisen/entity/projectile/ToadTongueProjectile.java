@@ -86,6 +86,8 @@ public class ToadTongueProjectile extends JujutsuProjectile {
             if (owner != null) {
                 if (this.distanceTo(owner) >= this.range) {
                     this.discard();
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                    this.discard();
                 }
             }
         }

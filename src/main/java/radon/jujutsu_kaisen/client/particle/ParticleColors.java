@@ -8,4 +8,5 @@ public class ParticleColors {
     public static Vector3f LIGHT_BLUE_COLOR = Vec3.fromRGB24(38143).toVector3f();
     public static Vector3f RED_COLOR = Vec3.fromRGB24(16711680).toVector3f();
     public static Vector3f PURPLE_COLOR = Vec3.fromRGB24(12781547).toVector3f();
+    public static Vector3f CURSED_ENERGY_COLOR = Vec3.fromRGB24(4842464).toVector3f();
 }

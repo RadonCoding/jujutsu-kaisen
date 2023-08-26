@@ -4,13 +4,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class RCT extends Ability {
+public class RCT extends Ability implements Ability.IChannelened {
     private static final float AMOUNT = 0.2F;
 
     @Override
@@ -48,14 +49,19 @@ public class RCT extends Ability {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) && cap.getBurnout() > 0)) {
-                result.set(10.0F);
+                result.set(5.0F);
             }
         });
         return result.get();
     }
 
     @Override
-    public boolean isDisplayed() {
-        return false;
+    public DisplayType getDisplayType() {
+        return DisplayType.NONE;
+    }
+
+    @Override
+    public void onRelease(LivingEntity owner, int charge) {
+
     }
 }

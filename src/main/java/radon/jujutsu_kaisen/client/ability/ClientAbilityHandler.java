@@ -16,10 +16,8 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 
@@ -71,7 +69,7 @@ public class ClientAbilityHandler {
             if (mc.player == null) return;
 
             if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
-                Ability ability = AbilityOverlay.getSelected();
+                Ability ability = MeleeAbilityOverlay.getSelected();
 
                 if (ability != null) {
                     if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
@@ -86,6 +84,7 @@ public class ClientAbilityHandler {
                 }
             }
 
+
             if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                 mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
@@ -93,38 +92,9 @@ public class ClientAbilityHandler {
                 });
             }
 
-            if (JJKKeys.ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN.consumeClick()) {
-                mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    boolean triggered = false;
-
-                    if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
-                        CursedTechnique technique = cap.getTechnique();
-
-                        if (technique != null) {
-                            Ability domain = technique.getDomain();
-
-                            if (domain != null) {
-                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(domain)));
-                                triggered = ClientAbilityHandler.trigger(domain) == Ability.Status.SUCCESS;
-                            }
-                        }
-                    }
-                    if (!triggered && cap.hasTrait(Trait.SIMPLE_DOMAIN)) {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.SIMPLE_DOMAIN.get())));
-                        ClientAbilityHandler.trigger(JJKAbilities.SIMPLE_DOMAIN.get());
-                    }
-                });
-            }
-
             if (JJKKeys.ACTIVATE_WATER_WALKING.consumeClick()) {
                 PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.WATER_WALKING.get())));
                 ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
-            }
-
-            if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
-                AbilityOverlay.scroll(1);
-            } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {
-                AbilityOverlay.scroll(-1);
             }
         }
     }
@@ -171,7 +141,9 @@ public class ClientAbilityHandler {
                 Ability.Status status;
 
                 if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    if (!cap.hasToggled(ability)) {
+                        MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    }
                     cap.toggle(owner, ability);
                 }
                 result.set(status);

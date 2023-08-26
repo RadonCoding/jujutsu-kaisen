@@ -6,12 +6,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbilityOverlay {
+public class MeleeAbilityOverlay {
     private static int selected;
     private static List<Ability> abilities = new ArrayList<>();
 
@@ -66,7 +67,7 @@ public class AbilityOverlay {
         assert player != null;
 
         abilities = JJKAbilities.getAbilities(player);
-        abilities.removeIf(ability -> !ability.isDisplayed());
+        abilities.removeIf(ability -> ability.getDisplayType() != DisplayType.SCROLL);
 
         if (!abilities.isEmpty()) {
             int index = getIndex();

@@ -66,6 +66,7 @@ public class SorcererData implements ISorcererData {
     private long lastBlackFlashTime;
 
     private @Nullable Ability channeled;
+    private int charge;
     private @Nullable UUID domain;
 
     private final Set<Ability> toggled;
@@ -198,6 +199,9 @@ public class SorcererData implements ISorcererData {
             } else {
                 this.channel(owner, this.channeled);
             }
+            this.charge++;
+        } else {
+            this.charge = 0;
         }
     }
 
@@ -599,7 +603,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < 5;
+        return ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < 3;
     }
 
     @Override
@@ -635,12 +639,20 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void channel(LivingEntity owner, @Nullable Ability ability) {
+        if (this.channeled != null) {
+            ((Ability.IChannelened) this.channeled).onRelease(owner, this.charge);
+        }
         this.channeled = this.channeled == ability ? null : ability;
     }
 
     @Override
     public boolean isChanneling(Ability ability) {
         return this.channeled == ability;
+    }
+
+    @Override
+    public int getCharge() {
+        return this.charge;
     }
 
     @Override
@@ -920,6 +932,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("grade", this.grade.ordinal());
         nbt.putInt("mode", this.mode.ordinal());
+        nbt.putInt("charge", this.charge);
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1036,6 +1049,7 @@ public class SorcererData implements ISorcererData {
         this.burnout = nbt.getInt("burnout");
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
+        this.charge = nbt.getInt("charge");
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");

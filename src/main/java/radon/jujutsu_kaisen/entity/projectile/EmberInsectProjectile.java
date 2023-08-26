@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -130,13 +131,19 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
             Vec3 look = owner.getLookAngle();
+            double d0 = look.horizontalDistance();
+            this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
+            this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+
             Vec3 spawn = new Vec3(owner.getX(),
                     owner.getEyeY() - (this.getBbHeight() / 2.0F),
                     owner.getZ())
                     .add(look)
                     .add(look.yRot(-90.0F).scale(xOffset))
                     .add(new Vec3(0.0F, yOffset, 0.0F));
-            this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            this.setPos(spawn.x(), spawn.y(), spawn.z());
         }
     }
 
@@ -156,7 +163,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }

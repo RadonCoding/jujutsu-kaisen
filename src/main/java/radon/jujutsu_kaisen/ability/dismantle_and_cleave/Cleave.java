@@ -14,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -133,5 +134,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public Classification getClassification() {
         return Classification.SLASH;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

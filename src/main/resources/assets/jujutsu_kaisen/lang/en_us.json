@@ -16,8 +16,9 @@
   "key.jujutsu_kaisen.ability_scroll": "Cycle Abilities With Scroll Wheel",
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
   "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
-  "key.jujutsu_kaisen.activate_domain_or_simple_domain": "Activate Domain or Simple Domain",
   "key.jujutsu_kaisen.activate_water_walking": "Activate Water Walking",
+  "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
+  "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
 
@@ -90,7 +91,7 @@
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
   "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
-  "ability.jujutsu_kaisen.simple_domain": "New Shadow Style: Simple Domain",
+  "ability.jujutsu_kaisen.simple_domain": "Simple Domain",
   "ability.jujutsu_kaisen.simple_domain.enable": "Activated simple domain",
   "ability.jujutsu_kaisen.simple_domain.disable": "Deactivated simple domain",
   "ability.jujutsu_kaisen.water_walking": "Water Walking",
@@ -101,15 +102,16 @@
 
   "ability.jujutsu_kaisen.heal": "Heal",
 
-  "ability.jujutsu_kaisen.infinity": "Neutral Limitless: Infinity",
+  "ability.jujutsu_kaisen.infinity": "Infinity",
   "ability.jujutsu_kaisen.infinity.enable": "Activated infinity",
   "ability.jujutsu_kaisen.infinity.disable": "Deactivated infinity",
 
-  "ability.jujutsu_kaisen.red": "Cursed Technique Reversal: Red",
-  "ability.jujutsu_kaisen.blue": "Cursed Technique Lapse: Blue",
-  "ability.jujutsu_kaisen.maximum_blue": "Cursed Technique Amplification - Maximum Output: Blue",
-  "ability.jujutsu_kaisen.hollow_purple": "Hollow Technique: Purple",
-  "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Technique: Hollow Purple",
+  "ability.jujutsu_kaisen.red": "Red",
+  "ability.jujutsu_kaisen.maximum_red": "Maximum Red",
+  "ability.jujutsu_kaisen.blue": "Blue",
+  "ability.jujutsu_kaisen.maximum_blue": "Maximum Blue",
+  "ability.jujutsu_kaisen.hollow_purple": "Hollow Purple",
+  "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Hollow Purple",
   "ability.jujutsu_kaisen.teleport": "Teleport",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 
@@ -118,7 +120,7 @@
   "ability.jujutsu_kaisen.fire_arrow": "Fire Arrow",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
-  "ability.jujutsu_kaisen.rika": "Summon Rika",
+  "ability.jujutsu_kaisen.rika": "Rika",
   "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
   "ability.jujutsu_kaisen.rika.disable": "Released Rika",
 
@@ -134,29 +136,29 @@
   "ability.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "ability.jujutsu_kaisen.coffin_of_iron_mountain": "Coffin of Iron Mountain",
 
-  "ability.jujutsu_kaisen.mahoraga": "Summon Mahoraga",
+  "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.disable": "Released Mahoraga",
 
-  "ability.jujutsu_kaisen.divine_dogs": "Summon Divine Dogs",
+  "ability.jujutsu_kaisen.divine_dogs": "Divine Dogs",
   "ability.jujutsu_kaisen.divine_dogs.enable": "Summoned Divine Dogs",
   "ability.jujutsu_kaisen.divine_dogs.disable": "Released Divine Dogs",
 
-  "ability.jujutsu_kaisen.divine_dog_totality": "Summon Divine Dog: Totality",
-  "ability.jujutsu_kaisen.divine_dog_totality.enable": "Summoned Divine Dog: Totality",
-  "ability.jujutsu_kaisen.divine_dog_totality.disable": "Released Divine Dog: Totality",
+  "ability.jujutsu_kaisen.divine_dog_totality": "Divine Dog Totality",
+  "ability.jujutsu_kaisen.divine_dog_totality.enable": "Summoned Divine Dog Totality",
+  "ability.jujutsu_kaisen.divine_dog_totality.disable": "Released Divine Dog Totality",
 
-  "ability.jujutsu_kaisen.toad": "Summon Toad",
+  "ability.jujutsu_kaisen.toad": "Toad",
   "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
   "ability.jujutsu_kaisen.toad.disable": "Released Toad",
 
   "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
-  "ability.jujutsu_kaisen.nue": "Summon Nue",
+  "ability.jujutsu_kaisen.nue": "Nue",
   "ability.jujutsu_kaisen.nue.enable": "Summoned Nue",
   "ability.jujutsu_kaisen.nue.disable": "Released Nue",
 
-  "ability.jujutsu_kaisen.great_serpent": "Summon Great Serpent",
+  "ability.jujutsu_kaisen.great_serpent": "Great Serpent",
   "ability.jujutsu_kaisen.great_serpent.enable": "Summoned Great Serpent",
   "ability.jujutsu_kaisen.great_serpent.disable": "Released Great Serpent",
 
@@ -232,6 +234,7 @@
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
   "death.attack.jujutsu_projectile": "%1$s was killed by %2$s using jujutsu",
+  "death.attack.soul": "%1$s had their soul destroyed by %2$s",
 
   "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
   "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",

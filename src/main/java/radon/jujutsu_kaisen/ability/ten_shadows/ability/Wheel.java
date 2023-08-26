@@ -36,6 +36,8 @@ public class Wheel extends Summon<WheelEntity> {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
+        if (owner instanceof MahoragaEntity) return true;
+
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->

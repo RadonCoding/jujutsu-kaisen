@@ -9,8 +9,10 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
@@ -28,10 +30,10 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public void run(LivingEntity owner) {
         if (owner.level instanceof ServerLevel level) {
-            for (int i = 0; i < 4; i++) {
-                level.sendParticles(JJKParticles.CURSED_ENERGY.get(),
+            for (int i = 0; i < 8; i++) {
+                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.CURSED_ENERGY_COLOR, 1.5F, 0.5F, false, 1),
                         owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),
-                        owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight() * 0.75F),
+                        owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
                         owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),
                         0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 2.5D);
             }
@@ -51,6 +53,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.DOMAIN;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Teleport extends Ability {
@@ -57,5 +58,10 @@ public class Teleport extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

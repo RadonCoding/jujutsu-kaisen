@@ -1,25 +1,29 @@
 plugins {
-    id 'eclipse'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 
-version = '1.0-SNAPSHOT'
-group = 'radon.jujutsu_kaisen'
-archivesBaseName = 'jujutsu_kaisen'
+group = mod_group_id
+version = mod_version
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
 
 mixin {
-    add sourceSets.main, 'mixins.jujutsu_kaisen.refmap.json'
-    config 'mixins.jujutsu_kaisen.json'
+    add sourceSets.main, "mixins.${mod_id}.refmap.json"
+    config "mixins.${mod_id}.json"
 }
 
 minecraft {
-    mappings channel: 'parchment', version: '2023.06.26-1.19.4'
+    mappings channel: mapping_channel, version: mapping_version
 
     runs {
         client {
@@ -27,11 +31,11 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+            property 'forge.enabledGameTestNamespaces', mod_id
             args '--username', 'Dev####'
 
             mods {
-                jujutsu_kaisen {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -41,10 +45,10 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+            property 'forge.enabledGameTestNamespaces', mod_id
             
             mods {
-                jujutsu_kaisen {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -54,10 +58,10 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'jujutsu_kaisen'
+            property 'forge.enabledGameTestNamespaces', mod_id
 
             mods {
-                jujutsu_kaisen {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -67,10 +71,10 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'jujutsu_kaisen', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                jujutsu_kaisen {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -89,27 +93,43 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.4-45.1.0'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.4:4.2')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     runtimeOnly fg.deobf('curse.maven:spark-361579:4505309')
 }
 
-jar {
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }}
+
+tasks.named('jar', Jar).configure {
     manifest {
         attributes([
-                "Specification-Title": "Jujutsu Kaisen",
+                "Specification-Title": mod_id,
+                "Specification-Vendor": mod_authors,
                 "Specification-Version": "1",
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.jar.archiveVersion,
+                "Implementation-Vendor": mod_authors,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    finalizedBy 'reobfJar'
 }
 
-jar.finalizedBy('reobfJar')
-
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
 }

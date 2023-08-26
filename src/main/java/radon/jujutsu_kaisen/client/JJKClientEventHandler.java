@@ -23,9 +23,11 @@ import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
+import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
+import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
@@ -47,6 +49,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -98,7 +101,24 @@ public class JJKClientEventHandler {
                     PacketHandler.sendToServer(new JumpInputListenerC2SPacket(true));
                     listener.setJump(true);
                 }
+                if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
+                    MeleeAbilityOverlay.scroll(1);
+                } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {
+                    MeleeAbilityOverlay.scroll(-1);
+                }
+                if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
+                    mc.setScreen(new AbilityScreen());
+                }
+                if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
+                    mc.setScreen(new DomainScreen());
+                }
             } else if (event.getAction() == InputConstants.RELEASE) {
+                if (event.getKey() == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) {
+                    mc.screen.onClose();
+                }
+                if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
+                    mc.screen.onClose();
+                }
                 if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
                     PacketHandler.sendToServer(new JumpInputListenerC2SPacket(false));
                     listener.setJump(false);
@@ -158,18 +178,18 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(JJKKeys.ACTIVATE_ABILITY);
-            event.register(JJKKeys.ABILITY_LEFT);
             event.register(JJKKeys.ABILITY_RIGHT);
-            event.register(JJKKeys.ABILITY_SCROLL);
+            event.register(JJKKeys.ABILITY_LEFT);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
-            event.register(JJKKeys.ACTIVATE_DOMAIN_OR_SIMPLE_DOMAIN);
             event.register(JJKKeys.ACTIVATE_WATER_WALKING);
+            event.register(JJKKeys.SHOW_ABILITY_MENU);
+            event.register(JJKKeys.SHOW_DOMAIN_MENU);
         }
 
         @SubscribeEvent
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
+            event.registerAboveAll("ability_overlay", MeleeAbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
         }
@@ -219,10 +239,11 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
-            event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), FireArrowRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUTA_OKKOTSU.get(), YutaOkkotsuRenderer::new);
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
             event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_RED.get(), MaximumRedRenderer::new);
             event.registerEntityRenderer(JJKEntities.BULLET.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
@@ -249,10 +270,15 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
+            JJKShaders.onRegisterShaders(event);
         }
 
         @SubscribeEvent

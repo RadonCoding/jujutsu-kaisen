@@ -11,7 +11,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.entity.sorcerer.YujiItadoriEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlackFlash {
@@ -31,7 +30,7 @@ public class BlackFlash {
                         int seconds = (int) (owner.level.getGameTime() - lastBlackFlashTime) / 20;
 
                         if (lastBlackFlashTime == 0 || seconds > 1) {
-                            if (HelperMethods.RANDOM.nextInt(cap.isInZone(owner) ? 3 : owner instanceof YujiItadoriEntity ? 50 : 250) != 0) {
+                            if (HelperMethods.RANDOM.nextInt(cap.isInZone(owner) ? 3 : 100) != 0) {
                                 return;
                             }
                         } else {
@@ -39,7 +38,7 @@ public class BlackFlash {
                         }
                         cap.onBlackFlash(owner);
 
-                        event.setAmount(event.getAmount() * 5.0F);
+                        event.setAmount((float) Math.pow(event.getAmount(), 2.5D));
 
                         target.level.playSound(null, target.getX(), target.getY(), target.getZ(),
                                 SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);

@@ -5,7 +5,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -75,7 +75,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
             Entity attacker = event.getSource().getEntity();
 
