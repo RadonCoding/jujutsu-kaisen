@@ -276,7 +276,10 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    if (source.is(JJKDamageSources.JUJUTSU)) {
+                    boolean melee = source.getDirectEntity() == source.getEntity() &&
+                            (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+
+                    if (melee || source.is(JJKDamageSources.JUJUTSU)) {
                         if (target.level instanceof ServerLevel level) {
                             for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
                                 Entity owner = domain.getOwner();
@@ -298,8 +301,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             return;
                         }
 
-                        if (source.getDirectEntity() == source.getEntity() &&
-                                (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
+                        if (melee) {
                             if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                                 target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                                 return;

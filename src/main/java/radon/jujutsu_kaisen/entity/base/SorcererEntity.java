@@ -76,6 +76,8 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
+            if (this.random.nextInt(Math.max(1, this.getGrade().ordinal() * (this.isCurse() ? 50 : 25) / (this.isCurse() && this.level.isNight() ? 2 : 1))) != 0) return false;
+
             if (this.isCurse()) {
                 if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                     if (!this.isInVillage() && !this.isInFortress()) return false;

@@ -33,7 +33,7 @@ import java.util.Optional;
 public class MaximumRedBeam extends JujutsuProjectile {
     public static final int FRAMES = 3;
     public static final float SCALE = 1.0F;
-    private static final double RADIUS = 20;
+    private static final double RADIUS = 10;
     private static final float DAMAGE = 5.0F;
     public static final int CHARGE = 20;
     public static final int DURATION = 20;

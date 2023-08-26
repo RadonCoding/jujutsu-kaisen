@@ -132,10 +132,10 @@ public class JJKClientEventHandler {
 
             assert mc.player != null;
 
+            LivingEntity target = event.getEntity();
+
             mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.hasTrait(Trait.SIX_EYES)) {
-                    LivingEntity target = event.getEntity();
-
                     if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
                         Entity viewer = Minecraft.getInstance().getCameraEntity();
 
@@ -266,6 +266,8 @@ public class JJKClientEventHandler {
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_TOTALITY.get(), DivineDogTotalityRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CYCLOPS_CURSE.get(), CyclopsCurseRenderer::new);
         }
 
         @SubscribeEvent
@@ -318,6 +320,8 @@ public class JJKClientEventHandler {
 
                                 pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.FISH_CURSE_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.CYCLOPS_CURSE_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.DISPLAY_CASE.get());
                                 pOutput.accept(JJKItems.ALTAR.get());

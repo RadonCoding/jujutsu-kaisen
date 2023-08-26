@@ -95,7 +95,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.FLYING_SPEED, 0.32D)
+                .add(Attributes.FLYING_SPEED)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE);
     }
@@ -214,6 +214,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 this.setOpen(target != null && target.getMaxHealth() > Player.MAX_HEALTH);
             }
         }
+    }
+
+    @Override
+    public @NotNull List<Ability> getCustom() {
+        return List.of(JJKAbilities.PURE_LOVE.get());
     }
 
     @Override

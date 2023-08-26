@@ -5,13 +5,13 @@
       "#forge:no_mob_spawns"
     ],
     "if_any": [
-      "#minecraft:is_overworld"
+      "#jujutsu_kaisen:has_mobs"
     ]
   },
   "spawners": [
     {
       "type": "jujutsu_kaisen:yuji_itadori",
-      "weight": 1,
+      "weight": 100,
       "minCount": 1,
       "maxCount": 1
     }

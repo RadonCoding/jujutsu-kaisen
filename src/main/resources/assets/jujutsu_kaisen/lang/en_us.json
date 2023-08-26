@@ -60,6 +60,8 @@
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
+  "item.jujutsu_kaisen.fish_curse_spawn_egg": "Spawn Fish Curse",
+  "item.jujutsu_kaisen.cyclops_curse_spawn_egg": "Spawn Cyclops Curse",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_iron_mountain_one": "Coffin of Iron Mountain One",
@@ -123,8 +125,6 @@
   "ability.jujutsu_kaisen.rika": "Rika",
   "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
   "ability.jujutsu_kaisen.rika.disable": "Released Rika",
-
-  "ability.jujutsu_kaisen.pure_love": "Pure Love",
 
   "ability.jujutsu_kaisen.copy": "Copy",
   "ability.jujutsu_kaisen.copy.enable": "Activated copy",
@@ -225,6 +225,8 @@
   "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
   "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
+  "entity.jujutsu_kaisen.fish_curse": "Fish Curse",
+  "entity.jujutsu_kaisen.cyclops_curse": "Cyclops Curse",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 
