@@ -25,11 +25,11 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TenShadowsSummon;
@@ -42,6 +42,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MahoragaEntity extends TenShadowsSummon {
@@ -218,7 +219,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                     target.setDeltaMovement(this.getLookAngle().scale(SWING_LAUNCH));
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(this.getLookAngle());
-                    this.level.explode(this, JJKDamageSources.indirectJujutsuAttack(this, null, null), null, explosionPos, SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                    this.level.explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }
         }
@@ -296,6 +297,11 @@ public class MahoragaEntity extends TenShadowsSummon {
                 this.breakBlocks();
             }
         }
+    }
+
+    @Override
+    public @NotNull List<Ability> getCustom() {
+        return List.of(JJKAbilities.WHEEL.get());
     }
 
     @Override

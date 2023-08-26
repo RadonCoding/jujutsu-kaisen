@@ -80,6 +80,10 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xC1BA50, 0x3B0F04, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> FISH_CURSE_SPAWN_EGG = ITEMS.register("fish_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.FISH_CURSE, 0x181A21, 0x252935, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> CYCLOPS_CURSE_SPAWN_EGG = ITEMS.register("cyclops_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.CYCLOPS_CURSE, 0xBEC0C5, 0xB7ACBA, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

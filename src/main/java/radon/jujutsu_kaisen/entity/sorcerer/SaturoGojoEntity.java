@@ -84,9 +84,7 @@ public class SaturoGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
+    protected void customServerAiStep() {
         if (!this.level.isClientSide) {
             LivingEntity target = this.getTarget();
 

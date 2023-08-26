@@ -9,17 +9,18 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
-import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
-import radon.jujutsu_kaisen.ability.limitless.*;
-import radon.jujutsu_kaisen.ability.misc.*;
-import radon.jujutsu_kaisen.ability.rika.Copy;
-import radon.jujutsu_kaisen.ability.rika.PureLove;
-import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Dismantle;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.FireArrow;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
+import radon.jujutsu_kaisen.ability.limitless.*;
+import radon.jujutsu_kaisen.ability.misc.*;
+import radon.jujutsu_kaisen.ability.rika.Copy;
+import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
+import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
@@ -29,8 +30,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -58,7 +58,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
-    public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
     public static RegistryObject<Ability> COPY = ABILITIES.register("copy", Copy::new);
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
@@ -88,10 +87,13 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
     public static RegistryObject<Ability> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
+    public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 
     public static RegistryObject<Ability> DIVERGENT_FIST = ABILITIES.register("divergent_fist", DivergentFist::new);
 
-    public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
+    public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
+    public static RegistryObject<Ability> CYCLOPS_SMASH = ABILITIES.register("cyclops_smash", CyclopsSmash::new);
+
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
@@ -128,10 +130,11 @@ public class JJKAbilities {
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
-        Set<Ability> abilities = new HashSet<>();
+        Set<Ability> abilities = new LinkedHashSet<>();
 
-        if (owner instanceof RikaEntity) abilities.add(JJKAbilities.PURE_LOVE.get());
-        if (owner instanceof MahoragaEntity) abilities.add(JJKAbilities.WHEEL.get());
+        if (owner instanceof ISorcerer sorcerer) {
+            abilities.addAll(sorcerer.getCustom());
+        }
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             abilities.add(JJKAbilities.AIR_PUNCH.get());

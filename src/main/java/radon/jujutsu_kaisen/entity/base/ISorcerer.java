@@ -22,6 +22,7 @@ public interface ISorcerer {
         return null;
     }
     @NotNull List<Trait> getTraits();
+    default @NotNull List<Ability> getCustom() { return List.of(); }
     boolean isCurse();
 
     @Nullable Ability getDomain();

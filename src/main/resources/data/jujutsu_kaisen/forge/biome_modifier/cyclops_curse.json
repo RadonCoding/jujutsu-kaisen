@@ -10,7 +10,7 @@
   },
   "spawners": [
     {
-      "type": "jujutsu_kaisen:satoru_gojo",
+      "type": "jujutsu_kaisen:cyclops_curse",
       "weight": 100,
       "minCount": 1,
       "maxCount": 1

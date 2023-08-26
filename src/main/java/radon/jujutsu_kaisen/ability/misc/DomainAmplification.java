@@ -13,13 +13,15 @@ import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) < 5.0D && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        Ability domain = ((ISorcerer) owner).getDomain();
+        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -31,7 +33,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         if (owner.level instanceof ServerLevel level) {
             for (int i = 0; i < 8; i++) {
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.CURSED_ENERGY_COLOR, 1.5F, 0.5F, false, 1),
+                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), 1.5F, 0.5F, false, 1),
                         owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),
                         owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
                         owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),

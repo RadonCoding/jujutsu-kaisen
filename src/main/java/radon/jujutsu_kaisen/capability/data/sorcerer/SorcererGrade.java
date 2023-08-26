@@ -5,11 +5,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public enum SorcererGrade {
     GRADE_4(0.0F, 1.0F, 10.0F),
-    GRADE_3(100.0F, 1.1F, 25.0F),
-    SEMI_GRADE_2(300.0F, 1.2F, 50.0F),
-    GRADE_2(500.0F, 1.3F, 75.0F),
-    SEMI_GRADE_1(1000.0F, 1.4F, 100.0F),
-    GRADE_1(1500.0F, 1.5F, 125.0F),
+    GRADE_3(100.0F, 1.25F, 25.0F),
+    SEMI_GRADE_2(300.0F, 1.5F, 50.0F),
+    GRADE_2(500.0F, 1.75F, 75.0F),
+    SEMI_GRADE_1(1000.0F, 2.0F, 100.0F),
+    GRADE_1(1500.0F, 2.25F, 125.0F),
     SPECIAL_GRADE_1(2000.0F, 2.5F, 150.0F),
     SPECIAL_GRADE(2500.0F, 3.0F, 300.0F);
 

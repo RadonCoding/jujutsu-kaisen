@@ -358,13 +358,13 @@ public class SorcererData implements ISorcererData {
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 20.0D : 15.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 15.0F : 10.0F), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D), AttributeModifier.Operation.ADDITION);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.15F : 0.1F), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.15D : 0.1D), AttributeModifier.Operation.ADDITION);
 
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F)
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
@@ -372,7 +372,7 @@ public class SorcererData implements ISorcererData {
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 10.0D : 5.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",

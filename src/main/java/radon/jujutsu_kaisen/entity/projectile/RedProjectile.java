@@ -11,8 +11,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -36,6 +39,31 @@ public class RedProjectile extends JujutsuProjectile {
         Vec3 look = pShooter.getLookAngle();
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+    }
+
+    private void spawnParticles() {
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+
+        float radius = 4.0F;
+        int count = (int) (radius * 2);
+
+        for (int i = 0; i < count; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * Math.cos(phi);
+
+            double x = center.x() + xOffset * (radius * 0.1F);
+            double y = center.y() + yOffset * (radius * 0.1F);
+            double z = center.z() + zOffset * (radius * 0.1F);
+
+            Vector3f offset = new Vec3(x, y, z).toVector3f();
+
+            this.level.addParticle(new TravelParticle.TravelParticleOptions(offset, ParticleColors.RED_COLOR, 0.1F, 1.0F, 5),
+                    center.x(), center.y(), center.z(), 0.0D, 0.0D, 0.0D);
+        }
     }
 
     private void hurtEntities() {
@@ -78,6 +106,8 @@ public class RedProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
+        this.spawnParticles();
+
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
@@ -90,19 +120,16 @@ public class RedProjectile extends JujutsuProjectile {
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }
-            }
-        }
-
-        if (!this.level.isClientSide) {
-            if (this.getTime() >= DURATION) {
+            } else if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (this.getTime() >= DELAY) {
+                this.hurtEntities();
+
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }
-                this.hurtEntities();
             }
         }
     }

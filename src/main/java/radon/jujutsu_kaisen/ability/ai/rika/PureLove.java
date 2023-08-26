@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.rika;
+package radon.jujutsu_kaisen.ability.ai.rika;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;

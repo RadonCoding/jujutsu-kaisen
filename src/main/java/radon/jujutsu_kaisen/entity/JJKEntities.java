@@ -10,9 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.curse.JogoEntity;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.entity.curse.RugbyFieldCurseEntity;
+import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.projectile.*;
 import radon.jujutsu_kaisen.entity.sorcerer.*;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
@@ -71,6 +69,16 @@ public class JJKEntities {
     public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
             EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
+                            .toString()));
+    public static RegistryObject<EntityType<FishCurseEntity>> FISH_CURSE = ENTITIES.register("fish_curse", () ->
+            EntityType.Builder.<FishCurseEntity>of(FishCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fish_curse")
+                            .toString()));
+    public static RegistryObject<EntityType<CyclopsCurseEntity>> CYCLOPS_CURSE = ENTITIES.register("cyclops_curse", () ->
+            EntityType.Builder.<CyclopsCurseEntity>of(CyclopsCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(2.0F, 6.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cyclops_curse")
                             .toString()));
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
             EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.CREATURE)
@@ -228,6 +236,8 @@ public class JJKEntities {
         event.put(RABBIT_ESCAPE.get(), RabbitEscapeEntity.createAttributes().build());
         event.put(NUE.get(), NueEntity.createAttributes().build());
         event.put(GREAT_SERPENT.get(), GreatSerpentEntity.createAttributes().build());
+        event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
+        event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
