@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.entity.MeteorEntity;
+import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 
 public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
     public MeteorRenderer(EntityRendererProvider.Context pContext) {

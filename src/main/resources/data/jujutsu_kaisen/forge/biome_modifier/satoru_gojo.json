@@ -11,7 +11,7 @@
   "spawners": [
     {
       "type": "jujutsu_kaisen:satoru_gojo",
-      "weight": 100,
+      "weight": 1,
       "minCount": 1,
       "maxCount": 1
     }

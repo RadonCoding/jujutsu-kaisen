@@ -9,7 +9,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.WheelEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -2,21 +2,30 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.ChimeraShadowGardenBlock;
 import radon.jujutsu_kaisen.block.DomainBlock;
-import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
     public ChimeraShadowGardenEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    public boolean hasSureHitEffect() {
+        return false;
     }
 
     @Override
@@ -29,11 +38,13 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
+        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
+
         int width = this.getWidth();
         int height = this.getHeight();
         BlockPos center = this.blockPosition().below(height / 2);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < width * width + height * height;
+        return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
     public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
@@ -69,7 +80,9 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
 
                                         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
                                             original = be.getOriginal();
-                                        } else if (state.getBlock() instanceof DomainBlock) {
+                                        } else if (this.level.getBlockEntity(pos) != null) {
+                                            return;
+                                        } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock) {
                                             return;
                                         }
 
@@ -78,7 +91,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity {
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, this.getId(), original == null ? state : original);
+                                            be.create(this.uuid, original == null ? state : original);
                                         }
                                     }
                                 }

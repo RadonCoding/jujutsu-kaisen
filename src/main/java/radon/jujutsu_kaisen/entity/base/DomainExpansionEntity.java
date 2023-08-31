@@ -52,6 +52,10 @@ public abstract class DomainExpansionEntity extends Mob {
         this.strength = strength;
     }
 
+    public boolean hasSureHitEffect() {
+        return true;
+    }
+
     public abstract boolean checkSureHitEffect();
 
     public Ability getAbility() {

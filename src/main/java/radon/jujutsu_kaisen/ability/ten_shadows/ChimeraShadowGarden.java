@@ -5,7 +5,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
-import radon.jujutsu_kaisen.entity.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -54,7 +54,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
                 }
 
                 for (TenShadowsSummon summon : summons) {
-                    if (summons.stream().noneMatch(x -> x.getType() == summon.getType() && x.isClone())) {
+                    if (summons.stream().noneMatch(x -> x.getJujutsuType() == summon.getJujutsuType() && x.isClone())) {
                         summon.getAbility().spawn(owner, true);
                     }
                 }
@@ -69,13 +69,13 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public int getHeight() {
-        return 8;
+        return 1;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
+        public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
             Entity attacker = event.getSource().getEntity();
 

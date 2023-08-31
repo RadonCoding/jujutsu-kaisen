@@ -12,25 +12,34 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.WheelEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
@@ -40,6 +49,8 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JJKEventHandler {
@@ -138,11 +149,13 @@ public class JJKEventHandler {
             });
         }
 
-        @SubscribeEvent
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
             Entity attacker = source.getEntity();
             LivingEntity victim = event.getEntity();
+
+            boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
             if (attacker instanceof SummonEntity tamable) {
                 if (tamable.isTame() && tamable.getOwner() == victim) {
@@ -150,16 +163,51 @@ public class JJKEventHandler {
                     return;
                 }
             } else if (victim instanceof SummonEntity tamable) {
-                if (tamable.isTame() && tamable.getOwner() == attacker) {
+                if (melee && tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
                 }
             }
 
             if (attacker instanceof LivingEntity living) {
-                if (source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK)) && living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
-                    event.setCanceled(true);
+                ItemStack stack = null;
+
+                if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
+                    stack = chain.getStack();
+                } else if (melee) {
+                    stack = living.getItemInHand(InteractionHand.MAIN_HAND);
+                }
+
+                if (stack != null) {
+                    if (stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                        if (attacker instanceof Player player) {
+                            stack.hurtEnemy(victim, player);
+
+                            if (stack.isEmpty()) {
+                                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                            }
+                        }
+                        victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
+                        event.setCanceled(true);
+                    } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
+                        Vec3 pos = living.getEyePosition().add(living.getLookAngle());
+                        living.level.explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                    } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ISorcererData::clearToggled);
+                    }
+                }
+
+                if (attacker instanceof MahoragaEntity mahoraga) {
+                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
+                        mahoraga.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                            Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+
+                            for (Ability ability : toggled) {
+                                if (!attackerCap.isAdaptedTo(ability)) continue;
+                                victimCap.toggle(victim, ability);
+                            }
+                        });
+                    });
                 }
             }
 
@@ -196,6 +244,20 @@ public class JJKEventHandler {
                             domain.setStrength(strength - factor);
                         }
                     });
+                }
+
+                DamageSource source = event.getSource();
+
+                if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
+                    if (source.getEntity() instanceof LivingEntity attacker) {
+                        if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
+                            Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
+                            attacker.level.explode(attacker, attacker instanceof Player player ? attacker.damageSources().playerAttack(player) : attacker.damageSources().mobAttack(attacker),
+                                    null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                        } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ISorcererData::clearToggled);
+                        }
+                    }
                 }
             }
 
@@ -259,7 +321,7 @@ public class JJKEventHandler {
                     if (victim instanceof SummonEntity) return;
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
-                        if (killerCap.isCurse() ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {
+                        if (killerCap.getType() == JujutsuType.CURSE ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {
                             killerCap.addTrait(Trait.STRONGEST);
 
                             if (killer instanceof ServerPlayer player) {
@@ -267,7 +329,7 @@ public class JJKEventHandler {
                             }
                         }
 
-                        if (killerCap.isCurse() != victimCap.isCurse()) {
+                        if (killerCap.getType() != victimCap.getType()) {
                             SorcererGrade grade = SorcererGrade.values()[victimCap.getGrade().ordinal()];
 
                             killerCap.exorcise(killer, grade);
@@ -278,17 +340,24 @@ public class JJKEventHandler {
                         }
                     });
 
-                    if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                        if (!victimCap.isCurse() && victimCap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                            if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
-                                victim.setHealth(victim.getMaxHealth() / 2);
-                                victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
-                                event.setCanceled(true);
+                    int chance = 10;
 
-                                if (victim instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                                }
-                                return;
+                    for (InteractionHand hand : InteractionHand.values()) {
+                        ItemStack stack = victim.getItemInHand(hand);
+
+                        if (stack.is(Items.TOTEM_OF_UNDYING)) {
+                            chance = 7;
+                        }
+                    }
+
+                    if (HelperMethods.RANDOM.nextInt(chance) == 0) {
+                        if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
+                            victim.setHealth(victim.getMaxHealth() / 2);
+                            victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+                            event.setCanceled(true);
+
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                             }
                         }
                     }

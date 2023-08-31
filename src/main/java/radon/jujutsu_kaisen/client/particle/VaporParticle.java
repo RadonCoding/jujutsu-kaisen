@@ -23,7 +23,7 @@ public class VaporParticle<T extends VaporParticle.VaporParticleOptions> extends
         this.lifetime = options.lifetime();
 
         this.xd = pXSpeed;
-        this.yd = this.random.nextFloat() * pYSpeed;
+        this.yd = pYSpeed;
         this.zd = pZSpeed;
 
         Vector3f color = options.color();

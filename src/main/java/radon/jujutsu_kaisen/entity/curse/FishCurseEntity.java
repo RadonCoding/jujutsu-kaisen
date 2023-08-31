@@ -10,7 +10,6 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -141,15 +141,14 @@ public class FishCurseEntity extends SorcererEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new HealingGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(4, new HealingGoal(this));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, false));
+        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, true));
     }
 
     @Override
@@ -168,8 +167,8 @@ public class FishCurseEntity extends SorcererEntity {
     }
 
     @Override
-    public boolean isCurse() {
-        return true;
+    public JujutsuType getJujutsuType() {
+        return JujutsuType.CURSE;
     }
 
     @Override

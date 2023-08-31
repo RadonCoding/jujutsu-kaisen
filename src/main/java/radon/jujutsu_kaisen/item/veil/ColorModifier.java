@@ -8,8 +8,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 public class ColorModifier extends Modifier {
     private final DyeColor color;
 
-    public ColorModifier(DyeColor color) {
-        super(Type.COLOR);
+    public ColorModifier(DyeColor color, Action action) {
+        super(Type.COLOR, action);
 
         this.color = color;
     }

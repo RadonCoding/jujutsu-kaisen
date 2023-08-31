@@ -15,10 +15,12 @@ public class ModifierUtils {
 
         return switch (type) {
             case NONE -> new Modifier(nbt);
-            case PLAYER_BLACKLIST -> new PlayerBlacklistModifier(nbt);
-            case ENTITY_BLACKLIST -> new EntityBlacklistModifier(nbt);
+            case PLAYER -> new PlayerModifier(nbt);
+            case ENTITY -> new EntityModifier(nbt);
             case COLOR -> new ColorModifier(nbt);
             case TRANSPARENT -> new TransparentModifier(nbt);
+            case CURSE -> new CurseModifier(nbt);
+            case SORCERER -> new SorcererModifier(nbt);
         };
     }
 
@@ -34,7 +36,7 @@ public class ModifierUtils {
             ListTag modifiersTag = new ListTag();
 
             for (int i = 0; i < MAX_MODIFIERS; i++) {
-                modifiersTag.add(new Modifier(Modifier.Type.NONE).serialize());
+                modifiersTag.add(new Modifier(Modifier.Type.NONE, Modifier.Action.NONE).serialize());
             }
             nbt.put("modifiers", modifiersTag);
         }

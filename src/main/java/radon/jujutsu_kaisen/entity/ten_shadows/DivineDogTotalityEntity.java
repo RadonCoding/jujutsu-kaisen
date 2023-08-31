@@ -6,7 +6,10 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -15,7 +18,8 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -39,8 +43,8 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                .add(owner.getLookAngle().yRot(90.0F));
+                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                .add(HelperMethods.getLookAngle(owner).yRot(90.0F));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -51,9 +55,8 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.6D, true));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));

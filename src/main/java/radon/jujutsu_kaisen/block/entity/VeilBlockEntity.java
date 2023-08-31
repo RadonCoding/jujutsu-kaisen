@@ -1,10 +1,11 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -15,41 +16,76 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.item.veil.EntityBlacklistModifier;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.item.veil.EntityModifier;
 import radon.jujutsu_kaisen.item.veil.Modifier;
-import radon.jujutsu_kaisen.item.veil.ModifierUtils;
-import radon.jujutsu_kaisen.item.veil.PlayerBlacklistModifier;
+import radon.jujutsu_kaisen.item.veil.PlayerModifier;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VeilBlockEntity extends BlockEntity {
     private int counter;
 
-    private List<Modifier> modifiers;
+    private BlockPos parent;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilBlockEntity pBlockEntity) {
-        if (++pBlockEntity.counter == VeilRodBlockEntity.INTERVAL * 2) {
+        if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
+
+        pBlockEntity.counter = 0;
+
+        List<BlockPos> nodes = new ArrayList<>();
+
+        if (pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity parent) {
+            BlockPos.MutableBlockPos current = new BlockPos.MutableBlockPos();
+            current.set(pBlockEntity.parent);
+
+            boolean success = true;
+
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                if (!success) break;
+
+                success = false;
+
+                for (int i = 1; i < VeilRodBlockEntity.RANGE; i++) {
+                    BlockPos relative = current.relative(direction, i);
+
+                    if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == parent.frequency) {
+                        nodes.add(relative);
+                        current.set(relative);
+                        success = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (nodes.size() != 4) {
             pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
         }
     }
 
-    public void setModifiers(@NotNull List<Modifier> modifiers) {
-        this.modifiers = modifiers;
+    public void setParent(BlockPos parent) {
+        this.parent = parent;
         this.sendUpdates();
     }
 
     public boolean isBlacklisted(Entity entity) {
-        if (entity == null || this.modifiers == null) return false;
+        if (!(entity.level.getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+
+        if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
 
         if (entity instanceof Player player) {
-            for (Modifier modifier : this.modifiers) {
-                if (modifier.getType() != Modifier.Type.PLAYER_BLACKLIST) continue;
-                if (((PlayerBlacklistModifier) modifier).getName().equals(player.getDisplayName().getString())) {
+            for (Modifier modifier : be.modifiers) {
+                if (modifier.getAction() != Modifier.Action.DENY || modifier.getType() != Modifier.Type.PLAYER)
+                    continue;
+                if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
                     return true;
                 }
             }
@@ -57,20 +93,64 @@ public class VeilBlockEntity extends BlockEntity {
             Registry<EntityType<?>> registry = entity.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             ResourceLocation key = registry.getKey(entity.getType());
 
-            if (key == null) return false;
-
-            for (Modifier modifier : this.modifiers) {
-                if (modifier.getType() != Modifier.Type.ENTITY_BLACKLIST) continue;
-                if (key.equals(((EntityBlacklistModifier) modifier).getKey())) {
-                    return true;
+            if (key != null) {
+                for (Modifier modifier : be.modifiers) {
+                    if (modifier.getAction() != Modifier.Action.DENY || modifier.getType() != Modifier.Type.ENTITY)
+                        continue;
+                    if (key.equals(((EntityModifier) modifier).getKey())) return true;
                 }
+            }
+        }
+
+        for (Modifier modifier : be.modifiers) {
+            if (modifier.getAction() == Modifier.Action.DENY && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
+                AtomicBoolean result = new AtomicBoolean();
+                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                        result.set(cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                                cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER));
+                if (result.get()) return true;
             }
         }
         return false;
     }
 
-    public void reset() {
-        this.counter = 0;
+    public boolean isWhitelisted(Entity entity) {
+        if (!(entity.level.getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
+
+        if (entity instanceof Player player) {
+            for (Modifier modifier : be.modifiers) {
+                if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER) continue;
+                if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
+                    return true;
+                }
+            }
+        } else {
+            Registry<EntityType<?>> registry = entity.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            ResourceLocation key = registry.getKey(entity.getType());
+
+            if (key != null) {
+                for (Modifier modifier : be.modifiers) {
+                    if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.ENTITY) continue;
+                    if (key.equals(((EntityModifier) modifier).getKey())) return true;
+                }
+            }
+        }
+
+        for (Modifier modifier : be.modifiers) {
+            if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
+                AtomicBoolean result = new AtomicBoolean();
+                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                        result.set(cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                                cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER));
+                if (result.get()) return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAllowed(Entity entity) {
+        return this.isWhitelisted(entity) || !this.isBlacklisted(entity);
     }
 
     public void sendUpdates() {
@@ -98,17 +178,13 @@ public class VeilBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
-        if (this.modifiers != null) {
-            pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
-        }
+        pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
     }
 
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
 
-        if (pTag.contains("modifiers")) {
-            this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));
-        }
+        this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
     }
 }

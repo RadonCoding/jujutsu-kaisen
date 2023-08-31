@@ -1,13 +1,19 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.NueTotalityEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Nue extends Summon<NueEntity> {
     public Nue() {
@@ -19,7 +25,29 @@ public class Nue extends Summon<NueEntity> {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
-        return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.75F;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+    }
+
+    @Override
+    public Status checkStatus(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasSummonOfClass(level, NueTotalityEntity.class)));
+        }
+        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+    }
+
+    @Override
+    public Status checkToggleable(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasSummonOfClass(level, NueTotalityEntity.class)));
+        }
+        return result.get() ? Status.FAILURE : super.checkToggleable(owner);
     }
 
     @Override

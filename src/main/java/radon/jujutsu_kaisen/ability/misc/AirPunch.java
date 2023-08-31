@@ -4,6 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -12,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AirPunch extends Ability {
@@ -56,8 +56,8 @@ public class AirPunch extends Ability {
                             if (owner.distanceTo(target) < 3.0D) {
                                 owner.swing(InteractionHand.MAIN_HAND);
 
-                                owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null,
-                                        owner.getX(), owner.getY(), owner.getZ(), cap.getGrade().getPower(), false,
+                                owner.level.explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),
+                                        null, owner.getX(), owner.getY(), owner.getZ(), cap.getGrade().getPower(), false,
                                         owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
                                 return true;
                             }

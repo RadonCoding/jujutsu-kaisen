@@ -130,7 +130,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         this.discard();
                     } else {
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                                .add(owner.getLookAngle().scale(OFFSET));
+                                .add(HelperMethods.getLookAngle(owner).scale(OFFSET));
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {

@@ -8,5 +8,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKItemTags {
     public static final TagKey<Item> ALTAR = ItemTags.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "altar"));
-
+    public static final TagKey<Item> CURSED_TOOL = ItemTags.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_tool"));
+    public static final TagKey<Item> CURSED_OBJECT = ItemTags.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_object"));
 }

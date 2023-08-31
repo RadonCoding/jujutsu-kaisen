@@ -6,7 +6,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -24,8 +27,9 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -50,7 +54,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -84,13 +88,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
         if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
 
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
@@ -146,7 +148,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!this.isVehicle()) {
+        if (this.isTame() && !this.isVehicle()) {
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());

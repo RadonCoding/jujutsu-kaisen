@@ -8,26 +8,29 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
+import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
+import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
+import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
+import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Cleave;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.Dismantle;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.FireArrow;
-import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.rika.Copy;
-import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
 import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
+import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -54,6 +57,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
     public static RegistryObject<Ability> CLEAVE = ABILITIES.register("cleave", Cleave::new);
+    public static RegistryObject<Ability> DISMANTLE_BARRAGE = ABILITIES.register("dismantle_barrage", DismantleBarrage::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
@@ -64,12 +68,16 @@ public class JJKAbilities {
     public static RegistryObject<Ability> VOLCANO = ABILITIES.register("volcano", Volcano::new);
     public static RegistryObject<Ability> MAXIMUM_METEOR = ABILITIES.register("maximum_meteor", MaximumMeteor::new);
     public static RegistryObject<Ability> DISASTER_FLAMES = ABILITIES.register("disaster_flames", DisasterFlames::new);
+    public static RegistryObject<Ability> FLAMETHROWER = ABILITIES.register("flamethrower", Flamethrower::new);
+    public static RegistryObject<Ability> FIREBALL = ABILITIES.register("fireball", Fireball::new);
     public static RegistryObject<Ability> COFFIN_OF_IRON_MOUNTAIN = ABILITIES.register("coffin_of_iron_mountain", CoffinOfIronMountain::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
     public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
-    public static RegistryObject<Ability> RCT = ABILITIES.register("rct", radon.jujutsu_kaisen.ability.misc.RCT::new);
+    public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
+    public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
+    public static RegistryObject<Ability> SHOOT_RCT = ABILITIES.register("shoot_rct", ShootRCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
@@ -79,20 +87,29 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
     public static RegistryObject<Summon<?>> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
+    public static RegistryObject<Summon<?>> NUE_TOAD = ABILITIES.register("nue_toad", NueToad::new);
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
+    public static RegistryObject<Summon<?>> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);
     public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
+    public static RegistryObject<Summon<?>> MAX_ELEPHANT = ABILITIES.register("max_elephant", MaxElephant::new);
+    public static RegistryObject<Summon<?>> TRANQUIL_DEER = ABILITIES.register("tranquil_deer", RoundDeer::new);
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE = ABILITIES.register("release", Release::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
     public static RegistryObject<Ability> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
+    public static RegistryObject<Ability> NUE_TOTALITY_LIGHTNING = ABILITIES.register("nue_totality_lightning", NueTotalityLightning::new);
+    public static RegistryObject<Ability> PIERCING_WATER = ABILITIES.register("piercing_water", PiercingWater::new);
     public static RegistryObject<Summon<?>> WHEEL = ABILITIES.register("wheel", Wheel::new);
 
     public static RegistryObject<Ability> DIVERGENT_FIST = ABILITIES.register("divergent_fist", DivergentFist::new);
 
     public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
     public static RegistryObject<Ability> CYCLOPS_SMASH = ABILITIES.register("cyclops_smash", CyclopsSmash::new);
+    public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
+    public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
+    public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
 
 
     public static ResourceLocation getKey(Ability ability) {
@@ -138,6 +155,7 @@ public class JJKAbilities {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             abilities.add(JJKAbilities.AIR_PUNCH.get());
+            abilities.add(JJKAbilities.BARRAGE.get());
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 abilities.add(JJKAbilities.DASH.get());
@@ -145,10 +163,14 @@ public class JJKAbilities {
                 abilities.add(JJKAbilities.SMASH.get());
                 abilities.add(JJKAbilities.WATER_WALKING.get());
 
-                if (cap.isCurse()) {
+                if (cap.getType() == JujutsuType.CURSE) {
                     abilities.add(JJKAbilities.HEAL.get());
                 } else if (cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
                     abilities.add(JJKAbilities.RCT.get());
+
+                    if (cap.hasTrait(Trait.STRONGEST)) {
+                        abilities.add(JJKAbilities.SHOOT_RCT.get());
+                    }
                 }
 
                 if (cap.hasTrait(Trait.SIMPLE_DOMAIN)) abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());

@@ -1,10 +1,13 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
@@ -15,7 +18,7 @@ public class Teleport extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.hasLineOfSight(target) && owner.distanceTo(target) > 5.0D;
+        return target != null && owner.hasLineOfSight(target) && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
     }
 
     @Override
@@ -23,20 +26,23 @@ public class Teleport extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
-            return hit.getEntity();
-        }
-        return null;
+    private @Nullable HitResult getTarget(LivingEntity owner) {
+        HitResult hit = HelperMethods.getLookAtHit(owner, RANGE);
+        if (hit.getType() == HitResult.Type.MISS) return null;
+        if (hit.getType() == HitResult.Type.BLOCK && owner.level.getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() &&
+                ((BlockHitResult) hit).getDirection() == Direction.UP) return null;
+        return hit;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        Entity target = this.getTarget(owner);
+        HitResult target = this.getTarget(owner);
 
         if (target != null) {
             owner.swing(InteractionHand.MAIN_HAND);
-            owner.teleportTo(target.getX(), target.getY(), target.getZ());
+
+            Vec3 pos = target.getLocation();
+            owner.teleportTo(pos.x(), pos.y(), pos.z());
         }
     }
 
@@ -47,7 +53,7 @@ public class Teleport extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        Entity target = this.getTarget(owner);
+        HitResult target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;

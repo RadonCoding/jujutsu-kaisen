@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     public RabbitEscape() {
@@ -18,7 +17,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && HelperMethods.RANDOM.nextInt(3) == 0 && owner.getLastHurtByMobTimestamp() - owner.tickCount == 0;
+        return target != null && owner.getLastHurtByMobTimestamp() - owner.tickCount == 0;
     }
 
     @Override

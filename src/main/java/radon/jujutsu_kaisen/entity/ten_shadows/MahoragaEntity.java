@@ -11,7 +11,10 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -29,10 +32,11 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -72,7 +76,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
+                .subtract(HelperMethods.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
@@ -91,7 +95,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.6D, true));
-        this.goalSelector.addGoal(goal++, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
@@ -114,9 +118,10 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
+                .add(Attributes.FOLLOW_RANGE, MAX_DISTANCE)
+                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D)
-                .add(Attributes.FOLLOW_RANGE, 64.0D);
+                .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
     }
 
     @Override
@@ -174,7 +179,7 @@ public class MahoragaEntity extends TenShadowsSummon {
             AtomicBoolean result = new AtomicBoolean();
 
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.isCurse()));
+                    result.set(cap.getType() == JujutsuType.CURSE));
 
             if (result.get() && this.entityData.get(DATA_POSITIVE_SWORD)) {
                 d0 *= 3.0D;
@@ -193,19 +198,11 @@ public class MahoragaEntity extends TenShadowsSummon {
             AtomicBoolean result = new AtomicBoolean();
 
             target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.isCurse()));
+                    result.set(cap.getType() == JujutsuType.CURSE));
             this.entityData.set(DATA_POSITIVE_SWORD, result.get());
         }
 
-        this.setSprinting(this.moveControl.getSpeedModifier() > 1.0D);
-
-        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (ClosedDomainExpansionEntity domain : HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox())) {
-                if (cap.isAdaptedTo(domain.getAbility())) {
-                    domain.discard();
-                }
-            }
-        });
+        this.setSprinting(this.getDeltaMovement().lengthSqr() >= 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
 
         int slash = this.entityData.get(DATA_SLASH);
 
@@ -248,7 +245,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                 this.level.addFreshEntity(dog);
             }
             for (int i = 0; i < 6; i++) {
-                ToadEntity dog = new ToadEntity(this, true);
+                ToadEntity dog = new ToadEntity(this, true, false);
                 dog.setRitual(i, RITUAL_DURATION);
                 this.level.addFreshEntity(dog);
             }

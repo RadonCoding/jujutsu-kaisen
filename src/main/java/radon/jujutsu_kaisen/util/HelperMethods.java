@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -19,6 +21,30 @@ public class HelperMethods {
     public static <T extends Enum<?>> T randomEnum(Class<T> enumClass) {
         int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
         return enumClass.getEnumConstants()[x];
+    }
+
+    public static float getXRotD(Entity src, Vec3 target) {
+        double d0 = target.x() - src.getX();
+        double d1 = target.y() - src.getEyeY();
+        double d2 = target.z() - src.getZ();
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        return (float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)));
+    }
+
+    public static float getYRotD(Entity src,Vec3 target) {
+        double d0 = target.x() - src.getX();
+        double d1 = target.z() - src.getZ();
+        return (float) (Mth.atan2(d1, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F;
+    }
+
+    public static Vec3 getLookAngle(LivingEntity entity) {
+        float f = entity.getXRot() * ((float)Math.PI / 180F);
+        float f1 = -entity.yHeadRot * ((float)Math.PI / 180F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
@@ -54,7 +80,7 @@ public class HelperMethods {
                 center.x() + 32.0D, center.y() + 32.0D, center.z() + 32.0D);
 
         for (Entity entity : level.getEntities(null, area)) {
-            if (entity.getBoundingBox().intersects(bounds)) {
+            if (bounds.intersects(entity.getBoundingBox())) {
                 collisions.add(entity);
             }
         }

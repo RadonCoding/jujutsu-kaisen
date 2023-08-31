@@ -8,26 +8,30 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.Modifier;
 import radon.jujutsu_kaisen.item.veil.ModifierUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class VeilRodBlockEntity extends BlockEntity {
-    private static final int RANGE = 64;
-    public static final int INTERVAL = 20;
+    public static final int RANGE = 128;
+    public static final int INTERVAL = 5;
 
     private int counter;
-    private int frequency;
+    public int frequency;
 
-    private @Nullable List<Modifier> modifiers;
+    @Nullable
+    public List<Modifier> modifiers;
+    @Nullable
+    public UUID ownerUUID;
 
     public VeilRodBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL_ROD.get(), pPos, pBlockState);
@@ -45,6 +49,8 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         boolean success = true;
 
+        Set<Modifier> modifiers = new HashSet<>();
+
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             if (!success) break;
 
@@ -53,8 +59,10 @@ public class VeilRodBlockEntity extends BlockEntity {
             for (int i = 1; i < RANGE; i++) {
                 BlockPos relative = current.relative(direction, i);
 
-                if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == pBlockEntity.frequency &&
-                        ((be.modifiers == null && pBlockEntity.modifiers == null) || be.modifiers != null && be.modifiers.equals(pBlockEntity.modifiers))) {
+                if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == pBlockEntity.frequency) {
+                    if (be.modifiers != null) {
+                        modifiers.addAll(be.modifiers);
+                    }
                     nodes.add(relative);
                     current.set(relative);
                     success = true;
@@ -64,17 +72,13 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
 
         if (nodes.size() == 4) {
-            List<Modifier> modifiers = pBlockEntity.modifiers;
-
             BlockState state = JJKBlocks.VEIL.get().defaultBlockState();
 
-            if (modifiers != null) {
-                for (Modifier modifier : modifiers) {
-                    if (modifier.getType() == Modifier.Type.COLOR) {
-                        state = state.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
-                    } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
-                        state = state.setValue(VeilBlock.TRANSPARENT, true);
-                    }
+            for (Modifier modifier : modifiers) {
+                if (modifier.getType() == Modifier.Type.COLOR) {
+                    state = state.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
+                } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
+                    state = state.setValue(VeilBlock.TRANSPARENT, true);
                 }
             }
 
@@ -94,14 +98,16 @@ public class VeilRodBlockEntity extends BlockEntity {
                         pos.getY() == corner1.getY() || pos.getY() == corner2.getY()) {
                     BlockState original = pLevel.getBlockState(pos);
 
-                    if (original.is(JJKBlocks.VEIL.get()) || original.isAir()) {
+                    for (DomainExpansionEntity domain : pLevel.getEntitiesOfClass(DomainExpansionEntity.class, AABB.ofSize(pos.getCenter(),
+                            64.0D, 64.0D, 64.0D))) {
+                        if (domain.isInsideBarrier(pos)) return;
+                    }
+
+                    if (original.isAir() || !original.canOcclude()) {
                         pLevel.setBlockAndUpdate(pos, block);
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            if (modifiers != null) {
-                                be.setModifiers(modifiers);
-                            }
-                            be.reset();
+                            be.setParent(pPos);
                         }
                     }
                 }
@@ -109,12 +115,14 @@ public class VeilRodBlockEntity extends BlockEntity {
         }
     }
 
-    public int getFrequency() {
-        return this.frequency;
-    }
-
     public void setFrequency(int frequency) {
         this.frequency = frequency;
+        this.setChanged();
+    }
+
+    public void setOwner(UUID ownerUUID) {
+        this.ownerUUID = ownerUUID;
+        this.setChanged();
     }
 
     @Override
@@ -131,6 +139,9 @@ public class VeilRodBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
+        if (this.ownerUUID != null) {
+            pTag.putUUID("owner", this.ownerUUID);
+        }
         pTag.putInt("counter", this.counter);
         pTag.putInt("frequency", this.frequency);
 
@@ -143,6 +154,9 @@ public class VeilRodBlockEntity extends BlockEntity {
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
 
+        if (pTag.contains("owner")) {
+            this.ownerUUID = pTag.getUUID("owner");
+        }
         this.counter = pTag.getInt("counter");
         this.frequency = pTag.getInt("frequency");
 

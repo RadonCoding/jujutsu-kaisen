@@ -11,14 +11,16 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +34,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -40,6 +43,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -49,7 +53,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
-    private static final int DURATION = 10 * 20;
+    private static final int DURATION = 60 * 20;
 
     public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -70,7 +74,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
+                .subtract(HelperMethods.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z());
 
@@ -95,6 +99,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 5 * 20.0D)
                 .add(Attributes.FLYING_SPEED)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE);
@@ -114,9 +119,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new SorcererGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-        this.goalSelector.addGoal(6, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -206,12 +210,16 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 if (!this.tame && this.getTime() >= DURATION) {
                     this.discard();
                 }
-
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
-                LivingEntity target = this.getTarget();
-                this.setOpen(target != null && target.getMaxHealth() > Player.MAX_HEALTH);
+                if (owner != null) {
+                    if (this.isOpen()) {
+                        this.setOpen(this.getTarget() != null);
+                    } else {
+                        this.setOpen(this.getTarget() != null && owner.getHealth() / owner.getMaxHealth() <= 0.5F);
+                    }
+                }
             }
         }
     }
@@ -237,8 +245,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public boolean isCurse() {
-        return true;
+    public JujutsuType getJujutsuType() {
+        return JujutsuType.CURSE;
     }
 
     @Override

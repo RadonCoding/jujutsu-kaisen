@@ -31,6 +31,14 @@ public class MaximumHollowPurple extends Ability {
     }
 
     @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Status.COOLDOWN) {
+            return Status.FAILURE;
+        }
+        return super.checkTriggerable(owner);
+    }
+
+    @Override
     public boolean isUnlocked(LivingEntity owner) {
         return JJKAbilities.hasTrait(owner, Trait.REVERSE_CURSED_TECHNIQUE);
     }

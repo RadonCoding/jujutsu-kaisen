@@ -1,0 +1,92 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.geometry.humanoid",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "body",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 12, -2], "size": [8, 12, 4], "uv": [16, 16]},
+						{"origin": [-4, 3, -2], "size": [8, 13, 4], "inflate": 0.25, "uv": [0, 32]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body",
+					"pivot": [0, 24, 0],
+					"rotation": [37.5, 0, 0],
+					"cubes": [
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "body",
+					"pivot": [-5, 22, 0],
+					"cubes": [
+						{"origin": [-7, 12, -2], "size": [3, 12, 4], "uv": [40, 16]}
+					]
+				},
+				{
+					"name": "scissor",
+					"parent": "right_arm",
+					"pivot": [-5.5, 13, -1],
+					"rotation": [-60, 0, 0]
+				},
+				{
+					"name": "scissor_half",
+					"parent": "scissor",
+					"pivot": [-5.5, 12, -1.1],
+					"rotation": [10, 0, 0],
+					"cubes": [
+						{"origin": [-5.51, 11, -1.1], "size": [0, 3, 3], "uv": [50, -3]},
+						{"origin": [-5.51, 6, -1.1], "size": [0, 5, 2], "uv": [60, -2]}
+					]
+				},
+				{
+					"name": "scissor_half2",
+					"parent": "scissor",
+					"pivot": [-5.5, 11, -1],
+					"rotation": [-167.5, 0, 180],
+					"cubes": [
+						{"origin": [-5.5, 11, -1], "size": [0, 3, 3], "uv": [50, -3]},
+						{"origin": [-5.5, 6, -1], "size": [0, 5, 2], "uv": [60, -2]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "body",
+					"pivot": [5, 22, 0],
+					"cubes": [
+						{"origin": [4, 12, -2], "size": [3, 12, 4], "uv": [32, 48]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "body",
+					"pivot": [-1.9, 12, 0],
+					"cubes": [
+						{"origin": [-3.9, 0, -2], "size": [4, 12, 4], "uv": [0, 16]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "body",
+					"pivot": [1.9, 12, 0],
+					"cubes": [
+						{"origin": [-0.1, 0, -2], "size": [4, 12, 4], "uv": [16, 48]}
+					]
+				}
+			]
+		}
+	]
+}

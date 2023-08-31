@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -19,7 +20,16 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return true;
+        if (JJKAbilities.hasToggled(owner, this)) return target != null;
+        if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
+
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (target != null) {
+            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal()));
+        }
+        return result.get();
     }
 
     @Override

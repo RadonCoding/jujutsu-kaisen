@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.VolcanoEntity;
+import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -35,5 +35,16 @@ public class VolcanoRenderer extends GeoEntityRenderer<VolcanoEntity> {
     @Override
     protected int getBlockLightLevel(@NotNull VolcanoEntity pEntity, @NotNull BlockPos pPos) {
         return 15;
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull VolcanoEntity animatable) {
+        ResourceLocation key = super.getTextureLocation(animatable);
+
+        if (animatable.getTime() >= VolcanoEntity.DELAY) {
+            return new ResourceLocation(key.getNamespace(), key.getPath().replace(".png",
+                    String.format("_%s.%s", "erupt", "png")));
+        }
+        return key;
     }
 }

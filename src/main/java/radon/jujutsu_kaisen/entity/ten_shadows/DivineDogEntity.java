@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -52,7 +53,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.setOwner(owner);
 
         Vec3 pos = ritual ? owner.position() : owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -157,9 +158,8 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.4D, true));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));

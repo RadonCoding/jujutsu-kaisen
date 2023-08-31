@@ -15,11 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.ChimeraShadowGardenBlock;
 import radon.jujutsu_kaisen.block.DomainBlock;
-import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -101,10 +102,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
+        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
+
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < radius * radius;
+        return relative.distSqr(Vec3i.ZERO) < radius * radius - 1;
     }
 
     private void createBarrier(Entity owner) {
@@ -122,7 +125,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         int delay = radius - (pos.getY() - center.getY());
 
-                        if (!state.is(JJKBlocks.VEIL_ROD.get()) && !state.isAir() || distance >= radius - 1) {
+                        if (!state.isAir() || distance >= radius - 1) {
                             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 cap.delayTickEvent(() -> {
                                     if (!this.isRemoved()) {
@@ -132,19 +135,24 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                             original = be.getOriginal();
                                         } else if (this.level.getBlockEntity(pos) != null) {
                                             return;
-                                        } else if (state.getBlock() instanceof DomainBlock) {
+                                        } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock) {
                                             return;
                                         }
 
                                         List<Block> blocks = ((DomainExpansion.IClosedDomain) this.ability).getBlocks();
                                         List<Block> filler = ((DomainExpansion.IClosedDomain) this.ability).getFillBlocks();
-                                        Block block = state.isAir() ? blocks.get(this.random.nextInt(blocks.size())) :
-                                                state.is(JJKBlocks.VEIL.get()) ? Blocks.AIR : filler.get(this.random.nextInt(filler.size()));
+
+                                        if (distance < radius - 1 && (state.getFluidState().is(Fluids.WATER) || state.getFluidState().is(Fluids.FLOWING_WATER) ||
+                                                state.getFluidState().is(Fluids.LAVA) || state.getFluidState().is(Fluids.FLOWING_LAVA))) {
+                                            owner.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                            return;
+                                        }
+                                        Block block = state.isAir() ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
                                         owner.level.setBlock(pos, block.defaultBlockState(),
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, this.getId(), original == null ? state : original);
+                                            be.create(this.uuid, original == null ? state : original);
                                         }
                                     }
                                 }, delay);

@@ -10,19 +10,20 @@ public enum CursedTechnique {
     CURSE_MANIPULATION(null),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.MAXIMUM_RED.get(), JJKAbilities.BLUE.get(),
             JJKAbilities.MAXIMUM_BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
-    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.FIRE_ARROW.get()),
+    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null),
     RIKA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),
-            JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get()),
+            JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE.get(),
 
-            JJKAbilities.NUE_LIGHTNING.get(),
+            JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.PIERCING_WATER.get(),
 
-            JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(),
-            JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.NUE.get(), JJKAbilities.GREAT_SERPENT.get(), JJKAbilities.MAHORAGA.get()),
+            JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(), JJKAbilities.NUE_TOAD.get(),
+            JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.NUE.get(), JJKAbilities.NUE_TOTALITY.get(), JJKAbilities.GREAT_SERPENT.get(),
+            JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.TRANQUIL_DEER.get(), JJKAbilities.MAHORAGA.get()),
     DIVERGENT_FIST(null, JJKAbilities.DIVERGENT_FIST.get());
 
     private final @Nullable Ability domain;

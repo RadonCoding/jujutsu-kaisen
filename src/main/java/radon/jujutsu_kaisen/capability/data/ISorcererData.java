@@ -10,10 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
@@ -39,14 +36,15 @@ public interface ISorcererData {
     void addTraits(List<Trait> traits);
     void removeTrait(Trait trait);
 
-    void setCurse(boolean curse);
-    boolean isCurse();
+    void setType(JujutsuType type);
+    JujutsuType getType();
 
     void exorcise(LivingEntity owner, SorcererGrade grade);
     void consume(LivingEntity owner, SorcererGrade grade);
 
     void toggle(LivingEntity owner, Ability ability);
     void clearToggled();
+    Set<Ability> getToggled();
 
     void addCooldown(LivingEntity owner, Ability ability);
     int getRemainingCooldown(Ability ability);

@@ -47,21 +47,19 @@ public class BlackFlash {
 
                         if (!target.level.isClientSide) {
                             for (int i = 0; i < 12; i++) {
-                                cap.delayTickEvent(() -> {
-                                    for (int j = 0; j < 32; j++) {
-                                        double d0 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
-                                        double d1 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
-                                        double d2 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+                                for (int j = 0; j < 32; j++) {
+                                    double d0 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+                                    double d1 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+                                    double d2 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
 
-                                        if (!(d0 * d0 + d1 * d1 + d2 * d2 > 1.0D)) {
-                                            double d3 = target.getX(d0 / 4.0D);
-                                            double d4 = target.getY(0.5D + d1 / 4.0D);
-                                            double d5 = target.getZ(d2 / 4.0D);
-                                            ((ServerLevel) target.level).sendParticles(JJKParticles.BLACK_FLASH.get(), d3, d4, d5,
-                                                    0, d0, d1 + 0.2D, d2, 1.0D);
-                                        }
+                                    if (!(d0 * d0 + d1 * d1 + d2 * d2 > 1.0D)) {
+                                        double d3 = target.getX(d0 / 4.0D);
+                                        double d4 = target.getY(0.5D + d1 / 4.0D);
+                                        double d5 = target.getZ(d2 / 4.0D);
+                                        ((ServerLevel) target.level).sendParticles(JJKParticles.BLACK_FLASH.get(), d3, d4, d5,
+                                                0, d0, d1 + 0.2D, d2, 1.0D);
                                     }
-                                }, i + 1);
+                                }
                             }
                         }
                     }

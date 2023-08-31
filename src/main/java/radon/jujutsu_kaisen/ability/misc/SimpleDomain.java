@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,16 +15,18 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SimpleDomain extends Ability implements Ability.IToggled {
-    private static final float PARTICLE_SIZE = 0.075F;
-    private static final double X_STEP = 0.25D;
+public class SimpleDomain extends Ability implements Ability.IToggled, Ability.IDurationable {
+    private static final double X_STEP = 0.05D;
     private static final double RADIUS = 3.0D;
 
     @Override
@@ -33,10 +35,8 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
 
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
-
                 for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
-                    if (!domain.checkSureHitEffect()) continue;
+                    if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
                     result.set(true);
                     break;
                 }
@@ -58,12 +58,19 @@ public class SimpleDomain extends Ability implements Ability.IToggled {
             float factor = (float) cap.getRemaining(this) / (float) this.getDuration();
 
             if (!owner.level.isClientSide) {
+                ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
+                        1.0F, true, 1);
+
                 for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
                     double x = owner.getX() + RADIUS * Math.cos(phi);
-                    double y = owner.getY() + PARTICLE_SIZE;
+                    double y = owner.getY();
                     double z = owner.getZ() + RADIUS * Math.sin(phi);
 
-                    ((ServerLevel) owner.level).sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    ((ServerLevel) owner.level).sendParticles(particle, x, y, z, 0,
+                            0.0D,
+                            HelperMethods.RANDOM.nextDouble(),
+                            0.0D,
+                            1.0D);
                 }
             }
         });

@@ -7,7 +7,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -19,6 +18,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
@@ -39,10 +39,9 @@ public class SaturoGojoEntity extends SorcererEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new SorcererGoal(this));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(4, new SorcererGoal(this));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, false));
@@ -65,8 +64,8 @@ public class SaturoGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public boolean isCurse() {
-        return false;
+    public JujutsuType getJujutsuType() {
+        return JujutsuType.SORCERER;
     }
 
     @Override
