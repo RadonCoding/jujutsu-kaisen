@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RCT extends Ability implements Ability.IChannelened {
-    private static final float AMOUNT = 0.2F;
+    public static final float AMOUNT = 0.2F;
+    public static final float COST = 5.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -49,7 +50,7 @@ public class RCT extends Ability implements Ability.IChannelened {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) && cap.getBurnout() > 0)) {
-                result.set(5.0F);
+                result.set(COST);
             }
         });
         return result.get();

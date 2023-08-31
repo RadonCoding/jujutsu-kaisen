@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueProjectile extends JujutsuProjectile {
-    private static final double RANGE = 10.0D;
+    private static final double RANGE = 30.0D;
     private static final double PULL_STRENGTH = 0.25D;
     private static final int DELAY = 20;
 
@@ -37,7 +37,7 @@ public class BlueProjectile extends JujutsuProjectile {
     public BlueProjectile(LivingEntity pShooter) {
         this(JJKEntities.BLUE.get(), pShooter.level, pShooter);
 
-        Vec3 look = pShooter.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
@@ -50,7 +50,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     protected float getDamage() {
-        return 2.5F;
+        return 3.0F;
     }
 
     private void pullEntities() {
@@ -163,14 +163,14 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = owner.getLookAngle();
+                        Vec3 look = HelperMethods.getLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
-                        Vec3 look = owner.getLookAngle();
+                        Vec3 look = HelperMethods.getLookAngle(owner);
                         Vec3 end = start.add(look.scale(RANGE));
                         HitResult result = HelperMethods.getHitResult(owner, start, end);
 

@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +29,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return true;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
     }
 
     @Override
@@ -70,7 +71,14 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasSummonOfClass(level, NueEntity.class)));
+        }
+        return result.get() ? Status.FAILURE : super.checkStatus(owner);
     }
 
     @Override
@@ -91,7 +99,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
                 target.hurt(owner instanceof Player player ? owner.level.damageSources().playerAttack(player) :
                         owner.level.damageSources().mobAttack(owner), DAMAGE * cap.getGrade().getPower()));
 
-        target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
+        target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
         owner.level.playSound(null, target.getX(), target.getY(), target.getZ(),
                 SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
@@ -108,5 +116,10 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.ELECTRICITY;
     }
 }

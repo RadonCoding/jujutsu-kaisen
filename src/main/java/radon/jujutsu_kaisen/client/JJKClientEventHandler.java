@@ -2,14 +2,17 @@ package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,7 +25,6 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
@@ -40,12 +42,15 @@ import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.KuchisakeOnnaAnswerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
+import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
@@ -73,7 +78,6 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-
                 if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
@@ -93,13 +97,14 @@ public class JJKClientEventHandler {
 
             if (mc.player == null) return;
 
+            if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
+                listener.setJump(event.getAction() == InputConstants.PRESS);
+            }
+
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
-                }
-                if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(true));
-                    listener.setJump(true);
                 }
                 if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
                     MeleeAbilityOverlay.scroll(1);
@@ -119,10 +124,6 @@ public class JJKClientEventHandler {
                 if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
                     mc.screen.onClose();
                 }
-                if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(false));
-                    listener.setJump(false);
-                }
             }
         }
 
@@ -135,24 +136,45 @@ public class JJKClientEventHandler {
             LivingEntity target = event.getEntity();
 
             mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.hasTrait(Trait.SIX_EYES)) {
-                    if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
-                        Entity viewer = Minecraft.getInstance().getCameraEntity();
+                if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
+                    Entity viewer = Minecraft.getInstance().getCameraEntity();
 
-                        if (viewer != null && target != viewer) {
-                            Vec3 look = viewer.getLookAngle();
-                            Vec3 start = viewer.getEyePosition();
-                            Vec3 result = target.getEyePosition().subtract(start);
+                    if (viewer != null && target != viewer) {
+                        Vec3 look = viewer.getLookAngle();
+                        Vec3 start = viewer.getEyePosition();
+                        Vec3 result = target.getEyePosition().subtract(start);
 
-                            double angle = Math.acos(look.normalize().dot(result.normalize()));
+                        double angle = Math.acos(look.normalize().dot(result.normalize()));
 
-                            if (angle > 1.0D) {
-                                event.setCanceled(true);
-                            }
+                        double threshold = 0.5D;
+
+                        if (target.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItemTags.CURSED_TOOL) ||
+                                target.getItemInHand(InteractionHand.OFF_HAND).is(JJKItemTags.CURSED_TOOL)) {
+                            threshold = 1.0D;
+                        }
+
+                        if (angle > threshold) {
+                            event.setCanceled(true);
                         }
                     }
                 }
             });
+        }
+
+        @SubscribeEvent
+        public static void onClientChat(ClientChatEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            assert mc.level != null && mc.player != null;
+
+            for (KuchisakeOnna curse : mc.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(mc.player.position(),
+                    64.0D, 64.0D, 64.0D))) {
+                curse.getCurrent().ifPresent(identifier -> {
+                    event.setCanceled(true);
+
+                    PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID(), event.getMessage().toLowerCase().contains("yes")));
+                });
+            }
         }
     }
 
@@ -244,7 +266,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
             event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_RED.get(), MaximumRedRenderer::new);
-            event.registerEntityRenderer(JJKEntities.BULLET.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FIREBALL.get(), FireballRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
@@ -259,6 +281,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_ZENIN.get(), TojiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
@@ -268,6 +291,14 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_TOTALITY.get(), DivineDogTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CYCLOPS_CURSE.get(), CyclopsCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.KUCHISAKE_ONNA.get(), ScissorCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAX_ELEPHANT.get(), MaxElephantRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
+            event.registerEntityRenderer(JJKEntities.NUE_TOTALITY_LIGHTNING.get(), LightningBoltRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), RoundDeerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
         }
 
         @SubscribeEvent
@@ -322,11 +353,15 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.FISH_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.CYCLOPS_CURSE_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.KUCHISAKE_ONNA_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.ZOMBA_CURSE_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.DISPLAY_CASE.get());
                                 pOutput.accept(JJKItems.ALTAR.get());
                                 pOutput.accept(JJKItems.VEIL_ROD.get());
+
                                 pOutput.accept(JJKItems.SUKUNA_FINGER.get());
+                                pOutput.accept(JJKItems.CURSED_TOTEM.get());
                             }));
         }
     }

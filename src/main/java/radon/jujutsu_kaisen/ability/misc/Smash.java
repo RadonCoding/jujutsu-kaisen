@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class Smash extends Ability {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
-            Vec3 explosionPos = owner.getEyePosition().add(owner.getLookAngle());
+            Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 
             if (!owner.level.isClientSide) {
                 float f2 = radius * 2.0F;

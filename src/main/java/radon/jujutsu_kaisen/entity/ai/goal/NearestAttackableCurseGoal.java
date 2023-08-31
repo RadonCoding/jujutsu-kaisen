@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 
 import javax.annotation.Nullable;
@@ -61,7 +62,7 @@ public class NearestAttackableCurseGoal extends TargetGoal {
             AtomicBoolean result = new AtomicBoolean();
 
             if (!(entity instanceof SummonEntity)) {
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> result.set(cap.isCurse()));
+                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> result.set(cap.getType() == JujutsuType.CURSE));
             }
             return result.get();
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

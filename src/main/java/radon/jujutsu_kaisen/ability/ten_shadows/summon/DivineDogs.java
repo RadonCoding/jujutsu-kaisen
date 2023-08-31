@@ -12,11 +12,10 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogBlackEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogWhiteEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,7 +29,29 @@ public class DivineDogs extends Summon<DivineDogEntity> {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
-        return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.9F;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+    }
+
+    @Override
+    public Status checkStatus(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasSummonOfClass(level, DivineDogTotalityEntity.class)));
+        }
+        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+    }
+
+    @Override
+    public Status checkToggleable(LivingEntity owner) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasSummonOfClass(level, DivineDogTotalityEntity.class)));
+        }
+        return result.get() ? Status.FAILURE : super.checkToggleable(owner);
     }
 
     @Override

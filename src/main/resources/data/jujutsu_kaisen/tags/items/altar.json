@@ -20,6 +20,8 @@
     "minecraft:glass",
     "minecraft:rotten_flesh",
     "minecraft:bone",
-    "minecraft:gunpowder"
+    "minecraft:gunpowder",
+    "#jujutsu_kaisen:cursed_object",
+    "#jujutsu_kaisen:cursed_tool"
   ]
 }

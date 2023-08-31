@@ -1,0 +1,99 @@
+package radon.jujutsu_kaisen.ability.misc;
+
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class ShootRCT extends Ability {
+    private static final float AMOUNT = RCT.AMOUNT * 10;
+    public static final float RANGE = 5.0F;
+
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+
+        AtomicBoolean result = new AtomicBoolean();
+
+        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.getType() == JujutsuType.CURSE));
+        return result.get() && this.getTargets(owner).contains(target);
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
+    }
+
+    private List<LivingEntity> getTargets(LivingEntity owner) {
+        Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
+        List<LivingEntity> entities = owner.level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE));
+        entities.removeIf(entity -> entity == owner);
+        return entities;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        if (!(owner.level instanceof ServerLevel level)) return;
+
+        owner.swing(InteractionHand.MAIN_HAND, true);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
+            for (LivingEntity target : this.getTargets(owner)) {
+                AtomicBoolean result = new AtomicBoolean();
+
+                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap ->
+                        result.set(targetCap.getType() == JujutsuType.CURSE));
+
+                if (result.get()) {
+                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower());
+                } else {
+                    target.heal(AMOUNT * ownerCap.getGrade().getPower());
+                }
+
+                for (int i = 0; i < 8; i++) {
+                    ownerCap.delayTickEvent(() -> {
+                        for (int j = 0; j < 8; j++) {
+                            double width = target.getBbWidth();
+                            double height = target.getBbHeight();
+                            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5) * width;
+                            double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
+                            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5) * width;
+                            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, 1.5F, 0.5F, false, 1),
+                                    x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                        }
+                    }, i * 2);
+                }
+            }
+        });
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return RCT.COST * 10;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 10;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
+    }
+}

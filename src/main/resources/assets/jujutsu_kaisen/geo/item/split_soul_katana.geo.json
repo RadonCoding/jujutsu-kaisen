@@ -7,15 +7,18 @@
 				"texture_width": 32,
 				"texture_height": 32,
 				"visible_bounds_width": 2,
-				"visible_bounds_height": 3.5,
-				"visible_bounds_offset": [0, 1.25, 0]
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, 1, 0]
 			},
 			"bones": [
 				{
 					"name": "bb_main",
 					"pivot": [0, 0, 0],
 					"cubes": [
-						{"origin": [-0.5, -6.5, 0.4], "size": [1, 9, 2], "uv": [6, 0]},
+						{"origin": [-1.5, 0.5, -0.6], "size": [3, 2, 4], "uv": [16, 0]},
+						{"origin": [-1.5, -1.5, -0.6], "size": [3, 2, 4], "uv": [15, 15]},
+						{"origin": [-0.5, -8.5, 0.4], "size": [1, 10, 2], "uv": [6, 0]},
+						{"origin": [-1, -10.5, 0.4], "size": [2, 2, 2], "uv": [15, 7]},
 						{"origin": [0.0625, 2.5, -0.5875], "size": [0, 24, 3], "uv": [0, 0]}
 					]
 				}

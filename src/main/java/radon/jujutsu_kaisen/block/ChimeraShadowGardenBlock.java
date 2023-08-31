@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +41,12 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (ctx.getEntity() instanceof LivingEntity entity && pLevel.getBlockEntity(pPos) instanceof DomainBlockEntity be &&
-                    pLevel instanceof ServerLevel level && level.getEntity(be.getIdentifier()) instanceof DomainExpansionEntity domain &&
-                    domain.getOwner() != entity && !(entity instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == domain.getOwner())) {
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 5, false, false, false));
-            }
+            if (!(ctx.getEntity() instanceof LivingEntity entity)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (!(pLevel.getBlockEntity(pPos) instanceof DomainBlockEntity be)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (!(pLevel instanceof ServerLevel level && level.getEntity(be.getIdentifier()) instanceof DomainExpansionEntity domain)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (entity instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == domain.getOwner()) return Shapes.block();
+            if (domain.getOwner() == entity) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 0, false, false, false));
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
     }

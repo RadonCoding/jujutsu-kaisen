@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.MaximumRedBeam;
+import radon.jujutsu_kaisen.entity.effect.MaximumRedBeam;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MaximumRed extends Ability {

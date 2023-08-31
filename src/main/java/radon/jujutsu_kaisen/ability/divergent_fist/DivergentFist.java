@@ -55,7 +55,7 @@ public class DivergentFist extends Ability {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
 
-                Vec3 explosionPos = owner.getEyePosition().add(owner.getLookAngle());
+                Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 
                 if (!owner.level.isClientSide) {
                     float f2 = radius * 2.0F;

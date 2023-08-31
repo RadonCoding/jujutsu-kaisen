@@ -85,8 +85,8 @@ public class MeleeAbilityOverlay {
                 lines.add(costText);
             }
 
-            if (ability instanceof Ability.IToggled toggled) {
-                int duration = toggled.getRealDuration(player);
+            if (ability instanceof Ability.IDurationable durationable) {
+                int duration = durationable.getRealDuration(player);
 
                 if (duration > 0) {
                     Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), duration / 20);

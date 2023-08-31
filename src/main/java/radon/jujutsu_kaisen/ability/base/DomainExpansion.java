@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
@@ -53,8 +55,8 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             }
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                result.set(owner.getHealth() / owner.getMaxHealth() < 0.75F ||
-                        cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
+                result.set(cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
+                        owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
                         target.getHealth() > owner.getHealth() * 2);
 
                 for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {

@@ -30,9 +30,9 @@
   "item.jujutsu_kaisen.split_soul_katana.desc": "Bypasses all resistance and cuts directly at the soul.",
   "item.jujutsu_kaisen.chain": "Chain of a Thousand Miles",
   "item.jujutsu_kaisen.chain.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
-  "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta Okkotsu's Sword",
-  "item.jujutsu_kaisen.pistol": "Pistol",
+  "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta's Sword",
   "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
+  "item.jujutsu_kaisen.cursed_totem": "Cursed Totem",
 
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
   "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
@@ -57,11 +57,14 @@
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
   "item.jujutsu_kaisen.toji_zenin_spawn_egg": "Spawn Toji Zenin",
   "item.jujutsu_kaisen.meguna_ryomen_spawn_egg": "Spawn Meguna Ryomen",
+  "item.jujutsu_kaisen.yuji_itadori_spanw_egg": "Spawn Yuji Itadori",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
   "item.jujutsu_kaisen.fish_curse_spawn_egg": "Spawn Fish Curse",
   "item.jujutsu_kaisen.cyclops_curse_spawn_egg": "Spawn Cyclops Curse",
+  "item.jujutsu_kaisen.kuchisake_onna_spawn_egg": "Spawn Kuchisake-Onna",
+  "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_iron_mountain_one": "Coffin of Iron Mountain One",
@@ -76,9 +79,16 @@
   "block.jujutsu_kaisen.altar": "Altar",
 
   "item.jujutsu_kaisen.veil_rod_item.modifiers": "Modifiers: ",
-  "item.jujutsu_kaisen.veil_rod.blacklist": "Blacklist: %1$s",
+  "item.jujutsu_kaisen.veil_rod.entity.allow": "Allow entity: %1$s",
+  "item.jujutsu_kaisen.veil_rod.entity.deny": "Deny entity: %1$s",
+  "item.jujutsu_kaisen.veil_rod.player.allow": "Allow player: %1$s",
+  "item.jujutsu_kaisen.veil_rod.player.deny": "Deny player: %1$s",
   "item.jujutsu_kaisen.veil_rod.color": "Color: %1$s",
   "item.jujutsu_kaisen.veil_rod.transparent": "Transparent",
+  "item.jujutsu_kaisen.veil_rod.curse.allow": "Allow curses",
+  "item.jujutsu_kaisen.veil_rod.curse.deny": "Deny curses",
+  "item.jujutsu_kaisen.veil_rod.sorcerer.allow": "Allow sorcerers",
+  "item.jujutsu_kaisen.veil_rod.sorcerer.deny": "Deny sorcerers",
 
   "ability.jujutsu_kaisen.fail.energy": "Not enough cursed energy",
   "ability.jujutsu_kaisen.fail.cooldown": "Cooldown: %1$d seconds",
@@ -90,6 +100,7 @@
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.smash": "Smash",
   "ability.jujutsu_kaisen.air_punch": "Air Punch",
+  "ability.jujutsu_kaisen.barrage": "Barrage",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
   "ability.jujutsu_kaisen.domain_amplification.disable": "Deactivated domain amplification",
@@ -101,6 +112,7 @@
   "ability.jujutsu_kaisen.water_walking.disable": "Deactivated water walking",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
+  "ability.jujutsu_kaisen.shoot_rct": "Shoot: Reverse Cursed Technique",
 
   "ability.jujutsu_kaisen.heal": "Heal",
 
@@ -119,6 +131,7 @@
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
   "ability.jujutsu_kaisen.cleave": "Cleave",
+  "ability.jujutsu_kaisen.dismantle_barrage": "Dismantle Barrage",
   "ability.jujutsu_kaisen.fire_arrow": "Fire Arrow",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
@@ -134,6 +147,8 @@
   "ability.jujutsu_kaisen.volcano": "Volcano",
   "ability.jujutsu_kaisen.maximum_meteor": "Maximum Meteor",
   "ability.jujutsu_kaisen.disaster_flames": "Disaster Flames",
+  "ability.jujutsu_kaisen.flamethrower": "Flamethrower",
+  "ability.jujutsu_kaisen.fireball": "Fireball",
   "ability.jujutsu_kaisen.coffin_of_iron_mountain": "Coffin of Iron Mountain",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
@@ -152,23 +167,40 @@
   "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
   "ability.jujutsu_kaisen.toad.disable": "Released Toad",
 
+  "ability.jujutsu_kaisen.nue_toad": "Nue + Toad",
+  "ability.jujutsu_kaisen.nue_toad.enable": "Summoned Nue + Toad",
+  "ability.jujutsu_kaisen.nue_toad.disable": "Released Nue + Toad",
+
   "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
   "ability.jujutsu_kaisen.nue": "Nue",
   "ability.jujutsu_kaisen.nue.enable": "Summoned Nue",
   "ability.jujutsu_kaisen.nue.disable": "Released Nue",
 
+  "ability.jujutsu_kaisen.nue_totality": "Nue Totality",
+  "ability.jujutsu_kaisen.nue_totality.enable": "Summoned Nue Totality",
+  "ability.jujutsu_kaisen.nue_totality.disable": "Released Nue Totality",
+
   "ability.jujutsu_kaisen.great_serpent": "Great Serpent",
   "ability.jujutsu_kaisen.great_serpent.enable": "Summoned Great Serpent",
   "ability.jujutsu_kaisen.great_serpent.disable": "Released Great Serpent",
+
+  "ability.jujutsu_kaisen.max_elephant": "Max Elephant",
+  "ability.jujutsu_kaisen.max_elephant.enable": "Summoned Max Elephant",
+  "ability.jujutsu_kaisen.max_elephant.disable": "Released Max Elephant",
+
+  "ability.jujutsu_kaisen.tranquil_deer": "Tranquil Deer",
+  "ability.jujutsu_kaisen.tranquil_deer.enable": "Summoned Tranquil Deer",
+  "ability.jujutsu_kaisen.tranquil_deer.disable": "Released Tranquil Deer",
 
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
   "ability.jujutsu_kaisen.release": "Release",
   "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
 
-  "ability.jujutsu_kaisen.wheel": "Wheel",
   "ability.jujutsu_kaisen.nue_lightning": "Nue Lighting",
+  "ability.jujutsu_kaisen.piercing_water": "Piercing Water",
+  "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
 
@@ -205,6 +237,7 @@
   "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
   "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s mode",
+  "chat.jujutsu_kaisen.kuchisake_onna": "<%1$s> Am... Am I... pretty?",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -221,12 +254,17 @@
   "entity.jujutsu_kaisen.toad": "Toad",
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
   "entity.jujutsu_kaisen.nue": "Nue",
+  "entity.jujutsu_kaisen.nue_totality": "Nue Totality",
   "entity.jujutsu_kaisen.great_serpent": "Great Serpent",
+  "entity.jujutsu_kaisen.max_elephant": "Max Elephant",
+  "entity.jujutsu_kaisen.tranquil_deer": "Tranquil Deer",
   "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
   "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
   "entity.jujutsu_kaisen.fish_curse": "Fish Curse",
   "entity.jujutsu_kaisen.cyclops_curse": "Cyclops Curse",
+  "entity.jujutsu_kaisen.kuchisake_onna": "Kuchisake-Onna",
+  "entity.jujutsu_kaisen.zomba_curse": "Zomba Curse",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 

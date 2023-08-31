@@ -77,7 +77,7 @@ public class RedProjectile extends JujutsuProjectile {
                     float factor = 1.0F - (float) this.getTime() / DURATION;
 
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower())) {
-                        entity.setDeltaMovement(this.getLookAngle().scale(LAUNCH_POWER));
+                        entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                     }
                 }
             });
@@ -116,7 +116,7 @@ public class RedProjectile extends JujutsuProjectile {
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = owner.getLookAngle();
+                    Vec3 look = HelperMethods.getLookAngle(owner);
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }

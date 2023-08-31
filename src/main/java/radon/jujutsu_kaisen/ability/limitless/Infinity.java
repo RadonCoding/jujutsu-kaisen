@@ -6,7 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -15,12 +15,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +32,10 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.HashMap;
@@ -54,7 +57,13 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner instanceof Player player) {
+            if (player.getAbilities().instabuild) return;
 
+            if (player.getAbilities().flying) {
+                player.getAbilities().setFlyingSpeed(0.025F);
+            }
+        }
     }
 
     @Override
@@ -70,6 +79,7 @@ public class Infinity extends Ability implements Ability.IToggled {
     @Override
     public void onEnabled(LivingEntity owner) {
         if (owner instanceof Player player) {
+            if (player.getAbilities().instabuild) return;
             player.getAbilities().mayfly = true;
         }
     }
@@ -77,6 +87,7 @@ public class Infinity extends Ability implements Ability.IToggled {
     @Override
     public void onDisabled(LivingEntity owner) {
         if (owner instanceof Player player) {
+            if (player.getAbilities().instabuild) return;
             player.getAbilities().mayfly = false;
             player.getAbilities().flying = false;
         }
@@ -85,6 +96,11 @@ public class Infinity extends Ability implements Ability.IToggled {
     @Override
     public Classification getClassification() {
         return Classification.LIMITLESS;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 20;
     }
 
     public static class FrozenProjectileData extends SavedData {
@@ -205,6 +221,23 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
     }
 
+    private static boolean canBlock(LivingEntity target, Projectile projectile) {
+        AtomicBoolean result = new AtomicBoolean();
+
+        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (projectile instanceof ThrownChainItemProjectile chain) {
+                if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return;
+            }
+            for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level))) {
+                if (projectile.getOwner() == domain.getOwner()) return;
+            }
+            if (projectile instanceof ScissorEntity) return;
+
+            result.set(true);
+        });
+        return result.get();
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
@@ -220,30 +253,20 @@ public class Infinity extends Ability implements Ability.IToggled {
 
         @SubscribeEvent
         public static void onProjectileImpact(ProjectileImpactEvent event) {
-            if (event.getRayTraceResult() instanceof EntityHitResult result) {
-                if (result.getEntity() instanceof LivingEntity target) {
-                    if (target.level instanceof ServerLevel level) {
-                        FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
-                                FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
+            if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
+            if (!(hit.getEntity() instanceof LivingEntity target)) return;
+            if (!(target.level instanceof ServerLevel level)) return;
 
-                        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            Projectile projectile = event.getProjectile();
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
+                    FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
-                            if (projectile instanceof ThrownChainItemProjectile chain) {
-                                if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return;
-                            }
+            if (JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) {
+                Projectile projectile = event.getProjectile();
 
-                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
-                                if (projectile.getOwner() == domain.getOwner()) return;
-                            }
+                if (!Infinity.canBlock(target, projectile)) return;
 
-                            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
-                                data.add(target, projectile);
-                                event.setCanceled(true);
-                            }
-                        });
-                    }
-                }
+                data.add(target, projectile);
+                event.setCanceled(true);
             }
         }
 
@@ -251,24 +274,20 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity target = event.getEntity();
 
-            if (target.level instanceof ServerLevel level) {
-                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
-                        FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
+            if (!(target.level instanceof ServerLevel level)) return;
 
-                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
-                        for (Projectile projectile : target.level.getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
-                            for (DomainExpansionEntity domain : cap.getDomains(level)) {
-                                if (projectile.getOwner() == domain.getOwner()) return;
-                            }
-                            data.add(target, projectile);
-                        }
-                    }
-                });
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
+                    FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
+
+            if (JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) {
+                for (Projectile projectile : target.level.getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
+                    if (!Infinity.canBlock(target, projectile)) continue;
+                    data.add(target, projectile);
+                }
             }
         }
 
-        @SubscribeEvent
+        @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 
@@ -276,23 +295,32 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    boolean melee = source.getDirectEntity() == source.getEntity() &&
-                            (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
-
-                    if (melee || source.is(JJKDamageSources.JUJUTSU)) {
-                        if (target.level instanceof ServerLevel level) {
-                            for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
-                                Entity owner = domain.getOwner();
-
-                                if (owner == source.getEntity()) {
-                                    return;
-                                }
-                            }
-                        }
+                    if (!source.is(JJKDamageSources.SOUL) && source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+                        return;
                     }
 
-                    if (source.is(DamageTypes.OUT_OF_WORLD)) {
-                        return;
+                    if (target.level instanceof ServerLevel level) {
+                        for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
+                            Entity owner = domain.getOwner();
+
+                            if (owner == source.getEntity()) {
+                                return;
+                            }
+                        }
+
+                        AtomicBoolean result = new AtomicBoolean();
+
+                        for (KuchisakeOnna curse : target.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(target.position(),
+                                KuchisakeOnna.RANGE, KuchisakeOnna.RANGE, KuchisakeOnna.RANGE))) {
+                            if (result.get()) break;
+
+                            curse.getCurrent().ifPresent(identifier ->
+                                    result.set(identifier.equals(target.getUUID())));
+                        }
+
+                        if (result.get()) {
+                            return;
+                        }
                     }
 
                     if (source.getEntity() instanceof LivingEntity living) {
@@ -301,37 +329,18 @@ public class Infinity extends Ability implements Ability.IToggled {
                             return;
                         }
 
+                        boolean melee = source.getDirectEntity() == source.getEntity() &&
+                                (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+
                         if (melee) {
-                            if (living.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                                target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-                                return;
-                            } else if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                                 return;
                             }
-
-                            if (living instanceof MahoragaEntity) {
-                                AtomicBoolean result = new AtomicBoolean();
-
-                                living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                                    if (attackerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
-                                        result.set(true);
-                                    }
-                                });
-
-                                if (result.get()) {
-                                    return;
-                                }
-                            }
-                        } else if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
-                            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                                target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-                                return;
-                            }
+                        } else if (source.getDirectEntity() instanceof ScissorEntity) {
+                            return;
                         }
                     }
-
                     target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
-
                     event.setCanceled(true);
                 }
             });

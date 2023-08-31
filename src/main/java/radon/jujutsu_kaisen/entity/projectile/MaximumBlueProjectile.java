@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MaximumBlueProjectile extends BlueProjectile {
     private static final double OFFSET = 10.0D;
@@ -39,7 +40,7 @@ public class MaximumBlueProjectile extends BlueProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(owner.getLookAngle().scale(OFFSET));
+            Vec3 pos = center.add(HelperMethods.getLookAngle(owner).scale(OFFSET));
             this.setPos(pos.x(), pos.y() - (this.getBbHeight() / 2.0F), pos.z());
         }
     }

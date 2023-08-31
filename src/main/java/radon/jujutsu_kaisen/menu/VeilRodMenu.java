@@ -19,7 +19,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
 
         this.frequency = this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
-                return be.getFrequency();
+                return be.frequency;
             }
             return 0;
         }).orElse(0);

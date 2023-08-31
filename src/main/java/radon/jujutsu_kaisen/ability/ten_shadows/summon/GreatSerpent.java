@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class GreatSerpent extends Summon<GreatSerpentEntity> {
     public GreatSerpent() {
@@ -19,7 +20,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
-        return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.5F;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

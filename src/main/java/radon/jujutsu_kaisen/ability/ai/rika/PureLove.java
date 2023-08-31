@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.entity.PureLoveBeam;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 public class PureLove extends Ability {
@@ -22,12 +22,6 @@ public class PureLove extends Ability {
     public void run(LivingEntity owner) {
         PureLoveBeam beam = new PureLoveBeam(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
         owner.level.addFreshEntity(beam);
-    }
-
-    @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        if (!((RikaEntity) owner).isOpen()) return Status.FAILURE;
-        return super.checkTriggerable(owner);
     }
 
     @Override

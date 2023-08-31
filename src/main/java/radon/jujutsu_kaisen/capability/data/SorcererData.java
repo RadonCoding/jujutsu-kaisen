@@ -27,10 +27,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -59,7 +56,7 @@ public class SorcererData implements ISorcererData {
     private float maxEnergy;
     private float used;
 
-    private boolean curse;
+    private JujutsuType type;
 
     private int burnout;
 
@@ -88,6 +85,7 @@ public class SorcererData implements ISorcererData {
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
+    private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
 
     private static final float ENERGY_AMOUNT = 0.25F;
@@ -140,8 +138,14 @@ public class SorcererData implements ISorcererData {
             if (remaining > 0) {
                 this.durations.put(entry.getKey(), --remaining);
             } else {
-                if (this.hasToggled(ability)) {
-                    this.toggle(owner, ability);
+                if (ability instanceof Ability.IToggled) {
+                    if (this.hasToggled(ability)) {
+                        this.toggle(owner, ability);
+                    }
+                } else if (ability instanceof Ability.IChannelened) {
+                    if (this.isChanneling(ability)) {
+                        this.channel(owner, null);
+                    }
                 }
                 iter.remove();
             }
@@ -322,10 +326,10 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
-        if (this.used >= 5000.0F) {
+        if (this.used >= 10000.0F) {
             this.traits.add(Trait.DOMAIN_EXPANSION);
         }
-        if (this.used >= 2500.0F) {
+        if (this.used >= 5000.0F) {
             this.traits.add(Trait.SIMPLE_DOMAIN);
         }
 
@@ -358,13 +362,15 @@ public class SorcererData implements ISorcererData {
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 15.0D : 10.0D), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D), AttributeModifier.Operation.ADDITION);
+            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed",
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D), AttributeModifier.Operation.ADDITION);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.15D : 0.1D), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D), AttributeModifier.Operation.ADDITION);
 
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F)
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
@@ -372,11 +378,11 @@ public class SorcererData implements ISorcererData {
                     false, false, false));
         } else {
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((grade.ordinal() * (this.traits.contains(Trait.STRONGEST) ? 10.0D : 5.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+                    Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 40.0D : 20.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 10.0F : 5.0F) / 2.0F, AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F, AttributeModifier.Operation.ADDITION);
 
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F)
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
@@ -423,13 +429,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setCurse(boolean curse) {
-        this.curse = curse;
+    public void setType(JujutsuType type) {
+        this.type = type;
     }
 
     @Override
-    public boolean isCurse() {
-        return this.curse;
+    public JujutsuType getType() {
+        return this.type;
     }
 
     @Override
@@ -441,8 +447,8 @@ public class SorcererData implements ISorcererData {
         this.experience += grade.getReward();
 
         if (owner instanceof Player player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise_%s", JujutsuKaisen.MOD_ID, this.curse ? "sorcerer" : "curse"), grade.getReward(),
-                    this.experience, next.getRequiredExperience()));
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise_%s", JujutsuKaisen.MOD_ID,
+                            this.type == JujutsuType.SORCERER ? "sorcerer" : "curse"), grade.getReward(), this.experience, next.getRequiredExperience()));
         }
 
         // If the owner has enough experience and the curse/sorcerer exorcised was higher or equal to the next rank
@@ -503,6 +509,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Set<Ability> getToggled() {
+        return this.toggled;
+    }
+
+    @Override
     public void addCooldown(LivingEntity owner, Ability ability) {
         this.cooldowns.put(ability, ability.getRealCooldown(owner));
     }
@@ -519,7 +530,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addDuration(LivingEntity owner, Ability ability) {
-        this.durations.put(ability, ((Ability.IToggled) ability).getRealDuration(owner));
+        this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(owner));
     }
 
     @Override
@@ -755,7 +766,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void revive() {
         this.dead.clear();
-        this.tamed.clear();
     }
 
     @Override
@@ -869,13 +879,17 @@ public class SorcererData implements ISorcererData {
                 this.addTrait(Trait.SIX_EYES);
             }
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
-            this.curse = HelperMethods.RANDOM.nextInt(5) == 0;
+            this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
             assert this.technique != null;
 
+            if (this.technique == CursedTechnique.RIKA) {
+                this.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+            }
+
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
 
-            if (this.curse) {
+            if (this.type == JujutsuType.CURSE) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
             } else {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
@@ -928,7 +942,7 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("used", this.used);
-        nbt.putBoolean("curse", this.curse);
+        nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("grade", this.grade.ordinal());
         nbt.putInt("mode", this.mode.ordinal());
@@ -1045,7 +1059,7 @@ public class SorcererData implements ISorcererData {
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
         this.used = nbt.getFloat("used");
-        this.curse = nbt.getBoolean("curse");
+        this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -23,7 +24,7 @@ public interface ISorcerer {
     }
     @NotNull List<Trait> getTraits();
     default @NotNull List<Ability> getCustom() { return List.of(); }
-    boolean isCurse();
+    JujutsuType getJujutsuType();
 
     @Nullable Ability getDomain();
 
@@ -32,7 +33,7 @@ public interface ISorcerer {
         data.setTechnique(this.getTechnique());
         data.setAdditional(this.getAdditional());
         data.addTraits(this.getTraits());
-        data.setCurse(this.isCurse());
+        data.setType(this.getJujutsuType());
 
         Map<ResourceLocation, Float> config = ConfigHolder.SERVER.getMaxCursedEnergyNPC();
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(((Entity) this).getType());

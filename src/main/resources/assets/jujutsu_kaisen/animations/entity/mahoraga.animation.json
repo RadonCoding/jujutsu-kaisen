@@ -544,7 +544,7 @@
 		},
 		"move.run": {
 			"loop": true,
-			"animation_length": 0.79167,
+			"animation_length": 0.75,
 			"bones": {
 				"body": {
 					"position": {

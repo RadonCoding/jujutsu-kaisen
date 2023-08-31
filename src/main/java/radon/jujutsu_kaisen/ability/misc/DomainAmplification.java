@@ -17,11 +17,13 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
+
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || !JJKAbilities.hasToggled(owner, domain)) &&
+                JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -37,7 +39,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
                         owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),
                         owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
                         owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D),
-                        0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 2.5D);
+                        0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
             }
         }
     }
@@ -69,7 +71,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             LivingEntity owner = event.getEntity();
 
             if (JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                event.setAmount(event.getAmount() * 0.75F);
+                event.setAmount(event.getAmount() * 0.5F);
             }
         }
     }

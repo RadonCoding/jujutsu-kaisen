@@ -50,10 +50,16 @@ public class VeilBlock extends Block implements EntityBlock {
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext ctx) {
             if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return Shapes.empty();
+
             Entity entity = ctx.getEntity();
-            if (entity instanceof LivingEntity living && JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION)) return Shapes.empty();
-            if (entity instanceof Projectile projectile) entity = projectile.getOwner();
-            return be.isBlacklisted(entity) ? Shapes.block() : Shapes.empty();
+
+            if (entity != null) {
+                if (entity instanceof LivingEntity living && JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
+                    return Shapes.empty();
+                }
+                if (entity instanceof Projectile projectile) entity = projectile.getOwner();
+                return be.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+            }
         }
         return Shapes.empty();
     }

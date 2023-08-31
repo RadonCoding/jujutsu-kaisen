@@ -20,14 +20,14 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.entity.MaximumRedBeam;
+import radon.jujutsu_kaisen.entity.effect.MaximumRedBeam;
 
 public class MaximumRedRenderer extends EntityRenderer<MaximumRedBeam> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/maximum_red.png");
     private static final int TEXTURE_WIDTH = 256;
     private static final int TEXTURE_HEIGHT = 32;
     private static final float START_RADIUS = 1.3F;
-    private static final float BEAM_RADIUS = 1;
+    private static final float BEAM_RADIUS = 1.0F;
     private boolean clearerView = false;
 
     public MaximumRedRenderer(EntityRendererProvider.Context pContext) {
@@ -88,7 +88,7 @@ public class MaximumRedRenderer extends EntityRenderer<MaximumRedBeam> {
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
-        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, -START_RADIUS, 0, minU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, -START_RADIUS, 0.0F, minU, minV, 1.0F, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1, packedLight);
@@ -133,7 +133,7 @@ public class MaximumRedRenderer extends EntityRenderer<MaximumRedBeam> {
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
         float offset = this.clearerView ? -1 : 0;
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, 0, minU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, 0.0F, minU, minV, 1.0F, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, 0, minU, maxV, 1, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, 0, maxU, maxV, 1, packedLight);
         this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, 0, maxU, minV, 1, packedLight);

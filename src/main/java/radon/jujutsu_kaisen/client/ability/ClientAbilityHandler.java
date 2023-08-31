@@ -16,9 +16,12 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,6 +30,7 @@ public class ClientAbilityHandler {
     private static @Nullable Ability channeled;
     private static @Nullable KeyMapping current;
     private static boolean isChanneling;
+    private static boolean isRightDown;
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class ForgeEvents {
@@ -60,6 +64,20 @@ public class ClientAbilityHandler {
                     }
                 }
             }
+
+            if (mc.player.getVehicle() instanceof IRightClickInputListener listener) {
+                if (!isRightDown && mc.mouseHandler.isRightPressed()) {
+                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(true));
+                    listener.setDown(true);
+
+                    isRightDown = true;
+                } else if (isRightDown && !mc.mouseHandler.isRightPressed()) {
+                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(false));
+                    listener.setDown(false);
+
+                    isRightDown = false;
+                }
+            }
         }
 
         @SubscribeEvent
@@ -68,15 +86,13 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            if (JJKKeys.ACTIVATE_ABILITY.consumeClick()) {
+            if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
                 Ability ability = MeleeAbilityOverlay.getSelected();
 
                 if (ability != null) {
                     if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-                        mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
-                            current = JJKKeys.ACTIVATE_ABILITY;
-                        });
+                        channeled = ability;
+                        current = JJKKeys.ACTIVATE_ABILITY;
                     } else {
                         PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                         ClientAbilityHandler.trigger(ability);
@@ -84,10 +100,9 @@ public class ClientAbilityHandler {
                 }
             }
 
-
             if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                 mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    channeled = cap.isCurse() ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
+                    channeled = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
                     current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
                 });
             }

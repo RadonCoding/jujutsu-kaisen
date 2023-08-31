@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Toad extends Summon<ToadEntity> {
     public Toad() {
@@ -19,7 +20,7 @@ public class Toad extends Summon<ToadEntity> {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
-        return owner.getHealth() / owner.getMaxHealth() <= 0.9F;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
@@ -49,6 +50,6 @@ public class Toad extends Summon<ToadEntity> {
 
     @Override
     protected ToadEntity summon(int index, LivingEntity owner) {
-        return new ToadEntity(owner, false);
+        return new ToadEntity(owner, false, false);
     }
 }

@@ -3,20 +3,21 @@ package radon.jujutsu_kaisen.ability.disaster_flames;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.entity.MeteorEntity;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MaximumMeteor extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.distanceTo(target) <= 5.0D && target.getMaxHealth() > Player.MAX_HEALTH && owner.hasLineOfSight(target);
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get()) && owner.getHealth() / owner.getMaxHealth() <= 0.5F &&
+                HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.distanceTo(target) <= 5.0D && owner.hasLineOfSight(target);
     }
 
     @Override

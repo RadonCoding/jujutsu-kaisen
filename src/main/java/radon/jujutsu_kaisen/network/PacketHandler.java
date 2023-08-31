@@ -92,6 +92,11 @@ public class PacketHandler {
                 .encoder(JumpInputListenerC2SPacket::encode)
                 .consumerMainThread(JumpInputListenerC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(RightClickInputListenerC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RightClickInputListenerC2SPacket::new)
+                .encoder(RightClickInputListenerC2SPacket::encode)
+                .consumerMainThread(RightClickInputListenerC2SPacket::handle)
+                .add();
         INSTANCE.messageBuilder(SetFrequencyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(SetFrequencyC2SPacket::new)
                 .encoder(SetFrequencyC2SPacket::encode)
@@ -116,6 +121,11 @@ public class PacketHandler {
                 .decoder(SetTojiBountyC2SPacket::new)
                 .encoder(SetTojiBountyC2SPacket::encode)
                 .consumerMainThread(SetTojiBountyC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(KuchisakeOnnaAnswerC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(KuchisakeOnnaAnswerC2SPacket::new)
+                .encoder(KuchisakeOnnaAnswerC2SPacket::encode)
+                .consumerMainThread(KuchisakeOnnaAnswerC2SPacket::handle)
                 .add();
     }
 

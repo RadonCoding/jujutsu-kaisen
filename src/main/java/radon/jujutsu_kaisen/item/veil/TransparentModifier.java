@@ -5,8 +5,8 @@ import net.minecraft.network.chat.Component;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class TransparentModifier extends Modifier {
-    public TransparentModifier() {
-        super(Type.TRANSPARENT);
+    public TransparentModifier(Action action) {
+        super(Type.TRANSPARENT, action);
     }
 
     public TransparentModifier(CompoundTag nbt) {

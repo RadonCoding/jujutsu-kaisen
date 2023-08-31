@@ -1,0 +1,49 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 2, 4], "size": [0, 5, 3], "uv": [5, 5]},
+						{"origin": [-0.5, 2, -5.6], "size": [0, 5, 1], "uv": [13, -1]}
+					]
+				},
+				{
+					"name": "scissor_top",
+					"parent": "bone",
+					"pivot": [0, 6, 6],
+					"rotation": [-2.5, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 6, -6], "size": [0, 1, 13], "pivot": [0, 5, 7], "rotation": [-2.5, 0, 0], "uv": [0, 15]},
+						{"origin": [-0.5, 5, 5], "size": [0, 1, 2], "pivot": [0, 5, 7], "rotation": [-2.5, 0, 0], "uv": [11, 26]},
+						{"origin": [-0.5, 4, -6], "size": [0, 2, 2], "pivot": [0, 5, 7], "rotation": [-2.5, 0, 0], "uv": [11, 26]},
+						{"origin": [-0.5, 4, -14], "size": [0, 3, 9], "pivot": [0, 5, 7], "rotation": [-2.5, 0, 0], "uv": [15, 6]}
+					]
+				},
+				{
+					"name": "scissor_bottom",
+					"parent": "bone",
+					"pivot": [0, 3, 6],
+					"rotation": [2.5, 0, 0],
+					"cubes": [
+						{"origin": [-0.5, 2, -6], "size": [0, 1, 13], "pivot": [0, 4, 7], "rotation": [2.5, 0, 0], "uv": [0, 15]},
+						{"origin": [-0.5, 3, 5], "size": [0, 1, 2], "pivot": [0, 4, 7], "rotation": [2.5, 0, 0], "uv": [11, 26]},
+						{"origin": [-0.5, 3, -6], "size": [0, 2, 2], "pivot": [0, 4, 7], "rotation": [2.5, 0, 0], "uv": [11, 26]},
+						{"origin": [-0.5, 2, -14], "size": [0, 3, 9], "pivot": [0, 4, 7], "rotation": [2.5, 0, 0], "uv": [15, 13]}
+					]
+				}
+			]
+		}
+	]
+}

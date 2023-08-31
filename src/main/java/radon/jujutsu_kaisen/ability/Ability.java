@@ -40,7 +40,9 @@ public abstract class Ability {
         DISASTER_FLAMES,
         SLASH,
         PURE_LOVE,
-        LIMITLESS
+        LIMITLESS,
+        WATER,
+        ELECTRICITY
     }
 
     public Classification getClassification() {
@@ -101,7 +103,7 @@ public abstract class Ability {
                 }
 
                 if (this.getRealCooldown(owner) > 0) {
-                    if (!cap.isCooldownDone(this) && !cap.hasToggled(this)) {
+                    if (!cap.isCooldownDone(this) && !cap.hasToggled(this) && !cap.isChanneling(this)) {
                         result.set(Status.COOLDOWN);
                         return;
                     }
@@ -122,7 +124,7 @@ public abstract class Ability {
             }
 
             if (duration) {
-                if (((IToggled) this).getRealDuration(owner) > 0) {
+                if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
                     cap.addDuration(owner, this);
                 }
             }
@@ -140,7 +142,7 @@ public abstract class Ability {
     }
 
     public Status checkChannelable(LivingEntity owner) {
-        return this.getStatus(owner, true, false, true, false);
+        return this.getStatus(owner, true, false, true, true);
     }
 
     public Status checkStatus(LivingEntity owner) {
@@ -193,18 +195,7 @@ public abstract class Ability {
         void perform(LivingEntity owner, @Nullable LivingEntity target);
     }
 
-    public interface IChannelened {
-        void onRelease(LivingEntity owner, int charge);
-    }
-
-    public interface IToggled {
-        void onEnabled(LivingEntity owner);
-        void onDisabled(LivingEntity owner);
-
-        default boolean shouldLog() {
-            return true;
-        }
-
+    public interface IDurationable {
         default int getDuration() { return 0; }
         default int getRealDuration(LivingEntity owner) {
             AtomicReference<Integer> result = new AtomicReference<>(0);
@@ -216,6 +207,19 @@ public abstract class Ability {
                         result.set((int) (duration * cap.getGrade().getPower())));
             }
             return result.get();
+        }
+    }
+
+    public interface IChannelened {
+        void onRelease(LivingEntity owner, int charge);
+    }
+
+    public interface IToggled {
+        void onEnabled(LivingEntity owner);
+        void onDisabled(LivingEntity owner);
+
+        default boolean shouldLog() {
+            return true;
         }
 
         default boolean isPassive() {

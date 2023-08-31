@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
@@ -13,7 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,12 +30,12 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DisplayCaseBlockEntity extends BlockEntity {
-    private static final int RARITY = 500;
-    private static final int RADIUS = 8;
-    private static final double SPAWN_RADIUS = 128.0D;
+    private static final int RARITY = 50;
+    private static final double SPAWN_RADIUS = 64.0D;
+    private static final int INTERVAL = 5;
 
     private ItemStack stack = ItemStack.EMPTY;
     private int rot = 0;
@@ -42,80 +44,87 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         super(JJKBlockEntities.DISPLAY_CASE.get(), pPos, pBlockState);
     }
 
-    private static @Nullable EntityType<?> getRandomCurse(Level level, float energy) {
-        List<EntityType<?>> pool = new ArrayList<>();
+    private static @Nullable Entity getRandomCurse(Level level, float energy) {
+        List<Entity> pool = new ArrayList<>();
 
         Collection<RegistryObject<EntityType<?>>> registry = JJKEntities.ENTITIES.getEntries();
 
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
-            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof ISorcerer sorcerer && sorcerer.getGrade().getPower() < energy) {
-                pool.add(type);
+            Entity entity = type.create(level);
+
+            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && entity instanceof ISorcerer sorcerer && sorcerer.getGrade().getPower() <= energy) {
+                pool.add(entity);
             }
         }
         return pool.isEmpty() ? null : pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
     }
 
-    public int getEnergy() {
+    public float getEnergy() {
         if (this.stack.getItem() instanceof CursedObjectItem obj) {
             int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
-            return Mth.floor(SorcererGrade.values()[index].getPower());
+            return SorcererGrade.values()[index].getPower();
         }
-        return 0;
+        return 0.0F;
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DisplayCaseBlockEntity pBlockEntity) {
         pBlockEntity.rotTick();
 
-        int initial = pBlockEntity.getEnergy();
+        if (pLevel.getGameTime() % INTERVAL != 0 || pLevel.isClientSide) return;
 
-        if (initial == 0) return;
+        AtomicReference<Float> energy = new AtomicReference<>(pBlockEntity.getEnergy());
 
-        AtomicInteger energy = new AtomicInteger(initial);
+        int centerX = pPos.getX() >> 4;
+        int centerZ = pPos.getZ() >> 4;
 
-        AABB bounds = new AABB(pPos.getX() - (double) RADIUS / 2, pPos.getY() - (double) RADIUS / 2, pPos.getZ() - (double) RADIUS / 2,
-                pPos.getX() + (double) RADIUS / 2, pPos.getY() + (double) RADIUS / 2, pPos.getZ() + (double) RADIUS / 2);
+        for (int x = centerX - 1; x <= centerX + 1; x++) {
+            for (int z = centerZ - 1; z <= centerZ + 1; z++) {
+                ChunkAccess chunk = pLevel.getChunk(x, z);
 
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = pLevel.getBlockState(pos);
+                for (BlockPos pos : chunk.getBlockEntitiesPos()) {
+                    if (pos.equals(pPos)) continue;
 
-            if (!state.is(JJKBlocks.DISPLAY_CASE.get())) return;
+                    BlockState state = pLevel.getBlockState(pos);
 
-            if (pLevel.getBlockEntity(pos) instanceof DisplayCaseBlockEntity be) {
-                energy.getAndAdd(be.getEnergy());
+                    if (!state.is(JJKBlocks.DISPLAY_CASE.get())) continue;
+
+                    if (pLevel.getBlockEntity(pos) instanceof DisplayCaseBlockEntity be) {
+                        energy.set(energy.get() + be.getEnergy());
+                    }
+                }
             }
-        });
+        }
 
-        if (HelperMethods.RANDOM.nextInt((energy.get() * RARITY) / (pLevel.isNight() ? 2 : 1)) == 0) {
-            EntityType<?> curse = getRandomCurse(pLevel, energy.get());
+        Entity curse = getRandomCurse(pLevel, energy.get());
 
-            if (curse == null) return;
+        if (curse == null) return;
 
+        int rng = Mth.floor((energy.get() * RARITY)) / (pLevel.isNight() ? 2 : 1);
+
+        if (HelperMethods.RANDOM.nextInt(rng) == 0) {
             double d0 = (double) pPos.getX() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
-            double d1 = pPos.getY() + HelperMethods.RANDOM.nextInt(3) - 1;
+            double d1 = pPos.getY() + HelperMethods.RANDOM.nextInt(10) - 1;
             double d2 = (double) pPos.getZ() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
 
-            if (pLevel.noCollision(curse.getAABB(d0, d1, d2))) {
-                if (!curse.getCategory().isFriendly() && pLevel.getDifficulty() == Difficulty.PEACEFUL) {
+            EntityType<?> type = curse.getType();
+
+            if (pLevel.noCollision(type.getAABB(d0, d1, d2))) {
+                if (!type.getCategory().isFriendly() && pLevel.getDifficulty() == Difficulty.PEACEFUL) {
                     return;
                 }
+                curse.setPos(d0, d1, d2);
+                curse.moveTo(curse.getX(), curse.getY(), curse.getZ(), HelperMethods.RANDOM.nextFloat() * 360.0F, 0.0F);
 
-                Entity entity = curse.create(pLevel);
-
-                if (entity == null) return;
-
-                entity.setPos(d0, d1, d2);
-
-                entity.moveTo(entity.getX(), entity.getY(), entity.getZ(), HelperMethods.RANDOM.nextFloat() * 360.0F, 0.0F);
-
-                if (entity instanceof Mob mob) {
+                if (curse instanceof Mob mob) {
                     if (!mob.checkSpawnRules(pLevel, MobSpawnType.SPAWNER) || !mob.checkSpawnObstruction(pLevel)) {
                         return;
                     }
+                    ForgeEventFactory.onFinalizeSpawn(mob, (ServerLevel) pLevel, pLevel.getCurrentDifficultyAt(curse.blockPosition()), MobSpawnType.SPAWNER, null, null);
                 }
-                if (!pLevel.addFreshEntity(entity)) return;
-                if (entity instanceof Mob mob) mob.spawnAnim();
+                if (!pLevel.addFreshEntity(curse)) return;
+                if (curse instanceof Mob mob) mob.spawnAnim();
             }
         }
     }

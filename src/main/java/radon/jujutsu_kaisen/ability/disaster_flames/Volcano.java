@@ -12,7 +12,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.entity.VolcanoEntity;
+import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Volcano extends Ability {
@@ -30,7 +31,7 @@ public class Volcano extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
         HitResult result = HelperMethods.getHitResult(owner, start, end);
 
@@ -85,5 +86,10 @@ public class Volcano extends Ability {
     @Override
     public Classification getClassification() {
         return Classification.DISASTER_FLAMES;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

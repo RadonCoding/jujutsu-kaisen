@@ -18,5 +18,5 @@ public class JJKFluidTypes {
 
     public static final RegistryObject<FluidType> CHIMERA_SHADOW_GARDEN = FLUID_TYPES.register("chimera_shadow_garden",
             () -> new JJKFluidType(WATER_STILL, WATER_FLOWING, WATER_OVERLAY, 0x141414,
-                    Vec3.fromRGB24(0x000000).toVector3f(), FluidType.Properties.create().canSwim(false)));
+                    Vec3.fromRGB24(0x000000).toVector3f(), FluidType.Properties.create().canSwim(false).motionScale(1.0D)));
 }

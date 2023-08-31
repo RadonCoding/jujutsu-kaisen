@@ -17,7 +17,9 @@ import java.util.UUID;
 
 public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
+    @Nullable
     private UUID identifier;
+    @Nullable
     private BlockState original;
 
     private CompoundTag deferred;
@@ -27,6 +29,8 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
+        if (pBlockEntity.identifier == null) return;
+
         Entity domain = ((ServerLevel) pLevel).getEntity(pBlockEntity.identifier);
 
         if (domain == null || domain.isRemoved() || !domain.isAlive()) {
@@ -46,6 +50,7 @@ public class DomainBlockEntity extends BlockEntity {
         }
     }
 
+    @Nullable
     public UUID getIdentifier() {
         return this.identifier;
     }
@@ -59,7 +64,7 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID identifier, int id, BlockState state) {
+    public void create(UUID identifier, BlockState state) {
         this.initialized = true;
         this.identifier = identifier;
         this.original = state;
@@ -85,6 +90,8 @@ public class DomainBlockEntity extends BlockEntity {
         pTag.putBoolean("initialized", this.initialized);
 
         if (this.initialized) {
+            assert this.identifier != null;
+
             pTag.putUUID("identifier", this.identifier);
 
             if (this.original != null) {

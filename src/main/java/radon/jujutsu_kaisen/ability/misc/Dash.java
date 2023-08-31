@@ -39,7 +39,7 @@ public class Dash extends Ability {
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
         } else if (owner.isInWater() || owner.isOnGround()) {
-            owner.setDeltaMovement(owner.getLookAngle().scale(SPEED));
+            owner.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
         }
     }
 

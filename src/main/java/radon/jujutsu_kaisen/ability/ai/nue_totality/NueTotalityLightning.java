@@ -1,0 +1,46 @@
+package radon.jujutsu_kaisen.ability.ai.nue_totality;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.entity.NueTotalityLightingEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
+
+public class NueTotalityLightning extends Ability {
+    @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        return false;
+    }
+
+    @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        NueTotalityLightingEntity lightning = new NueTotalityLightingEntity(owner);
+        BlockPos target = owner.blockPosition();
+
+        for (int i = 0; i < owner.getY(); i++) {
+            BlockState state = owner.level.getBlockState(target.below(i));
+
+            if (state.canOcclude()) {
+                target = target.below(i);
+                break;
+            }
+        }
+        Vec3 pos = target.getCenter().add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 25.0D, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 25.0D);
+        lightning.setPos(pos);
+        owner.level.addFreshEntity(lightning);
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return 10.0F;
+    }
+}

@@ -19,18 +19,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AltarMenu extends ItemCombinerMenu {
     private static final Map<Item, ResourceLocation> ENTITY_DROPS = new HashMap<>();
+
+    private static final List<Integer> BLACKLIST = List.of(2, 5, 7, 8);
 
     public AltarMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(JJKMenus.ALTAR.get(), pContainerId, pPlayerInventory, pAccess);
@@ -60,7 +60,7 @@ public class AltarMenu extends ItemCombinerMenu {
                 .withSlot(1, 47, 17, stack -> stack.is(JJKItemTags.ALTAR))
                 .withSlot(2, 65, 17, stack -> stack.is(JJKItemTags.ALTAR))
                 .withSlot(3, 29, 35, stack -> stack.is(JJKItemTags.ALTAR))
-                .withSlot(4, 47, 35, stack -> stack.getCount() == 1 && stack.is(JJKItems.VEIL_ROD.get()))
+                .withSlot(4, 47, 35, stack -> stack.getItem() instanceof VeilRodItem)
                 .withSlot(5, 65, 35, stack -> stack.is(JJKItemTags.ALTAR))
                 .withSlot(6, 29, 53, stack -> stack.is(JJKItemTags.ALTAR))
                 .withSlot(7, 47, 53, stack -> stack.is(JJKItemTags.ALTAR))
@@ -113,15 +113,19 @@ public class AltarMenu extends ItemCombinerMenu {
         return true;
     }
 
-    private static Modifier getModifier(ItemStack stack) {
+    private static Modifier getModifier(ItemStack stack, Modifier.Action action) {
         if (stack.is(Items.NAME_TAG)) {
-            return new PlayerBlacklistModifier(stack.getHoverName().getString());
+            return new PlayerModifier(stack.getHoverName().getString(), action);
         } else if (stack.getItem() instanceof DyeItem dye) {
-            return new ColorModifier(dye.getDyeColor());
+            return new ColorModifier(dye.getDyeColor(), action);
         } else if (stack.is(Items.GLASS)) {
-            return new TransparentModifier();
+            return new TransparentModifier(action);
+        } else if (stack.is(JJKItemTags.CURSED_OBJECT)) {
+            return new CurseModifier(action);
+        } else if (stack.is(JJKItemTags.CURSED_TOOL)) {
+            return new SorcererModifier(action);
         } else if (ENTITY_DROPS.containsKey(stack.getItem())) {
-            return new EntityBlacklistModifier(ENTITY_DROPS.get(stack.getItem()));
+            return new EntityModifier(ENTITY_DROPS.get(stack.getItem()), action);
         }
         throw new NotImplementedException();
     }
@@ -134,15 +138,16 @@ public class AltarMenu extends ItemCombinerMenu {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
             ItemStack copy = stack.copy();
-            copy.setCount(4);
 
             for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
                 if (i == 4) continue;
 
                 ItemStack slot = this.inputSlots.getItem(i);
 
+                int index = i > 4 ? i - 1 : i;
+
                 if (!slot.isEmpty()) {
-                    VeilRodItem.setModifier(copy, i > 4 ? i - 1 : i, getModifier(slot));
+                    VeilRodItem.setModifier(copy, index, getModifier(slot, BLACKLIST.contains(i) ? Modifier.Action.DENY : Modifier.Action.ALLOW));
                 }
             }
             this.resultSlots.setItem(0, copy);

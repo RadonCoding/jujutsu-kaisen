@@ -74,6 +74,7 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
             Matrix4f matrix4f = pose.pose();
             Matrix3f matrix3f = pose.normal();
             pPoseStack.pushPose();
+
             vertex(consumer, matrix4f, matrix3f, f4, f0, f5, j, k, l, 0.4999F, f13, pPackedLight);
             vertex(consumer, matrix4f, matrix3f, f4, 0.0F, f5, j, k, l, 0.4999F, f12, pPackedLight);
             vertex(consumer, matrix4f, matrix3f, f6, 0.0F, f7, j, k, l, 0.0F, f12, pPackedLight);
@@ -83,6 +84,7 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
             vertex(consumer, matrix4f, matrix3f, f8, 0.0F, f9, j, k, l, 0.4999F, f14, pPackedLight);
             vertex(consumer, matrix4f, matrix3f, f10, 0.0F, f11, j, k, l, 0.0F, f14, pPackedLight);
             vertex(consumer, matrix4f, matrix3f, f10, f0, f11, j, k, l, 0.0F, f15, pPackedLight);
+
             pPoseStack.popPose();
             pPoseStack.popPose();
         }

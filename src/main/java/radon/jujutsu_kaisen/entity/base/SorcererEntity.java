@@ -5,6 +5,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -30,6 +32,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Arrays;
 
 public abstract class SorcererEntity extends PathfinderMob implements GeoEntity, ISorcerer {
+    private static final int RARITY = 10;
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     protected SorcererEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
@@ -37,6 +41,11 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         Arrays.fill(this.armorDropChances, 1.0F);
         Arrays.fill(this.handDropChances, 1.0F);
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
     }
 
     @Override
@@ -48,7 +57,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 
-        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker)) {
+        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
             this.setTarget(attacker);
         }
     }
@@ -76,19 +85,23 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Math.max(1, this.getGrade().ordinal() * (this.isCurse() ? 50 : 25) / (this.isCurse() && this.level.isNight() ? 2 : 1))) != 0) return false;
+            if (this.getJujutsuType() == JujutsuType.CURSE) {
+                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower()) / (this.level.isNight() ? 2 : 1)) != 0) return false;
 
-            if (this.isCurse()) {
                 if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                     if (!this.isInVillage() && !this.isInFortress()) return false;
                 } else if (!this.isInFortress()) {
                     return false;
                 }
             } else {
+                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower() / 2)) != 0) return false;
                 if (!this.isInVillage()) return false;
             }
-            if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 256.0D,  32.0D, 256.0D)).size() > 0) return false;
             if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D,  16.0D, 64.0D)).size() > 0) return false;
+        }
+
+        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0) return false;
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);
     }
