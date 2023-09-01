@@ -24,7 +24,7 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/piercing_water.png");
     private static final int TEXTURE_WIDTH = 16;
     private static final int TEXTURE_HEIGHT = 512;
-    private static final float BEAM_RADIUS = 0.15F;
+    private static final float BEAM_RADIUS = 0.1F;
     private boolean clearerView = false;
 
     public PiercingWaterRenderer(EntityRendererProvider.Context pContext) {

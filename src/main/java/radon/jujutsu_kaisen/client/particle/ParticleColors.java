@@ -16,6 +16,8 @@ public class ParticleColors {
     public static Vector3f SIMPLE_DOMAIN = Vec3.fromRGB24(9756159).toVector3f();
     public static Vector3f CURSED_ENERGY_SORCERER_COLOR = Vec3.fromRGB24(4826595).toVector3f();
     public static Vector3f CURSED_ENERGY_CURSE_COLOR = Vec3.fromRGB24(10890961).toVector3f();
+    public static Vector3f PINK_COLOR = Vec3.fromRGB24(15729660).toVector3f();
+    public static Vector3f PURPLE_COLOR = Vec3.fromRGB24(6176255).toVector3f();
 
     public static Vector3f getCursedEnergyColor(LivingEntity entity) {
         AtomicReference<Vector3f> color = new AtomicReference<>();

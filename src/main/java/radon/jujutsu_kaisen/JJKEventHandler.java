@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -33,9 +34,10 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
@@ -44,6 +46,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -328,6 +331,28 @@ public class JJKEventHandler {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
                             }
                         }
+                        
+                        if (victimCap.getType() == JujutsuType.CURSE) {
+                            double width = victim.getBbWidth();
+                            double height = victim.getBbHeight();
+                            ParticleOptions one = new VaporParticle.VaporParticleOptions(ParticleColors.PINK_COLOR, (float) width * 2.0F, 0.5F, false, 20);
+                            ParticleOptions two = new VaporParticle.VaporParticleOptions(ParticleColors.PURPLE_COLOR, (float) width * 2.0F, 0.5F, false, 20);
+
+                            for (int j = 0; j < 8; j++) {
+                                double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                                double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
+                                double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                                ((ServerLevel) victim.level).sendParticles(one, x, y, z, 0,
+                                        0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                            }
+                            for (int j = 0; j < 8; j++) {
+                                double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                                double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
+                                double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                                ((ServerLevel) victim.level).sendParticles(two, x, y, z, 0,
+                                        0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                            }
+                        }
 
                         if (killerCap.getType() != victimCap.getType()) {
                             SorcererGrade grade = SorcererGrade.values()[victimCap.getGrade().ordinal()];
@@ -339,6 +364,8 @@ public class JJKEventHandler {
                             }
                         }
                     });
+
+                    if (victimCap.getType() != JujutsuType.SORCERER || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
                     int chance = 10;
 

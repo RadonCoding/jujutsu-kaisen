@@ -94,7 +94,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
                     return false;
                 }
             } else {
-                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower() / 2)) != 0) return false;
+                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower()) / 4) != 0) return false;
                 if (!this.isInVillage()) return false;
             }
             if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D,  16.0D, 64.0D)).size() > 0) return false;

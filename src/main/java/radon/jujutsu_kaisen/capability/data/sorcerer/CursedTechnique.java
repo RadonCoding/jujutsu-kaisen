@@ -10,7 +10,7 @@ public enum CursedTechnique {
     CURSE_MANIPULATION(null),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.MAXIMUM_RED.get(), JJKAbilities.BLUE.get(),
             JJKAbilities.MAXIMUM_BLUE.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
-    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.FIRE_ARROW.get()),
+    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.SPIDERWEB.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null),
     RIKA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),

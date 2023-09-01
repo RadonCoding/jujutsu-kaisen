@@ -79,7 +79,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.25F : 1.0F;
+        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
     }
 
     private void createGoals() {
@@ -235,9 +235,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
         if (this.jump) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.1D, 0.0D));
-        } else if (!pEntity.isOnGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, 0.05D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
         }
     }
 

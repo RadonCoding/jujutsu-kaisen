@@ -288,7 +288,7 @@ public class JJKEntities {
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(KUCHISAKE_ONNA.get(), KuchisakeOnna.createAttributes().build());
-        event.put(ZOMBA_CURSE.get(), ZombaCurseEntity.createAttributes().build());
+        event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

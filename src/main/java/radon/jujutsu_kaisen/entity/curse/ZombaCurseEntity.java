@@ -1,21 +1,25 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -38,25 +42,13 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class ZombaCurseEntity extends SorcererEntity {
-    private static final double RANGE = 32.0D;
+    private static final double ATTACK_RANGE = 32.0D;
 
     private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
     public ZombaCurseEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-
-        this.moveControl = new FlyingMoveControl(this, 20, true);
-    }
-
-    @Override
-    protected float getFlyingSpeed() {
-        return 0.2F;
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.FLYING_SPEED);
     }
 
     @Override
@@ -74,21 +66,65 @@ public class ZombaCurseEntity extends SorcererEntity {
     }
 
     @Override
-    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
-        FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel);
-        navigation.setCanOpenDoors(false);
-        navigation.setCanFloat(true);
-        navigation.setCanPassDoors(true);
-        return navigation;
-    }
-
-    @Override
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            if (this.distanceTo(target) <= RANGE) {
+            if (this.distanceTo(target) <= ATTACK_RANGE) {
                 AbilityHandler.trigger(this, JJKAbilities.SKY_STRIKE.get());
+            } else {
+                this.teleportTowards(target);
+            }
+        }
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        if (!this.level.isClientSide && pSource.getEntity() instanceof LivingEntity) {
+            this.teleport();
+        }
+        return super.hurt(pSource, pAmount);
+    }
+
+    private void teleport() {
+        if (!this.level.isClientSide && this.isAlive()) {
+            double d0 = this.getX() + (this.random.nextDouble() - 0.5D) * 64.0D;
+            double d1 = this.getY() + (double)(this.random.nextInt(64) - 32);
+            double d2 = this.getZ() + (this.random.nextDouble() - 0.5D) * 64.0D;
+            this.teleport(d0, d1, d2);
+        }
+    }
+
+    private void teleportTowards(Entity pTarget) {
+        Vec3 pos = new Vec3(this.getX() - pTarget.getX(), this.getY(0.5D) - pTarget.getEyeY(), this.getZ() - pTarget.getZ()).normalize();
+        double d0 = 16.0D;
+        double d1 = this.getX() + (this.random.nextDouble() - 0.5D) * 8.0D - pos.x * d0;
+        double d2 = this.getY() + (double)(this.random.nextInt(16) - 8) - pos.y * d0;
+        double d3 = this.getZ() + (this.random.nextDouble() - 0.5D) * 8.0D - pos.z * d0;
+        this.teleport(d1, d2, d3);
+    }
+
+    private void teleport(double pX, double pY, double pZ) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(pX, pY, pZ);
+
+        while (pos.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(pos).getMaterial().blocksMotion()) {
+            pos.move(Direction.DOWN);
+        }
+        BlockState blockstate = this.level.getBlockState(pos);
+        boolean flag = blockstate.getMaterial().blocksMotion();
+        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
+
+        if (flag && !flag1) {
+            Vec3 current = this.position();
+            boolean success = this.randomTeleport(pX, pY, pZ, true);
+
+            if (success) {
+                this.level.gameEvent(GameEvent.TELEPORT, current, GameEvent.Context.of(this));
+
+                if (!this.isSilent()) {
+                    this.level.playSound(null, this.xo, this.yo, this.zo, SoundEvents.ENDERMAN_TELEPORT, this.getSoundSource(), 1.0F, 1.0F);
+                    this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+                }
             }
         }
     }
