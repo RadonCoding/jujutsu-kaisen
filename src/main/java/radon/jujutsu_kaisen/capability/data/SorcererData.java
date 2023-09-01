@@ -92,6 +92,8 @@ public class SorcererData implements ISorcererData {
     private static final int REQUIRED_ADAPTATION = 3;
 
     public SorcererData() {
+        this.type = JujutsuType.SORCERER;
+
         this.grade = SorcererGrade.GRADE_4;
         this.mode = TenShadowsMode.SUMMON;
 
@@ -198,7 +200,9 @@ public class SorcererData implements ISorcererData {
 
     private void updateChanneled(LivingEntity owner) {
         if (this.channeled != null) {
-            if (this.channeled.checkStatus(owner) == Ability.Status.SUCCESS) {
+            Ability.Status status = this.channeled.checkStatus(owner);
+
+            if (status == Ability.Status.SUCCESS) {
                 this.channeled.run(owner);
             } else {
                 this.channel(owner, this.channeled);

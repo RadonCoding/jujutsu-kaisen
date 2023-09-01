@@ -230,7 +230,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
+        return JujutsuType.SHIKIGAMI;
     }
 
     @Override

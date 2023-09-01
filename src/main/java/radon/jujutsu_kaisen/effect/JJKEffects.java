@@ -12,5 +12,5 @@ public class JJKEffects {
 
     public static RegistryObject<MobEffect> STUN = EFFECTS.register("stun", () -> new StunEffect(MobEffectCategory.HARMFUL, 0));
     public static RegistryObject<MobEffect> UNLIMITED_VOID = EFFECTS.register("unlimited_void", () -> new StunEffect(MobEffectCategory.HARMFUL, 0));
-    public static RegistryObject<MobEffect> UNDETECTABLE = EFFECTS.register("undetectable", () -> new UndetectableEffect(MobEffectCategory.BENEFICIAL, 0));
+    public static RegistryObject<MobEffect> UNDETECTABLE = EFFECTS.register("undetectable", () -> new JJKEffect(MobEffectCategory.BENEFICIAL, 0));
 }

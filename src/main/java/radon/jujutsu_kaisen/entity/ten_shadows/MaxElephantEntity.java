@@ -211,6 +211,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
             this.setSprinting(this.getDeltaMovement().lengthSqr() >= 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
         }
 
+        if (passenger != null) return;
+
         LivingEntity target = this.getTarget();
 
         boolean trigger = target != null && this.distanceTo(target) <= Water.RANGE && this.hasLineOfSight(target);
@@ -253,6 +255,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     public void setDown(boolean down) {
+        if (this.level.isClientSide) return;
+
         boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
 
         if (down) {

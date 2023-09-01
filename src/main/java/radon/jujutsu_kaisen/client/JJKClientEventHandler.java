@@ -41,19 +41,16 @@ import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.KuchisakeOnnaAnswerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class JJKClientEventHandler {
@@ -96,11 +93,6 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
-
-            if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
-                listener.setJump(event.getAction() == InputConstants.PRESS);
-            }
 
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {

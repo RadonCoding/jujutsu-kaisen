@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class ShootRCT extends Ability {
     private List<LivingEntity> getTargets(LivingEntity owner) {
         Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
         List<LivingEntity> entities = owner.level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE));
-        entities.removeIf(entity -> entity == owner);
+        entities.removeIf(entity -> entity == owner || entity instanceof DomainExpansionEntity);
         return entities;
     }
 
@@ -60,7 +61,7 @@ public class ShootRCT extends Ability {
                         result.set(targetCap.getType() == JujutsuType.CURSE));
 
                 if (result.get()) {
-                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower());
+                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower() * 10.0F);
                 } else {
                     target.heal(AMOUNT * ownerCap.getGrade().getPower());
                 }
@@ -70,10 +71,10 @@ public class ShootRCT extends Ability {
                         for (int j = 0; j < 8; j++) {
                             double width = target.getBbWidth();
                             double height = target.getBbHeight();
-                            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5) * width;
+                            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                             double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
-                            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5) * width;
-                            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, 1.5F, 0.5F, false, 1),
+                            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, (float) width * 2.0F, 0.5F, false, 1),
                                     x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
                         }
                     }, i * 2);
@@ -89,7 +90,7 @@ public class ShootRCT extends Ability {
 
     @Override
     public int getCooldown() {
-        return 10;
+        return 5 * 20;
     }
 
     @Override

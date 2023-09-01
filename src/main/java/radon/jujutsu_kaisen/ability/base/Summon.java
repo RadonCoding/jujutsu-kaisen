@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -54,7 +55,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
-        if (this.isTenShadows()) {
+        if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
             AtomicBoolean result = new AtomicBoolean();
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->

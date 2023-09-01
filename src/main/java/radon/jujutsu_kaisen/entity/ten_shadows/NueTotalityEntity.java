@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,14 +14,19 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -31,10 +37,12 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class NueTotalityEntity extends TenShadowsSummon {
+public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideable, IJumpInputListener {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
     private static final RawAnimation SHOCK = RawAnimation.begin().thenPlay("attack.shock");
+
+    private boolean jump;
 
     public NueTotalityEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -102,7 +110,7 @@ public class NueTotalityEntity extends TenShadowsSummon {
 
     @Override
     protected float getFlyingSpeed() {
-        return 0.3F;
+        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -150,5 +158,111 @@ public class NueTotalityEntity extends TenShadowsSummon {
     @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_TOTALITY_LIGHTNING.get());
+    }
+    @Override
+    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
+        if (!this.isVehicle()) {
+            if (pPlayer.startRiding(this)) {
+                pPlayer.setYRot(this.getYRot());
+                pPlayer.setXRot(this.getXRot());
+            }
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
+    }
+
+    @Override
+    public boolean shouldRiderSit() {
+        return false;
+    }
+
+    @Override
+    public double getPassengersRidingOffset() {
+        LivingEntity passenger = this.getControllingPassenger();
+        if (passenger == null) return super.getPassengersRidingOffset();
+        return -passenger.getBbHeight() + 0.8D;
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        EntityDimensions dimensions = super.getDimensions(pPose);
+
+        LivingEntity passenger = this.getControllingPassenger();
+
+        if (passenger != null) {
+            return new EntityDimensions(dimensions.width, dimensions.height + passenger.getBbHeight(), dimensions.fixed);
+        }
+        return dimensions;
+    }
+
+    @Override
+    protected @NotNull AABB makeBoundingBox() {
+        AABB bounds = super.makeBoundingBox();
+
+        LivingEntity passenger = this.getControllingPassenger();
+
+        if (passenger != null) {
+            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2.0F - 0.4D)
+                    .setMaxY(bounds.maxY - passenger.getBbHeight() / 2.0F);
+        }
+        return bounds;
+    }
+
+    @Override
+    protected @NotNull Vec3 getRiddenInput(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
+        if (this.onGround) {
+            return Vec3.ZERO;
+        } else {
+            float f = pEntity.xxa * 0.5F;
+            float f1 = pEntity.zza;
+
+            if (f1 <= 0.0F) {
+                f1 *= 0.25F;
+            }
+            return new Vec3(f, 0.0D, f1);
+        }
+    }
+
+    @Nullable
+    @Override
+    public LivingEntity getControllingPassenger() {
+        Entity entity = this.getFirstPassenger();
+
+        if (entity instanceof LivingEntity living) {
+            return living;
+        }
+        return null;
+    }
+
+    private Vec2 getRiddenRotation(LivingEntity pEntity) {
+        return new Vec2(pEntity.getXRot() * 0.5F, pEntity.getYRot());
+    }
+
+    @Override
+    protected void tickRidden(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
+        super.tickRidden(pEntity, pTravelVector);
+
+        Vec2 vec2 = this.getRiddenRotation(pEntity);
+        this.setRot(vec2.y, vec2.x);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+
+        if (this.jump) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.1D, 0.0D));
+        } else if (!pEntity.isOnGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, 0.05D, 0.0D));
+        }
+    }
+
+    @Override
+    public void setJump(boolean jump) {
+        this.jump = jump;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.refreshDimensions();
     }
 }
