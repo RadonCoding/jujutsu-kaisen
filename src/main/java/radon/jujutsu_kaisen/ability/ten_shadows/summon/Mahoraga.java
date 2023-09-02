@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Mahoraga extends Summon<MahoragaEntity> {
@@ -51,8 +52,8 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     }
 
     @Override
-    public EntityType<MahoragaEntity> getType() {
-        return JJKEntities.MAHORAGA.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.MAHORAGA.get());
     }
 
     @Override

@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Rika extends Summon<RikaEntity> {
@@ -38,8 +39,8 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    public EntityType<RikaEntity> getType() {
-        return JJKEntities.RIKA.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.RIKA.get());
     }
 
     @Override

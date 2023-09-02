@@ -10,13 +10,17 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.TranquilDeerEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class RoundDeer extends Summon<TranquilDeerEntity> {
-    public RoundDeer() {
+import java.util.List;
+
+public class TranquilDeer extends Summon<TranquilDeerEntity> {
+    public TranquilDeer() {
         super(TranquilDeerEntity.class);
     }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (!this.isTamed(owner)) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -29,7 +33,7 @@ public class RoundDeer extends Summon<TranquilDeerEntity> {
     }
 
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.5F : 250.0F;
+        return this.isTamed(owner) ? 0.2F : 250.0F;
     }
 
     @Override
@@ -38,8 +42,8 @@ public class RoundDeer extends Summon<TranquilDeerEntity> {
     }
 
     @Override
-    public EntityType<TranquilDeerEntity> getType() {
-        return JJKEntities.TRANQUIL_DEER.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.TRANQUIL_DEER.get());
     }
 
     @Override

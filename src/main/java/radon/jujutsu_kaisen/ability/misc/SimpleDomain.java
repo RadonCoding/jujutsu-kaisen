@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -23,6 +24,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimpleDomain extends Ability implements Ability.IToggled, Ability.IDurationable {
@@ -104,6 +106,11 @@ public class SimpleDomain extends Ability implements Ability.IToggled, Ability.I
     @Override
     public DisplayType getDisplayType() {
         return DisplayType.DOMAIN;
+    }
+
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.SIMPLE_DOMAIN);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

@@ -50,7 +50,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             int radius = this.getRadius();
-            List<Block> blocks = this.getBlocks();
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius,
                     cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));

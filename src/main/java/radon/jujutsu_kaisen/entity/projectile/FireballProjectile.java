@@ -47,7 +47,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.FIREBALL.get(), pShooter.level, pShooter);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(pShooter.getLookAngle());
+                .add(HelperMethods.getLookAngle(pShooter));
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 

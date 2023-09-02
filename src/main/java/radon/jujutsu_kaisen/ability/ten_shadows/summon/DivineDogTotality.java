@@ -1,19 +1,16 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogTotalityEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
 
 public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     public DivineDogTotality() {
@@ -29,25 +26,8 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, DivineDogEntity.class)));
-        }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
-    }
-
-    @Override
-    public Status checkToggleable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, DivineDogEntity.class)));
-        }
-        return result.get() ? Status.FAILURE : super.checkToggleable(owner);
+    protected List<EntityType<?>> getFusions() {
+        return List.of(JJKEntities.DIVINE_DOG_WHITE.get(), JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override
@@ -56,8 +36,8 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    public EntityType<DivineDogTotalityEntity> getType() {
-        return JJKEntities.DIVINE_DOG_TOTALITY.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.DIVINE_DOG_TOTALITY.get());
     }
 
     @Override

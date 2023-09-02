@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -81,6 +82,8 @@ public class SorcererData implements ISorcererData {
     private final Set<Ability.Classification> adapted;
     private final Map<Ability.Classification, Integer> adapting;
 
+    private final List<ItemStack> shadowInventory;
+
     private TenShadowsMode mode;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
@@ -110,6 +113,8 @@ public class SorcererData implements ISorcererData {
 
         this.adapted = new HashSet<>();
         this.adapting = new HashMap<>();
+
+        this.shadowInventory = new ArrayList<>();
     }
 
     private void updateCooldowns() {
@@ -723,8 +728,8 @@ public class SorcererData implements ISorcererData {
             T summon = test.tryCast(entity);
 
             if (summon != null) {
-                summon.discard();
                 iter.remove();
+                summon.discard();
             }
         }
     }
@@ -768,8 +773,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void revive() {
+    public void revive(boolean full) {
         this.dead.clear();
+
+        if (full) {
+            this.tamed.clear();
+        }
     }
 
     @Override
@@ -797,6 +806,26 @@ public class SorcererData implements ISorcererData {
     @Override
     public void adaptAll(Set<Ability.Classification> adaptations) {
         this.adapted.addAll(adaptations);
+    }
+
+    @Override
+    public void addShadowInventory(ItemStack stack) {
+        this.shadowInventory.add(stack);
+    }
+
+    @Override
+    public ItemStack getShadowInventory(int index) {
+        return this.shadowInventory.get(index);
+    }
+
+    @Override
+    public List<ItemStack> getShadowInventory() {
+        return this.shadowInventory;
+    }
+
+    @Override
+    public void removeShadowInventory(int index) {
+        this.shadowInventory.remove(index);
     }
 
     private @Nullable Ability.Classification getClassification(DamageSource source) {
@@ -1042,6 +1071,13 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("adapting", adaptingTag);
 
+        ListTag shadowInventoryTag = new ListTag();
+
+        for (ItemStack stack : this.shadowInventory) {
+            shadowInventoryTag.add(stack.save(new CompoundTag()));
+        }
+        nbt.put("shadow_inventory", shadowInventoryTag);
+
         return nbt;
     }
 
@@ -1150,6 +1186,12 @@ public class SorcererData implements ISorcererData {
         for (Tag key : nbt.getList("adapting", Tag.TAG_COMPOUND)) {
             CompoundTag adaptation = (CompoundTag) key;
             this.adapting.put(Ability.Classification.values()[adaptation.getInt("classification")], adaptation.getInt("stage"));
+        }
+
+        this.shadowInventory.clear();
+
+        for (Tag key : nbt.getList("shadow_inventory", Tag.TAG_COMPOUND)) {
+            this.shadowInventory.add(ItemStack.of((CompoundTag) key));
         }
     }
 }

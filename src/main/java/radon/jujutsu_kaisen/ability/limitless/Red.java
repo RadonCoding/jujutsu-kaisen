@@ -4,10 +4,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.RedProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.List;
 
 public class Red extends Ability {
     @Override
@@ -27,8 +28,8 @@ public class Red extends Ability {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        return JJKAbilities.hasTrait(owner, Trait.REVERSE_CURSED_TECHNIQUE);
+    public List<Trait> getRequirements() {
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

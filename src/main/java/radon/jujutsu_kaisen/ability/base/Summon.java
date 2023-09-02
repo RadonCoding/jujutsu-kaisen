@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Summon<T extends Entity> extends Ability implements Ability.IToggled {
@@ -23,7 +24,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         this.clazz = clazz;
     }
 
-    public abstract EntityType<T> getType();
+    public abstract List<EntityType<?>> getTypes();
 
     protected boolean canTame() {
         return false;
@@ -37,6 +38,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return 1;
     }
 
+    protected List<EntityType<?>> getFusions() {
+        return List.of();
+    }
+
     public abstract boolean isTenShadows();
 
     public boolean isTamed(LivingEntity owner) {
@@ -44,17 +49,27 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
         AtomicBoolean result = new AtomicBoolean();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType())));
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            for (EntityType<?> type : this.getTypes()) {
+                if (result.get()) break;
+
+                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type));
+            }
+        });
         return result.get();
     }
 
     public boolean isDead(LivingEntity owner) {
-        return this.isDead(owner, this.getType());
+        for (EntityType<?> type : this.getTypes()) {
+            if (this.isDead(owner, type)) return true;
+        }
+        return false;
     }
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
+        if (!super.isUnlocked(owner)) return false;
+
         if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
             AtomicBoolean result = new AtomicBoolean();
 
@@ -63,6 +78,24 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             if (!result.get()) {
                 return false;
+            }
+
+            for (Ability ability : JJKAbilities.getToggled(owner)) {
+                if (!(ability instanceof Summon<?> summon)) continue;
+
+                for (EntityType<?> type : this.getTypes()) {
+                    if (summon.getTypes().contains(type)) return false;
+                    if (summon.getFusions().contains(type)) return false;
+                }
+                for (EntityType<?> fusion : this.getFusions()) {
+                    if (!JJKAbilities.hasTamed(owner, fusion)) return false;
+                    if (summon.getTypes().contains(fusion)) return false;
+                    if (summon.getFusions().contains(fusion)) return false;
+                }
+            }
+
+            for (EntityType<?> fusion : this.getFusions()) {
+                if (!JJKAbilities.hasTamed(owner, fusion)) return false;
             }
         }
         return !this.isDead(owner);

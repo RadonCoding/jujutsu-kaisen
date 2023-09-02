@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
+
 public class Toad extends Summon<ToadEntity> {
     public Toad() {
         super(ToadEntity.class);
@@ -39,8 +41,8 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
-    public EntityType<ToadEntity> getType() {
-        return JJKEntities.TOAD.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.TOAD.get());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.rika.Copy;
 import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
+import radon.jujutsu_kaisen.ability.ten_shadows.ShadowStorage;
 import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
@@ -32,11 +33,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class JJKAbilities {
@@ -94,9 +95,12 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);
     public static RegistryObject<Summon<?>> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
     public static RegistryObject<Summon<?>> MAX_ELEPHANT = ABILITIES.register("max_elephant", MaxElephant::new);
-    public static RegistryObject<Summon<?>> TRANQUIL_DEER = ABILITIES.register("tranquil_deer", RoundDeer::new);
+    public static RegistryObject<Summon<?>> TRANQUIL_DEER = ABILITIES.register("tranquil_deer", TranquilDeer::new);
+    public static RegistryObject<Summon<?>> PIERCING_BULL = ABILITIES.register("piercing_bull", PiercingBull::new);
+    public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE = ABILITIES.register("release", Release::new);
+    public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
     public static RegistryObject<Ability> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
@@ -124,10 +128,26 @@ public class JJKAbilities {
     public static boolean hasToggled(LivingEntity owner, Ability ability) {
         AtomicBoolean result = new AtomicBoolean();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            result.set(cap.hasToggled(ability));
-        });
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.hasToggled(ability)));
         return result.get();
+    }
+
+    public static List<Ability> getToggled(LivingEntity owner) {
+        List<Ability> toggled = new ArrayList<>();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                toggled.addAll(cap.getToggled()));
+        return toggled;
+    }
+
+    public static boolean hasTamed(LivingEntity owner, EntityType<?> type) {
+        for (RegistryObject<Ability> ability : ABILITIES.getEntries()) {
+            if (!(ability.get() instanceof Summon<?> summon)) continue;
+            if (!summon.getTypes().contains(type)) continue;
+            return summon.isTamed(owner);
+        }
+        return false;
     }
 
     public static boolean isChanneling(LivingEntity owner, Ability ability) {
@@ -144,6 +164,14 @@ public class JJKAbilities {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                 result.set(cap.hasTrait(trait)));
+        return result.get();
+    }
+
+    public static JujutsuType getType(LivingEntity owner) {
+        AtomicReference<JujutsuType> result = new AtomicReference<>();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.getType()));
         return result.get();
     }
 
@@ -164,7 +192,15 @@ public class JJKAbilities {
                 abilities.add(JJKAbilities.SMASH.get());
                 abilities.add(JJKAbilities.WATER_WALKING.get());
 
-                if (cap.getType() == JujutsuType.CURSE) {
+                abilities.add(JJKAbilities.HEAL.get());
+
+                abilities.add(JJKAbilities.RCT.get());
+                abilities.add(JJKAbilities.SHOOT_RCT.get());
+
+                abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
+                abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+
+                /*if (cap.getType() == JujutsuType.CURSE) {
                     abilities.add(JJKAbilities.HEAL.get());
                 } else if (cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
                     abilities.add(JJKAbilities.RCT.get());
@@ -172,21 +208,21 @@ public class JJKAbilities {
                     if (cap.hasTrait(Trait.STRONGEST)) {
                         abilities.add(JJKAbilities.SHOOT_RCT.get());
                     }
-                }
+                }*/
 
-                if (cap.hasTrait(Trait.SIMPLE_DOMAIN)) abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
-                if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                /*if (cap.hasTrait(Trait.SIMPLE_DOMAIN)) abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
+                if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());*/
 
                 CursedTechnique technique = cap.getTechnique();
 
                 if (technique != null) {
-                    if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
+                    //if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
                         Ability domain = technique.getDomain();
 
                         if (domain != null) {
                             abilities.add(domain);
                         }
-                    }
+                    //}
                     abilities.addAll(Arrays.asList(technique.getAbilities()));
                 }
 
@@ -212,11 +248,6 @@ public class JJKAbilities {
                         abilities.add(copied.getDomain());
                     }
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
-                }
-
-                if ((cap.getTechnique() == CursedTechnique.TEN_SHADOWS || cap.getAdditional() == CursedTechnique.TEN_SHADOWS) &&
-                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get())) {
-                    abilities.add(JJKAbilities.WHEEL.get());
                 }
             }
             abilities.removeIf(ability -> !ability.isUnlocked(owner));

@@ -111,7 +111,7 @@ public class JJKEventHandler {
                         newCap.resetBurnout();
                         newCap.clearToggled();
                         newCap.setCopied(null);
-                        newCap.revive();
+                        newCap.revive(false);
                     }
                 });
             });
@@ -343,14 +343,14 @@ public class JJKEventHandler {
                                 double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
                                 double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                                 ((ServerLevel) victim.level).sendParticles(one, x, y, z, 0,
-                                        0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                                        0.0D, 0.0D, 0.0D, 0.0D);
                             }
                             for (int j = 0; j < 8; j++) {
                                 double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                                 double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
                                 double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                                 ((ServerLevel) victim.level).sendParticles(two, x, y, z, 0,
-                                        0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                                        0.0D, 0.0D, 0.0D, 0.0D);
                             }
                         }
 

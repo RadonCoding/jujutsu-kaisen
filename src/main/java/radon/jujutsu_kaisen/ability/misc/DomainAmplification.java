@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -11,10 +11,14 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.List;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
@@ -22,8 +26,8 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || !JJKAbilities.hasToggled(owner, domain)) &&
-                JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||
+                !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -64,14 +68,26 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         return DisplayType.DOMAIN;
     }
 
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.DOMAIN_EXPANSION);
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity owner = event.getEntity();
 
-            if (JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                event.setAmount(event.getAmount() * 0.5F);
+            if (!JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
+
+            Ability ability = source.getAbility();
+
+            if (ability == null) return;
+
+            if (ability.isTechnique()) {
+                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.5F : 0.0F));
             }
         }
     }

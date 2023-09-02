@@ -19,7 +19,7 @@ public class MaximumBlueProjectile extends BlueProjectile {
     public MaximumBlueProjectile(LivingEntity pShooter) {
         super(JJKEntities.MAXIMUM_BLUE.get(), pShooter.level, pShooter);
 
-        Vec3 look = pShooter.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }

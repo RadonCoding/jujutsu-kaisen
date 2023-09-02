@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.MaximumHollowPurpleProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
+
 public class MaximumHollowPurple extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -39,8 +41,8 @@ public class MaximumHollowPurple extends Ability {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        return JJKAbilities.hasTrait(owner, Trait.REVERSE_CURSED_TECHNIQUE);
+    public List<Trait> getRequirements() {
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

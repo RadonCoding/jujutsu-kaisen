@@ -7,18 +7,20 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.NueTotalityEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.PiercingBullEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class NueTotality extends Summon<NueTotalityEntity> {
-    public NueTotality() {
-        super(NueTotalityEntity.class);
+public class PiercingBull extends Summon<PiercingBullEntity> {
+    public PiercingBull() {
+        super(PiercingBullEntity.class);
     }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (!this.isTamed(owner)) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -26,23 +28,27 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    protected List<EntityType<?>> getFusions() {
-        return List.of(JJKEntities.NUE.get(), JJKEntities.GREAT_SERPENT.get());
+    public ActivationType getActivationType(LivingEntity owner) {
+        return this.isTamed(owner) ? ActivationType.TOGGLED : ActivationType.INSTANT;
+    }
+
+    public float getCost(LivingEntity owner) {
+        return this.isTamed(owner) ? 0.2F : 250.0F;
     }
 
     @Override
-    public float getCost(LivingEntity owner) {
-        return 0.2F;
+    public int getCooldown() {
+        return 15 * 20;
     }
 
     @Override
     public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.NUE_TOTALITY.get());
+        return List.of(JJKEntities.PIERCING_BULL.get());
     }
 
     @Override
-    protected NueTotalityEntity summon(int index, LivingEntity owner) {
-        return new NueTotalityEntity(owner);
+    protected PiercingBullEntity summon(int index, LivingEntity owner) {
+        return new PiercingBullEntity(owner, this.isTamed(owner));
     }
 
     @Override
@@ -56,8 +62,8 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    public int getCooldown() {
-        return 25 * 20;
+    protected boolean canTame() {
+        return true;
     }
 
     @Override

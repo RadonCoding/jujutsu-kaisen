@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
+
 public class MaxElephant extends Summon<MaxElephantEntity> {
     public MaxElephant() {
         super(MaxElephantEntity.class);
@@ -17,6 +19,8 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (!this.isTamed(owner)) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -29,7 +33,7 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.5F : 250.0F;
+        return this.isTamed(owner) ? 0.3F : 250.0F;
     }
 
     @Override
@@ -38,8 +42,8 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     @Override
-    public EntityType<MaxElephantEntity> getType() {
-        return JJKEntities.MAX_ELEPHANT.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.MAX_ELEPHANT.get());
     }
 
     @Override

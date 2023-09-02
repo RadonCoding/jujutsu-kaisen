@@ -72,7 +72,7 @@ public class MaximumRedBeam extends JujutsuProjectile {
         this.setYaw(yaw);
         this.setPitch(pitch);
 
-        Vec3 look = pShooter.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 

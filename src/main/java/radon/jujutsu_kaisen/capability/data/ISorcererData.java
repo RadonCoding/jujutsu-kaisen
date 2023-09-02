@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
@@ -96,13 +97,18 @@ public interface ISorcererData {
 
     boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
     void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
-    void revive();
+    void revive(boolean full);
 
     void setDomain(DomainExpansionEntity domain);
     @Nullable DomainExpansionEntity getDomain(ServerLevel level);
 
     Set<Ability.Classification> getAdapted();
     void adaptAll(Set<Ability.Classification> adaptations);
+
+    void addShadowInventory(ItemStack stack);
+    ItemStack getShadowInventory(int index);
+    List<ItemStack> getShadowInventory();
+    void removeShadowInventory(int index);
 
     boolean isAdaptedTo(DamageSource source);
     boolean isAdaptedTo(Ability ability);

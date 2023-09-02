@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
+
 public class GreatSerpent extends Summon<GreatSerpentEntity> {
     public GreatSerpent() {
         super(GreatSerpentEntity.class);
@@ -17,6 +19,8 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (!this.isTamed(owner)) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -29,7 +33,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.25F : 50.0F;
+        return this.isTamed(owner) ? 0.2F : 50.0F;
     }
 
     @Override
@@ -38,8 +42,8 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     @Override
-    public EntityType<GreatSerpentEntity> getType() {
-        return JJKEntities.GREAT_SERPENT.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.GREAT_SERPENT.get());
     }
 
     @Override

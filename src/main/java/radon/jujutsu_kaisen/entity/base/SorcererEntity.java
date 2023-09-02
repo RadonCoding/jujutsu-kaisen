@@ -44,6 +44,16 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    public int getMaxHeadXRot() {
+        return 360;
+    }
+
+    @Override
+    public int getMaxHeadYRot() {
+        return 360;
+    }
+
+    @Override
     public boolean isPersistenceRequired() {
         return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
     }
@@ -104,11 +114,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
             if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0) return false;
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);
-    }
-
-    @Override
-    public int getMaxHeadXRot() {
-        return 90;
     }
 
     @Override

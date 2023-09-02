@@ -18,12 +18,14 @@ public enum CursedTechnique {
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE.get(),
+            JJKAbilities.SHADOW_STORAGE.get(),
 
-            JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.PIERCING_WATER.get(),
+            JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.PIERCING_WATER.get(), JJKAbilities.WHEEL.get(),
 
             JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(), JJKAbilities.NUE_TOAD.get(),
-            JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.NUE.get(), JJKAbilities.NUE_TOTALITY.get(), JJKAbilities.GREAT_SERPENT.get(),
-            JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.TRANQUIL_DEER.get(), JJKAbilities.MAHORAGA.get()),
+            JJKAbilities.GREAT_SERPENT.get(), JJKAbilities.NUE.get(), JJKAbilities.NUE_TOTALITY.get(),
+            JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.TRANQUIL_DEER.get(),
+            JJKAbilities.PIERCING_BULL.get(), JJKAbilities.AGITO.get(), JJKAbilities.MAHORAGA.get()),
     DIVERGENT_FIST(null, JJKAbilities.DIVERGENT_FIST.get());
 
     private final @Nullable Ability domain;

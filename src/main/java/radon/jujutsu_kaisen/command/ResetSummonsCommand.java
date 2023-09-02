@@ -22,7 +22,7 @@ public class ResetSummonsCommand {
 
     public static int reset(ServerPlayer player) {
         player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            cap.revive();
+            cap.revive(true);
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         });
         return 1;

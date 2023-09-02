@@ -5,9 +5,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -59,6 +62,16 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public DisplayType getDisplayType() {
         return DisplayType.NONE;
+    }
+
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+        return JJKAbilities.getType(owner) != JujutsuType.CURSE && super.isUnlocked(owner);
     }
 
     @Override
