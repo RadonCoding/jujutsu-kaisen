@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.gui.scren.base;
+package radon.jujutsu_kaisen.client.gui.scren;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -8,28 +8,28 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class RadialScreen extends Screen {
+public class ShadowInventoryScreen extends Screen {
     private static final float RADIUS_IN = 50.0F;
     private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
 
-    private final List<Ability> abilities = new ArrayList<>();
+    private final List<ItemStack> items = new ArrayList<>();
 
     private int hovered = -1;
 
-    public RadialScreen() {
+    public ShadowInventoryScreen() {
         super(Component.nullToEmpty(null));
     }
 
@@ -43,14 +43,27 @@ public abstract class RadialScreen extends Screen {
         super.init();
 
         assert this.minecraft != null;
-        this.abilities.addAll(this.getAbilities());
 
-        if (this.abilities.isEmpty()) {
+        List<ItemStack> inventory = this.getItems();
+
+        if (inventory == null) return;
+
+        this.items.addAll(inventory);
+
+        if (this.items.isEmpty()) {
             this.onClose();
         }
     }
 
-    protected abstract List<Ability> getAbilities();
+    private @Nullable List<ItemStack> getItems() {
+        AtomicReference<List<ItemStack>> items = new AtomicReference<>();
+
+        if (this.minecraft == null || this.minecraft.player == null) return null;
+
+        this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                items.set(cap.getShadowInventory()));
+        return items.get();
+    }
 
     private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY,
                           float startAngle, float endAngle, int color) {
@@ -91,9 +104,7 @@ public abstract class RadialScreen extends Screen {
     @Override
     public void onClose() {
         if (this.hovered != -1) {
-            Ability ability = this.abilities.get(this.hovered);
-            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-            ClientAbilityHandler.trigger(ability);
+            PacketHandler.sendToServer(new ShadowInventoryTakeC2SPacket(this.hovered));
         }
         super.onClose();
     }
@@ -124,22 +135,21 @@ public abstract class RadialScreen extends Screen {
         assert this.minecraft != null;
         assert this.minecraft.player != null;
 
-        for (int i = 0; i < this.abilities.size(); i++) {
+        for (int i = 0; i < this.items.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
             float endAngle = getAngleFor(i + 0.5F);
 
-            Ability ability = this.abilities.get(i);
             int white = HelperMethods.toRGB24(255, 255, 255, 150);
             int black = HelperMethods.toRGB24(0, 0, 0, 150);
 
             int color;
 
-            if (JJKAbilities.hasToggled(this.minecraft.player, ability)) {
+            /*if (JJKAbilities.hasToggled(this.minecraft.player, ability)) {
                 color = this.hovered == i ? black : white;
             }
-            else {
-                color = this.hovered == i ? white : black;
-            }
+            else {*/
+            color = this.hovered == i ? white : black;
+            //}
             this.drawSlot(pPoseStack, buffer, centerX, centerY, startAngle, endAngle, color);
         }
 
@@ -148,51 +158,24 @@ public abstract class RadialScreen extends Screen {
         pPoseStack.popPose();
         float radius = (RADIUS_IN + RADIUS_OUT) / 2.0F;
 
-        for (int i = 0; i < this.abilities.size(); i++) {
+        for (int i = 0; i < this.items.size(); i++) {
             float start = getAngleFor(i - 0.5F);
             float end = getAngleFor(i + 0.5F);
             float middle = (start + end) / 2.0F;
             int posX = (int) (centerX + radius * (float) Math.cos(middle));
             int posY = (int) (centerY + radius * (float) Math.sin(middle));
 
-            Ability ability = this.abilities.get(i);
+            ItemStack stack = this.items.get(i);
 
             if (this.hovered == i) {
-                List<Component> lines = new ArrayList<>();
-
-                float cost = ability.getRealCost(this.minecraft.player);
-
-                if (cost > 0.0F) {
-                    Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost);
-                    lines.add(costText);
-                }
-
-                if (ability instanceof Ability.IDurationable durationable) {
-                    int duration = durationable.getRealDuration(this.minecraft.player);
-
-                    if (duration > 0) {
-                        Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), duration / 20);
-                        lines.add(durationText);
-                    }
-                }
-
                 int x = this.width / 2;
-                int y = this.height / 2 - this.font.lineHeight / 2 - ((lines.size() - 1) * this.font.lineHeight);
-
-                for (Component line : lines) {
-                    drawCenteredString(pPoseStack, this.font, line, x, y, 0xFFFFFF);
-                    y += this.font.lineHeight;
-                }
+                int y = this.height / 2 - this.font.lineHeight / 2;
+                drawCenteredString(pPoseStack, this.font, stack.getHoverName(), x, y, 0xFFFFFF);
             }
 
-            int y = posY - this.font.lineHeight / 2;
-
-            float scale = 0.5F;
-
             pPoseStack.pushPose();
-            pPoseStack.scale(scale, scale, 0.0F);
-            pPoseStack.translate(posX, y, 0.0F);
-            drawCenteredString(pPoseStack, this.font, ability.getName(), posX, y, 0xFFFFFF);
+            pPoseStack.translate(-8.0F, -8.0F, 0.0F);
+            this.itemRenderer.renderAndDecorateItem(pPoseStack, stack, posX, posY);
             pPoseStack.popPose();
         }
     }
@@ -207,9 +190,9 @@ public abstract class RadialScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.abilities.size() > 0) {
+        if (this.items.size() > 0) {
             float startAngle = getAngleFor(-0.5F);
-            float endAngle = getAngleFor(this.abilities.size() - 0.5F);
+            float endAngle = getAngleFor(this.items.size() - 0.5F);
 
             while (mouseAngle < startAngle) {
                 mouseAngle += Mth.TWO_PI;
@@ -221,7 +204,7 @@ public abstract class RadialScreen extends Screen {
 
         this.hovered = -1;
 
-        for (int i = 0; i < this.abilities.size(); i++) {
+        for (int i = 0; i < this.items.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
             float endAngle = getAngleFor(i + 0.5F);
 
@@ -232,10 +215,11 @@ public abstract class RadialScreen extends Screen {
         }
     }
 
-    private float getAngleFor(double i) {
-        if (this.abilities.size() == 0) {
+    private float getAngleFor(double i)
+    {
+        if (this.items.size() == 0) {
             return 0;
         }
-        return (float) (((i / this.abilities.size()) + 0.25) * Mth.TWO_PI + Math.PI);
+        return (float) (((i / this.items.size()) + 0.25) * Mth.TWO_PI + Math.PI);
     }
 }

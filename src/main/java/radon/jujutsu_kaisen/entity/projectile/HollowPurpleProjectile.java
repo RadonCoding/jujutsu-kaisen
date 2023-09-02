@@ -40,7 +40,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity pShooter) {
         super(pEntityType, pShooter.level, pShooter);
 
-        Vec3 look = pShooter.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look.scale(OFFSET));
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }

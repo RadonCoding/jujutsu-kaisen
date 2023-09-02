@@ -26,7 +26,7 @@ public class Spiderweb extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !owner.hasLineOfSight(target);
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

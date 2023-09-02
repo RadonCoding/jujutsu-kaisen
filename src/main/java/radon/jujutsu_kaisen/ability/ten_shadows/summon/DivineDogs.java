@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DivineDogs extends Summon<DivineDogEntity> {
@@ -30,28 +31,6 @@ public class DivineDogs extends Summon<DivineDogEntity> {
             return target != null;
         }
         return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
-    }
-
-    @Override
-    public Status checkStatus(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, DivineDogTotalityEntity.class)));
-        }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
-    }
-
-    @Override
-    public Status checkToggleable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, DivineDogTotalityEntity.class)));
-        }
-        return result.get() ? Status.FAILURE : super.checkToggleable(owner);
     }
 
     @Override
@@ -117,8 +96,8 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
-    public EntityType<DivineDogEntity> getType() {
-        return null;
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.DIVINE_DOG_WHITE.get(), JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override

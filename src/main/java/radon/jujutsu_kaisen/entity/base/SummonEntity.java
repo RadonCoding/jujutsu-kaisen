@@ -47,6 +47,16 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     }
 
     @Override
+    public int getMaxHeadXRot() {
+        return 360;
+    }
+
+    @Override
+    public int getMaxHeadYRot() {
+        return 360;
+    }
+
+    @Override
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 

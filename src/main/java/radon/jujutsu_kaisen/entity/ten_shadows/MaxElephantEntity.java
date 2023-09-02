@@ -1,10 +1,12 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,12 +20,17 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -43,6 +50,10 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideable, IRightClickInputListener {
+    private static final double EXPLOSION_FALL_DISTANCE = 10.0D;
+    private static final int EXPLOSION_DURATION = 20;
+    private static final float EXPLOSION_POWER = 10.0F;
+
     private static final EntityDataAccessor<Boolean> DATA_SHOOTING = SynchedEntityData.defineId(MaxElephantEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
@@ -74,11 +85,33 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         this.createGoals();
     }
 
+    private void breakBlocks() {
+        AABB bounds = this.getBoundingBox();
+
+        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+            BlockState state = this.level.getBlockState(pos);
+
+            if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                this.level.destroyBlock(pos, false);
+            }
+        });
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 
         this.entityData.define(DATA_SHOOTING, false);
+    }
+
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+        boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
+
+        if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
+            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this);
+        }
+        return result;
     }
 
     @Override
@@ -121,6 +154,17 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         Vec2 vec2 = this.getRiddenRotation(pEntity);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level.isClientSide) {
+            if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                this.breakBlocks();
+            }
+        }
     }
 
     @Override

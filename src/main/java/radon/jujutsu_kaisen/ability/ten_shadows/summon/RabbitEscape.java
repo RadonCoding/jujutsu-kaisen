@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.RabbitEscapeEntity;
 
+import java.util.List;
+
 public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     public RabbitEscape() {
         super(RabbitEscapeEntity.class);
@@ -21,8 +23,8 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     }
 
     @Override
-    public EntityType<RabbitEscapeEntity> getType() {
-        return JJKEntities.RABBIT_ESCAPE.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.RABBIT_ESCAPE.get());
     }
 
     @Override

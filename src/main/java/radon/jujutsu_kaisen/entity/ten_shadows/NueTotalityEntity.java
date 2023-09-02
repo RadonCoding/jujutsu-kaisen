@@ -69,8 +69,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         LivingEntity target = this.getTarget();
 
         if (target != null && !target.isRemoved() && target.isAlive()) {
-            this.setOrderedToSit(true);
-
             if (this.getY() >= target.getY() + (this.getBbHeight() * 3.0F) && Math.sqrt(this.distanceToSqr(target.getX(), this.getY(), target.getZ())) <= 1.0D) {
                 if (this.random.nextInt(5) != 0) return;
 
@@ -80,8 +78,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
             } else {
                 this.moveControl.setWantedPosition(target.getX(), target.getY() + (this.getBbHeight() * 3.0F), target.getZ(), this.getFlyingSpeed());
             }
-        } else {
-            this.setOrderedToSit(false);
         }
     }
 

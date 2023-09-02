@@ -13,6 +13,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
@@ -34,10 +35,13 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
+        if (!super.isUnlocked(owner)) return false;
+
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
+                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
+                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
                         cap.getMode() == TenShadowsMode.ABILITY));
         return result.get();
     }
@@ -121,5 +125,10 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     @Override
     public Classification getClassification() {
         return Classification.ELECTRICITY;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 }

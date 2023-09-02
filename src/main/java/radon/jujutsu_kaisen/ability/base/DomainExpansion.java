@@ -142,6 +142,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return DisplayType.DOMAIN;
     }
 
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.DOMAIN_EXPANSION);
+    }
+
     public interface IClosedDomain {
         int getRadius();
         List<Block> getBlocks();

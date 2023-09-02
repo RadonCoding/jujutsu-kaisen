@@ -1,17 +1,16 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.PiercingWaterEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,22 +22,14 @@ public class PiercingWater extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, MaxElephantEntity.class)));
-        }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
-    }
-
-    @Override
     public boolean isUnlocked(LivingEntity owner) {
+        if (!super.isUnlocked(owner)) return false;
+
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
+                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.MAX_ELEPHANT.get()) &&
+                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
                         cap.getMode() == TenShadowsMode.ABILITY));
         return result.get();
     }
@@ -69,5 +60,10 @@ public class PiercingWater extends Ability {
     @Override
     public Classification getClassification() {
         return Classification.WATER;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 }

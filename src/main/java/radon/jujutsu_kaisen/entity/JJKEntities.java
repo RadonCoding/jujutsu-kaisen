@@ -216,7 +216,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<DivineDogTotalityEntity>> DIVINE_DOG_TOTALITY = ENTITIES.register("divine_dog_totality", () ->
             EntityType.Builder.<DivineDogTotalityEntity>of(DivineDogTotalityEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 1.6F)
+                    .sized(1.6F, 2.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_totality")
                             .toString()));
     public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
@@ -259,6 +259,16 @@ public class JJKEntities {
                     .sized(3.8F, 3.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "tranquil_deer")
                             .toString()));
+    public static RegistryObject<EntityType<PiercingBullEntity>> PIERCING_BULL = ENTITIES.register("piercing_bull", () ->
+            EntityType.Builder.<PiercingBullEntity>of(PiercingBullEntity::new, MobCategory.MISC)
+                    .sized(2.0F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_bull")
+                            .toString()));
+    public static RegistryObject<EntityType<AgitoEntity>> AGITO = ENTITIES.register("agito", () ->
+            EntityType.Builder.<AgitoEntity>of(AgitoEntity::new, MobCategory.MISC)
+                    .sized(2.4F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
+                            .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
@@ -284,6 +294,8 @@ public class JJKEntities {
         event.put(GREAT_SERPENT.get(), GreatSerpentEntity.createAttributes().build());
         event.put(MAX_ELEPHANT.get(), MaxElephantEntity.createAttributes().build());
         event.put(TRANQUIL_DEER.get(), TranquilDeerEntity.createAttributes().build());
+        event.put(PIERCING_BULL.get(), PiercingBullEntity.createAttributes().build());
+        event.put(AGITO.get(), AgitoEntity.createAttributes().build());
 
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());

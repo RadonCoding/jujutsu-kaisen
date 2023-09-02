@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Wheel extends Summon<WheelEntity> {
@@ -36,6 +37,7 @@ public class Wheel extends Summon<WheelEntity> {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
+        if (!super.isUnlocked(owner)) return false;
         if (owner instanceof MahoragaEntity) return true;
 
         AtomicBoolean result = new AtomicBoolean();
@@ -46,13 +48,13 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
-    public EntityType<WheelEntity> getType() {
-        return JJKEntities.WHEEL.get();
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.WHEEL.get());
     }
 
     @Override
     public boolean isTenShadows() {
-        return true;
+        return false;
     }
 
     @Override
@@ -89,7 +91,7 @@ public class Wheel extends Summon<WheelEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.0F;
+        return 0;
     }
 
     @Override

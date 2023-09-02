@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -16,9 +14,8 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        @SubscribeEvent
+        /*@SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
             Entity attacker = event.getSource().getEntity();
@@ -100,7 +97,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
                     }
                 });
             }
-        }
+        }*/
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent event) {

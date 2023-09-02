@@ -34,7 +34,7 @@ public class Copy extends Ability implements Ability.IToggled {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get());
+        return JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get()) && super.isUnlocked(owner);
     }
 
     @Override

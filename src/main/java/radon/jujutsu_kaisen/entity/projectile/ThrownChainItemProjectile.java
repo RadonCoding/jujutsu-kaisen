@@ -43,7 +43,7 @@ public class ThrownChainItemProjectile extends AbstractArrow {
         super(JJKEntities.THROWN_CHAIN_ITEM.get(), pShooter, pShooter.level);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(pShooter.getLookAngle());
+                .add(HelperMethods.getLookAngle(pShooter));
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
         this.entityData.set(DATA_ITEM, stack);

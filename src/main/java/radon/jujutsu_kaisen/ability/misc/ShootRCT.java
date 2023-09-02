@@ -9,8 +9,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -90,7 +92,17 @@ public class ShootRCT extends Ability {
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 10;
+    }
+
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.STRONGEST);
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+        return JJKAbilities.getType(owner) != JujutsuType.CURSE && super.isUnlocked(owner);
     }
 
     @Override

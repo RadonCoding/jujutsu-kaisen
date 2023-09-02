@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -10,14 +10,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,15 +23,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.misc.ShootRCT;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -42,20 +36,23 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.List;
+public class PiercingBullEntity extends TenShadowsSummon {
+    private static final float DAMAGE = 10.0F;
+    private static final int INTERVAL = 3 * 20;
 
-public class TranquilDeerEntity extends TenShadowsSummon {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    public TranquilDeerEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    private float distance;
+
+    public PiercingBullEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public TranquilDeerEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.TRANQUIL_DEER.get(), owner.level);
+    public PiercingBullEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.PIERCING_BULL.get(), owner.level);
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -86,6 +83,35 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
+    protected void customServerAiStep() {
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
+
+            if (this.isSprinting() || this.tickCount % INTERVAL == 0) {
+                this.setSprinting(true);
+                this.setDeltaMovement(target.position().subtract(this.position()).normalize());
+                this.distance = (float) this.distanceToSqr(target);
+
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level, this.getBoundingBox())) {
+                    if (entity == this) continue;
+
+                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        entity.hurt(this.damageSources().mobAttack(this), DAMAGE * this.distance * cap.getGrade().getPower());
+                        entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getGrade().getPower()));
+                        this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), cap.getGrade().getPower(), false, Level.ExplosionInteraction.NONE);
+                    });
+
+                    if (entity == target) {
+                        this.setSprinting(false);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -93,24 +119,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
             if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 this.breakBlocks();
             }
-        }
-    }
-
-    @Override
-    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (this.isTame() && !this.isVehicle()) {
-            this.yHeadRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
-            this.yBodyRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
-
-            this.setXRot(HelperMethods.getXRotD(this, pPlayer.getEyePosition()));
-            this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
-
-            if (AbilityHandler.trigger(this, JJKAbilities.SHOOT_RCT.get()) == Ability.Status.SUCCESS) {
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
-            }
-            return InteractionResult.FAIL;
-        } else {
-            return super.mobInteract(pPlayer, pHand);
         }
     }
 
@@ -126,8 +134,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         int goal = 1;
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.6D, true));
-        this.goalSelector.addGoal(goal++, new HealingGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
@@ -143,7 +149,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
-    private PlayState walkRunIdlePredicate(AnimationState<TranquilDeerEntity> animationState) {
+    private PlayState walkRunIdlePredicate(AnimationState<PiercingBullEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         } else {
@@ -151,7 +157,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         }
     }
 
-    private PlayState swingPredicate(AnimationState<TranquilDeerEntity> animationState) {
+    private PlayState swingPredicate(AnimationState<PiercingBullEntity> animationState) {
         if (this.swinging) {
             return animationState.setAndContinue(SWING);
         }
@@ -166,18 +172,8 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.SHOOT_RCT.get());
-    }
-
-    @Override
     public Summon<?> getAbility() {
-        return JJKAbilities.TRANQUIL_DEER.get();
-    }
-
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
+        return JJKAbilities.PIERCING_BULL.get();
     }
 
     @Override

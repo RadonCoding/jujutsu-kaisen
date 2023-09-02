@@ -127,6 +127,11 @@ public class PacketHandler {
                 .encoder(KuchisakeOnnaAnswerC2SPacket::encode)
                 .consumerMainThread(KuchisakeOnnaAnswerC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ShadowInventoryTakeC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ShadowInventoryTakeC2SPacket::new)
+                .encoder(ShadowInventoryTakeC2SPacket::encode)
+                .consumerMainThread(ShadowInventoryTakeC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

@@ -7,18 +7,20 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.NueTotalityEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.AgitoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class NueTotality extends Summon<NueTotalityEntity> {
-    public NueTotality() {
-        super(NueTotalityEntity.class);
+public class Agito extends Summon<AgitoEntity> {
+    public Agito() {
+        super(AgitoEntity.class);
     }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (!this.isTamed(owner)) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -27,22 +29,22 @@ public class NueTotality extends Summon<NueTotalityEntity> {
 
     @Override
     protected List<EntityType<?>> getFusions() {
-        return List.of(JJKEntities.NUE.get(), JJKEntities.GREAT_SERPENT.get());
+        return List.of(JJKEntities.NUE.get(), JJKEntities.GREAT_SERPENT.get(), JJKEntities.TRANQUIL_DEER.get());
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.2F;
+        return this.isTamed(owner) ? 0.3F : 500.0F;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 25 * 20;
     }
 
     @Override
     public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.NUE_TOTALITY.get());
-    }
-
-    @Override
-    protected NueTotalityEntity summon(int index, LivingEntity owner) {
-        return new NueTotalityEntity(owner);
+        return List.of(JJKEntities.AGITO.get());
     }
 
     @Override
@@ -56,12 +58,17 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    public int getCooldown() {
-        return 25 * 20;
+    protected AgitoEntity summon(int index, LivingEntity owner) {
+        return new AgitoEntity(owner);
     }
 
     @Override
     public boolean isTechnique() {
+        return true;
+    }
+
+    @Override
+    public boolean isTamed(LivingEntity owner) {
         return true;
     }
 }

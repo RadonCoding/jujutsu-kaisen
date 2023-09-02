@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.scren.ShadowInventoryScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
@@ -114,6 +115,9 @@ public class JJKClientEventHandler {
                     mc.screen.onClose();
                 }
                 if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
+                    mc.screen.onClose();
+                }
+                if (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen) {
                     mc.screen.onClose();
                 }
             }
@@ -291,6 +295,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), RoundDeerRenderer::new);
             event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PIERCING_BULL.get(), PiercingBullRenderer::new);
+            event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
         }
 
         @SubscribeEvent
