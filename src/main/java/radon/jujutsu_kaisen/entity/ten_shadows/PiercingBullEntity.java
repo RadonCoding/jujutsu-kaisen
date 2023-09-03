@@ -37,7 +37,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class PiercingBullEntity extends TenShadowsSummon {
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 5.0F;
     private static final int INTERVAL = 3 * 20;
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
@@ -92,7 +92,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
             if (this.isSprinting() || this.tickCount % INTERVAL == 0) {
                 this.setSprinting(true);
                 this.setDeltaMovement(target.position().subtract(this.position()).normalize());
-                this.distance = (float) this.distanceToSqr(target);
+                this.distance = this.distanceTo(target);
 
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, this.getBoundingBox())) {
                     if (entity == this) continue;

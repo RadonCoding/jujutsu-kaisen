@@ -38,7 +38,7 @@ public class BlackFlash {
                         }
                         cap.onBlackFlash(owner);
 
-                        event.setAmount((float) Math.pow(event.getAmount(), 2.5D));
+                        event.setAmount((float) Math.pow(event.getAmount(), 1.5D));
 
                         target.level.playSound(null, target.getX(), target.getY(), target.getZ(),
                                 SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);

@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +25,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -63,6 +68,24 @@ public class AgitoEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
+        if (this.isTame() && !this.isVehicle()) {
+            this.yHeadRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
+            this.yBodyRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
+
+            this.setXRot(HelperMethods.getXRotD(this, pPlayer.getEyePosition()));
+            this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
+
+            if (AbilityHandler.trigger(this, JJKAbilities.SHOOT_RCT.get()) == Ability.Status.SUCCESS) {
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
+            }
+            return InteractionResult.FAIL;
+        } else {
+            return super.mobInteract(pPlayer, pHand);
+        }
     }
 
     @Override
@@ -160,6 +183,11 @@ public class AgitoEntity extends TenShadowsSummon {
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.AGITO.get();
+    }
+
+    @Override
+    public @NotNull List<Ability> getCustom() {
+        return List.of(JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.SHOOT_RCT.get());
     }
 
     @Override
