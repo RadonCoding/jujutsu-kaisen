@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
@@ -15,6 +16,9 @@ import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.curse_manipulation.AbsorbCurse;
+import radon.jujutsu_kaisen.ability.curse_manipulation.ReleaseCurse;
+import radon.jujutsu_kaisen.ability.curse_manipulation.SummonCurse;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
@@ -32,6 +36,7 @@ import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
@@ -89,7 +94,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
     public static RegistryObject<Summon<?>> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
-    public static RegistryObject<Summon<?>> NUE_TOAD = ABILITIES.register("nue_toad", NueToad::new);
+    public static RegistryObject<Summon<?>> TOAD_TOTALITY = ABILITIES.register("toad_totality", ToadTotality::new);
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
     public static RegistryObject<Summon<?>> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);
@@ -99,7 +104,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> PIERCING_BULL = ABILITIES.register("piercing_bull", PiercingBull::new);
     public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
-    public static RegistryObject<Ability> RELEASE = ABILITIES.register("release", Release::new);
+    public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
@@ -116,6 +121,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
 
+    public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
+    public static RegistryObject<Ability> SUMMON_CURSE = ABILITIES.register("summon_curse", SummonCurse::new);
+    public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
@@ -130,6 +138,23 @@ public class JJKAbilities {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                 result.set(cap.hasToggled(ability)));
+        return result.get();
+    }
+
+    @Nullable
+    public static CursedTechnique getTechnique(LivingEntity owner) {
+        AtomicReference<CursedTechnique> result = new AtomicReference<>(null);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.getTechnique()));
+        return result.get();
+    }
+
+    public static SorcererGrade getGrade(LivingEntity owner) {
+        AtomicReference<SorcererGrade> result = new AtomicReference<>();
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(cap.getGrade()));
         return result.get();
     }
 

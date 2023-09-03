@@ -112,14 +112,18 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
-         this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-         this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        if (this.getTime() >= DELAY) {
+            Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
+            this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+            this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
+
+        this.spawnParticles();
 
         if (this.getTime() >= DURATION) {
             this.discard();
@@ -134,7 +138,6 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
-                    this.spawnParticles();
                     this.hurtEntities();
 
                     if (!this.level.isClientSide) {

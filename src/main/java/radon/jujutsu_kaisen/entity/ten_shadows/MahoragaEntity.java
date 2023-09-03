@@ -11,14 +11,6 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -36,8 +28,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -70,6 +60,26 @@ public class MahoragaEntity extends TenShadowsSummon {
         super(pEntityType, pLevel);
     }
 
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return true;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
+    }
+
     public MahoragaEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.MAHORAGA.get(), owner.level);
 
@@ -85,31 +95,6 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
-
-        this.createGoals();
-    }
-
-    private void createGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.6D, true));
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
-                    entity -> this.participants.contains(entity.getUUID())));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -246,7 +231,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                 this.level.addFreshEntity(dog);
             }
             for (int i = 0; i < 6; i++) {
-                ToadEntity dog = new ToadEntity(this, true, false);
+                ToadEntity dog = new ToadEntity(JJKEntities.TOAD.get(), this, true);
                 dog.setRitual(i, RITUAL_DURATION);
                 this.level.addFreshEntity(dog);
             }

@@ -7,10 +7,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -19,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -39,7 +34,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     private static final RawAnimation HOWL = RawAnimation.begin().thenPlayAndHold("misc.howl");
 
     private static final int TONGUE_DURATION = 10;
-    private static final int PULL_INTERVAL = 20;
     private static final int RANGE = 20;
 
     public boolean canShoot = true;
@@ -48,8 +42,28 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
         super(pEntityType, pLevel);
     }
 
-    public ToadEntity(LivingEntity owner, boolean ritual, boolean wings) {
-        this(JJKEntities.TOAD.get(), owner.level);
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return false;
+    }
+
+    public ToadEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual) {
+        this(type, owner.level);
 
         this.setTame(true);
         this.setOwner(owner);
@@ -60,7 +74,9 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+    }
 
+    public void setWings(boolean wings) {
         this.entityData.set(DATA_WINGS, wings);
     }
 
@@ -127,14 +143,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
                 .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, PULL_INTERVAL, RANGE));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-    }
-
     private PlayState walkPredicate(AnimationState<ToadEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(WALK);
@@ -169,7 +177,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
     @Override
     public Summon<?> getAbility() {
-        return this.hasWings() ? JJKAbilities.NUE_TOAD.get() : JJKAbilities.TOAD.get();
+        return this.hasWings() ? JJKAbilities.TOAD_TOTALITY.get() : JJKAbilities.TOAD.get();
     }
 
     @Override

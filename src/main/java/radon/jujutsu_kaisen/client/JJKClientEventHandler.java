@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
+import radon.jujutsu_kaisen.client.gui.scren.CurseSummonScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
 import radon.jujutsu_kaisen.client.gui.scren.ShadowInventoryScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
@@ -117,14 +118,15 @@ public class JJKClientEventHandler {
                 if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
                     mc.screen.onClose();
                 }
-                if (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen) {
+                if (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() &&
+                        (mc.screen instanceof ShadowInventoryScreen || mc.screen instanceof CurseSummonScreen)) {
                     mc.screen.onClose();
                 }
             }
         }
 
         @SubscribeEvent
-        public static void onRenderLiving(RenderLivingEvent<?, ?> event) {
+        public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
             Minecraft mc = Minecraft.getInstance();
 
             assert mc.player != null;
@@ -274,6 +276,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_BLACK.get(), DivineDogRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOAD_TOTALITY.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);

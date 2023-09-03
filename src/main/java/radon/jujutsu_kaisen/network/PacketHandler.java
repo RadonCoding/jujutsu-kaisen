@@ -132,6 +132,11 @@ public class PacketHandler {
                 .encoder(ShadowInventoryTakeC2SPacket::encode)
                 .consumerMainThread(ShadowInventoryTakeC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(CurseSummonC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(CurseSummonC2SPacket::new)
+                .encoder(CurseSummonC2SPacket::encode)
+                .consumerMainThread(CurseSummonC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

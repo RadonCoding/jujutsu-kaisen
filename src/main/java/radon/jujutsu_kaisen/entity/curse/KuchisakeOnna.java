@@ -10,15 +10,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -29,14 +23,11 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -49,10 +40,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class KuchisakeOnna extends SorcererEntity {
+public class KuchisakeOnna extends CursedSpirit {
     public static final double RANGE = 16.0D;
     private static final int SNIP_DURATION = 5;
     private static final float DAMAGE = 5.0F;
+    private static final int INTERVAL = 5 * 20;
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation SNIP = RawAnimation.begin().thenPlay("attack.snip");
@@ -62,27 +54,35 @@ public class KuchisakeOnna extends SorcererEntity {
     public static EntityDataAccessor<Integer> DATA_SNIP = SynchedEntityData.defineId(KuchisakeOnna.class, EntityDataSerializers.INT);
 
     private Vec3 start;
+    private int cooldown;
 
-    public KuchisakeOnna(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+    public KuchisakeOnna(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return false;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.17D);
-    }
-
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(3, new HealingGoal(this));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, true));
     }
 
     private PlayState walkPredicate(AnimationState<KuchisakeOnna> animationState) {
@@ -146,6 +146,7 @@ public class KuchisakeOnna extends SorcererEntity {
             AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
         }
         this.start = null;
+        this.cooldown = INTERVAL;
     }
 
     @Override
@@ -166,11 +167,6 @@ public class KuchisakeOnna extends SorcererEntity {
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of();
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
     }
 
     @Override
@@ -203,6 +199,8 @@ public class KuchisakeOnna extends SorcererEntity {
             this.entityData.set(DATA_SNIP, --snip);
         }
 
+        if (this.cooldown > 0) this.cooldown--;
+
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (cap.getDomains(((ServerLevel) this.level)).size() > 0) {
                 this.reset();
@@ -210,13 +208,11 @@ public class KuchisakeOnna extends SorcererEntity {
             }
 
             this.getCurrent().ifPresent(identifier -> {
-                Entity target = ((ServerLevel) this.level).getEntity(identifier);
-
-                if (target == null) return;
+                if (!(((ServerLevel) this.level).getEntity(identifier) instanceof LivingEntity target)) return;
 
                 this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
-                if (this.distanceTo(target) > RANGE) {
+                if (JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
                     this.reset();
                 } else if (Math.sqrt(target.distanceToSqr(this.start)) >= 3.0D) {
                     this.attack();
@@ -231,7 +227,7 @@ public class KuchisakeOnna extends SorcererEntity {
             }
 
             if (!this.isOpen()) {
-                if (this.distanceTo(target) <= RANGE) {
+                if (this.cooldown == 0 && this.distanceTo(target) <= RANGE) {
                     this.entityData.set(DATA_TARGET, Optional.of(target.getUUID()));
 
                     this.start = target.position();

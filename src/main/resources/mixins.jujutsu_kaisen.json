@@ -17,6 +17,7 @@
   },
   "refmap": "mixins.jujutsu_kaisen.refmap.json",
   "mixins": [
+    "client.MinecraftMixin",
     "client.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",

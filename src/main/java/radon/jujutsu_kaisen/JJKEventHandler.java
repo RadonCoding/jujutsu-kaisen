@@ -40,7 +40,6 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
@@ -160,17 +159,17 @@ public class JJKEventHandler {
 
             boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-            if (attacker instanceof SummonEntity tamable1) {
+            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
-                } else if (victim instanceof SummonEntity tamable2) {
+                } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
                     if (tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()){
                         event.setCanceled(true);
                         return;
                     }
                 }
-            } else if (victim instanceof SummonEntity tamable) {
+            } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
                 if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
@@ -326,7 +325,7 @@ public class JJKEventHandler {
                         killer = source;
                     }
 
-                    if (victim instanceof SummonEntity) return;
+                    if (victim instanceof TamableAnimal) return;
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
                         if (killerCap.getType() == JujutsuType.CURSE ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {

@@ -2,13 +2,14 @@ package radon.jujutsu_kaisen.entity.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -61,7 +62,7 @@ public class NearestAttackableCurseGoal extends TargetGoal {
         this.target = this.mob.level.getNearestEntity(this.mob.level.getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             AtomicBoolean result = new AtomicBoolean();
 
-            if (!(entity instanceof SummonEntity)) {
+            if (!(entity instanceof TamableAnimal && entity instanceof ISorcerer)) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> result.set(cap.getType() == JujutsuType.CURSE));
             }
             return result.get();

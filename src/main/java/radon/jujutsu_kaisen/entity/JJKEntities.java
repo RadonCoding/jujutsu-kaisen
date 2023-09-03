@@ -224,6 +224,11 @@ public class JJKEntities {
                     .sized(1.6F, 1.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
                             .toString()));
+    public static RegistryObject<EntityType<ToadTotalityEntity>> TOAD_TOTALITY = ENTITIES.register("toad_totality", () ->
+            EntityType.Builder.<ToadTotalityEntity>of(ToadTotalityEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_totality")
+                            .toString()));
     public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
             EntityType.Builder.<ToadTongueProjectile>of(ToadTongueProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
@@ -266,7 +271,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<AgitoEntity>> AGITO = ENTITIES.register("agito", () ->
             EntityType.Builder.<AgitoEntity>of(AgitoEntity::new, MobCategory.MISC)
-                    .sized(2.4F, 2.0F)
+                    .sized(1.6F, 4.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
                             .toString()));
 
@@ -288,6 +293,7 @@ public class JJKEntities {
         event.put(DIVINE_DOG_BLACK.get(), DivineDogEntity.createAttributes().build());
         event.put(DIVINE_DOG_TOTALITY.get(), DivineDogTotalityEntity.createAttributes().build());
         event.put(TOAD.get(), ToadEntity.createAttributes().build());
+        event.put(TOAD_TOTALITY.get(), ToadEntity.createAttributes().build());
         event.put(RABBIT_ESCAPE.get(), RabbitEscapeEntity.createAttributes().build());
         event.put(NUE.get(), NueEntity.createAttributes().build());
         event.put(NUE_TOTALITY.get(), NueTotalityEntity.createAttributes().build());

@@ -4,15 +4,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
@@ -107,6 +111,8 @@ public abstract class RadialScreen extends Screen {
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 
+        if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
+
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -120,9 +126,6 @@ public abstract class RadialScreen extends Screen {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-        assert this.minecraft != null;
-        assert this.minecraft.player != null;
 
         for (int i = 0; i < this.abilities.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
@@ -185,15 +188,24 @@ public abstract class RadialScreen extends Screen {
                 }
             }
 
-            int y = posY - this.font.lineHeight / 2;
+            if (ability instanceof Summon<?> summon) {
+                EntityType<?> type = summon.getTypes().get(0);
 
-            float scale = 0.5F;
+                if (!(type.create(this.minecraft.level) instanceof LivingEntity entity)) continue;
 
-            pPoseStack.pushPose();
-            pPoseStack.scale(scale, scale, 0.0F);
-            pPoseStack.translate(posX, y, 0.0F);
-            drawCenteredString(pPoseStack, this.font, ability.getName(), posX, y, 0xFFFFFF);
-            pPoseStack.popPose();
+                float height = entity.getBbHeight();
+                int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
+                InventoryScreen.renderEntityInInventoryFollowsAngle(pPoseStack, posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F,
+                        0.0F, entity);
+            } else {
+                int y = posY - this.font.lineHeight / 2;
+
+                pPoseStack.pushPose();
+                pPoseStack.scale(0.5F, 0.5F, 0.0F);
+                pPoseStack.translate(posX, y, 0.0F);
+                drawCenteredString(pPoseStack, this.font, ability.getName(), posX, y, 0xFFFFFF);
+                pPoseStack.popPose();
+            }
         }
     }
 

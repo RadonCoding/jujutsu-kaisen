@@ -48,6 +48,26 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         super(pEntityType, pLevel);
     }
 
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return true;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return false;
+    }
+
     public NueTotalityEntity(LivingEntity owner) {
         this(JJKEntities.NUE_TOTALITY.get(), owner.level);
 

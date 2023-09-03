@@ -118,6 +118,8 @@ public class ShadowInventoryScreen extends Screen {
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 
+        if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
+
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -132,9 +134,6 @@ public class ShadowInventoryScreen extends Screen {
         BufferBuilder buffer = tesselator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        assert this.minecraft != null;
-        assert this.minecraft.player != null;
-
         for (int i = 0; i < this.items.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
             float endAngle = getAngleFor(i + 0.5F);
@@ -142,15 +141,7 @@ public class ShadowInventoryScreen extends Screen {
             int white = HelperMethods.toRGB24(255, 255, 255, 150);
             int black = HelperMethods.toRGB24(0, 0, 0, 150);
 
-            int color;
-
-            /*if (JJKAbilities.hasToggled(this.minecraft.player, ability)) {
-                color = this.hovered == i ? black : white;
-            }
-            else {*/
-            color = this.hovered == i ? white : black;
-            //}
-            this.drawSlot(pPoseStack, buffer, centerX, centerY, startAngle, endAngle, color);
+            this.drawSlot(pPoseStack, buffer, centerX, centerY, startAngle, endAngle, this.hovered == i ? white : black);
         }
 
         tesselator.end();

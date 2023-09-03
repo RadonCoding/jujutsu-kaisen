@@ -52,6 +52,6 @@ public class Toad extends Summon<ToadEntity> {
 
     @Override
     protected ToadEntity summon(int index, LivingEntity owner) {
-        return new ToadEntity(owner, false, false);
+        return new ToadEntity(JJKEntities.TOAD.get(), owner, false);
     }
 }

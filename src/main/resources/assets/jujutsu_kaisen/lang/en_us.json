@@ -5,6 +5,8 @@
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$ds",
 
+  "gui.jujutsu_kaisen.curse_summon_overlay.count": "Count: %1$d",
+
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.energy": "Energy: %1$f/%2$f",
@@ -21,6 +23,7 @@
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
+  "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
 
   "item.jujutsu_kaisen.inverted_spear_of_heaven": "Inverted Spear of Heaven",
   "item.jujutsu_kaisen.inverted_spear_of_heaven.desc": "Nullifies all cursed techniques on contact.",
@@ -31,8 +34,10 @@
   "item.jujutsu_kaisen.chain": "Chain of a Thousand Miles",
   "item.jujutsu_kaisen.chain.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta's Sword",
+
   "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
   "item.jujutsu_kaisen.cursed_totem": "Cursed Totem",
+  "item.jujutsu_kaisen.cursed_spirit_orb": "Cursed Spirit Orb",
 
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
   "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",
@@ -168,9 +173,9 @@
   "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
   "ability.jujutsu_kaisen.toad.disable": "Released Toad",
 
-  "ability.jujutsu_kaisen.nue_toad": "Nue + Toad",
-  "ability.jujutsu_kaisen.nue_toad.enable": "Summoned Nue + Toad",
-  "ability.jujutsu_kaisen.nue_toad.disable": "Released Nue + Toad",
+  "ability.jujutsu_kaisen.toad_totality": "Toad Totality",
+  "ability.jujutsu_kaisen.toad_totality.enable": "Summoned Toad Totality",
+  "ability.jujutsu_kaisen.toad_totality.disable": "Released Toad Totality",
 
   "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
@@ -205,7 +210,7 @@
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
   "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
-  "ability.jujutsu_kaisen.release": "Release",
+  "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
 
   "ability.jujutsu_kaisen.nue_lightning": "Nue Lighting",
@@ -213,6 +218,10 @@
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
+
+  "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
+  "ability.jujutsu_kaisen.summon_curse": "Summon Curse",
+  "ability.jujutsu_kaisen.release_curse": "Release Curse",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
@@ -262,6 +271,7 @@
   "entity.jujutsu_kaisen.divine_dog_black": "Divine Dog Black",
   "entity.jujutsu_kaisen.divine_dog_totality": "Divine Dog Totality",
   "entity.jujutsu_kaisen.toad": "Toad",
+  "entity.jujutsu_kaisen.toad_totality": "Toad Totality",
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
   "entity.jujutsu_kaisen.nue": "Nue",
   "entity.jujutsu_kaisen.nue_totality": "Nue Totality",

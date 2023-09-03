@@ -76,15 +76,17 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability, Integer> durations;
     private final Set<UUID> domains;
     private final Set<UUID> summons;
+
+    // Ten shadows
     private final Set<ResourceLocation> tamed;
     private final Set<ResourceLocation> dead;
-
+    private final List<ItemStack> shadowInventory;
     private final Set<Ability.Classification> adapted;
     private final Map<Ability.Classification, Integer> adapting;
-
-    private final List<ItemStack> shadowInventory;
-
     private TenShadowsMode mode;
+
+    private final Map<ResourceLocation, Integer> curses;
+
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
@@ -108,11 +110,14 @@ public class SorcererData implements ISorcererData {
         this.durations = new HashMap<>();
         this.domains = new HashSet<>();
         this.summons = new HashSet<>();
+
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
 
         this.adapted = new HashSet<>();
         this.adapting = new HashMap<>();
+
+        this.curses = new HashMap<>();
 
         this.shadowInventory = new ArrayList<>();
     }
@@ -681,6 +686,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void removeSummon(Entity entity) {
+        this.summons.remove(entity.getUUID());
+    }
+
+    @Override
     public List<Entity> getSummons(ServerLevel level) {
         List<Entity> entities = new ArrayList<>();
 
@@ -900,6 +910,35 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void addCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
+        ResourceLocation key = registry.getKey(type);
+        this.curses.put(key, this.curses.getOrDefault(key, 0) + 1);
+    }
+
+    @Override
+    public void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
+        ResourceLocation key = registry.getKey(type);
+
+        int count = this.curses.get(key) - 1;
+
+        if (count == 0) {
+            this.curses.remove(key);
+        } else {
+            this.curses.put(key, count);
+        }
+    }
+
+    @Override
+    public Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry) {
+        Map<EntityType<?>, Integer> curses = new HashMap<>();
+
+        for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
+            curses.put(registry.get(entry.getKey()), entry.getValue());
+        }
+        return curses;
+    }
+
+    @Override
     public void generate(ServerPlayer player) {
         this.initialized = true;
 
@@ -1064,10 +1103,9 @@ public class SorcererData implements ISorcererData {
 
         for (Map.Entry<Ability.Classification, Integer> entry : this.adapting.entrySet()) {
             CompoundTag adaptation = new CompoundTag();
-            adaptation.putInt("stage", entry.getValue());
             adaptation.putInt("classification", entry.getKey().ordinal());
+            adaptation.putInt("stage", entry.getValue());
             adaptingTag.add(adaptation);
-
         }
         nbt.put("adapting", adaptingTag);
 
@@ -1077,6 +1115,16 @@ public class SorcererData implements ISorcererData {
             shadowInventoryTag.add(stack.save(new CompoundTag()));
         }
         nbt.put("shadow_inventory", shadowInventoryTag);
+
+        ListTag cursesTag = new ListTag();
+
+        for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
+            CompoundTag curse = new CompoundTag();
+            curse.putString("key", entry.getKey().toString());
+            curse.putInt("count", entry.getValue());
+            cursesTag.add(curse);
+        }
+        nbt.put("curses", cursesTag);
 
         return nbt;
     }
@@ -1192,6 +1240,13 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("shadow_inventory", Tag.TAG_COMPOUND)) {
             this.shadowInventory.add(ItemStack.of((CompoundTag) key));
+        }
+
+        this.curses.clear();
+
+        for (Tag key : nbt.getList("curses", Tag.TAG_COMPOUND)) {
+            CompoundTag curse = (CompoundTag) key;
+            this.curses.put(new ResourceLocation(curse.getString("key")), curse.getInt("count"));
         }
     }
 }
