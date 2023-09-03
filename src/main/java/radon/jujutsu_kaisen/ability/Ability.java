@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -82,6 +83,7 @@ public abstract class Ability {
 
     public boolean isUnlocked(LivingEntity owner) {
         if (this.isTechnique() && JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if (owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(this)) return true;
 
         for (Trait trait : this.getRequirements()) {
             if (!JJKAbilities.hasTrait(owner, trait)) return false;

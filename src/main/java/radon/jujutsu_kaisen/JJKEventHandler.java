@@ -160,13 +160,18 @@ public class JJKEventHandler {
 
             boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-            if (attacker instanceof SummonEntity tamable) {
-                if (tamable.isTame() && tamable.getOwner() == victim) {
+            if (attacker instanceof SummonEntity tamable1) {
+                if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
+                } else if (victim instanceof SummonEntity tamable2) {
+                    if (tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()){
+                        event.setCanceled(true);
+                        return;
+                    }
                 }
             } else if (victim instanceof SummonEntity tamable) {
-                if (melee && tamable.isTame() && tamable.getOwner() == attacker) {
+                if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
                 }
