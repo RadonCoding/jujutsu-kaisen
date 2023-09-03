@@ -8,14 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -26,13 +19,9 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -41,28 +30,34 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class ZombaCurseEntity extends SorcererEntity {
+public class ZombaCurseEntity extends CursedSpirit {
     private static final double ATTACK_RANGE = 32.0D;
 
     private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
-    public ZombaCurseEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+    public ZombaCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new HealingGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+    protected boolean isCustom() {
+        return false;
+    }
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, true));
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
     }
 
     @Override
@@ -142,11 +137,6 @@ public class ZombaCurseEntity extends SorcererEntity {
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of();
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
     }
 
     @Override

@@ -1,27 +1,16 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -30,26 +19,32 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class JogoEntity extends SorcererEntity {
+public class JogoEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
 
-    public JogoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+    public JogoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new SorcererGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+    protected boolean isCustom() {
+        return false;
+    }
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, true));
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return true;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
     }
 
     @Override
@@ -65,11 +60,6 @@ public class JogoEntity extends SorcererEntity {
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of(Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
     }
 
     @Override

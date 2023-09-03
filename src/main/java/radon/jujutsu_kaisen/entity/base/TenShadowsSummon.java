@@ -15,6 +15,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -27,6 +35,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -45,6 +56,37 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    protected abstract boolean isCustom();
+    protected abstract boolean canFly();
+    protected abstract boolean canPerformSorcery();
+    protected abstract boolean hasMeleeAttack();
+
+    private void createGoals() {
+        int target = 1;
+        int goal = 1;
+
+        this.goalSelector.addGoal(goal++, new FloatGoal(this));
+
+        if (this.hasMeleeAttack()) {
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.8D, true));
+        }
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+
+        if (this.isTame()) {
+            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
+
+            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+        } else {
+            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
+                    entity -> this.participants.contains(entity.getUUID())));
+        }
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -97,6 +139,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
+
+        if (!this.isCustom()) this.createGoals();
 
         this.spawnParticles();
 

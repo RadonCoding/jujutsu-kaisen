@@ -59,9 +59,6 @@ public class ShadowStorage extends Ability {
 
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) result.set(true);
-        } else {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getShadowInventory().isEmpty()));
         }
         return result.get() ? Status.FAILURE : super.checkTriggerable(owner);
     }

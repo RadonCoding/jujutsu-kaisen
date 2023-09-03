@@ -59,6 +59,9 @@ public class JJKItems {
             () -> new SukunaFingerItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
     public static RegistryObject<Item> CURSED_TOTEM = ITEMS.register("cursed_totem",
             () -> new CursedTotemItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+    public static RegistryObject<Item> CURSED_SPIRIT_ORB = ITEMS.register("cursed_spirit_orb",
+            () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+
 
     public static RegistryObject<Item> VEIL_ROD = ITEMS.register("veil_rod",
             () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));

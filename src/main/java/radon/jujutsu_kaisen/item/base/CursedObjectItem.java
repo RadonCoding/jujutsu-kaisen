@@ -45,16 +45,14 @@ public abstract class CursedObjectItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        if (!pLevel.isClientSide) {
-            pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.getType() == JujutsuType.CURSE) {
-                    cap.consume(pEntityLiving, this.getGrade());
-                } else {
-                    pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
-                            Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));
-                }
-            });
-        }
+        pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (cap.getType() == JujutsuType.CURSE) {
+                cap.consume(pEntityLiving, this.getGrade());
+            } else {
+                pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
+                        Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));
+            }
+        });
         return stack;
     }
 }

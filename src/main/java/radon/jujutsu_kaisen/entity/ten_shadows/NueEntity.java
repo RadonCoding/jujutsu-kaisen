@@ -6,14 +6,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +19,8 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -47,6 +39,26 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         super(pEntityType, pLevel);
     }
 
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return true;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
+    }
+
     public NueEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.NUE.get(), owner.level);
 
@@ -61,8 +73,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
-
-        this.createGoals();
     }
 
     @Override
@@ -80,27 +90,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     @Override
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
-    }
-
-    private void createGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
-                    entity -> this.participants.contains(entity.getUUID())));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

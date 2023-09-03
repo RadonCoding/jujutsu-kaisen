@@ -8,13 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -25,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.misc.ShootRCT;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -51,6 +43,26 @@ public class PiercingBullEntity extends TenShadowsSummon {
         super(pEntityType, pLevel);
     }
 
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return false;
+    }
+
     public PiercingBullEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.PIERCING_BULL.get(), owner.level);
 
@@ -66,8 +78,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
-
-        this.createGoals();
     }
 
     private void breakBlocks() {
@@ -127,26 +137,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
-    }
-
-    private void createGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, ShootRCT.RANGE, ShootRCT.RANGE, false));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
-                    entity -> this.participants.contains(entity.getUUID())));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<PiercingBullEntity> animationState) {

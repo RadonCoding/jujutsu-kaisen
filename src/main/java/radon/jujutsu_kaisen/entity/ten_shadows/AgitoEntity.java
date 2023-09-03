@@ -8,13 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
@@ -30,9 +23,9 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -51,6 +44,26 @@ public class AgitoEntity extends TenShadowsSummon {
 
     public AgitoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return true;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
     }
 
     public AgitoEntity(LivingEntity owner) {
@@ -86,19 +99,6 @@ public class AgitoEntity extends TenShadowsSummon {
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
-    }
-
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.6D, true));
-        this.goalSelector.addGoal(3, new SorcererGoal(this));
-        this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
     }
 
     @Override
@@ -188,6 +188,11 @@ public class AgitoEntity extends TenShadowsSummon {
     @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.SHOOT_RCT.get());
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        return SorcererGrade.SPECIAL_GRADE;
     }
 
     @Override

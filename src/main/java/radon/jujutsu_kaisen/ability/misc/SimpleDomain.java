@@ -80,7 +80,7 @@ public class SimpleDomain extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public int getDuration() {
-        return 3 * 20;
+        return 5 * 20;
     }
 
     @Override

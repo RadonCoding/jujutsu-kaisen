@@ -27,7 +27,8 @@ public class EntityModifier extends Modifier {
 
     @Override
     public Component getComponent() {
-        return Component.translatable(String.format("item.%s.veil_rod.entity.%s", JujutsuKaisen.MOD_ID, this.getAction().name().toLowerCase()), Component.translatable(this.key.getPath()))
+        return Component.translatable(String.format("item.%s.veil_rod.entity.%s", JujutsuKaisen.MOD_ID, this.getAction().name().toLowerCase()),
+                Component.translatable(String.format("entity.%s.%s", this.key.getNamespace(), this.key.getPath())))
                 .withStyle(this.getAction() == Action.DENY ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN);
     }
 

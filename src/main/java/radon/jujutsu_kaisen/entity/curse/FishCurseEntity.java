@@ -7,28 +7,18 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -39,7 +29,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 import java.util.UUID;
 
-public class FishCurseEntity extends SorcererEntity {
+public class FishCurseEntity extends CursedSpirit {
     private static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
 
     @Nullable
@@ -47,10 +37,30 @@ public class FishCurseEntity extends SorcererEntity {
     @Nullable
     private LivingEntity cachedLeader;
 
-    public FishCurseEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+    public FishCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return true;
+    }
+
+    @Override
+    protected boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
     }
 
     public FishCurseEntity(FishCurseEntity leader) {
@@ -138,20 +148,6 @@ public class FishCurseEntity extends SorcererEntity {
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new HealingGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, true));
-    }
-
-    @Override
     public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_4;
     }
@@ -164,11 +160,6 @@ public class FishCurseEntity extends SorcererEntity {
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of();
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
     }
 
     @Override

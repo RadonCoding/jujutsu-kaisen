@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -87,6 +88,7 @@ public interface ISorcererData {
     void generate(ServerPlayer player);
 
     void addSummon(Entity entity);
+    void removeSummon(Entity entity);
     List<Entity> getSummons(ServerLevel level);
     <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz);
     <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz);
@@ -119,6 +121,10 @@ public interface ISorcererData {
 
     TenShadowsMode getMode();
     void setMode(TenShadowsMode mode);
+
+    void addCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+    void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+    Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +44,8 @@ public class Wheel extends Summon<WheelEntity> {
         AtomicBoolean result = new AtomicBoolean();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getMode() == TenShadowsMode.ABILITY));
+                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                        cap.getMode() == TenShadowsMode.ABILITY));
         return result.get();
     }
 
