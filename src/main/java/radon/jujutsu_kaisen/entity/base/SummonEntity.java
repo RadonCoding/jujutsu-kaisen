@@ -47,6 +47,11 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     }
 
     @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        return (!this.isTame() || pTarget != this.getOwner()) && super.canAttack(pTarget);
+    }
+
+    @Override
     public int getMaxHeadXRot() {
         return 360;
     }
