@@ -205,6 +205,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ACTIVATE_WATER_WALKING);
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
+            event.register(JJKKeys.DASH);
         }
 
         @SubscribeEvent
