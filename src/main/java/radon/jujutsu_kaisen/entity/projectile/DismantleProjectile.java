@@ -62,11 +62,9 @@ public class DismantleProjectile extends JujutsuProjectile {
     public int getSize() {
         AtomicInteger result = new AtomicInteger();
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(Mth.floor(LINE_LENGTH * cap.getGrade().getPower())));
+                    result.set(Mth.floor(LINE_LENGTH * cap.getGrade().getPower(owner))));
         }
         return result.get();
     }
@@ -88,11 +86,9 @@ public class DismantleProjectile extends JujutsuProjectile {
             perpendicular = direction.getCounterClockWise();
         }
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getGrade().getPower());
+                int size = Mth.floor(LINE_LENGTH * cap.getGrade().getPower(owner));
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
                 BlockPos end = center.relative(perpendicular, size / 2);
 
@@ -116,7 +112,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * cap.getGrade().getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * cap.getGrade().getPower(owner));
                 }
             });
         }
@@ -138,11 +134,9 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         List<EntityHitResult> entities = new ArrayList<>();
 
-        Entity owner = this.getOwner();
-
-        if (owner != null) {
+        if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getGrade().getPower());
+                int size = Mth.floor(LINE_LENGTH * cap.getGrade().getPower(owner));
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
                 BlockPos end = center.relative(perpendicular, size / 2);
 

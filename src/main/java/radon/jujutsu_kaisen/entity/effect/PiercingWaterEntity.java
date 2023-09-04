@@ -131,7 +131,7 @@ public class PiercingWaterEntity extends JujutsuProjectile {
                 for (Entity entity : entities) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_RED.get()), DAMAGE * cap.getGrade().getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_RED.get()), DAMAGE * cap.getGrade().getPower(owner));
                 }
             });
 

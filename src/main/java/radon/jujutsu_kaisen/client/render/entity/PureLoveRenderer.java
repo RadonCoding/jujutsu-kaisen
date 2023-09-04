@@ -139,20 +139,17 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));
         poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
-        poseStack.pushPose();
 
-        if (!this.clearerView) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + 90.0F));
-        }
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + 90.0F));
         this.drawBeam(length, frame, poseStack, consumer, packedLight);
         poseStack.popPose();
 
-        if (!this.clearerView) {
-            poseStack.pushPose();
-            poseStack.mulPose(Axis.YN.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() - 90.0F));
-            this.drawBeam(length, frame, poseStack, consumer, packedLight);
-            poseStack.popPose();
-        }
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YN.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() - 90.0F));
+        this.drawBeam(length, frame, poseStack, consumer, packedLight);
+        poseStack.popPose();
+
         poseStack.popPose();
     }
 

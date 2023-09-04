@@ -38,7 +38,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
             int height = this.getHeight();
 
             ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height,
-                    cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
+                    cap.getGrade().getPower(owner) + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
             owner.level.addFreshEntity(domain);
 
             cap.setDomain(domain);

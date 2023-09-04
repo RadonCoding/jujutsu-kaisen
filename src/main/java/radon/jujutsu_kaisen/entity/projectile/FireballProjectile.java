@@ -60,7 +60,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getPower(owner));
                 }
             });
         }
@@ -90,7 +90,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
                 this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
-                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(), false,
+                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(owner), false,
                         this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }

@@ -114,7 +114,7 @@ public class NueTotalityLightingEntity extends LightningBolt {
                         for (Entity entity : entities) {
                             if (entity == owner || entity == ((SummonEntity) owner).getOwner()) continue;
                             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.NUE_TOTALITY_LIGHTNING.get()),
-                                    DAMAGE * cap.getGrade().getPower());
+                                    DAMAGE * cap.getGrade().getPower(owner));
                         }
                     });
                 }

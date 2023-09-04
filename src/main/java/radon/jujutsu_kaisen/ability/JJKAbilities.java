@@ -210,17 +210,15 @@ public class JJKAbilities {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             abilities.add(JJKAbilities.AIR_PUNCH.get());
             abilities.add(JJKAbilities.BARRAGE.get());
+            abilities.add(JJKAbilities.DASH.get());
 
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                abilities.add(JJKAbilities.DASH.get());
-            } else {
+            if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 abilities.add(JJKAbilities.SMASH.get());
                 abilities.add(JJKAbilities.WATER_WALKING.get());
 
                 abilities.add(JJKAbilities.HEAL.get());
 
                 abilities.add(JJKAbilities.RCT.get());
-                abilities.add(JJKAbilities.SHOOT_RCT.get());
 
                 abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
                 abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
@@ -242,11 +240,11 @@ public class JJKAbilities {
 
                 if (technique != null) {
                     //if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
-                        Ability domain = technique.getDomain();
+                    Ability domain = technique.getDomain();
 
-                        if (domain != null) {
-                            abilities.add(domain);
-                        }
+                    if (domain != null) {
+                        abilities.add(domain);
+                    }
                     //}
                     abilities.addAll(Arrays.asList(technique.getAbilities()));
                 }
@@ -275,7 +273,7 @@ public class JJKAbilities {
                     abilities.addAll(Arrays.asList(copied.getAbilities()));
                 }
             }
-            abilities.removeIf(ability -> !ability.isUnlocked(owner));
+            abilities.removeIf(ability -> !ability.isUnlocked(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
         });
         return new ArrayList<>(abilities);
     }

@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.entity.base;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -10,11 +13,10 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.StructureTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -26,11 +28,17 @@ import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableSorcererGoal;
@@ -45,6 +53,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
+    private static final int RARITY = 10;
+
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -56,6 +66,51 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     protected CursedSpirit(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        this.setTame(false);
+    }
+
+    private boolean isInVillage() {
+        HolderSet.Named<Structure> structures = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+
+        boolean success = false;
+
+        for (Holder<Structure> holder : structures) {
+            if (((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
+                success = true;
+                break;
+            }
+        }
+        return success;
+    }
+
+    private boolean isInFortress() {
+        Structure structure = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
+        if (structure == null) return false;
+        return ((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), structure) != StructureStart.INVALID_START;
+    }
+
+    @Override
+    public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
+        if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
+            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower(this)) / (this.level.isNight() ? 2 : 1)) != 0) return false;
+
+            if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
+                if (!this.isInVillage() && !this.isInFortress()) return false;
+            } else if (!this.isInFortress()) {
+                return false;
+            }
+            if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D,  16.0D, 64.0D)).size() > 0) return false;
+        }
+        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0) return false;
+        }
+        return super.checkSpawnRules(pLevel, pSpawnReason);
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
     }
 
     protected abstract boolean isCustom();
@@ -78,7 +133,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
         if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
+            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
 
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));

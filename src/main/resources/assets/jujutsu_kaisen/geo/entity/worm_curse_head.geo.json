@@ -1,0 +1,48 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.worm_curse_head",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 17,
+				"visible_bounds_height": 12,
+				"visible_bounds_offset": [0, 5, 0]
+			},
+			"bones": [
+				{
+					"name": "head",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-18.5, -12, 6.3125], "size": [15, 16, 2], "pivot": [0.5, -3.5, 103.3125], "rotation": [0, 0, 90], "uv": [18, 46]}
+					]
+				},
+				{
+					"name": "right_jaw",
+					"parent": "head",
+					"pivot": [0.5, 8, 7.6875],
+					"rotation": [0, 0, 90],
+					"cubes": [
+						{"origin": [-5.5, 1, -10.3125], "size": [6, 13, 6], "uv": [24, 26]},
+						{"origin": [-6.5, 0, -4.3125], "size": [7, 15, 11], "uv": [0, 0]},
+						{"origin": [0.5, 0.5, -3.8125], "size": [2, 14, 10], "uv": [0, 26]},
+						{"origin": [0.5, 1.5, -9.8125], "size": [2, 12, 6], "uv": [36, 0]}
+					]
+				},
+				{
+					"name": "left_jaw",
+					"parent": "head",
+					"pivot": [0.5, 8, 7.6875],
+					"rotation": [0, 0, 90],
+					"cubes": [
+						{"origin": [0.5, 1, -10.3125], "size": [6, 13, 6], "uv": [24, 26], "mirror": true},
+						{"origin": [0.5, 0, -4.3125], "size": [7, 15, 11], "uv": [0, 0], "mirror": true},
+						{"origin": [-1.5, 0.5, -3.8125], "size": [2, 14, 10], "uv": [0, 26], "mirror": true},
+						{"origin": [-1.5, 1.5, -9.8125], "size": [2, 12, 6], "uv": [36, 0], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -62,7 +61,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         AtomicReference<Float> result = new AtomicReference<>();
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(MAX_DAMAGE * ((float) (cap.getGrade().ordinal() + 1) / SorcererGrade.values().length)));
+                result.set(Math.min(MAX_DAMAGE, (cap.getGrade().ordinal() + 1) * 10.0F)));
         return result.get();
     }
 

@@ -22,7 +22,7 @@ public interface ISorcerer {
     default @Nullable CursedTechnique getAdditional() {
         return null;
     }
-    @NotNull List<Trait> getTraits();
+    default @NotNull List<Trait> getTraits() { return List.of(); }
     default @NotNull List<Ability> getCustom() { return List.of(); }
     JujutsuType getJujutsuType();
 

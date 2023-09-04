@@ -1,7 +1,11 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public enum SorcererGrade {
     GRADE_4(0.0F, 1.0F, 10.0F),
@@ -37,5 +41,13 @@ public enum SorcererGrade {
 
     public float getPower() {
         return this.power;
+    }
+
+    public float getPower(LivingEntity owner) {
+        AtomicReference<Float> result = new AtomicReference<>(this.power);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.getAndUpdate(power -> power * (cap.isInZone(owner) ? 1.20F : 1.0F)));
+        return result.get();
     }
 }

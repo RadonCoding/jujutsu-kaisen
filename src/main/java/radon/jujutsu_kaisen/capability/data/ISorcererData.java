@@ -66,6 +66,7 @@ public interface ISorcererData {
     float getMaxEnergy();
     void setMaxEnergy(float maxEnergy);
     void useEnergy(float amount);
+    void addEnergy(float amount);
     void setEnergy(float energy);
 
     void onBlackFlash(LivingEntity owner);
@@ -125,6 +126,7 @@ public interface ISorcererData {
     void addCurse(Registry<EntityType<?>> registry, EntityType<?> type);
     void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
     Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
+    boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

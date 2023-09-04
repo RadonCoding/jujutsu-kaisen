@@ -24,7 +24,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
@@ -44,7 +43,7 @@ public class KuchisakeOnna extends CursedSpirit {
     public static final double RANGE = 16.0D;
     private static final int SNIP_DURATION = 5;
     private static final float DAMAGE = 5.0F;
-    private static final int INTERVAL = 5 * 20;
+    private static final int INTERVAL = 3 * 20;
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation SNIP = RawAnimation.begin().thenPlay("attack.snip");
@@ -164,10 +163,7 @@ public class KuchisakeOnna extends CursedSpirit {
         return null;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public @Nullable Ability getDomain() {
@@ -184,7 +180,7 @@ public class KuchisakeOnna extends CursedSpirit {
             if (target == null) return;
 
             this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * cap.getGrade().getPower()));
+                target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * cap.getGrade().getPower(this)));
         });
         this.reset();
     }
@@ -222,12 +218,13 @@ public class KuchisakeOnna extends CursedSpirit {
             LivingEntity target = this.getTarget();
 
             if (target == null || target.isRemoved() || !target.isAlive()) {
-                this.reset();
                 return;
             }
 
             if (!this.isOpen()) {
-                if (this.cooldown == 0 && this.distanceTo(target) <= RANGE) {
+                if (this.cooldown > 0) return;
+
+                if (this.distanceTo(target) <= RANGE) {
                     this.entityData.set(DATA_TARGET, Optional.of(target.getUUID()));
 
                     this.start = target.position();
@@ -239,6 +236,8 @@ public class KuchisakeOnna extends CursedSpirit {
                     } else {
                         this.entityData.set(DATA_TARGET, Optional.empty());
                     }
+                } else {
+                    this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), this.getSpeed());
                 }
             }
         });

@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.ten_shadows;
+package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -15,11 +15,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -27,14 +28,14 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class GreatSerpentEntity extends TenShadowsSummon {
+public class WormCurseEntity extends CursedSpirit {
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
 
     private static final int MAX_SEGMENTS = 24;
 
-    private GreatSerpentSegmentEntity[] segments;
+    private WormCurseSegmentEntity[] segments;
 
-    public GreatSerpentEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public WormCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -58,8 +59,8 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return true;
     }
 
-    public GreatSerpentEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.GREAT_SERPENT.get(), owner.level);
+    public WormCurseEntity(LivingEntity owner, boolean tame) {
+        super(JJKEntities.WORM_CURSE.get(), owner.level);
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -76,7 +77,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         this.init();
     }
 
-    private PlayState bitePredicate(AnimationState<GreatSerpentEntity> animationState) {
+    private PlayState bitePredicate(AnimationState<WormCurseEntity> animationState) {
         if (this.swinging) {
             return animationState.setAndContinue(BITE);
         }
@@ -116,10 +117,10 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     private void init() {
-        this.segments = new GreatSerpentSegmentEntity[MAX_SEGMENTS];
+        this.segments = new WormCurseSegmentEntity[MAX_SEGMENTS];
 
         for (int i = 0; i < this.segments.length; i++) {
-            this.segments[i] = new GreatSerpentSegmentEntity(this);
+            this.segments[i] = new WormCurseSegmentEntity(this);
             this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
         }
     }
@@ -134,7 +135,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         super.remove(reason);
 
         if (!this.level.isClientSide) {
-            for (GreatSerpentSegmentEntity seg : this.segments) {
+            for (WormCurseSegmentEntity seg : this.segments) {
                 seg.kill();
             }
         }
@@ -164,7 +165,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
             diff = diff.add(idealX, idealY, idealZ).normalize();
 
-            double f = i == 0 ? 1.271D : 0.9D;
+            double f = i == 0 ? 0.988D : 0.934D;
 
             double destX = followX + f * diff.x();
             double destY = followY + f * diff.y();
@@ -207,7 +208,17 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
-    public Summon<?> getAbility() {
-        return JJKAbilities.GREAT_SERPENT.get();
+    public SorcererGrade getGrade() {
+        return SorcererGrade.GRADE_1;
+    }
+
+    @Override
+    public @Nullable CursedTechnique getTechnique() {
+        return null;
+    }
+
+    @Override
+    public @Nullable Ability getDomain() {
+        return null;
     }
 }

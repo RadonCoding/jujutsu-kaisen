@@ -90,6 +90,11 @@ public class JJKEntities {
                     .sized(1.6F, 2.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "zomba_curse")
                             .toString()));
+    public static RegistryObject<EntityType<WormCurseEntity>> WORM_CURSE = ENTITIES.register("worm_curse", () ->
+            EntityType.Builder.<WormCurseEntity>of(WormCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(1.0F, 0.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse")
+                            .toString()));
 
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
             EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
@@ -307,6 +312,7 @@ public class JJKEntities {
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(KUCHISAKE_ONNA.get(), KuchisakeOnna.createAttributes().build());
         event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

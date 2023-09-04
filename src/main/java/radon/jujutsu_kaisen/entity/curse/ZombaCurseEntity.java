@@ -134,10 +134,7 @@ public class ZombaCurseEntity extends CursedSpirit {
         return null;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public @NotNull List<Ability> getCustom() {

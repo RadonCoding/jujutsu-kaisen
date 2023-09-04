@@ -6,10 +6,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -52,9 +49,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
-            Entity entity = type.create(level);
-
-            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && entity instanceof ISorcerer sorcerer && sorcerer.getGrade().getPower() <= energy) {
+            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer && sorcerer.getGrade().getPower(entity) <= energy) {
                 pool.add(entity);
             }
         }

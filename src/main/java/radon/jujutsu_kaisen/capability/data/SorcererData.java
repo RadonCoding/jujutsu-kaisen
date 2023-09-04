@@ -87,7 +87,6 @@ public class SorcererData implements ISorcererData {
 
     private final Map<ResourceLocation, Integer> curses;
 
-
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
@@ -380,11 +379,11 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D), AttributeModifier.Operation.ADDITION);
             this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D), AttributeModifier.Operation.ADDITION);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D), AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D), AttributeModifier.Operation.ADDITION);
 
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F)
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
@@ -396,9 +395,9 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower() * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F, AttributeModifier.Operation.ADDITION);
+                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F, AttributeModifier.Operation.ADDITION);
 
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F)
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F) * (this.type == JujutsuType.CURSE ? 2.0F : 1.0F))
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
         }
     }
@@ -462,7 +461,7 @@ public class SorcererData implements ISorcererData {
 
         if (owner instanceof Player player) {
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise_%s", JujutsuKaisen.MOD_ID,
-                            this.type == JujutsuType.SORCERER ? "sorcerer" : "curse"), grade.getReward(), this.experience, next.getRequiredExperience()));
+                            this.type == JujutsuType.SORCERER ? "curse" : "sorcerer"), grade.getReward(), this.experience, next.getRequiredExperience()));
         }
 
         // If the owner has enough experience and the curse/sorcerer exorcised was higher or equal to the next rank
@@ -605,6 +604,11 @@ public class SorcererData implements ISorcererData {
     public void useEnergy(float amount) {
         this.energy -= amount;
         this.used += amount;
+    }
+
+    @Override
+    public void addEnergy(float amount) {
+        this.energy += amount;
     }
 
     @Override
@@ -867,7 +871,7 @@ public class SorcererData implements ISorcererData {
     }
 
     private boolean tryAdapt(@Nullable Ability.Classification classification) {
-        if (classification == null) return false;
+        if (classification == null || classification == Ability.Classification.MELEE) return false;
 
         if (!this.adapting.containsKey(classification)) {
             this.adapting.put(classification, 1);
@@ -936,6 +940,11 @@ public class SorcererData implements ISorcererData {
             curses.put(registry.get(entry.getKey()), entry.getValue());
         }
         return curses;
+    }
+
+    @Override
+    public boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
+        return this.curses.containsKey(registry.getKey(type));
     }
 
     @Override

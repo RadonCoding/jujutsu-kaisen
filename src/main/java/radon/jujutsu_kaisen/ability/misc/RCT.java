@@ -35,7 +35,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            owner.heal(AMOUNT * cap.getGrade().getPower());
+            owner.heal(AMOUNT * cap.getGrade().getPower(owner));
 
             if (cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) {
                 int burnout = cap.getBurnout();

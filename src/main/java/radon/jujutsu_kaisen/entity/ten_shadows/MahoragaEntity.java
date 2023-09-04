@@ -50,7 +50,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
 
-    private static final double SWING_LAUNCH = 10.0D;
+    private static final double SWING_LAUNCH = 5.0D;
     private static final float SWING_EXPLOSION = 2.5F;
 
     private static final int SLASH_DURATION = 20;

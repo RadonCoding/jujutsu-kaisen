@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.rika;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -10,11 +12,16 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Rika extends Summon<RikaEntity> {
+    private static final float AMOUNT = 100.0F;
+    private static final int INTERVAL = 5 * 20;
+
     public Rika() {
         super(RikaEntity.class);
     }
@@ -35,7 +42,26 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level.getGameTime() % INTERVAL != 0) return;
 
+        if (owner.level instanceof ServerLevel level) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
+                RikaEntity rika = ownerCap.getSummonByClass(level, RikaEntity.class);
+
+                if (rika == null) return;
+
+                rika.getCapability(SorcererDataHandler.INSTANCE).ifPresent(summonCap -> {
+                    if (summonCap.getEnergy() > AMOUNT) {
+                        ownerCap.addEnergy(AMOUNT);
+                        summonCap.useEnergy(AMOUNT);
+
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                        }
+                    }
+                });
+            });
+        }
     }
 
     @Override
@@ -59,7 +85,7 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.0F;
+        return 0;
     }
 
     @Override
@@ -69,7 +95,7 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 60 * 20;
     }
 
     @Override
