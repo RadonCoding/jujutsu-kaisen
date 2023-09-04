@@ -116,6 +116,11 @@ public class ClientAbilityHandler {
                 ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
             }
 
+            if (JJKKeys.DASH.consumeClick()) {
+                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
+                ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
+            }
+
             if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
                 PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
                 listener.setJump(event.getAction() != InputConstants.RELEASE);

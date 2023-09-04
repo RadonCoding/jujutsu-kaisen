@@ -25,6 +25,11 @@ public class JJKBlockEntities {
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
 
+    public static RegistryObject<BlockEntityType<RemovableBlockEntity>> REMOVABLE = BLOCK_ENTITIES.register("removable", () ->
+            BlockEntityType.Builder.of(RemovableBlockEntity::new,
+                            JJKBlocks.REMOVABLE_WATER.get())
+                    .build(null));
+
     public static RegistryObject<BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->
             BlockEntityType.Builder.of(DisplayCaseBlockEntity::new,
                             JJKBlocks.DISPLAY_CASE.get())

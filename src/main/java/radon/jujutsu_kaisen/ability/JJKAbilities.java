@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.curse_manipulation.AbsorbCurse;
 import radon.jujutsu_kaisen.ability.curse_manipulation.ReleaseCurse;
 import radon.jujutsu_kaisen.ability.curse_manipulation.SummonCurse;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
+import radon.jujutsu_kaisen.ability.disaster_tides.DisasterTides;
 import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
@@ -81,6 +82,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> COFFIN_OF_THE_IRON_MOUNTAIN = ABILITIES.register("coffin_of_the_iron_mountain", CoffinOfTheIronMountain::new);
 
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
+    public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);

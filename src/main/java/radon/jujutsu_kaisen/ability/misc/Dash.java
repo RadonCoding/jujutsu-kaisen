@@ -73,6 +73,6 @@ public class Dash extends Ability {
 
     @Override
     public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+        return DisplayType.NONE;
     }
 }

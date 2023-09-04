@@ -21,6 +21,7 @@
   "key.jujutsu_kaisen.activate_water_walking": "Activate Water Walking",
   "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
+  "key.jujutsu_kaisen.dash": "Dash",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
@@ -160,6 +161,7 @@
   "ability.jujutsu_kaisen.coffin_of_the_iron_mountain": "Coffin of the Iron Mountain",
 
   "ability.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
+  "ability.jujutsu_kaisen.disaster_tides": "Disaster Tides",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",

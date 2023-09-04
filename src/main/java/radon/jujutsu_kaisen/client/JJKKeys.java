@@ -24,6 +24,8 @@ public class JJKKeys {
             InputConstants.KEY_C);
     public static KeyMapping SHOW_DOMAIN_MENU = createKeyMapping("show_domain_menu",
             InputConstants.KEY_V);
+    public static KeyMapping DASH = createKeyMapping("dash",
+            InputConstants.KEY_G);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {
         return new KeyMapping(String.format("key.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);
