@@ -70,6 +70,7 @@
   "item.jujutsu_kaisen.cyclops_curse_spawn_egg": "Spawn Cyclops Curse",
   "item.jujutsu_kaisen.kuchisake_onna_spawn_egg": "Spawn Kuchisake-Onna",
   "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
+  "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_iron_mountain_one": "Coffin of Iron Mountain One",
@@ -287,6 +288,7 @@
   "entity.jujutsu_kaisen.cyclops_curse": "Cyclops Curse",
   "entity.jujutsu_kaisen.kuchisake_onna": "Kuchisake-Onna",
   "entity.jujutsu_kaisen.zomba_curse": "Zomba Curse",
+  "entity.jujutsu_kaisen.worm_curse": "Worm Curse",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 

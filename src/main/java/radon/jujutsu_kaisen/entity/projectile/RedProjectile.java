@@ -76,7 +76,7 @@ public class RedProjectile extends JujutsuProjectile {
 
                     float factor = 1.0F - (float) this.getTime() / DURATION;
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower())) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower(owner))) {
                         entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                     }
                 }
@@ -92,7 +92,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                float radius = EXPLOSIVE_POWER * cap.getGrade().getPower();
+                float radius = EXPLOSIVE_POWER * cap.getGrade().getPower(owner);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
                 this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,

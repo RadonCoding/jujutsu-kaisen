@@ -16,13 +16,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -86,30 +84,13 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         return success;
     }
 
-    private boolean isInFortress() {
-        Structure structure = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
-        if (structure == null) return false;
-        return ((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), structure) != StructureStart.INVALID_START;
-    }
-
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.getJujutsuType() == JujutsuType.CURSE) {
-                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower()) / (this.level.isNight() ? 2 : 1)) != 0) return false;
-
-                if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
-                    if (!this.isInVillage() && !this.isInFortress()) return false;
-                } else if (!this.isInFortress()) {
-                    return false;
-                }
-            } else {
-                if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower()) / 4) != 0) return false;
-                if (!this.isInVillage()) return false;
-            }
+            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower(this)) / 4) != 0) return false;
+            if (!this.isInVillage()) return false;
             if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D,  16.0D, 64.0D)).size() > 0) return false;
         }
-
         if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
             if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0) return false;
         }

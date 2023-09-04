@@ -239,10 +239,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         return null;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public JujutsuType getJujutsuType() {

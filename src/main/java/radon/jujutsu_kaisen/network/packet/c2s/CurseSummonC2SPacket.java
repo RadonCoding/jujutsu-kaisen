@@ -10,6 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.function.Supplier;
 
@@ -42,6 +44,8 @@ public class CurseSummonC2SPacket {
 
                 if (type == null) return;
 
+                if (!cap.hasCurse(registry, type)) return;
+
                 if (type.create(player.level) instanceof CursedSpirit curse) {
                     Vec3 pos = player.position().subtract(player.getLookAngle()
                             .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
@@ -53,6 +57,8 @@ public class CurseSummonC2SPacket {
                     cap.addSummon(curse);
 
                     cap.removeCurse(registry, type);
+
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }
             });
         });

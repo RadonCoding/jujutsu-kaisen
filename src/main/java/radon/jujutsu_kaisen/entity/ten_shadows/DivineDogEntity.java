@@ -46,7 +46,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         super(pEntityType, pLevel);
     }
 
-    public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual) {
+    public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual, Variant variant) {
         super(type, owner.level);
 
         this.setTame(true);
@@ -59,6 +59,8 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
+
+        this.setVariant(variant);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     protected boolean hasMeleeAttack() {
-        return false;
+        return true;
     }
 
     protected void setVariant(Variant variant) {
@@ -199,7 +201,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_VARIANT, -1);
+        this.entityData.define(DATA_VARIANT, Variant.WHITE.ordinal());
         this.entityData.define(DATA_LEAP, 0);
         this.entityData.define(DATA_RITUAL, 0);
     }

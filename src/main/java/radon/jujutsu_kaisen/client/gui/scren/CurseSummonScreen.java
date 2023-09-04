@@ -20,17 +20,14 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CurseSummonC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CurseSummonScreen extends Screen {
     private static final float RADIUS_IN = 50.0F;
     private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
 
-    private final Map<EntityType<?>, Integer> summons = new HashMap<>();
+    private final Map<EntityType<?>, Integer> curses = new HashMap<>();
 
     private int hovered = -1;
 
@@ -49,18 +46,18 @@ public class CurseSummonScreen extends Screen {
 
         assert this.minecraft != null;
 
-        Map<EntityType<?>, Integer> inventory = this.getSummons();
+        Map<EntityType<?>, Integer> curses = this.getCurses();
 
-        if (inventory == null) return;
+        if (curses == null) return;
 
-        this.summons.putAll(inventory);
+        this.curses.putAll(curses);
 
-        if (this.summons.isEmpty()) {
+        if (this.curses.isEmpty()) {
             this.onClose();
         }
     }
 
-    private @Nullable Map<EntityType<?>, Integer> getSummons() {
+    private @Nullable Map<EntityType<?>, Integer> getCurses() {
         AtomicReference<Map<EntityType<?>, Integer>> summons = new AtomicReference<>();
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return null;
@@ -110,7 +107,7 @@ public class CurseSummonScreen extends Screen {
     public void onClose() {
         if (this.hovered != -1) {
             if (this.minecraft != null && this.minecraft.level != null) {
-                EntityType<?> type = (EntityType<?>) this.summons.keySet().toArray()[this.hovered];
+                EntityType<?> type = (EntityType<?>) this.curses.keySet().toArray()[this.hovered];
                 Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
                 PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
             }
@@ -138,7 +135,7 @@ public class CurseSummonScreen extends Screen {
         BufferBuilder buffer = tesselator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        for (int i = 0; i < this.summons.size(); i++) {
+        for (int i = 0; i < this.curses.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
             float endAngle = getAngleFor(i + 0.5F);
 
@@ -155,7 +152,7 @@ public class CurseSummonScreen extends Screen {
 
         int i = 0;
 
-        for (Map.Entry<EntityType<?>, Integer> entry : this.summons.entrySet()) {
+        for (Map.Entry<EntityType<?>, Integer> entry : this.curses.entrySet()) {
             float start = getAngleFor(i - 0.5F);
             float end = getAngleFor(i + 0.5F);
             float middle = (start + end) / 2.0F;
@@ -200,9 +197,9 @@ public class CurseSummonScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.summons.size() > 0) {
+        if (this.curses.size() > 0) {
             float startAngle = getAngleFor(-0.5F);
-            float endAngle = getAngleFor(this.summons.size() - 0.5F);
+            float endAngle = getAngleFor(this.curses.size() - 0.5F);
 
             while (mouseAngle < startAngle) {
                 mouseAngle += Mth.TWO_PI;
@@ -214,7 +211,7 @@ public class CurseSummonScreen extends Screen {
 
         this.hovered = -1;
 
-        for (int i = 0; i < this.summons.size(); i++) {
+        for (int i = 0; i < this.curses.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
             float endAngle = getAngleFor(i + 0.5F);
 
@@ -227,9 +224,9 @@ public class CurseSummonScreen extends Screen {
 
     private float getAngleFor(double i)
     {
-        if (this.summons.size() == 0) {
+        if (this.curses.size() == 0) {
             return 0;
         }
-        return (float) (((i / this.summons.size()) + 0.25) * Mth.TWO_PI + Math.PI);
+        return (float) (((i / this.curses.size()) + 0.25) * Mth.TWO_PI + Math.PI);
     }
 }

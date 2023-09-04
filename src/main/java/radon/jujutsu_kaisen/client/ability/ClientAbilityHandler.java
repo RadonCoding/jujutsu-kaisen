@@ -174,7 +174,7 @@ public class ClientAbilityHandler {
             } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
                 Ability.Status status;
 
-                if (isSuccess(ability, status = ability.checkChannelable(owner))) {
+                if (isSuccess(ability, status = ability.checkChannelable(owner)) || cap.isChanneling(ability)) {
                     cap.channel(owner, ability);
                 }
                 result.set(status);

@@ -1,18 +1,23 @@
 package radon.jujutsu_kaisen.client.gui.scren.base;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -22,6 +27,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +113,53 @@ public abstract class RadialScreen extends Screen {
         pFont.drawShadow(pPoseStack, sql, (float)(pX - pFont.width(sql) / 2), (float)pY, pColor);
     }
 
+    private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ((float) Math.PI);
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * ((float) Math.PI / 180.0F));
+        quaternionf.mul(quaternionf1);
+
+        if (pEntity instanceof LivingEntity living) {
+            living.yBodyRot = 180.0F + angleXComponent * 20.0F;
+        }
+        pEntity.setYRot(180.0F + angleXComponent * 40.0F);
+        pEntity.setXRot(-angleYComponent * 20.0F);
+
+        if (pEntity instanceof LivingEntity living) {
+            living.yHeadRot = pEntity.getYRot();
+            living.yHeadRotO = pEntity.getYRot();
+        }
+        renderEntityInInventory(pPoseStack, pX, pY, pScale, quaternionf, quaternionf1, pEntity);
+    }
+
+    private static void renderEntityInInventory(PoseStack pPoseStack, int pX, int pY, int pScale, Quaternionf p_275229_, @Nullable Quaternionf pCameraOrientation, Entity pEntity) {
+        PoseStack posestack = RenderSystem.getModelViewStack();
+        posestack.pushPose();
+        posestack.translate(0.0D, 0.0D, 1000.0D);
+        RenderSystem.applyModelViewMatrix();
+        pPoseStack.pushPose();
+        pPoseStack.translate(pX, pY, -950.0D);
+        pPoseStack.mulPoseMatrix((new Matrix4f()).scaling((float)pScale, (float)pScale, (float)(-pScale)));
+        pPoseStack.mulPose(p_275229_);
+        Lighting.setupForEntityInInventory();
+        EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+
+        if (pCameraOrientation != null) {
+            pCameraOrientation.conjugate();
+            entityrenderdispatcher.overrideCameraOrientation(pCameraOrientation);
+        }
+        entityrenderdispatcher.setRenderShadow(false);
+        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+        RenderSystem.runAsFancy(() -> {
+            entityrenderdispatcher.render(pEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, pPoseStack, multibuffersource$buffersource, 15728880);
+        });
+        multibuffersource$buffersource.endBatch();
+        entityrenderdispatcher.setRenderShadow(true);
+        pPoseStack.popPose();
+        Lighting.setupFor3DItems();
+        posestack.popPose();
+        RenderSystem.applyModelViewMatrix();
+    }
+
     @Override
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
@@ -190,13 +243,13 @@ public abstract class RadialScreen extends Screen {
 
             if (ability instanceof Summon<?> summon) {
                 EntityType<?> type = summon.getTypes().get(0);
+                Entity entity = type.create(this.minecraft.level);
 
-                if (!(type.create(this.minecraft.level) instanceof LivingEntity entity)) continue;
+                if (entity == null) continue;
 
                 float height = entity.getBbHeight();
                 int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
-                InventoryScreen.renderEntityInInventoryFollowsAngle(pPoseStack, posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F,
-                        0.0F, entity);
+                renderEntityInInventoryFollowsAngle(pPoseStack, posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
             } else {
                 int y = posY - this.font.lineHeight / 2;
 

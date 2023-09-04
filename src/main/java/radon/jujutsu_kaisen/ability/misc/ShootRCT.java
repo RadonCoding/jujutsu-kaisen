@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -63,20 +64,22 @@ public class ShootRCT extends Ability {
                         result.set(targetCap.getType() == JujutsuType.CURSE));
 
                 if (result.get()) {
-                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower() * 10.0F);
+                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower(owner) * 10.0F);
                 } else {
-                    target.heal(AMOUNT * ownerCap.getGrade().getPower());
+                    target.heal(AMOUNT * ownerCap.getGrade().getPower(owner));
                 }
+
+                double width = target.getBbWidth();
+                double height = target.getBbHeight();
+                ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, (float) width * 2.0F, 0.5F, false, 1);
 
                 for (int i = 0; i < 8; i++) {
                     ownerCap.delayTickEvent(() -> {
                         for (int j = 0; j < 8; j++) {
-                            double width = target.getBbWidth();
-                            double height = target.getBbHeight();
                             double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                             double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
                             double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, (float) width * 2.0F, 0.5F, false, 1),
+                            level.sendParticles(particle,
                                     x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
                         }
                     }, i * 2);
@@ -97,7 +100,7 @@ public class ShootRCT extends Ability {
 
     @Override
     public List<Trait> getRequirements() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.STRONGEST);
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

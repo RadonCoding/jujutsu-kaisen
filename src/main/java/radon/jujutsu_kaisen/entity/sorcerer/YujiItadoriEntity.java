@@ -73,10 +73,7 @@ public class YujiItadoriEntity extends SorcererEntity {
         return CursedTechnique.DIVERGENT_FIST;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public JujutsuType getJujutsuType() {

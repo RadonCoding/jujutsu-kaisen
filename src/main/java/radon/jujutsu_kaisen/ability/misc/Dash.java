@@ -7,7 +7,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
@@ -46,6 +50,25 @@ public class Dash extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 0;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3 * 20;
+    }
+
+    @Override
+    public int getRealCooldown(LivingEntity owner) {
+        AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                cooldown.set(0);
+            } else if (cap.hasTrait(Trait.SIX_EYES)) {
+                cooldown.set(cooldown.get() / 2);
+            }
+        });
+        return cooldown.get();
     }
 
     @Override

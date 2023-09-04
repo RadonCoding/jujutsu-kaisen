@@ -11,20 +11,17 @@ import java.util.function.Supplier;
 
 public class KuchisakeOnnaAnswerC2SPacket {
     private final UUID identifier;
-    private final boolean correct;
 
-    public KuchisakeOnnaAnswerC2SPacket(UUID identifier, boolean correct) {
+    public KuchisakeOnnaAnswerC2SPacket(UUID identifier) {
         this.identifier = identifier;
-        this.correct = correct;
     }
 
     public KuchisakeOnnaAnswerC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readUUID(), buf.readBoolean());
+        this(buf.readUUID());
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeUUID(this.identifier);
-        buf.writeBoolean(this.correct);
     }
 
     public void handle(Supplier<NetworkEvent.Context> supplier) {
@@ -38,11 +35,7 @@ public class KuchisakeOnnaAnswerC2SPacket {
             ServerLevel level = player.getLevel();
 
             if (level.getEntity(this.identifier) instanceof KuchisakeOnna curse) {
-                if (this.correct) {
-                    curse.reset();
-                } else {
-                    curse.attack();
-                }
+                curse.attack();
             }
         });
         ctx.setPacketHandled(true);

@@ -87,7 +87,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             if (ability == null) return;
 
             if (ability.isTechnique()) {
-                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.5F : 0.0F));
+                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.5F : 0.25F));
             }
         }
     }

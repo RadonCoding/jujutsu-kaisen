@@ -325,7 +325,7 @@ public class JJKEventHandler {
                         killer = source;
                     }
 
-                    if (victim instanceof TamableAnimal) return;
+                    if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
 
                     killer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(killerCap -> {
                         if (killerCap.getType() == JujutsuType.CURSE ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {

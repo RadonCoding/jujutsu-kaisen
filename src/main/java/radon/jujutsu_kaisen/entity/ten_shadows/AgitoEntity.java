@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -188,11 +187,6 @@ public class AgitoEntity extends TenShadowsSummon {
     @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.SHOOT_RCT.get());
-    }
-
-    @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
     }
 
     @Override

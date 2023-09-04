@@ -33,7 +33,7 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
 
         if (owner.level.getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getPower())) {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getPower(owner))) {
                     entity.setSecondsOnFire(15);
                 }
             });
@@ -52,7 +52,7 @@ public class CoffinOfIronMountain extends DomainExpansion implements DomainExpan
             List<Block> blocks = this.getBlocks();
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius,
-                    cap.getGrade().getPower() + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
+                    cap.getGrade().getPower(owner) + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
             owner.level.addFreshEntity(domain);
 
             cap.setDomain(domain);

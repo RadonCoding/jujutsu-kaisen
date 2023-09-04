@@ -6,6 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
@@ -39,13 +40,14 @@ public class Wheel extends Summon<WheelEntity> {
     @Override
     public boolean isUnlocked(LivingEntity owner) {
         if (!super.isUnlocked(owner)) return false;
-        if (owner instanceof MahoragaEntity) return true;
 
         AtomicBoolean result = new AtomicBoolean();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
-                        cap.getMode() == TenShadowsMode.ABILITY));
+        if (!JJKAbilities.hasToggled(owner, this)) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                            cap.getMode() == TenShadowsMode.ABILITY));
+        }
         return result.get();
     }
 

@@ -157,10 +157,7 @@ public class FishCurseEntity extends CursedSpirit {
         return null;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public @Nullable Ability getDomain() {

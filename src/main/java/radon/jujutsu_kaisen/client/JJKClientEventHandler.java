@@ -169,8 +169,8 @@ public class JJKClientEventHandler {
                     64.0D, 64.0D, 64.0D))) {
                 curse.getCurrent().ifPresent(identifier -> {
                     event.setCanceled(true);
-
-                    PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID(), event.getMessage().toLowerCase().contains("yes")));
+                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getDisplayName(), event.getMessage())));
+                    PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID()));
                 });
             }
         }
@@ -300,6 +300,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_BULL.get(), PiercingBullRenderer::new);
             event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WORM_CURSE.get(), WormCurseHeadRenderer::new);
         }
 
         @SubscribeEvent
@@ -356,6 +357,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.CYCLOPS_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.KUCHISAKE_ONNA_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.ZOMBA_CURSE_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.WORM_CURSE_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.DISPLAY_CASE.get());
                                 pOutput.accept(JJKItems.ALTAR.get());

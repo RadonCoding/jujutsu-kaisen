@@ -7,6 +7,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -48,21 +50,26 @@ public class CursedSpiritOrbItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         ResourceLocation key = this.getKey(pStack);
-
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID),
                 Component.translatable(String.format("entity.%s.%s", key.getNamespace(), key.getPath()))).withStyle(ChatFormatting.DARK_RED));
     }
 
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
-        if (JJKAbilities.getTechnique(pEntityLiving) != CursedTechnique.CURSE_MANIPULATION) return pStack;
+        if (JJKAbilities.getTechnique(pEntityLiving) != CursedTechnique.CURSE_MANIPULATION) {
+            pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
+            return pStack;
+        }
 
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
         Registry<EntityType<?>> registry = pLevel.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
         pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                 cap.addCurse(pEntityLiving.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getCurse(registry, pStack)));
+
+        pEntityLiving.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 1));
+
         return stack;
     }
 }

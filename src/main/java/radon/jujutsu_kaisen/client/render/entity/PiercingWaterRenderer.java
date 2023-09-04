@@ -110,25 +110,22 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
         this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
     }
 
-    private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));
         poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
-        poseStack.pushPose();
 
-        if (!this.clearerView) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + 90.0F));
-        }
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + 90.0F));
         this.drawBeam(length, frame, poseStack, consumer, packedLight);
         poseStack.popPose();
 
-        if (!this.clearerView) {
-            poseStack.pushPose();
-            poseStack.mulPose(Axis.YN.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() - 90.0F));
-            this.drawBeam(length, frame, poseStack, consumer, packedLight);
-            poseStack.popPose();
-        }
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YN.rotationDegrees(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() - 90.0F));
+        this.drawBeam(length, frame, poseStack, consumer, packedLight);
+        poseStack.popPose();
+
         poseStack.popPose();
     }
 

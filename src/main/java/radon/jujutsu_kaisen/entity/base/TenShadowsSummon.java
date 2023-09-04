@@ -34,7 +34,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -78,7 +77,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
         if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
+            this.goalSelector.addGoal(goal++, new FollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
 
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
@@ -301,10 +300,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         return null;
     }
 
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of();
-    }
+
 
     @Override
     public @Nullable Ability getDomain() {
