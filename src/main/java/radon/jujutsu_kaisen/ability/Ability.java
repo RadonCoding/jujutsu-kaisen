@@ -39,6 +39,7 @@ public abstract class Ability {
         NONE,
         MELEE,
         DISASTER_FLAMES,
+        DISASTER_TIDES,
         SLASH,
         PURE_LOVE,
         LIMITLESS,

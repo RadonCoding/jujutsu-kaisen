@@ -137,7 +137,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (this.isTame() && !this.isVehicle()) {
+        if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());

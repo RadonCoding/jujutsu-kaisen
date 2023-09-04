@@ -188,7 +188,7 @@ public class MahoragaEntity extends TenShadowsSummon {
             this.entityData.set(DATA_POSITIVE_SWORD, result.get());
         }
 
-        this.setSprinting(this.getDeltaMovement().lengthSqr() >= 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
 
         int slash = this.entityData.get(DATA_SLASH);
 

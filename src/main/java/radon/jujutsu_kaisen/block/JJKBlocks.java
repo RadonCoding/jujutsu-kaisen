@@ -2,7 +2,9 @@ package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,28 +40,36 @@ public class JJKBlocks {
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
-
     public static RegistryObject<DomainBlock> UNLIMITED_VOID_FILL = BLOCKS.register("unlimited_void_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_iron_mountain_one", () ->
+    public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
                     .lightLevel((pState) -> 3)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
-
-    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_iron_mountain_two", () ->
+    public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_the_iron_mountain_two", () ->
+            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(-1.0F, 3600000.8F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_the_iron_mountain_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> COFFIN_OF_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_iron_mountain_three", () ->
+    public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
+            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(-1.0F, 3600000.8F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)

@@ -177,7 +177,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!this.isVehicle()) {
+        if (pPlayer == this.getOwner() && !this.isVehicle()) {
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());

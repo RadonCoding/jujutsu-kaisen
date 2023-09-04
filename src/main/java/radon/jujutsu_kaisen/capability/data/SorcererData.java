@@ -632,7 +632,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < 3;
+        return ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < 10;
     }
 
     @Override
@@ -959,7 +959,10 @@ public class SorcererData implements ISorcererData {
             if (HelperMethods.RANDOM.nextInt(10) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
-            this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+
+            while (this.technique == null || this.technique == CursedTechnique.CURSED_SPEECH || this.technique == CursedTechnique.DISASTER_TIDES) {
+                this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+            }
             this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
             assert this.technique != null;

@@ -14,9 +14,14 @@ public class JJKBlockEntities {
             BlockEntityType.Builder.of(DomainBlockEntity::new,
                             JJKBlocks.UNLIMITED_VOID.get(),
                             JJKBlocks.UNLIMITED_VOID_FILL.get(),
-                            JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_ONE.get(),
-                            JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_TWO.get(),
-                            JJKBlocks.COFFIN_OF_IRON_MOUNTAIN_THREE.get(),
+
+                            JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
+                            JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
+                            JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_THREE.get(),
+
+                            JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(),
+                            JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get(),
+
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
 

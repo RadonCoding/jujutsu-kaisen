@@ -62,14 +62,21 @@ public class JJKEntities {
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "chimera_shadow_garden")
                             .toString()));
+
+    public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
+            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
+                            .toString()));
+    public static RegistryObject<EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
+            EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.AMBIENT)
+                    .sized(1.4F, 3.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
+                            .toString()));
+
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.AMBIENT)
                     .sized(2.0F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
-                            .toString()));
-    public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
-            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.AMBIENT)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
                             .toString()));
     public static RegistryObject<EntityType<FishCurseEntity>> FISH_CURSE = ENTITIES.register("fish_curse", () ->
             EntityType.Builder.<FishCurseEntity>of(FishCurseEntity::new, MobCategory.AMBIENT)
@@ -281,7 +288,6 @@ public class JJKEntities {
                             .toString()));
 
     public static void createAttributes(EntityAttributeCreationEvent event) {
-        event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
         event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
@@ -292,7 +298,7 @@ public class JJKEntities {
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
-        event.put(JOGO.get(), SorcererEntity.createAttributes().build());
+
         event.put(MAHORAGA.get(), MahoragaEntity.createAttributes().build());
         event.put(DIVINE_DOG_WHITE.get(), DivineDogEntity.createAttributes().build());
         event.put(DIVINE_DOG_BLACK.get(), DivineDogEntity.createAttributes().build());
@@ -308,6 +314,9 @@ public class JJKEntities {
         event.put(PIERCING_BULL.get(), PiercingBullEntity.createAttributes().build());
         event.put(AGITO.get(), AgitoEntity.createAttributes().build());
 
+        event.put(JOGO.get(), SorcererEntity.createAttributes().build());
+        event.put(DAGON.get(), SorcererEntity.createAttributes().build());
+        event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(KUCHISAKE_ONNA.get(), KuchisakeOnna.createAttributes().build());
