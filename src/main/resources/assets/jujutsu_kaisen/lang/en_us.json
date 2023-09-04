@@ -66,6 +66,7 @@
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
+  "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
   "item.jujutsu_kaisen.fish_curse_spawn_egg": "Spawn Fish Curse",
   "item.jujutsu_kaisen.cyclops_curse_spawn_egg": "Spawn Cyclops Curse",
   "item.jujutsu_kaisen.kuchisake_onna_spawn_egg": "Spawn Kuchisake-Onna",
@@ -73,9 +74,9 @@
   "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
-  "block.jujutsu_kaisen.coffin_of_iron_mountain_one": "Coffin of Iron Mountain One",
-  "block.jujutsu_kaisen.coffin_of_iron_mountain_two": "Coffin of Iron Mountain Two",
-  "block.jujutsu_kaisen.coffin_of_iron_mountain_three": "Coffin of Iron Mountain Three",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain One",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_two": "Coffin of the Iron Mountain Two",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_three": "Coffin of the Iron Mountain Three",
   "block.jujutsu_kaisen.unlimited_void": "Unlimited Void",
   "block.jujutsu_kaisen.unlimited_void_fill": "Unlimited Void Fill",
 
@@ -156,7 +157,9 @@
   "ability.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "ability.jujutsu_kaisen.flamethrower": "Flamethrower",
   "ability.jujutsu_kaisen.fireball": "Fireball",
-  "ability.jujutsu_kaisen.coffin_of_iron_mountain": "Coffin of Iron Mountain",
+  "ability.jujutsu_kaisen.coffin_of_the_iron_mountain": "Coffin of the Iron Mountain",
+
+  "ability.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
@@ -218,8 +221,6 @@
   "ability.jujutsu_kaisen.piercing_water": "Piercing Water",
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
-  "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
-
   "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
   "ability.jujutsu_kaisen.summon_curse": "Summon Curse",
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
@@ -240,8 +241,8 @@
   "cursed_technique.jujutsu_kaisen.cursed_speech": "Cursed Speech",
   "cursed_technique.jujutsu_kaisen.rika": "Rika",
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
+  "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
-  "cursed_technique.jujutsu_kaisen.divergent_fist": "Divergent Fist",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
@@ -266,6 +267,7 @@
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
   "entity.jujutsu_kaisen.rika": "Rika",
   "entity.jujutsu_kaisen.jogo": "Jogo",
+  "entity.jujutsu_kaisen.dagon": "Dagon",
   "entity.jujutsu_kaisen.megumi_fushiguro": "Megumi Fushiguro",
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
   "entity.jujutsu_kaisen.divine_dog_white": "Divine Dog White",

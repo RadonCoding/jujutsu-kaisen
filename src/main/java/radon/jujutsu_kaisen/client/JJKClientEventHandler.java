@@ -266,6 +266,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAXIMUM_RED.get(), MaximumRedRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIREBALL.get(), FireballRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
@@ -351,8 +352,10 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.TOJI_ZENIN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.MEGUNA_RYOMEN_SPAWN_EGG.get());
 
-                                pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());
+
+                                pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.FISH_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.CYCLOPS_CURSE_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.KUCHISAKE_ONNA_SPAWN_EGG.get());

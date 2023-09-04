@@ -126,7 +126,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (this.isTame() && !this.isVehicle()) {
+        if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
@@ -241,7 +241,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         if (passenger != null) {
             this.setSprinting(passenger.getDeltaMovement().lengthSqr() >= 1.0E-7D);
         } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() >= 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
+            this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
         }
 
         if (passenger != null) return;

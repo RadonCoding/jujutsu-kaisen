@@ -89,6 +89,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xC1BA50, 0x3B0F04, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> DAGON_SPAWN_EGG = ITEMS.register("dagon_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.DAGON, 0x8E2D33, 0xD6C0A3, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FISH_CURSE_SPAWN_EGG = ITEMS.register("fish_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FISH_CURSE, 0x181A21, 0x252935, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> CYCLOPS_CURSE_SPAWN_EGG = ITEMS.register("cyclops_curse_spawn_egg",

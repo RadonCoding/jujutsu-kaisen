@@ -117,7 +117,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!this.isVehicle()) {
+        if (pPlayer == this.getOwner() && !this.isVehicle()) {
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
@@ -269,7 +269,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         if (passenger != null) {
             this.setSprinting(passenger.getDeltaMovement().lengthSqr() >= 1.0E-7D);
         } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() >= 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
+            this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
         }
 
         int leap = this.entityData.get(DATA_LEAP);
