@@ -55,7 +55,7 @@ public class ClientAbilityHandler {
                             PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                             ClientAbilityHandler.trigger(channeled);
                         }
-                        isChanneling = true;
+                        isChanneling = JJKAbilities.isChanneling(mc.player, channeled);
                     } else {
                         if (isChanneling) {
                             PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));

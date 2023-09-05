@@ -358,7 +358,8 @@ public class JJKEventHandler {
                             }
                         }
 
-                        if (killerCap.getType() != victimCap.getType()) {
+                        if (killerCap.getType() == JujutsuType.SORCERER && victimCap.getType() == JujutsuType.CURSE ||
+                                killerCap.getType() == JujutsuType.CURSE && victimCap.getType() == JujutsuType.SORCERER) {
                             SorcererGrade grade = SorcererGrade.values()[victimCap.getGrade().ordinal()];
 
                             killerCap.exorcise(killer, grade);

@@ -144,7 +144,6 @@ public abstract class Ability {
     }
 
     public Status checkTriggerable(LivingEntity owner) {
-        if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) return Status.SIMPLE_DOMAIN;
         return this.getStatus(owner, true, true, true, false);
     }
 

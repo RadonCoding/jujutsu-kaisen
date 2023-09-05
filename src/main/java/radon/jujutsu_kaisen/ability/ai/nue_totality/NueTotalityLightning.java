@@ -34,7 +34,7 @@ public class NueTotalityLightning extends Ability {
                 break;
             }
         }
-        Vec3 pos = target.getCenter().add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 25.0D, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 25.0D);
+        Vec3 pos = target.getCenter().add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 10.0D, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 10.0D);
         lightning.setPos(pos);
         owner.level.addFreshEntity(lightning);
     }

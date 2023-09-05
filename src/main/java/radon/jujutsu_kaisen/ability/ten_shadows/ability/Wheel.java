@@ -29,11 +29,9 @@ public class Wheel extends Summon<WheelEntity> {
 
         AtomicBoolean result = new AtomicBoolean();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                result.set(targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique()));
-            });
-        });
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap ->
+                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap ->
+                        result.set(targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique()))));
         return result.get();
     }
 
@@ -43,11 +41,10 @@ public class Wheel extends Summon<WheelEntity> {
 
         AtomicBoolean result = new AtomicBoolean();
 
-        if (!JJKAbilities.hasToggled(owner, this)) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
-                            cap.getMode() == TenShadowsMode.ABILITY));
-        }
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
+                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                        cap.getMode() == TenShadowsMode.ABILITY));
         return result.get();
     }
 
