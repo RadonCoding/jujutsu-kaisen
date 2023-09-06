@@ -137,6 +137,16 @@ public class PacketHandler {
                 .encoder(CurseSummonC2SPacket::encode)
                 .consumerMainThread(CurseSummonC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetAdditionalC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetAdditionalC2SPacket::new)
+                .encoder(SetAdditionalC2SPacket::encode)
+                .consumerMainThread(SetAdditionalC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SetAbsorbedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetAbsorbedC2SPacket::new)
+                .encoder(SetAbsorbedC2SPacket::encode)
+                .consumerMainThread(SetAbsorbedC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -151,9 +161,7 @@ public class PacketHandler {
         INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
     }
 
-    public static <MSG> void broadcastNearby(MSG message, LivingEntity entity) {
-        INSTANCE.send(PacketDistributor.NEAR.with(() ->
-                new PacketDistributor.TargetPoint(entity.getX(), entity.getY(), entity.getZ(),
-                        64, entity.level.dimension())), message);
+    public static <MSG> void broadcast(MSG message) {
+        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 }

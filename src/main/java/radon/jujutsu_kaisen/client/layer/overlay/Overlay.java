@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.client.layer.overlay;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 
 public abstract class Overlay {
-    public abstract RenderType getRenderType();
-    public abstract int getPackedLight();
+    public abstract void init(LivingEntity owner);
+    public abstract CompoundTag addCustomData();
+    public abstract void readCustomData(CompoundTag nbt);
 }

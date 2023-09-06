@@ -96,6 +96,7 @@ public class DivergentFist extends Ability {
                                     d9 *= d11;
                                     Vec3 vec31 = new Vec3(d5, d7, d9);
                                     entity.setDeltaMovement(entity.getDeltaMovement().add(vec31.scale(LAUNCH_POWER)));
+                                    entity.hurtMarked = true;
                                 }
                             }
                         }

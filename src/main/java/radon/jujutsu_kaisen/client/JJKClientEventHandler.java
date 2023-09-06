@@ -18,21 +18,24 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
-import radon.jujutsu_kaisen.client.gui.scren.CurseSummonScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
-import radon.jujutsu_kaisen.client.gui.scren.ShadowInventoryScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
+import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
+import radon.jujutsu_kaisen.client.layer.overlay.IRunnableOverlay;
 import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
@@ -54,6 +57,7 @@ import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -118,10 +122,6 @@ public class JJKClientEventHandler {
                 if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
                     mc.screen.onClose();
                 }
-                if (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() &&
-                        (mc.screen instanceof ShadowInventoryScreen || mc.screen instanceof CurseSummonScreen)) {
-                    mc.screen.onClose();
-                }
             }
         }
 
@@ -169,10 +169,46 @@ public class JJKClientEventHandler {
                     64.0D, 64.0D, 64.0D))) {
                 curse.getCurrent().ifPresent(identifier -> {
                     event.setCanceled(true);
-                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getDisplayName(), event.getMessage())));
+                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName(), event.getMessage())));
                     PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID()));
                 });
             }
+        }
+
+        @SubscribeEvent
+        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (mc.player == null) return;
+
+            mc.player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
+                Set<Overlay> overlays;
+
+                if (cap.isSynced(event.getEntity().getUUID())) {
+                    overlays = cap.getRemoteOverlays(event.getEntity().getUUID());
+                } else {
+                    return;
+                }
+
+                for (Overlay overlay : overlays) {
+                    if (!(overlay instanceof IRunnableOverlay runnable)) continue;
+                    runnable.run(event.getEntity());
+                }
+            });
+        }
+
+        @SubscribeEvent
+        public static void onClientTick(TickEvent.ClientTickEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (mc.player == null) return;
+
+            mc.player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
+                for (Overlay overlay : cap.getLocalOverlays()) {
+                    if (!(overlay instanceof IRunnableOverlay runnable)) continue;
+                    runnable.run(mc.player);
+                }
+            });
         }
     }
 
@@ -252,7 +288,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BLUE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MAXIMUM_PURPLE_HOLLOW.get(), HollowPurpleRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
@@ -303,6 +339,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.PIERCING_BULL.get(), PiercingBullRenderer::new);
             event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
             event.registerEntityRenderer(JJKEntities.WORM_CURSE.get(), WormCurseHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAXIMUM_UZUMAKI.get(), MaximumUzumakiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MINI_UZUMAKI.get(), MiniUzumakiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), HollowPurpleExplosionRenderer::new);
         }
 
         @SubscribeEvent

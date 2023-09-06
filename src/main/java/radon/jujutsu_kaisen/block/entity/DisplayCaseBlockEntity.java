@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public class DisplayCaseBlockEntity extends BlockEntity {
     private static final int RARITY = 50;
@@ -69,7 +69,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         if (pLevel.getGameTime() % INTERVAL != 0 || pLevel.isClientSide) return;
 
-        AtomicReference<Float> energy = new AtomicReference<>(pBlockEntity.getEnergy());
+        float energy = pBlockEntity.getEnergy();
 
         int centerX = pPos.getX() >> 4;
         int centerZ = pPos.getZ() >> 4;
@@ -86,17 +86,17 @@ public class DisplayCaseBlockEntity extends BlockEntity {
                     if (!state.is(JJKBlocks.DISPLAY_CASE.get())) continue;
 
                     if (pLevel.getBlockEntity(pos) instanceof DisplayCaseBlockEntity be) {
-                        energy.set(energy.get() + be.getEnergy());
+                        energy += be.getEnergy();
                     }
                 }
             }
         }
 
-        Entity curse = getRandomCurse(pLevel, energy.get());
+        Entity curse = getRandomCurse(pLevel, energy);
 
         if (curse == null) return;
 
-        int rng = Mth.floor((energy.get() * RARITY)) / (pLevel.isNight() ? 2 : 1);
+        int rng = Mth.floor((energy * RARITY)) / (pLevel.isNight() ? 2 : 1);
 
         if (HelperMethods.RANDOM.nextInt(rng) == 0) {
             double d0 = (double) pPos.getX() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;

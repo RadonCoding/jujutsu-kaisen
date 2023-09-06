@@ -21,7 +21,7 @@ public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 center;
 
-    protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ,  TravelParticleOptions options, SpriteSet pSprites) {
+    protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());

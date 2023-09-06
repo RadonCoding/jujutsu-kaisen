@@ -18,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -36,8 +35,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
-
-    private float distance;
 
     public PiercingBullEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -102,16 +99,16 @@ public class PiercingBullEntity extends TenShadowsSummon {
             if (this.isSprinting() || this.tickCount % INTERVAL == 0) {
                 this.setSprinting(true);
                 this.setDeltaMovement(target.position().subtract(this.position()).normalize());
-                this.distance = this.distanceTo(target);
+                float distance = this.distanceTo(target);
 
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, this.getBoundingBox())) {
                     if (entity == this) continue;
 
-                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        entity.hurt(this.damageSources().mobAttack(this), DAMAGE * this.distance * cap.getGrade().getPower(this));
-                        entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getGrade().getPower(this)));
-                        this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), cap.getGrade().getPower(this), false, Level.ExplosionInteraction.NONE);
-                    });
+                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * this.getGrade().getPower(this));
+                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(this.getGrade().getPower(this)));
+                    entity.hurtMarked = true;
+
+                    this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getPower(this), false, Level.ExplosionInteraction.NONE);
 
                     if (entity == target) {
                         this.setSprinting(false);

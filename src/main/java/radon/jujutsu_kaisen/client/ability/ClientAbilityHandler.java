@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.JJKKeys;
@@ -28,7 +29,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 
 import java.awt.event.KeyEvent;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public class ClientAbilityHandler {
     private static @Nullable Ability channeled;
@@ -150,41 +151,41 @@ public class ClientAbilityHandler {
     }
 
     public static Ability.Status trigger(Ability ability) {
-        AtomicReference<Ability.Status> result = new AtomicReference<>(Ability.Status.SUCCESS);
-
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer owner = mc.player;
 
         assert owner != null;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
-                Ability.Status status;
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
-                    ability.run(owner);
-                }
-                result.set(status);
-            } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
-                Ability.Status status;
+        if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
+            Ability.Status status;
 
-                if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
-                    if (!cap.hasToggled(ability)) {
-                        MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
-                    }
-                    cap.toggle(owner, ability);
-                }
-                result.set(status);
-            } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
-                Ability.Status status;
-
-                if (isSuccess(ability, status = ability.checkChannelable(owner)) || cap.isChanneling(ability)) {
-                    cap.channel(owner, ability);
-                }
-                result.set(status);
+            if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                cap.addUsed(ability.getRealCost(owner));
+                ability.run(owner);
             }
-        });
-        return result.get();
+            return status;
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
+            Ability.Status status;
+
+            if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
+                if (!cap.hasToggled(ability)) {
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                }
+                cap.toggle(owner, ability);
+            }
+            return status;
+        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
+            Ability.Status status;
+
+            if (isSuccess(ability, status = ability.checkChannelable(owner)) || cap.isChanneling(ability)) {
+                cap.channel(owner, ability);
+            }
+            return status;
+        }
+        return Ability.Status.SUCCESS;
     }
 }

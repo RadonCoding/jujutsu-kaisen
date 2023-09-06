@@ -120,6 +120,8 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
                 entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
+                entity.hurtMarked = true;
+
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), DAMAGE * cap.getGrade().getPower(owner));
             }
         });

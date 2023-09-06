@@ -39,10 +39,15 @@ public class JJKEntities {
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
                             .toString()));
-    public static RegistryObject<EntityType<MaximumHollowPurpleProjectile>> MAXIMUM_PURPLE_HOLLOW = ENTITIES.register("maximum_hollow_purple", () ->
+    public static RegistryObject<EntityType<MaximumHollowPurpleProjectile>> MAXIMUM_HOLLOW_PURPLE = ENTITIES.register("maximum_hollow_purple", () ->
             EntityType.Builder.<MaximumHollowPurpleProjectile>of(MaximumHollowPurpleProjectile::new, MobCategory.MISC)
                     .sized(2.0F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_hollow_purple")
+                            .toString()));
+    public static RegistryObject<EntityType<HollowPurpleExplosion>> HOLLOW_PURPLE_EXPLOSION = ENTITIES.register("hollow_purple_explosion", () ->
+            EntityType.Builder.<HollowPurpleExplosion>of(HollowPurpleExplosion::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")
                             .toString()));
     public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
             EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
@@ -204,6 +209,16 @@ public class JJKEntities {
             EntityType.Builder.<SkyStrikeEntity>of(SkyStrikeEntity::new, MobCategory.MISC)
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sky_strike")
+                            .toString()));
+    public static RegistryObject<EntityType<MaximumUzumakiProjectile>> MAXIMUM_UZUMAKI = ENTITIES.register("maximum_uzumaki", () ->
+            EntityType.Builder.<MaximumUzumakiProjectile>of(MaximumUzumakiProjectile::new, MobCategory.MISC)
+                    .sized(2.0F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_uzumaki")
+                            .toString()));
+    public static RegistryObject<EntityType<MiniUzumakiProjectile>> MINI_UZUMAKI = ENTITIES.register("mini_uzumaki", () ->
+            EntityType.Builder.<MiniUzumakiProjectile>of(MiniUzumakiProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mini_uzumaki")
                             .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->

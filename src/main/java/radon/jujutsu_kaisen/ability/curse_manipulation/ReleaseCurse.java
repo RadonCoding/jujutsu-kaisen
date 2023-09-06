@@ -82,6 +82,11 @@ public class ReleaseCurse extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return true;
+    }
+    
+    @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
     }

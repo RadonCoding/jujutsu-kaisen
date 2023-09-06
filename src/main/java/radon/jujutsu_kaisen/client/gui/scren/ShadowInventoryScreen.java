@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
@@ -19,7 +20,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public class ShadowInventoryScreen extends Screen {
     private static final float RADIUS_IN = 50.0F;
@@ -56,13 +57,10 @@ public class ShadowInventoryScreen extends Screen {
     }
 
     private @Nullable List<ItemStack> getItems() {
-        AtomicReference<List<ItemStack>> items = new AtomicReference<>();
-
         if (this.minecraft == null || this.minecraft.player == null) return null;
-
-        this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                items.set(cap.getShadowInventory()));
-        return items.get();
+        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getShadowInventory();
     }
 
     private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY,

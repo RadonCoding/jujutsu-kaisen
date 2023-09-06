@@ -78,6 +78,7 @@ public class RedProjectile extends JujutsuProjectile {
 
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower(owner))) {
                         entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+                        entity.hurtMarked = true;
                     }
                 }
             });

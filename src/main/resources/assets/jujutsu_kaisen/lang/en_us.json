@@ -118,6 +118,9 @@
   "ability.jujutsu_kaisen.water_walking": "Water Walking",
   "ability.jujutsu_kaisen.water_walking.enable": "Activated water walking",
   "ability.jujutsu_kaisen.water_walking.disable": "Deactivated water walking",
+  "ability.jujutsu_kaisen.cursed_energy_flow": "CE Flow",
+  "ability.jujutsu_kaisen.cursed_energy_flow.enable": "Activated CE flow",
+  "ability.jujutsu_kaisen.cursed_energy_flow.disable": "Deactivated CE flow",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
   "ability.jujutsu_kaisen.shoot_rct": "Shoot: Reverse Cursed Technique",
@@ -132,6 +135,9 @@
   "ability.jujutsu_kaisen.maximum_red": "Maximum Red",
   "ability.jujutsu_kaisen.blue": "Blue",
   "ability.jujutsu_kaisen.maximum_blue": "Maximum Blue",
+  "ability.jujutsu_kaisen.blue_fists": "Blue Fists",
+  "ability.jujutsu_kaisen.blue_fists.enable": "Activated blue fists",
+  "ability.jujutsu_kaisen.blue_fists.disable": "Deactivated blue fists",
   "ability.jujutsu_kaisen.hollow_purple": "Hollow Purple",
   "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Hollow Purple",
   "ability.jujutsu_kaisen.teleport": "Teleport",
@@ -224,8 +230,11 @@
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
-  "ability.jujutsu_kaisen.summon_curse": "Summon Curse",
+  "ability.jujutsu_kaisen.absorb_technique": "Absorb Technique",
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
+  "ability.jujutsu_kaisen.enhance_curse": "Enhance Curse",
+  "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
+  "ability.jujutsu_kaisen.mini_uzumaki": "Mini Uzumaki",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
@@ -247,6 +256,7 @@
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
+  "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
   "chat.jujutsu_kaisen.sorcerer": "You're a jujutsu sorcerer",
   "chat.jujutsu_kaisen.exorcise_curse": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",

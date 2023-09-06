@@ -7,13 +7,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.PiercingWaterEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PiercingWater extends Ability {
     @Override
@@ -25,13 +25,12 @@ public class PiercingWater extends Ability {
     public boolean isUnlocked(LivingEntity owner) {
         if (!super.isUnlocked(owner)) return false;
 
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.MAX_ELEPHANT.get()) &&
-                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
-                        cap.getMode() == TenShadowsMode.ABILITY));
-        return result.get();
+        return !cap.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
+                cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
+                cap.getMode() == TenShadowsMode.ABILITY;
     }
 
     @Override

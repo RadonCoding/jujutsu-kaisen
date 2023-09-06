@@ -16,5 +16,6 @@ public class JJKCommands {
         SetTypeCommand.register(event.getDispatcher());
         RerollCommand.register(event.getDispatcher());
         ResetSummonsCommand.register(event.getDispatcher());
+        SetNatureCommand.register(event.getDispatcher());
     }
 }

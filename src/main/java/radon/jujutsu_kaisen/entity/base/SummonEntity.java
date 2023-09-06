@@ -58,7 +58,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     public int getMaxHeadYRot() {
-        return 180;
+        return 90;
     }
 
     @Override

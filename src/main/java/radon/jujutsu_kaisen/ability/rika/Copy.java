@@ -75,12 +75,12 @@ public class Copy extends Ability implements Ability.IToggled {
                             CursedTechnique current = attackerCap.getTechnique();
                             CursedTechnique copied = victimCap.getTechnique();
 
-                            if (copied == null || current == null) return;
+                            if (current == null || attackerCap.hasTechnique(copied)) return;
 
                             if (!current.equals(copied)) {
                                 attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.copy", JujutsuKaisen.MOD_ID), copied.getName()));
 
-                                attackerCap.setCopied(copied);
+                                attackerCap.copy(copied);
                                 attackerCap.toggle(attacker, JJKAbilities.COPY.get());
 
                                 if (attacker instanceof ServerPlayer player) {

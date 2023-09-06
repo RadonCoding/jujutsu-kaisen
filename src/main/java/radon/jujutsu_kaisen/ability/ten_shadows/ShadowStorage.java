@@ -9,11 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ShadowStorage extends Ability {
     @Override
@@ -55,15 +55,15 @@ public class ShadowStorage extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.isShiftKeyDown()) {
-            if (owner.getMainHandItem().isEmpty()) result.set(true);
+            if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;
         } else {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getShadowInventory().size() > 0));
+            if (cap.getShadowInventory().size() > 0) return Status.FAILURE;
         }
-        return result.get() ? Status.FAILURE : super.checkTriggerable(owner);
+        return super.checkTriggerable(owner);
     }
 
     @Override

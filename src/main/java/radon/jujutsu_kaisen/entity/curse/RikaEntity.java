@@ -36,7 +36,6 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -53,7 +52,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
-    private static final int DURATION = 60 * 20;
+    private static final int DURATION = 5 * 60 * 20;
 
     public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -207,7 +206,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             super.tick();
 
             if (!this.level.isClientSide) {
-                if (!this.tame && this.getTime() >= DURATION) {
+                if (this.getTime() >= DURATION) {
                     this.discard();
                 }
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
@@ -238,8 +237,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
-
-
 
     @Override
     public JujutsuType getJujutsuType() {

@@ -65,6 +65,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).scale(PULL_STRENGTH);
                 entity.setDeltaMovement(direction);
+                entity.hurtMarked = true;
             }
         }
     }

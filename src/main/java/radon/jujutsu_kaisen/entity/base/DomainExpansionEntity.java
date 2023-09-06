@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -118,7 +120,10 @@ public abstract class DomainExpansionEntity extends Mob {
                 int time = this.getTime();
 
                 if (owner != null) {
-                    if (!JJKAbilities.hasToggled(owner, this.ability)) {
+                    if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    if (!cap.hasToggled(this.ability)) {
                         this.discard();
                         return;
                     }
@@ -135,7 +140,10 @@ public abstract class DomainExpansionEntity extends Mob {
             return false;
         }
         if (entity instanceof LivingEntity living) {
-            if (!owner.canAttack(living) || JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get())) {
+            if (!living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!owner.canAttack(living) || cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 return false;
             }
         }

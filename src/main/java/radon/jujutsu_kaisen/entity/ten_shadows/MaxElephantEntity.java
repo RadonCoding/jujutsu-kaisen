@@ -119,7 +119,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this);
+            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this, null);
         }
         return result;
     }
@@ -231,18 +231,15 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected void customServerAiStep() {
-        if (!this.level.isClientSide) {
-            this.entityData.set(DATA_SHOOTING, JJKAbilities.isChanneling(this, JJKAbilities.WATER.get()));
-        }
+    public void aiStep() {
+        super.aiStep();
+    }
 
+    @Override
+    protected void customServerAiStep() {
+        this.entityData.set(DATA_SHOOTING, JJKAbilities.isChanneling(this, JJKAbilities.WATER.get()));
         LivingEntity passenger = this.getControllingPassenger();
 
-        if (passenger != null) {
-            this.setSprinting(passenger.getDeltaMovement().lengthSqr() >= 1.0E-7D);
-        } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
 
         if (passenger != null) return;
 

@@ -12,7 +12,7 @@ public class MaximumHollowPurpleProjectile extends HollowPurpleProjectile {
     }
 
     public MaximumHollowPurpleProjectile(LivingEntity pShooter) {
-        super(JJKEntities.MAXIMUM_PURPLE_HOLLOW.get(), pShooter);
+        super(JJKEntities.MAXIMUM_HOLLOW_PURPLE.get(), pShooter);
     }
 
     @Override

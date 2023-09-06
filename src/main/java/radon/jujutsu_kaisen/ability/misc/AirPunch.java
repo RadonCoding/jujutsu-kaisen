@@ -43,6 +43,7 @@ public class AirPunch extends Ability {
 
         if (target != null) {
             owner.setDeltaMovement(owner.getDeltaMovement().add(0.0D, JUMP, 0.0D));
+            owner.hurtMarked = true;
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 cap.delayTickEvent(() -> {
@@ -50,6 +51,7 @@ public class AirPunch extends Ability {
                             .normalize()
                             .scale(SPEED);
                     owner.setDeltaMovement(direction);
+                    owner.hurtMarked = true;
 
                     if (!owner.level.isClientSide) {
                         cap.scheduleTickEvent(() -> {

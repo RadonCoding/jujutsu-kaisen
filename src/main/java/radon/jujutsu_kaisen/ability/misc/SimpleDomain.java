@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -25,7 +26,6 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimpleDomain extends Ability implements Ability.IToggled, Ability.IDurationable {
     private static final double X_STEP = 0.05D;
@@ -33,18 +33,16 @@ public class SimpleDomain extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        AtomicBoolean result = new AtomicBoolean();
-
         if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
-                    if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
-                    result.set(true);
-                    break;
-                }
-            });
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
+                if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
+                return true;
+            }
         }
-        return result.get();
+        return false;
     }
 
     @Override

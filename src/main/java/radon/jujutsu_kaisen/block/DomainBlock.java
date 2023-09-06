@@ -18,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DomainBlock extends Block implements EntityBlock {
     public DomainBlock(Properties pProperties) {
@@ -33,19 +33,15 @@ public class DomainBlock extends Block implements EntityBlock {
         if (pContext instanceof EntityCollisionContext ctx) {
             Entity entity = ctx.getEntity();
 
-            AtomicBoolean result = new AtomicBoolean();
-
             if (entity != null) {
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                        result.set(true);
-                    }
-                });
-            }
+                if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (result.get()) {
-                if (!pContext.isAbove(Shapes.block(), pPos, true)) {
-                    return Shapes.empty();
+                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                        if (!pContext.isAbove(Shapes.block(), pPos, true)) {
+                            return Shapes.empty();
+                        }
+                    }
                 }
             }
         }

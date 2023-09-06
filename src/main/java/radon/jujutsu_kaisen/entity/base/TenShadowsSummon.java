@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public abstract class TenShadowsSummon extends SummonEntity implements ICommandable, ISorcerer {
     protected static final int MAX_DISTANCE = 64;
@@ -69,7 +70,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.8D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
@@ -177,7 +178,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner != null && !owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.getTechnique() == CursedTechnique.TEN_SHADOWS || cap.getAdditional() == CursedTechnique.TEN_SHADOWS) {
+                if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
                     if (!this.isTame()) {
                         if (pCause.getEntity() == owner) {
                             cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
@@ -281,18 +282,14 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     @Override
     public SorcererGrade getGrade() {
-        AtomicReference<SorcererGrade> result = new AtomicReference<>(SorcererGrade.GRADE_4);
-
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                SorcererGrade grade = cap.getGrade();
-                int index = Mth.clamp(grade.ordinal() - 1, 0, SorcererGrade.values().length - 1);
-                result.set(SorcererGrade.values()[index]);
-            });
-        }
-        return result.get();
+        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return SorcererGrade.GRADE_4;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        SorcererGrade grade = cap.getGrade();
+        int index = Mth.clamp(grade.ordinal() - 1, 0, SorcererGrade.values().length - 1);
+        return SorcererGrade.values()[index];
     }
 
     @Override

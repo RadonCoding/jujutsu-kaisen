@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -16,6 +18,8 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import java.util.function.Supplier;
 
 public class CurseSummonC2SPacket {
+    private static final float COST = 50.0F;
+
     private final ResourceLocation key;
 
     public CurseSummonC2SPacket(ResourceLocation key) {
@@ -38,6 +42,8 @@ public class CurseSummonC2SPacket {
 
             assert player != null;
 
+            if (player.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || JJKAbilities.hasToggled(player, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+
             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Registry<EntityType<?>> registry = player.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
                 EntityType<?> type = registry.get(this.key);
@@ -47,6 +53,15 @@ public class CurseSummonC2SPacket {
                 if (!cap.hasCurse(registry, type)) return;
 
                 if (type.create(player.level) instanceof CursedSpirit curse) {
+                    float cost = COST * curse.getGrade().getPower();
+
+                    if (!player.getAbilities().instabuild) {
+                        if (cap.getEnergy() < cost) {
+                            return;
+                        }
+                        cap.useEnergy(cost);
+                    }
+
                     Vec3 pos = player.position().subtract(player.getLookAngle()
                             .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
                     curse.moveTo(pos.x(), pos.y(), pos.z(), player.getYRot(), player.getXRot());

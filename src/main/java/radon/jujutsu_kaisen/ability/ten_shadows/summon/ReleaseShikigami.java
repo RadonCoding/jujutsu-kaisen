@@ -6,29 +6,28 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReleaseShikigami extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        AtomicBoolean result = new AtomicBoolean();
-
         if (target == null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                List<TenShadowsSummon> summons = new ArrayList<>();
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                for (Entity entity : cap.getSummons((ServerLevel) owner.level)) {
-                    if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
-                }
-                result.set(summons.size() > 0);
-            });
+            List<TenShadowsSummon> summons = new ArrayList<>();
+
+            for (Entity entity : cap.getSummons((ServerLevel) owner.level)) {
+                if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
+            }
+            return summons.size() > 0;
         }
-        return result.get();
+        return false;
     }
 
     @Override
