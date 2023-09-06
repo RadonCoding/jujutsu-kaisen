@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.veil.EntityModifier;
@@ -25,7 +26,6 @@ import radon.jujutsu_kaisen.item.veil.PlayerModifier;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VeilBlockEntity extends BlockEntity {
     private int counter;
@@ -104,11 +104,11 @@ public class VeilBlockEntity extends BlockEntity {
 
         for (Modifier modifier : be.modifiers) {
             if (modifier.getAction() == Modifier.Action.DENY && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                AtomicBoolean result = new AtomicBoolean();
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        result.set(cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                                cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER));
-                if (result.get()) return true;
+                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                return cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                        cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
             }
         }
         return false;
@@ -139,11 +139,11 @@ public class VeilBlockEntity extends BlockEntity {
 
         for (Modifier modifier : be.modifiers) {
             if (modifier.getAction() == Modifier.Action.ALLOW && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                AtomicBoolean result = new AtomicBoolean();
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        result.set(cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                                cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER));
-                if (result.get()) return true;
+                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                return cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
+                        cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
             }
         }
         return false;

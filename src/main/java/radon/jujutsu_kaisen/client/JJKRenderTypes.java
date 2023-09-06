@@ -33,7 +33,6 @@ public class JJKRenderTypes extends RenderType {
                         .setOverlayState(OVERLAY)
                         .createCompositeState(false));
     });
-
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }

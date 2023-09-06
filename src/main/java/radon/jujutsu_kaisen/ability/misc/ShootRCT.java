@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -21,7 +21,6 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ShootRCT extends Ability {
     private static final float AMOUNT = RCT.AMOUNT * 10;
@@ -30,12 +29,9 @@ public class ShootRCT extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
-
-        AtomicBoolean result = new AtomicBoolean();
-
-        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getType() == JujutsuType.CURSE));
-        return result.get() && this.getTargets(owner).contains(target);
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE && this.getTargets(owner).contains(target);
     }
 
     @Override
@@ -56,36 +52,37 @@ public class ShootRCT extends Ability {
 
         owner.swing(InteractionHand.MAIN_HAND, true);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
-            for (LivingEntity target : this.getTargets(owner)) {
-                AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap ->
-                        result.set(targetCap.getType() == JujutsuType.CURSE));
+        for (LivingEntity target : this.getTargets(owner)) {
+            double width = target.getBbWidth();
+            double height = target.getBbHeight();
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR,
+                    (float) width * 2.0F, 0.5F, false, 1);
 
-                if (result.get()) {
+            for (int i = 0; i < 8; i++) {
+                ownerCap.delayTickEvent(() -> {
+                    for (int j = 0; j < 8; j++) {
+                        double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                        double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
+                        double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+                        level.sendParticles(particle,
+                                x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                    }
+                }, i * 2);
+            }
+
+            if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (targetCap.getType() == JujutsuType.CURSE) {
                     target.hurt(JJKDamageSources.jujutsuAttack(owner, this), AMOUNT * ownerCap.getGrade().getPower(owner) * 10.0F);
-                } else {
-                    target.heal(AMOUNT * ownerCap.getGrade().getPower(owner));
-                }
-
-                double width = target.getBbWidth();
-                double height = target.getBbHeight();
-                ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR, (float) width * 2.0F, 0.5F, false, 1);
-
-                for (int i = 0; i < 8; i++) {
-                    ownerCap.delayTickEvent(() -> {
-                        for (int j = 0; j < 8; j++) {
-                            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
-                            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            level.sendParticles(particle,
-                                    x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
-                        }
-                    }, i * 2);
+                    return;
                 }
             }
-        });
+            target.heal(AMOUNT * ownerCap.getGrade().getPower(owner));
+        }
     }
 
     @Override
@@ -105,7 +102,9 @@ public class ShootRCT extends Ability {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
-        return JJKAbilities.getType(owner) != JujutsuType.CURSE && super.isUnlocked(owner);
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() != JujutsuType.CURSE && super.isUnlocked(owner);
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
@@ -18,7 +19,6 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DivineDogs extends Summon<DivineDogEntity> {
     public DivineDogs() {
@@ -50,13 +50,10 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
-        AtomicBoolean result = new AtomicBoolean();
-
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get())));
-        return result.get();
+        return cap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override

@@ -27,8 +27,15 @@ public interface ISorcererData {
 
     boolean hasToggled(Ability ability);
 
+    @Nullable CursedTechnique getAdditional();
+    void setAdditional(CursedTechnique technique);
+
     @Nullable CursedTechnique getTechnique();
+    boolean hasTechnique(CursedTechnique technique);
     void setTechnique(@Nullable CursedTechnique technique);
+
+    CursedEnergyNature getNature();
+    void setNature(CursedEnergyNature nature);
 
     SorcererGrade getGrade();
     void setGrade(SorcererGrade grade);
@@ -69,6 +76,8 @@ public interface ISorcererData {
     void addEnergy(float amount);
     void setEnergy(float energy);
 
+    void addUsed(float amount);
+
     void onBlackFlash(LivingEntity owner);
     long getLastBlackFlashTime();
     boolean isInZone(LivingEntity owner);
@@ -76,11 +85,18 @@ public interface ISorcererData {
     void delayTickEvent(Runnable task, int delay);
     void scheduleTickEvent(Callable<Boolean> task, int duration);
 
-    void setCopied(@Nullable CursedTechnique technique);
-    @Nullable CursedTechnique getCopied();
+    void copy(@Nullable CursedTechnique technique);
+    Set<CursedTechnique> getCopied();
 
-    void setAdditional(@Nullable CursedTechnique technique);
-    @Nullable CursedTechnique getAdditional();
+    void setCurrentCopied(@Nullable CursedTechnique technique);
+    @Nullable CursedTechnique getCurrentCopied();
+
+    void absorb(@Nullable CursedTechnique technique);
+    void unabsorb(CursedTechnique technique);
+    Set<CursedTechnique> getAbsorbed();
+
+    void setCurrentAbsorbed(@Nullable CursedTechnique technique);
+    @Nullable CursedTechnique getCurrentAbsorbed();
 
     void channel(LivingEntity owner, @Nullable Ability ability);
     boolean isChanneling(Ability ability);
@@ -125,6 +141,7 @@ public interface ISorcererData {
 
     void addCurse(Registry<EntityType<?>> registry, EntityType<?> type);
     void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+    void removeAllCurses(Registry<EntityType<?>> registry, EntityType<?> type);
     Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 

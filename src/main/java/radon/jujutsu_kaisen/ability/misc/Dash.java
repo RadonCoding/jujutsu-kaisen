@@ -42,8 +42,10 @@ public class Dash extends Ability {
             double motionZ = distanceZ / distance * SPEED;
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
+            owner.hurtMarked = true;
         } else if (owner.isInWater() || owner.isOnGround()) {
             owner.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+            owner.hurtMarked = true;
         }
     }
 

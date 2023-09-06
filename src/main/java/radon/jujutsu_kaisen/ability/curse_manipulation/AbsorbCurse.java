@@ -86,7 +86,7 @@ public class AbsorbCurse extends Ability {
     public Status checkTriggerable(LivingEntity owner) {
         Entity target = this.getTarget(owner);
 
-        if (target == null) {
+        if (!canAbsorb(owner, target)) {
             return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
@@ -95,6 +95,11 @@ public class AbsorbCurse extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 100.0F;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 
     @Override

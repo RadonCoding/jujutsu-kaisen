@@ -37,7 +37,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class KuchisakeOnna extends CursedSpirit {
     public static final double RANGE = 16.0D;
@@ -115,18 +114,18 @@ public class KuchisakeOnna extends CursedSpirit {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        AtomicBoolean result = new AtomicBoolean();
-
         Entity source = pSource.getEntity();
 
         if (source != null) {
-            this.entityData.get(DATA_TARGET).ifPresent(identifier -> {
-                if (source.getUUID().equals(identifier)) {
-                    result.set(true);
+            Optional<UUID> identifier = this.entityData.get(DATA_TARGET);
+
+            if (identifier.isPresent()) {
+                if (source.getUUID().equals(identifier.get())) {
+                    return false;
                 }
-            });
+            }
         }
-        return !result.get() && super.hurt(pSource, pAmount);
+        return super.hurt(pSource, pAmount);
     }
 
     public boolean isOpen() {

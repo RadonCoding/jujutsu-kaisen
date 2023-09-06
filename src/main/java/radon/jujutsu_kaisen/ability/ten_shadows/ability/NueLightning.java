@@ -14,15 +14,16 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
-import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     private static final double RANGE = 3.0D;
@@ -36,14 +37,11 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     @Override
     public boolean isUnlocked(LivingEntity owner) {
         if (!super.isUnlocked(owner)) return false;
-
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return !cap.hasToggled(JJKAbilities.NUE.get()) &&
                         cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
-                        cap.getMode() == TenShadowsMode.ABILITY));
-        return result.get();
+                        cap.getMode() == TenShadowsMode.ABILITY;
     }
 
     @Override
@@ -72,17 +70,15 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     public Status checkTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
-        if (target == null) {
-            return Status.FAILURE;
-        }
+        if (target == null) return Status.FAILURE;
 
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, NueEntity.class)));
+            if (cap.hasSummonOfClass(level, NueEntity.class)) return Status.FAILURE;
         }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+        return super.checkStatus(owner);
     }
 
     @Override
@@ -112,7 +108,8 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
             double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
             double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
             double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-            ((ServerLevel) owner.level).sendParticles(JJKParticles.LIGHTNING.get(), target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
+            ((ServerLevel) owner.level).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.VIOLET_LIGHTNING_COLOR, 0.5F),
+                    target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
                     0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
     }

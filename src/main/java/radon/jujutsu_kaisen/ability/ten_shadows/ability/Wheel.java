@@ -8,6 +8,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -15,7 +16,6 @@ import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Wheel extends Summon<WheelEntity> {
     public Wheel() {
@@ -27,25 +27,23 @@ public class Wheel extends Summon<WheelEntity> {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;
 
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap ->
-                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap ->
-                        result.set(targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique()))));
-        return result.get();
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData targetCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique());
     }
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
         if (!super.isUnlocked(owner)) return false;
-
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(!JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
-                        cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
-                        cap.getMode() == TenShadowsMode.ABILITY));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
+                cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                cap.getMode() == TenShadowsMode.ABILITY;
     }
 
     @Override
@@ -65,24 +63,24 @@ public class Wheel extends Summon<WheelEntity> {
 
     @Override
     public Status checkStatus(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, MahoragaEntity.class)));
+            if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
         }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+        return super.checkStatus(owner);
     }
 
     @Override
     public Status checkToggleable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.hasSummonOfClass(level, MahoragaEntity.class)));
+            if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
         }
-        return result.get() ? Status.FAILURE : super.checkToggleable(owner);
+        return super.checkToggleable(owner);
     }
 
     @Override

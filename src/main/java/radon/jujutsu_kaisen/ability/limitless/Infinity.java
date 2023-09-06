@@ -30,19 +30,16 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
+import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled {
     @Override
@@ -151,19 +148,14 @@ public class Infinity extends Ability implements Ability.IToggled {
                     iter.remove();
                     this.setDirty();
                 } else {
-                    AtomicBoolean result = new AtomicBoolean();
+                    boolean result = false;
 
-                    if (source == null) {
-                        result.set(true);
-                    } else {
-                        source.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            if (!cap.hasToggled(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F) {
-                                result.set(true);
-                            }
-                        });
+                    if (source != null && source.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                        ISorcererData cap = source.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        result = !cap.hasToggled(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F;
                     }
 
-                    if (result.get()) {
+                    if (source == null || result) {
                         target.setNoGravity(nbt.isNoGravity());
                         iter.remove();
                         this.setDirty();
@@ -222,20 +214,16 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     private static boolean canBlock(LivingEntity target, Projectile projectile) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (projectile instanceof ThrownChainItemProjectile chain) {
-                if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return;
-            }
-            for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level))) {
-                if (projectile.getOwner() == domain.getOwner()) return;
-            }
-            if (projectile instanceof ScissorEntity) return;
-
-            result.set(true);
-        });
-        return result.get();
+        if (projectile instanceof ThrownChainItemProjectile chain) {
+            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
+        }
+        for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level))) {
+            if (projectile.getOwner() == domain.getOwner()) return false;
+        }
+        return !(projectile instanceof ScissorEntity);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -260,7 +248,10 @@ public class Infinity extends Ability implements Ability.IToggled {
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                     FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
-            if (JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) {
+            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 Projectile projectile = event.getProjectile();
 
                 if (!Infinity.canBlock(target, projectile)) return;
@@ -279,7 +270,10 @@ public class Infinity extends Ability implements Ability.IToggled {
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                     FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
 
-            if (JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) {
+            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 for (Projectile projectile : target.level.getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
                     if (!Infinity.canBlock(target, projectile)) continue;
                     data.add(target, projectile);
@@ -308,36 +302,33 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
 
-                        AtomicBoolean result = new AtomicBoolean();
-
                         for (KuchisakeOnna curse : target.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(target.position(),
                                 KuchisakeOnna.RANGE, KuchisakeOnna.RANGE, KuchisakeOnna.RANGE))) {
-                            if (result.get()) break;
-
-                            curse.getCurrent().ifPresent(identifier ->
-                                    result.set(identifier.equals(target.getUUID())));
-                        }
-
-                        if (result.get()) {
-                            return;
+                            Optional<UUID> identifier = curse.getCurrent();
+                            if (identifier.isEmpty()) continue;
+                            if (identifier.get().equals(target.getUUID())) return;
                         }
                     }
 
                     if (source.getEntity() instanceof LivingEntity living) {
-                        if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null &&
-                                src.getAbility().getClassification() == Classification.MELEE && JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            return;
-                        }
+                        if (source.getDirectEntity() instanceof ScissorEntity) return;
 
-                        boolean melee = source.getDirectEntity() == source.getEntity() &&
-                                (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+                        if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                            ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        if (melee) {
-                            if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null &&
+                                    src.getAbility().getClassification() == Classification.MELEE && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                                 return;
                             }
-                        } else if (source.getDirectEntity() instanceof ScissorEntity) {
-                            return;
+
+                            boolean melee = source.getDirectEntity() == source.getEntity() &&
+                                    (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+
+                            if (melee) {
+                                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                                    return;
+                                }
+                            }
                         }
                     }
                     target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);

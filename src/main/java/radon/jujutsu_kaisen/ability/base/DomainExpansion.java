@@ -11,30 +11,31 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class DomainExpansion extends Ability implements Ability.IToggled {
     public static final int BURNOUT = 30 * 20;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        AtomicBoolean result = new AtomicBoolean();
+        boolean result = false;
 
-        if (JJKAbilities.hasToggled(owner, this)) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasToggled(this)) {
             if (target != null) {
-                result.set(true);
+                result = true;
 
                 if (this instanceof IOpenDomain) {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
-                        result.set(domain != null && domain.isInsideBarrier(target.blockPosition()));
-                    });
+                    DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
+                    result = domain != null && domain.isInsideBarrier(target.blockPosition());
                 }
             }
         } else {
@@ -54,39 +55,34 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 }
             }
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                result.set(cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
-                        owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
-                        target.getHealth() > owner.getHealth() * 2);
+            result = owner.isOnGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
+                    owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
+                            target.getHealth() > owner.getHealth() * 2;
 
-                for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
-                    result.set(true);
+            for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
+                result = true;
+            }
+
+            Status status = this.getStatus(owner, true, false, false, false);
+
+            if (result && (status == Status.SIMPLE_DOMAIN || status == Status.DOMAIN_AMPLIFICATION)) {
+                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                    cap.toggle(owner, JJKAbilities.SIMPLE_DOMAIN.get());
                 }
-
-                Status status = this.getStatus(owner, true, false, false, false);
-
-                if (result.get() && (status == Status.SIMPLE_DOMAIN || status == Status.DOMAIN_AMPLIFICATION)) {
-                    if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                        cap.toggle(owner, JJKAbilities.SIMPLE_DOMAIN.get());
-                    }
-                }
-            });
+            }
         }
-        return result.get();
+        return result;
     }
 
     @Override
     public Status checkStatus(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.getDomain(level) == null) {
-                    result.set(true);
-                }
-            });
+            if (cap.getDomain(level) == null) return Status.FAILURE;
         }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+        return  super.checkStatus(owner);
     }
 
     @Override

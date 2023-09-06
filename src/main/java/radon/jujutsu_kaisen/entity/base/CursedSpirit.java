@@ -125,7 +125,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.8D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
@@ -157,7 +157,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     @Override
     public int getMaxHeadYRot() {
-        return 180;
+        return 90;
     }
 
     @Override

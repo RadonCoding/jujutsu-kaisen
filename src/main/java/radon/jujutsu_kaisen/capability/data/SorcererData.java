@@ -46,9 +46,16 @@ public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private @Nullable CursedTechnique technique;
+
     private @Nullable CursedTechnique additional;
-    private @Nullable CursedTechnique copied;
-    private int copiedTimer;
+
+    private final Set<CursedTechnique> copied;
+    private @Nullable CursedTechnique currentCopied;
+
+    private final Set<CursedTechnique> absorbed;
+    private @Nullable CursedTechnique currentAbsorbed;
+
+    private CursedEnergyNature nature;
 
     private float experience;
     private SorcererGrade grade;
@@ -98,6 +105,11 @@ public class SorcererData implements ISorcererData {
     public SorcererData() {
         this.type = JujutsuType.SORCERER;
 
+        this.copied = new LinkedHashSet<>();
+        this.absorbed = new LinkedHashSet<>();
+
+        this.nature = CursedEnergyNature.BASIC;
+
         this.grade = SorcererGrade.GRADE_4;
         this.mode = TenShadowsMode.SUMMON;
 
@@ -116,7 +128,7 @@ public class SorcererData implements ISorcererData {
         this.adapted = new HashSet<>();
         this.adapting = new HashMap<>();
 
-        this.curses = new HashMap<>();
+        this.curses = new LinkedHashMap<>();
 
         this.shadowInventory = new ArrayList<>();
     }
@@ -288,19 +300,6 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-
-    private void updateCopied(LivingEntity owner) {
-        if (this.copied != null) {
-            if (++this.copiedTimer == 5 * 60 * 20) {
-                if (owner.level.isClientSide) {
-                    owner.sendSystemMessage(Component.translatable(String.format("chat.%s.copy_expire", JujutsuKaisen.MOD_ID)));
-                }
-                this.copied = null;
-                this.copiedTimer = 0;
-            }
-        }
-    }
-
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
@@ -331,7 +330,6 @@ public class SorcererData implements ISorcererData {
         this.updateDomain(owner);
         this.updateDomains(owner);
         this.updateSummons(owner);
-        this.updateCopied(owner);
 
         this.updateCooldowns();
         this.updateDurations(owner);
@@ -407,8 +405,23 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public boolean hasTechnique(CursedTechnique technique) {
+        return this.technique == technique || this.additional == technique;
+    }
+
+    @Override
     public void setTechnique(@Nullable CursedTechnique technique) {
         this.technique = technique;
+    }
+
+    @Override
+    public CursedEnergyNature getNature() {
+        return this.nature;
+    }
+
+    @Override
+    public void setNature(CursedEnergyNature nature) {
+        this.nature = nature;
     }
 
     @Override
@@ -603,7 +616,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void useEnergy(float amount) {
         this.energy -= amount;
-        this.used += amount;
     }
 
     @Override
@@ -614,6 +626,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setEnergy(float energy) {
         this.energy = energy;
+    }
+
+    @Override
+    public void addUsed(float amount) {
+        this.used += amount;
     }
 
     @Override
@@ -646,24 +663,55 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setCopied(@Nullable CursedTechnique technique) {
-        this.copied = technique;
-        this.copiedTimer = 0;
+    public void copy(@Nullable CursedTechnique technique) {
+        this.copied.add(technique);
     }
 
     @Override
-    public @Nullable CursedTechnique getCopied() {
+    public Set<CursedTechnique> getCopied() {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.RIKA)) {
+            return Set.of();
+        }
         return this.copied;
     }
 
     @Override
-    public void setAdditional(@Nullable CursedTechnique technique) {
-        this.additional = technique;
+    public void setCurrentCopied(@Nullable CursedTechnique technique) {
+        this.currentCopied = this.currentCopied == technique ? null : technique;
     }
 
     @Override
-    public @Nullable CursedTechnique getAdditional() {
-        return this.additional;
+    public @Nullable CursedTechnique getCurrentCopied() {
+        return this.currentCopied;
+    }
+
+    @Override
+    public void absorb(@Nullable CursedTechnique technique) {
+        this.absorbed.add(technique);
+    }
+
+    @Override
+    public void unabsorb(CursedTechnique technique) {
+        this.absorbed.remove(technique);
+        this.currentAbsorbed = null;
+    }
+
+    @Override
+    public Set<CursedTechnique> getAbsorbed() {
+        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+            return Set.of();
+        }
+        return this.absorbed;
+    }
+
+    @Override
+    public void setCurrentAbsorbed(@Nullable CursedTechnique technique) {
+        this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
+    }
+
+    @Override
+    public @Nullable CursedTechnique getCurrentAbsorbed() {
+        return this.currentAbsorbed;
     }
 
     @Override
@@ -933,8 +981,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void removeAllCurses(Registry<EntityType<?>> registry, EntityType<?> type) {
+        ResourceLocation key = registry.getKey(type);
+        this.curses.remove(key);
+    }
+
+    @Override
     public Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry) {
         Map<EntityType<?>, Integer> curses = new HashMap<>();
+
+        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return curses;
 
         for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
             curses.put(registry.get(entry.getKey()), entry.getValue());
@@ -962,6 +1018,14 @@ public class SorcererData implements ISorcererData {
 
             while (this.technique == null || this.technique == CursedTechnique.CURSED_SPEECH || this.technique == CursedTechnique.DISASTER_TIDES) {
                 this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+            }
+
+            if (HelperMethods.RANDOM.nextInt(5) == 0) {
+                this.nature = HelperMethods.randomEnum(CursedEnergyNature.class);
+
+                if (this.nature != CursedEnergyNature.BASIC) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
+                }
             }
             this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
@@ -1008,6 +1072,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public @Nullable CursedTechnique getAdditional() {
+        return this.additional;
+    }
+
+    @Override
+    public void setAdditional(CursedTechnique technique) {
+        this.additional = technique;
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
@@ -1015,13 +1089,16 @@ public class SorcererData implements ISorcererData {
         if (this.technique != null) {
             nbt.putInt("technique", this.technique.ordinal());
         }
-        if (this.copied != null) {
-            nbt.putInt("copied", this.copied.ordinal());
-        }
         if (this.additional != null) {
             nbt.putInt("additional", this.additional.ordinal());
         }
-        nbt.putInt("copied_timer", this.copiedTimer);
+        if (this.currentCopied != null) {
+            nbt.putInt("current_copied", this.currentCopied.ordinal());
+        }
+        if (this.currentAbsorbed != null) {
+            nbt.putInt("current_absorbed", this.currentAbsorbed.ordinal());
+        }
+        nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
@@ -1039,6 +1116,20 @@ public class SorcererData implements ISorcererData {
         if (this.channeled != null) {
             nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
         }
+
+        ListTag copiedTag = new ListTag();
+
+        for (CursedTechnique technique : this.copied) {
+            copiedTag.add(IntTag.valueOf(technique.ordinal()));
+        }
+        nbt.put("copied", copiedTag);
+
+        ListTag absorbedTag = new ListTag();
+
+        for (CursedTechnique technique : this.absorbed) {
+            absorbedTag.add(IntTag.valueOf(technique.ordinal()));
+        }
+        nbt.put("absorbed", absorbedTag);
 
         ListTag toggledTag = new ListTag();
 
@@ -1148,13 +1239,16 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("technique")) {
             this.technique = CursedTechnique.values()[nbt.getInt("technique")];
         }
-        if (nbt.contains("copied")) {
-            this.copied = CursedTechnique.values()[nbt.getInt("copied")];
-        }
         if (nbt.contains("additional")) {
             this.additional = CursedTechnique.values()[nbt.getInt("additional")];
         }
-        this.copiedTimer = nbt.getInt("copied_timer");
+        if (nbt.contains("current_copied")) {
+            this.currentCopied = CursedTechnique.values()[nbt.getInt("current_copied")];
+        }
+        if (nbt.contains("current_absorbed")) {
+            this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
+        }
+        this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
@@ -1171,6 +1265,18 @@ public class SorcererData implements ISorcererData {
 
         if (nbt.contains("channeled")) {
             this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));
+        }
+
+        this.copied.clear();
+
+        for (Tag tag : nbt.getList("copied", Tag.TAG_INT)) {
+            this.copied.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
+        }
+
+        this.absorbed.clear();
+
+        for (Tag tag : nbt.getList("absorbed", Tag.TAG_INT)) {
+            this.absorbed.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
         }
 
         this.toggled.clear();

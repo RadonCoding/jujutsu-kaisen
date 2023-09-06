@@ -57,12 +57,13 @@ public class CursedSpiritOrbItem extends Item {
     }
 
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
+        ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
+
         if (JJKAbilities.getTechnique(pEntityLiving) != CursedTechnique.CURSE_MANIPULATION) {
             pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
-            return pStack;
+            return stack;
         }
 
-        ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
         Registry<EntityType<?>> registry = pLevel.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
         pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->

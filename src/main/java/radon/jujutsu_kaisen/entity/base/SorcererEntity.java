@@ -48,7 +48,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     @Override
     public int getMaxHeadYRot() {
-        return 180;
+        return 90;
     }
 
     @Override

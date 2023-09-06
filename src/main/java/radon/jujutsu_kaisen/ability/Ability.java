@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -13,9 +14,8 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public abstract class Ability {
     public enum ActivationType {
@@ -44,7 +44,8 @@ public abstract class Ability {
         PURE_LOVE,
         LIMITLESS,
         WATER,
-        ELECTRICITY
+        ELECTRICITY,
+        RAW_CURSED_ENERGY
     }
 
     public Classification getClassification() {
@@ -82,65 +83,61 @@ public abstract class Ability {
     }
 
     public boolean isUnlocked(LivingEntity owner) {
-        if (this.isTechnique() && JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
 
         for (Trait trait : this.getRequirements()) {
-            if (!JJKAbilities.hasTrait(owner, trait)) return false;
+            if (!cap.hasTrait(trait)) return false;
         }
         return true;
     }
 
     public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        AtomicReference<Status> result = new AtomicReference<>(Status.SUCCESS);
+        if (!JJKAbilities.getAbilities(owner).contains(this)) {
+            return Status.UNUSUABLE;
+        }
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!JJKAbilities.getAbilities(owner).contains(this)) {
-                result.set(Status.UNUSUABLE);
-                return;
+        if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+            if (this.isTechnique() && cap.hasBurnout()) {
+                return Status.BURNOUT;
             }
 
-            if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-                if (this.isTechnique() && cap.hasBurnout()) {
-                    result.set(Status.BURNOUT);
-                    return;
-                }
+            if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasTrait(Trait.STRONGEST))) &&
+                    cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                return Status.DOMAIN_AMPLIFICATION;
+            }
 
-                if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasTrait(Trait.STRONGEST))) &&
-                        cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    result.set(Status.DOMAIN_AMPLIFICATION);
-                    return;
+            if (this.getRealCooldown(owner) > 0) {
+                if (!cap.isCooldownDone(this) && !cap.hasToggled(this) && !cap.isChanneling(this)) {
+                    return Status.COOLDOWN;
                 }
+            }
 
+            if (cost) {
+                if (!this.checkCost(owner, charge)) {
+                    return Status.ENERGY;
+                }
+            }
+
+            if (cooldown) {
                 if (this.getRealCooldown(owner) > 0) {
-                    if (!cap.isCooldownDone(this) && !cap.hasToggled(this) && !cap.isChanneling(this)) {
-                        result.set(Status.COOLDOWN);
-                        return;
-                    }
-                }
-
-                if (cost) {
-                    if (!this.checkCost(owner, charge)) {
-                        result.set(Status.ENERGY);
-                        return;
-                    }
-                }
-
-                if (cooldown) {
-                    if (this.getRealCooldown(owner) > 0) {
-                        cap.addCooldown(owner, this);
-                    }
+                    cap.addCooldown(owner, this);
                 }
             }
+        }
 
-            if (duration) {
-                if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
-                    cap.addDuration(owner, this);
-                }
+        if (duration) {
+            if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
+                cap.addDuration(owner, this);
             }
-        });
-        return result.get();
+        }
+        return Status.SUCCESS;
     }
 
     public Status checkTriggerable(LivingEntity owner) {
@@ -160,23 +157,21 @@ public abstract class Ability {
     }
 
     public boolean checkCost(LivingEntity owner, boolean use) {
-        AtomicBoolean result = new AtomicBoolean(true);
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-                float cost = this.getRealCost(owner);
+        if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+            float cost = this.getRealCost(owner);
 
-                if (cap.getEnergy() < cost) {
-                    result.set(false);
-                    return;
-                }
-
-                if (use) {
-                    cap.useEnergy(cost);
-                }
+            if (cap.getEnergy() < cost) {
+                return false;
             }
-        });
-        return result.get();
+
+            if (use) {
+                cap.useEnergy(cost);
+            }
+        }
+        return true;
     }
 
     public Component getName() {
@@ -187,14 +182,15 @@ public abstract class Ability {
     public abstract float getCost(LivingEntity owner);
 
     public float getRealCost(LivingEntity owner) {
-        AtomicReference<Float> cost = new AtomicReference<>(this.getCost(owner));
+        float cost = this.getCost(owner);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.SIX_EYES)) {
-                cost.set(cost.get() / 2);
-            }
-        });
-        return cost.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return cost;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasTrait(Trait.SIX_EYES)) {
+            cost *= 0.5F;
+        }
+        return cost;
     }
 
     public interface IDomainAttack {
@@ -208,15 +204,15 @@ public abstract class Ability {
     public interface IDurationable {
         default int getDuration() { return 0; }
         default int getRealDuration(LivingEntity owner) {
-            AtomicReference<Integer> result = new AtomicReference<>(0);
-
             int duration = this.getDuration();
 
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return duration;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             if (duration > 0) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        result.set((int) (duration * cap.getGrade().getPower(owner))));
+                duration = (int) (duration * cap.getGrade().getPower(owner));
             }
-            return result.get();
+            return duration;
         }
     }
 

@@ -69,8 +69,10 @@ public class JogoEntity extends CursedSpirit {
     }
 
     @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
+    public void aiStep() {
+        super.aiStep();
+
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 
     private PlayState walkPredicate(AnimationState<JogoEntity> animationState) {

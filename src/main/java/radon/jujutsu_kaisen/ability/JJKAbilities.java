@@ -7,7 +7,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
@@ -16,9 +15,7 @@ import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.curse_manipulation.AbsorbCurse;
-import radon.jujutsu_kaisen.ability.curse_manipulation.ReleaseCurse;
-import radon.jujutsu_kaisen.ability.curse_manipulation.SummonCurse;
+import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.DisasterTides;
 import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
@@ -35,13 +32,14 @@ import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -58,6 +56,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MAXIMUM_RED = ABILITIES.register("maximum_red", MaximumRed::new);
     public static RegistryObject<Ability> BLUE = ABILITIES.register("blue", Blue::new);
     public static RegistryObject<Ability> MAXIMUM_BLUE = ABILITIES.register("maximum_blue", MaximumBlue::new);
+    public static RegistryObject<Ability> BLUE_FISTS = ABILITIES.register("blue_fists", BlueFists::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
     public static RegistryObject<Ability> MAXIMUM_HOLLOW_PURPLE = ABILITIES.register("maximum_hollow_purple", MaximumHollowPurple::new);
     public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);
@@ -94,6 +93,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
+
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
@@ -127,8 +128,11 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
 
     public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
-    public static RegistryObject<Ability> SUMMON_CURSE = ABILITIES.register("summon_curse", SummonCurse::new);
+    public static RegistryObject<Ability> ABSORB_TECHNIQUE = ABILITIES.register("absorb_technique", AbsorbTechnique::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
+    public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
+    public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
+    public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
@@ -153,6 +157,14 @@ public class JJKAbilities {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                 result.set(cap.getTechnique()));
         return result.get();
+    }
+
+    @Nullable
+    public static CursedTechnique getTechnique(Ability ability) {
+        for (CursedTechnique technique : CursedTechnique.values()) {
+            if (List.of(technique.getAbilities()).contains(ability)) return technique;
+        }
+        return null;
     }
 
     public static SorcererGrade getGrade(LivingEntity owner) {
@@ -197,14 +209,6 @@ public class JJKAbilities {
         return result.get();
     }
 
-    public static JujutsuType getType(LivingEntity owner) {
-        AtomicReference<JujutsuType> result = new AtomicReference<>();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getType()));
-        return result.get();
-    }
-
     public static List<Ability> getAbilities(LivingEntity owner) {
         Set<Ability> abilities = new LinkedHashSet<>();
 
@@ -212,74 +216,48 @@ public class JJKAbilities {
             abilities.addAll(sorcerer.getCustom());
         }
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            abilities.add(JJKAbilities.AIR_PUNCH.get());
-            abilities.add(JJKAbilities.BARRAGE.get());
-            abilities.add(JJKAbilities.DASH.get());
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                abilities.add(JJKAbilities.SMASH.get());
-                abilities.add(JJKAbilities.WATER_WALKING.get());
+        abilities.add(JJKAbilities.AIR_PUNCH.get());
+        abilities.add(JJKAbilities.BARRAGE.get());
+        abilities.add(JJKAbilities.DASH.get());
 
-                abilities.add(JJKAbilities.HEAL.get());
+        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            abilities.add(JJKAbilities.SMASH.get());
+            abilities.add(JJKAbilities.WATER_WALKING.get());
+            abilities.add(JJKAbilities.CURSED_ENERGY_FLOW.get());
 
-                abilities.add(JJKAbilities.RCT.get());
+            abilities.add(JJKAbilities.HEAL.get());
+            abilities.add(JJKAbilities.RCT.get());
 
-                abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
-                abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
+            abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
 
-                /*if (cap.getType() == JujutsuType.CURSE) {
-                    abilities.add(JJKAbilities.HEAL.get());
-                } else if (cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
-                    abilities.add(JJKAbilities.RCT.get());
+            CursedTechnique technique = cap.getTechnique();
 
-                    if (cap.hasTrait(Trait.STRONGEST)) {
-                        abilities.add(JJKAbilities.SHOOT_RCT.get());
-                    }
-                }*/
+            if (technique != null) {
+                Ability domain = technique.getDomain();
 
-                /*if (cap.hasTrait(Trait.SIMPLE_DOMAIN)) abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
-                if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());*/
-
-                CursedTechnique technique = cap.getTechnique();
-
-                if (technique != null) {
-                    //if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
-                    Ability domain = technique.getDomain();
-
-                    if (domain != null) {
-                        abilities.add(domain);
-                    }
-                    //}
-                    abilities.addAll(Arrays.asList(technique.getAbilities()));
+                if (domain != null) {
+                    abilities.add(domain);
                 }
-
-                CursedTechnique additional = cap.getAdditional();
-
-                if (additional != null) {
-                    /*if (cap.hasTrait(Trait.DOMAIN_EXPANSION)) {
-                        Ability domain = additional.getDomain();
-
-                        if (domain != null) {
-                            abilities.add(domain);
-                        }
-                    }*/
-                    abilities.addAll(Arrays.asList(additional.getAbilities()));
-                }
-
-                CursedTechnique copied = cap.getCopied();
-
-                if (copied != null) {
-                    Ability domain = copied.getDomain();
-
-                    if (domain != null) {
-                        abilities.add(copied.getDomain());
-                    }
-                    abilities.addAll(Arrays.asList(copied.getAbilities()));
-                }
+                abilities.addAll(Arrays.asList(technique.getAbilities()));
             }
-            abilities.removeIf(ability -> !ability.isUnlocked(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
-        });
+
+            CursedTechnique additional = cap.getAdditional();
+            if (additional != null) abilities.addAll(Arrays.asList(additional.getAbilities()));
+
+            if (cap.hasToggled(JJKAbilities.RIKA.get())) {
+                CursedTechnique copied = cap.getCurrentCopied();
+                if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
+            }
+
+            CursedTechnique absorbed = cap.getCurrentAbsorbed();
+            if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));
+        }
+        abilities.removeIf(ability -> !ability.isUnlocked(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
+
         return new ArrayList<>(abilities);
     }
 }

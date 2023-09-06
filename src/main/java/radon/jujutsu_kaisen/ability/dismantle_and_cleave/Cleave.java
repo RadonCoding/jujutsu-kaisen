@@ -18,13 +18,14 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
@@ -58,11 +59,9 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     private static float getMaxDamage(LivingEntity owner) {
-        AtomicReference<Float> result = new AtomicReference<>();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(Math.min(MAX_DAMAGE, (cap.getGrade().ordinal() + 1) * 10.0F)));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return 0.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return Math.min(MAX_DAMAGE, (cap.getGrade().ordinal() + 1) * 10.0F);
     }
 
     private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {

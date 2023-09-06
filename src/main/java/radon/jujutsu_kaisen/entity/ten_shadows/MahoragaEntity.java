@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -38,7 +39,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MahoragaEntity extends TenShadowsSummon {
     public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
@@ -162,14 +162,12 @@ public class MahoragaEntity extends TenShadowsSummon {
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            AtomicBoolean result = new AtomicBoolean();
+            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return d0;
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getType() == JujutsuType.CURSE));
-
-            if (result.get() && this.entityData.get(DATA_POSITIVE_SWORD)) {
+            if (cap.getType() == JujutsuType.CURSE && this.entityData.get(DATA_POSITIVE_SWORD)) {
                 d0 *= 3.0D;
-            } else if (!result.get() && !this.entityData.get(DATA_POSITIVE_SWORD)) {
+            } else if (cap.getType() != JujutsuType.CURSE && !this.entityData.get(DATA_POSITIVE_SWORD)) {
                 d0 *= 1.5D;
             }
         }
@@ -177,18 +175,22 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
+    public void aiStep() {
+        super.aiStep();
+
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
+    }
+
+    @Override
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
         if (target != null) {
-            AtomicBoolean result = new AtomicBoolean();
-
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getType() == JujutsuType.CURSE));
-            this.entityData.set(DATA_POSITIVE_SWORD, result.get());
+            if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                this.entityData.set(DATA_POSITIVE_SWORD, cap.getType() == JujutsuType.CURSE);
+            }
         }
-
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 1.0E-7D && this.moveControl.getSpeedModifier() > 1.0D);
 
         int slash = this.entityData.get(DATA_SLASH);
 
@@ -200,6 +202,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
                     target.setDeltaMovement(this.getLookAngle().scale(SWING_LAUNCH));
+                    target.hurtMarked = true;
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(this.getLookAngle());
                     this.level.explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);

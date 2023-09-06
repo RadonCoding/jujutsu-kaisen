@@ -15,7 +15,8 @@ public class JJKOverlays {
     public static Supplier<IForgeRegistry<Overlay>> OVERLAY_REGISTRY =
             OVERLAYS.makeRegistry(RegistryBuilder::new);
 
-    public static RegistryObject<Overlay> SIX_EYES = OVERLAYS.register("six_eyes", SixEyes::new);
+    public static RegistryObject<Overlay> SIX_EYES = OVERLAYS.register("six_eyes", SixEyesOverlay::new);
+    public static RegistryObject<Overlay> BLUE_FISTS = OVERLAYS.register("blue_fists", BlueFistsOverlay::new);
 
     public static ResourceLocation getKey(Overlay overlay) {
         return OVERLAY_REGISTRY.get().getKey(overlay);

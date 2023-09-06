@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -15,7 +16,6 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Summon<T extends Entity> extends Ability implements Ability.IToggled {
     private final Class<T> clazz;
@@ -47,16 +47,16 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (EntityType<?> type : this.getTypes()) {
-                if (result.get()) break;
+        boolean result = false;
 
-                result.set(cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type));
-            }
-        });
-        return result.get();
+        for (EntityType<?> type : this.getTypes()) {
+            if (result) break;
+            result = cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
+        }
+        return false;
     }
 
     public boolean isDead(LivingEntity owner) {
@@ -71,14 +71,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (!super.isUnlocked(owner)) return false;
 
         if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
-            AtomicBoolean result = new AtomicBoolean();
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getMode() == TenShadowsMode.SUMMON));
-
-            if (!result.get()) {
-                return false;
-            }
+            if (cap.getMode() != TenShadowsMode.SUMMON) return false;
 
             for (Ability ability : JJKAbilities.getToggled(owner)) {
                 if (!(ability instanceof Summon<?> summon)) continue;
@@ -103,12 +99,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!this.canDie()) return false;
-
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.isDead(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type)));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isDead(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
     }
 
 
@@ -134,30 +127,28 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasSummonOfClass(level, this.clazz)) {
-                    result.set(true);
-                }
-            });
+            if (cap.hasSummonOfClass(level, this.clazz)) {
+                return Status.FAILURE;
+            }
         }
-        return result.get() ? Status.FAILURE : super.checkTriggerable(owner);
+        return super.checkTriggerable(owner);
     }
 
     @Override
     public Status checkStatus(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.hasSummonOfClass(level, this.clazz)) {
-                    result.set(true);
-                }
-            });
+            if (!cap.hasSummonOfClass(level, this.clazz)) {
+                return Status.FAILURE;
+            }
         }
-        return result.get() ? Status.FAILURE : super.checkStatus(owner);
+        return super.checkStatus(owner);
     }
 
     protected abstract T summon(int index, LivingEntity owner);

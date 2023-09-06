@@ -13,12 +13,10 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -37,7 +35,7 @@ public class PureLoveBeam extends JujutsuProjectile {
     private static final double RADIUS = 20;
     private static final float DAMAGE = 10.0F;
     public static final int CHARGE = 20;
-    public static final int DURATION = 5 * 20;
+    public static final int DURATION = 3 * 20;
 
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
@@ -76,11 +74,6 @@ public class PureLoveBeam extends JujutsuProjectile {
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
         this.calculateEndPos();
-    }
-
-    @Override
-    public @NotNull PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE;
     }
 
     @Override

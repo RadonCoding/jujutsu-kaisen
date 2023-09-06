@@ -11,9 +11,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
+import radon.jujutsu_kaisen.client.layer.overlay.RenderableOverlay;
 import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.RequestOverlayDataC2SPacket;
 
 import java.util.Set;
 
@@ -37,7 +36,6 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
                 if (cap.isSynced(pLivingEntity.getUUID())) {
                     overlays = cap.getRemoteOverlays(pLivingEntity.getUUID());
                 } else {
-                    PacketHandler.sendToServer(new RequestOverlayDataC2SPacket(pLivingEntity.getUUID()));
                     return;
                 }
             } else {
@@ -45,8 +43,9 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
             }
 
             for (Overlay overlay : overlays) {
-                VertexConsumer consumer = pBuffer.getBuffer(overlay.getRenderType());
-                this.getParentModel().renderToBuffer(pMatrixStack, consumer, overlay.getPackedLight(), OverlayTexture.NO_OVERLAY,
+                if (!(overlay instanceof RenderableOverlay renderable)) continue;
+                VertexConsumer consumer = pBuffer.getBuffer(renderable.getRenderType());
+                this.getParentModel().renderToBuffer(pMatrixStack, consumer, renderable.getPackedLight(), OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
             }
         });

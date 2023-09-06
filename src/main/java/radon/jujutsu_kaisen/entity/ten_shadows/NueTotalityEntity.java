@@ -126,7 +126,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
+        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.25F : 1.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

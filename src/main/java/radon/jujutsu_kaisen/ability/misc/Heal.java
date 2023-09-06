@@ -5,14 +5,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public class Heal extends Ability implements Ability.IChannelened {
-    private static final float AMOUNT = 0.2F;
+    private static final float AMOUNT = 0.3F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -32,14 +32,7 @@ public class Heal extends Ability implements Ability.IChannelened {
 
     @Override
     public float getCost(LivingEntity owner) {
-        AtomicReference<Float> result = new AtomicReference<>(0.0F);
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (owner.getHealth() < owner.getMaxHealth()) {
-                result.set(2.5F);
-            }
-        });
-        return result.get();
+        return owner.getHealth() < owner.getMaxHealth() ? 2.5F : 0.0F;
     }
 
     @Override
@@ -49,7 +42,9 @@ public class Heal extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
-        return JJKAbilities.getType(owner) == JujutsuType.CURSE && super.isUnlocked(owner);
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE && super.isUnlocked(owner);
     }
 
     @Override

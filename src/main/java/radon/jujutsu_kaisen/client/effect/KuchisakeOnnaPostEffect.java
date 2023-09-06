@@ -7,7 +7,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.effect.base.PostEffect;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Optional;
+import java.util.UUID;
+
 
 public class KuchisakeOnnaPostEffect extends PostEffect {
     private static final ResourceLocation EFFECT = new ResourceLocation(JujutsuKaisen.MOD_ID, "shaders/post/kuchisake_onna.json");
@@ -19,15 +21,12 @@ public class KuchisakeOnnaPostEffect extends PostEffect {
 
     @Override
     public boolean shouldRender(LocalPlayer player) {
-        AtomicBoolean result = new AtomicBoolean();
-
         for (KuchisakeOnna curse : player.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(player.position(),
                 64.0D, 64.0D, 64.0D))) {
-            if (result.get()) break;
-
-            curse.getCurrent().ifPresent(identifier ->
-                    result.set(identifier.equals(player.getUUID())));
+            Optional<UUID> identifier = curse.getCurrent();
+            if (identifier.isEmpty()) continue;
+            if (identifier.get().equals(player.getUUID())) return true;
         }
-        return result.get();
+        return false;
     }
 }

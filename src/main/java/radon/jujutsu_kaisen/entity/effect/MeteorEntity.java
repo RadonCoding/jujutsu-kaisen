@@ -271,7 +271,8 @@ public class MeteorEntity extends Entity {
 
                         if (this.isOnGround()) {
                             if (this.explosionTime == 0) {
-                                ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getPower(owner)), EXPLOSION_DURATION, owner);
+                                ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getPower(owner)),
+                                        EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                                 this.explosionTime++;
                             }
                         }

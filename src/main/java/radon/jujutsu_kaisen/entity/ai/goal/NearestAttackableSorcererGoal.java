@@ -6,12 +6,12 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.phys.AABB;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class NearestAttackableSorcererGoal extends TargetGoal {
@@ -59,9 +59,9 @@ public class NearestAttackableSorcererGoal extends TargetGoal {
 
     protected void findTarget() {
         this.target = this.mob.level.getNearestEntity(this.mob.level.getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
-            AtomicBoolean result = new AtomicBoolean();
-            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> result.set(cap.getType() == JujutsuType.SORCERER));
-            return result.get();
+            if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return cap.getType() == JujutsuType.SORCERER;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }
 

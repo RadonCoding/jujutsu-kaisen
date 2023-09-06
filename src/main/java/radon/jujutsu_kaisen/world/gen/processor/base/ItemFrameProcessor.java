@@ -3,8 +3,8 @@ package radon.jujutsu_kaisen.world.gen.processor.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.Item;
@@ -21,7 +21,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
+
 
 public abstract class ItemFrameProcessor extends StructureProcessor {
     private static ItemStack getRandomCursedTool(LevelAccessor accessor) {
@@ -41,16 +42,16 @@ public abstract class ItemFrameProcessor extends StructureProcessor {
 
     @Override
     public StructureTemplate.@NotNull StructureEntityInfo processEntity(@NotNull LevelReader world, @NotNull BlockPos seedPos, StructureTemplate.@NotNull StructureEntityInfo rawEntityInfo, StructureTemplate.@NotNull StructureEntityInfo entityInfo, @NotNull StructurePlaceSettings placementSettings, @NotNull StructureTemplate template) {
-        AtomicReference<CompoundTag> result = new AtomicReference<>(entityInfo.nbt);
-
         ServerLevel level = ((ServerLevelAccessor) world).getLevel();
 
-        EntityType.create(entityInfo.nbt, level).ifPresent(entity -> {
-            if (entity instanceof ItemFrame frame) {
+        Optional<Entity> entity = EntityType.create(entityInfo.nbt, level);
+
+        if (entity.isPresent()) {
+            if (entity.get() instanceof ItemFrame frame) {
                 frame.setItem(getRandomCursedTool((LevelAccessor) world));
-                result.set(frame.serializeNBT());
+                return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
-        });
-        return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, result.get());
+        }
+        return super.processEntity(world, seedPos, rawEntityInfo, entityInfo, placementSettings, template);
     }
 }

@@ -14,18 +14,18 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.projectile.MaximumBlueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ import java.util.Optional;
 public class MaximumRedBeam extends JujutsuProjectile {
     public static final int FRAMES = 3;
     public static final float SCALE = 1.0F;
-    private static final double RADIUS = 10;
-    private static final float DAMAGE = 5.0F;
+    private static final double RADIUS = 20;
+    private static final float DAMAGE = 25.0F;
     public static final int CHARGE = 20;
     public static final int DURATION = 20;
 
@@ -50,7 +50,6 @@ public class MaximumRedBeam extends JujutsuProjectile {
     public @Nullable Direction side = null;
 
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(MaximumRedBeam.class, EntityDataSerializers.FLOAT);
-
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(MaximumRedBeam.class, EntityDataSerializers.FLOAT);
 
     public float prevYaw;
@@ -77,11 +76,6 @@ public class MaximumRedBeam extends JujutsuProjectile {
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
         this.calculateEndPos();
-    }
-
-    @Override
-    public @NotNull PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE;
     }
 
     @Override
@@ -130,9 +124,24 @@ public class MaximumRedBeam extends JujutsuProjectile {
 
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     for (Entity entity : entities) {
+                        if (this.getTime() - 1 > CHARGE && entity instanceof MaximumBlueProjectile projectile) {
+                            cap.addCooldown(owner, JJKAbilities.MAXIMUM_RED.get());
+                            cap.addCooldown(owner, JJKAbilities.MAXIMUM_BLUE.get());
+
+                            this.level.addFreshEntity(new HollowPurpleExplosion(owner, projectile.position()));
+
+                            projectile.discard();
+                            this.discard();
+                            return;
+                        }
+
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_RED.get()), DAMAGE * cap.getGrade().getPower(owner));
+                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_RED.get()),
+                                DAMAGE * cap.getGrade().getPower(owner))) {
+                            entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
+                            entity.hurtMarked = true;
+                        }
                     }
                 });
 
@@ -165,7 +174,7 @@ public class MaximumRedBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - DURATION / 2 > DURATION) {
+            if (this.getTime() >= DURATION) {
                 this.on = false;
             }
         }

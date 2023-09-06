@@ -6,8 +6,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -16,7 +16,6 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Rika extends Summon<RikaEntity> {
     private static final float AMOUNT = 100.0F;
@@ -28,16 +27,18 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (JJKAbilities.hasToggled(owner, this)) return target != null;
-        if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        AtomicBoolean result = new AtomicBoolean();
+        if (ownerCap.hasToggled(this)) return target != null;
 
         if (target != null) {
-            target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(cap.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal()));
+            if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
+            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return targetCap.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
         }
-        return result.get();
+        return false;
     }
 
     @Override
@@ -76,11 +77,9 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean isTamed(LivingEntity owner) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal();
     }
 
     @Override

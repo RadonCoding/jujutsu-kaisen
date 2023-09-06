@@ -15,8 +15,13 @@ public class JJKParticles {
 
     public static RegistryObject<SimpleParticleType> BLACK_FLASH = PARTICLES.register("black_flash", () ->
             new SimpleParticleType(true));
-    public static RegistryObject<SimpleParticleType> LIGHTNING = PARTICLES.register("lightning", () ->
-            new SimpleParticleType(true));
+    public static RegistryObject<ParticleType<LightningParticle.LightningParticleOptions>> LIGHTNING = PARTICLES.register("lightning", () ->
+            new ParticleType<>(false, LightningParticle.LightningParticleOptions.DESERIALIZER) {
+                @Override
+                public @NotNull Codec<LightningParticle.LightningParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<ParticleType<VaporParticle.VaporParticleOptions>> VAPOR = PARTICLES.register("vapor", () ->
             new ParticleType<>(false, VaporParticle.VaporParticleOptions.DESERIALIZER) {
                 @Override
