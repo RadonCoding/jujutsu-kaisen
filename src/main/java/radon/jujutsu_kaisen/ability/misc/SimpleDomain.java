@@ -29,7 +29,7 @@ import java.util.List;
 
 public class SimpleDomain extends Ability implements Ability.IToggled, Ability.IDurationable {
     private static final double X_STEP = 0.05D;
-    private static final double RADIUS = 3.0D;
+    public static final double RADIUS = 3.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

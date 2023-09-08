@@ -26,8 +26,15 @@ public class OverlayDataHandler {
     private static class OverlayDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
         public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "overlay_data");
 
-        private final IOverlayData cap = new OverlayData();
-        private final LazyOptional<IOverlayData> optional = LazyOptional.of(() -> this.cap);
+        private IOverlayData cap = null;
+        private final LazyOptional<IOverlayData> optional = LazyOptional.of(this::create);
+
+        private IOverlayData create() {
+            if (this.cap == null) {
+                this.cap = new OverlayData();
+            }
+            return this.cap;
+        }
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
@@ -36,12 +43,12 @@ public class OverlayDataHandler {
 
         @Override
         public CompoundTag serializeNBT() {
-            return this.cap.serializeNBT();
+            return this.create().serializeNBT();
         }
 
         @Override
         public void deserializeNBT(CompoundTag nbt) {
-            this.cap.deserializeLocalNBT(nbt);
+            this.create().deserializeLocalNBT(nbt);
         }
     }
 }

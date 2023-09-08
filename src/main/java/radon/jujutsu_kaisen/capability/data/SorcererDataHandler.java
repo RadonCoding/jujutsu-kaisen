@@ -26,8 +26,15 @@ public class SorcererDataHandler {
     private static class SorcererDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
         public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_data");
 
-        private final ISorcererData cap = new SorcererData();
-        private final LazyOptional<ISorcererData> optional = LazyOptional.of(() -> this.cap);
+        private ISorcererData cap = null;
+        private final LazyOptional<ISorcererData> optional = LazyOptional.of(this::create);
+
+        private ISorcererData create() {
+            if (this.cap == null) {
+                this.cap = new SorcererData();
+            }
+            return this.cap;
+        }
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
@@ -36,12 +43,12 @@ public class SorcererDataHandler {
 
         @Override
         public CompoundTag serializeNBT() {
-            return this.cap.serializeNBT();
+            return this.create().serializeNBT();
         }
 
         @Override
         public void deserializeNBT(CompoundTag nbt) {
-            this.cap.deserializeNBT(nbt);
+            this.create().deserializeNBT(nbt);
         }
     }
 }

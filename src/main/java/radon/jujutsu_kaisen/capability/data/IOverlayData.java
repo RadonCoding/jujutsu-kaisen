@@ -2,11 +2,13 @@ package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
 
 import java.util.Set;
 import java.util.UUID;
 
+@AutoRegisterCapability
 public interface IOverlayData {
     void sync(LivingEntity owner);
 

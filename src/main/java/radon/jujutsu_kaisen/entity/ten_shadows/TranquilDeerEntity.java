@@ -106,7 +106,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (this.isTame() && !this.isVehicle()) {
+        if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
             this.yHeadRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
             this.yBodyRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
 

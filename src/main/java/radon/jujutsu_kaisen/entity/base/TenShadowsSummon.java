@@ -179,7 +179,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         if (owner != null && !owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!this.isTame()) {
-                    if (pCause.getEntity() == owner) {
+                    if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
                         cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                         if (owner instanceof ServerPlayer player) {

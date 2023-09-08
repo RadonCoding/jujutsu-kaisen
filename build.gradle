@@ -98,6 +98,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     runtimeOnly fg.deobf('curse.maven:spark-361579:4505309')
+    runtimeOnly fg.deobf('curse.maven:corail-tombstone-243707:4506539')
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -186,6 +187,12 @@ public abstract class Ability {
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return cost;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        CursedTechnique copied = cap.getCurrentCopied();
+
+        if (copied != null && List.of(copied.getAbilities()).contains(this)) {
+            cost *= 1.5F;
+        }
 
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;

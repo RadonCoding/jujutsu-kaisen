@@ -256,8 +256,10 @@ public class JJKAbilities {
             CursedTechnique additional = cap.getAdditional();
             if (additional != null) abilities.addAll(Arrays.asList(additional.getAbilities()));
 
-            CursedTechnique copied = cap.getCurrentCopied();
-            if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
+            if (cap.hasToggled(JJKAbilities.RIKA.get())) {
+                CursedTechnique copied = cap.getCurrentCopied();
+                if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
+            }
 
             CursedTechnique absorbed = cap.getCurrentAbsorbed();
             if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));
