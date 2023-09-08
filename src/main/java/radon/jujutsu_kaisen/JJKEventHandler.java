@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -118,7 +117,7 @@ public class JJKEventHandler {
                         newCap.resetCooldowns();
                         newCap.resetBurnout();
                         newCap.clearToggled();
-                        newCap.revive(!newCap.hasTechnique(CursedTechnique.TEN_SHADOWS));
+                        newCap.revive(false);
                     }
                 });
             });
@@ -129,12 +128,8 @@ public class JJKEventHandler {
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof LivingEntity entity) {
                 if (entity instanceof Player || entity instanceof ISorcerer) {
-                    if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        SorcererDataHandler.attach(event);
-                    }
-                    if (!entity.getCapability(OverlayDataHandler.INSTANCE).isPresent()) {
-                        OverlayDataHandler.attach(event);
-                    }
+                    SorcererDataHandler.attach(event);
+                    OverlayDataHandler.attach(event);
                 }
             }
         }
@@ -419,12 +414,6 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
             JJKEntities.createAttributes(event);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-            event.register(ISorcererData.class);
-            event.register(IOverlayData.class);
         }
     }
 }
