@@ -16,7 +16,7 @@ public enum CursedTechnique {
     RIKA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get()),
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get()),
-    DISASTER_TIDES(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DISASTER_TIDES.get()),
+    DISASTER_TIDES(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DISASTER_TIDES.get(), JJKAbilities.WATER_SHIELD.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),

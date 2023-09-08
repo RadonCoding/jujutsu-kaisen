@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.DeferredRegister;
@@ -78,9 +77,6 @@ public class JJKBlocks {
 
     public static RegistryObject<ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
-
-    public static RegistryObject<RemovableFluidBlock> REMOVABLE_WATER = BLOCKS.register("removable_water", () ->
-            new RemovableFluidBlock(() -> Fluids.WATER, BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     public static RegistryObject<Block> DISPLAY_CASE = BLOCKS.register("display_case", () ->
             new DisplayCaseBlock(BlockBehaviour.Properties.of(Material.STONE)));

@@ -178,22 +178,20 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner != null && !owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
-                    if (!this.isTame()) {
-                        if (pCause.getEntity() == owner) {
-                            cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                if (!this.isTame()) {
+                    if (pCause.getEntity() == owner) {
+                        cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
-                            if (owner instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                            }
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                         }
-                    } else {
-                        if (this.getAbility().canDie()) {
-                            cap.kill(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                    }
+                } else {
+                    if (this.getAbility().canDie()) {
+                        cap.kill(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
-                            if (owner instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                            }
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                         }
                     }
                 }

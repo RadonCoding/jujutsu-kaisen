@@ -34,7 +34,7 @@ public class AbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS || cap.isChanneling(ability)) {
+            if ((status = ability.checkChannelable(owner)) == Ability.Status.SUCCESS) {
                 cap.channel(owner, ability);
             }
             return status;

@@ -10,7 +10,10 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.List;
 
 public class SwitchMode extends Ability {
     @Override
@@ -32,6 +35,11 @@ public class SwitchMode extends Ability {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.switch_mode", JujutsuKaisen.MOD_ID), cap.getMode().name().toLowerCase()));
             }
         });
+    }
+
+    @Override
+    public List<Trait> getRequirements() {
+        return List.of(Trait.STRONGEST);
     }
 
     @Override

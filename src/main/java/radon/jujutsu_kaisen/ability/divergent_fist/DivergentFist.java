@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class DivergentFist extends Ability {
-    private static final float EXPLOSIVE_POWER = 2.5F;
+    private static final float EXPLOSIVE_POWER = 1.5F;
     private static final double LAUNCH_POWER = 10.0D;
     private static final double RANGE = 3.0D;
 

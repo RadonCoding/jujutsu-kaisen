@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
@@ -12,7 +11,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class FireArrow extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && target.getMaxHealth() > Player.MAX_HEALTH && owner.hasLineOfSight(target);
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override

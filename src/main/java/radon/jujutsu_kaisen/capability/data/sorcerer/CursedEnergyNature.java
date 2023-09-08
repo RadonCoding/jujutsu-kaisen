@@ -9,6 +9,6 @@ public enum CursedEnergyNature {
     LIGHTNING;
 
     public Component getName() {
-        return Component.translatable(String.format("cursed_technique.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
+        return Component.translatable(String.format("cursed_energy_nature.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
 }

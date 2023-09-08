@@ -32,12 +32,6 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
         super(pFluid, pProperties);
     }
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
-        return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
-    }
-
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext ctx) {
@@ -49,6 +43,12 @@ public class ChimeraShadowGardenBlock extends LiquidBlock implements EntityBlock
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 0, false, false, false));
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        return JJKBlockEntities.DOMAIN.get().create(pPos, pState);
     }
 
     @Nullable

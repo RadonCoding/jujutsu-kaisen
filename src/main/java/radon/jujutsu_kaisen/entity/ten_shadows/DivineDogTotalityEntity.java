@@ -64,7 +64,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
-                .add(Attributes.MAX_HEALTH, 2 * 20.0D)
+                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }
 

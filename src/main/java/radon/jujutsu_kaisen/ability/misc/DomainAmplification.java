@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +25,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
+        if (!owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty()) return true;
 
         Ability domain = ((ISorcerer) owner).getDomain();
         return target != null && owner.distanceTo(target) < 5.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||
@@ -39,7 +41,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         if (owner.level instanceof ServerLevel level) {
             for (int i = 0; i < 8; i++) {
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), 1.5F, 0.5F, false, 1),
+                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 2.0F, 0.5F, false, 1),
                         owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).x(),
                         owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
                         owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).z(),
@@ -50,7 +52,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.1F;
+        return 0.2F;
     }
 
     @Override

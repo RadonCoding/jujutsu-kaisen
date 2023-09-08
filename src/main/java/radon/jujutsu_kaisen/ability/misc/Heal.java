@@ -8,11 +8,11 @@ import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 
 
 public class Heal extends Ability implements Ability.IChannelened {
-    private static final float AMOUNT = 0.3F;
+    private static final float AMOUNT = 1.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -27,7 +27,7 @@ public class Heal extends Ability implements Ability.IChannelened {
     @Override
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                owner.heal(AMOUNT * cap.getGrade().getPower(owner)));
+                owner.heal(AMOUNT * cap.getGrade().ordinal() / SorcererGrade.values().length));
     }
 
     @Override

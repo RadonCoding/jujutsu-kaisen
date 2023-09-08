@@ -71,34 +71,6 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
-        /*@SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            LivingEntity victim = event.getEntity();
-            Entity attacker = event.getSource().getEntity();
-
-            if (attacker == null) return;
-
-            if (victim.level instanceof ServerLevel level) {
-                victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (cap.getDomain(level) instanceof ChimeraShadowGardenEntity domain && domain.isInsideBarrier(attacker.blockPosition())) {
-                        for (int i = 0; i < 16; i++) {
-                            for (int j = 0; j < victim.getBbHeight() * victim.getBbHeight(); j++) {
-                                victim.level.addParticle(ParticleTypes.SMOKE, victim.getX() + (victim.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
-                                        victim.getY(), victim.getZ() + (victim.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
-                                        HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D,
-                                        HelperMethods.RANDOM.nextGaussian() * 0.075D);
-                                victim.level.addParticle(ParticleTypes.LARGE_SMOKE, victim.getX() + (victim.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
-                                        victim.getY(), victim.getZ() + (victim.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
-                                        HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D,
-                                        HelperMethods.RANDOM.nextGaussian() * 0.075D);
-                            }
-                        }
-                        victim.setPos(attacker.position().subtract(attacker.getLookAngle()));
-                    }
-                });
-            }
-        }*/
-
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent event) {
             LivingEntity owner = event.getEntity();

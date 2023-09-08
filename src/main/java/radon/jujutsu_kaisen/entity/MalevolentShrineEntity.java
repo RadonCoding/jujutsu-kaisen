@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -32,11 +33,13 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
+        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
+
         int width = this.getWidth();
         int height = this.getHeight();
-        BlockPos center = this.blockPosition().above(height / 2);
+        BlockPos center = this.blockPosition();
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < width * width + height * height;
+        return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
     public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {

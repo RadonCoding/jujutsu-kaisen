@@ -50,11 +50,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        boolean result = false;
-
         for (EntityType<?> type : this.getTypes()) {
-            if (result) break;
-            result = cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
+            if (cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type)) return true;
         }
         return false;
     }

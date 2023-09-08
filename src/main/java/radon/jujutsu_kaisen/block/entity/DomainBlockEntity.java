@@ -17,8 +17,8 @@ import java.util.UUID;
 
 public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
-    @Nullable
     private UUID identifier;
+
     @Nullable
     private BlockState original;
 
@@ -50,7 +50,6 @@ public class DomainBlockEntity extends BlockEntity {
         }
     }
 
-    @Nullable
     public UUID getIdentifier() {
         return this.identifier;
     }
@@ -90,8 +89,6 @@ public class DomainBlockEntity extends BlockEntity {
         pTag.putBoolean("initialized", this.initialized);
 
         if (this.initialized) {
-            assert this.identifier != null;
-
             pTag.putUUID("identifier", this.identifier);
 
             if (this.original != null) {

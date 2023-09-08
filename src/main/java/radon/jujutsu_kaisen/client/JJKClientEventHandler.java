@@ -342,6 +342,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAXIMUM_UZUMAKI.get(), MaximumUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.MINI_UZUMAKI.get(), MiniUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), HollowPurpleExplosionRenderer::new);
+            event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WATERBALL.get(), WaterballRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
         }
 
         @SubscribeEvent

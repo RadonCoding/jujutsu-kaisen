@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.limitless;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -16,7 +15,7 @@ import java.util.List;
 public class HollowPurple extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && target.getMaxHealth() > Player.MAX_HEALTH && owner.hasLineOfSight(target);
+        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
