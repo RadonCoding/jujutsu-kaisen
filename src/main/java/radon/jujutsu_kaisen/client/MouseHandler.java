@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,8 +11,6 @@ import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 public class MouseHandler {
     @SubscribeEvent
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
-        Minecraft mc = Minecraft.getInstance();
-
         double delta = event.getScrollDelta();
 
         int i = (int) Math.signum(delta);

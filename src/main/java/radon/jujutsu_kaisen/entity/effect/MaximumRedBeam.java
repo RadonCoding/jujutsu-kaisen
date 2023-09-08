@@ -127,6 +127,8 @@ public class MaximumRedBeam extends JujutsuProjectile {
                         if (this.getTime() - 1 > CHARGE && entity instanceof MaximumBlueProjectile projectile) {
                             cap.addCooldown(owner, JJKAbilities.MAXIMUM_RED.get());
                             cap.addCooldown(owner, JJKAbilities.MAXIMUM_BLUE.get());
+                            cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
+                            cap.addCooldown(owner, JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get());
 
                             this.level.addFreshEntity(new HollowPurpleExplosion(owner, projectile.position()));
 

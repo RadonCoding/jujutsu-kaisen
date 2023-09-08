@@ -61,7 +61,7 @@ public class ShadowStorage extends Ability {
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return Status.FAILURE;
         } else {
-            if (cap.getShadowInventory().size() > 0) return Status.FAILURE;
+            if (cap.getShadowInventory().size() == 0) return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
     }

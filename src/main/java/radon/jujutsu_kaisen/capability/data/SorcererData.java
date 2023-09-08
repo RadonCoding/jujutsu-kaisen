@@ -669,7 +669,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public Set<CursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.RIKA)) {
+        if (!this.hasTechnique(CursedTechnique.RIKA)) {
             return Set.of();
         }
         return this.copied;
@@ -1016,9 +1016,7 @@ public class SorcererData implements ISorcererData {
                 this.addTrait(Trait.SIX_EYES);
             }
 
-            while (this.technique == null || this.technique == CursedTechnique.CURSED_SPEECH || this.technique == CursedTechnique.DISASTER_TIDES) {
-                this.technique = HelperMethods.randomEnum(CursedTechnique.class);
-            }
+            this.technique = HelperMethods.randomEnum(CursedTechnique.class);
 
             if (HelperMethods.RANDOM.nextInt(5) == 0) {
                 this.nature = HelperMethods.randomEnum(CursedEnergyNature.class);
@@ -1095,8 +1093,8 @@ public class SorcererData implements ISorcererData {
         if (this.currentCopied != null) {
             nbt.putInt("current_copied", this.currentCopied.ordinal());
         }
-        if (this.currentAbsorbed != null) {
-            nbt.putInt("current_absorbed", this.currentAbsorbed.ordinal());
+        if (nbt.contains("current_absorbed")) {
+            this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);

@@ -27,7 +27,6 @@ import software.bernie.geckolib.core.object.PlayState;
 public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     private static final EntityDataAccessor<Integer> DATA_TONGUE = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_RITUAL = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> DATA_WINGS = SynchedEntityData.defineId(ToadEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation TONGUE = RawAnimation.begin().thenPlay("attack.tongue");
@@ -76,12 +75,8 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
         this.yHeadRotO = this.yHeadRot;
     }
 
-    public void setWings(boolean wings) {
-        this.entityData.set(DATA_WINGS, wings);
-    }
-
     public boolean hasWings() {
-        return this.entityData.get(DATA_WINGS);
+        return false;
     }
 
     public void setRitual(int index, int duration) {
@@ -118,7 +113,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
         this.entityData.define(DATA_TONGUE, 0);
         this.entityData.define(DATA_RITUAL, 0);
-        this.entityData.define(DATA_WINGS, false);
     }
 
     @Override
@@ -126,7 +120,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("ritual", this.entityData.get(DATA_RITUAL));
-        pCompound.putBoolean("wings", this.entityData.get(DATA_WINGS));
     }
 
     @Override
@@ -134,7 +127,6 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_RITUAL, pCompound.getInt("ritual"));
-        this.entityData.set(DATA_WINGS, pCompound.getBoolean("wings"));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

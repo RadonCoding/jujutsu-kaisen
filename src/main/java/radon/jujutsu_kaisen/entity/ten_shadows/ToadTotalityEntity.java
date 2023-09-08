@@ -9,11 +9,14 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 public class ToadTotalityEntity extends ToadEntity {
     public ToadTotalityEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-
-        this.setWings(true);
     }
 
     public ToadTotalityEntity(LivingEntity owner, boolean ritual) {
         super(JJKEntities.TOAD_TOTALITY.get(), owner, ritual);
+    }
+
+    @Override
+    public boolean hasWings() {
+        return true;
     }
 }

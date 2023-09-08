@@ -220,6 +220,16 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mini_uzumaki")
                             .toString()));
+    public static RegistryObject<EntityType<LightningProjectile>> LIGHTNING = ENTITIES.register("lightning", () ->
+            EntityType.Builder.<LightningProjectile>of(LightningProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lightning")
+                            .toString()));
+    public static RegistryObject<EntityType<WaterballEntity>> WATERBALL = ENTITIES.register("waterball", () ->
+            EntityType.Builder.<WaterballEntity>of(WaterballEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "waterball")
+                            .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)

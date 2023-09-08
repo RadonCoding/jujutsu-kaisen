@@ -8,13 +8,14 @@ import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.List;
 
 
 public class RCT extends Ability implements Ability.IChannelened {
-    public static final float AMOUNT = 0.25F;
+    public static final float AMOUNT = 0.75F;
     public static final float COST = 5.0F;
 
     @Override
@@ -32,7 +33,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            owner.heal(AMOUNT * cap.getGrade().getPower(owner));
+            owner.heal(AMOUNT * cap.getGrade().ordinal() / SorcererGrade.values().length);
 
             if (cap.hasTrait(Trait.SIX_EYES) || cap.hasTrait(Trait.STRONGEST)) {
                 int burnout = cap.getBurnout();

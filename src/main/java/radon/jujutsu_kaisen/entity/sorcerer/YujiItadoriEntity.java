@@ -47,11 +47,11 @@ public class YujiItadoriEntity extends SorcererEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemStack stack = pPlayer.getItemInHand(pHand);
 
-        if (itemstack.is(JJKItems.SUKUNA_FINGER.get())) {
+        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
             if (!pPlayer.getAbilities().instabuild) {
-                itemstack.shrink(1);
+                stack.shrink(1);
             }
 
             if (!this.level.isClientSide) {

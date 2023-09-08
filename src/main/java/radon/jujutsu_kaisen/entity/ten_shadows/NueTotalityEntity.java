@@ -81,7 +81,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.moveControl = new FlyingMoveControl(this, 20, true);
+        this.moveControl = new FlyingMoveControl(this, 20, false);
     }
 
     @Override
@@ -264,9 +264,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
         if (this.jump) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.1D, 0.0D));
-        } else if (!pEntity.isOnGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, 0.05D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
         }
     }
 

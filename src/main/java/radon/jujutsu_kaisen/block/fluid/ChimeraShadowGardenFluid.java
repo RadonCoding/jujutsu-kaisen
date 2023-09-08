@@ -46,11 +46,13 @@ public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
         public Flowing(Properties properties)
         {
             super(properties);
+
             registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
         }
 
         protected void createFluidStateDefinition(StateDefinition.@NotNull Builder<Fluid, FluidState> builder) {
             super.createFluidStateDefinition(builder);
+
             builder.add(LEVEL);
         }
 

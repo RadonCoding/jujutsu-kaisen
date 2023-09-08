@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -182,13 +183,25 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean doHurtTarget(@NotNull Entity pEntity) {
+        if (super.doHurtTarget(pEntity)) {
+            if (pEntity instanceof LivingEntity living) {
+                Ability lightning = JJKAbilities.NUE_LIGHTNING.get();
+                ((Ability.ITenShadowsAttack) lightning).perform(this, living);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Summon<?> getAbility() {
         return JJKAbilities.AGITO.get();
     }
 
     @Override
     public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.SHOOT_RCT.get());
+        return List.of(JJKAbilities.SHOOT_RCT.get());
     }
 
     @Override

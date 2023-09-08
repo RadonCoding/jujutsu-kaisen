@@ -13,12 +13,15 @@ import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.ai.scissor.TeleportRandom;
+import radon.jujutsu_kaisen.ability.ai.scissor.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.DisasterTides;
 import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
+import radon.jujutsu_kaisen.ability.disaster_tides.WaterShield;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
@@ -82,6 +85,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
+    public static RegistryObject<Ability> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
@@ -94,6 +98,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
+    public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
 
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
@@ -126,6 +131,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
     public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
+    public static RegistryObject<Ability> TELEPORT_TOWARDS = ABILITIES.register("teleport_towards", TeleportTowards::new);
+    public static RegistryObject<Ability> TELEPORT_RANDOM = ABILITIES.register("teleport_random", TeleportRandom::new);
 
     public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
     public static RegistryObject<Ability> ABSORB_TECHNIQUE = ABILITIES.register("absorb_technique", AbsorbTechnique::new);
@@ -227,6 +234,7 @@ public class JJKAbilities {
             abilities.add(JJKAbilities.SMASH.get());
             abilities.add(JJKAbilities.WATER_WALKING.get());
             abilities.add(JJKAbilities.CURSED_ENERGY_FLOW.get());
+            abilities.add(JJKAbilities.LIGHTNING.get());
 
             abilities.add(JJKAbilities.HEAL.get());
             abilities.add(JJKAbilities.RCT.get());
@@ -248,10 +256,8 @@ public class JJKAbilities {
             CursedTechnique additional = cap.getAdditional();
             if (additional != null) abilities.addAll(Arrays.asList(additional.getAbilities()));
 
-            if (cap.hasToggled(JJKAbilities.RIKA.get())) {
-                CursedTechnique copied = cap.getCurrentCopied();
-                if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
-            }
+            CursedTechnique copied = cap.getCurrentCopied();
+            if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
 
             CursedTechnique absorbed = cap.getCurrentAbsorbed();
             if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));

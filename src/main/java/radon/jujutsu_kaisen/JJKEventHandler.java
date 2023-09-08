@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -97,7 +98,6 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
             Player player = event.getEntity();
-
             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                     cap.setEnergy(cap.getMaxEnergy()));
         }
@@ -118,7 +118,7 @@ public class JJKEventHandler {
                         newCap.resetCooldowns();
                         newCap.resetBurnout();
                         newCap.clearToggled();
-                        newCap.revive(false);
+                        newCap.revive(!newCap.hasTechnique(CursedTechnique.TEN_SHADOWS));
                     }
                 });
             });
@@ -322,7 +322,7 @@ public class JJKEventHandler {
 
                 LivingEntity killer;
 
-                if (source instanceof TamableAnimal tamable) {
+                if (source instanceof TamableAnimal tamable && tamable.isTame()) {
                     LivingEntity owner = tamable.getOwner();
                     killer = owner == null ? source : owner;
                 } else {
@@ -376,8 +376,7 @@ public class JJKEventHandler {
                     }
                 }
 
-                if (victimCap.getType() != JujutsuType.SORCERER || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION))
-                    return;
+                if (victimCap.getType() != JujutsuType.SORCERER || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
                 int chance = 10;
 
@@ -393,11 +392,11 @@ public class JJKEventHandler {
                     if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
                         victim.setHealth(victim.getMaxHealth() / 2);
                         victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
-                        event.setCanceled(true);
 
                         if (victim instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
+                        event.setCanceled(true);
                     }
                 }
             }
@@ -420,6 +419,12 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
             JJKEntities.createAttributes(event);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+            event.register(ISorcererData.class);
+            event.register(IOverlayData.class);
         }
     }
 }

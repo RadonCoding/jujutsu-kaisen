@@ -121,6 +121,7 @@
   "ability.jujutsu_kaisen.cursed_energy_flow": "CE Flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.enable": "Activated CE flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.disable": "Deactivated CE flow",
+  "ability.jujutsu_kaisen.lightning": "Lightning",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
   "ability.jujutsu_kaisen.shoot_rct": "Shoot: Reverse Cursed Technique",
@@ -168,6 +169,9 @@
 
   "ability.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
   "ability.jujutsu_kaisen.disaster_tides": "Disaster Tides",
+  "ability.jujutsu_kaisen.disaster_tides.enable": "Activated disaster tides",
+  "ability.jujutsu_kaisen.disaster_tides.disable": "Deactivated disaster tides",
+  "ability.jujutsu_kaisen.water_shield": "Water Shield",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
@@ -254,6 +258,10 @@
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
+
+  "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
+  "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",
+  "cursed_energy_nature.jujutsu_kaisen.lightning": "lightning",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",

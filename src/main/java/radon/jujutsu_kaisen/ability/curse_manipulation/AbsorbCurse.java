@@ -56,8 +56,10 @@ public class AbsorbCurse extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level.isClientSide) return;
+
         if (this.getTarget(owner) instanceof CursedSpirit curse && !curse.isTame()) {
-            owner.swing(InteractionHand.MAIN_HAND);
+            owner.swing(InteractionHand.MAIN_HAND, true);
 
             Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             ResourceLocation key = registry.getKey(curse.getType());
@@ -74,10 +76,7 @@ public class AbsorbCurse extends Ability {
             } else {
                 owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
             }
-
-            if (!owner.level.isClientSide) {
-                makePoofParticles(curse);
-            }
+            makePoofParticles(curse);
             curse.discard();
         }
     }

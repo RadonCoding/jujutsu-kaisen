@@ -57,6 +57,8 @@ public class AbsorbTechnique extends Ability {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        if (ownerCap.getAbsorbed().size() > 0) return false;
+
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

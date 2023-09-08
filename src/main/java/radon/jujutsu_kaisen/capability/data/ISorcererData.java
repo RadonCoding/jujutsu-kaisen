@@ -91,6 +91,7 @@ public interface ISorcererData {
     void setCurrentCopied(@Nullable CursedTechnique technique);
     @Nullable CursedTechnique getCurrentCopied();
 
+
     void absorb(@Nullable CursedTechnique technique);
     void unabsorb(CursedTechnique technique);
     Set<CursedTechnique> getAbsorbed();

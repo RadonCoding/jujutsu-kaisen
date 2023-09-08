@@ -33,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -79,7 +81,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
 
-        this.moveControl = new FlyingMoveControl(this, 20, true);
+        this.moveControl = new FlyingMoveControl(this, 20, false);
 
         this.tame = tame;
     }
@@ -229,8 +231,13 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public SorcererGrade getGrade() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return SorcererGrade.SPECIAL_GRADE;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return cap.getGrade();
     }
 
     @Override
