@@ -53,10 +53,9 @@ public class DisplayCaseBlock extends BaseEntityBlock {
                         return InteractionResult.CONSUME;
                     }
                 } else if (!be.getItem().isEmpty()) {
-                    if (!player.getAbilities().instabuild) {
-                        player.addItem(be.getItem());
+                    if (!player.getAbilities().instabuild && player.addItem(be.getItem())) {
+                        be.setItem(ItemStack.EMPTY);
                     }
-                    be.setItem(ItemStack.EMPTY);
                 }
             }
         }

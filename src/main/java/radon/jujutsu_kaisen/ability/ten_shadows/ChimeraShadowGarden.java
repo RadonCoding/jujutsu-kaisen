@@ -66,7 +66,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     public int getHeight() {
-        return 1;
+        return 16;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

@@ -99,4 +99,7 @@ public class JJKBlocks {
                     .strength(100.0F, 14.0F)
                     .isViewBlocking(JJKBlocks::always)
                     .noOcclusion()));
+
+    public static RegistryObject<FakeWaterBlock> FAKE_WATER = BLOCKS.register("fake_water", () ->
+            new FakeWaterBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 }

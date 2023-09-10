@@ -11,7 +11,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class CursedEnergyOverlay {
-    public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
+    public static ResourceLocation NORMAL = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
+    public static ResourceLocation ZONE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar_zone.png");
 
     public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
         LocalPlayer player = gui.getMinecraft().player;
@@ -26,7 +27,7 @@ public class CursedEnergyOverlay {
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, TEXTURE);
+            RenderSystem.setShaderTexture(0, cap.isInZone(player) ? ZONE : NORMAL);
 
             GuiComponent.blit(poseStack, 20, 20, 0, 0, 93, 9, 93, 16);
 

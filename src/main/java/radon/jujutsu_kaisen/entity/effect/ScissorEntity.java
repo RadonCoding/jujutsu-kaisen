@@ -68,7 +68,8 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    pResult.getEntity().hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SCISSORS.get()), DAMAGE * cap.getGrade().getPower(owner)));
+                    pResult.getEntity().hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SCISSORS.get()),
+                            DAMAGE * cap.getGrade().getPower(owner)));
             this.discard();
         }
     }

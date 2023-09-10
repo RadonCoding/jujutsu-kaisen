@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -39,11 +38,13 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -56,7 +57,7 @@ import java.util.List;
 public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
     private static final int DURATION = 5 * 60 * 20;
 
-    public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
+    public static EntityDataAccessor<Integer> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
@@ -81,7 +82,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
 
-        this.moveControl = new FlyingMoveControl(this, 20, false);
+        this.moveControl = new FlyingMoveControl(this, 20, true);
 
         this.tame = tame;
     }
@@ -121,7 +122,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(2, new SorcererGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
+        this.goalSelector.addGoal(6, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -133,15 +134,15 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_OPEN, false);
+        this.entityData.define(DATA_OPEN, 0);
     }
 
-    public void setOpen(boolean open) {
-        this.entityData.set(DATA_OPEN, open);
+    public void setOpen() {
+        this.entityData.set(DATA_OPEN, PureLoveBeam.CHARGE + PureLoveBeam.DURATION);
     }
 
     public boolean isOpen() {
-        return this.entityData.get(DATA_OPEN);
+        return this.entityData.get(DATA_OPEN) > 0;
     }
 
     private PlayState openPredicate(AnimationState<RikaEntity> animationState) {
@@ -207,6 +208,26 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         } else {
             super.tick();
 
+            LivingEntity target = this.getTarget();
+            this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+
+            if (owner != null && this.isOpen()) {
+                int remaining = this.entityData.get(DATA_OPEN);
+
+                if (--remaining == 0) {
+                    this.discard();
+                }
+                this.entityData.set(DATA_OPEN, remaining);
+
+                Vec3 pos = owner.position()
+                        .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                        .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
+                this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+                this.yHeadRot = this.getYRot();
+                this.yHeadRotO = this.yHeadRot;
+            }
+
             if (!this.level.isClientSide) {
                 if (this.getTime() >= DURATION) {
                     this.discard();
@@ -214,20 +235,13 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
-                if (owner != null) {
-                    if (this.isOpen()) {
-                        this.setOpen(this.getTarget() != null);
-                    } else {
-                        this.setOpen(this.getTarget() != null && owner.getHealth() / owner.getMaxHealth() <= 0.5F);
-                    }
-                }
             }
         }
     }
 
     @Override
     public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.PURE_LOVE.get());
+        return List.of(JJKAbilities.SHOOT_PURE_LOVE.get());
     }
 
     @Override

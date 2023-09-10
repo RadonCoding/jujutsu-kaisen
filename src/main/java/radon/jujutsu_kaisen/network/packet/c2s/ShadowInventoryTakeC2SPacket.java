@@ -40,7 +40,7 @@ public class ShadowInventoryTakeC2SPacket {
                 if (player.getMainHandItem().isEmpty()) {
                     player.setItemSlot(EquipmentSlot.MAINHAND, stack);
                 } else {
-                    player.addItem(stack);
+                    if (!player.addItem(stack)) return;
                 }
                 cap.removeShadowInventory(this.index);
 

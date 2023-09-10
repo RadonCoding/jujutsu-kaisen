@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.block.fluid;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -10,13 +10,20 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.base.JJKFluidType;
 
 public class JJKFluidTypes {
-    public static final ResourceLocation WATER_STILL = new ResourceLocation("block/water_still");
-    public static final ResourceLocation WATER_FLOWING = new ResourceLocation("block/water_flow");
-    public static final ResourceLocation WATER_OVERLAY = new ResourceLocation("block/water_overlay");
-
     public static DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, JujutsuKaisen.MOD_ID);
 
     public static final RegistryObject<FluidType> CHIMERA_SHADOW_GARDEN = FLUID_TYPES.register("chimera_shadow_garden",
-            () -> new JJKFluidType(WATER_STILL, WATER_FLOWING, WATER_OVERLAY, 0x141414,
-                    Vec3.fromRGB24(0x000000).toVector3f(), FluidType.Properties.create().canSwim(false).motionScale(1.0D)));
+            () -> new JJKFluidType(0x141414, FluidType.Properties.create()
+                    .canSwim(false)
+                    .motionScale(1.0D)));
+    public static final RegistryObject<FluidType> FAKE_WATER = FLUID_TYPES.register("fake_water",
+            () -> new JJKFluidType(0xFF3F76E4, FluidType.Properties.create()
+                    .fallDistanceModifier(0.0F)
+                    .canExtinguish(true)
+                    .canConvertToSource(true)
+                    .supportsBoating(true)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                    .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+                    .canHydrate(true)));
 }

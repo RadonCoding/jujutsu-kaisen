@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +19,6 @@ import radon.jujutsu_kaisen.client.gui.scren.BountyScreen;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.client.gui.scren.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.scren.VeilRodScreen;
-import radon.jujutsu_kaisen.client.layer.overlay.JJKOverlays;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -41,8 +42,6 @@ public class JujutsuKaisen {
         ctx.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
-
-        JJKOverlays.OVERLAYS.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
 
@@ -78,5 +77,8 @@ public class JujutsuKaisen {
         MenuScreens.register(JJKMenus.ALTAR.get(), AltarScreen::new);
         MenuScreens.register(JJKMenus.VEIL_ROD.get(), VeilRodScreen::new);
         MenuScreens.register(JJKMenus.BOUNTY.get(), BountyScreen::new);
+
+        //ItemBlockRenderTypes.setRenderLayer(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(JJKFluids.FAKE_WATER_SOURCE.get(), RenderType.translucent());
     }
 }

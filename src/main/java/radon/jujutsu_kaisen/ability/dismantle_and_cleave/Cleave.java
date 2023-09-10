@@ -41,7 +41,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         return ActivationType.INSTANT;
     }
 
-    protected @Nullable LivingEntity getTarget(LivingEntity owner) {
+    private @Nullable LivingEntity getTarget(LivingEntity owner) {
         LivingEntity result = null;
 
         if (owner instanceof Player) {

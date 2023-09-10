@@ -265,7 +265,7 @@ public class SorcererData implements ISorcererData {
                 Entity entity = level.getEntity(identifier);
 
                 if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
-                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner.blockPosition())) {
+                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(null, owner.blockPosition())) {
                     iter.remove();
                 }
             }
@@ -395,7 +395,8 @@ public class SorcererData implements ISorcererData {
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
                     this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F, AttributeModifier.Operation.ADDITION);
 
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F) * (this.type == JujutsuType.CURSE ? 2.0F : 1.0F))
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F)
+                    * (this.type == JujutsuType.CURSE ? 2.0F : 1.0F))
                     * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
         }
     }
@@ -452,6 +453,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void removeTrait(Trait trait) {
         this.traits.remove(trait);
+    }
+
+    @Override
+    public Set<Trait> getTraits() {
+        return this.traits;
     }
 
     @Override
@@ -649,7 +655,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < 10;
+        return this.lastBlackFlashTime != 0 && ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override
@@ -1075,7 +1081,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setAdditional(CursedTechnique technique) {
+    public void setAdditional(@Nullable CursedTechnique technique) {
         this.additional = technique;
     }
 
@@ -1106,6 +1112,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("grade", this.grade.ordinal());
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
+        nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1256,6 +1263,7 @@ public class SorcererData implements ISorcererData {
         this.grade = SorcererGrade.values()[nbt.getInt("grade")];
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
+        this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");

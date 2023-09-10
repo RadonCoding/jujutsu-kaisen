@@ -3,6 +3,8 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -30,7 +32,10 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-
+        if (owner.level.getGameTime() % 10 == 0) {
+            Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
+            ((IDomainAttack) fish).perform(owner, domain, entity);
+        }
     }
 
     @Override

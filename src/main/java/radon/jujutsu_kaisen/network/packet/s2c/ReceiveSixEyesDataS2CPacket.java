@@ -1,27 +1,25 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
+import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class SyncOverlayDataRemoteS2CPacket {
+public class ReceiveSixEyesDataS2CPacket {
     private final UUID src;
     private final CompoundTag nbt;
 
-    public SyncOverlayDataRemoteS2CPacket(UUID src, CompoundTag nbt) {
+    public ReceiveSixEyesDataS2CPacket(UUID src, CompoundTag nbt) {
         this.src = src;
         this.nbt = nbt;
     }
 
-    public SyncOverlayDataRemoteS2CPacket(FriendlyByteBuf buf) {
+    public ReceiveSixEyesDataS2CPacket(FriendlyByteBuf buf) {
         this(buf.readUUID(), buf.readNbt());
     }
 
@@ -34,20 +32,9 @@ public class SyncOverlayDataRemoteS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Minecraft mc = Minecraft.getInstance();
-            LocalPlayer player = mc.player;
-
-            assert player != null;
-
-            player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
-                if (player.getUUID().equals(this.src)) {
-                    cap.deserializeLocalNBT(this.nbt);
-                } else {
-                    cap.deserializeRemoteNBT(this.src, this.nbt);
-                }
-            });
+            SixEyesOverlay.SixEyesData data = SixEyesOverlay.SixEyesData.deserializeNBT(this.nbt);
+            SixEyesOverlay.setCurrent(this.src, data);
         }));
-
         ctx.setPacketHandled(true);
     }
 }

@@ -35,7 +35,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
                 if (this instanceof IOpenDomain) {
                     DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
-                    result = domain != null && domain.isInsideBarrier(target.blockPosition());
+                    result = domain != null && domain.isInsideBarrier(null, target.blockPosition());
                 }
             }
         } else {

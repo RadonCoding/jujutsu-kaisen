@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +29,9 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return (target != null && owner.distanceTo(target) <= 5.0D) || !owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty();
+        return (target != null && owner.distanceTo(target) <= 5.0D) ||
+                !owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D),
+                        entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner).isEmpty();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.4F;
+        return 0.3F;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
+        public static void onLivingHurt(LivingHurtEvent event) {
             // Damage
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
@@ -96,8 +98,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                     if (melee) {
                         switch (attackerCap.getNature()) {
-                            case LIGHTNING, BASIC -> event.setAmount(event.getAmount() * 1.1F);
-                            case ROUGH -> event.setAmount(event.getAmount() * 1.2F);
+                            case LIGHTNING, BASIC -> event.setAmount(event.getAmount() * 1.25F);
+                            case ROUGH -> event.setAmount(event.getAmount() * 1.5F);
                         }
                     }
                 }
@@ -107,10 +109,10 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             LivingEntity victim = event.getEntity();
 
             if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                event.setAmount(event.getAmount() * 0.9F);
-
                 if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    event.setAmount(event.getAmount() * 0.75F);
 
                     switch (cap.getNature()) {
                         case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,

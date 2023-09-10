@@ -106,8 +106,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         this.entityData.set(DATA_HEIGHT, pCompound.getInt("height"));
     }
 
-    private List<ClosedDomainExpansionEntity> getClosedDomainsInside() {
-        return HelperMethods.getEntityCollisionsOfClass(ClosedDomainExpansionEntity.class, this.level, this.getBoundingBox());
+    protected List<DomainExpansionEntity> getDomains() {
+        return HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level, this.getBounds());
     }
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
@@ -122,16 +122,18 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        List<ClosedDomainExpansionEntity> domains = this.getClosedDomainsInside();
+        List<DomainExpansionEntity> domains = this.getDomains();
 
-        for (ClosedDomainExpansionEntity domain : domains) {
-            if (!domain.isInsideBarrier(this.blockPosition())) continue;
+        for (DomainExpansionEntity domain : domains) {
+            if (domain instanceof ClosedDomainExpansionEntity) {
+                if ((!domain.isInsideBarrier(null, this.blockPosition()) && !this.isInsideBarrier(null, domain.blockPosition()))) continue;
 
-            if (domain.getStrength() > this.getStrength()) {
-                this.discard();
-                return false;
-            } else if (domain.getStrength() == this.getStrength()) {
-                return false;
+                if (domain.getStrength() > this.getStrength()) {
+                    this.discard();
+                    return false;
+                } else if (domain.getStrength() == this.getStrength()) {
+                    return false;
+                }
             }
         }
         return true;

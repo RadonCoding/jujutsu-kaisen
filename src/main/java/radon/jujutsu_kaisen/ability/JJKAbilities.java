@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
-import radon.jujutsu_kaisen.ability.ai.rika.PureLove;
+import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.scissor.TeleportRandom;
 import radon.jujutsu_kaisen.ability.ai.scissor.TeleportTowards;
@@ -20,12 +20,14 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.DisasterTides;
+import radon.jujutsu_kaisen.ability.disaster_tides.FishShikigami;
 import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
 import radon.jujutsu_kaisen.ability.disaster_tides.WaterShield;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
+import radon.jujutsu_kaisen.ability.rika.CommandPureLove;
 import radon.jujutsu_kaisen.ability.rika.Copy;
 import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
@@ -74,6 +76,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
     public static RegistryObject<Ability> COPY = ABILITIES.register("copy", Copy::new);
+    public static RegistryObject<Ability> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
     public static RegistryObject<Ability> VOLCANO = ABILITIES.register("volcano", Volcano::new);
@@ -86,6 +89,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
     public static RegistryObject<Ability> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
+    public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
@@ -126,7 +130,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> DIVERGENT_FIST = ABILITIES.register("divergent_fist", DivergentFist::new);
 
-    public static RegistryObject<Ability> PURE_LOVE = ABILITIES.register("pure_love", PureLove::new);
+    public static RegistryObject<Ability> SHOOT_PURE_LOVE = ABILITIES.register("shoot_pure_love", ShootPureLove::new);
     public static RegistryObject<Ability> CYCLOPS_SMASH = ABILITIES.register("cyclops_smash", CyclopsSmash::new);
     public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
     public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);

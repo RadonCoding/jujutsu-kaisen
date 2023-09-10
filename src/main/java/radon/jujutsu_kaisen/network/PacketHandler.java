@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.network;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -37,30 +36,15 @@ public class PacketHandler {
                 .encoder(TriggerAbilityC2SPacket::encode)
                 .consumerMainThread(TriggerAbilityC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SyncOverlayDataLocalS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SyncOverlayDataLocalS2CPacket::new)
-                .encoder(SyncOverlayDataLocalS2CPacket::encode)
-                .consumerMainThread(SyncOverlayDataLocalS2CPacket::handle)
+        INSTANCE.messageBuilder(RequestSixEyesDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RequestSixEyesDataC2SPacket::new)
+                .encoder(RequestSixEyesDataC2SPacket::encode)
+                .consumerMainThread(RequestSixEyesDataC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SyncOverlayDataRemoteS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SyncOverlayDataRemoteS2CPacket::new)
-                .encoder(SyncOverlayDataRemoteS2CPacket::encode)
-                .consumerMainThread(SyncOverlayDataRemoteS2CPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(RequestOverlayDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(RequestOverlayDataC2SPacket::new)
-                .encoder(RequestOverlayDataC2SPacket::encode)
-                .consumerMainThread(RequestOverlayDataC2SPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(RequestSorcererDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(RequestSorcererDataC2SPacket::new)
-                .encoder(RequestSorcererDataC2SPacket::encode)
-                .consumerMainThread(RequestSorcererDataC2SPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(ReceiveSorcererDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ReceiveSorcererDataS2CPacket::new)
-                .encoder(ReceiveSorcererDataS2CPacket::encode)
-                .consumerMainThread(ReceiveSorcererDataS2CPacket::handle)
+        INSTANCE.messageBuilder(ReceiveSixEyesDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ReceiveSixEyesDataS2CPacket::new)
+                .encoder(ReceiveSixEyesDataS2CPacket::encode)
+                .consumerMainThread(ReceiveSixEyesDataS2CPacket::handle)
                 .add();
         INSTANCE.messageBuilder(OpenInventoryCurseC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(OpenInventoryCurseC2SPacket::new)
@@ -146,6 +130,16 @@ public class PacketHandler {
                 .decoder(SetAbsorbedC2SPacket::new)
                 .encoder(SetAbsorbedC2SPacket::encode)
                 .consumerMainThread(SetAbsorbedC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RequestVisualDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RequestVisualDataC2SPacket::new)
+                .encoder(RequestVisualDataC2SPacket::encode)
+                .consumerMainThread(RequestVisualDataC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ReceiveVisualDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ReceiveVisualDataS2CPacket::new)
+                .encoder(ReceiveVisualDataS2CPacket::encode)
+                .consumerMainThread(ReceiveVisualDataS2CPacket::handle)
                 .add();
     }
 

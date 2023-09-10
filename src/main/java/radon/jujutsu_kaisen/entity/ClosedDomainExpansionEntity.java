@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         AABB bounds = this.getBounds();
 
         for (DomainExpansionEntity entity : this.level.getEntitiesOfClass(DomainExpansionEntity.class, bounds)) {
-            if (this.isInsideBarrier(entity.blockPosition())) {
+            if (this.isInsideBarrier(null, entity.blockPosition())) {
                 entities.add(entity);
             }
         }
@@ -101,7 +102,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
+    public boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos) {
         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
 
         int radius = this.getRadius();
@@ -209,7 +210,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;
 
-        if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
+        if (!completed || entity != null && this.isInsideBarrier(null, entity.blockPosition())) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -299,7 +300,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
-                } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
+                } else if (completed && !this.isInsideBarrier(null, owner.blockPosition())) {
                     this.discard();
                 }
             }

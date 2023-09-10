@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.mixin.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.curse_manipulation.AbsorbCurse;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -16,10 +18,21 @@ public class MinecraftMixin {
     public boolean isCurrentlyGlowing(Entity instance) {
         if (instance.isCurrentlyGlowing()) return true;
 
-        LivingEntity owner = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
 
-        if (owner == null || !(instance instanceof LivingEntity entity)) return false;
+        if (player == null || !player.hasLineOfSight(instance)) return false;
 
-        return MeleeAbilityOverlay.getSelected() == JJKAbilities.ABSORB_CURSE.get() && owner.hasLineOfSight(instance) && AbsorbCurse.canAbsorb(owner, entity);
+        if (ClientVisualHandler.isSynced(instance.getUUID())) {
+            ClientVisualHandler.VisualData data = ClientVisualHandler.getData(instance.getUUID());
+
+            if (data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                return true;
+            }
+        }
+
+        if (!(instance instanceof LivingEntity entity)) return false;
+
+        return MeleeAbilityOverlay.getSelected() == JJKAbilities.ABSORB_CURSE.get() &&
+                AbsorbCurse.canAbsorb(player, entity);
     }
 }
