@@ -94,7 +94,7 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public abstract AABB getBounds();
-    public abstract boolean isInsideBarrier(BlockPos pos);
+    public abstract boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos);
     public abstract void warn();
 
     @Override
@@ -140,14 +140,17 @@ public abstract class DomainExpansionEntity extends Mob {
             return false;
         }
         if (entity instanceof LivingEntity living) {
-            if (!living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!owner.canAttack(living)) return false;
 
-            if (!owner.canAttack(living) || cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                return false;
+            if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                    return false;
+                }
             }
         }
-        return this.isInsideBarrier(entity.blockPosition());
+        return this.isInsideBarrier(null, entity.blockPosition());
     }
 
     @Override

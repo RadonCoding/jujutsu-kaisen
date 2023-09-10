@@ -230,6 +230,21 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "waterball")
                             .toString()));
+    public static RegistryObject<EntityType<EelShikigamiProjectile>> EEL_SHIKIGAMI = ENTITIES.register("eel_shikigami", () ->
+            EntityType.Builder.<EelShikigamiProjectile>of(EelShikigamiProjectile::new, MobCategory.MISC)
+                    .sized(2.0F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "eel_shikigami")
+                            .toString()));
+    public static RegistryObject<EntityType<PiranhaShikigamiProjectile>> PIRANHA_SHIKIGAMI = ENTITIES.register("piranha_shikigami", () ->
+            EntityType.Builder.<PiranhaShikigamiProjectile>of(PiranhaShikigamiProjectile::new, MobCategory.MISC)
+                    .sized(2.0F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piranha_shikigami")
+                            .toString()));
+    public static RegistryObject<EntityType<SharkShikigamiProjectile>> SHARK_SHIKIGAMI = ENTITIES.register("shark_shikigami", () ->
+            EntityType.Builder.<SharkShikigamiProjectile>of(SharkShikigamiProjectile::new, MobCategory.MISC)
+                    .sized(2.0F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "shark_shikigami")
+                            .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)

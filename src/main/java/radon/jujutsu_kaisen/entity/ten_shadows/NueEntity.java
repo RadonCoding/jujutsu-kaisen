@@ -72,7 +72,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
 
-        this.moveControl = new FlyingMoveControl(this, 20, false);
+        this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 
     @Override

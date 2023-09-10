@@ -29,9 +29,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
-import radon.jujutsu_kaisen.capability.data.IOverlayData;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -51,7 +49,6 @@ import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncOverlayDataRemoteS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -66,15 +63,6 @@ public class JJKEventHandler {
             if (event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
-
-                player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap ->
-                        cap.sync(player));
-
-                for (Player player1 : player.level.players()) {
-                    if (!player1.getCapability(OverlayDataHandler.INSTANCE).isPresent()) continue;
-                    IOverlayData cap = player1.getCapability(OverlayDataHandler.INSTANCE).resolve().orElseThrow();
-                    PacketHandler.sendToClient(new SyncOverlayDataRemoteS2CPacket(player1.getUUID(), cap.serializeNBT()), player);
-                }
             }
         }
 
@@ -129,7 +117,6 @@ public class JJKEventHandler {
             if (event.getObject() instanceof LivingEntity entity) {
                 if (entity instanceof Player || entity instanceof ISorcerer) {
                     SorcererDataHandler.attach(event);
-                    OverlayDataHandler.attach(event);
                 }
             }
         }
@@ -138,7 +125,6 @@ public class JJKEventHandler {
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity owner = event.getEntity();
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
-            owner.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
         }
 
         @SubscribeEvent
@@ -203,7 +189,13 @@ public class JJKEventHandler {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());
                         living.level.explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
                     } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ISorcererData::clearToggled);
+                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            cap.clearToggled();
+
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
+                        });
                     }
                 }
 

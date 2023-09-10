@@ -80,7 +80,8 @@ public class WheelEntity extends Entity implements GeoEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
+        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
+                !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
             this.discard();
         } else {
             if (owner != null) {

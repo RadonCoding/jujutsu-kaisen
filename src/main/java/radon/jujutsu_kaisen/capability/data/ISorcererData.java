@@ -46,6 +46,7 @@ public interface ISorcererData {
     void addTrait(Trait trait);
     void addTraits(List<Trait> traits);
     void removeTrait(Trait trait);
+    Set<Trait> getTraits();
 
     void setType(JujutsuType type);
     JujutsuType getType();

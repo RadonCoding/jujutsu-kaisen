@@ -1,23 +1,21 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final double RADIUS = 3.0D;
@@ -37,19 +35,23 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (!owner.level.isClientSide) {
-                ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(Material.WATER.getColor().col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 2.5F,
-                        0.3F, false, 5);
-
                 for (double phi = 0.0D; phi < Math.PI * 2.0D; phi += X_STEP) {
-                    double x = owner.getX() + RADIUS * Math.cos(phi);
-                    double y = owner.getY();
-                    double z = owner.getZ() + RADIUS * Math.sin(phi);
+                    for (int i = 0; i < RADIUS; i++) {
+                        double x = owner.getX() + RADIUS * Math.cos(phi);
+                        double y = owner.getY() + i;
+                        double z = owner.getZ() + RADIUS * Math.sin(phi);
 
-                    ((ServerLevel) owner.level).sendParticles(particle, x, y, z, 0,
-                            0.0D,
-                            HelperMethods.RANDOM.nextDouble(),
-                            0.0D,
-                            1.0D);
+                        BlockPos pos = BlockPos.containing(x, y, z);
+                        BlockState state = owner.level.getBlockState(pos);
+
+                        if (!state.isAir() || state.canOcclude()) continue;
+
+                        owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER.get().defaultBlockState());
+
+                        if (owner.level.getBlockEntity(pos) instanceof DurationBlockEntity be) {
+                            be.create(1, state);
+                        }
+                    }
                 }
 
                 AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
@@ -69,10 +71,9 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     @Override
     public void onRelease(LivingEntity owner, int charge) {
         if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DIVERGENT_FIST.get()), null, owner.position(),
-                    cap.getGrade().getPower() * 2.0F, false, Level.ExplosionInteraction.NONE);
-            });
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level.explode(owner,
+                    JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
+                cap.getGrade().getPower() * 2.0F, false, Level.ExplosionInteraction.NONE));
         }
     }
 
@@ -84,5 +85,10 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.WATER;
     }
 }

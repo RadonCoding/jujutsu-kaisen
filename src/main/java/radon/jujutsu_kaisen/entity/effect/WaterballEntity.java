@@ -8,12 +8,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -27,10 +27,6 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     private static final RawAnimation SPIN = RawAnimation.begin().thenLoop("misc.spin");
 
@@ -41,8 +37,6 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     private static final int WIDTH = 16;
     private static final int HEIGHT = 8;
     private static final float DAMAGE = 10.0F;
-
-    private final List<BlockPos> blocks = new ArrayList<>();
 
     public WaterballEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -69,8 +63,6 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     private void createWave(LivingEntity owner) {
-        BlockState block = Blocks.WATER.defaultBlockState();
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         BlockPos center = owner.blockPosition();
@@ -87,6 +79,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         for (int i = 0; i < WIDTH; i++) {
             int horizontal = i;
 
+            int delay = i + 1;
+
             cap.delayTickEvent(() -> {
                 for (int j = -HEIGHT; j < HEIGHT; j++) {
                     for (int x = -horizontal; x <= horizontal; x++) {
@@ -100,41 +94,16 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
                                 if (!state.isAir() || state.canOcclude()) continue;
 
-                                owner.level.setBlockAndUpdate(pos, block);
+                                owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER.get().defaultBlockState());
 
-                                this.blocks.add(pos);
+                                if (owner.level.getBlockEntity(pos) instanceof DurationBlockEntity be) {
+                                    be.create(delay, state);
+                                }
                             }
                         }
                     }
                 }
             }, i);
-
-            cap.delayTickEvent(() -> {
-                Iterator<BlockPos> iter = this.blocks.iterator();
-
-                while (iter.hasNext()) {
-                    BlockPos pos = iter.next();
-                    iter.remove();
-                    if (this.level.getFluidState(pos).isEmpty()) continue;
-                    this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                }
-            }, i + 1);
-        }
-    }
-
-    @Override
-    public void remove(@NotNull RemovalReason pReason) {
-        super.remove(pReason);
-
-        if (!this.level.isClientSide) {
-            Iterator<BlockPos> iter = this.blocks.iterator();
-
-            while (iter.hasNext()) {
-                BlockPos pos = iter.next();
-                iter.remove();
-                if (this.level.getFluidState(pos).isEmpty()) continue;
-                this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            }
         }
     }
 

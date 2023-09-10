@@ -17,10 +17,13 @@ import radon.jujutsu_kaisen.block.DomainBlock;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import javax.annotation.Nullable;
 
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -43,9 +46,12 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
     }
 
     @Override
-    public boolean isInsideBarrier(BlockPos pos) {
+    public boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos) {
         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
 
+        for (DomainExpansionEntity domain : this.getDomains()) {
+            if (domain != this && domain != asker && domain.getStrength() >= this.getStrength() && domain.isInsideBarrier(this, pos)) return false;
+        }
         int width = this.getWidth();
         int height = this.getHeight();
         BlockPos center = this.blockPosition().below(height / 2);

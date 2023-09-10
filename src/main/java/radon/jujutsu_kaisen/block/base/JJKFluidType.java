@@ -1,60 +1,53 @@
 package radon.jujutsu_kaisen.block.base;
 
-import net.minecraft.client.Camera;
-import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class JJKFluidType extends FluidType {
-    private final ResourceLocation stillTexture;
-    private final ResourceLocation flowingTexture;
-    private final ResourceLocation overlayTexture;
     private final int tintColor;
-    private final Vector3f fogColor;
 
-    public JJKFluidType(final ResourceLocation stillTexture, final ResourceLocation flowingTexture, final ResourceLocation overlayTexture,
-                        final int tintColor, final Vector3f fogColor, final Properties properties) {
+    public JJKFluidType(int tintColor, Properties properties) {
         super(properties);
 
-        this.stillTexture = stillTexture;
-        this.flowingTexture = flowingTexture;
-        this.overlayTexture = overlayTexture;
         this.tintColor = tintColor;
-        this.fogColor = fogColor;
     }
 
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
+            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
+                    WATER_STILL = new ResourceLocation("block/water_still"),
+                    WATER_FLOW = new ResourceLocation("block/water_flow"),
+                    WATER_OVERLAY = new ResourceLocation("block/water_overlay");
+
             @Override
             public ResourceLocation getStillTexture() {
-                return stillTexture;
+                return WATER_STILL;
             }
 
             @Override
             public ResourceLocation getFlowingTexture() {
-                return flowingTexture;
+                return WATER_FLOW;
             }
 
             @Override
-            public @Nullable ResourceLocation getOverlayTexture() {
-                return overlayTexture;
+            public @NotNull ResourceLocation getOverlayTexture() {
+                return WATER_OVERLAY;
+            }
+
+            @Override
+            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return UNDERWATER_LOCATION;
             }
 
             @Override
             public int getTintColor() {
-                return tintColor;
-            }
-
-            @Override
-            public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-                return fogColor;
+                return JJKFluidType.this.tintColor;
             }
         });
     }

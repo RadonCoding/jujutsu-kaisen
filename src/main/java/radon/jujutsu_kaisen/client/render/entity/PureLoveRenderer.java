@@ -61,7 +61,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         }
 
         pPoseStack.pushPose();
-        pPoseStack.scale(PureLoveBeam.SCALE, PureLoveBeam.SCALE, PureLoveBeam.SCALE);
+        pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));

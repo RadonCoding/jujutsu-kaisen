@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -76,6 +77,26 @@ public class PureLoveBeam extends JujutsuProjectile {
         this.calculateEndPos();
     }
 
+    public float getScale() {
+        if (!(this.getOwner() instanceof RikaEntity rika)) return SCALE;
+        return SCALE * (rika.isOpen() ? 1.0F : 0.5F);
+    }
+
+    public double getRadius() {
+        if (!(this.getOwner() instanceof RikaEntity rika)) return RADIUS;
+        return RADIUS * (rika.isOpen() ? 1.0D : 0.5D);
+    }
+
+    public float getDamage() {
+        if (!(this.getOwner() instanceof RikaEntity rika)) return DAMAGE;
+        return DAMAGE * (rika.isOpen() ? 1.0F : 0.5F);
+    }
+
+    public float getDuration() {
+        if (!(this.getOwner() instanceof RikaEntity rika)) return DURATION;
+        return DURATION * (rika.isOpen() ? 1.0F : 0.5F);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -121,13 +142,14 @@ public class PureLoveBeam extends JujutsuProjectile {
                     for (Entity entity : entities) {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_RED.get()), DAMAGE * cap.getGrade().getPower(owner));
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
+                                this.getDamage() * cap.getGrade().getPower(owner));
                     }
                 });
 
                 if (!this.level.isClientSide) {
                     if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                        double radius = SCALE * 2.0F;
+                        double radius = this.getScale() * 2.0F;
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
@@ -154,7 +176,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - DURATION / 2 > DURATION) {
+            if (this.getTime() - this.getDuration() / 2 > this.getDuration()) {
                 this.on = false;
             }
         }
@@ -186,13 +208,13 @@ public class PureLoveBeam extends JujutsuProjectile {
 
     private void calculateEndPos() {
         if (this.level.isClientSide) {
-            this.endPosX = this.getX() + RADIUS * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosZ = this.getZ() + RADIUS * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosY = this.getY() + RADIUS * Math.sin(this.renderPitch);
+            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.renderPitch);
         } else {
-            this.endPosX = this.getX() + RADIUS * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosZ = this.getZ() + RADIUS * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosY = this.getY() + RADIUS * Math.sin(this.getPitch());
+            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.getPitch());
         }
     }
 
@@ -216,7 +238,7 @@ public class PureLoveBeam extends JujutsuProjectile {
         AABB bounds = new AABB(Math.min(this.getX(), this.collidePosX), Math.min(this.getY(), this.collidePosY),
                 Math.min(this.getZ(), this.collidePosZ), Math.max(this.getX(), this.collidePosX),
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
-                .inflate(SCALE);
+                .inflate(this.getScale());
 
         for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
             float pad = entity.getPickRadius() + 0.5F;

@@ -39,4 +39,9 @@ public class JJKBlockEntities {
             BlockEntityType.Builder.of(VeilBlockEntity::new,
                             JJKBlocks.VEIL.get())
                     .build(null));
+
+    public static RegistryObject<BlockEntityType<DurationBlockEntity>> DURATION = BLOCK_ENTITIES.register("duration", () ->
+            BlockEntityType.Builder.of(DurationBlockEntity::new,
+                            JJKBlocks.FAKE_WATER.get())
+                    .build(null));
 }

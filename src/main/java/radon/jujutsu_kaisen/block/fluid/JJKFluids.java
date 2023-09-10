@@ -20,4 +20,13 @@ public class JJKFluids {
     public static final ForgeFlowingFluid.Properties CHIMERA_SHADOW_GARDEN_PROPERTIES = new ForgeFlowingFluid.Properties(
             JJKFluidTypes.CHIMERA_SHADOW_GARDEN, CHIMERA_SHADOW_GARDEN_SOURCE, CHIMERA_SHADOW_GARDEN_FLOWING)
             .block(JJKBlocks.CHIMERA_SHADOW_GARDEN);
+
+    public static final RegistryObject<FlowingFluid> FAKE_WATER_SOURCE = FLUIDS.register("fake_water_source",
+            () -> new FakeWaterFluid.Source(JJKFluids.FAKE_WATER_PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FAKE_WATER_FLOWING = FLUIDS.register("fake_water_flowing",
+            () -> new FakeWaterFluid.Flowing(JJKFluids.FAKE_WATER_PROPERTIES));
+
+    public static final ForgeFlowingFluid.Properties FAKE_WATER_PROPERTIES = new ForgeFlowingFluid.Properties(
+            JJKFluidTypes.FAKE_WATER, FAKE_WATER_SOURCE, FAKE_WATER_FLOWING)
+            .block(JJKBlocks.FAKE_WATER);
 }

@@ -5,23 +5,21 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererData;
-import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ReceiveSorcererDataS2CPacket {
+public class ReceiveVisualDataS2CPacket {
     private final UUID src;
     private final CompoundTag nbt;
 
-    public ReceiveSorcererDataS2CPacket(UUID src, CompoundTag nbt) {
+    public ReceiveVisualDataS2CPacket(UUID src, CompoundTag nbt) {
         this.src = src;
         this.nbt = nbt;
     }
 
-    public ReceiveSorcererDataS2CPacket(FriendlyByteBuf buf) {
+    public ReceiveVisualDataS2CPacket(FriendlyByteBuf buf) {
         this(buf.readUUID(), buf.readNbt());
     }
 
@@ -34,9 +32,8 @@ public class ReceiveSorcererDataS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            ISorcererData data = new SorcererData();
-            data.deserializeNBT(this.nbt);
-            SixEyesOverlay.setCurrent(this.src, data);
+            ClientVisualHandler.VisualData data = ClientVisualHandler.VisualData.deserializeNBT(this.nbt);
+            ClientVisualHandler.receive(this.src, data);
         }));
         ctx.setPacketHandled(true);
     }

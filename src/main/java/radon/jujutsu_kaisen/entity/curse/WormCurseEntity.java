@@ -3,13 +3,15 @@ package radon.jujutsu_kaisen.entity.curse;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
@@ -18,10 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -57,24 +57,6 @@ public class WormCurseEntity extends CursedSpirit {
     @Override
     protected boolean hasMeleeAttack() {
         return true;
-    }
-
-    public WormCurseEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.WORM_CURSE.get(), owner.level);
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
-
-        this.init();
     }
 
     private PlayState bitePredicate(AnimationState<WormCurseEntity> animationState) {

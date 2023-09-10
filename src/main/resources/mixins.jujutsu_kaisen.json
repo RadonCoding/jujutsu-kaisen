@@ -3,25 +3,27 @@
   "minVersion": "0.8",
   "package": "radon.jujutsu_kaisen.mixin",
   "compatibilityLevel": "JAVA_17",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "jujutsu_kaisen.refmap.json",
   "client": [
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
+    "client.MinecraftMixin",
     "client.PostChainAccessor"
   ],
-  "server": [],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "refmap": "mixins.jujutsu_kaisen.refmap.json",
+  "server": [
+    "server.ServerEntityMixin"
+  ],
   "mixins": [
-    "client.ItemEntityMixin",
-    "client.MinecraftMixin",
+    "client.EntityMixin",
+    "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",
-    "common.PathNavigationMixin",
-    "server.ServerEntityMixin"
+    "common.PathNavigationMixin"
   ]
 }

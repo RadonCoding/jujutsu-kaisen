@@ -26,8 +26,8 @@ public class Heal extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                owner.heal(AMOUNT * cap.getGrade().ordinal() / SorcererGrade.values().length));
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        owner.heal(AMOUNT * ((float) (Math.max(1, cap.getGrade().ordinal())) / SorcererGrade.values().length));
     }
 
     @Override

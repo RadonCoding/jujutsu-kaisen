@@ -18,15 +18,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.CreativeModeTabEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.capability.data.OverlayDataHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
@@ -34,8 +31,6 @@ import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.layer.overlay.IRunnableOverlay;
-import radon.jujutsu_kaisen.client.layer.overlay.Overlay;
 import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
@@ -57,7 +52,6 @@ import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.io.IOException;
-import java.util.Set;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -174,50 +168,13 @@ public class JJKClientEventHandler {
                 });
             }
         }
-
-        @SubscribeEvent
-        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            Minecraft mc = Minecraft.getInstance();
-
-            if (mc.player == null) return;
-
-            mc.player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
-                Set<Overlay> overlays;
-
-                if (cap.isSynced(event.getEntity().getUUID())) {
-                    overlays = cap.getRemoteOverlays(event.getEntity().getUUID());
-                } else {
-                    return;
-                }
-
-                for (Overlay overlay : overlays) {
-                    if (!(overlay instanceof IRunnableOverlay runnable)) continue;
-                    runnable.run(event.getEntity());
-                }
-            });
-        }
-
-        @SubscribeEvent
-        public static void onClientTick(TickEvent.ClientTickEvent event) {
-            Minecraft mc = Minecraft.getInstance();
-
-            if (mc.player == null) return;
-
-            mc.player.getCapability(OverlayDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Overlay overlay : cap.getLocalOverlays()) {
-                    if (!(overlay instanceof IRunnableOverlay runnable)) continue;
-                    runnable.run(mc.player);
-                }
-            });
-        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ModEvents {
         @SubscribeEvent
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
-            event.register((pState, pLevel, pPos, pTintIndex) ->
-                    pState.getValue(VeilBlock.COLOR).getMaterialColor().col,
+            event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMaterialColor().col,
                     JJKBlocks.VEIL.get());
         }
 
@@ -345,6 +302,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
             event.registerEntityRenderer(JJKEntities.WATERBALL.get(), WaterballRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
+            event.registerEntityRenderer(JJKEntities.EEL_SHIKIGAMI.get(), EelShikigamiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SHARK_SHIKIGAMI.get(), SharkShikigamiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PIRANHA_SHIKIGAMI.get(), PiranhaShikigamiRenderer::new);
         }
 
         @SubscribeEvent

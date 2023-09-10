@@ -5,20 +5,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.ReceiveSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.ReceiveVisualDataS2CPacket;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class RequestSorcererDataC2SPacket {
+public class RequestVisualDataC2SPacket {
     private final UUID src;
 
-    public RequestSorcererDataC2SPacket(UUID uuid) {
+    public RequestVisualDataC2SPacket(UUID uuid) {
         this.src = uuid;
     }
 
-    public RequestSorcererDataC2SPacket(FriendlyByteBuf buf) {
+    public RequestVisualDataC2SPacket(FriendlyByteBuf buf) {
         this(buf.readUUID());
     }
 
@@ -37,8 +38,10 @@ public class RequestSorcererDataC2SPacket {
             LivingEntity target = (LivingEntity) sender.getLevel().getEntity(this.src);
 
             if (target != null) {
-                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        PacketHandler.sendToClient(new ReceiveSorcererDataS2CPacket(this.src, cap.serializeNBT()), sender));
+                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), cap.getType());
+                    PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
+                });
             }
         });
         ctx.setPacketHandled(true);
