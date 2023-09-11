@@ -21,6 +21,7 @@ public class JJKBlockEntities {
 
                             JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(),
                             JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get(),
+                            JJKBlocks.FAKE_WATER_DOMAIN.get(),
 
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
@@ -42,6 +43,6 @@ public class JJKBlockEntities {
 
     public static RegistryObject<BlockEntityType<DurationBlockEntity>> DURATION = BLOCK_ENTITIES.register("duration", () ->
             BlockEntityType.Builder.of(DurationBlockEntity::new,
-                            JJKBlocks.FAKE_WATER.get())
+                            JJKBlocks.FAKE_WATER_DURATION.get())
                     .build(null));
 }

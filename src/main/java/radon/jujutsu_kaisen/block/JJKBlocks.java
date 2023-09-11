@@ -68,11 +68,13 @@ public class JJKBlocks {
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
@@ -100,6 +102,8 @@ public class JJKBlocks {
                     .isViewBlocking(JJKBlocks::always)
                     .noOcclusion()));
 
-    public static RegistryObject<FakeWaterBlock> FAKE_WATER = BLOCKS.register("fake_water", () ->
-            new FakeWaterBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static RegistryObject<FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
+            new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static RegistryObject<FakeWaterDomainBlock> FAKE_WATER_DOMAIN = BLOCKS.register("fake_water_domain", () ->
+            new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 }

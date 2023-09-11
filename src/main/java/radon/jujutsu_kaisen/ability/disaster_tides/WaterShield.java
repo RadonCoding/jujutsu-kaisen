@@ -46,7 +46,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
                         if (!state.isAir() || state.canOcclude()) continue;
 
-                        owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER.get().defaultBlockState());
+                        owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
 
                         if (owner.level.getBlockEntity(pos) instanceof DurationBlockEntity be) {
                             be.create(1, state);

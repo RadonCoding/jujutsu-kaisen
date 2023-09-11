@@ -79,7 +79,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         for (int i = 0; i < WIDTH; i++) {
             int horizontal = i;
 
-            int delay = i + 1;
+            int duration = i + 1;
 
             cap.delayTickEvent(() -> {
                 for (int j = -HEIGHT; j < HEIGHT; j++) {
@@ -94,10 +94,12 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
                                 if (!state.isAir() || state.canOcclude()) continue;
 
-                                owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER.get().defaultBlockState());
+                                if (this.level.getBlockEntity(pos) != null) throw new RuntimeException();
+
+                                owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
 
                                 if (owner.level.getBlockEntity(pos) instanceof DurationBlockEntity be) {
-                                    be.create(delay, state);
+                                    be.create(duration, state);
                                 }
                             }
                         }
@@ -120,7 +122,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                 if (this.getTime() % 5 == 0) {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
-                if (this.getTime() % INTERVAL == 0) {
+                if (!this.level.isClientSide && this.getTime() % INTERVAL == 0) {
                     this.createWave(owner);
                 }
                 Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())

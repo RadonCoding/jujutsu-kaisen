@@ -34,6 +34,8 @@ public class DurationBlockEntity extends BlockEntity {
                 } else {
                     pLevel.setBlockAndUpdate(pPos, original);
                 }
+            } else {
+                pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
             }
         }
     }

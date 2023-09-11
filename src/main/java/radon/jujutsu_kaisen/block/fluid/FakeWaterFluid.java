@@ -24,8 +24,7 @@ public abstract class FakeWaterFluid extends ForgeFlowingFluid {
 
     public static class Flowing extends FakeWaterFluid
     {
-        public Flowing(Properties properties)
-        {
+        public Flowing(Properties properties) {
             super(properties);
 
             registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));

@@ -327,6 +327,12 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
                             .toString()));
 
+    public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
+            EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
+                    .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
+                            .toString()));
+
     public static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
@@ -366,5 +372,7 @@ public class JJKEntities {
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
         event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
+
+        event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
     }
 }

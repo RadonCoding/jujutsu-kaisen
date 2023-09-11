@@ -38,6 +38,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return 1;
     }
 
+    public boolean display() {
+        return true;
+    }
+
     protected List<EntityType<?>> getFusions() {
         return List.of();
     }

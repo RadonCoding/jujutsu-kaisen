@@ -106,6 +106,7 @@ public class JJKEventHandler {
                         newCap.resetBurnout();
                         newCap.clearToggled();
                         newCap.revive(false);
+                        newCap.resetBlackFlash();
                     }
                 });
             });
@@ -148,7 +149,7 @@ public class JJKEventHandler {
 
             boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
+            /*if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
@@ -163,7 +164,7 @@ public class JJKEventHandler {
                     event.setCanceled(true);
                     return;
                 }
-            }
+            }*/
 
             if (attacker instanceof LivingEntity living) {
                 ItemStack stack = null;
