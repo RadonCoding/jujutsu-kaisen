@@ -13,9 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
@@ -115,6 +113,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
 
+        int floorY = owner.getBlockY();
+
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -126,39 +126,46 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         int delay = radius - (pos.getY() - center.getY());
 
-                        if (!state.isAir() || distance >= radius - 1) {
-                            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.delayTickEvent(() -> {
-                                    if (!this.isRemoved()) {
-                                        BlockState original = null;
+                        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            cap.delayTickEvent(() -> {
+                                if (!this.isRemoved()) {
+                                    BlockState original = null;
 
-                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            original = be.getOriginal();
-                                        } else if (this.level.getBlockEntity(pos) != null) {
-                                            return;
-                                        } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock) {
-                                            return;
-                                        }
-
-                                        List<Block> blocks = ((DomainExpansion.IClosedDomain) this.ability).getBlocks();
-                                        List<Block> filler = ((DomainExpansion.IClosedDomain) this.ability).getFillBlocks();
-
-                                        if (distance < radius - 1 && (state.getFluidState().is(Fluids.WATER) || state.getFluidState().is(Fluids.FLOWING_WATER) ||
-                                                state.getFluidState().is(Fluids.LAVA) || state.getFluidState().is(Fluids.FLOWING_LAVA))) {
-                                            owner.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-                                            return;
-                                        }
-                                        Block block = state.isAir() ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
-                                        owner.level.setBlock(pos, block.defaultBlockState(),
-                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-
-                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, original == null ? state : original);
-                                        }
+                                    if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                        original = be.getOriginal();
+                                    } else if (this.level.getBlockEntity(pos) != null) {
+                                        return;
+                                    } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock) {
+                                        return;
                                     }
-                                }, delay);
-                            });
-                        }
+
+                                    List<Block> blocks = ((DomainExpansion.IClosedDomain) this.ability).getBlocks();
+                                    List<Block> filler = ((DomainExpansion.IClosedDomain) this.ability).getFillBlocks();
+                                    List<Block> floor = ((DomainExpansion.IClosedDomain) this.ability).getFloorBlocks();
+
+                                    Block block = null;
+
+                                    if (state.isAir()) {
+                                        if (distance >= radius - 1) {
+                                            block = blocks.get(this.random.nextInt(blocks.size()));
+                                        } else if (pos.getY() <= floorY && !floor.isEmpty()) {
+                                            block = floor.get(this.random.nextInt(floor.size()));
+                                        }
+                                    } else {
+                                        block = distance >= radius - 1 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
+                                    }
+
+                                    if (block == null) return;
+
+                                    owner.level.setBlock(pos, block.defaultBlockState(),
+                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                    if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                        be.create(this.uuid, original == null ? state : original);
+                                    }
+                                }
+                            }, delay);
+                        });
                     }
                 }
             }

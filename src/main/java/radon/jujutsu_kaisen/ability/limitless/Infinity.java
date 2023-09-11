@@ -30,10 +30,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.misc.SimpleDomain;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
@@ -314,7 +314,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     if (source.getEntity() instanceof LivingEntity living) {
                         if (source.getDirectEntity() instanceof ScissorEntity) return;
 
-                        if (JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) && living.distanceTo(target) <= SimpleDomain.RADIUS) return;
+                        if (JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) && living.distanceTo(target) <= SimpleDomainEntity.RADIUS) return;
 
                         if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                             ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

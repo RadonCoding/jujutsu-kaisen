@@ -83,6 +83,7 @@ public interface ISorcererData {
 
     void onBlackFlash(LivingEntity owner);
     long getLastBlackFlashTime();
+    void resetBlackFlash();
     boolean isInZone(LivingEntity owner);
 
     void delayTickEvent(Runnable task, int delay);

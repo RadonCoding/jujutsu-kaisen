@@ -31,8 +31,13 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     }
 
     @Override
+    public List<Block> getFloorBlocks() {
+        return List.of(JJKBlocks.FAKE_WATER_DOMAIN.get());
+    }
+
+    @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        if (owner.level.getGameTime() % 10 == 0) {
+        if (owner.hasLineOfSight(entity) && owner.level.getGameTime() % 10 == 0) {
             Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
             ((IDomainAttack) fish).perform(owner, domain, entity);
         }

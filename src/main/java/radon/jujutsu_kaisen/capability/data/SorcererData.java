@@ -100,7 +100,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
 
     private static final float ENERGY_AMOUNT = 0.25F;
-    private static final int REQUIRED_ADAPTATION = 3;
+    private static final int REQUIRED_ADAPTATION = 4;
 
     public SorcererData() {
         this.type = JujutsuType.SORCERER;
@@ -112,6 +112,8 @@ public class SorcererData implements ISorcererData {
 
         this.grade = SorcererGrade.GRADE_4;
         this.mode = TenShadowsMode.SUMMON;
+
+        this.lastBlackFlashTime = -1;
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
@@ -654,8 +656,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void resetBlackFlash() {
+        this.lastBlackFlashTime = -1;
+    }
+
+    @Override
     public boolean isInZone(LivingEntity owner) {
-        return this.lastBlackFlashTime != 0 && ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
+        return this.lastBlackFlashTime != -1 && ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override

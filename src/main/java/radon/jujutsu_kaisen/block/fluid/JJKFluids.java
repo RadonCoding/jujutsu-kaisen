@@ -28,5 +28,5 @@ public class JJKFluids {
 
     public static final ForgeFlowingFluid.Properties FAKE_WATER_PROPERTIES = new ForgeFlowingFluid.Properties(
             JJKFluidTypes.FAKE_WATER, FAKE_WATER_SOURCE, FAKE_WATER_FLOWING)
-            .block(JJKBlocks.FAKE_WATER);
+            .block(JJKBlocks.FAKE_WATER_DURATION);
 }

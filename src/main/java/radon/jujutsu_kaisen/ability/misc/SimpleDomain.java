@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -13,21 +13,22 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class SimpleDomain extends Ability implements Ability.IToggled, Ability.IDurationable {
-    private static final double X_STEP = 0.05D;
-    public static final double RADIUS = 3.0D;
+public class SimpleDomain extends Summon<SimpleDomainEntity> implements Ability.IDurationable {
+    public SimpleDomain() {
+        super(SimpleDomainEntity.class);
+    }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -44,37 +45,18 @@ public class SimpleDomain extends Ability implements Ability.IToggled, Ability.I
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.SIMPLE_DOMAIN.get());
     }
 
     @Override
-    public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            float factor = (float) cap.getRemaining(this) / (float) this.getDuration();
-
-            if (!owner.level.isClientSide) {
-                ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
-                        1.0F, true, 1);
-
-                for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
-                    double x = owner.getX() + RADIUS * Math.cos(phi);
-                    double y = owner.getY();
-                    double z = owner.getZ() + RADIUS * Math.sin(phi);
-
-                    ((ServerLevel) owner.level).sendParticles(particle, x, y, z, 0,
-                            0.0D,
-                            HelperMethods.RANDOM.nextDouble(),
-                            0.0D,
-                            1.0D);
-                }
-            }
-        });
+    public boolean isTenShadows() {
+        return false;
     }
 
     @Override
-    public int getDuration() {
-        return 5 * 20;
+    protected SimpleDomainEntity summon(int index, LivingEntity owner) {
+        return new SimpleDomainEntity(owner);
     }
 
     @Override
@@ -88,18 +70,13 @@ public class SimpleDomain extends Ability implements Ability.IToggled, Ability.I
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onDisabled(LivingEntity owner) {
-
-    }
-
-    @Override
     public DisplayType getDisplayType() {
         return DisplayType.DOMAIN;
+    }
+
+    @Override
+    public boolean display() {
+        return false;
     }
 
     @Override
