@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.mixin.client;
+package radon.jujutsu_kaisen.mixin.common;
 
 import net.minecraft.world.entity.Entity;
 import org.joml.Vector3f;

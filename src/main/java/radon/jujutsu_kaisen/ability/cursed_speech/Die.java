@@ -23,7 +23,7 @@ import java.util.List;
 public class Die extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 35.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -39,7 +39,7 @@ public class Die extends Ability {
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level.getEntities(owner, bounds);
+        return owner.level.getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Die extends Ability {
                 for (Entity entity : getEntities(owner)) {
                     if (!(entity instanceof LivingEntity living)) continue;
 
-                    living.hurt(JJKDamageSources.jujutsuBypassAttack(owner, this), DAMAGE * ownerCap.getGrade().getPower());
+                    living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getGrade().getPower());
 
                     living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
                         if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
@@ -86,5 +86,10 @@ public class Die extends Ability {
     @Override
     public int getCooldown() {
         return 30 * 20;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 }

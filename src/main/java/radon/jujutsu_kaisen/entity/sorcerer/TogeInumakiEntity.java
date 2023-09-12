@@ -4,6 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -87,9 +88,26 @@ public class TogeInumakiEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.TOGE_HELMET.get()));
         this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.TOGE_CHESTPLATE.get()));
         this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.TOGE_LEGGINGS.get()));
         this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.TOGE_BOOTS.get()));
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        if (!this.level.isClientSide) {
+            LivingEntity target = this.getTarget();
+
+            if (target != null) {
+                if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                    this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                }
+                return;
+            }
+
+            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.TOGE_HELMET.get()));
+            }
+        }
     }
 }

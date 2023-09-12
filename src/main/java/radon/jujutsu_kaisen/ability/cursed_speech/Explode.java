@@ -40,7 +40,7 @@ public class Explode extends Ability {
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level.getEntities(owner, bounds);
+        return owner.level.getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
 
     @Override
@@ -80,5 +80,10 @@ public class Explode extends Ability {
     @Override
     public int getCooldown() {
         return 20 * 20;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 }

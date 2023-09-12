@@ -37,6 +37,8 @@ public class MeleeAbilityOverlay {
     }
 
     public static Ability getSelected() {
+        if (abilities.isEmpty()) return null;
+
         int index = getIndex();
 
         if (abilities.size() > index) {

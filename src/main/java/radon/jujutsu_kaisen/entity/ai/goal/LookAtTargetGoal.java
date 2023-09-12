@@ -26,11 +26,17 @@ public class LookAtTargetGoal extends Goal {
         LivingEntity target = this.mob.getTarget();
 
         if (target != null) {
-            this.mob.yHeadRot = HelperMethods.getYRotD(this.mob, target.getEyePosition());
-            this.mob.yBodyRot = HelperMethods.getYRotD(this.mob, target.getEyePosition());
-
             this.mob.setXRot(HelperMethods.getXRotD(this.mob, target.getEyePosition()));
+            this.mob.xRotO = this.mob.getXRot();
+
             this.mob.setYRot(HelperMethods.getYRotD(this.mob, target.getEyePosition()));
+            this.mob.yRotO = this.mob.getYRot();
+
+            this.mob.yHeadRot = this.mob.getYRot();
+            this.mob.yHeadRotO = this.mob.yHeadRot;
+
+            this.mob.yBodyRot = this.mob.getYRot();
+            this.mob.yBodyRotO = this.mob.yBodyRot;
         }
     }
 }
