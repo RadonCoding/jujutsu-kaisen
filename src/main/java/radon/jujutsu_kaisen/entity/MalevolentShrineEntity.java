@@ -29,8 +29,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     public AABB getBounds() {
         int width = this.getWidth();
         int height = this.getHeight();
-        return new AABB(this.getX() - width, this.getY(), this.getZ() - width,
-                this.getX() + width, this.getY() + height, this.getZ() + width);
+        return new AABB(this.getX() - width, this.getY() - ((double) height / 2), this.getZ() - width,
+                this.getX() + width, this.getY() + ((double) height / 2), this.getZ() + width);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         }
         int width = this.getWidth();
         int height = this.getHeight();
-        BlockPos center = this.blockPosition();
+        BlockPos center = this.blockPosition().below(height / 2);
         BlockPos relative = pos.subtract(center);
         return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }

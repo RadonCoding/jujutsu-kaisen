@@ -20,7 +20,7 @@
     "server.ServerEntityMixin"
   ],
   "mixins": [
-    "client.EntityMixin",
+    "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",

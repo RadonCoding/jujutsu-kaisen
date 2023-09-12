@@ -33,4 +33,9 @@ public class DisasterTides extends Ability {
     public float getCost(LivingEntity owner) {
         return 100.0F;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
 }

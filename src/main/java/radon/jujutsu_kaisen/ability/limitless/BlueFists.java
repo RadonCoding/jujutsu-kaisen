@@ -48,6 +48,11 @@ public class BlueFists extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isTechnique() {
+        return true;
+    }
+
+    @Override
     public Classification getClassification() {
         return Classification.LIMITLESS;
     }

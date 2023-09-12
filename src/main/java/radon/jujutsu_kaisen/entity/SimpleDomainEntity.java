@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
@@ -62,6 +63,11 @@ public class SimpleDomainEntity extends Mob {
     }
 
     @Override
+    public boolean isSilent() {
+        return true;
+    }
+
+    @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (pSource instanceof JJKDamageSources.JujutsuDamageSource source) {
             if (source.getDirectEntity() instanceof DomainExpansionEntity) {
@@ -77,20 +83,22 @@ public class SimpleDomainEntity extends Mob {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner == null) return;
+        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
+            this.discard();
+        } else if (owner != null) {
+            this.setPos(owner.position());
 
-        this.setPos(owner.position());
+            float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
 
-        float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
+                    1.0F, true, 1);
 
-        ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
-                1.0F, true, 1);
-
-        for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
-            double x = this.getX() + RADIUS * Math.cos(phi);
-            double y = this.getY();
-            double z = this.getZ() + RADIUS * Math.sin(phi);
-            this.level.addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+            for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
+                double x = this.getX() + RADIUS * Math.cos(phi);
+                double y = this.getY();
+                double z = this.getZ() + RADIUS * Math.sin(phi);
+                this.level.addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+            }
         }
     }
 

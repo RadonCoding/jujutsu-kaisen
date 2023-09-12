@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -87,11 +87,13 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> implements Ability.
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingHurt(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                    System.out.println(victim);
+
                     cap.toggle(victim, JJKAbilities.SIMPLE_DOMAIN.get());
 
                     if (victim instanceof ServerPlayer player) {
