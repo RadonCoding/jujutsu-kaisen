@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -129,6 +130,19 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         return !(pTarget instanceof FishShikigamiProjectile) && super.canHitEntity(pTarget);
     }
 
+    private void applyRotation() {
+        LivingEntity target = this.getTarget();
+
+        if (target != null) {
+            Vec3 delta = target.position().subtract(this.position());
+            double d0 = delta.horizontalDistance();
+            this.setYRot((float) (Mth.atan2(delta.x(), delta.z()) * (double) (180.0F / (float) Math.PI)));
+            this.setXRot((float) (Mth.atan2(delta.y(), d0) * (double) (180.0F / (float) Math.PI)));
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+        }
+    }
+
     private void applyOffset() {
         if (this.getOwner() instanceof LivingEntity owner) {
             float xOffset = this.entityData.get(DATA_OFFSET_X);
@@ -136,17 +150,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
             Vec3 look = HelperMethods.getLookAngle(owner);
 
-            LivingEntity target = this.getTarget();
-
-            if (target != null) {
-                double dx = target.getX() - this.getX();
-                double dy = target.getY() - this.getY();
-                double dz = target.getZ() - this.getZ();
-                this.setYRot((float) (Math.atan2(dz, dx) * (180.0F / Math.PI)));
-                this.setXRot((float) (Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)) * (180.0F / Math.PI)));
-                this.yRotO = this.getYRot();
-                this.xRotO = this.getXRot();
-            }
+            this.applyRotation();
 
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                     .subtract(look.multiply(this.getBbWidth() * 3.0D, 0.0D, this.getBbWidth() * 3.0D))
@@ -193,14 +197,18 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                     this.applyOffset();
                 }
             } else if (this.getTime() >= DELAY) {
-                this.hurtEntities();
+                this.applyRotation();
 
-                LivingEntity target = this.getTarget();
+                if (!this.level.isClientSide) {
+                    this.hurtEntities();
 
-                if (target != null) {
-                    this.setDeltaMovement(target.position().subtract(this.position()).normalize().scale(SPEED));
-                } else {
-                    this.discard();
+                    LivingEntity target = this.getTarget();
+
+                    if (target != null) {
+                        this.setDeltaMovement(target.position().subtract(this.position()).normalize().scale(SPEED));
+                    } else {
+                        this.discard();
+                    }
                 }
             }
         }

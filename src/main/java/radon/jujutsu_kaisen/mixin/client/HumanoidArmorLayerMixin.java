@@ -25,7 +25,8 @@ public class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidM
             return armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_OUTFIT ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_BLINDFOLD ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.YUJI_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.MEGUMI_OUTFIT;
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.MEGUMI_OUTFIT ||
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.TOGE_OUTFIT;
         }
         return false;
     }

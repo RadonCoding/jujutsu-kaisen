@@ -1,9 +1,11 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -230,7 +232,12 @@ public class KuchisakeOnna extends CursedSpirit {
 
                     if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, false, false) == Ability.Status.SUCCESS) {
                         target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 3 * 20, 0, false, false, false));
-                        target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID), this.getDisplayName()));
+                        ResourceLocation key = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(this.getType());
+
+                        if (key != null) {
+                            target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID),
+                                    Component.translatable(String.format("entity.%s.%s", key.getNamespace(), key.getPath()))));
+                        }
                         this.entityData.set(DATA_OPEN, true);
                     } else {
                         this.entityData.set(DATA_TARGET, Optional.empty());

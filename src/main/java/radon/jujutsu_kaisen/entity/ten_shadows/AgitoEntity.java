@@ -92,7 +92,7 @@ public class AgitoEntity extends TenShadowsSummon {
             this.setXRot(HelperMethods.getXRotD(this, pPlayer.getEyePosition()));
             this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
 
-            if (AbilityHandler.trigger(this, JJKAbilities.SHOOT_RCT.get()) == Ability.Status.SUCCESS) {
+            if (AbilityHandler.trigger(this, JJKAbilities.HEAL_RCT.get()) == Ability.Status.SUCCESS) {
                 return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
             return InteractionResult.FAIL;
@@ -201,7 +201,7 @@ public class AgitoEntity extends TenShadowsSummon {
 
     @Override
     public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.SHOOT_RCT.get());
+        return List.of(JJKAbilities.HEAL_RCT.get());
     }
 
     @Override

@@ -66,10 +66,15 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
 
     public static void addItem(ItemStack inventory, int slot, ItemStack stack) {
         CompoundTag nbt = inventory.getOrCreateTag();
-
         ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
         itemsTag.add(slot, stack.save(new CompoundTag()));
+        nbt.put("items", itemsTag);
+    }
 
+    public static void removeItem(ItemStack inventory, int slot) {
+        CompoundTag nbt = inventory.getOrCreateTag();
+        ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
+        itemsTag.remove(slot);
         nbt.put("items", itemsTag);
     }
 
@@ -86,9 +91,7 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
 
         SimpleContainer container = new SimpleContainer(9);
         container.fromTag(nbt.getList("items", Tag.TAG_COMPOUND));
-        container.addListener(pContainer -> {
-            nbt.put("items", ((SimpleContainer) pContainer).createTag());
-        });
+        container.addListener(pContainer -> nbt.put("items", ((SimpleContainer) pContainer).createTag()));
         return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / 9);
     }
 }

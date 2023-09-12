@@ -364,27 +364,42 @@ public class JJKEventHandler {
                     }
                 }
 
-                if (victimCap.getType() != JujutsuType.SORCERER || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
+                if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
                 int chance = 10;
 
-                for (InteractionHand hand : InteractionHand.values()) {
-                    ItemStack stack = victim.getItemInHand(hand);
+                if (victimCap.getType() == JujutsuType.SORCERER) {
+                    for (InteractionHand hand : InteractionHand.values()) {
+                        ItemStack stack = victim.getItemInHand(hand);
 
-                    if (stack.is(Items.TOTEM_OF_UNDYING)) {
-                        chance = 7;
+                        if (stack.is(Items.TOTEM_OF_UNDYING)) {
+                            chance = 7;
+                        }
                     }
                 }
 
                 if (HelperMethods.RANDOM.nextInt(chance) == 0) {
-                    if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
-                        victim.setHealth(victim.getMaxHealth() / 2);
-                        victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+                    if (victimCap.getType() == JujutsuType.SORCERER) {
+                        if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
+                            victim.setHealth(victim.getMaxHealth() / 2);
+                            victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
 
-                        if (victim instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                            }
+                            event.setCanceled(true);
                         }
-                        event.setCanceled(true);
+                    } else if (victimCap.hasTrait(Trait.CURSED_WOMB)) {
+                        if (!victimCap.hasTrait(Trait.EVOLVED_CURSE)) {
+                            victim.setHealth(victim.getMaxHealth() / 2);
+                            victimCap.addTrait(Trait.EVOLVED_CURSE);
+                            victimCap.removeTrait(Trait.CURSED_WOMB);
+
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                            }
+                            event.setCanceled(true);
+                        }
                     }
                 }
             }

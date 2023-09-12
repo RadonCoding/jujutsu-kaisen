@@ -31,13 +31,17 @@ import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.model.YujiItadoriModel;
+import radon.jujutsu_kaisen.client.model.entity.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
+import radon.jujutsu_kaisen.client.render.entity.curse.*;
+import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
+import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
+import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -237,6 +241,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(YujiItadoriModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(YujiItadoriModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(YujiItadoriModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(TogeInumakiModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(TogeInumakiModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(TogeInumakiModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -282,6 +290,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOGE_INUMAKI.get(), TogeInumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_TOTALITY.get(), DivineDogTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CYCLOPS_CURSE.get(), CyclopsCurseRenderer::new);
@@ -290,7 +299,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAX_ELEPHANT.get(), MaxElephantRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY_LIGHTNING.get(), LightningBoltRenderer::new);
-            event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), RoundDeerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), TranquilDeerRenderer::new);
             event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_BULL.get(), PiercingBullRenderer::new);
@@ -306,6 +315,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SHARK_SHIKIGAMI.get(), SharkShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIRANHA_SHIKIGAMI.get(), PiranhaShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.SIMPLE_DOMAIN.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WATER_TORRENT.get(), WaterTorrentRenderer::new);
         }
 
         @SubscribeEvent
@@ -314,6 +324,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
         }
 
         @SubscribeEvent
@@ -348,6 +359,11 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.MEGUMI_LEGGINGS.get());
                                 pOutput.accept(JJKItems.MEGUMI_BOOTS.get());
 
+                                pOutput.accept(JJKItems.TOGE_HELMET.get());
+                                pOutput.accept(JJKItems.TOGE_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.TOGE_LEGGINGS.get());
+                                pOutput.accept(JJKItems.TOGE_BOOTS.get());
+
                                 pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
@@ -355,6 +371,8 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.MEGUMI_FUSHIGURO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.TOJI_ZENIN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.MEGUNA_RYOMEN_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.YUJI_IDATORI_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());

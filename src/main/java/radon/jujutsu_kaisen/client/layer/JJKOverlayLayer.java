@@ -16,6 +16,6 @@ public class JJKOverlayLayer<T extends LivingEntity, M extends EntityModel<T>> e
 
     @Override
     public void render(@NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, @NotNull T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        ClientVisualHandler.render(this.getParentModel(), pMatrixStack, pBuffer, pLivingEntity);
+        ClientVisualHandler.render(this.getParentModel(), pMatrixStack, pBuffer, pPackedLight, pLivingEntity);
     }
 }

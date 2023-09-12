@@ -18,11 +18,9 @@ import radon.jujutsu_kaisen.ability.ai.scissor.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
+import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
-import radon.jujutsu_kaisen.ability.disaster_tides.DisasterTides;
-import radon.jujutsu_kaisen.ability.disaster_tides.FishShikigami;
-import radon.jujutsu_kaisen.ability.disaster_tides.HorizonOfTheCaptivatingSkandha;
-import radon.jujutsu_kaisen.ability.disaster_tides.WaterShield;
+import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
@@ -90,6 +88,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
     public static RegistryObject<Ability> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
     public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
+    public static RegistryObject<Ability> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
@@ -97,6 +96,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
     public static RegistryObject<Ability> SHOOT_RCT = ABILITIES.register("shoot_rct", ShootRCT::new);
+    public static RegistryObject<Ability> HEAL_RCT = ABILITIES.register("heal_rct", HealRCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
@@ -144,6 +144,12 @@ public class JJKAbilities {
     public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
+
+    public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
+    public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);
+    public static RegistryObject<Ability> BLAST_AWAY = ABILITIES.register("blast_away", BlastAway::new);
+    public static RegistryObject<Ability> EXPLODE = ABILITIES.register("explode", Explode::new);
+    public static RegistryObject<Ability> DIE = ABILITIES.register("die", Die::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);

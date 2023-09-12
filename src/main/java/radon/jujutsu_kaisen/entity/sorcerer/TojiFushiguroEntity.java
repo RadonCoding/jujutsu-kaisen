@@ -206,6 +206,17 @@ public class TojiFushiguroEntity extends SorcererEntity {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
+    private int getSlot(ItemStack stack) {
+        if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
+            return PLAYFUL_CLOUD;
+        } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+            return INVERTED_SPEAR_OF_HEAVEN;
+        } else if (stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+            return SPLIT_SOUL_KATANA;
+        }
+        return -1;
+    }
+
     private void pickWeapon(LivingEntity target) {
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
 
@@ -220,9 +231,17 @@ public class TojiFushiguroEntity extends SorcererEntity {
         });
 
         ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
-        ItemStack main = InventoryCurseItem.getItem(inventory, result.get());
 
-        if (!this.getMainHandItem().is(main.getItem())) {
+        if (this.getSlot(this.getMainHandItem()) != result.get()) {
+            if (!this.getMainHandItem().isEmpty()) {
+                int slot = this.getSlot(this.getMainHandItem());
+
+                if (slot != -1) {
+                    InventoryCurseItem.addItem(inventory, slot, this.getMainHandItem());
+                }
+            }
+            ItemStack main = InventoryCurseItem.getItem(inventory, result.get());
+            InventoryCurseItem.removeItem(inventory, result.get());
             this.setItemInHand(InteractionHand.MAIN_HAND, main);
         }
     }
