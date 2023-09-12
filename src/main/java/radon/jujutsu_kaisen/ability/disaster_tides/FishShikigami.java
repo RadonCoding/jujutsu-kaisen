@@ -90,7 +90,7 @@ public class FishShikigami extends Ability implements Ability.IDomainAttack {
         if (owner.level.isClientSide || target == null) return;
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 6; i++) {
                 float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
                 float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
 
@@ -101,8 +101,12 @@ public class FishShikigami extends Ability implements Ability.IDomainAttack {
                 };
 
                 int delay = i * 2;
-                cap.delayTickEvent(() ->
-                        owner.level.addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]), delay);
+
+                cap.delayTickEvent(() -> {
+                    if (target.isAlive() && !target.isRemoved()) {
+                        owner.level.addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
+                    }
+                }, delay);
             }
         });
     }

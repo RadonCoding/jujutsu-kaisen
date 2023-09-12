@@ -4,8 +4,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.LazyLoadedValue;
-import radon.jujutsu_kaisen.client.render.entity.GreatSerpentSegmentRenderer;
-import radon.jujutsu_kaisen.client.render.entity.WormCurseSegmentRenderer;
+import radon.jujutsu_kaisen.client.render.entity.ten_shadows.GreatSerpentSegmentRenderer;
+import radon.jujutsu_kaisen.client.render.entity.curse.WormCurseSegmentRenderer;
 import radon.jujutsu_kaisen.entity.curse.WormCurseSegmentEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentSegmentEntity;
 

@@ -34,6 +34,7 @@
   "item.jujutsu_kaisen.split_soul_katana.desc": "Bypasses all resistance and cuts directly at the soul.",
   "item.jujutsu_kaisen.chain": "Chain of a Thousand Miles",
   "item.jujutsu_kaisen.chain.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
+
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta's Sword",
 
   "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
@@ -52,6 +53,11 @@
   "item.jujutsu_kaisen.yuji_leggings": "Yuji Leggings",
   "item.jujutsu_kaisen.yuji_boots": "Yuji Boots",
 
+  "item.jujutsu_kaisen.toge_helmet": "Toge Helmet",
+  "item.jujutsu_kaisen.toge_chestplate": "Toge Chestplate",
+  "item.jujutsu_kaisen.toge_leggings": "Toge Leggings",
+  "item.jujutsu_kaisen.toge_boots": "Toge Boots",
+
   "item.jujutsu_kaisen.megumi_chestplate": "Megumi Chestplate",
   "item.jujutsu_kaisen.megumi_leggings": "Megumi Leggings",
   "item.jujutsu_kaisen.megumi_boots": "Megumi Boots",
@@ -63,7 +69,8 @@
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
   "item.jujutsu_kaisen.toji_zenin_spawn_egg": "Spawn Toji Zenin",
   "item.jujutsu_kaisen.meguna_ryomen_spawn_egg": "Spawn Meguna Ryomen",
-  "item.jujutsu_kaisen.yuji_itadori_spanw_egg": "Spawn Yuji Itadori",
+  "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
+  "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -177,6 +184,7 @@
   "ability.jujutsu_kaisen.disaster_tides.disable": "Deactivated disaster tides",
   "ability.jujutsu_kaisen.water_shield": "Water Shield",
   "ability.jujutsu_kaisen.fish_shikigami": "Fish Shikigami",
+  "ability.jujutsu_kaisen.water_torrent": "Water Torrent",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
@@ -245,6 +253,12 @@
   "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
   "ability.jujutsu_kaisen.mini_uzumaki": "Mini Uzumaki",
 
+  "ability.jujutsu_kaisen.dont_move": "Don't Move",
+  "ability.jujutsu_kaisen.get_crushed": "Get Crushed",
+  "ability.jujutsu_kaisen.blast_away": "Blast Away",
+  "ability.jujutsu_kaisen.explode": "Explode",
+  "ability.jujutsu_kaisen.die": "Die",
+
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
   "grade.jujutsu_kaisen.semi_grade_2": "Semi-Grade 2",
@@ -284,6 +298,13 @@
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
   "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s mode",
   "chat.jujutsu_kaisen.kuchisake_onna": "<%1$s> Am... Am I... pretty?",
+  "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
+
+  "chat.jujutsu_kaisen.dont_move": "<%1$s> DON'T MOVE!",
+  "chat.jujutsu_kaisen.get_crushed": "<%1$s> GET CRUSHED!",
+  "chat.jujutsu_kaisen.blast_away": "<%1$s> BLAST AWAY!",
+  "chat.jujutsu_kaisen.explode": "<%1$s> EXPLODE!",
+  "chat.jujutsu_kaisen.die": "<%1$s> DIE!",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -311,6 +332,7 @@
   "entity.jujutsu_kaisen.toji_zenin": "Toji Zenin",
   "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
+  "entity.jujutsu_kaisen.toge_inumaki": "Toge Inumaki",
   "entity.jujutsu_kaisen.fish_curse": "Fish Curse",
   "entity.jujutsu_kaisen.cyclops_curse": "Cyclops Curse",
   "entity.jujutsu_kaisen.kuchisake_onna": "Kuchisake-Onna",
@@ -324,7 +346,7 @@
   "effect.jujutsu_kaisen.undetectable": "Undetectable",
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
-  "death.attack.jujutsu_projectile": "%1$s was killed by %2$s using jujutsu",
+  "death.attack.jujutsu_bypass": "%1$s was killed by %2$s using jujutsu",
   "death.attack.soul": "%1$s had their soul destroyed by %2$s",
 
   "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
@@ -351,8 +373,11 @@
   "advancements.jujutsu_kaisen.strongest.title": "The Strongest",
   "advancements.jujutsu_kaisen.strongest.description": "Defeat the strongest.",
 
-  "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
-  "chat.jujutsu_kaisen.copy_expire": "Your copied technique has expired after five minutes.",
+  "advancements.jujutsu_kaisen.cursed_womb.title": "Cursed Womb",
+  "advancements.jujutsu_kaisen.cursed_womb.description": "Hmm... Maybe you should try evolving.",
+
+  "advancements.jujutsu_kaisen.evolved_curse.title": "Evolved Curse",
+  "advancements.jujutsu_kaisen.evolved_curse.description": "You've developed to your final stage",
 
   "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
 

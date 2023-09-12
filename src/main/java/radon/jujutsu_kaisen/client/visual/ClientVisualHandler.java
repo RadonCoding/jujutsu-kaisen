@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -32,6 +33,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientVisualHandler {
     private static final RenderType SIX_EYES = RenderType.eyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
+    private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
     private static final Map<UUID, VisualData> synced = new HashMap<>();
 
@@ -60,7 +62,7 @@ public class ClientVisualHandler {
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), cap.getType());
+                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), cap.getType(), cap.getTechnique());
                 return synced.put(mc.player.getUUID(), data);
             }
         } else {
@@ -71,13 +73,18 @@ public class ClientVisualHandler {
         return null;
     }
 
-    public static void render(EntityModel<?> model, PoseStack poseStack, MultiBufferSource buffer, LivingEntity entity) {
+    public static void render(EntityModel<?> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight, LivingEntity entity) {
         if (synced.containsKey(entity.getUUID())) {
             VisualData data = synced.get(entity.getUUID());
 
             if (data.traits.contains(Trait.SIX_EYES)) {
                 VertexConsumer consumer = buffer.getBuffer(SIX_EYES);
                 model.renderToBuffer(poseStack, consumer, 15728640, OverlayTexture.NO_OVERLAY,
+                        1.0F, 1.0F, 1.0F, 1.0F);
+            }
+            if (data.technique == CursedTechnique.CURSED_SPEECH) {
+                VertexConsumer consumer = buffer.getBuffer(INUMAKI);
+                model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
             }
         } else {
@@ -113,7 +120,7 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, JujutsuType type) {
+    public record VisualData(Set<Ability> toggled, Set<Trait> traits, JujutsuType type, CursedTechnique technique) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
@@ -132,6 +139,7 @@ public class ClientVisualHandler {
             nbt.put("traits", traitsTag);
 
             nbt.putInt("type", this.type.ordinal());
+            nbt.putInt("technique", this.technique.ordinal());
 
             return nbt;
         }
@@ -150,7 +158,7 @@ public class ClientVisualHandler {
                     traits.add(Trait.values()[tag.getAsInt()]);
                 }
             }
-            return new VisualData(toggled, traits, JujutsuType.values()[nbt.getInt("type")]);
+            return new VisualData(toggled, traits, JujutsuType.values()[nbt.getInt("type")], CursedTechnique.values()[nbt.getInt("technique")]);
         }
     }
 }

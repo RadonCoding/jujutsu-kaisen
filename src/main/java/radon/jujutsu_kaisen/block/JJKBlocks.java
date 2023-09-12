@@ -39,11 +39,13 @@ public class JJKBlocks {
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> UNLIMITED_VOID_FILL = BLOCKS.register("unlimited_void_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(-1.0F, 3600000.8F)
                     .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->

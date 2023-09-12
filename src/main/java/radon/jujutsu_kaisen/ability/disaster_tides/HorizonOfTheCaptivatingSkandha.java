@@ -37,7 +37,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        if (owner.hasLineOfSight(entity) && owner.level.getGameTime() % 10 == 0) {
+        if (owner.hasLineOfSight(entity) && owner.level.getGameTime() % 20 == 0) {
             Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
             ((IDomainAttack) fish).perform(owner, domain, entity);
         }

@@ -18,5 +18,10 @@
     "sounds": [
       "jujutsu_kaisen:wolf_howling"
     ]
+  },
+  "cursed_speech": {
+    "sounds": [
+      "jujutsu_kaisen:cursed_speech"
+    ]
   }
 }

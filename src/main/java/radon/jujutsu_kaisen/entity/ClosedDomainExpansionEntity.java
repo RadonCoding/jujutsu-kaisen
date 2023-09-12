@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.ChimeraShadowGardenBlock;
 import radon.jujutsu_kaisen.block.DomainBlock;
+import radon.jujutsu_kaisen.block.FakeWaterDomainBlock;
+import radon.jujutsu_kaisen.block.FakeWaterDurationBlock;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -135,7 +137,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         original = be.getOriginal();
                                     } else if (this.level.getBlockEntity(pos) != null) {
                                         return;
-                                    } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock) {
+                                    } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock ||
+                                            state.getBlock() instanceof FakeWaterDomainBlock || state.getBlock() instanceof FakeWaterDurationBlock) {
                                         return;
                                     }
 

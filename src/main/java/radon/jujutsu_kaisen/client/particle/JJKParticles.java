@@ -36,4 +36,6 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
+            new SimpleParticleType(true));
 }

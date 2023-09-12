@@ -49,11 +49,6 @@ public class SukunaRyomenEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.SHOOT_RCT.get());
-    }
-
-    @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }

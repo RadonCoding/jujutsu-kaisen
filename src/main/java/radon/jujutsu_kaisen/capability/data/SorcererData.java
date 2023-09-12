@@ -326,6 +326,8 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.SIMPLE_DOMAIN)) this.giveAdvancement(player, "simple_domain");
         if (this.traits.contains(Trait.DOMAIN_EXPANSION)) this.giveAdvancement(player, "domain_expansion");
         if (this.traits.contains(Trait.STRONGEST)) this.giveAdvancement(player, "strongest");
+        if (this.traits.contains(Trait.CURSED_WOMB)) this.giveAdvancement(player, "cursed_womb");
+        if (this.traits.contains(Trait.EVOLVED_CURSE)) this.giveAdvancement(player, "evolved_curse");
     }
 
     public void tick(LivingEntity owner) {
@@ -360,13 +362,15 @@ public class SorcererData implements ISorcererData {
 
         if (owner instanceof Player player) {
             FoodData data = player.getFoodData();
-            this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (data.getFoodLevel() / 20.0F)), this.getMaxEnergy());
+            this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (data.getFoodLevel() / 20.0F) * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.5F : 1.0F)), this.getMaxEnergy());
         }
 
         SorcererGrade grade = this.getGrade();
 
         if (this.technique == CursedTechnique.DISASTER_FLAMES) {
             owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
+        } else if (this.technique == CursedTechnique.DISASTER_TIDES) {
+            owner.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 2, 0, false, false, false));
         }
 
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
@@ -374,32 +378,48 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+            double health = Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)) / 20) * 20;
+
+            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D), AttributeModifier.Operation.ADDITION);
-            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed",
-                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D), AttributeModifier.Operation.ADDITION);
-            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D), AttributeModifier.Operation.ADDITION);
 
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor((this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F)
-                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
-            owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0,
-                    false, false, false));
+            double damage = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D);
+            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+
+            double speed = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D);
+            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
+
+            double movement = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D);
+            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
+
+            float resistanceMultiplier = this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F;
+            int resistance = Mth.floor(resistanceMultiplier * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
+
+            owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
         } else {
-            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health",
-                    Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 40.0D : 20.0D)) / 20) * 20, AttributeModifier.Operation.ADDITION)) {
+            double health = Math.ceil((Math.log(grade.ordinal() + 1)
+                    * (this.traits.contains(Trait.STRONGEST) ? 40.0D : 20.0D)
+                    * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.25D : 1.0D)
+                    * (this.traits.contains(Trait.CURSED_WOMB) ? 0.5D : 1.0D)) / 20) * 20;
+
+            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
-            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage",
-                    this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F, AttributeModifier.Operation.ADDITION);
 
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(((this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F)
-                    * (this.type == JujutsuType.CURSE ? 2.0F : 1.0F))
-                    * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)), false, false, false));
+            double damage = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F;
+
+            if (this.traits.contains(Trait.CURSED_WOMB)) {
+                damage *= 0.5D;
+            } else if (this.traits.contains(Trait.EVOLVED_CURSE)) {
+                damage *= 1.25D;
+            }
+            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+
+            float resistanceMultiplier = this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F;
+            int resistance = Mth.floor(resistanceMultiplier * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
     }
 
@@ -613,7 +633,10 @@ public class SorcererData implements ISorcererData {
         if (this.maxEnergy == 0.0F) {
             this.maxEnergy = ConfigHolder.SERVER.maxCursedEnergyDefault.get();
         }
-        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length) * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F);
+        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)
+                * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F)
+                * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.5F : 1.0F)
+                * (this.traits.contains(Trait.CURSED_WOMB) ? 0.5F : 1.0F);
     }
 
     @Override
@@ -1025,10 +1048,6 @@ public class SorcererData implements ISorcererData {
         if (HelperMethods.RANDOM.nextInt(10) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
-            if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                this.addTrait(Trait.SIX_EYES);
-            }
-
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
 
             if (HelperMethods.RANDOM.nextInt(5) == 0) {
@@ -1039,6 +1058,10 @@ public class SorcererData implements ISorcererData {
                 }
             }
             this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
+
+            if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                this.addTrait(this.type == JujutsuType.SORCERER ? Trait.SIX_EYES : Trait.CURSED_WOMB);
+            }
 
             assert this.technique != null;
 

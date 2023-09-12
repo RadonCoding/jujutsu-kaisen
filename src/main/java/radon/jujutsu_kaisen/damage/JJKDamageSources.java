@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 public class JJKDamageSources {
     public static final ResourceKey<DamageType> JUJUTSU = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu"));
+    public static final ResourceKey<DamageType> JUJUTSU_BYPASS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu_bypass"));
     public static final ResourceKey<DamageType> SOUL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "soul"));
 
     public static DamageSource soulAttack(LivingEntity source) {
@@ -29,6 +30,12 @@ public class JJKDamageSources {
         RegistryAccess registry = source.level.registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU), source, ability);
+    }
+
+    public static JujutsuDamageSource jujutsuBypassAttack(LivingEntity source, @Nullable Ability ability) {
+        RegistryAccess registry = source.level.registryAccess();
+        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
+        return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU_BYPASS), source, ability);
     }
 
     public static JujutsuDamageSource indirectJujutsuAttack(Entity source, @Nullable LivingEntity indirect, @Nullable Ability ability) {

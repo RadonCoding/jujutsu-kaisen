@@ -74,7 +74,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
             EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.AMBIENT)
-                    .sized(1.4F, 3.6F)
+                    .sized(1.4F, 3.2F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
                             .toString()));
 
@@ -140,6 +140,11 @@ public class JJKEntities {
             EntityType.Builder.<YujiItadoriEntity>of(YujiItadoriEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuji_itadori")
                             .toString()));
+    public static RegistryObject<EntityType<TogeInumakiEntity>> TOGE_INUMAKI = ENTITIES.register("toge_inumaki", () ->
+            EntityType.Builder.<TogeInumakiEntity>of(TogeInumakiEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toge_inumaki")
+                            .toString()));
+
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
                     .sized(1.4F, 3.875F)
@@ -245,6 +250,11 @@ public class JJKEntities {
                     .sized(2.0F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "shark_shikigami")
                             .toString()));
+    public static RegistryObject<EntityType<WaterTorrentEntity>> WATER_TORRENT = ENTITIES.register("water_torrent", () ->
+            EntityType.Builder.<WaterTorrentEntity>of(WaterTorrentEntity::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "water_torrent")
+                            .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)
@@ -342,6 +352,7 @@ public class JJKEntities {
         event.put(TOJI_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(MEGUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
+        event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 
