@@ -12,7 +12,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -37,8 +36,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
             int width = this.getWidth();
             int height = this.getHeight();
 
-            ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height,
-                    cap.getGrade().getPower(owner) + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
+            ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
             owner.level.addFreshEntity(domain);
 
             cap.setDomain(domain);

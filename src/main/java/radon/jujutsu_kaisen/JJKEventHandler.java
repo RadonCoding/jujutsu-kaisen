@@ -39,7 +39,6 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
@@ -149,7 +148,7 @@ public class JJKEventHandler {
 
             boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-            /*if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
+            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
@@ -164,7 +163,7 @@ public class JJKEventHandler {
                     event.setCanceled(true);
                     return;
                 }
-            }*/
+            }
 
             if (attacker instanceof LivingEntity living) {
                 ItemStack stack = null;
@@ -230,19 +229,6 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (!victim.level.isClientSide) {
-                float factor = event.getAmount() / victim.getMaxHealth();
-
-                if (factor > 0.25F) {
-                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        DomainExpansionEntity domain = cap.getDomain((ServerLevel) victim.level);
-
-                        if (domain != null) {
-                            float strength = domain.getStrength();
-                            domain.setStrength(strength - factor);
-                        }
-                    });
-                }
-
                 DamageSource source = event.getSource();
 
                 if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
@@ -258,7 +244,7 @@ public class JJKEventHandler {
                 }
             }
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) || JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get()) ||
+            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) ||
                     !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {

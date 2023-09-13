@@ -4,8 +4,7 @@
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$ds",
-
-  "gui.jujutsu_kaisen.curse_summon_overlay.count": "Count: %1$d",
+  "gui.jujutsu_kaisen.ability_overlay.count": "Count: %1$d",
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
@@ -62,6 +61,14 @@
   "item.jujutsu_kaisen.megumi_leggings": "Megumi Leggings",
   "item.jujutsu_kaisen.megumi_boots": "Megumi Boots",
 
+  "item.jujutsu_kaisen.yuta_chestplate": "Yuta Chestplate",
+  "item.jujutsu_kaisen.yuta_leggings": "Yuta Leggings",
+  "item.jujutsu_kaisen.yuta_boots": "Yuta Boots",
+
+  "item.jujutsu_kaisen.suguru_chestplate": "Suguru Chestplate",
+  "item.jujutsu_kaisen.suguru_leggings": "Suguru Leggings",
+  "item.jujutsu_kaisen.suguru_boots": "Suguru Boots",
+
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
   "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
@@ -71,6 +78,7 @@
   "item.jujutsu_kaisen.meguna_ryomen_spawn_egg": "Spawn Meguna Ryomen",
   "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
+  "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -249,7 +257,7 @@
   "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
   "ability.jujutsu_kaisen.absorb_technique": "Absorb Technique",
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
-  "ability.jujutsu_kaisen.enhance_curse": "Enhance Curse",
+  "ability.jujutsu_kaisen.release_curses": "Release Curses",
   "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
   "ability.jujutsu_kaisen.mini_uzumaki": "Mini Uzumaki",
 
@@ -333,6 +341,7 @@
   "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
   "entity.jujutsu_kaisen.toge_inumaki": "Toge Inumaki",
+  "entity.jujutsu_kaisen.suguru_geto": "Suguru Geto",
   "entity.jujutsu_kaisen.fish_curse": "Fish Curse",
   "entity.jujutsu_kaisen.cyclops_curse": "Cyclops Curse",
   "entity.jujutsu_kaisen.kuchisake_onna": "Kuchisake-Onna",

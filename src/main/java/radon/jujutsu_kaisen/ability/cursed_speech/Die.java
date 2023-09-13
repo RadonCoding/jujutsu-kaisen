@@ -3,10 +3,16 @@ package radon.jujutsu_kaisen.ability.cursed_speech;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +29,7 @@ import java.util.List;
 public class Die extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
-    private static final float DAMAGE = 35.0F;
+    private static final float DAMAGE = 25.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -40,6 +46,38 @@ public class Die extends Ability {
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level.getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+    }
+
+    private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
+        float damage = target.getMaxHealth();
+        float armor = (float) target.getArmorValue();
+        float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        float f = 2.0F + toughness / 4.0F;
+        float f1 = Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
+        damage /= 1.0F - f1 / 25.0F;
+
+        MobEffectInstance instance = target.getEffect(MobEffects.DAMAGE_RESISTANCE);
+
+        if (instance != null) {
+            int resistance = instance.getAmplifier();
+            int i = (resistance + 1) * 5;
+            int j = 25 - i;
+
+            if (j == 0) {
+                return damage;
+            } else {
+                float x = 25.0F / (float) j;
+                damage = damage * x;
+            }
+        }
+
+        int k = EnchantmentHelper.getDamageProtection(target.getArmorSlots(), source);
+
+        if (k > 0) {
+            float f2 = Mth.clamp(k, 0.0F, 20.0F);
+            damage /= 1.0F - f2 / 25.0F;
+        }
+        return damage;
     }
 
     @Override
@@ -66,7 +104,8 @@ public class Die extends Ability {
 
                     living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
                         if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
-                            entity.hurt(JJKDamageSources.jujutsuBypassAttack(owner, this), living.getMaxHealth());
+                            DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
+                            entity.hurt(source, calculateDamage(source, owner, living));
                         }
                     });
 

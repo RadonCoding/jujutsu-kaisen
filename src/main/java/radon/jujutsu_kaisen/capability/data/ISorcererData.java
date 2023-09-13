@@ -95,7 +95,6 @@ public interface ISorcererData {
     void setCurrentCopied(@Nullable CursedTechnique technique);
     @Nullable CursedTechnique getCurrentCopied();
 
-
     void absorb(@Nullable CursedTechnique technique);
     void unabsorb(CursedTechnique technique);
     Set<CursedTechnique> getAbsorbed();
@@ -146,7 +145,6 @@ public interface ISorcererData {
 
     void addCurse(Registry<EntityType<?>> registry, EntityType<?> type);
     void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
-    void removeAllCurses(Registry<EntityType<?>> registry, EntityType<?> type);
     Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 

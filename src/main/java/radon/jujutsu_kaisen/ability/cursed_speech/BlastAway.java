@@ -26,7 +26,7 @@ public class BlastAway extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
     private static final float DAMAGE = 5.0F;
-    private static final double LAUNCH_POWER = 1.5D;
+    private static final double LAUNCH_POWER = 2.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -70,7 +70,8 @@ public class BlastAway extends Ability {
                         owner.level.playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                                 4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * cap.getGrade().getPower(owner)));
+                        double power = LAUNCH_POWER * cap.getGrade().getPower(owner);
+                        entity.setDeltaMovement(look.multiply(power, Math.min(LAUNCH_POWER, power), power));
                         entity.hurtMarked = true;
                     }
                     if (entity instanceof Player player) {

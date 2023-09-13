@@ -245,6 +245,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(TogeInumakiModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(TogeInumakiModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(TogeInumakiModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(SuguruGetoModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(SuguruGetoModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(SuguruGetoModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -316,6 +320,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.PIRANHA_SHIKIGAMI.get(), PiranhaShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.SIMPLE_DOMAIN.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.WATER_TORRENT.get(), WaterTorrentRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SUGURU_GETO.get(), SuguruGetoRenderer::new);
         }
 
         @SubscribeEvent
@@ -364,6 +369,14 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.TOGE_LEGGINGS.get());
                                 pOutput.accept(JJKItems.TOGE_BOOTS.get());
 
+                                pOutput.accept(JJKItems.YUTA_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.YUTA_LEGGINGS.get());
+                                pOutput.accept(JJKItems.YUTA_BOOTS.get());
+
+                                pOutput.accept(JJKItems.SUGURU_CHESTPLATE.get());
+                                pOutput.accept(JJKItems.SUGURU_LEGGINGS.get());
+                                pOutput.accept(JJKItems.SUGURU_BOOTS.get());
+
                                 pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
@@ -373,6 +386,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.MEGUNA_RYOMEN_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.YUJI_IDATORI_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
+                                pOutput.accept(JJKItems.SUGURU_GETO_SPAWN_EGG.get());
 
                                 pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                                 pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());

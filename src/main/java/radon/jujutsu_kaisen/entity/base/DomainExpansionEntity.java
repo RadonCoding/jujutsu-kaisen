@@ -10,10 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -23,6 +20,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -39,19 +37,16 @@ public abstract class DomainExpansionEntity extends Mob {
     protected boolean warned;
     protected boolean first = true;
 
-    private float strength;
-
     protected DomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, float strength) {
+    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability) {
         super(pEntityType, owner.level);
 
         this.setOwner(owner);
 
         this.ability = ability;
-        this.strength = strength;
     }
 
     public boolean hasSureHitEffect() {
@@ -94,7 +89,7 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public abstract AABB getBounds();
-    public abstract boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos);
+    public abstract boolean isInsideBarrier(BlockPos pos);
     public abstract void warn();
 
     @Override
@@ -133,12 +128,19 @@ public abstract class DomainExpansionEntity extends Mob {
         }
     }
 
+    protected boolean isAffected(BlockPos pos) {
+        return this.isInsideBarrier(pos);
+    }
+
     protected boolean isAffected(Entity entity) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null || entity == owner) {
             return false;
         }
+
+        if (entity instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
+
         if (entity instanceof LivingEntity living) {
             if (!owner.canAttack(living)) return false;
 
@@ -150,7 +152,7 @@ public abstract class DomainExpansionEntity extends Mob {
                 }
             }
         }
-        return this.isInsideBarrier(null, entity.blockPosition());
+        return this.isAffected(entity.blockPosition());
     }
 
     @Override
@@ -164,7 +166,6 @@ public abstract class DomainExpansionEntity extends Mob {
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("warned", this.warned);
         pCompound.putBoolean("first", this.first);
-        pCompound.putFloat("strength", this.strength);
     }
 
     @Override
@@ -178,7 +179,6 @@ public abstract class DomainExpansionEntity extends Mob {
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.warned = pCompound.getBoolean("warned");
         this.first = pCompound.getBoolean("first");
-        this.strength = pCompound.getFloat("strength");
     }
 
     @Override
@@ -205,12 +205,25 @@ public abstract class DomainExpansionEntity extends Mob {
         }
     }
 
-    public float getStrength() {
-        return this.strength;
+    public static float getFactor(float num1, float num2) {
+        return Math.abs (num1 - num2) / (Math.max (num1, num2) + 1.0F);
     }
 
-    public void setStrength(float strength) {
-        this.strength = strength;
+    // If strength is more than 50% larger than this.getStrength
+    public boolean shouldCollapse(float strength) {
+        return getFactor(this.getStrength(), strength) >= 0.67F;
+    }
+
+    // If strength is more than or equal to this.getStrength
+    public boolean shouldCancel(float strength) {
+        return getFactor(this.getStrength(), strength) >= 0.0F;
+    }
+
+    public float getStrength() {
+        LivingEntity owner = this.getOwner();
+        if (owner == null) return 0.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return (cap.getGrade().getPower(owner) * (cap.hasTrait(Trait.STRONGEST) ? 2.0F : 1.0F)) * (owner.getHealth() / owner.getMaxHealth());
     }
 
     public int getTime() {

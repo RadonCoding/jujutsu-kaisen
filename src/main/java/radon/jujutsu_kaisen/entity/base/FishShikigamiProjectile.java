@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -119,8 +119,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     }
 
     @Override
-    protected void onHit(@NotNull HitResult pResult) {
-        super.onHit(pResult);
+    protected void onHitEntity(@NotNull EntityHitResult pResult) {
+        super.onHitEntity(pResult);
 
         this.discard();
     }

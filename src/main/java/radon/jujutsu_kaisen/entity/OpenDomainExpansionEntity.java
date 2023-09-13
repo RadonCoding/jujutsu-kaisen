@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,8 +35,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, pLevel);
     }
 
-    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
-        super(pEntityType, owner, ability, strength);
+    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(pEntityType, owner, ability);
 
         Vec3 pos = owner.position()
                 .subtract(HelperMethods.getLookAngle(owner)
@@ -53,6 +54,14 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 this.setHealth(this.getMaxHealth());
             }
         });
+    }
+
+    @Override
+    protected boolean isAffected(BlockPos pos) {
+        for (DomainExpansionEntity domain : this.getDomains()) {
+            if (this.shouldCancel(domain.getStrength()) && domain.isInsideBarrier(pos)) return false;
+        }
+        return super.isAffected(pos);
     }
 
     protected int getWidth() {
@@ -107,7 +116,9 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected List<DomainExpansionEntity> getDomains() {
-        return HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level, this.getBounds());
+        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level, this.getBounds());
+        domains.removeIf(domain -> domain.is(this));
+        return domains;
     }
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
@@ -126,12 +137,12 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         for (DomainExpansionEntity domain : domains) {
             if (domain instanceof ClosedDomainExpansionEntity) {
-                if ((!domain.isInsideBarrier(null, this.blockPosition()) && !this.isInsideBarrier(null, domain.blockPosition()))) continue;
+                if (!domain.isInsideBarrier(this.blockPosition())) continue;
 
-                if (domain.getStrength() > this.getStrength()) {
+                if (this.shouldCollapse(domain.getStrength())) {
                     this.discard();
                     return false;
-                } else if (domain.getStrength() == this.getStrength()) {
+                } else if (this.shouldCancel(domain.getStrength())) {
                     return false;
                 }
             }

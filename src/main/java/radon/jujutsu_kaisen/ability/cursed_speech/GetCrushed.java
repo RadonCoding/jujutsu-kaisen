@@ -83,12 +83,12 @@ public class GetCrushed extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 300.0F;
+        return 200.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 30 * 20;
+        return 15 * 20;
     }
 
     @Override

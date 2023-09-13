@@ -35,9 +35,8 @@ import java.util.Map;
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
-    private static final float MAX_EXPLOSION = 25.0F;
     private static final float DAMAGE = 25.0F;
-    private static final float MAX_POWER = 10.0F;
+    private static final float MAX_POWER = 7.5F;
 
     private float power;
 
@@ -95,7 +94,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
     private void hurtEntities() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        float radius = Math.min(MAX_EXPLOSION, this.power * 2.0F);
+        float radius = this.power * 2.0F;
 
         AABB bounds = this.getBoundingBox().inflate(radius);
 
@@ -158,7 +157,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level.dimension(), BlockPos.containing(offset), Math.min(MAX_EXPLOSION, this.power * 2.0F), 20, owner, JJKAbilities.MAXIMUM_UZUMAKI.get());
+                ExplosionHandler.spawn(this.level.dimension(), BlockPos.containing(offset), this.power * 2.0F, 20, owner, JJKAbilities.MAXIMUM_UZUMAKI.get());
 
                 this.hurtEntities();
             }

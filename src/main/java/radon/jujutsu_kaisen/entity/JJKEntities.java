@@ -144,6 +144,10 @@ public class JJKEntities {
             EntityType.Builder.<TogeInumakiEntity>of(TogeInumakiEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toge_inumaki")
                             .toString()));
+    public static RegistryObject<EntityType<SuguruGetoEntity>> SUGURU_GETO = ENTITIES.register("suguru_geto", () ->
+            EntityType.Builder.<SuguruGetoEntity>of(SuguruGetoEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "suguru_geto")
+                            .toString()));
 
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -353,6 +357,7 @@ public class JJKEntities {
         event.put(MEGUNA_RYOMEN.get(), SorcererEntity.createAttributes().build());
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
+        event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

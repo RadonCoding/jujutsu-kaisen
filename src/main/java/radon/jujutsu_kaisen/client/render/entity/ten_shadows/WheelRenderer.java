@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
@@ -43,7 +44,9 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
         LivingEntity owner = animatable.getOwner();
 
         if (owner != null) {
-            if (JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) {
+            ClientVisualHandler.VisualData data = ClientVisualHandler.getData(owner.getUUID());
+
+            if (data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, COLOR.x(), COLOR.y(), COLOR.z(), alpha);
                 return;
             }

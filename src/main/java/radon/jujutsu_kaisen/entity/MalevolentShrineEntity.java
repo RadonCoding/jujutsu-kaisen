@@ -8,11 +8,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -34,12 +31,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     }
 
     @Override
-    public boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos) {
-        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
-
-        for (DomainExpansionEntity domain : this.getDomains()) {
-            if (domain != this && domain != asker && domain.getStrength() >= this.getStrength() && domain.isInsideBarrier(this, pos)) return false;
-        }
+    public boolean isInsideBarrier(BlockPos pos) {
         int width = this.getWidth();
         int height = this.getHeight();
         BlockPos center = this.blockPosition().below(height / 2);
@@ -47,8 +39,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
-    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
-        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height, strength);
+    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height);
     }
 
     @Override
@@ -78,7 +70,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                     if (distance < horizontal && distance >= horizontal - 1) {
                                         BlockPos pos = center.offset(x, vertical, z);
-                                        if (this.level.getBlockState(pos).isAir()) continue;
+                                        if (!this.isAffected(pos) || this.level.getBlockState(pos).isAir()) continue;
                                         this.ability.onHitBlock(this, owner, pos);
                                     }
                                 }

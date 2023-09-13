@@ -26,7 +26,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         boolean result = false;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasToggled(this)) {
@@ -35,7 +34,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
                 if (this instanceof IOpenDomain) {
                     DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
-                    result = domain != null && domain.isInsideBarrier(null, target.blockPosition());
+                    result = domain != null && domain.isInsideBarrier(target.blockPosition());
                 }
             }
         } else {
@@ -56,7 +55,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             }
 
             result = owner.isOnGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
-                    owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
+                    owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getRealCost(owner) < (cap.getMaxEnergy() / 2) ||
                             target.getHealth() > owner.getHealth() * 2;
 
             for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {

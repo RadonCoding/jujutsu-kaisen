@@ -8,13 +8,15 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;
 
 public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements DomainExpansion.IClosedDomain {
+    private static final float DAMAGE = 10.0F;
+
     @Override
     public int getRadius() {
         return 20;
@@ -37,9 +39,14 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        if (owner.hasLineOfSight(entity) && owner.level.getGameTime() % 20 == 0) {
-            Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
-            ((IDomainAttack) fish).perform(owner, domain, entity);
+        if (owner.level.getGameTime() % 20 == 0) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.FISH_SHIKIGAMI.get()), DAMAGE * cap.getGrade().getPower(owner)));
+
+            if (owner.level.getGameTime() % 3 * 20 == 0) {
+                Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
+                ((IDomainAttack) fish).perform(owner, domain, entity);
+            }
         }
     }
 
@@ -53,8 +60,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             int radius = this.getRadius();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius,
-                    cap.getGrade().getPower(owner) + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
             owner.level.addFreshEntity(domain);
 
             cap.setDomain(domain);
