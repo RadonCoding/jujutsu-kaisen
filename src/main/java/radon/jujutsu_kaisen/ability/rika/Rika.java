@@ -76,20 +76,13 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    public boolean isTamed(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal();
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
         return 0;
     }
 
     @Override
     protected RikaEntity summon(int index, LivingEntity owner) {
-        return new RikaEntity(owner, this.isTamed(owner));
+        return new RikaEntity(owner);
     }
 
     @Override

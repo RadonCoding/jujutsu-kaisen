@@ -5,9 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -31,8 +28,6 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class SimpleDomainEntity extends Mob {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.INT);
-
     private static final float STRENGTH = 100.0F;
 
     private static final double X_STEP = 0.05D;
@@ -153,6 +148,7 @@ public class SimpleDomainEntity extends Mob {
     public boolean isPersistenceRequired() {
         return true;
     }
+
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -160,7 +156,6 @@ public class SimpleDomainEntity extends Mob {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
     @Override
@@ -170,14 +165,6 @@ public class SimpleDomainEntity extends Mob {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_TIME, 0);
     }
 
     @Override
@@ -195,13 +182,5 @@ public class SimpleDomainEntity extends Mob {
         if (owner != null) {
             this.setOwner(owner);
         }
-    }
-
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
     }
 }

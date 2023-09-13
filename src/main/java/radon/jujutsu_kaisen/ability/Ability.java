@@ -87,7 +87,7 @@ public abstract class Ability {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasTrait(Trait.STRONGEST))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
 
         for (Trait trait : this.getRequirements()) {
             if (!cap.hasTrait(trait)) return false;

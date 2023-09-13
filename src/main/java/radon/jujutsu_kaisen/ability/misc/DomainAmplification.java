@@ -21,11 +21,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
-        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D),
+        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
                 entity -> entity instanceof JujutsuProjectile projectile && projectile.getOwner() != owner).isEmpty()) return true;
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) < 5.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||
+        return target != null && owner.distanceTo(target) < 10.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||
                 !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
@@ -86,7 +86,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             if (ability == null) return;
 
             if (ability.isTechnique()) {
-                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.5F : 0.25F));
+                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.8F : 0.6F));
             }
         }
     }

@@ -296,6 +296,8 @@ public class Infinity extends Ability implements Ability.IToggled {
 
                     if (target.level instanceof ServerLevel level) {
                         for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
+                            if (!domain.checkSureHitEffect()) continue;
+
                             Entity owner = domain.getOwner();
 
                             if (owner == source.getEntity()) {

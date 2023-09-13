@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class RCT extends Ability implements Ability.IChannelened {
-    public static final float AMOUNT = 0.75F;
+    public static final float AMOUNT = 0.5F;
     public static final float COST = 5.0F;
 
     @Override

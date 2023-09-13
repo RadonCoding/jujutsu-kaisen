@@ -59,7 +59,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     protected boolean isAffected(BlockPos pos) {
         for (DomainExpansionEntity domain : this.getDomains()) {
-            if (this.shouldCancel(domain.getStrength()) && domain.isInsideBarrier(pos)) return false;
+            if (domain.isInsideBarrier(pos)) return false;
         }
         return super.isAffected(pos);
     }
@@ -133,19 +133,13 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        List<DomainExpansionEntity> domains = this.getDomains();
+        for (DomainExpansionEntity domain : this.getDomains()) {
+            if (!domain.isInsideBarrier(this.blockPosition())) continue;
 
-        for (DomainExpansionEntity domain : domains) {
-            if (domain instanceof ClosedDomainExpansionEntity) {
-                if (!domain.isInsideBarrier(this.blockPosition())) continue;
-
-                if (this.shouldCollapse(domain.getStrength())) {
-                    this.discard();
-                    return false;
-                } else if (this.shouldCancel(domain.getStrength())) {
-                    return false;
-                }
+            if (this.shouldCollapse(domain.getStrength())) {
+                this.discard();
             }
+            return false;
         }
         return true;
     }

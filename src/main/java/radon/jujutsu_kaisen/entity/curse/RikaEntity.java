@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -63,13 +62,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    private boolean tame;
-
     public RikaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public RikaEntity(LivingEntity owner, boolean tame) {
+    public RikaEntity(LivingEntity owner) {
         this(JJKEntities.RIKA.get(), owner.level);
 
         this.setTame(true);
@@ -83,8 +80,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
-
-        this.tame = tame;
     }
 
     @Override
@@ -165,20 +160,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         controllerRegistrar.add(new AnimationController<>(this, "Idle", state -> state.setAndContinue(IDLE)));
         controllerRegistrar.add(new AnimationController<>(this, "Open", this::openPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putBoolean("tame", this.tame);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.tame = pCompound.getBoolean("tame");
     }
 
     @Override
@@ -271,7 +252,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public boolean canChangeTarget() {
-        return this.tame;
+        return true;
     }
 
     @Override

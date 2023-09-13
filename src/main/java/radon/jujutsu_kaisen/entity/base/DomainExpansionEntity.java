@@ -205,18 +205,9 @@ public abstract class DomainExpansionEntity extends Mob {
         }
     }
 
-    public static float getFactor(float num1, float num2) {
-        return Math.abs (num1 - num2) / (Math.max (num1, num2) + 1.0F);
-    }
-
-    // If strength is more than 50% larger than this.getStrength
+    // If strength is more than 75% larger than this
     public boolean shouldCollapse(float strength) {
-        return getFactor(this.getStrength(), strength) >= 0.67F;
-    }
-
-    // If strength is more than or equal to this.getStrength
-    public boolean shouldCancel(float strength) {
-        return getFactor(this.getStrength(), strength) >= 0.0F;
+        return ((strength - this.getStrength()) / this.getStrength()) >= 0.75F;
     }
 
     public float getStrength() {
