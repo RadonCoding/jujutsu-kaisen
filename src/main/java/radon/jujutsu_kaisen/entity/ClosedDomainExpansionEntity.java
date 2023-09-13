@@ -107,7 +107,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
         BlockPos relative = pos.subtract(center);
-        return relative.distSqr(Vec3i.ZERO) < radius * radius - 1;
+        return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
     private void createBarrier(Entity owner) {
@@ -260,10 +260,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();
-                return false;
-            } else if (this.shouldCancel(domain.getStrength())) {
-                return false;
             }
+            return false;
         }
         return true;
     }

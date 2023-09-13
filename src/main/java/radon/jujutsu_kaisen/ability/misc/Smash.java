@@ -8,7 +8,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -22,7 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class Smash extends Ability {
-    private static final float EXPLOSIVE_POWER = 1.5F;
+    private static final float EXPLOSIVE_POWER = 1.0F;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -88,8 +87,7 @@ public class Smash extends Ability {
                         }
                     }
                 }
-                owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false,
-                        owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false, Level.ExplosionInteraction.NONE);
             }
         });
     }

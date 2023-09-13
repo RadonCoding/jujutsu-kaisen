@@ -34,7 +34,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     public boolean isInsideBarrier(BlockPos pos) {
         int width = this.getWidth();
         int height = this.getHeight();
-        BlockPos center = this.blockPosition().below(height / 2);
+        BlockPos center = this.blockPosition();
         BlockPos relative = pos.subtract(center);
         return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }

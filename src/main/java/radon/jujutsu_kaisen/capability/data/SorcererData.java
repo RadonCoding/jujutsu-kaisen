@@ -22,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -258,6 +257,14 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
+    private void removeModifier(LivingEntity owner, Attribute attribute, UUID identifier) {
+        AttributeInstance instance = owner.getAttribute(attribute);
+
+        if (instance != null) {
+            instance.removeModifier(identifier);
+        }
+    }
+
     private void updateDomains(LivingEntity owner) {
         if (owner.level instanceof ServerLevel level) {
             Iterator<UUID> iter = this.domains.iterator();
@@ -360,10 +367,8 @@ public class SorcererData implements ISorcererData {
             this.burnout--;
         }
 
-        if (owner instanceof Player player) {
-            FoodData data = player.getFoodData();
-            this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (data.getFoodLevel() / 20.0F) * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.5F : 1.0F)), this.getMaxEnergy());
-        }
+        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F) *
+                (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.5F : 1.0F)), this.getMaxEnergy());
 
         SorcererGrade grade = this.getGrade();
 
@@ -399,6 +404,8 @@ public class SorcererData implements ISorcererData {
 
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
         } else {
+            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+
             double health = Math.ceil((Math.log(grade.ordinal() + 1)
                     * (this.traits.contains(Trait.STRONGEST) ? 40.0D : 20.0D)
                     * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.25D : 1.0D)

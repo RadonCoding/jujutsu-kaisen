@@ -29,8 +29,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return (target != null && owner.distanceTo(target) <= 5.0D) ||
-                !owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D),
+        return (target != null && owner.distanceTo(target) <= 10.0D) ||
+                !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
                         entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner).isEmpty();
     }
 
@@ -112,7 +112,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    event.setAmount(event.getAmount() * 0.75F);
+                    event.setAmount(event.getAmount() * 0.9F);
 
                     switch (cap.getNature()) {
                         case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
