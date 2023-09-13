@@ -3,20 +3,25 @@ package radon.jujutsu_kaisen.ability.limitless;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.MaximumHollowPurpleProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
 public class MaximumHollowPurple extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null) return false;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
+                owner.getHealth() / owner.getMaxHealth() < 0.7F || target.getHealth() > owner.getHealth() * 2;
     }
 
     @Override

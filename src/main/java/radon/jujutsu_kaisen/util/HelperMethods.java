@@ -10,6 +10,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.mixin.common.ILevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +76,7 @@ public class HelperMethods {
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
         List<Entity> collisions = new ArrayList<>();
 
-        Vec3 center = bounds.getCenter();
-        AABB area = new AABB(center.x() - 32.0D, center.y() - 32.0D, center.z() - 32.0D,
-                center.x() + 32.0D, center.y() + 32.0D, center.z() + 32.0D);
-
-        for (Entity entity : level.getEntities(null, area)) {
+        for (Entity entity : ((ILevelAccessor) level).getEntitiesInvoker().getAll()) {
             if (bounds.intersects(entity.getBoundingBox())) {
                 collisions.add(entity);
             }

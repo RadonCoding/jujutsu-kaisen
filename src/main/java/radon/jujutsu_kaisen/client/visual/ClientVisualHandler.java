@@ -62,7 +62,15 @@ public class ClientVisualHandler {
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), cap.getType(), cap.getTechnique());
+
+                Set<CursedTechnique> techniques = new HashSet<>();
+
+                if (cap.getTechnique() != null) techniques.add(cap.getTechnique());
+                if (cap.getCurrentCopied() != null) techniques.add(cap.getCurrentCopied());
+                if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
+                if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
+
+                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
                 return synced.put(mc.player.getUUID(), data);
             }
         } else {
@@ -82,7 +90,7 @@ public class ClientVisualHandler {
                 model.renderToBuffer(poseStack, consumer, 15728640, OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
             }
-            if (data.technique == CursedTechnique.CURSED_SPEECH) {
+            if (data.techniques.contains(CursedTechnique.CURSED_SPEECH)) {
                 VertexConsumer consumer = buffer.getBuffer(INUMAKI);
                 model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
@@ -120,7 +128,7 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, JujutsuType type, CursedTechnique technique) {
+    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
@@ -138,8 +146,14 @@ public class ClientVisualHandler {
             }
             nbt.put("traits", traitsTag);
 
+            ListTag techniquesTag = new ListTag();
+
+            for (CursedTechnique technique : this.techniques) {
+                techniquesTag.add(IntTag.valueOf(technique.ordinal()));
+            }
+            nbt.put("techniques", techniquesTag);
+
             nbt.putInt("type", this.type.ordinal());
-            nbt.putInt("technique", this.technique.ordinal());
 
             return nbt;
         }
@@ -158,7 +172,15 @@ public class ClientVisualHandler {
                     traits.add(Trait.values()[tag.getAsInt()]);
                 }
             }
-            return new VisualData(toggled, traits, JujutsuType.values()[nbt.getInt("type")], CursedTechnique.values()[nbt.getInt("technique")]);
+
+            Set<CursedTechnique> techniques = new HashSet<>();
+
+            for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
+                if (key instanceof IntTag tag) {
+                    techniques.add(CursedTechnique.values()[tag.getAsInt()]);
+                }
+            }
+            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")]);
         }
     }
 }

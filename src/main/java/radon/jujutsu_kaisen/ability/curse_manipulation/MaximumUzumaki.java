@@ -10,8 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.MaximumUzumakiProjectile;
 
 import java.util.Map;
@@ -21,12 +19,7 @@ public class MaximumUzumaki extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        return cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
-                owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) ||
-                        target.getHealth() > owner.getHealth() * 2;
+        return owner.getHealth() / owner.getMaxHealth() <= 0.1F;
     }
 
     @Override

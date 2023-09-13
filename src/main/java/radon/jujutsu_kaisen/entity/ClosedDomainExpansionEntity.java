@@ -27,7 +27,6 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +38,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, pLevel);
     }
 
-    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius, float strength) {
-        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability, strength);
+    public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
+        super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
         this.moveTo(owner.getX(), owner.getY() - (double) (radius / 2), owner.getZ());
 
@@ -94,7 +93,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         AABB bounds = this.getBounds();
 
         for (DomainExpansionEntity entity : this.level.getEntitiesOfClass(DomainExpansionEntity.class, bounds)) {
-            if (this.isInsideBarrier(null, entity.blockPosition())) {
+            if (this.isInsideBarrier(entity.blockPosition())) {
                 entities.add(entity);
             }
         }
@@ -102,7 +101,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos) {
+    public boolean isInsideBarrier(BlockPos pos) {
         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
 
         int radius = this.getRadius();
@@ -220,7 +219,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
         boolean completed = this.getTime() >= radius * 2;
 
-        if (!completed || entity != null && this.isInsideBarrier(null, entity.blockPosition())) {
+        if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -259,10 +258,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         for (DomainExpansionEntity domain : domains) {
             if (domain.getOwner() == this.getOwner()) continue;
 
-            if (domain.getStrength() > this.getStrength()) {
+            if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();
                 return false;
-            } else if (domain.getStrength() == this.getStrength()) {
+            } else if (this.shouldCancel(domain.getStrength())) {
                 return false;
             }
         }
@@ -310,7 +309,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
-                } else if (completed && !this.isInsideBarrier(null, owner.blockPosition())) {
+                } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();
                 }
             }

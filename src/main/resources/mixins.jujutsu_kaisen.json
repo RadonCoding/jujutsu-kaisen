@@ -21,6 +21,7 @@
   ],
   "mixins": [
     "common.EntityMixin",
+    "common.ILevelAccessor",
     "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",

@@ -100,7 +100,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                     for (DomainExpansionEntity domain : pLevel.getEntitiesOfClass(DomainExpansionEntity.class, AABB.ofSize(pos.getCenter(),
                             64.0D, 64.0D, 64.0D))) {
-                        if (domain.isInsideBarrier(null, pos)) return;
+                        if (domain.isInsideBarrier(pos)) return;
                     }
 
                     if (original.isAir() || !original.canOcclude()) {

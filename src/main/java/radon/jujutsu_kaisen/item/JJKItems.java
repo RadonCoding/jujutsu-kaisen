@@ -60,6 +60,19 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.TOGE_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> TOGE_BOOTS = ITEMS.register("toge_boots",
             () -> new ArmorItem(JJKArmorMaterials.TOGE_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> YUTA_CHESTPLATE = ITEMS.register("yuta_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.YUTA_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> YUTA_LEGGINGS = ITEMS.register("yuta_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.YUTA_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> YUTA_BOOTS = ITEMS.register("yuta_boots",
+            () -> new ArmorItem(JJKArmorMaterials.YUTA_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SUGURU_CHESTPLATE = ITEMS.register("suguru_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.SUGURU_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SUGURU_LEGGINGS = ITEMS.register("suguru_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.SUGURU_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SUGURU_BOOTS = ITEMS.register("suguru_boots",
+            () -> new ArmorItem(JJKArmorMaterials.SUGURU_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+
     public static RegistryObject<Item> DISPLAY_CASE = ITEMS.register("display_case",
             () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
 
@@ -94,6 +107,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.YUJI_ITADORI, 0xCC8E8C, 0x704629, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> TOGE_INUMAKI_SPAWN_EGG = ITEMS.register("toge_inumaki_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOGE_INUMAKI, 0xD8D0BC, 0x776B90, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> SUGURU_GETO_SPAWN_EGG = ITEMS.register("suguru_geto_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.SUGURU_GETO, 0x1F2A30, 0x3B2511, new Item.Properties()));
 
     public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
@@ -124,6 +139,10 @@ public class JJKItems {
         public static JJKArmorMaterial MEGUMI_OUTFIT = new JJKArmorMaterial("megumi_outfit", 100, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial TOGE_OUTFIT = new JJKArmorMaterial("toge_outfit", 100, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+                4.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial YUTA_OUTFIT = new JJKArmorMaterial("yuta_outfit", 100, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+                4.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial SUGURU_OUTFIT = new JJKArmorMaterial("suguru_outfit", 100, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
     }
 }

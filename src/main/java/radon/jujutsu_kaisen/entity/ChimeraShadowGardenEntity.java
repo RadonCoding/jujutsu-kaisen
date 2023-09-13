@@ -15,13 +15,10 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.*;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import javax.annotation.Nullable;
 
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -44,21 +41,18 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
     }
 
     @Override
-    public boolean isInsideBarrier(@Nullable DomainExpansionEntity asker, BlockPos pos) {
+    public boolean isInsideBarrier(BlockPos pos) {
         if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
 
-        for (DomainExpansionEntity domain : this.getDomains()) {
-            if (domain != this && domain != asker && domain.getStrength() >= this.getStrength() && domain.isInsideBarrier(this, pos)) return false;
-        }
         int width = this.getWidth();
         int height = this.getHeight();
-        BlockPos center = this.blockPosition().below(height / 2);
+        BlockPos center = this.blockPosition().below();
         BlockPos relative = pos.subtract(center);
-        return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
+        return relative.getY() >= 0 && relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
-    public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height, float strength) {
-        super(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), owner, ability, width, height, strength);
+    public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), owner, ability, width, height);
     }
 
     private void createBarrier(Entity owner) {
@@ -82,6 +76,8 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                                 if (distance <= horizontal && distance >= horizontal - 1) {
                                     BlockPos pos = center.offset(x, -vertical, z);
+
+                                    if (!this.isAffected(pos)) return;
 
                                     BlockState state = this.level.getBlockState(pos);
 

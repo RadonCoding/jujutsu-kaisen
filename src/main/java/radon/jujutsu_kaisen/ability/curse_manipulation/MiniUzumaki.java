@@ -10,21 +10,15 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.projectile.MiniUzumakiProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.Map;
 
 public class MiniUzumaki extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        return cap.getType() == JujutsuType.CURSE || owner.getHealth() / owner.getMaxHealth() < 0.75F ||
-                        cap.getEnergy() - this.getCost(owner) < (cap.getMaxEnergy() / 2) || target.getHealth() > owner.getHealth() * 2;
+        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override

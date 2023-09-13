@@ -24,7 +24,7 @@ import java.util.List;
 public class Explode extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
-    private static final float EXPLOSIVE_POWER = 1.0F;
+    private static final float EXPLOSIVE_POWER = 1.5F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -74,7 +74,7 @@ public class Explode extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 500.0F;
+        return 300.0F;
     }
 
     @Override

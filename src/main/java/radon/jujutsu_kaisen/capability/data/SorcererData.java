@@ -267,7 +267,7 @@ public class SorcererData implements ISorcererData {
                 Entity entity = level.getEntity(identifier);
 
                 if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
-                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(null, owner.blockPosition())) {
+                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner.blockPosition())) {
                     iter.remove();
                 }
             }
@@ -718,6 +718,9 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public @Nullable CursedTechnique getCurrentCopied() {
+        if (!this.toggled.contains(JJKAbilities.RIKA.get())) {
+            return null;
+        }
         return this.currentCopied;
     }
 
@@ -1014,12 +1017,6 @@ public class SorcererData implements ISorcererData {
         } else {
             this.curses.put(key, count);
         }
-    }
-
-    @Override
-    public void removeAllCurses(Registry<EntityType<?>> registry, EntityType<?> type) {
-        ResourceLocation key = registry.getKey(type);
-        this.curses.remove(key);
     }
 
     @Override

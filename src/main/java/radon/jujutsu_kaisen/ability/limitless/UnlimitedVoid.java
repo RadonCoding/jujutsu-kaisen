@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -51,8 +50,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             int radius = this.getRadius();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius,
-                    cap.getGrade().getPower(owner) + (cap.hasTrait(Trait.STRONGEST) ? 1.0F : 0.0F));
+            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
             owner.level.addFreshEntity(domain);
 
             cap.setDomain(domain);

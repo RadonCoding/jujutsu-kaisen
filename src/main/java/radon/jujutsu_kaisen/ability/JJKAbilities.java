@@ -1,8 +1,13 @@
 package radon.jujutsu_kaisen.ability;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -40,7 +45,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -141,7 +150,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
     public static RegistryObject<Ability> ABSORB_TECHNIQUE = ABILITIES.register("absorb_technique", AbsorbTechnique::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
-    public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
+    public static RegistryObject<Ability> RELEASE_CURSES = ABILITIES.register("release_curses", ReleaseCurses::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
 
@@ -165,6 +174,46 @@ public class JJKAbilities {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                 result.set(cap.hasToggled(ability)));
         return result.get();
+    }
+
+    public static float getCurseCost(SorcererGrade grade) {
+        return 50.0F * grade.getPower();
+    }
+
+    public static void summonCurse(LivingEntity owner, EntityType<?> type) {
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+
+        Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            if (!cap.hasCurse(registry, type)) return;
+
+            if (type.create(owner.level) instanceof CursedSpirit curse) {
+                float cost = getCurseCost(curse.getGrade());
+
+                if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                    if (cap.getEnergy() < cost) {
+                        return;
+                    }
+                    cap.useEnergy(cost);
+                }
+
+                Vec3 pos = owner.position().subtract(owner.getLookAngle()
+                        .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
+                curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+                curse.setTame(true);
+                curse.setOwner(owner);
+                owner.level.addFreshEntity(curse);
+
+                cap.addSummon(curse);
+
+                cap.removeCurse(registry, type);
+
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                }
+            }
+        });
     }
 
     @Nullable
@@ -266,10 +315,8 @@ public class JJKAbilities {
             CursedTechnique additional = cap.getAdditional();
             if (additional != null) abilities.addAll(Arrays.asList(additional.getAbilities()));
 
-            if (cap.hasToggled(JJKAbilities.RIKA.get())) {
-                CursedTechnique copied = cap.getCurrentCopied();
-                if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
-            }
+            CursedTechnique copied = cap.getCurrentCopied();
+            if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
 
             CursedTechnique absorbed = cap.getCurrentAbsorbed();
             if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));
