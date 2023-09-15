@@ -23,5 +23,15 @@
     "sounds": [
       "jujutsu_kaisen:cursed_speech"
     ]
+  },
+  "clap": {
+    "sounds": [
+      "jujutsu_kaisen:clap"
+    ]
+  },
+  "forest_spikes": {
+    "sounds": [
+      "jujutsu_kaisen:forest_spikes"
+    ]
   }
 }

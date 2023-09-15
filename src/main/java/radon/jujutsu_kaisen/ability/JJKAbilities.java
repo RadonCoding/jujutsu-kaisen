@@ -22,9 +22,13 @@ import radon.jujutsu_kaisen.ability.ai.scissor.TeleportRandom;
 import radon.jujutsu_kaisen.ability.ai.scissor.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
+import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
+import radon.jujutsu_kaisen.ability.disaster_plants.ForestPlatform;
+import radon.jujutsu_kaisen.ability.disaster_plants.ForestSpikes;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
@@ -99,6 +103,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static RegistryObject<Ability> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
 
+    public static RegistryObject<Ability> FOREST_PLATFORM = ABILITIES.register("forest_platform", ForestPlatform::new);
+    public static RegistryObject<Ability> FOREST_SPIKES = ABILITIES.register("forest_spikes", ForestSpikes::new);
+
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
     public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
@@ -159,6 +166,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> BLAST_AWAY = ABILITIES.register("blast_away", BlastAway::new);
     public static RegistryObject<Ability> EXPLODE = ABILITIES.register("explode", Explode::new);
     public static RegistryObject<Ability> DIE = ABILITIES.register("die", Die::new);
+
+    public static RegistryObject<Ability> BOOGIE_WOOGIE = ABILITIES.register("boogie_woogie", BoogieWoogie::new);
+    public static RegistryObject<Ability> FEINT = ABILITIES.register("feint", Feint::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);

@@ -91,7 +91,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
             }
         }
-        this.warned = true;
     }
 
     @Override
@@ -134,7 +133,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean checkSureHitEffect() {
         for (DomainExpansionEntity domain : this.getDomains()) {
-            if (!domain.isInsideBarrier(this.blockPosition())) continue;
+            //if (!domain.isInsideBarrier(this.blockPosition()) && !this.isInsideBarrier(domain.blockPosition())) continue;
+            if (!this.getBoundingBox().intersects(domain.getBoundingBox())) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();
@@ -180,9 +180,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         if (owner != null) {
             if (!this.level.isClientSide) {
                 if (this.checkSureHitEffect()) {
-                    if (!this.warned || this.getTime() % 5 == 0) {
-                        this.warn();
-                    }
+                    this.warn();
+
                     this.doSureHitEffect(owner);
                 }
             }

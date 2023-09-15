@@ -327,7 +327,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
 
                             boolean melee = source.getDirectEntity() == source.getEntity() &&
-                                    (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+                                    (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
                             if (melee) {
                                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {

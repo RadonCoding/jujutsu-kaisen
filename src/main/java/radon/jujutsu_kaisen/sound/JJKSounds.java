@@ -20,4 +20,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "wolf_howling")));
     public static RegistryObject<SoundEvent> CURSED_SPEECH = SOUNDS.register("cursed_speech", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_speech")));
+    public static RegistryObject<SoundEvent> CLAP = SOUNDS.register("clap", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "clap")));
+    public static RegistryObject<SoundEvent> FOREST_SPIKES = SOUNDS.register("forest_spikes", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_spikes")));
 }

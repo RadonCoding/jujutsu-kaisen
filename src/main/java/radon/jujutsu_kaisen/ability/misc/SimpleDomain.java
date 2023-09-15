@@ -91,8 +91,6 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                    System.out.println(victim);
-
                     cap.toggle(victim, JJKAbilities.SIMPLE_DOMAIN.get());
 
                     if (victim instanceof ServerPlayer player) {

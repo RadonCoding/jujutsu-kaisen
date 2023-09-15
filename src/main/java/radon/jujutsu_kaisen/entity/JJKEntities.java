@@ -259,6 +259,11 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "water_torrent")
                             .toString()));
+    public static RegistryObject<EntityType<ForestSpikeEntity>> FOREST_SPIKE = ENTITIES.register("forest_spike", () ->
+            EntityType.Builder.<ForestSpikeEntity>of(ForestSpikeEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_spike")
+                            .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)

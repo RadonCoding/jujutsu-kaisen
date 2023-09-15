@@ -18,6 +18,7 @@ public enum CursedTechnique {
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get()),
     DISASTER_TIDES(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DISASTER_TIDES.get(), JJKAbilities.WATER_SHIELD.get(), JJKAbilities.FISH_SHIKIGAMI.get(), JJKAbilities.WATER_TORRENT.get()),
+    DISASTER_PLANTS(null, JJKAbilities.FOREST_PLATFORM.get(), JJKAbilities.FOREST_SPIKES.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),
@@ -28,7 +29,8 @@ public enum CursedTechnique {
             JJKAbilities.DIVINE_DOGS.get(), JJKAbilities.DIVINE_DOG_TOTALITY.get(), JJKAbilities.TOAD.get(), JJKAbilities.TOAD_TOTALITY.get(),
             JJKAbilities.GREAT_SERPENT.get(), JJKAbilities.NUE.get(), JJKAbilities.NUE_TOTALITY.get(),
             JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.TRANQUIL_DEER.get(),
-            JJKAbilities.PIERCING_BULL.get(), JJKAbilities.AGITO.get(), JJKAbilities.MAHORAGA.get());
+            JJKAbilities.PIERCING_BULL.get(), JJKAbilities.AGITO.get(), JJKAbilities.MAHORAGA.get()),
+    BOOGIE_WOOGIE(null, JJKAbilities.BOOGIE_WOOGIE.get(), JJKAbilities.FEINT.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;

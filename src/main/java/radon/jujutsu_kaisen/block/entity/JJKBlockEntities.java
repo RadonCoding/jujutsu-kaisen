@@ -43,6 +43,7 @@ public class JJKBlockEntities {
 
     public static RegistryObject<BlockEntityType<DurationBlockEntity>> DURATION = BLOCK_ENTITIES.register("duration", () ->
             BlockEntityType.Builder.of(DurationBlockEntity::new,
-                            JJKBlocks.FAKE_WATER_DURATION.get())
+                            JJKBlocks.FAKE_WATER_DURATION.get(),
+                            JJKBlocks.FAKE_WOOD.get())
                     .build(null));
 }

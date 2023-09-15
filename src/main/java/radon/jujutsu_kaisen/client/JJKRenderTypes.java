@@ -33,11 +33,26 @@ public class JJKRenderTypes extends RenderType {
                         .setOverlayState(OVERLAY)
                         .createCompositeState(false));
     });
+    private static final Function<ResourceLocation, RenderType> SIX_EYES = Util.memoize((pLocation) -> {
+        RenderStateShard.TextureStateShard shard = new RenderStateShard.TextureStateShard(pLocation, false, false);
+        return create("six_eyes", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+                false, true, RenderType.CompositeState.builder()
+                        .setShaderState(RENDERTYPE_EYES_SHADER)
+                        .setTextureState(shard)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .createCompositeState(false));
+    });
+
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
     public static RenderType glow(ResourceLocation pLocation) {
         return GLOW.apply(pLocation);
+    }
+
+    public static RenderType sixEyes(ResourceLocation pLocation) {
+        return SIX_EYES.apply(pLocation);
     }
 }

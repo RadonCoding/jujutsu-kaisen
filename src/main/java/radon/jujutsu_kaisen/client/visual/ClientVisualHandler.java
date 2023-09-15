@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +27,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestVisualDataC2SPacket;
 
@@ -32,7 +35,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientVisualHandler {
-    private static final RenderType SIX_EYES = RenderType.eyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
+    private static final RenderType SIX_EYES = JJKRenderTypes.sixEyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
     private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
     private static final Map<UUID, VisualData> synced = new HashMap<>();
@@ -55,9 +58,12 @@ public class ClientVisualHandler {
 
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player == null) return null;
+        if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
+            if (mc.level.getGameTime() % 20  == 0) {
+                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
+            }
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -87,7 +93,7 @@ public class ClientVisualHandler {
 
             if (data.traits.contains(Trait.SIX_EYES)) {
                 VertexConsumer consumer = buffer.getBuffer(SIX_EYES);
-                model.renderToBuffer(poseStack, consumer, 15728640, OverlayTexture.NO_OVERLAY,
+                model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                         1.0F, 1.0F, 1.0F, 1.0F);
             }
             if (data.techniques.contains(CursedTechnique.CURSED_SPEECH)) {
@@ -100,6 +106,11 @@ public class ClientVisualHandler {
                 PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onEntityRemoved(EntityLeaveLevelEvent event) {
+        synced.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
@@ -118,8 +129,6 @@ public class ClientVisualHandler {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (player == null) return;
-
-        if (player.level.getGameTime() % 20  == 0) synced.clear();
 
         VisualData data = getOrRequest(player);
 

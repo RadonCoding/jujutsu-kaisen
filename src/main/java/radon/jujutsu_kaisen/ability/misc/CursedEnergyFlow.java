@@ -31,7 +31,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return (target != null && owner.distanceTo(target) <= 10.0D) ||
                 !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
-                        entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner).isEmpty();
+                        entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty();
     }
 
     @Override

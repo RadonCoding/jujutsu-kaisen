@@ -39,8 +39,11 @@ public class HelperMethods {
     }
 
     public static Vec3 getLookAngle(LivingEntity entity) {
-        float f = entity.getXRot() * ((float)Math.PI / 180F);
-        float f1 = -entity.yHeadRot * ((float)Math.PI / 180F);
+        float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
+        float yaw = (entity.yHeadRotO + Mth.wrapDegrees(entity.yHeadRot - entity.yHeadRotO));
+
+        float f = pitch * ((float)Math.PI / 180.0F);
+        float f1 = -yaw * ((float)Math.PI / 180.0F);
         float f2 = Mth.cos(f1);
         float f3 = Mth.sin(f1);
         float f4 = Mth.cos(f);
@@ -49,6 +52,10 @@ public class HelperMethods {
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
+        return getHitResult(entity, start, end, true);
+    }
+
+    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, boolean hasToBePickable) {
         Level level = entity.level;
 
         HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
@@ -58,7 +65,7 @@ public class HelperMethods {
         }
 
         HitResult entityHit = ProjectileUtil.getEntityHitResult(level, entity, start, end, entity.getBoundingBox()
-                .expandTowards(end.subtract(start)).inflate(1.0D), target -> !target.isSpectator() && target.isPickable());
+                .expandTowards(end.subtract(start)).inflate(1.0D), target -> !target.isSpectator() && (!hasToBePickable || target.isPickable()));
 
         if (entityHit != null) {
             return entityHit;
@@ -71,6 +78,13 @@ public class HelperMethods {
         Vec3 look = entity.getLookAngle();
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end);
+    }
+
+    public static HitResult getLookAtHitAny(Entity entity, double range) {
+        Vec3 start = entity.getEyePosition();
+        Vec3 look = entity.getLookAngle();
+        Vec3 end = start.add(look.scale(range));
+        return getHitResult(entity, start, end, false);
     }
 
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
