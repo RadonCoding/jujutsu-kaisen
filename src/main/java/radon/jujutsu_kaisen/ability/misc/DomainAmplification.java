@@ -22,7 +22,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
         if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
-                entity -> entity instanceof JujutsuProjectile projectile && projectile.getOwner() != owner).isEmpty()) return true;
+                entity -> entity instanceof JujutsuProjectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty()) return true;
 
         Ability domain = ((ISorcerer) owner).getDomain();
         return target != null && owner.distanceTo(target) < 10.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||

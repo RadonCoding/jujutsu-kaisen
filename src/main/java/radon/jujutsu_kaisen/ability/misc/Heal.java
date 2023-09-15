@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 
 
 public class Heal extends Ability implements Ability.IChannelened {
-    private static final float AMOUNT = 0.75F;
+    private static final float AMOUNT = 0.9F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

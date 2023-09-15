@@ -23,10 +23,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         super.onHitEntity(domain, owner, entity);
 
-        if (owner.level.getGameTime() % 10 == 0) {
-            Ability cleave = JJKAbilities.CLEAVE.get();
-            ((IDomainAttack) cleave).perform(owner, domain, entity);
-        }
+        Ability cleave = JJKAbilities.CLEAVE.get();
+        ((IDomainAttack) cleave).perform(owner, domain, entity);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public int getWidth() {
-        return 100;
+        return 64;
     }
 
     @Override

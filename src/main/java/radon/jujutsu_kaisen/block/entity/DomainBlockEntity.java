@@ -7,7 +7,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -34,20 +33,24 @@ public class DomainBlockEntity extends BlockEntity {
         Entity domain = ((ServerLevel) pLevel).getEntity(pBlockEntity.identifier);
 
         if (domain == null || domain.isRemoved() || !domain.isAlive()) {
-            BlockState original = pBlockEntity.getOriginal();
-
-            if (original != null) {
-                if (original.isAir()) {
-                    pLevel.destroyBlock(pPos, false);
-
-                    if (!pBlockEntity.getBlockState().getFluidState().isEmpty() && original.getFluidState().isEmpty()) {
-                        pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
-                    }
-                } else {
-                    pLevel.setBlockAndUpdate(pPos, original);
-                }
-            }
+            pBlockEntity.destroy();
         }
+    }
+
+    public boolean destroy() {
+        if (this.level == null) return false;
+
+        BlockState original = this.getOriginal();
+
+        if (original != null) {
+            if (original.isAir()) {
+                this.level.destroyBlock(this.getBlockPos(), false);
+            } else {
+                this.level.setBlockAndUpdate(this.getBlockPos(), original);
+            }
+            return true;
+        }
+        return false;
     }
 
     public UUID getIdentifier() {
@@ -55,6 +58,8 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     public @Nullable BlockState getOriginal() {
+        if (this.level == null) return this.original;
+
         if (this.original == null && this.deferred != null) {
             this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
             this.deferred = null;

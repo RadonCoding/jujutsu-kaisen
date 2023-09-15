@@ -88,9 +88,9 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
         this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, -START_RADIUS, 0.0F, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -START_RADIUS, START_RADIUS, 0.0F, minU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, START_RADIUS, 0.0F, maxU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, START_RADIUS, -START_RADIUS, 0.0F, maxU, minV, 1.0F, packedLight);
     }
 
     private void renderStart(int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
@@ -114,7 +114,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         }
         poseStack.pushPose();
         poseStack.mulPose(side.getRotation().mul(Axis.XP.rotationDegrees(90.0F)));
-        poseStack.translate(0, 0, -0.01F);
+        poseStack.translate(0.0F, 0.0F, -0.01F);
         this.renderFlatQuad(frame, poseStack, consumer, packedLight);
         poseStack.popPose();
     }
@@ -127,11 +127,11 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
-        float offset = this.clearerView ? -1 : 0;
+        float offset = this.clearerView ? -1.0F : 0.0F;
         this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, 0.0F, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, 0, minU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, 0, maxU, maxV, 1, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, 0, maxU, minV, 1, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, 0.0F, minU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, 0.0F, maxU, maxV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, 0.0F, maxU, minV, 1.0F, packedLight);
     }
 
     private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {

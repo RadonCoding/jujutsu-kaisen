@@ -194,6 +194,9 @@
   "ability.jujutsu_kaisen.fish_shikigami": "Fish Shikigami",
   "ability.jujutsu_kaisen.water_torrent": "Water Torrent",
 
+  "ability.jujutsu_kaisen.forest_platform": "Forest Platform",
+  "ability.jujutsu_kaisen.forest_spikes": "Forest Spikes",
+
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.disable": "Released Mahoraga",
@@ -267,6 +270,9 @@
   "ability.jujutsu_kaisen.explode": "Explode",
   "ability.jujutsu_kaisen.die": "Die",
 
+  "ability.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
+  "ability.jujutsu_kaisen.feint": "Feint",
+
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
   "grade.jujutsu_kaisen.semi_grade_2": "Semi-Grade 2",
@@ -285,6 +291,7 @@
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
+  "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
 
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",
@@ -313,6 +320,8 @@
   "chat.jujutsu_kaisen.blast_away": "<%1$s> BLAST AWAY!",
   "chat.jujutsu_kaisen.explode": "<%1$s> EXPLODE!",
   "chat.jujutsu_kaisen.die": "<%1$s> DIE!",
+
+  "chat.jujutsu_kaisen.cooldown": "Cooldown: %1$ds",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",

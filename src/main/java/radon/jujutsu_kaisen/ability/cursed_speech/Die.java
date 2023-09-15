@@ -110,7 +110,7 @@ public class Die extends Ability {
                     });
 
                     if (living instanceof Player player) {
-                        player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
+                        player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
                     }
                 }
             }, 20);

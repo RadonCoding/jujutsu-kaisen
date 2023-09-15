@@ -46,7 +46,8 @@ public abstract class Ability {
         LIMITLESS,
         WATER,
         ELECTRICITY,
-        RAW_CURSED_ENERGY
+        RAW_CURSED_ENERGY,
+        SHARP
     }
 
     public Classification getClassification() {
@@ -72,7 +73,7 @@ public abstract class Ability {
         AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.SIX_EYES)) {
+            if (this.getClassification() == Classification.MELEE ? cap.hasTrait(Trait.HEAVENLY_RESTRICTION) : cap.hasTrait(Trait.SIX_EYES)) {
                 cooldown.set(cooldown.get() / 2);
             }
         });

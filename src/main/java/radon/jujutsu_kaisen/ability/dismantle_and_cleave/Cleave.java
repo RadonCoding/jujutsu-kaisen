@@ -11,9 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -42,16 +40,12 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity result = null;
-
-        if (owner instanceof Player) {
-            if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-                if (owner.canAttack(target)) {
-                    result = target;
-                }
+        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+            if (owner.canAttack(target)) {
+                return target;
             }
         }
-        return result;
+        return null;
     }
 
     private DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
@@ -128,13 +122,13 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target != null && owner.level instanceof ServerLevel level) {
-            AABB bounds = target.getBoundingBox();
-            double minY = bounds.minY;
-            double maxY = bounds.maxY;
+            double width = target.getBbWidth();
+            double height = target.getBbHeight();
 
-            double randomY = minY + (maxY - minY) * HelperMethods.RANDOM.nextDouble();
-            level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), randomY, target.getZ(),
-                    0, 0.0D, 0.0D, 0.0D, 0.0D);
+            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+            double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
+            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
+            level.sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
 
             DamageSource source = this.getSource(owner, domain);
             float damage = calculateDamage(source, owner, target);

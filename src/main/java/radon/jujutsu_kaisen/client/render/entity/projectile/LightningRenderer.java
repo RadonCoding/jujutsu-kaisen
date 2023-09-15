@@ -43,7 +43,6 @@ public class LightningRenderer extends EntityRenderer<LightningProjectile> {
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
 
-        boolean still = pEntity.getTime() >= LightningProjectile.DELAY;
         RenderType type = RenderType.entityCutoutNoCull(STILL);
 
         for (int i = 0; i < 2; i++) {

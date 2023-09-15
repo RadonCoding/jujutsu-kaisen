@@ -34,7 +34,6 @@ public abstract class DomainExpansionEntity extends Mob {
     private LivingEntity cachedOwner;
 
     protected DomainExpansion ability;
-    protected boolean warned;
     protected boolean first = true;
 
     protected DomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
@@ -152,7 +151,7 @@ public abstract class DomainExpansionEntity extends Mob {
                 }
             }
         }
-        return this.isAffected(entity.blockPosition());
+        return entity instanceof DomainExpansionEntity ? this.isInsideBarrier(entity.blockPosition()) : this.isAffected(entity.blockPosition());
     }
 
     @Override
@@ -164,7 +163,6 @@ public abstract class DomainExpansionEntity extends Mob {
         }
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
-        pCompound.putBoolean("warned", this.warned);
         pCompound.putBoolean("first", this.first);
     }
 
@@ -177,7 +175,6 @@ public abstract class DomainExpansionEntity extends Mob {
         }
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
-        this.warned = pCompound.getBoolean("warned");
         this.first = pCompound.getBoolean("first");
     }
 

@@ -108,4 +108,7 @@ public class JJKBlocks {
             new FakeWaterDurationBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
     public static RegistryObject<FakeWaterDomainBlock> FAKE_WATER_DOMAIN = BLOCKS.register("fake_water_domain", () ->
             new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+
+    public static RegistryObject<FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
+            new FakeWoodBlock(BlockBehaviour.Properties.copy(Blocks.STONE)));
 }
