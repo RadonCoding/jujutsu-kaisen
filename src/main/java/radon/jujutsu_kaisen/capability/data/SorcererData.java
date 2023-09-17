@@ -843,6 +843,27 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public <T extends Entity> void removeSummonByClass(ServerLevel level, Class<T> clazz) {
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        Iterator<UUID> iter = this.summons.iterator();
+
+        while (iter.hasNext()) {
+            UUID identifier = iter.next();
+
+            Entity entity = level.getEntity(identifier);
+
+            if (entity == null) continue;
+
+            T summon = test.tryCast(entity);
+
+            if (summon != null) {
+                iter.remove();
+            }
+        }
+    }
+
+    @Override
     public <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 

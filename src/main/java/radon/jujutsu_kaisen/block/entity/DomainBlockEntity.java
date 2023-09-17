@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +45,11 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (original != null) {
             if (original.isAir()) {
-                this.level.destroyBlock(this.getBlockPos(), false);
+                if (!this.getBlockState().getFluidState().isEmpty()) {
+                    this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+                } else {
+                    this.level.destroyBlock(this.getBlockPos(), false);
+                }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
             }

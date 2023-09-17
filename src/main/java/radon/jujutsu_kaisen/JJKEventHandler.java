@@ -46,7 +46,6 @@ import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
-import radon.jujutsu_kaisen.item.InvertedSpearOfHeavenItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -190,16 +189,13 @@ public class JJKEventHandler {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());
                         living.level.explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
                     } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                        if (!InvertedSpearOfHeavenItem.isOnCooldown(attacker.level.getGameTime(), stack)) {
-                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                cap.clearToggled();
+                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            cap.clearToggled();
 
-                                if (victim instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                                }
-                            });
-                            InvertedSpearOfHeavenItem.setCooldown(stack, attacker.level.getGameTime());
-                        }
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
+                        });
                     }
                 }
 
