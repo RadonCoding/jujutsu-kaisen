@@ -87,7 +87,7 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public int getCooldown() {
-        return 60 * 20;
+        return 30 * 20;
     }
 
     @Override

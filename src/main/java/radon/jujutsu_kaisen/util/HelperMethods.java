@@ -24,6 +24,10 @@ public class HelperMethods {
         return enumClass.getEnumConstants()[x];
     }
 
+    public static float getYaw(Vec3 vec) {
+        return (float) (-Mth.atan2(vec.x(), vec.z()) * (180.0D / Math.PI));
+    }
+
     public static float getXRotD(Entity src, Vec3 target) {
         double d0 = target.x() - src.getX();
         double d1 = target.y() - src.getEyeY();

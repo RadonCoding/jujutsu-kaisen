@@ -113,6 +113,7 @@ public interface ISorcererData {
     List<Entity> getSummons(ServerLevel level);
     <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz);
     <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz);
+    <T extends Entity> void removeSummonByClass(ServerLevel level, Class<T> clazz);
     <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
 
     boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);

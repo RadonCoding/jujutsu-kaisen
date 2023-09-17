@@ -48,6 +48,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     public abstract boolean isTenShadows();
 
+    protected boolean shouldRemove() {
+        return true;
+    }
+
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
@@ -179,7 +183,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public void onDisabled(LivingEntity owner) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                cap.unsummonByClass((ServerLevel) owner.level, this.clazz);
+                if (this.shouldRemove()) {
+                    cap.unsummonByClass((ServerLevel) owner.level, this.clazz);
+                } else {
+                    cap.removeSummonByClass((ServerLevel) owner.level, this.clazz);
+                }
 
                 if (owner instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

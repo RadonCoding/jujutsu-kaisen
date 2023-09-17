@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
+import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
 import radon.jujutsu_kaisen.entity.sorcerer.*;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
@@ -263,6 +264,16 @@ public class JJKEntities {
             EntityType.Builder.<ForestSpikeEntity>of(ForestSpikeEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_spike")
+                            .toString()));
+    public static RegistryObject<EntityType<WoodSegmentEntity>> WOOD_SEGMENT = ENTITIES.register("wood_segment", () ->
+            EntityType.Builder.<WoodSegmentEntity>of(WoodSegmentEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_segment")
+                            .toString()));
+    public static RegistryObject<EntityType<WoodShieldEntity>> WOOD_SHIELD = ENTITIES.register("wood_shield", () ->
+            EntityType.Builder.<WoodShieldEntity>of(WoodShieldEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_shield")
                             .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
