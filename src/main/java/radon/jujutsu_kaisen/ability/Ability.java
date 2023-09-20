@@ -36,22 +36,8 @@ public abstract class Ability {
         SIMPLE_DOMAIN
     }
 
-    public enum Classification {
-        NONE,
-        MELEE,
-        DISASTER_FLAMES,
-        DISASTER_TIDES,
-        SLASH,
-        PURE_LOVE,
-        LIMITLESS,
-        WATER,
-        ELECTRICITY,
-        RAW_CURSED_ENERGY,
-        SHARP
-    }
-
-    public Classification getClassification() {
-        return Classification.NONE;
+    public boolean isMelee() {
+        return false;
     }
 
     // Used for AI
@@ -73,7 +59,7 @@ public abstract class Ability {
         AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (this.getClassification() == Classification.MELEE ? cap.hasTrait(Trait.HEAVENLY_RESTRICTION) : cap.hasTrait(Trait.SIX_EYES)) {
+            if (this.isMelee() ? cap.hasTrait(Trait.HEAVENLY_RESTRICTION) : cap.hasTrait(Trait.SIX_EYES)) {
                 cooldown.set(cooldown.get() / 2);
             }
         });

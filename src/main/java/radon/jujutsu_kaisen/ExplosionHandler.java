@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
@@ -70,7 +71,9 @@ public class ExplosionHandler {
                                 (y - explosion.position.getY()) * (y - explosion.position.getY()) +
                                 (z - explosion.position.getZ()) * (z - explosion.position.getZ());
 
-                        if (distance <= radius * radius) {
+                        double adjusted = radius *  ((double) explosion.age / explosion.duration);
+
+                        if (distance <= adjusted * adjusted) {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
 
@@ -79,7 +82,7 @@ public class ExplosionHandler {
                                         JJKDamageSources.jujutsuAttack(explosion.source, explosion.ability), explosion.radius);
                             }
 
-                            if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                            if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
                                 if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                     event.level.destroyBlock(pos, false);
 

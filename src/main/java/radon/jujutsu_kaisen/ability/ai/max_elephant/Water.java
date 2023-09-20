@@ -170,11 +170,6 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.WATER;
-    }
-
-    @Override
     public void onRelease(LivingEntity owner, int charge) {
 
     }

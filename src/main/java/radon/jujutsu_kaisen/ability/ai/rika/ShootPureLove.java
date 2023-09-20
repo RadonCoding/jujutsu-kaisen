@@ -34,9 +34,4 @@ public class ShootPureLove extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.PURE_LOVE;
-    }
 }

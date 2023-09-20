@@ -33,5 +33,10 @@
     "sounds": [
       "jujutsu_kaisen:forest_spikes"
     ]
+  },
+  "malevolent_shrine": {
+    "sounds": [
+      "jujutsu_kaisen:malevolent_shrine"
+    ]
   }
 }

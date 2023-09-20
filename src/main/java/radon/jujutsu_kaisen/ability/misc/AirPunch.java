@@ -91,8 +91,8 @@ public class AirPunch extends Ability {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.MELEE;
+    public boolean isMelee() {
+        return true;
     }
 
     @Override

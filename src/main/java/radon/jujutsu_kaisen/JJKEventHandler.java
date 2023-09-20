@@ -39,6 +39,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
@@ -146,7 +147,7 @@ public class JJKEventHandler {
             Entity attacker = source.getEntity();
             LivingEntity victim = event.getEntity();
 
-            boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
             if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
@@ -163,6 +164,9 @@ public class JJKEventHandler {
                     event.setCanceled(true);
                     return;
                 }
+            } else if (victim instanceof DomainExpansionEntity domain && domain.getOwner() == attacker) {
+                event.setCanceled(true);
+                return;
             }
 
             if (attacker instanceof LivingEntity living) {
@@ -198,19 +202,6 @@ public class JJKEventHandler {
                         });
                     }
                 }
-
-                if (attacker instanceof MahoragaEntity mahoraga) {
-                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
-                        mahoraga.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                            Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
-
-                            for (Ability ability : toggled) {
-                                if (!attackerCap.isAdaptedTo(ability)) continue;
-                                victimCap.toggle(victim, ability);
-                            }
-                        });
-                    });
-                }
             }
 
             if (!(victim instanceof MahoragaEntity)) return;
@@ -239,6 +230,19 @@ public class JJKEventHandler {
                                     null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
                         } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ISorcererData::clearToggled);
+                        }
+
+                        if (attacker instanceof MahoragaEntity mahoraga) {
+                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
+                                mahoraga.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                                    Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+
+                                    for (Ability ability : toggled) {
+                                        if (!attackerCap.isAdaptedTo(ability)) continue;
+                                        victimCap.toggle(victim, ability);
+                                    }
+                                });
+                            });
                         }
                     }
                 }

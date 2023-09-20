@@ -32,7 +32,7 @@ public class MeteorEntity extends Entity {
     public static final int HEIGHT = 30;
 
     private static final float DAMAGE = 40.0F;
-    private static final int EXPLOSION_DURATION = SIZE * 10;
+    private static final int EXPLOSION_DURATION = (SIZE / 2) * 20;
     private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
     private static final float MAX_EXPLOSION = 20.0F;
 

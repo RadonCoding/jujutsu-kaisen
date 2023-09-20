@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -35,7 +36,7 @@ import java.util.Map;
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 15.0F;
     private static final float MAX_POWER = 7.5F;
 
     private float power;
@@ -71,6 +72,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
             for (int i = 0; i < entry.getValue(); i++) {
                 if (this.power == MAX_POWER) break;
+                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
                 this.power = Math.min(MAX_POWER, this.power + curse.getGrade().getPower());
                 cap.removeCurse(registry, entity.getType());
             }
@@ -157,7 +159,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level.dimension(), BlockPos.containing(offset), this.power * 2.0F, 20, owner, JJKAbilities.MAXIMUM_UZUMAKI.get());
+                ExplosionHandler.spawn(this.level.dimension(), BlockPos.containing(offset), this.power * 1.5F, 3 * 20, owner, JJKAbilities.MAXIMUM_UZUMAKI.get());
 
                 this.hurtEntities();
             }

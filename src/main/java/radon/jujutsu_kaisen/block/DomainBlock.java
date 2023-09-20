@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +23,7 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 
 public class DomainBlock extends Block implements EntityBlock {
@@ -46,6 +49,17 @@ public class DomainBlock extends Block implements EntityBlock {
             }
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
+    }
+
+    @Override
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        Entity exploder = explosion.getExploder();
+
+        if (exploder != null && level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
+            if (((ServerLevel) level).getEntity(be.getIdentifier()) instanceof DomainExpansionEntity domain
+                    && domain.isInsideBarrier(exploder.blockPosition())) return 3600000.8F;
+        }
+        return super.getExplosionResistance(state, level, pos, explosion);
     }
 
     @Override

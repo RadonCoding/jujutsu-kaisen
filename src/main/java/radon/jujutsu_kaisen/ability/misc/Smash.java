@@ -105,11 +105,6 @@ public class Smash extends Ability {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.RAW_CURSED_ENERGY;
-    }
-
-    @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
     }

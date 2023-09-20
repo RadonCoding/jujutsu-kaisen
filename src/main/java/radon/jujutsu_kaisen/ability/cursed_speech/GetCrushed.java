@@ -1,14 +1,18 @@
 package radon.jujutsu_kaisen.ability.cursed_speech;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +73,35 @@ public class GetCrushed extends Ability {
                         ((ServerLevel) owner.level).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(),  0,1.0D, 0.0D, 0.0D, 1.0D);
                         owner.level.playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                                 4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
+
+                        float radius = entity.getBbWidth() * entity.getBbHeight() * 2.0F;
+                        int minX = Mth.floor(entity.getX() - radius - 1.0F);
+                        int maxX = Mth.floor(entity.getX() + radius + 1.0F);
+                        int minY = Mth.floor(entity.getY() - radius - 1.0F);
+                        int maxY = Mth.floor(entity.getY() + radius + 1.0F);
+                        int minZ = Mth.floor(entity.getZ() - radius - 1.0F);
+                        int maxZ = Mth.floor(entity.getZ() + radius + 1.0F);
+
+                        for (int x = minX; x <= maxX; x++) {
+                            for (int y = minY; y <= maxY; y++) {
+                                for (int z = minZ; z <= maxZ; z++) {
+                                    double distance = (x - entity.getX()) * (x - entity.getX()) +
+                                            (y - entity.getY()) * (y - entity.getY()) +
+                                            (z - entity.getZ()) * (z - entity.getZ());
+
+                                    if (distance <= radius * radius) {
+                                        BlockPos pos = new BlockPos(x, y, z);
+                                        BlockState state = owner.level.getBlockState(pos);
+                                        
+                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                                            if (owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                                                owner.level.destroyBlock(pos, false);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         entity.setDeltaMovement(0.0D, CRUSH_POWER * cap.getGrade().getPower(owner) * -1.0D, 0.0D);
                         entity.hurtMarked = true;

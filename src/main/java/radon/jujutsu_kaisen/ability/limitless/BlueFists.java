@@ -52,11 +52,6 @@ public class BlueFists extends Ability implements Ability.IToggled {
         return true;
     }
 
-    @Override
-    public Classification getClassification() {
-        return Classification.LIMITLESS;
-    }
-
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
@@ -66,7 +61,7 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
-            boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
             if (melee && JJKAbilities.hasToggled(attacker, JJKAbilities.BLUE_FISTS.get())) {
                 victim.setDeltaMovement(attacker.position().subtract(victim.position()).normalize());

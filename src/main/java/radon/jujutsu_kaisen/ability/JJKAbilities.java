@@ -120,6 +120,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
 
 
@@ -157,7 +158,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TELEPORT_RANDOM = ABILITIES.register("teleport_random", TeleportRandom::new);
 
     public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
-    public static RegistryObject<Ability> ABSORB_TECHNIQUE = ABILITIES.register("absorb_technique", AbsorbTechnique::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
     public static RegistryObject<Ability> RELEASE_CURSES = ABILITIES.register("release_curses", ReleaseCurses::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
@@ -188,8 +188,9 @@ public class JJKAbilities {
         return result.get();
     }
 
-    public static float getCurseCost(SorcererGrade grade) {
-        return 50.0F * grade.getPower();
+    public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return 50.0F * grade.getPower() * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
     public static void summonCurse(LivingEntity owner, EntityType<?> type) {
@@ -201,7 +202,7 @@ public class JJKAbilities {
             if (!cap.hasCurse(registry, type)) return;
 
             if (type.create(owner.level) instanceof CursedSpirit curse) {
-                float cost = getCurseCost(curse.getGrade());
+                float cost = getCurseCost(owner, curse.getGrade());
 
                 if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                     if (cap.getEnergy() < cost) {
@@ -270,6 +271,16 @@ public class JJKAbilities {
         return false;
     }
 
+    public static boolean isDead(LivingEntity owner, EntityType<?> type) {
+        for (RegistryObject<Ability> ability : ABILITIES.getEntries()) {
+            if (!(ability.get() instanceof Summon<?> summon)) continue;
+            if (!summon.getTypes().contains(type)) continue;
+            return summon.isDead(owner);
+        }
+        return false;
+    }
+
+
     public static boolean isChanneling(LivingEntity owner, Ability ability) {
         AtomicBoolean result = new AtomicBoolean();
 
@@ -305,6 +316,7 @@ public class JJKAbilities {
             abilities.add(JJKAbilities.SMASH.get());
             abilities.add(JJKAbilities.WATER_WALKING.get());
             abilities.add(JJKAbilities.CURSED_ENERGY_FLOW.get());
+            abilities.add(JJKAbilities.CURSED_ENERGY_BLAST.get());
             abilities.add(JJKAbilities.LIGHTNING.get());
 
             abilities.add(JJKAbilities.HEAL.get());

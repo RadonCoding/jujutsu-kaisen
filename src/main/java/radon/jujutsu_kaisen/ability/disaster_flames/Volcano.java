@@ -12,6 +12,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -83,7 +84,7 @@ public class Volcano extends Ability {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.DISASTER_FLAMES;
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

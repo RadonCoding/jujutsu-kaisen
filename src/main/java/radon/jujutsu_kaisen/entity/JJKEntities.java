@@ -75,7 +75,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
             EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.AMBIENT)
-                    .sized(1.4F, 3.2F)
+                    .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
                             .toString()));
 

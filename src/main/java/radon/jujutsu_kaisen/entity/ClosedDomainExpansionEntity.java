@@ -293,39 +293,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-    private void updateBarrier() {
-        int radius = this.getRadius();
-        float factor = (this.getHealth() / this.getMaxHealth());
-
-        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
-
-        int max = (int) (4.0D / 3.0D * Math.PI * (Math.pow(radius, 3) - Math.pow(radius - 1, 3)));
-
-        int count = (int) (max * (1.0F - factor));
-
-        if (this.destroyed < count) {
-            for (int x = -radius; x <= radius; x++) {
-                for (int y = -radius; y <= radius; y++) {
-                    for (int z = -radius; z <= radius; z++) {
-                        double distance = Math.sqrt(x * x + y * y + z * z);
-
-                        if (distance >= radius - 1) {
-                            BlockPos pos = center.offset(x, y, z);
-
-                            if (this.random.nextBoolean()) {
-                                if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                    if (be.destroy()) {
-                                        this.destroyed++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public void tick() {
         this.refreshDimensions();
@@ -336,8 +303,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (!this.level.isClientSide) {
                 int radius = this.getRadius();
                 boolean completed = this.getTime() >= radius * 2;
-
-                if (completed) this.updateBarrier();
 
                 if (this.checkSureHitEffect()) {
                     this.warn();

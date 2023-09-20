@@ -9,7 +9,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class CyclopsSmash extends Ability {
-    private static final float SMASH_EXPLOSION = 1.5F;
+    private static final float SMASH_EXPLOSION = 1.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

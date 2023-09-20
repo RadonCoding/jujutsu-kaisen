@@ -52,6 +52,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return true;
     }
 
+    protected boolean isBottomlessWell() {
+        return false;
+    }
+
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
@@ -96,7 +100,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             }
 
             for (EntityType<?> fusion : this.getFusions()) {
-                if (!JJKAbilities.hasTamed(owner, fusion)) return false;
+                if (this.isBottomlessWell() ? !JJKAbilities.hasTamed(owner, fusion) : !JJKAbilities.isDead(owner, fusion)) return false;
             }
         }
         return !this.isDead(owner);

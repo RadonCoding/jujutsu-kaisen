@@ -138,6 +138,7 @@
   "ability.jujutsu_kaisen.cursed_energy_flow": "CE Flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.enable": "Activated CE flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.disable": "Deactivated CE flow",
+  "ability.jujutsu_kaisen.cursed_energy_blast": "CE Blast",
   "ability.jujutsu_kaisen.lightning": "Lightning",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
@@ -165,7 +166,7 @@
   "ability.jujutsu_kaisen.cleave": "Cleave",
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
   "ability.jujutsu_kaisen.dismantle_barrage": "Dismantle Barrage",
-  "ability.jujutsu_kaisen.fire_arrow": "Fire Arrow",
+  "ability.jujutsu_kaisen.fire_arrow": "Open ■",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
   "ability.jujutsu_kaisen.rika": "Rika",
@@ -259,7 +260,6 @@
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
   "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
-  "ability.jujutsu_kaisen.absorb_technique": "Absorb Technique",
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
   "ability.jujutsu_kaisen.release_curses": "Release Curses",
   "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
@@ -291,6 +291,7 @@
   "cursed_technique.jujutsu_kaisen.rika": "Rika",
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
+  "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
 

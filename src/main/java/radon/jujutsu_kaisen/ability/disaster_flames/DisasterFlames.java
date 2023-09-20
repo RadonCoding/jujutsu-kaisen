@@ -120,9 +120,4 @@ public class DisasterFlames extends Ability {
     public int getCooldown() {
         return 15 * 20;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.DISASTER_FLAMES;
-    }
 }

@@ -14,7 +14,7 @@ import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 
 public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleExplosion> {
-    private static final float HALF_SQRT_3 = (float)(Math.sqrt(3.0D) / 2.0D);
+    private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 
     public HollowPurpleExplosionRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -52,7 +52,6 @@ public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleEx
         }
         pPoseStack.popPose();
     }
-
 
     private static void vertex01(VertexConsumer pConsumer, Matrix4f pMatrix, int pAlpha) {
         pConsumer.vertex(pMatrix, 0.0F, 0.0F, 0.0F).color(255, 255, 255, pAlpha).endVertex();

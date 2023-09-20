@@ -24,4 +24,6 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "clap")));
     public static RegistryObject<SoundEvent> FOREST_SPIKES = SOUNDS.register("forest_spikes", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_spikes")));
+    public static RegistryObject<SoundEvent> MALEVOLENT_SHRINE = SOUNDS.register("malevolent_shrine", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")));
 }

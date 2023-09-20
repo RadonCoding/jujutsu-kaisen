@@ -25,11 +25,15 @@ public class CommandPureLove extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level instanceof ServerLevel level)) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        RikaEntity rika = cap.getSummonByClass(level, RikaEntity.class);
+        RikaEntity rika = ownerCap.getSummonByClass(level, RikaEntity.class);
 
         if (rika == null) return;
+
+        ISorcererData summonCap = rika.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!summonCap.isCooldownDone(JJKAbilities.SHOOT_PURE_LOVE.get())) return;
 
         rika.setOpen();
     }

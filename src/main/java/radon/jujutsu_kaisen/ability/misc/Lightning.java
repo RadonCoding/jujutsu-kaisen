@@ -46,9 +46,4 @@ public class Lightning extends Ability {
     public int getCooldown() {
         return 15 * 20;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.ELECTRICITY;
-    }
 }

@@ -43,9 +43,4 @@ public class NueTotalityLightning extends Ability {
     public float getCost(LivingEntity owner) {
         return 10.0F;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.ELECTRICITY;
-    }
 }

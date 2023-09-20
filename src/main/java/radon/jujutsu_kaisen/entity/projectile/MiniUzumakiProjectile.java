@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
@@ -95,6 +96,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
                 Entity entity = entry.getKey().create(this.level);
                 if (!(entity instanceof CursedSpirit curse)) continue;
+                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
                 if (current == null || curse.getGrade().ordinal() > current.getGrade().ordinal()) current = curse;
             }
 

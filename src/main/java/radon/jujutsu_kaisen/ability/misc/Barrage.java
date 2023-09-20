@@ -77,9 +77,10 @@ public class Barrage extends Ability {
     public int getCooldown() {
         return 3 * 20;
     }
+
     @Override
-    public Classification getClassification() {
-        return Classification.MELEE;
+    public boolean isMelee() {
+        return true;
     }
 
     @Override
