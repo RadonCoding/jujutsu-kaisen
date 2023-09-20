@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -29,6 +30,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -208,6 +210,12 @@ public class MahoragaEntity extends TenShadowsSummon {
                     this.level.explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }
+        }
+
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level)) {
+            if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
     }
 

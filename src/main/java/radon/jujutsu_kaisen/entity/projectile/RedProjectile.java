@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 10.0D;
     private static final float EXPLOSIVE_POWER = 1.5F;
-    private static final int DELAY = 20;
+    public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
     private static final float DAMAGE = 30.0F;

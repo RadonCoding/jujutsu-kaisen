@@ -57,11 +57,6 @@ public class PiercingWater extends Ability {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.WATER;
-    }
-
-    @Override
     public boolean isTechnique() {
         return true;
     }

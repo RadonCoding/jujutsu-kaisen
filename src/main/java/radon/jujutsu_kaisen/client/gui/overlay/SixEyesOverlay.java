@@ -110,7 +110,7 @@ public class SixEyesOverlay {
         }
 
         public static SixEyesData deserializeNBT(CompoundTag nbt) {
-            return new SixEyesData(CursedTechnique.values()[nbt.getInt("technique")],
+            return new SixEyesData(nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null,
                     SorcererGrade.values()[nbt.getInt("grade")], nbt.getFloat("energy"), nbt.getFloat("max_energy"));
         }
     }

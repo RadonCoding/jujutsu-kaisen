@@ -76,11 +76,6 @@ public class FishShikigami extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.WATER;
-    }
-
-    @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
     }

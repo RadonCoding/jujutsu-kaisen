@@ -37,44 +37,44 @@ public class JJKBlocks {
 
     public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> UNLIMITED_VOID_FILL = BLOCKS.register("unlimited_void_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
                     .lightLevel((pState) -> 3)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_the_iron_mountain_two", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_the_iron_mountain_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
-                    .strength(-1.0F, 3600000.8F)
+                    .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));

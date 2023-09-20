@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 30.0F;
+    private static final float MAX_DAMAGE = 50.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -145,11 +145,6 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public boolean isTechnique() {
         return true;
-    }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.SLASH;
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
@@ -20,6 +21,9 @@ public abstract class EntityMixin {
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {
         if (ClientVisualHandler.isSynced(this.getUUID())) {
             ClientVisualHandler.VisualData data = ClientVisualHandler.getData(this.getUUID());
+
+            if (!data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+
             Vector3f color = ParticleColors.getCursedEnergyColor(data.type());
 
             int r = (int)(color.x() * 255.0D);

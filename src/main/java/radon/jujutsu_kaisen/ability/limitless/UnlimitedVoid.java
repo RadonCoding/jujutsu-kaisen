@@ -56,9 +56,4 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
             cap.setDomain(domain);
         });
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.LIMITLESS;
-    }
 }

@@ -46,6 +46,11 @@ public class ToadTotality extends Summon<ToadTotalityEntity> {
     }
 
     @Override
+    protected boolean isBottomlessWell() {
+        return true;
+    }
+
+    @Override
     public List<EntityType<?>> getTypes() {
         return List.of(JJKEntities.TOAD_TOTALITY.get());
     }

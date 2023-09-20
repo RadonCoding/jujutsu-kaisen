@@ -86,9 +86,4 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.WATER;
-    }
 }

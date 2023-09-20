@@ -100,11 +100,6 @@ public class ForestSpikes extends Ability {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.SHARP;
-    }
-
-    @Override
     public boolean isTechnique() {
         return true;
     }

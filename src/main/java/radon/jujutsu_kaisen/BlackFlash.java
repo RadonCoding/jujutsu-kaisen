@@ -27,7 +27,7 @@ public class BlackFlash {
             LivingEntity target = event.getEntity();
 
             if (source.getEntity() instanceof LivingEntity owner &&
-                    source.getDirectEntity() == source.getEntity() &&
+                    !source.isIndirect() &&
                     (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     if (cap.getEnergy() > 0.0F) {

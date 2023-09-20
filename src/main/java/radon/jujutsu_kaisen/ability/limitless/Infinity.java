@@ -92,11 +92,6 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.LIMITLESS;
-    }
-
-    @Override
     public int getCooldown() {
         return 20;
     }
@@ -224,6 +219,8 @@ public class Infinity extends Ability implements Ability.IToggled {
         for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level))) {
             if (projectile.getOwner() == domain.getOwner()) return false;
         }
+        if (projectile.getOwner() instanceof LivingEntity owner && JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) &&
+                owner.distanceTo(target) <= SimpleDomainEntity.RADIUS) return false;
         return !(projectile instanceof ScissorEntity);
     }
 
@@ -322,11 +319,11 @@ public class Infinity extends Ability implements Ability.IToggled {
                             ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                             if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null &&
-                                    src.getAbility().getClassification() == Classification.MELEE && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                                    src.getAbility().isMelee() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                                 return;
                             }
 
-                            boolean melee = source.getDirectEntity() == source.getEntity() &&
+                            boolean melee = !source.isIndirect() &&
                                     (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
                             if (melee) {

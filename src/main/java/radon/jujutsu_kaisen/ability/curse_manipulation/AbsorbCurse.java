@@ -20,7 +20,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AbsorbCurse extends Ability {
-    private static final double RANGE = 3.0D;
+    private static final double RANGE = 5.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -51,7 +51,7 @@ public class AbsorbCurse extends Ability {
 
     public static boolean canAbsorb(LivingEntity owner, Entity entity) {
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
-                (JJKAbilities.getGrade(owner).ordinal() - JJKAbilities.getGrade(curse).ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
+                (JJKAbilities.getGrade(owner).ordinal() - curse.getGrade().ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
     }
 
     @Override

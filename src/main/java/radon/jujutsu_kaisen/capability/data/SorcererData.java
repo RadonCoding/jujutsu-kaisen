@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -87,8 +88,8 @@ public class SorcererData implements ISorcererData {
     private final Set<ResourceLocation> tamed;
     private final Set<ResourceLocation> dead;
     private final List<ItemStack> shadowInventory;
-    private final Set<Ability.Classification> adapted;
-    private final Map<Ability.Classification, Integer> adapting;
+    private final Set<Ability> adapted;
+    private final Map<Ability, Integer> adapting;
     private TenShadowsMode mode;
 
     private final Map<ResourceLocation, Integer> curses;
@@ -99,7 +100,8 @@ public class SorcererData implements ISorcererData {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
 
     private static final float ENERGY_AMOUNT = 0.25F;
-    private static final int REQUIRED_ADAPTATION = 4;
+    private static final int REQUIRED_ADAPTATION = 30 * 20;
+    private static final int ADAPTATION_STEP = 5 * 20;
 
     public SorcererData() {
         this.type = JujutsuType.SORCERER;
@@ -309,6 +311,10 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    private void updateAdaptation() {
+        this.adapting.replaceAll((k, v) -> v + 1);
+    }
+
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
@@ -348,6 +354,8 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
+        this.updateAdaptation();
+
         if (this.used >= 10000.0F) {
             this.traits.add(Trait.DOMAIN_EXPANSION);
         }
@@ -371,12 +379,6 @@ public class SorcererData implements ISorcererData {
                 (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.5F : 1.0F)), this.getMaxEnergy());
 
         SorcererGrade grade = this.getGrade();
-
-        if (this.technique == CursedTechnique.DISASTER_FLAMES) {
-            owner.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2, 0, false, false, false));
-        } else if (this.technique == CursedTechnique.DISASTER_TIDES) {
-            owner.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 2, 0, false, false, false));
-        }
 
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
@@ -436,7 +438,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique;
+        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique;
     }
 
     @Override
@@ -757,6 +759,9 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public @Nullable CursedTechnique getCurrentAbsorbed() {
+        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+            return null;
+        }
         return this.currentAbsorbed;
     }
 
@@ -928,12 +933,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<Ability.Classification> getAdapted() {
+    public Set<Ability> getAdapted() {
         return this.adapted;
     }
 
     @Override
-    public void adaptAll(Set<Ability.Classification> adaptations) {
+    public void adaptAll(Set<Ability> adaptations) {
         this.adapted.addAll(adaptations);
     }
 
@@ -957,24 +962,24 @@ public class SorcererData implements ISorcererData {
         this.shadowInventory.remove(index);
     }
 
-    private @Nullable Ability.Classification getClassification(DamageSource source) {
+    private @Nullable Ability getAbility(DamageSource source) {
         Ability ability;
 
         if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && (ability = jujutsu.getAbility()) != null) {
-            return ability.getClassification();
+            return ability;
         }
         return null;
     }
 
     @Override
     public boolean isAdaptedTo(DamageSource source) {
-        Ability.Classification classification = this.getClassification(source);
-        return classification != null && this.adapted.contains(classification);
+        Ability ability = this.getAbility(source);
+        return ability != null && this.adapted.contains(ability);
     }
 
     @Override
     public boolean isAdaptedTo(Ability ability) {
-        return this.adapted.contains(ability.getClassification());
+        return this.adapted.contains(ability);
     }
 
     @Override
@@ -985,22 +990,22 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
-    private boolean tryAdapt(@Nullable Ability.Classification classification) {
-        if (classification == null || classification == Ability.Classification.MELEE) return false;
+    @Override
+    public boolean tryAdapt(@Nullable Ability ability) {
+        if (ability == null) return false;
 
-        if (!this.adapting.containsKey(classification)) {
-            this.adapting.put(classification, 1);
+        if (!this.adapting.containsKey(ability)) {
+            this.adapting.put(ability, 0);
         } else {
-            int stage = this.adapting.get(classification);
+            int timer = this.adapting.get(ability);
+            timer += ADAPTATION_STEP;
 
-            stage++;
-
-            if (stage >= REQUIRED_ADAPTATION) {
-                this.adapting.remove(classification);
-                this.adapted.add(classification);
+            if (timer >= REQUIRED_ADAPTATION) {
+                this.adapting.remove(ability);
+                this.adapted.add(ability);
                 return true;
             } else {
-                this.adapting.put(classification, stage);
+                this.adapting.put(ability, timer);
             }
         }
         return false;
@@ -1008,14 +1013,16 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean tryAdapt(DamageSource source) {
-        Ability.Classification classification = this.getClassification(source);
-        return this.tryAdapt(classification);
-    }
+        boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-    @Override
-    public boolean tryAdapt(Ability ability) {
-        Ability.Classification classification = ability.getClassification();
-        return this.tryAdapt(classification);
+        Ability ability;
+
+        if (melee && source.getEntity() instanceof LivingEntity attacker && JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
+            ability = JJKAbilities.INFINITY.get();
+        } else {
+            ability = this.getAbility(source);
+        }
+        return this.tryAdapt(ability);
     }
 
     @Override
@@ -1257,16 +1264,16 @@ public class SorcererData implements ISorcererData {
 
         ListTag adaptedTag = new ListTag();
 
-        for (Ability.Classification classification : this.adapted) {
-            adaptedTag.add(IntTag.valueOf(classification.ordinal()));
+        for (Ability ability : this.adapted) {
+            adaptedTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
         }
         nbt.put("adapted", adaptedTag);
 
         ListTag adaptingTag = new ListTag();
 
-        for (Map.Entry<Ability.Classification, Integer> entry : this.adapting.entrySet()) {
+        for (Map.Entry<Ability, Integer> entry : this.adapting.entrySet()) {
             CompoundTag adaptation = new CompoundTag();
-            adaptation.putInt("classification", entry.getKey().ordinal());
+            adaptation.putString("classification", JJKAbilities.getKey(entry.getKey()).toString());
             adaptation.putInt("stage", entry.getValue());
             adaptingTag.add(adaptation);
         }
@@ -1405,14 +1412,14 @@ public class SorcererData implements ISorcererData {
         this.adapted.clear();
 
         for (Tag key : nbt.getList("adapted", Tag.TAG_INT)) {
-            this.adapted.add(Ability.Classification.values()[((IntTag) key).getAsInt()]);
+            this.adapted.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
         }
 
         this.adapting.clear();
 
         for (Tag key : nbt.getList("adapting", Tag.TAG_COMPOUND)) {
             CompoundTag adaptation = (CompoundTag) key;
-            this.adapting.put(Ability.Classification.values()[adaptation.getInt("classification")], adaptation.getInt("stage"));
+            this.adapting.put(JJKAbilities.getValue(new ResourceLocation(adaptation.getString("key"))), adaptation.getInt("stage"));
         }
 
         this.shadowInventory.clear();

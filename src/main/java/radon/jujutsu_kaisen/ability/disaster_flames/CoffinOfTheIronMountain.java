@@ -56,9 +56,4 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
             cap.setDomain(domain);
         });
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.DISASTER_FLAMES;
-    }
 }

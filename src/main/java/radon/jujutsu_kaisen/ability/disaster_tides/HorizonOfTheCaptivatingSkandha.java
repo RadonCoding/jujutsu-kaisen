@@ -66,9 +66,4 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
             cap.setDomain(domain);
         });
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.DISASTER_TIDES;
-    }
 }

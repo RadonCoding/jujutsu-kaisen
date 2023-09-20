@@ -19,12 +19,16 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
+    public static final int DELAY = 20;
+
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         super.onHitEntity(domain, owner, entity);
 
-        Ability cleave = JJKAbilities.CLEAVE.get();
-        ((IDomainAttack) cleave).perform(owner, domain, entity);
+        if (domain.getTime() >= DELAY) {
+            Ability cleave = JJKAbilities.CLEAVE.get();
+            ((IDomainAttack) cleave).perform(owner, domain, entity);
+        }
     }
 
     @Override

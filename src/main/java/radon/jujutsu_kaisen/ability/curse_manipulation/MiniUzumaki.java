@@ -57,9 +57,4 @@ public class MiniUzumaki extends Ability {
     public boolean isTechnique() {
         return true;
     }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.RAW_CURSED_ENERGY;
-    }
 }

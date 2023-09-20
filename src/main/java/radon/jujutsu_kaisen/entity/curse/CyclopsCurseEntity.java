@@ -13,7 +13,6 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -129,8 +128,6 @@ public class CyclopsCurseEntity extends CursedSpirit {
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
-
-
 
     @Override
     public @Nullable Ability getDomain() {

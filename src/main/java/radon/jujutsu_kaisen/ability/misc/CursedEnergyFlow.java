@@ -51,7 +51,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width - owner.getLookAngle().scale(0.35D).x();
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * height;
                 double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width - owner.getLookAngle().scale(0.35D).z();
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), (float) width * 3.0F, 0.5F, false, 1),
+                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), (float) width * 3.0F, 0.5F, true, 1),
                         x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
             }
 
@@ -90,11 +90,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                    boolean melee = source.getDirectEntity() == source.getEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
                     if (melee) {
                         switch (attackerCap.getNature()) {
@@ -105,9 +105,33 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 }
             }
 
-            // Shield
             LivingEntity victim = event.getEntity();
 
+            if (melee) {
+                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    if (!JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+
+                    if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
+                        victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
+                        victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+                        if (!attacker.level.isClientSide) {
+                            for (int i = 0; i < 8; i++) {
+                                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                ((ServerLevel) attacker.level).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F),
+                                        victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Shield
             if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -122,28 +146,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                 attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
                             }
                         }
-                    }
-                }
-            }
-
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (!JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
-
-            if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
-
-                victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                if (!attacker.level.isClientSide) {
-                    for (int i = 0; i < 8; i++) {
-                        double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                        double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                        double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                        ((ServerLevel) attacker.level).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F),
-                                victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                                0, 0.0D, 0.0D, 0.0D, 0.0D);
                     }
                 }
             }

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -37,6 +37,7 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -63,6 +64,16 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    public Collection<ItemEntity> captureDrops() {
+        Collection<ItemEntity> drops = super.captureDrops();
+
+        if (drops != null) {
+            drops.removeIf(x -> x.getItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
+        }
+        return drops;
     }
 
     public void setCurrentCustomer(@Nullable Player pPlayer) {
@@ -225,7 +236,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         }
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
+            if (cap.getToggled().size() > 0) {
                 result.set(INVERTED_SPEAR_OF_HEAVEN);
             }
         });

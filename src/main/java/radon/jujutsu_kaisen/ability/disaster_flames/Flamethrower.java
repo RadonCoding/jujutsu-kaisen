@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -16,7 +17,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Flamethrower extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 7.5F;
     private static final double RANGE = 5.0D;
 
     @Override
@@ -32,13 +33,19 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         Vec3 look = HelperMethods.getLookAngle(owner);
 
         if (owner.level instanceof ServerLevel level) {
             for (int i = 0; i < 96; i++) {
-                Vec3 speed = look.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D,
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D,
-                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.8D);
+                double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+                double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+                double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+                double x = r * Math.sin(phi) * Math.cos(theta);
+                double y = r * Math.sin(phi) * Math.sin(theta);
+                double z = r * Math.cos(phi);
+                Vec3 speed = look.add(x, y, z);
                 Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
                 level.sendParticles(ParticleTypes.FLAME, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
             }
@@ -73,11 +80,6 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     @Override
     public boolean isTechnique() {
         return true;
-    }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.DISASTER_FLAMES;
     }
 
     @Override

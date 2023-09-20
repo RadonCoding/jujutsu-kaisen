@@ -120,11 +120,6 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.ELECTRICITY;
-    }
-
-    @Override
     public boolean isTechnique() {
         return true;
     }

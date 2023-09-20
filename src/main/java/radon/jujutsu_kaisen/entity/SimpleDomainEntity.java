@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class SimpleDomainEntity extends Mob {
-    private static final float STRENGTH = 100.0F;
+    private static final float STRENGTH = 500.0F;
 
     private static final double X_STEP = 0.05D;
     public static final float RADIUS = 3.0F;
@@ -46,6 +46,8 @@ public class SimpleDomainEntity extends Mob {
         super(JJKEntities.SIMPLE_DOMAIN.get(), owner.level);
 
         this.setOwner(owner);
+
+        this.setPos(owner.position());
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);

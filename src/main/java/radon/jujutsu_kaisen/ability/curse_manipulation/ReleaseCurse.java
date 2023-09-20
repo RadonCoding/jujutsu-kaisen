@@ -4,6 +4,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -15,6 +16,8 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ReleaseCurse extends Ability {
@@ -49,6 +52,8 @@ public class ReleaseCurse extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level.isClientSide) return;
+
         if (this.getTarget(owner) instanceof CursedSpirit curse && curse.isTame() && curse.getOwner() == owner) {
             owner.swing(InteractionHand.MAIN_HAND);
 
@@ -58,6 +63,10 @@ public class ReleaseCurse extends Ability {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     cap.removeSummon(curse);
                     cap.addCurse(registry, curse.getType());
+
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    }
                 });
 
                 if (!owner.level.isClientSide) {
