@@ -42,7 +42,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
         if (owner.level instanceof ServerLevel level) {
             Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(2.0D));
 
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), 2.0F, 0.5F, true, (int) RANGE / 2);
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), 2.0F, 0.1F, true, (int) RANGE / 2);
 
             for (int i = 0; i < 96; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;

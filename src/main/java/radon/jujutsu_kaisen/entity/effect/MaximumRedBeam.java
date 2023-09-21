@@ -25,7 +25,6 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.projectile.MaximumBlueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -124,16 +123,14 @@ public class MaximumRedBeam extends JujutsuProjectile {
 
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     for (Entity entity : entities) {
-                        if (this.getTime() - 1 > CHARGE && entity instanceof MaximumBlueProjectile projectile) {
+                        if (this.getTime() - 1 > CHARGE && entity instanceof MaximumBlueBlackHole blue) {
                             if (cap.isCooldownDone(JJKAbilities.HOLLOW_PURPLE.get()) && cap.isCooldownDone(JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get())) {
                                 cap.addCooldown(owner, JJKAbilities.MAXIMUM_RED.get());
-                                cap.addCooldown(owner, JJKAbilities.MAXIMUM_BLUE.get());
-                                cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
-                                cap.addCooldown(owner, JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get());
+                                cap.addCooldown(owner, JJKAbilities.MAXIMUM_BLUE_STILL.get());
 
-                                this.level.addFreshEntity(new HollowPurpleExplosion(owner, projectile.position()));
+                                this.level.addFreshEntity(new HollowPurpleExplosion(owner, blue.position()));
 
-                                projectile.discard();
+                                blue.discard();
                                 this.discard();
                                 return;
                             }

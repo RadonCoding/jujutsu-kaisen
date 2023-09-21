@@ -131,4 +131,9 @@ public class Die extends Ability {
     public boolean isTechnique() {
         return true;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.CURSED_SPEECH;
+    }
 }

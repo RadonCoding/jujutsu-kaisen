@@ -67,7 +67,7 @@ public class SimpleDomainEntity extends Mob {
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (pSource instanceof JJKDamageSources.JujutsuDamageSource source) {
-            if (source.getDirectEntity() instanceof DomainExpansionEntity) {
+            if (source.getDirectEntity() instanceof DomainExpansionEntity domain && domain.getOwner() != this.getOwner()) {
                 return super.hurt(pSource, pAmount);
             }
         }

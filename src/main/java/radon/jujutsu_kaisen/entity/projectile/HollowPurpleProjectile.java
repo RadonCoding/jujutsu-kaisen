@@ -106,7 +106,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     @Override
     protected void onInsideBlock(@NotNull BlockState pState) {
-        if (this.getTime() >= DELAY && pState.getBlock().defaultDestroyTime() <= -1.0F) {
+        if (this.getTime() >= DELAY && pState.getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
             this.discard();
         }
     }

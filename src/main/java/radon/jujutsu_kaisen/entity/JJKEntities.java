@@ -27,12 +27,10 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<BlueProjectile>> BLUE = ENTITIES.register("blue", () ->
             EntityType.Builder.<BlueProjectile>of(BlueProjectile::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")
                             .toString()));
     public static RegistryObject<EntityType<MaximumBlueProjectile>> MAXIMUM_BLUE = ENTITIES.register("maximum_blue", () ->
             EntityType.Builder.<MaximumBlueProjectile>of(MaximumBlueProjectile::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_blue")
                             .toString()));
     public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
@@ -274,6 +272,10 @@ public class JJKEntities {
             EntityType.Builder.<WoodShieldEntity>of(WoodShieldEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_shield")
+                            .toString()));
+    public static RegistryObject<EntityType<BlackHoleEntity>> BLACK_HOLE = ENTITIES.register("black_hole", () ->
+            EntityType.Builder.<BlackHoleEntity>of(BlackHoleEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "black_hole")
                             .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->

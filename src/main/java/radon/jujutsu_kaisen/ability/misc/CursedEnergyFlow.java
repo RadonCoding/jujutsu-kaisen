@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,6 +26,8 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
@@ -63,6 +67,10 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(owner), 0.2F),
                             x, y, z, 0, 0.0D, 0, 0.0D, 0.0D);
                 }
+
+                if (HelperMethods.RANDOM.nextInt(50) == 0) {
+                    owner.level.playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                }
             }
         });
     }
@@ -98,7 +106,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                     if (melee) {
                         switch (attackerCap.getNature()) {
-                            case LIGHTNING, BASIC -> event.setAmount(event.getAmount() * 1.25F);
+                            case BASIC -> event.setAmount(event.getAmount() * 1.25F);
+                            case LIGHTNING -> event.setAmount(event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
                             case ROUGH -> event.setAmount(event.getAmount() * 1.5F);
                         }
                     }
@@ -111,20 +120,21 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (!JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+                    if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
 
-                    if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
-                        victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0, false, false, false));
-                        victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                        if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
+                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
+                            victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-                        if (!attacker.level.isClientSide) {
-                            for (int i = 0; i < 8; i++) {
-                                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                ((ServerLevel) attacker.level).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F),
-                                        victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
+                            if (!attacker.level.isClientSide) {
+                                for (int i = 0; i < 8; i++) {
+                                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                    ((ServerLevel) attacker.level).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F),
+                                            victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                                            0, 0.0D, 0.0D, 0.0D, 0.0D);
+                                }
                             }
                         }
                     }

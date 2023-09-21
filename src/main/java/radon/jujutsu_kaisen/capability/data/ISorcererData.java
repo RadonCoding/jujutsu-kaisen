@@ -135,7 +135,7 @@ public interface ISorcererData {
     void removeShadowInventory(int index);
 
     boolean isAdaptedTo(DamageSource source);
-    boolean isAdaptedTo(Ability ability);
+    boolean isAdaptedTo(@Nullable Ability ability);
     boolean isAdaptedTo(CursedTechnique technique);
 
     boolean tryAdapt(DamageSource source);

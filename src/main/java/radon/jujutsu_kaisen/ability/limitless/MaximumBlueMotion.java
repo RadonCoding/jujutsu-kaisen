@@ -8,7 +8,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.projectile.MaximumBlueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class MaximumBlue extends Ability {
+public class MaximumBlueMotion extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
@@ -40,5 +40,10 @@ public class MaximumBlue extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.BLUE;
     }
 }

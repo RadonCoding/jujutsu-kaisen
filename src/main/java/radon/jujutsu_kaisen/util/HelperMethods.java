@@ -10,6 +10,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.mixin.common.ILevelAccessor;
 
 import java.util.ArrayList;
@@ -124,5 +125,11 @@ public class HelperMethods {
                 ((r & 0xFF) << 16) |
                 ((g & 0xFF) << 8)  |
                 ((b & 0xFF));
+    }
+
+    public static int toRGB24(Vector3f color) {
+        return (((int) (color.x() * 255.0F) & 0xFF) << 16) |
+                (((int) (color.y() * 255.0F) & 0xFF) << 8)  |
+                (((int) (color.z() * 255.0F) & 0xFF));
     }
 }

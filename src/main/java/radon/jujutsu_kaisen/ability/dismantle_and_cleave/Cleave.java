@@ -27,11 +27,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 50.0F;
+    private static final float MAX_DAMAGE = 16.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
+        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
     private static float getMaxDamage(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return Math.min(MAX_DAMAGE, (cap.getGrade().ordinal() + 1) * 10.0F);
+        return MAX_DAMAGE * cap.getGrade().getPower();
     }
 
     private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
@@ -150,5 +150,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.SLASHING;
     }
 }

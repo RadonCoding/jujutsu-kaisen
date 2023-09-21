@@ -11,7 +11,7 @@ public enum CursedTechnique {
             JJKAbilities.MAXIMUM_UZUMAKI.get(),
             JJKAbilities.MINI_UZUMAKI.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.MAXIMUM_RED.get(), JJKAbilities.BLUE.get(),
-            JJKAbilities.MAXIMUM_BLUE.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
+            JJKAbilities.MAXIMUM_BLUE_MOTION.get(), JJKAbilities.MAXIMUM_BLUE_STILL.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get()),
     DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.SPIDERWEB.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null, JJKAbilities.DONT_MOVE.get(), JJKAbilities.GET_CRUSHED.get(), JJKAbilities.BLAST_AWAY.get(), JJKAbilities.EXPLODE.get(), JJKAbilities.DIE.get()),
     RIKA(null, JJKAbilities.RIKA.get(), JJKAbilities.COPY.get(), JJKAbilities.COMMAND_PURE_LOVE.get()),

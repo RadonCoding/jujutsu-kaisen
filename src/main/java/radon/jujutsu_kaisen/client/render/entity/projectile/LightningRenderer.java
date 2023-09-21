@@ -15,7 +15,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 import radon.jujutsu_kaisen.entity.projectile.LightningProjectile;
 
@@ -23,7 +27,7 @@ public class LightningRenderer extends EntityRenderer<LightningProjectile> {
     private static final float SIZE = 1.5F;
     private static final int TEXTURE_WIDTH = 32;
     private static final int TEXTURE_HEIGHT = 128;
-    private static final ResourceLocation STILL = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/lightning.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/lightning.png");
 
     public LightningRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -43,7 +47,7 @@ public class LightningRenderer extends EntityRenderer<LightningProjectile> {
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
 
-        RenderType type = RenderType.entityCutoutNoCull(STILL);
+        RenderType type = JJKRenderTypes.glow(TEXTURE);
 
         for (int i = 0; i < 2; i++) {
             pPoseStack.pushPose();
@@ -64,29 +68,32 @@ public class LightningRenderer extends EntityRenderer<LightningProjectile> {
             float maxU = minU + 32.0F / TEXTURE_WIDTH;
             float maxV = minV + 32.0F / TEXTURE_HEIGHT;
 
+            Vector3f color = pEntity.getOwner() == null ? new Vector3f(1.0F, 1.0F, 1.0F) :
+                    ParticleColors.getCursedEnergyColor(ClientVisualHandler.getData(pEntity.getOwner().getUUID()).type());
+
             consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
+                    .color(color.x(), color.y(), color.z(), 1.0F)
                     .uv(minU, minV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
             consumer.vertex(pose, -SIZE, 0.0F, SIZE)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
+                    .color(color.x(), color.y(), color.z(), 1.0F)
                     .uv(minU, maxV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
             consumer.vertex(pose, SIZE, 0.0F, SIZE)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
+                    .color(color.x(), color.y(), color.z(), 1.0F)
                     .uv(maxU, maxV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
             consumer.vertex(pose, SIZE, 0.0F, -SIZE)
-                    .color(1.0F, 1.0F, 1.0F, 1.0F)
+                    .color(color.x(), color.y(), color.z(), 1.0F)
                     .uv(maxU, minV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
