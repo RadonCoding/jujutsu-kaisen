@@ -42,11 +42,11 @@ public class BlueFistsVisual {
 
     public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
         if (data.toggled().contains(JJKAbilities.BLUE_FISTS.get())) {
-            run(data, entity);
+            run(entity);
         }
     }
 
-    private static void run(ClientVisualHandler.VisualData data, LivingEntity entity) {
+    private static void run(LivingEntity entity) {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);

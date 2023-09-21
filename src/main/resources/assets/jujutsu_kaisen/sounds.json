@@ -38,5 +38,10 @@
     "sounds": [
       "jujutsu_kaisen:malevolent_shrine"
     ]
+  },
+  "electricity": {
+    "sounds": [
+      "jujutsu_kaisen:electricity"
+    ]
   }
 }

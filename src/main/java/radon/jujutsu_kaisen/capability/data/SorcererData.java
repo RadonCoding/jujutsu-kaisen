@@ -974,11 +974,17 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean isAdaptedTo(DamageSource source) {
         Ability ability = this.getAbility(source);
-        return ability != null && this.adapted.contains(ability);
+        return ability != null && this.isAdaptedTo(ability);
     }
 
     @Override
     public boolean isAdaptedTo(Ability ability) {
+        for (Ability adapted : this.adapted) {
+            Ability.Classification first = adapted.getClassification();
+            Ability.Classification second = ability.getClassification();
+            if (first != Ability.Classification.NONE && second != Ability.Classification.NONE &&
+                    adapted.getClassification() == ability.getClassification()) return true;
+        }
         return this.adapted.contains(ability);
     }
 

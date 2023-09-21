@@ -36,6 +36,20 @@ public abstract class Ability {
         SIMPLE_DOMAIN
     }
 
+    public enum Classification {
+        NONE,
+        CURSED_SPEECH,
+        SLASHING,
+        FLAMES,
+        BLUE,
+        RED,
+        PURPLE
+    }
+
+    public Classification getClassification() {
+        return Classification.NONE;
+    }
+
     public boolean isMelee() {
         return false;
     }

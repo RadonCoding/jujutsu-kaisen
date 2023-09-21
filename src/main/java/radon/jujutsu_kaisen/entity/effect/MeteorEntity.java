@@ -11,6 +11,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -285,7 +286,7 @@ public class MeteorEntity extends Entity {
                                     BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
                                         BlockState state = this.level.getBlockState(pos);
 
-                                        if (state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                                        if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
                                             this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                                         }
                                     });

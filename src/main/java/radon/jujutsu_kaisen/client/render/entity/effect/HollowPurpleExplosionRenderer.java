@@ -26,10 +26,11 @@ public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleEx
         float f1 = Math.min(f0 > 0.8F ? (f0 - 0.8F) / 0.2F : 0.0F, 1.0F);
         RandomSource random = RandomSource.create(432L);
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.lightning());
+
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
-        for (int i = 0; (float) i < (f0 + f0 * f0) / 2.0F * 60.0F; ++i) {
+        for (int i = 0; (float) i < (f0 + f0 * f0) / 2.0F * 60.0F; i++) {
             pPoseStack.mulPose(Axis.XP.rotationDegrees(random.nextFloat() * 360.0F));
             pPoseStack.mulPose(Axis.YP.rotationDegrees(random.nextFloat() * 360.0F));
             pPoseStack.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 360.0F));

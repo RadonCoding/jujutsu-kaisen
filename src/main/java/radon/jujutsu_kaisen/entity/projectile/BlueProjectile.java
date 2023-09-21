@@ -2,9 +2,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -13,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -72,7 +71,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void hurtEntities() {
-        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
+        AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -86,10 +85,10 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
-        double centerX = bounds.getCenter().x;
-        double centerY = bounds.getCenter().y;
-        double centerZ = bounds.getCenter().z;
+        AABB bounds = this.getBoundingBox();
+        double centerX = bounds.getCenter().x();
+        double centerY = bounds.getCenter().y();
+        double centerZ = bounds.getCenter().z();
 
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -146,6 +145,11 @@ public class BlueProjectile extends JujutsuProjectile {
             this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return EntityDimensions.fixed(this.getRadius(), this.getRadius());
     }
 
     @Override

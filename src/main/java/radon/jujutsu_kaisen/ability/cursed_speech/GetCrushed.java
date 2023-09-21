@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -93,7 +94,7 @@ public class GetCrushed extends Ability {
                                         BlockPos pos = new BlockPos(x, y, z);
                                         BlockState state = owner.level.getBlockState(pos);
                                         
-                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > -1.0F && !state.isAir()) {
+                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
                                             if (owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                                 owner.level.destroyBlock(pos, false);
                                             }
@@ -127,5 +128,10 @@ public class GetCrushed extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.CURSED_SPEECH;
     }
 }

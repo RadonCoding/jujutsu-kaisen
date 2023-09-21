@@ -324,6 +324,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FOREST_SPIKE.get(), ForestSpikeRenderer::new);
             event.registerEntityRenderer(JJKEntities.WOOD_SEGMENT.get(), WoodSegmentRenderer::new);
             event.registerEntityRenderer(JJKEntities.WOOD_SHIELD.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.BLACK_HOLE.get(), BlackHoleRenderer::new);
         }
 
         @SubscribeEvent
@@ -350,6 +351,7 @@ public class JJKClientEventHandler {
                                 pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
                                 pOutput.accept(JJKItems.SPLIT_SOUL_KATANA.get());
                                 pOutput.accept(JJKItems.CHAIN.get());
+                                pOutput.accept(JJKItems.NYOI_STAFF.get());
 
                                 pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
                                 pOutput.accept(JJKItems.INVENTORY_CURSE.get());

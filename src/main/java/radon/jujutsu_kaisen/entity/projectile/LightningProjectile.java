@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class LightningProjectile extends JujutsuProjectile {
@@ -54,7 +56,8 @@ public class LightningProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getPower(owner));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getPower(owner) *
+                            (owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
                 }
             });
         }
@@ -94,6 +97,10 @@ public class LightningProjectile extends JujutsuProjectile {
     @Override
     public void tick() {
         super.tick();
+
+        if (this.random.nextInt(25) == 0) {
+            this.playSound(JJKSounds.ELECTRICITY.get(), 1.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        }
 
         if (this.animation < STILL_FRAMES) {
             this.animation++;

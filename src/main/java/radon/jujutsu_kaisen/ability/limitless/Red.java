@@ -46,4 +46,9 @@ public class Red extends Ability {
     public boolean isTechnique() {
         return true;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.RED;
+    }
 }
