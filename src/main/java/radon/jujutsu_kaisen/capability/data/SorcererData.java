@@ -938,8 +938,18 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void adaptAll(Set<Ability> adaptations) {
+    public void addAdapted(Set<Ability> adaptations) {
         this.adapted.addAll(adaptations);
+    }
+
+    @Override
+    public Map<Ability, Integer> getAdapting() {
+        return this.adapting;
+    }
+
+    @Override
+    public void addAdapting(Map<Ability, Integer> adapting) {
+        this.adapting.putAll(adapting);
     }
 
     @Override

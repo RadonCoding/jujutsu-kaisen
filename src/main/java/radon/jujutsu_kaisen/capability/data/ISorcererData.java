@@ -127,7 +127,10 @@ public interface ISorcererData {
     @Nullable DomainExpansionEntity getDomain(ServerLevel level);
 
     Set<Ability> getAdapted();
-    void adaptAll(Set<Ability> adaptations);
+    void addAdapted(Set<Ability> adaptations);
+
+    Map<Ability, Integer> getAdapting();
+    void addAdapting(Map<Ability, Integer> adapting);
 
     void addShadowInventory(ItemStack stack);
     ItemStack getShadowInventory(int index);

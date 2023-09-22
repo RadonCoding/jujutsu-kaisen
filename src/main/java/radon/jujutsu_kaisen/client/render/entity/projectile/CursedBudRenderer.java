@@ -8,18 +8,18 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.projectile.EmberInsectProjectile;
+import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EmberInsectRenderer extends GeoEntityRenderer<EmberInsectProjectile> {
-    public EmberInsectRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")));
+public class CursedBudRenderer extends GeoEntityRenderer<CursedBudProjectile> {
+    public CursedBudRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_bud")));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, EmberInsectProjectile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, CursedBudProjectile animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
