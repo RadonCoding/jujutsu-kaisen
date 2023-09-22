@@ -43,13 +43,6 @@ public class JJKRenderTypes extends RenderType {
                         .setWriteMaskState(COLOR_WRITE)
                         .createCompositeState(false));
     });
-    private static final RenderType BLACK_HOLE = create("black_hole", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
-            false, true, RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
-                    .setCullState(NO_CULL)
-                    .createCompositeState(false));
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -61,9 +54,5 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType sixEyes(ResourceLocation pLocation) {
         return SIX_EYES.apply(pLocation);
-    }
-
-    public static RenderType blackHole() {
-        return BLACK_HOLE;
     }
 }

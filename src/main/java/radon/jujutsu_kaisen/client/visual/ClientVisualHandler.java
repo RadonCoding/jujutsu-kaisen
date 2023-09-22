@@ -61,9 +61,7 @@ public class ClientVisualHandler {
         if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
-            if (mc.level.getGameTime() % 20  == 0) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
-            }
+            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

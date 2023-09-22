@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "jujutsu_kaisen:item/jet_black_shadow_sword_inventory"
+  }
+}
