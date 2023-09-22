@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -162,6 +163,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         } else if (pos.getY() <= floorY && !floor.isEmpty()) {
                                             block = floor.get(this.random.nextInt(floor.size()));
                                         }
+                                    } else if (!state.getFluidState().isEmpty()) {
+                                        block = distance >= radius - 1 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
                                     } else {
                                         block = distance >= radius - 1 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
                                     }

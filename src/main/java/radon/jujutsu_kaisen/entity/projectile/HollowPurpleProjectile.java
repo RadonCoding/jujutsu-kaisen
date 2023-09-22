@@ -18,12 +18,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.particle.LightningParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HollowPurpleProjectile extends JujutsuProjectile {
@@ -119,21 +116,6 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
             this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
             this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-        }
-
-        double width = this.getBbWidth();
-        double height = this.getBbHeight();
-
-        for (int i = 0; i < 2; i++) {
-            double x = this.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2;
-            double y = this.getY() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * height * 2;
-            double z = this.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2;
-            this.level.addParticle(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
-
-        if (HelperMethods.RANDOM.nextInt(50) == 0) {
-            this.playSound(JJKSounds.ELECTRICITY.get(), 1.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         }
     }
 
