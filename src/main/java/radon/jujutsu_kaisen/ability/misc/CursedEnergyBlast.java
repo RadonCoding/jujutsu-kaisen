@@ -24,7 +24,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(5) == 0 && target != null &&
+        return JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(10) == 0 && target != null &&
                 owner.hasLineOfSight(target) && owner.distanceTo(target) <= RANGE;
     }
 

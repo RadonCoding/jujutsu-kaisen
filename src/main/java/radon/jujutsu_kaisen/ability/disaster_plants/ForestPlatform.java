@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 public class ForestPlatform extends Ability implements Ability.IChannelened {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return target != null;
     }
 
     @Override

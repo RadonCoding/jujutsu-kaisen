@@ -152,7 +152,7 @@ public class AgitoEntity extends TenShadowsSummon {
             if (owner != null) {
                 this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                        dstCap.adaptAll(srcCap.getAdapted());
+                        dstCap.addAdapted(srcCap.getAdapted());
                     });
                 });
             }

@@ -43,7 +43,6 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
@@ -312,7 +311,7 @@ public class JJKEventHandler {
                 if (killer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData killerCap = killer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (killerCap.getType() == JujutsuType.CURSE ? victim instanceof SaturoGojoEntity : (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity)) {
+                    if (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity) {
                         killerCap.addTrait(Trait.STRONGEST);
 
                         if (killer instanceof ServerPlayer player) {
