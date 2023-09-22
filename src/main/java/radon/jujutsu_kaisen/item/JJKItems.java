@@ -27,10 +27,14 @@ public class JJKItems {
     public static RegistryObject<Item> CHAIN = ITEMS.register("chain",
             () -> new ChainItem(JJKTiers.CURSED_TOOL,0, 0.0F, new Item.Properties()));
     public static RegistryObject<Item> NYOI_STAFF = ITEMS.register("nyoi_staff",
-            () -> new NyoiStaffItem(JJKTiers.CURSED_TOOL,0, 0.0F, new Item.Properties()));
+            () -> new NyoiStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> SLAUGHTER_DEMON = ITEMS.register("slaughter_demon",
+            () -> new SlaughterDemonItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
 
     public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
             () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
+            () -> new JetBlackShadowSwordItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));

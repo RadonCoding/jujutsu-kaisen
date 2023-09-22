@@ -106,6 +106,8 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
+
         this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.MEGUMI_CHESTPLATE.get()));
         this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.MEGUMI_LEGGINGS.get()));
         this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.MEGUMI_BOOTS.get()));

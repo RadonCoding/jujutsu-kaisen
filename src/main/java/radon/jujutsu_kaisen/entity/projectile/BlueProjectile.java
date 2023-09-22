@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -23,7 +25,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueProjectile extends JujutsuProjectile {
     private static final double RANGE = 30.0D;
-    private static final double PULL_STRENGTH = 0.25D;
     private static final int DELAY = 20;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
@@ -63,24 +64,10 @@ public class BlueProjectile extends JujutsuProjectile {
             for (Entity entity : this.level.getEntities(owner, bounds)) {
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity instanceof Projectile projectile && projectile.getOwner() == owner)) continue;
 
-                Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).scale(PULL_STRENGTH);
+                Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
                 entity.setDeltaMovement(direction);
                 entity.hurtMarked = true;
             }
-        }
-    }
-
-    private void hurtEntities() {
-        AABB bounds = this.getBoundingBox();
-
-        if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getGrade().getPower(owner));
-                }
-            });
         }
     }
 
@@ -108,11 +95,64 @@ public class BlueProjectile extends JujutsuProjectile {
         }
     }
 
+    private void hurtEntities() {
+        AABB bounds = this.getBoundingBox();
+
+        if (this.getOwner() instanceof LivingEntity owner) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this)
+                        continue;
+
+                    if (entity instanceof LivingEntity) {
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getGrade().getPower(owner));
+                    } else {
+                        entity.discard();
+                    }
+                }
+            });
+        }
+    }
+
+    private void pullBlocks() {
+        double radius = this.getRadius() * 2.0F;
+        AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
+                this.getX() + radius, this.getY() + radius, this.getZ() + radius);
+        double centerX = bounds.getCenter().x();
+        double centerY = bounds.getCenter().y();
+        double centerZ = bounds.getCenter().z();
+
+        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                    if (this.random.nextInt((int) this.getRadius() * 2 * 20) != 0) continue;
+
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = this.level.getBlockState(pos);
+
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+
+                    if (distance <= radius) {
+                        if (!state.isAir() && state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                            if (this.level.destroyBlock(pos, false)) {
+                                FallingBlockEntity entity = FallingBlockEntity.fall(this.level, pos, state);
+                                entity.noPhysics = true;
+
+                                if (((ServerLevel) this.level).getEntity(entity.getUUID()) == null) {
+                                    this.level.addFreshEntity(entity);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         float radius = this.getRadius();
-        int count = (int) (radius * 4);
+        int count = (int) (radius * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -156,6 +196,8 @@ public class BlueProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
+        this.refreshDimensions();
+
         if (this.getTime() >= this.getDuration()) {
             this.discard();
         } else {
@@ -181,13 +223,14 @@ public class BlueProjectile extends JujutsuProjectile {
                         HitResult result = HelperMethods.getHitResult(owner, start, end);
 
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
-                        this.setPos(pos);
+                        this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
                     }
                     this.pullEntities();
                     this.hurtEntities();
 
                     if (!this.level.isClientSide) {
                         if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                            this.pullBlocks();
                             this.breakBlocks();
                         }
                     }

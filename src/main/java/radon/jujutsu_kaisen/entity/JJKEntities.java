@@ -273,10 +273,6 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_shield")
                             .toString()));
-    public static RegistryObject<EntityType<BlackHoleEntity>> BLACK_HOLE = ENTITIES.register("black_hole", () ->
-            EntityType.Builder.<BlackHoleEntity>of(BlackHoleEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "black_hole")
-                            .toString()));
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)

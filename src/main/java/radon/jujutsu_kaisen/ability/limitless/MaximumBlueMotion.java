@@ -23,7 +23,7 @@ public class MaximumBlueMotion extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner);
+        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, true);
         owner.level.addFreshEntity(blue);
     }
 
@@ -40,10 +40,5 @@ public class MaximumBlueMotion extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
-    }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.BLUE;
     }
 }

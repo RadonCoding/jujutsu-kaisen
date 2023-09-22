@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -28,13 +27,13 @@ import java.util.Optional;
 
 
 public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
-    private static ItemStack getRandomCursedTool(LevelAccessor accessor) {
-        InvertedSpearData data = ((ServerLevel) accessor).getDataStorage().computeIfAbsent(InvertedSpearData::load,
+    private static ItemStack getRandomCursedTool(ServerLevel level) {
+        InvertedSpearData data = level.getDataStorage().computeIfAbsent(InvertedSpearData::load,
                 InvertedSpearData::new, InvertedSpearData.IDENTIFIER);
 
         List<ItemStack> pool = new ArrayList<>();
 
-        Registry<Item> registry = accessor.registryAccess().registryOrThrow(Registries.ITEM);
+        Registry<Item> registry = level.registryAccess().registryOrThrow(Registries.ITEM);
 
         for (Item item : registry) {
             ItemStack stack = new ItemStack(item);
@@ -62,7 +61,7 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
 
         if (entity.isPresent()) {
             if (entity.get() instanceof ItemFrame frame) {
-                frame.setItem(getRandomCursedTool((LevelAccessor) world));
+                frame.setItem(getRandomCursedTool(level));
                 return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
         }
