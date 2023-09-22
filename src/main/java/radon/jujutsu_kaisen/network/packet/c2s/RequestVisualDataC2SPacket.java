@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,17 +17,20 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class RequestVisualDataC2SPacket {
+    private final CompoundTag existing;
     private final UUID src;
 
-    public RequestVisualDataC2SPacket(UUID uuid) {
+    public RequestVisualDataC2SPacket(CompoundTag existing, UUID uuid) {
+        this.existing = existing;
         this.src = uuid;
     }
 
     public RequestVisualDataC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readUUID());
+        this(buf.readAnySizeNbt(), buf.readUUID());
     }
 
     public void encode(FriendlyByteBuf buf) {
+        buf.writeNbt(this.existing);
         buf.writeUUID(this.src);
     }
 
@@ -50,7 +54,11 @@ public class RequestVisualDataC2SPacket {
                     if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
                     ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
-                    PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
+                    CompoundTag updated = data.serializeNBT();
+
+                    if (this.existing != updated) {
+                        PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, updated), sender);
+                    }
                 });
             }
         });

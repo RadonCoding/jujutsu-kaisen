@@ -61,7 +61,7 @@ public class ClientVisualHandler {
         if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
-            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
+            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(synced.get(entity.getUUID()).serializeNBT(), entity.getUUID()));
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -79,7 +79,7 @@ public class ClientVisualHandler {
             }
         } else {
             if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
+                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(new CompoundTag(), entity.getUUID()));
             }
         }
         return null;
@@ -101,7 +101,7 @@ public class ClientVisualHandler {
             }
         } else {
             if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
+                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(new CompoundTag(), entity.getUUID()));
             }
         }
     }
