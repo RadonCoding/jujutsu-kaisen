@@ -21,9 +21,9 @@ public class BlackFlashParticle extends TextureSheetParticle {
         this.xd += pXSpeed * 0.4D;
         this.yd += pYSpeed * 0.4D;
         this.zd += pZSpeed * 0.4D;
-        this.rCol = 0.5F;
-        this.gCol = 0.0F;
-        this.bCol = 0.0F;
+        this.rCol = ParticleColors.BLACK_FLASH.x();
+        this.gCol = ParticleColors.BLACK_FLASH.y();
+        this.bCol = ParticleColors.BLACK_FLASH.z();
         this.quadSize *= 0.75F;
         this.lifetime = Math.max((int)(6.0D / (Math.random() * 0.8D + 0.6D)), 1);
         this.hasPhysics = false;

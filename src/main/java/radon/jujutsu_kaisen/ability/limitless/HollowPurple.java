@@ -5,7 +5,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -35,14 +34,6 @@ public class HollowPurple extends Ability {
 
         HollowPurpleProjectile purple = new HollowPurpleProjectile(owner);
         owner.level.addFreshEntity(purple);
-    }
-
-    @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        if (JJKAbilities.MAXIMUM_HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Status.COOLDOWN) {
-            return Status.FAILURE;
-        }
-        return super.checkTriggerable(owner);
     }
 
     @Override

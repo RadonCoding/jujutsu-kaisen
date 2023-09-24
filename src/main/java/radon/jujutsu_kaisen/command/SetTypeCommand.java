@@ -23,6 +23,8 @@ public class SetTypeCommand {
     }
 
     public static int setType(ServerPlayer player, JujutsuType type) {
+        if (type == JujutsuType.SHIKIGAMI) return 0;
+
         player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             cap.setType(type);
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

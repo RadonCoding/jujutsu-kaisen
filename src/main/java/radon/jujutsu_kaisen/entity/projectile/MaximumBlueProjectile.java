@@ -35,7 +35,7 @@ public class MaximumBlueProjectile extends BlueProjectile {
 
     @Override
     public float getRadius() {
-        return super.getRadius() * 2.0F;
+        return super.getRadius() * 1.5F;
     }
 
     @Override

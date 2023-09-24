@@ -141,8 +141,8 @@ public interface ISorcererData {
     boolean isAdaptedTo(@Nullable Ability ability);
     boolean isAdaptedTo(CursedTechnique technique);
 
-    boolean tryAdapt(DamageSource source);
-    boolean tryAdapt(Ability ability);
+    void tryAdapt(DamageSource source);
+    void tryAdapt(Ability ability);
 
     TenShadowsMode getMode();
     void setMode(TenShadowsMode mode);

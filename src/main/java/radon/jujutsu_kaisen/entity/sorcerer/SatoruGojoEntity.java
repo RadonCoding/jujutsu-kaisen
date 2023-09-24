@@ -30,8 +30,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
 
-public class SaturoGojoEntity extends SorcererEntity {
-    public SaturoGojoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+public class SatoruGojoEntity extends SorcererEntity {
+    public SatoruGojoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 

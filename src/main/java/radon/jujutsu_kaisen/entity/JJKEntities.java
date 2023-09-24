@@ -35,17 +35,10 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
             EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
-                            .toString()));
-    public static RegistryObject<EntityType<MaximumHollowPurpleProjectile>> MAXIMUM_HOLLOW_PURPLE = ENTITIES.register("maximum_hollow_purple", () ->
-            EntityType.Builder.<MaximumHollowPurpleProjectile>of(MaximumHollowPurpleProjectile::new, MobCategory.MISC)
-                    .sized(2.0F, 2.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_hollow_purple")
                             .toString()));
     public static RegistryObject<EntityType<HollowPurpleExplosion>> HOLLOW_PURPLE_EXPLOSION = ENTITIES.register("hollow_purple_explosion", () ->
             EntityType.Builder.<HollowPurpleExplosion>of(HollowPurpleExplosion::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")
                             .toString()));
     public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
@@ -115,8 +108,8 @@ public class JJKEntities {
             EntityType.Builder.<SukunaRyomenEntity>of(SukunaRyomenEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna_ryomen")
                             .toString()));
-    public static RegistryObject<EntityType<SaturoGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
-            EntityType.Builder.<SaturoGojoEntity>of(SaturoGojoEntity::new, MobCategory.AMBIENT)
+    public static RegistryObject<EntityType<SatoruGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
+            EntityType.Builder.<SatoruGojoEntity>of(SatoruGojoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "satoru_gojo")
                             .toString()));
     public static RegistryObject<EntityType<YutaOkkotsuEntity>> YUTA_OKKOTSU = ENTITIES.register("yuta_okkotsu", () ->
@@ -168,11 +161,6 @@ public class JJKEntities {
             EntityType.Builder.<PureLoveBeam>of(PureLoveBeam::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")
-                            .toString()));
-    public static RegistryObject<EntityType<MaximumRedBeam>> MAXIMUM_RED = ENTITIES.register("maximum_red", () ->
-            EntityType.Builder.<MaximumRedBeam>of(MaximumRedBeam::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maximum_red")
                             .toString()));
     public static RegistryObject<EntityType<EmberInsectProjectile>> EMBER_INSECT = ENTITIES.register("ember_insect", () ->
             EntityType.Builder.<EmberInsectProjectile>of(EmberInsectProjectile::new, MobCategory.MISC)

@@ -12,8 +12,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -24,7 +26,7 @@ public class RedProjectile extends JujutsuProjectile {
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
-    private static final float DAMAGE = 30.0F;
+    private static final float DAMAGE = 25.0F;
 
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -46,7 +48,7 @@ public class RedProjectile extends JujutsuProjectile {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    float factor = 1.0F - (float) this.getTime() / DURATION;
+                    float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getPower(owner))) {
                         entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
@@ -95,6 +97,19 @@ public class RedProjectile extends JujutsuProjectile {
                 this.discard();
             } else if (this.getTime() >= DELAY) {
                 this.hurtEntities();
+
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                    if (cap.isCooldownDone(JJKAbilities.HOLLOW_PURPLE.get())) {
+                        cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
+
+                        this.level.addFreshEntity(new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D)));
+
+                        blue.discard();
+                        this.discard();
+                    }
+                }
 
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));

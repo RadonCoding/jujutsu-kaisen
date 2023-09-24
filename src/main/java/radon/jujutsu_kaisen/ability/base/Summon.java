@@ -199,4 +199,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             });
         }
     }
+
+    @Override
+    public float getRealCost(LivingEntity owner) {
+        return this.isTenShadows() && JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
+    }
 }

@@ -41,7 +41,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 15.0F;
     private static final int DELAY = 20;
     private static final int BITE_DURATION = 5;
     private static final double SPEED = 2.0D;
@@ -204,7 +204,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
                     LivingEntity target = this.getTarget();
 
-                    if (target != null) {
+                    if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
                         this.setDeltaMovement(target.position().subtract(this.position()).normalize().scale(SPEED));
                     } else {
                         this.discard();

@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueProjectile extends JujutsuProjectile {
-    private static final double RANGE = 30.0D;
+    private static final double RANGE = 15.0D;
     private static final int DELAY = 20;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
@@ -72,7 +72,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox();
+        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
         double centerX = bounds.getCenter().x();
         double centerY = bounds.getCenter().y();
         double centerZ = bounds.getCenter().z();
