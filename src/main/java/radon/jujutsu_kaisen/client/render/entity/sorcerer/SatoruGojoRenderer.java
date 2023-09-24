@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.entity.SatoruGojoModel;
-import radon.jujutsu_kaisen.entity.sorcerer.SaturoGojoEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SatoruGojoEntity;
 
-public class SatoruGojoRenderer extends HumanoidMobRenderer<SaturoGojoEntity, SatoruGojoModel> {
+public class SatoruGojoRenderer extends HumanoidMobRenderer<SatoruGojoEntity, SatoruGojoModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/satoru_gojo.png");
 
     public SatoruGojoRenderer(EntityRendererProvider.Context pContext) {
@@ -22,7 +22,7 @@ public class SatoruGojoRenderer extends HumanoidMobRenderer<SaturoGojoEntity, Sa
         this.addLayer(new JJKOverlayLayer<>(this));
     }
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SaturoGojoEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull SatoruGojoEntity pEntity) {
         return TEXTURE;
     }
 }

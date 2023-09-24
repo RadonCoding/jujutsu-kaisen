@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,14 +31,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DismantleProjectile extends JujutsuProjectile {
-    public static final int FRAMES = 2;
     private static final float DAMAGE = 15.0F;
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 3;
     private static final float SPEED = 5.0F;
-
-    public int animation;
-    public boolean on = true;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -98,6 +96,8 @@ public class DismantleProjectile extends JujutsuProjectile {
                     if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                         this.level.destroyBlock(pos, false);
                     }
+                    ((ServerLevel) this.level).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
+                            0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
             });
         }
@@ -161,24 +161,10 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (!this.on && this.animation == 0) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
             this.discard();
-        }
-
-        if (this.on) {
-            if (this.animation < FRAMES) {
-                this.animation++;
-            }
-        } else {
-            if (this.animation > 0) {
-                this.animation--;
-            }
-        }
-
-        if (this.getTime() - DURATION / 2 > DURATION) {
-            this.on = false;
         }
     }
 }

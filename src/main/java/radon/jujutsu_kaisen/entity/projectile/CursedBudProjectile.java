@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -11,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -22,8 +24,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity {
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
-    private static final float SPEED = 5.0F;
-    private static final int EFFECT = 2 * 20;
+    private static final int EFFECT = 5 * 20;
+    private static final double SPEED = 3.0D;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -39,19 +41,15 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
-    public CursedBudProjectile(Level level, double x, double y, double z) {
-        super(JJKEntities.CURSED_BUD.get(), level);
-
-        this.setPos(x, y, z);
-    }
-
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
-        if (this.getOwner() instanceof LivingEntity owner && pResult.getEntity() instanceof LivingEntity entity) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            //entity.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getGrade().getPower(owner))));
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getGrade().getPower(owner)), 0, false, false, false));
+            }
         }
         this.discard();
     }
@@ -84,8 +82,6 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
-                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                    this.discard();
                 }
             }
         }

@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class MaximumBlueStill extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MaximumBlueStill extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 800.0F;
+        return 200.0F;
     }
 
     @Override

@@ -126,7 +126,8 @@
 			}
 		},
 		"attack.tongue": {
-			"animation_length": 0.5,
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
 			"bones": {
 				"mouth": {
 					"rotation": {
@@ -135,9 +136,6 @@
 						},
 						"0.25": {
 							"vector": [-30, 0, 0]
-						},
-						"0.5": {
-							"vector": [0, 0, 0]
 						}
 					}
 				}
@@ -147,7 +145,7 @@
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,
 			"bones": {
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]

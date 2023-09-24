@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -45,7 +46,6 @@ import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -252,15 +252,7 @@ public class JJKEventHandler {
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.isAdaptedTo(event.getSource())) {
-                    if (!cap.tryAdapt(event.getSource())) return;
-
-                    if (!victim.level.isClientSide) {
-                        WheelEntity wheel = cap.getSummonByClass((ServerLevel) victim.level, WheelEntity.class);
-
-                        if (wheel != null) {
-                            wheel.spin();
-                        }
-                    }
+                    cap.tryAdapt(event.getSource());
                 }
             });
         }
@@ -276,15 +268,7 @@ public class JJKEventHandler {
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!cap.isAdaptedTo(event.getAbility())) {
-                    if (!cap.tryAdapt(event.getAbility())) return;
-
-                    if (!victim.level.isClientSide) {
-                        WheelEntity wheel = cap.getSummonByClass((ServerLevel) victim.level, WheelEntity.class);
-
-                        if (wheel != null) {
-                            wheel.spin();
-                        }
-                    }
+                    cap.tryAdapt(event.getAbility());
                 }
             });
         }
@@ -402,6 +386,10 @@ public class JJKEventHandler {
 
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
+            }
+
+            if (event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
+                event.getEntity().hurt(event.getEntity().damageSources().generic(), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
             }
         }
     }

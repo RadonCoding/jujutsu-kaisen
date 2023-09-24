@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -311,8 +312,28 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateAdaptation() {
-        this.adapting.replaceAll((k, v) -> v + 1);
+    private void updateAdaptation(ServerLevel level) {
+        if (this.toggled.contains(JJKAbilities.WHEEL.get())) {
+            Iterator<Map.Entry<Ability, Integer>> iter = this.adapting.entrySet().iterator();
+
+            while (iter.hasNext()) {
+                Map.Entry<Ability, Integer> entry = iter.next();
+
+                int timer = entry.getValue();
+
+                if (++timer >= REQUIRED_ADAPTATION) {
+                    iter.remove();
+
+                    this.adapted.add(entry.getKey());
+
+                    WheelEntity wheel = this.getSummonByClass(level, WheelEntity.class);
+
+                    if (wheel != null) {
+                        wheel.spin();
+                    }
+                }
+            }
+        }
     }
 
     private void giveAdvancement(ServerPlayer player, String name) {
@@ -354,7 +375,9 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
-        this.updateAdaptation();
+        if (owner.level instanceof ServerLevel level) {
+            this.updateAdaptation(level);
+        }
 
         if (this.used >= 10000.0F) {
             this.traits.add(Trait.DOMAIN_EXPANSION);
@@ -1007,28 +1030,20 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean tryAdapt(@Nullable Ability ability) {
-        if (ability == null) return false;
+    public void tryAdapt(@Nullable Ability ability) {
+        if (ability == null) return;
 
         if (!this.adapting.containsKey(ability)) {
             this.adapting.put(ability, 0);
         } else {
             int timer = this.adapting.get(ability);
             timer += ADAPTATION_STEP;
-
-            if (timer >= REQUIRED_ADAPTATION) {
-                this.adapting.remove(ability);
-                this.adapted.add(ability);
-                return true;
-            } else {
-                this.adapting.put(ability, timer);
-            }
+            this.adapting.put(ability, timer);
         }
-        return false;
     }
 
     @Override
-    public boolean tryAdapt(DamageSource source) {
+    public void tryAdapt(DamageSource source) {
         boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
         Ability ability;
@@ -1038,7 +1053,7 @@ public class SorcererData implements ISorcererData {
         } else {
             ability = this.getAbility(source);
         }
-        return this.tryAdapt(ability);
+        this.tryAdapt(ability);
     }
 
     @Override
@@ -1289,7 +1304,7 @@ public class SorcererData implements ISorcererData {
 
         for (Map.Entry<Ability, Integer> entry : this.adapting.entrySet()) {
             CompoundTag adaptation = new CompoundTag();
-            adaptation.putString("classification", JJKAbilities.getKey(entry.getKey()).toString());
+            adaptation.putString("key", JJKAbilities.getKey(entry.getKey()).toString());
             adaptation.putInt("stage", entry.getValue());
             adaptingTag.add(adaptation);
         }

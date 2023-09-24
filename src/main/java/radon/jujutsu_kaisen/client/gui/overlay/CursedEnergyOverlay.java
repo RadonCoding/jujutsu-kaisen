@@ -7,12 +7,14 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 
 public class CursedEnergyOverlay {
-    public static ResourceLocation NORMAL = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
-    public static ResourceLocation ZONE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar_zone.png");
+    public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
 
     public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
         LocalPlayer player = gui.getMinecraft().player;
@@ -26,14 +28,19 @@ public class CursedEnergyOverlay {
             RenderSystem.depthMask(false);
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, cap.isInZone(player) ? ZONE : NORMAL);
+            Vector3f color = cap.isInZone(player) ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
+                    ParticleColors.CURSED_ENERGY_SORCERER_COLOR : ParticleColors.CURSED_ENERGY_CURSE_COLOR;
+            RenderSystem.setShaderColor(color.x(), color.y(), color.z(), 1.0F);
+            RenderSystem.setShaderTexture(0, TEXTURE);
 
             GuiComponent.blit(poseStack, 20, 20, 0, 0, 93, 9, 93, 16);
 
             float maxEnergy = cap.getMaxEnergy();
             float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
             GuiComponent.blit(poseStack, 20, 21, 0, 9, (int) energyWidth, 7, 93, 16);
+
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
             poseStack.pushPose();
             poseStack.scale(0.5F, 0.5F, 0.5F);
             gui.getFont().drawShadow(poseStack, String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),

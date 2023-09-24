@@ -4,9 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -27,7 +26,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
-    private static final double OFFSET = 3.0D;
+    private static final float DAMAGE = 30.0F;
+    private static final float RADIUS = 5.0F;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -41,43 +41,26 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         super(pEntityType, pShooter.level, pShooter);
 
         Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look.scale(OFFSET));
+        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
-    public float getSize() {
-        return 1.0F;
-    }
-
-    protected float getDamage() {
-        return 30.0F;
-    }
-
-    protected double getRadius() {
-        return 3.0D;
-    }
-
-    @Override
-    public boolean isNoGravity() {
-        return true;
-    }
-
     private void hurtEntities() {
-        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
+        AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                            this.getDamage() * cap.getGrade().getPower(owner));
+                            DAMAGE * cap.getGrade().getPower(owner));
                 }
             });
         }
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
+        AABB bounds = this.getBoundingBox().inflate(RADIUS);
         double centerX = bounds.getCenter().x();
         double centerY = bounds.getCenter().y();
         double centerZ = bounds.getCenter().z();
@@ -90,7 +73,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= this.getRadius()) {
+                    if (distance <= RADIUS) {
                         if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             if (state.getFluidState().isEmpty()) {
                                 this.level.destroyBlock(pos, false);
@@ -112,18 +95,21 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        if (this.getTime() >= DELAY) {
-            Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
-            this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-            this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-        }
+        Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
+        this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return EntityDimensions.fixed(RADIUS, RADIUS);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.spawnParticles();
+        this.refreshDimensions();
 
         if (this.getTime() >= DURATION) {
             this.discard();
@@ -133,12 +119,16 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
+                        if (this.getTime() % 5 == 0) {
+                            owner.swing(InteractionHand.MAIN_HAND);
+                        }
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                                .add(HelperMethods.getLookAngle(owner).scale(OFFSET));
+                                .add(HelperMethods.getLookAngle(owner));
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     this.hurtEntities();
+                    this.spawnParticles();
 
                     if (!this.level.isClientSide) {
                         if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
