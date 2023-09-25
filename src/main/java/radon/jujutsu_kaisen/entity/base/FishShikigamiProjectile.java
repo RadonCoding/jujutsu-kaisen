@@ -169,7 +169,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
                     if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FISH_SHIKIGAMI.get()),
-                            DAMAGE * cap.getGrade().getPower(owner));
+                            DAMAGE * cap.getGrade().getRealPower(owner));
                     this.entityData.set(DATA_BITE, BITE_DURATION);
                 }
             });

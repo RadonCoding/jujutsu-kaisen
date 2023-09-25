@@ -143,7 +143,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                this.getDamage() * cap.getGrade().getPower(owner));
+                                this.getDamage() * cap.getGrade().getRealPower(owner));
                     }
                 });
 

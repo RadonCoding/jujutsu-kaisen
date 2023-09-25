@@ -89,7 +89,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getPower(this)) / (this.level.isNight() ? 2 : 1)) != 0) return false;
+            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getBasePower()) / (this.level.isNight() ? 2 : 1)) != 0) return false;
 
             if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 if (!this.isInVillage() && !this.isInFortress()) return false;

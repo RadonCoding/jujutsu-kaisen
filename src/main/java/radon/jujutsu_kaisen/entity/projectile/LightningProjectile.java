@@ -56,7 +56,7 @@ public class LightningProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getPower(owner) *
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getGrade().getRealPower(owner) *
                             (owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
                 }
             });
@@ -87,7 +87,7 @@ public class LightningProjectile extends JujutsuProjectile {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             Vec3 location = result.getLocation();
             this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
-                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getPower(owner), false,
+                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner), false,
                     this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         });
         this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER);

@@ -101,11 +101,10 @@ public class BlueProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this)
-                        continue;
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
                     if (entity instanceof LivingEntity) {
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getGrade().getPower(owner));
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getGrade().getRealPower(owner));
                     } else {
                         entity.discard();
                     }

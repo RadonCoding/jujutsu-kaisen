@@ -25,7 +25,7 @@ public class CyclopsSmash extends Ability {
     public void run(LivingEntity owner) {
         if (!owner.level.isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                owner.level.explode(owner, owner.getX(), owner.getY(), owner.getZ(), SMASH_EXPLOSION * cap.getGrade().getPower(), false,
+                owner.level.explode(owner, owner.getX(), owner.getY(), owner.getZ(), SMASH_EXPLOSION * cap.getGrade().getRealPower(owner), false,
                         owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }

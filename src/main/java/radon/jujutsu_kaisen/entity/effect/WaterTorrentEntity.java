@@ -35,7 +35,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
     public static final int FRAMES = 16;
     public static final float SCALE = 2.0F;
     private static final double RANGE = 30.0D;
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 7.5F;
     public static final int DURATION = 4;
 
     public double endPosX, endPosY, endPosZ;
@@ -124,7 +124,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
                 for (Entity entity : entities) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * cap.getGrade().getPower(owner));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * cap.getGrade().getRealPower(owner));
                 }
             });
 

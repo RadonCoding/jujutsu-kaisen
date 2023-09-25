@@ -68,7 +68,7 @@ public class GetCrushed extends Ability {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             cap.delayTickEvent(() -> {
                 for (Entity entity : getEntities(owner)) {
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getPower(owner))) {
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                         Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                         ((ServerLevel) owner.level).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
                         ((ServerLevel) owner.level).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(),  0,1.0D, 0.0D, 0.0D, 1.0D);
@@ -103,7 +103,7 @@ public class GetCrushed extends Ability {
                                 }
                             }
                         }
-                        entity.setDeltaMovement(0.0D, CRUSH_POWER * cap.getGrade().getPower(owner) * -1.0D, 0.0D);
+                        entity.setDeltaMovement(0.0D, CRUSH_POWER * cap.getGrade().getRealPower(owner) * -1.0D, 0.0D);
                         entity.hurtMarked = true;
                     }
                     if (entity instanceof Player player) {

@@ -214,11 +214,10 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return duration;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (duration > 0) {
-                duration = (int) (duration * cap.getGrade().getPower(owner));
+                duration = (int) (duration * cap.getGrade().getRealPower(owner));
             }
             return duration;
         }
@@ -226,6 +225,10 @@ public abstract class Ability {
 
     public interface IChannelened {
         void onRelease(LivingEntity owner, int charge);
+        default int getCharge(LivingEntity owner) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return cap.getCharge();
+        }
     }
 
     public interface IToggled {

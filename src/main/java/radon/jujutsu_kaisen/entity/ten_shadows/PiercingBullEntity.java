@@ -104,11 +104,11 @@ public class PiercingBullEntity extends TenShadowsSummon {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level, this.getBoundingBox())) {
                     if (entity == this) continue;
 
-                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * this.getGrade().getPower(this));
-                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(this.getGrade().getPower(this)));
+                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * this.getGrade().getRealPower(this));
+                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(this.getGrade().getRealPower(this)));
                     entity.hurtMarked = true;
 
-                    this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getPower(this), false, Level.ExplosionInteraction.NONE);
+                    this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getRealPower(this), false, Level.ExplosionInteraction.NONE);
 
                     if (entity == target) {
                         this.setSprinting(false);

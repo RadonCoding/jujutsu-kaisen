@@ -32,7 +32,7 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
 
         if (owner.level.getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getPower(owner))) {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                     entity.setSecondsOnFire(15);
                 }
             });

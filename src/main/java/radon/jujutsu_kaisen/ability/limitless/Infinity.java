@@ -35,7 +35,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -302,8 +302,8 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
 
-                        for (KuchisakeOnna curse : target.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(target.position(),
-                                KuchisakeOnna.RANGE, KuchisakeOnna.RANGE, KuchisakeOnna.RANGE))) {
+                        for (KuchisakeOnnaEntity curse : target.level.getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
+                                KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
                             Optional<UUID> identifier = curse.getCurrent();
                             if (identifier.isEmpty()) continue;
                             if (identifier.get().equals(target.getUUID())) return;

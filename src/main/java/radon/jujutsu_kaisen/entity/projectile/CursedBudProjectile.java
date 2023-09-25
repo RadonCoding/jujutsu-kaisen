@@ -10,8 +10,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -26,6 +28,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     private static final int DURATION = 3 * 20;
     private static final int EFFECT = 5 * 20;
     private static final double SPEED = 3.0D;
+    private static final float DAMAGE = 5.0F;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -48,7 +51,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         if (this.getOwner() instanceof LivingEntity owner) {
             if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getGrade().getPower(owner)), 0, false, false, false));
+                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getGrade().getRealPower(owner)), 0, false, false, false));
+                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getGrade().getRealPower(owner));
             }
         }
         this.discard();

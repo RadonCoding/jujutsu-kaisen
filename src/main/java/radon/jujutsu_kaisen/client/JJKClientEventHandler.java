@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -45,7 +46,7 @@ import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -163,7 +164,7 @@ public class JJKClientEventHandler {
 
             assert mc.level != null && mc.player != null;
 
-            for (KuchisakeOnna curse : mc.level.getEntitiesOfClass(KuchisakeOnna.class, AABB.ofSize(mc.player.position(),
+            for (KuchisakeOnnaEntity curse : mc.level.getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(mc.player.position(),
                     64.0D, 64.0D, 64.0D))) {
                 curse.getCurrent().ifPresent(identifier -> {
                     event.setCanceled(true);
@@ -323,6 +324,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.WOOD_SEGMENT.get(), WoodSegmentRenderer::new);
             event.registerEntityRenderer(JJKEntities.WOOD_SHIELD.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_BUD.get(), CursedBudRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FOREST_WAVE.get(), ForestWaveRenderer::new);
         }
 
         @SubscribeEvent

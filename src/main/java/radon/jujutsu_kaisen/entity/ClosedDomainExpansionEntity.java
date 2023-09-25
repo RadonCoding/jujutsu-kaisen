@@ -50,7 +50,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
             if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getGrade().getPower(owner));
+                attribute.setBaseValue(STRENGTH * cap.getGrade().getRealPower(owner));
                 this.setHealth(this.getMaxHealth());
             }
         });
