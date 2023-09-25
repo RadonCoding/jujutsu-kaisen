@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -34,7 +34,7 @@ public class KuchisakeOnnaAnswerC2SPacket {
 
             ServerLevel level = player.getLevel();
 
-            if (level.getEntity(this.identifier) instanceof KuchisakeOnna curse) {
+            if (level.getEntity(this.identifier) instanceof KuchisakeOnnaEntity curse) {
                 curse.attack();
             }
         });

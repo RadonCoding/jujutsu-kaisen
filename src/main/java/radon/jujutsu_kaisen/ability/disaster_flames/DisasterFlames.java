@@ -91,7 +91,7 @@ public class DisasterFlames extends Ability {
 
             if (target == null) {
                 for (Entity entity : this.getTargets(owner)) {
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getGrade().getPower(owner))) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                         entity.setSecondsOnFire(5);
 
                         if (!owner.level.isClientSide) {
@@ -100,7 +100,7 @@ public class DisasterFlames extends Ability {
                     }
                 }
             } else {
-                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getGrade().getPower(owner))) {
+                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getGrade().getRealPower(owner))) {
                     target.setSecondsOnFire(10);
 
                     if (!owner.level.isClientSide) {

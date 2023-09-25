@@ -40,11 +40,11 @@ public enum SorcererGrade {
         return Component.translatable(String.format("grade.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
     }
 
-    public float getPower() {
+    public float getBasePower() {
         return this.power;
     }
 
-    public float getPower(LivingEntity owner) {
+    public float getRealPower(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return this.power * (cap.isInZone(owner) ? 1.20F : 1.0F);

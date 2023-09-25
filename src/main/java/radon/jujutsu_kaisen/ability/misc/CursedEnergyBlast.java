@@ -59,7 +59,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
                 Vec3 range = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
                 for (Entity entity : owner.level.getEntities(owner, AABB.ofSize(range, RANGE, RANGE, RANGE))) {
-                    entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getPower(owner));
+                    entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner));
                 }
             });
         }
@@ -77,7 +77,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
 
     @Override
     public int getDuration() {
-        return 20;
+        return 10;
     }
 
     @Override

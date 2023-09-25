@@ -54,7 +54,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
     private static float getMaxDamage(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return MAX_DAMAGE * cap.getGrade().getPower();
+        return MAX_DAMAGE * cap.getGrade().getRealPower(owner);
     }
 
     private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {

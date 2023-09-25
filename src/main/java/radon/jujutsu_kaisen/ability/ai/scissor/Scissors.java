@@ -6,8 +6,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Scissors extends Ability {
@@ -25,7 +25,7 @@ public class Scissors extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level instanceof ServerLevel level)) return;
 
-        ((KuchisakeOnna) owner).getCurrent().ifPresent(identifier -> {
+        ((KuchisakeOnnaEntity) owner).getCurrent().ifPresent(identifier -> {
             LivingEntity target = (LivingEntity) level.getEntity(identifier);
 
             if (target == null) return;

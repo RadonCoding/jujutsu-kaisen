@@ -414,13 +414,13 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D);
+            double damage = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D);
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            double speed = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D);
+            double speed = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D);
             this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D);
+            double movement = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
             float resistanceMultiplier = this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F;
@@ -440,7 +440,7 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.grade.getPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F;
+            double damage = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F;
 
             if (this.traits.contains(Trait.CURSED_WOMB)) {
                 damage *= 0.5D;

@@ -85,8 +85,8 @@ public class JJKEntities {
                     .sized(2.0F, 6.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cyclops_curse")
                             .toString()));
-    public static RegistryObject<EntityType<KuchisakeOnna>> KUCHISAKE_ONNA = ENTITIES.register("kuchisake_onna", () ->
-            EntityType.Builder.<KuchisakeOnna>of(KuchisakeOnna::new, MobCategory.AMBIENT)
+    public static RegistryObject<EntityType<KuchisakeOnnaEntity>> KUCHISAKE_ONNA = ENTITIES.register("kuchisake_onna", () ->
+            EntityType.Builder.<KuchisakeOnnaEntity>of(KuchisakeOnnaEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "kuchisake_onna")
                             .toString()));
     public static RegistryObject<EntityType<ZombaCurseEntity>> ZOMBA_CURSE = ENTITIES.register("zomba_curse", () ->
@@ -266,6 +266,12 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_bud")
                             .toString()));
+    public static RegistryObject<EntityType<ForestWaveEntity>> FOREST_WAVE = ENTITIES.register("forest_wave", () ->
+            EntityType.Builder.<ForestWaveEntity>of(ForestWaveEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_wave")
+                            .toString()));
+
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)
@@ -388,7 +394,7 @@ public class JJKEntities {
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());
-        event.put(KUCHISAKE_ONNA.get(), KuchisakeOnna.createAttributes().build());
+        event.put(KUCHISAKE_ONNA.get(), KuchisakeOnnaEntity.createAttributes().build());
         event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
 

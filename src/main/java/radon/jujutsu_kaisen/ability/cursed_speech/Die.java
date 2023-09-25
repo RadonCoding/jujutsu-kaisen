@@ -100,7 +100,7 @@ public class Die extends Ability {
                 for (Entity entity : getEntities(owner)) {
                     if (!(entity instanceof LivingEntity living)) continue;
 
-                    living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getGrade().getPower());
+                    living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getGrade().getRealPower(owner));
 
                     living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
                         if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {

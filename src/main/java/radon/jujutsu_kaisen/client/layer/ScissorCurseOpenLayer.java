@@ -7,20 +7,20 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnna;
+import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class ScissorCurseOpenLayer extends GeoRenderLayer<KuchisakeOnna> {
+public class ScissorCurseOpenLayer extends GeoRenderLayer<KuchisakeOnnaEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/kuchisake_onna_open.png");
 
-    public ScissorCurseOpenLayer(GeoRenderer<KuchisakeOnna> entityRendererIn) {
+    public ScissorCurseOpenLayer(GeoRenderer<KuchisakeOnnaEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, KuchisakeOnna animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, KuchisakeOnnaEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if (animatable.isOpen()) {
             RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
 

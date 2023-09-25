@@ -48,12 +48,12 @@ public class PiercingWater extends Ability {
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 10 * 20;
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 50.0F;
+        return 100.0F;
     }
 
     @Override

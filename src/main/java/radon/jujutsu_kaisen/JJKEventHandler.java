@@ -389,7 +389,7 @@ public class JJKEventHandler {
             }
 
             if (event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
-                event.getEntity().hurt(event.getEntity().damageSources().generic(), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
+                event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity().level.registryAccess(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
             }
         }
     }

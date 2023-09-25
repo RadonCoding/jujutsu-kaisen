@@ -211,7 +211,7 @@ public abstract class DomainExpansionEntity extends Mob {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (cap.getGrade().getPower(owner) * (cap.hasTrait(Trait.STRONGEST) ? 2.0F : 1.0F)) * (owner.getHealth() / owner.getMaxHealth());
+        return (cap.getGrade().getRealPower(owner) * (cap.hasTrait(Trait.STRONGEST) ? 2.0F : 1.0F)) * (owner.getHealth() / owner.getMaxHealth());
     }
 
     public int getTime() {
