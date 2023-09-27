@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
+import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
 import radon.jujutsu_kaisen.ability.rika.CommandPureLove;
 import radon.jujutsu_kaisen.ability.rika.Copy;
 import radon.jujutsu_kaisen.ability.rika.Rika;
@@ -74,6 +75,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> BLUE_FISTS = ABILITIES.register("blue_fists", BlueFists::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
     public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);
+    public static RegistryObject<Ability> FLY = ABILITIES.register("fly", Fly::new);
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
@@ -98,6 +100,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
     public static RegistryObject<Ability> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
+    public static RegistryObject<Ability> DEATH_SWARM = ABILITIES.register("death_swarm", DeathSwarm::new);
     public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static RegistryObject<Ability> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
 
@@ -121,7 +124,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
     public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
-
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
@@ -195,12 +197,12 @@ public class JJKAbilities {
     public static void summonCurse(LivingEntity owner, EntityType<?> type) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
-        Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (!cap.hasCurse(registry, type)) return;
 
-            if (type.create(owner.level) instanceof CursedSpirit curse) {
+            if (type.create(owner.level()) instanceof CursedSpirit curse) {
                 float cost = getCurseCost(owner, curse.getGrade());
 
                 if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
@@ -215,7 +217,7 @@ public class JJKAbilities {
                 curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
                 curse.setTame(true);
                 curse.setOwner(owner);
-                owner.level.addFreshEntity(curse);
+                owner.level().addFreshEntity(curse);
 
                 cap.addSummon(curse);
 

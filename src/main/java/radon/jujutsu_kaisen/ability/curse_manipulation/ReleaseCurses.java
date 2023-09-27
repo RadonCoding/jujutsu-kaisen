@@ -33,16 +33,16 @@ public class ReleaseCurses extends Ability {
             double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
             double d1 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
             double d2 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
-            ((ServerLevel) entity.level).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
+            ((ServerLevel) entity.level()).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
                     0, d0, d1, d2, 1.0D);
         }
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
 
-        Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (Entity summon : cap.getSummons(level)) {
@@ -55,7 +55,7 @@ public class ReleaseCurses extends Ability {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }
 
-                if (!owner.level.isClientSide) {
+                if (!owner.level().isClientSide) {
                     makePoofParticles(curse);
                 }
                 curse.discard();

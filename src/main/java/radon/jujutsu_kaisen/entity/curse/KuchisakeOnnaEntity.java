@@ -176,7 +176,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
 
         this.getCurrent().ifPresent(identifier -> {
-            Entity target = ((ServerLevel) this.level).getEntity(identifier);
+            Entity target = ((ServerLevel) this.level()).getEntity(identifier);
 
             if (target == null) return;
 
@@ -188,7 +188,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
     @Override
     protected void customServerAiStep() {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         int snip = this.entityData.get(DATA_SNIP);
 
@@ -199,13 +199,13 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         if (this.cooldown > 0) this.cooldown--;
 
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getDomains(((ServerLevel) this.level)).size() > 0) {
+            if (cap.getDomains(((ServerLevel) this.level())).size() > 0) {
                 this.reset();
                 return;
             }
 
             this.getCurrent().ifPresent(identifier -> {
-                if (!(((ServerLevel) this.level).getEntity(identifier) instanceof LivingEntity target)) return;
+                if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
 
                 this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
@@ -232,7 +232,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
                     if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, false, false) == Ability.Status.SUCCESS) {
                         target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 3 * 20, 0, false, false, false));
-                        ResourceLocation key = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(this.getType());
+                        ResourceLocation key = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(this.getType());
 
                         if (key != null) {
                             target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID),

@@ -29,7 +29,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
-    private static final float STRENGTH = 100.0F;
+    private static final float STRENGTH = 500.0F;
 
     public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -87,7 +87,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         if (owner != null) {
             AABB bounds = this.getBounds();
 
-            for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
+            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
             }
         }
@@ -115,7 +115,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected List<DomainExpansionEntity> getDomains() {
-        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level, this.getBounds());
+        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), this.getBounds());
         domains.removeIf(domain -> domain.is(this));
         return domains;
     }
@@ -123,7 +123,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
-        for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
+        for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
             if (entity instanceof LivingEntity living) {
                 this.ability.onHitEntity(this, owner, living);
             }
@@ -155,7 +155,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public void onRemovedFromWorld() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             LivingEntity owner = this.getOwner();
 
             if (owner != null) {
@@ -178,7 +178,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (this.checkSureHitEffect()) {
                     this.warn();
 

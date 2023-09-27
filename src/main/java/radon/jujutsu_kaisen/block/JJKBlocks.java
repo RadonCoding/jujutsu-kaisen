@@ -10,8 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -36,44 +35,44 @@ public class JJKBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> UNLIMITED_VOID_FILL = BLOCKS.register("unlimited_void_fill", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
                     .lightLevel((pState) -> 3)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_the_iron_mountain_two", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_the_iron_mountain_three", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
-            new DomainBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
@@ -83,23 +82,23 @@ public class JJKBlocks {
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     public static RegistryObject<Block> DISPLAY_CASE = BLOCKS.register("display_case", () ->
-            new DisplayCaseBlock(BlockBehaviour.Properties.of(Material.STONE)));
+            new DisplayCaseBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
 
     public static RegistryObject<Block> ALTAR = BLOCKS.register("altar", () ->
-            new AltarBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL)
+            new AltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F, 1200.0F)
                     .sound(SoundType.ANVIL)));
 
     public static RegistryObject<Block> VEIL_ROD = BLOCKS.register("veil_rod", () ->
-            new VeilRodBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_ORANGE)
+            new VeilRodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE)
                     .requiresCorrectToolForDrops()
                     .strength(3.0F, 6.0F)
                     .sound(SoundType.COPPER)
                     .noOcclusion()));
 
     public static RegistryObject<Block> VEIL = BLOCKS.register("veil", () ->
-            new VeilBlock(BlockBehaviour.Properties.of(Material.STONE)
+            new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(100.0F, 14.0F)
                     .isViewBlocking(JJKBlocks::always)
                     .noOcclusion()));

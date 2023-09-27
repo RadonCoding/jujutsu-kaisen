@@ -31,7 +31,7 @@ public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity>
     }
 
     private void collideWithOthers() {
-        List<Entity> entities = this.level.getEntities(this, this.getBoundingBox());
+        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox());
 
         for (Entity entity : entities) {
             if (entity.isPushable()) {

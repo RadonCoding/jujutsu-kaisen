@@ -42,7 +42,7 @@ public class NueTotalityLightingEntity extends LightningBolt {
     }
 
     public NueTotalityLightingEntity(LivingEntity owner) {
-        this(JJKEntities.NUE_TOTALITY_LIGHTNING.get(), owner.level);
+        this(JJKEntities.NUE_TOTALITY_LIGHTNING.get(), owner.level());
 
         this.setOwner(owner);
     }
@@ -58,8 +58,8 @@ public class NueTotalityLightingEntity extends LightningBolt {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -83,9 +83,9 @@ public class NueTotalityLightingEntity extends LightningBolt {
         super.tick();
 
         if (this.life == 2) {
-            if (this.level.isClientSide) {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 2.0F, 0.8F + this.random.nextFloat() * 0.2F, false);
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F, false);
+            if (this.level().isClientSide) {
+                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 2.0F, 0.8F + this.random.nextFloat() * 0.2F, false);
+                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F, false);
             }
         }
 
@@ -102,10 +102,10 @@ public class NueTotalityLightingEntity extends LightningBolt {
         }
 
         if (this.life >= 0) {
-            if (!(this.level instanceof ServerLevel)) {
-                this.level.setSkyFlashTime(2);
+            if (!(this.level() instanceof ServerLevel)) {
+                this.level().setSkyFlashTime(2);
             } else {
-                List<Entity> entities = this.level.getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
+                List<Entity> entities = this.level().getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
 
                 LivingEntity owner = this.getOwner();
 

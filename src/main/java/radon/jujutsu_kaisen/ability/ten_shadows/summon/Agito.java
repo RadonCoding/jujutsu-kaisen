@@ -19,8 +19,6 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!this.isTamed(owner)) return false;
-
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
@@ -34,7 +32,7 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.isTamed(owner) ? 0.3F : 500.0F;
+        return 0.3F;
     }
 
     @Override
@@ -64,11 +62,6 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public boolean isTechnique() {
-        return true;
-    }
-
-    @Override
-    public boolean isTamed(LivingEntity owner) {
         return true;
     }
 }

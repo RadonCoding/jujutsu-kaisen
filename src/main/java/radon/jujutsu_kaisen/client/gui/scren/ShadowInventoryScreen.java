@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.gui.scren;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -107,14 +108,14 @@ public class ShadowInventoryScreen extends Screen {
         super.onClose();
     }
 
-    public static void drawCenteredString(@NotNull PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY, int pColor) {
+    public static void drawCenteredString(@NotNull GuiGraphics pGuiGraphics, Font pFont, Component pText, int pX, int pY, int pColor) {
         FormattedCharSequence sql = pText.getVisualOrderText();
-        pFont.drawShadow(pPoseStack, sql, (float)(pX - pFont.width(sql) / 2), (float)pY, pColor);
+        pGuiGraphics.drawString(pFont, sql, pX - pFont.width(sql) / 2, pY, pColor);
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
@@ -126,7 +127,7 @@ public class ShadowInventoryScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        pPoseStack.pushPose();
+        pGuiGraphics.pose().pushPose();
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
@@ -139,12 +140,12 @@ public class ShadowInventoryScreen extends Screen {
             int white = HelperMethods.toRGB24(255, 255, 255, 150);
             int black = HelperMethods.toRGB24(0, 0, 0, 150);
 
-            this.drawSlot(pPoseStack, buffer, centerX, centerY, startAngle, endAngle, this.hovered == i ? white : black);
+            this.drawSlot(pGuiGraphics.pose(), buffer, centerX, centerY, startAngle, endAngle, this.hovered == i ? white : black);
         }
 
         tesselator.end();
         RenderSystem.disableBlend();
-        pPoseStack.popPose();
+        pGuiGraphics.pose().popPose();
         float radius = (RADIUS_IN + RADIUS_OUT) / 2.0F;
 
         for (int i = 0; i < this.items.size(); i++) {
@@ -159,13 +160,14 @@ public class ShadowInventoryScreen extends Screen {
             if (this.hovered == i) {
                 int x = this.width / 2;
                 int y = this.height / 2 - this.font.lineHeight / 2;
-                drawCenteredString(pPoseStack, this.font, stack.getHoverName(), x, y, 0xFFFFFF);
+                drawCenteredString(pGuiGraphics, this.font, stack.getHoverName(), x, y, 0xFFFFFF);
             }
 
-            pPoseStack.pushPose();
-            pPoseStack.translate(-8.0F, -8.0F, 0.0F);
-            this.itemRenderer.renderAndDecorateItem(pPoseStack, stack, posX, posY);
-            pPoseStack.popPose();
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().translate(-8.0F, -8.0F, 0.0F);
+            pGuiGraphics.renderFakeItem(stack, posX, posY);
+            pGuiGraphics.renderItemDecorations(this.font, stack, posX, posY);
+            pGuiGraphics.pose().popPose();
         }
     }
 

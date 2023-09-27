@@ -9,7 +9,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -41,7 +41,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     private Vec3 getCollision(LivingEntity owner, Vec3 from, Vec3 to) {
-        BlockHitResult result = owner.level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
+        BlockHitResult result = owner.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
 
         double collidePosX;
         double collidePosY;
@@ -68,7 +68,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                 Math.max(from.y(), collision.y()), Math.max(from.z(), collision.z()))
                 .inflate(SCALE);
 
-        for (Entity entity : HelperMethods.getEntityCollisions(owner.level, bounds)) {
+        for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);
@@ -84,12 +84,12 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
-        ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(Material.WATER.getColor().col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
+        ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
                 0.1F, false, HelperMethods.RANDOM.nextInt(20) + 1);
 
         for (int i = 0; i < 32; i++) {
@@ -98,7 +98,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
             double dy = dir.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
             double dz = dir.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
 
-            ((ServerLevel) owner.level).sendParticles(particle, spawn.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
+            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
                     spawn.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
                     spawn.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
                     0, dx, dy, dz, 1.0D);
@@ -126,7 +126,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
             }
         });
 
-        if (owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             double radius = SCALE * 2.0F;
 
             AABB bounds = new AABB(collision.x() - radius, collision.y() - radius, collision.z() - radius,
@@ -139,13 +139,13 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                 for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                     for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                         BlockPos pos = new BlockPos(x, y, z);
-                        BlockState state = owner.level.getBlockState(pos);
+                        BlockState state = owner.level().getBlockState(pos);
 
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                         if (distance <= radius) {
                             if (state.getFluidState().isEmpty() && !state.canOcclude()) {
-                                owner.level.destroyBlock(pos, false);
+                                owner.level().destroyBlock(pos, false);
                             }
                         }
                     }

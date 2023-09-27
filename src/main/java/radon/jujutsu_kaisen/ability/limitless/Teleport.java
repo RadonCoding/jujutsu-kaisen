@@ -30,7 +30,7 @@ public class Teleport extends Ability {
     private @Nullable HitResult getTarget(LivingEntity owner) {
         HitResult hit = HelperMethods.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
-        if (hit.getType() == HitResult.Type.BLOCK && (owner.level.getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
+        if (hit.getType() == HitResult.Type.BLOCK && (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
                 ((BlockHitResult) hit).getDirection() != Direction.UP)) return null;
         return hit;
     }

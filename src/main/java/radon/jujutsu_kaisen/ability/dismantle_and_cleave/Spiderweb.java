@@ -45,14 +45,14 @@ public class Spiderweb extends Ability {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level.clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         }
         return null;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.swing(InteractionHand.MAIN_HAND, true);
 
@@ -66,7 +66,7 @@ public class Spiderweb extends Ability {
 
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
                     cap.delayTickEvent(() -> {
-                        owner.level.playSound(null, center.x(), center.y(), center.z(),
+                        owner.level().playSound(null, center.x(), center.y(), center.z(),
                                 JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
@@ -78,8 +78,8 @@ public class Spiderweb extends Ability {
                     }, i * 2);
                 }
                 cap.delayTickEvent(() ->
-                        owner.level.explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner),
-                                owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
+                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner),
+                                owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
                                         Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE), DELAY);
             });
         }

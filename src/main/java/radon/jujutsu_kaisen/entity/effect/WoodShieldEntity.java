@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.effect;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,7 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     }
 
     public WoodShieldEntity(LivingEntity owner) {
-        super(JJKEntities.WOOD_SHIELD.get(), owner.level);
+        super(JJKEntities.WOOD_SHIELD.get(), owner.level());
 
         this.setOwner(owner);
         this.pos = owner.position();
@@ -66,8 +67,8 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -102,11 +103,17 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     public void tick() {
         super.tick();
 
+
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else if (owner != null) {
+            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox())) {
+                entity.setDeltaMovement(entity.position().subtract(this.position()).normalize());
+                entity.hurtMarked = true;
+            }
+
             if (!this.isDying && !JJKAbilities.hasToggled(owner, JJKAbilities.WOOD_SHIELD.get())) {
                 this.isDying = true;
                 this.start = this.tickCount;
@@ -115,16 +122,16 @@ public class WoodShieldEntity extends WoodSegmentEntity {
             int count = 30;
 
             if ((!this.isDying || this.tickCount - this.start < count - this.getIndex())) {
-                if (!this.level.isClientSide && this.getIndex() == 0 && this.tickCount == 1) {
+                if (!this.level().isClientSide && this.getIndex() == 0 && this.tickCount == 1) {
                     for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
                         Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
                         float f = HelperMethods.getYaw(this.pos.subtract(this.position().add(pos)));
                         WoodShieldEntity segment = new WoodShieldEntity(this, pos.x(), pos.y(), pos.z(), f + ((this.random.nextFloat() - 0.5F) * 160.0F), 80.0F);
                         segment.prevSegment = segment;
-                        this.level.addFreshEntity(segment);
+                        this.level().addFreshEntity(segment);
                     }
                 }
-                if (!this.level.isClientSide && this.getIndex() == 1 && this.tickCount > 1 && this.tickCount <= count) {
+                if (!this.level().isClientSide && this.getIndex() == 1 && this.tickCount > 1 && this.tickCount <= count) {
                     float yaw = (this.random.nextFloat() - 0.5F) * 30.0F;
                     int i = this.prevSegment.getIndex();
 
@@ -134,12 +141,12 @@ public class WoodShieldEntity extends WoodSegmentEntity {
                         yaw /= owner.getBbWidth() + Math.max(4.4F - (float) i * 0.075F, 1.0F);
                     }
                     this.prevSegment = new WoodShieldEntity(this.prevSegment, yaw, -0.5F);
-                    this.level.addFreshEntity(this.prevSegment);
+                    this.level().addFreshEntity(this.prevSegment);
                 }
                 if (this.pos != null) {
                     owner.moveTo(this.pos.x(), this.pos.y(), this.pos.z());
                 }
-            } else if (!this.level.isClientSide) {
+            } else if (!this.level().isClientSide) {
                 this.discard();
             }
         }

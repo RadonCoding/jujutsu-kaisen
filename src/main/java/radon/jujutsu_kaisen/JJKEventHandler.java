@@ -190,7 +190,7 @@ public class JJKEventHandler {
                         event.setCanceled(true);
                     } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());
-                        living.level.explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                        living.level().explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
                     } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                         victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             cap.clearToggled();
@@ -203,6 +203,23 @@ public class JJKEventHandler {
                 }
             }
 
+            if (attacker instanceof MahoragaEntity) {
+                victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
+                    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                        Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+
+                        for (Ability ability : toggled) {
+                            if (!attackerCap.isAdaptedTo(ability)) continue;
+                            victimCap.toggle(victim, ability);
+                        }
+
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                        }
+                    });
+                });
+            }
+
             if (!(victim instanceof MahoragaEntity)) return;
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -210,7 +227,7 @@ public class JJKEventHandler {
             if (cap.isAdaptedTo(event.getSource())) {
                 event.setCanceled(true);
 
-                victim.level.playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }
 
@@ -218,29 +235,27 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (!victim.level.isClientSide) {
+            if (!victim.level().isClientSide) {
                 DamageSource source = event.getSource();
 
                 if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
                     if (source.getEntity() instanceof LivingEntity attacker) {
                         if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
                             Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                            attacker.level.explode(attacker, attacker instanceof Player player ? attacker.damageSources().playerAttack(player) : attacker.damageSources().mobAttack(attacker),
+                            attacker.level().explode(attacker, attacker instanceof Player player ? attacker.damageSources().playerAttack(player) : attacker.damageSources().mobAttack(attacker),
                                     null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
                         } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ISorcererData::clearToggled);
-                        }
+                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                                Set<Ability> toggled = new HashSet<>(cap.getToggled());
 
-                        if (attacker instanceof MahoragaEntity mahoraga) {
-                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
-                                mahoraga.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                                    Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+                                for (Ability ability : toggled) {
+                                    if (!ability.isTechnique()) continue;
+                                    cap.toggle(victim, ability);
+                                }
 
-                                    for (Ability ability : toggled) {
-                                        if (!attackerCap.isAdaptedTo(ability)) continue;
-                                        victimCap.toggle(victim, ability);
-                                    }
-                                });
+                                if (victim instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                }
                             });
                         }
                     }
@@ -260,8 +275,6 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
-
-            if (victim.is(event.getEntity())) return;
 
             if (victim instanceof Mob mob) mob.setTarget(event.getEntity());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
@@ -313,14 +326,14 @@ public class JJKEventHandler {
                             double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                             double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
                             double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            ((ServerLevel) victim.level).sendParticles(one, x, y, z, 0,
+                            ((ServerLevel) victim.level()).sendParticles(one, x, y, z, 0,
                                     0.0D, 0.0D, 0.0D, 0.0D);
                         }
                         for (int j = 0; j < 8; j++) {
                             double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
                             double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
                             double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            ((ServerLevel) victim.level).sendParticles(two, x, y, z, 0,
+                            ((ServerLevel) victim.level()).sendParticles(two, x, y, z, 0,
                                     0.0D, 0.0D, 0.0D, 0.0D);
                         }
                     }
@@ -389,7 +402,7 @@ public class JJKEventHandler {
             }
 
             if (event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
-                event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity().level.registryAccess(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
+                event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
             }
         }
     }

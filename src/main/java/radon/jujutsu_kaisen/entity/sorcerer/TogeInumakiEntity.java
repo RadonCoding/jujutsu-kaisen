@@ -55,7 +55,7 @@ public class TogeInumakiEntity extends SorcererEntity {
                 itemstack.shrink(1);
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.convertTo(JJKEntities.MEGUNA_RYOMEN.get(), true);
             }
             return InteractionResult.SUCCESS;
@@ -95,7 +95,7 @@ public class TogeInumakiEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             LivingEntity target = this.getTarget();
 
             if (target != null) {

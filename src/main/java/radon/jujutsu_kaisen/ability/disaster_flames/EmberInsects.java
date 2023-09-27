@@ -29,7 +29,7 @@ public class EmberInsects extends Ability {
                     EmberInsectProjectile insect = new EmberInsectProjectile(owner,
                             HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
                             HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));
-                    owner.level.addFreshEntity(insect);
+                    owner.level().addFreshEntity(insect);
                 }, delay);
             }
         });

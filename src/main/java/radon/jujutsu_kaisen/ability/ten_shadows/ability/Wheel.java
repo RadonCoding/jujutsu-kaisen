@@ -46,7 +46,7 @@ public class Wheel extends Summon<WheelEntity> {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
-                cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
                 (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY);
     }
 
@@ -70,7 +70,7 @@ public class Wheel extends Summon<WheelEntity> {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
         }
         return super.checkStatus(owner);
@@ -81,7 +81,7 @@ public class Wheel extends Summon<WheelEntity> {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
         }
         return super.checkToggleable(owner);

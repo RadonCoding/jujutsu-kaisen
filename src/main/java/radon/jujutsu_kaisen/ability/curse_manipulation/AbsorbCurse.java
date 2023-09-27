@@ -44,7 +44,7 @@ public class AbsorbCurse extends Ability {
             double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
             double d1 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
             double d2 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
-            ((ServerLevel) entity.level).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
+            ((ServerLevel) entity.level()).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
                     0, d0, d1, d2, 1.0D);
         }
     }
@@ -56,12 +56,12 @@ public class AbsorbCurse extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         if (this.getTarget(owner) instanceof CursedSpirit curse && !curse.isTame()) {
             owner.swing(InteractionHand.MAIN_HAND, true);
 
-            Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             ResourceLocation key = registry.getKey(curse.getType());
 
             if (key == null) return;

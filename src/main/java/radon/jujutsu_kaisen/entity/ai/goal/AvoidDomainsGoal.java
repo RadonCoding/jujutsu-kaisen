@@ -51,7 +51,7 @@ public class AvoidDomainsGoal extends Goal {
         this.mob.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             DomainExpansionEntity current = null;
 
-            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.mob.level)) {
+            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.mob.level())) {
                 double distance = this.mob.distanceTo(domain);
 
                 if (current == null || distance < this.mob.distanceTo(current)) {

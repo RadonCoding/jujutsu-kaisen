@@ -84,7 +84,7 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             LivingEntity target = this.getTarget();
 
             if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

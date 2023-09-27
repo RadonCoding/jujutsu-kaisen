@@ -47,7 +47,7 @@ public class SorcererGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        long i = this.mob.level.getGameTime();
+        long i = this.mob.level().getGameTime();
 
         if (i - this.lastCanUseCheck < 20L) {
             return false;

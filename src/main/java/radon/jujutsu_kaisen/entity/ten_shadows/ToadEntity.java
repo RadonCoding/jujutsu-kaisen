@@ -65,7 +65,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     }
 
     public ToadEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual) {
-        this(type, owner.level);
+        this(type, owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
@@ -193,7 +193,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
         if (owner != null) {
             if (this.hasWings()) {
-                for (Projectile projectile : this.level.getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
+                for (Projectile projectile : this.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
                     if (projectile instanceof AbstractArrow && projectile.getOwner() != this.getOwner()) {
                         this.shoot(projectile);
                         projectile.discard();
@@ -234,7 +234,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
         this.setYRot(HelperMethods.getYRotD(this, target.getEyePosition()));
 
         ToadTongueProjectile tongue = new ToadTongueProjectile(this, RANGE, target.getUUID());
-        this.level.addFreshEntity(tongue);
+        this.level().addFreshEntity(tongue);
 
         this.entityData.set(DATA_CAN_SHOOT, false);
     }

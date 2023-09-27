@@ -38,7 +38,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity pShooter) {
-        super(pEntityType, pShooter.level, pShooter);
+        super(pEntityType, pShooter.level(), pShooter);
 
         Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
@@ -50,7 +50,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                     if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
                             DAMAGE * cap.getGrade().getRealPower(owner));
@@ -69,16 +69,16 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                 for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                     BlockPos pos = new BlockPos(x, y, z);
-                    BlockState state = this.level.getBlockState(pos);
+                    BlockState state = this.level().getBlockState(pos);
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= RADIUS) {
                         if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             if (state.getFluidState().isEmpty()) {
-                                this.level.destroyBlock(pos, false);
+                                this.level().destroyBlock(pos, false);
                             } else {
-                                this.level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                             }
                         }
                     }
@@ -96,8 +96,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + this.getBbHeight() / 2.0F, this.getZ());
-        this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-        this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        this.level().addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        this.level().addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -130,15 +130,15 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     this.hurtEntities();
                     this.spawnParticles();
 
-                    if (!this.level.isClientSide) {
-                        if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    if (!this.level().isClientSide) {
+                        if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                             this.breakBlocks();
                         }
                     }
 
                     if (this.getTime() == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
-                        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                         this.discard();
                     }

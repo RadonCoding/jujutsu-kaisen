@@ -24,7 +24,7 @@ public class FireArrow extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         FireArrowProjectile arrow = new FireArrowProjectile(owner);
-        owner.level.addFreshEntity(arrow);
+        owner.level().addFreshEntity(arrow);
     }
 
     @Override

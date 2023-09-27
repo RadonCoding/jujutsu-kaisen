@@ -24,7 +24,7 @@ public class Blue extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         BlueProjectile blue = new BlueProjectile(owner);
-        owner.level.addFreshEntity(blue);
+        owner.level().addFreshEntity(blue);
     }
 
     @Override

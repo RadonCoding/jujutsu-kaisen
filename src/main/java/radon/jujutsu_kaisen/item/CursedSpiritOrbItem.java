@@ -67,7 +67,7 @@ public class CursedSpiritOrbItem extends Item {
                 return stack;
             }
             Registry<EntityType<?>> registry = pLevel.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            cap.addCurse(pEntityLiving.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getCurse(registry, pStack));
+            cap.addCurse(pEntityLiving.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getCurse(registry, pStack));
             pEntityLiving.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 1));
         }
         return stack;

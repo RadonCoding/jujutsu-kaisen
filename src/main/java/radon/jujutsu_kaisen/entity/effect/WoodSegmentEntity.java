@@ -32,7 +32,7 @@ public class WoodSegmentEntity extends Entity {
     }
 
     public WoodSegmentEntity(WoodSegmentEntity segment, double offsetX, double offsetY, double offsetZ, float yawOffset, float pitchOffset) {
-        this(JJKEntities.WOOD_SEGMENT.get(), segment.level);
+        this(JJKEntities.WOOD_SEGMENT.get(), segment.level());
 
         Vec2 rot = segment.getRotationOffset();
         Vec3 offset = new Vec3(offsetX, offsetY, offsetZ).xRot(-rot.x * 0.017453292F)
@@ -72,7 +72,7 @@ public class WoodSegmentEntity extends Entity {
 
     @Nullable
     protected Entity getParent() {
-        return this.level.getEntity(this.entityData.get(DATA_PARENT));
+        return this.level().getEntity(this.entityData.get(DATA_PARENT));
     }
 
     protected void setIndex(int i) {

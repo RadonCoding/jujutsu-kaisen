@@ -70,12 +70,12 @@ public class MegunaRyomenEntity extends SorcererEntity {
     public void init(ISorcererData data) {
         super.init(data);
 
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.TRANQUIL_DEER.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.PIERCING_BULL.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.TRANQUIL_DEER.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.PIERCING_BULL.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get());
     }
 
     @Override

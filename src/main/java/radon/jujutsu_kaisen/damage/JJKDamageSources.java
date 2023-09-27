@@ -20,24 +20,19 @@ public class JJKDamageSources {
     public static final ResourceKey<DamageType> SOUL = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JujutsuKaisen.MOD_ID, "soul"));
 
     public static DamageSource soulAttack(LivingEntity source) {
-        RegistryAccess registry = source.level.registryAccess();
+        RegistryAccess registry = source.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new DamageSource(types.getHolderOrThrow(SOUL), source);
     }
 
     public static JujutsuDamageSource jujutsuAttack(LivingEntity source, @Nullable Ability ability) {
-        RegistryAccess registry = source.level.registryAccess();
+        RegistryAccess registry = source.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU), source, ability);
     }
 
-    public static JujutsuDamageSource jujutsuAttack(RegistryAccess registry, @Nullable Ability ability) {
-        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-        return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU), null, ability);
-    }
-
     public static JujutsuDamageSource indirectJujutsuAttack(Entity source, @Nullable LivingEntity indirect, @Nullable Ability ability) {
-        RegistryAccess registry = source.level.registryAccess();
+        RegistryAccess registry = source.level().registryAccess();
         Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
         return new JujutsuDamageSource(types.getHolderOrThrow(JUJUTSU), source, indirect, ability);
     }

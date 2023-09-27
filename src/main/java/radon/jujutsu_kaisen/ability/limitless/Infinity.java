@@ -12,7 +12,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.AABB;
@@ -55,13 +54,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner instanceof Player player) {
-            if (player.getAbilities().instabuild) return;
 
-            if (player.getAbilities().flying) {
-                player.getAbilities().setFlyingSpeed(0.025F);
-            }
-        }
     }
 
     @Override
@@ -76,24 +69,17 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        if (owner instanceof Player player) {
-            if (player.getAbilities().instabuild) return;
-            player.getAbilities().mayfly = true;
-        }
+
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        if (owner instanceof Player player) {
-            if (player.getAbilities().instabuild) return;
-            player.getAbilities().mayfly = false;
-            player.getAbilities().flying = false;
-        }
+
     }
 
     @Override
     public int getCooldown() {
-        return 20;
+        return 5 * 20;
     }
 
     public static class FrozenProjectileData extends SavedData {
@@ -216,7 +202,7 @@ public class Infinity extends Ability implements Ability.IToggled {
         if (projectile instanceof ThrownChainItemProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
-        for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level))) {
+        for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level()))) {
             if (projectile.getOwner() == domain.getOwner()) return false;
         }
         if (projectile.getOwner() instanceof LivingEntity owner && JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) &&
@@ -241,7 +227,7 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onProjectileImpact(ProjectileImpactEvent event) {
             if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
             if (!(hit.getEntity() instanceof LivingEntity target)) return;
-            if (!(target.level instanceof ServerLevel level)) return;
+            if (!(target.level() instanceof ServerLevel level)) return;
 
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                     FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
@@ -255,7 +241,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (!Infinity.canBlock(target, projectile)) return;
 
                 data.add(target, projectile);
-                event.setCanceled(true);
+                event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
             }
         }
 
@@ -263,7 +249,7 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity target = event.getEntity();
 
-            if (!(target.level instanceof ServerLevel level)) return;
+            if (!(target.level() instanceof ServerLevel level)) return;
 
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load,
                     FrozenProjectileData::new, FrozenProjectileData.IDENTIFIER);
@@ -272,7 +258,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
-                for (Projectile projectile : target.level.getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
+                for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
                     if (!Infinity.canBlock(target, projectile)) continue;
                     data.add(target, projectile);
                 }
@@ -291,7 +277,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                         return;
                     }
 
-                    if (target.level instanceof ServerLevel level) {
+                    if (target.level() instanceof ServerLevel level) {
                         for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
                             if (!domain.checkSureHitEffect()) continue;
 
@@ -302,7 +288,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
 
-                        for (KuchisakeOnnaEntity curse : target.level.getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
+                        for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
                                 KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
                             Optional<UUID> identifier = curse.getCurrent();
                             if (identifier.isEmpty()) continue;
@@ -333,7 +319,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
                     }
-                    target.level.playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+                    target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
                     event.setCanceled(true);
                 }
             });

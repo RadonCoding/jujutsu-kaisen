@@ -79,7 +79,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     public MaxElephantEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.MAX_ELEPHANT.get(), owner.level);
+        this(JJKEntities.MAX_ELEPHANT.get(), owner.level());
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -99,10 +99,10 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         AABB bounds = this.getBoundingBox();
 
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level.getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
             if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level.destroyBlock(pos, false);
+                this.level().destroyBlock(pos, false);
             }
         });
     }
@@ -119,7 +119,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this, null);
+            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this, null);
         }
         return result;
     }
@@ -131,7 +131,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
@@ -153,15 +153,15 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected float getRiddenSpeed(@NotNull LivingEntity pEntity) {
+    protected float getRiddenSpeed(@NotNull Player pPlayer) {
         return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 2.0F;
     }
 
     @Override
-    protected void tickRidden(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        super.tickRidden(pEntity, pTravelVector);
+    protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        super.tickRidden(pPlayer, pTravelVector);
 
-        Vec2 vec2 = this.getRiddenRotation(pEntity);
+        Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
     }
@@ -170,17 +170,17 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
-            if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 this.breakBlocks();
             }
         }
     }
 
     @Override
-    protected @NotNull Vec3 getRiddenInput(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        float f = pEntity.xxa * 0.5F;
-        float f1 = pEntity.zza;
+    protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        float f = pPlayer.xxa * 0.5F;
+        float f1 = pPlayer.zza;
 
         if (f1 <= 0.0F) {
             f1 *= 0.25F;
@@ -285,7 +285,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     public void setDown(boolean down) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
 

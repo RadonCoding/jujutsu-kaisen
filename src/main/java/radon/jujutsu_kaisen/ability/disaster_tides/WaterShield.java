@@ -23,7 +23,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !owner.level.getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty();
+        return !owner.level().getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     @Override
     public void run(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!owner.level.isClientSide) {
+            if (!owner.level().isClientSide) {
                 for (double phi = 0.0D; phi < Math.PI * 2.0D; phi += X_STEP) {
                     for (int i = 0; i < RADIUS; i++) {
                         double x = owner.getX() + RADIUS * Math.cos(phi);
@@ -42,13 +42,13 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
                         double z = owner.getZ() + RADIUS * Math.sin(phi);
 
                         BlockPos pos = BlockPos.containing(x, y, z);
-                        BlockState state = owner.level.getBlockState(pos);
+                        BlockState state = owner.level().getBlockState(pos);
 
                         if (!state.isAir() || state.canOcclude()) continue;
 
-                        owner.level.setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
+                        owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
 
-                        if (owner.level.getBlockEntity(pos) instanceof DurationBlockEntity be) {
+                        if (owner.level().getBlockEntity(pos) instanceof DurationBlockEntity be) {
                             be.create(1, state);
                         }
                     }
@@ -56,8 +56,9 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
                 AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
 
-                for (Entity entity : owner.level.getEntities(owner, bounds)) {
+                for (Entity entity : owner.level().getEntities(owner, bounds)) {
                     entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
+                    entity.hurtMarked = true;
                 }
             }
         });
@@ -70,8 +71,8 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
     @Override
     public void onRelease(LivingEntity owner, int charge) {
-        if (!owner.level.isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level.explode(owner,
+        if (!owner.level().isClientSide) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level().explode(owner,
                     JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
                 cap.getGrade().getRealPower(owner) * 2.0F, false, Level.ExplosionInteraction.NONE));
         }

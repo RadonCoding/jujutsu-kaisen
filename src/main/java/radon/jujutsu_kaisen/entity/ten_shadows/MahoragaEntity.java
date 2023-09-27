@@ -83,7 +83,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     public MahoragaEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.MAHORAGA.get(), owner.level);
+        this(JJKEntities.MAHORAGA.get(), owner.level());
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -177,14 +177,9 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
-
-    @Override
     protected void customServerAiStep() {
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
+
         LivingEntity target = this.getTarget();
 
         if (target != null) {
@@ -200,21 +195,21 @@ public class MahoragaEntity extends TenShadowsSummon {
             this.entityData.set(DATA_SLASH, --slash);
         } else {
             if (target != null) {
-                if (this.isOnGround() && this.distanceTo(target) < 3.0D) {
+                if (this.onGround() && this.distanceTo(target) < 3.0D) {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
                     target.setDeltaMovement(this.getLookAngle().scale(SWING_LAUNCH));
                     target.hurtMarked = true;
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(this.getLookAngle());
-                    this.level.explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                    this.level().explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }
         }
 
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level)) {
+        for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level())) {
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
     }
@@ -240,12 +235,12 @@ public class MahoragaEntity extends TenShadowsSummon {
             for (int i = 0; i < 6; i++) {
                 DivineDogBlackEntity dog = new DivineDogBlackEntity(this, true);
                 dog.setRitual(i, RITUAL_DURATION);
-                this.level.addFreshEntity(dog);
+                this.level().addFreshEntity(dog);
             }
             for (int i = 0; i < 6; i++) {
                 ToadEntity dog = new ToadEntity(JJKEntities.TOAD.get(), this, true);
                 dog.setRitual(i, RITUAL_DURATION);
-                this.level.addFreshEntity(dog);
+                this.level().addFreshEntity(dog);
             }
         }
     }
@@ -272,10 +267,10 @@ public class MahoragaEntity extends TenShadowsSummon {
         AABB bounds = this.getBoundingBox();
 
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level.getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
             if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level.destroyBlock(pos, false);
+                this.level().destroyBlock(pos, false);
             }
         });
     }
@@ -288,8 +283,8 @@ public class MahoragaEntity extends TenShadowsSummon {
             this.setNoAi(this.getTime() <= RITUAL_DURATION);
         }
 
-        if (!this.level.isClientSide) {
-            if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 this.breakBlocks();
             }
         }

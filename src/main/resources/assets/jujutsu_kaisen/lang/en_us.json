@@ -1,9 +1,9 @@
 {
-  "itemGroup.jujutsu_kaisen": "Jujutsu Kaisen",
+  "creative_mode_tab.jujutsu_kaisen.main": "Jujutsu Kaisen",
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
-  "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$ds",
+  "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.count": "Count: %1$d",
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
@@ -93,6 +93,7 @@
   "item.jujutsu_kaisen.kuchisake_onna_spawn_egg": "Spawn Kuchisake-Onna",
   "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
   "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
+  "item.jujutsu_kaisen.feline_curse_spawn_egg": "Spawn Feline Curse",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain One",
@@ -166,6 +167,7 @@
   "ability.jujutsu_kaisen.hollow_purple": "Hollow Purple",
   "ability.jujutsu_kaisen.maximum_hollow_purple": "Maximum Hollow Purple",
   "ability.jujutsu_kaisen.teleport": "Teleport",
+  "ability.jujutsu_kaisen.fly": "Fly",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
@@ -196,6 +198,7 @@
   "ability.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
   "ability.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "ability.jujutsu_kaisen.water_shield": "Water Shield",
+  "ability.jujutsu_kaisen.death_swarm": "Death Swarm",
   "ability.jujutsu_kaisen.fish_shikigami": "Fish Shikigami",
   "ability.jujutsu_kaisen.water_torrent": "Water Torrent",
 

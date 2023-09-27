@@ -18,7 +18,7 @@ public class ItemEntityMixin {
         Item item = stack.getItem();
 
         if (item instanceof DisplayCaseItem) {
-            ((DisplayCaseItem) item).updateDisplayCase(entity.level, stack);
+            ((DisplayCaseItem) item).updateDisplayCase(entity.level(), stack);
         }
     }
 }

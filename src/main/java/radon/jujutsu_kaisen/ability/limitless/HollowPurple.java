@@ -33,7 +33,7 @@ public class HollowPurple extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         HollowPurpleProjectile purple = new HollowPurpleProjectile(owner);
-        owner.level.addFreshEntity(purple);
+        owner.level().addFreshEntity(purple);
     }
 
     @Override

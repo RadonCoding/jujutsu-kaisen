@@ -32,7 +32,7 @@ public class MeteorEntity extends Entity {
     public static final int SIZE = 10;
     public static final int HEIGHT = 30;
 
-    private static final float DAMAGE = 40.0F;
+    private static final float DAMAGE = 50.0F;
     private static final int EXPLOSION_DURATION = (SIZE / 2) * 20;
     private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
     private static final float MAX_EXPLOSION = 20.0F;
@@ -59,7 +59,7 @@ public class MeteorEntity extends Entity {
     }
 
     public MeteorEntity(LivingEntity owner) {
-        this(JJKEntities.METEOR.get(), owner.level);
+        this(JJKEntities.METEOR.get(), owner.level());
 
         this.setOwner(owner);
 
@@ -93,8 +93,8 @@ public class MeteorEntity extends Entity {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -123,7 +123,7 @@ public class MeteorEntity extends Entity {
     }
 
     private float getFrictionInfluencedSpeed(float pFriction) {
-        return this.onGround ? 0.7F * (0.21600002F / (pFriction * pFriction * pFriction)) : 0.02F;
+        return this.onGround() ? 0.7F * (0.21600002F / (pFriction * pFriction * pFriction)) : 0.02F;
     }
 
     private Vec3 handleRelativeFrictionAndCalculateMovement(Vec3 pDeltaMovement, float pFriction) {
@@ -138,17 +138,17 @@ public class MeteorEntity extends Entity {
     }
 
     private void travel(Vec3 pTravelVector) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             double d0 = 0.08D;
 
             BlockPos blockpos = this.getBlockPosBelowThatAffectsMyMovement();
-            float f2 = this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getFriction(level, this.getBlockPosBelowThatAffectsMyMovement(), this);
-            float f3 = this.onGround ? f2 * 0.91F : 0.91F;
+            float f2 = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getFriction(this.level(), this.getBlockPosBelowThatAffectsMyMovement(), this);
+            float f3 = this.onGround() ? f2 * 0.91F : 0.91F;
             Vec3 vec35 = this.handleRelativeFrictionAndCalculateMovement(pTravelVector, f2);
             double d2 = vec35.y;
 
-            if (this.level.isClientSide && !this.level.hasChunkAt(blockpos)) {
-                if (this.getY() > (double)this.level.getMinBuildHeight()) {
+            if (this.level().isClientSide && !this.level().hasChunkAt(blockpos)) {
+                if (this.getY() > (double)this.level().getMinBuildHeight()) {
                     d2 = -0.1D;
                 } else {
                     d2 = 0.0D;
@@ -165,13 +165,13 @@ public class MeteorEntity extends Entity {
     }
 
     private void pushEntities() {
-        if (this.level.isClientSide()) {
-            this.level.getEntities(EntityTypeTest.forClass(Player.class), this.getBoundingBox(), EntitySelector.pushableBy(this)).forEach(this::doPush);
+        if (this.level().isClientSide()) {
+            this.level().getEntities(EntityTypeTest.forClass(Player.class), this.getBoundingBox(), EntitySelector.pushableBy(this)).forEach(this::doPush);
         } else {
-            List<Entity> entities = this.level.getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
+            List<Entity> entities = this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
 
             if (!entities.isEmpty()) {
-                int i = this.level.getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
+                int i = this.level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
 
                 if (i > 0 && entities.size() > i - 1 && this.random.nextInt(4) == 0) {
                     int j = 0;
@@ -215,7 +215,7 @@ public class MeteorEntity extends Entity {
             --this.lerpSteps;
             this.setPos(d0, d2, d4);
             this.setRot(this.getYRot(), this.getXRot());
-        } else if (!this.level.isClientSide) {
+        } else if (!this.level().isClientSide) {
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
         }
 
@@ -252,7 +252,7 @@ public class MeteorEntity extends Entity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -261,18 +261,18 @@ public class MeteorEntity extends Entity {
                 this.aiStep();
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (owner != null) {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         if (this.explosionTime == 0) {
-                            for (Entity entity : this.level.getEntities(owner, this.getBoundingBox().move(0.0D, -1.0D, 0.0D))) {
+                            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
                                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getGrade().getRealPower(owner));
                             }
                         }
 
-                        if (this.isOnGround()) {
+                        if (this.onGround()) {
                             if (this.explosionTime == 0) {
-                                ExplosionHandler.spawn(this.level.dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getRealPower(owner)),
+                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getRealPower(owner)),
                                         EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                                 this.explosionTime++;
                             }
@@ -284,10 +284,10 @@ public class MeteorEntity extends Entity {
                             } else {
                                 if (this.explosionTime < MAXIMUM_TIME / 4) {
                                     BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
-                                        BlockState state = this.level.getBlockState(pos);
+                                        BlockState state = this.level().getBlockState(pos);
 
                                         if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                            this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                                            this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                                         }
                                     });
                                 }
@@ -312,7 +312,7 @@ public class MeteorEntity extends Entity {
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        LivingEntity owner = (LivingEntity) this.level.getEntity(pPacket.getData());
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
 
         if (owner != null) {
             this.setOwner(owner);

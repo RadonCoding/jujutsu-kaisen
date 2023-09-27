@@ -49,7 +49,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     }
 
     public EmberInsectProjectile(LivingEntity pShooter, float xOffset, float yOffset) {
-        super(JJKEntities.EMBER_INSECT.get(), pShooter.level, pShooter);
+        super(JJKEntities.EMBER_INSECT.get(), pShooter.level(), pShooter);
 
         this.entityData.set(DATA_OFFSET_X, xOffset);
         this.entityData.set(DATA_OFFSET_Y, yOffset);
@@ -100,7 +100,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         Vec3 dir = this.getDeltaMovement().normalize();
 
@@ -112,15 +112,15 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
-                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), null, location,
+                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), null, location,
                         EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner), false,
-                        this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();

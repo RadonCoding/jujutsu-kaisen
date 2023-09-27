@@ -43,9 +43,9 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.getGameTime() % INTERVAL != 0) return;
+        if (owner.level().getGameTime() % INTERVAL != 0) return;
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
                 RikaEntity rika = ownerCap.getSummonByClass(level, RikaEntity.class);
 

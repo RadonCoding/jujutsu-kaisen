@@ -37,7 +37,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
         Vec3 look = HelperMethods.getLookAngle(owner);
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 96; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
                 double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
@@ -53,7 +53,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
-                for (Entity entity : owner.level.getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
+                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
                     if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                         entity.setSecondsOnFire(5);
                     }

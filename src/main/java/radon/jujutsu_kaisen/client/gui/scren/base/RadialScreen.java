@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -137,9 +138,9 @@ public abstract class RadialScreen extends Screen {
         super.onClose();
     }
 
-    public static void drawCenteredString(@NotNull PoseStack pPoseStack, Font pFont, Component pText, int pX, int pY, int pColor) {
+    public static void drawCenteredString(@NotNull GuiGraphics pGuiGraphics, Font pFont, Component pText, int pX, int pY, int pColor) {
         FormattedCharSequence sql = pText.getVisualOrderText();
-        pFont.drawShadow(pPoseStack, sql, (float)(pX - pFont.width(sql) / 2), (float)pY, pColor);
+        pGuiGraphics.drawString(pFont, sql, pX - pFont.width(sql) / 2, pY, pColor);
     }
 
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
@@ -189,8 +190,8 @@ public abstract class RadialScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
@@ -205,7 +206,7 @@ public abstract class RadialScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        pPoseStack.pushPose();
+        pGuiGraphics.pose().pushPose();
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
@@ -228,12 +229,12 @@ public abstract class RadialScreen extends Screen {
             } else {
                 color = this.hovered == i ? white : black;
             }
-            this.drawSlot(pPoseStack, buffer, centerX, centerY, startAngle, endAngle, color);
+            this.drawSlot(pGuiGraphics.pose(), buffer, centerX, centerY, startAngle, endAngle, color);
         }
 
         tesselator.end();
         RenderSystem.disableBlend();
-        pPoseStack.popPose();
+        pGuiGraphics.pose().popPose();
         float radius = (RADIUS_IN + RADIUS_OUT) / 2.0F;
 
         for (int i = 0; i < this.items.size(); i++) {
@@ -260,7 +261,7 @@ public abstract class RadialScreen extends Screen {
                         int duration = durationable.getRealDuration(this.minecraft.player);
 
                         if (duration > 0) {
-                            Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), duration / 20);
+                            Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), (float) duration / 20);
                             lines.add(durationText);
                         }
                     }
@@ -279,7 +280,7 @@ public abstract class RadialScreen extends Screen {
                 int y = this.height / 2 - this.font.lineHeight / 2 - ((lines.size() - 1) * this.font.lineHeight);
 
                 for (Component line : lines) {
-                    drawCenteredString(pPoseStack, this.font, line, x, y, 0xFFFFFF);
+                    drawCenteredString(pGuiGraphics, this.font, line, x, y, 0xFFFFFF);
                     y += this.font.lineHeight;
                 }
             }
@@ -293,23 +294,23 @@ public abstract class RadialScreen extends Screen {
 
                 float height = entity.getBbHeight();
                 int scale = (int) Math.max(3.0F, 10.0F - entity.getBbHeight());
-                renderEntityInInventoryFollowsAngle(pPoseStack, posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
+                renderEntityInInventoryFollowsAngle(pGuiGraphics.pose(), posX, (int) (posY + (height * scale / 2.0F)), scale, -1.0F, -0.5F, entity);
             } else if (item.type == DisplayItem.Type.ABILITY) {
                 int y = posY - this.font.lineHeight / 2;
 
-                pPoseStack.pushPose();
-                pPoseStack.scale(0.5F, 0.5F, 0.0F);
-                pPoseStack.translate(posX, y, 0.0F);
-                drawCenteredString(pPoseStack, this.font, item.ability.getName(), posX, y, 0xFFFFFF);
-                pPoseStack.popPose();
+                pGuiGraphics.pose().pushPose();
+                pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
+                pGuiGraphics.pose().translate(posX, y, 0.0F);
+                drawCenteredString(pGuiGraphics, this.font, item.ability.getName(), posX, y, 0xFFFFFF);
+                pGuiGraphics.pose().popPose();
             } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED) {
                 int y = posY - this.font.lineHeight / 2;
 
-                pPoseStack.pushPose();
-                pPoseStack.scale(0.5F, 0.5F, 0.0F);
-                pPoseStack.translate(posX, y, 0.0F);
-                drawCenteredString(pPoseStack, this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
-                pPoseStack.popPose();
+                pGuiGraphics.pose().pushPose();
+                pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
+                pGuiGraphics.pose().translate(posX, y, 0.0F);
+                drawCenteredString(pGuiGraphics, this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
+                pGuiGraphics.pose().popPose();
             }
         }
     }

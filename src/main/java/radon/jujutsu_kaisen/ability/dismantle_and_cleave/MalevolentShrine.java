@@ -33,19 +33,19 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        if (owner.level instanceof ServerLevel) {
-            BlockState state = owner.level.getBlockState(pos);
+        if (owner.level() instanceof ServerLevel) {
+            BlockState state = owner.level().getBlockState(pos);
 
-            owner.level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
+            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
                     1.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.5F);
 
-            if (owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                    owner.level.setBlock(pos, Blocks.AIR.defaultBlockState(),
+                    owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                     if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                        ((ServerLevel) owner.level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
+                        ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
                                 0.0D, 0.0D, 0.0D, 0.0D);
                     }
                 }
@@ -60,7 +60,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
             int height = this.getHeight();
 
             MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height);
-            owner.level.addFreshEntity(domain);
+            owner.level().addFreshEntity(domain);
 
             cap.setDomain(domain);
         });

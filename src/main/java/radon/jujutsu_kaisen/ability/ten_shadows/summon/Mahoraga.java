@@ -21,6 +21,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
+
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (this.isTamed(owner)) {
@@ -31,10 +32,10 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                        return ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
-                    }
-
-                    if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
+                        if (ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                            return true;
+                        }
+                    } else if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
                         return true;
                     }
                 }

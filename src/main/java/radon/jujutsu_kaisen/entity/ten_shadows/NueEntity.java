@@ -60,7 +60,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     public NueEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.NUE.get(), owner.level);
+        this(JJKEntities.NUE.get(), owner.level());
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -142,7 +142,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
@@ -186,12 +186,12 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    protected @NotNull Vec3 getRiddenInput(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        if (this.onGround) {
+    protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        if (this.onGround()) {
             return Vec3.ZERO;
         } else {
-            float f = pEntity.xxa * 0.5F;
-            float f1 = pEntity.zza;
+            float f = pPlayer.xxa * 0.5F;
+            float f1 = pPlayer.zza;
 
             if (f1 <= 0.0F) {
                 f1 *= 0.25F;
@@ -216,10 +216,10 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    protected void tickRidden(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        super.tickRidden(pEntity, pTravelVector);
+    protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        super.tickRidden(pPlayer, pTravelVector);
 
-        Vec2 vec2 = this.getRiddenRotation(pEntity);
+        Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 

@@ -59,7 +59,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     public GreatSerpentEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.GREAT_SERPENT.get(), owner.level);
+        super(JJKEntities.GREAT_SERPENT.get(), owner.level());
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -94,10 +94,10 @@ public class GreatSerpentEntity extends TenShadowsSummon {
             AABB bounds = i == 0 ? this.getBoundingBox() : this.segments[i - 1].getBoundingBox();
 
             BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                BlockState state = this.level.getBlockState(pos);
+                BlockState state = this.level().getBlockState(pos);
 
                 if (state.getFluidState().isEmpty() && !state.canOcclude()) {
-                    this.level.destroyBlock(pos, false);
+                    this.level().destroyBlock(pos, false);
                 }
             });
         }
@@ -133,7 +133,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     public void remove(@NotNull RemovalReason reason) {
         super.remove(reason);
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             for (GreatSerpentSegmentEntity seg : this.segments) {
                 seg.kill();
             }
@@ -186,8 +186,8 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
             this.yHeadRot = this.getYRot();
 
-            if (!this.level.isClientSide) {
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            if (!this.level().isClientSide) {
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
             }

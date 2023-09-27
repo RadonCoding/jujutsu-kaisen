@@ -21,7 +21,7 @@ public class RabbitEscapeEntity extends Rabbit {
     }
 
     public RabbitEscapeEntity(LivingEntity owner) {
-        this(JJKEntities.RABBIT_ESCAPE.get(), owner.level);
+        this(JJKEntities.RABBIT_ESCAPE.get(), owner.level());
 
         Vec3 pos = owner.position()
                 .subtract(HelperMethods.getLookAngle(owner)

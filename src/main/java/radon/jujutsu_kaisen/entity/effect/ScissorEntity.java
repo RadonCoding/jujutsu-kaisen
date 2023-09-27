@@ -38,7 +38,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     public ScissorEntity(LivingEntity pShooter, LivingEntity target) {
-        super(JJKEntities.SCISSOR.get(), pShooter.level, pShooter);
+        super(JJKEntities.SCISSOR.get(), pShooter.level(), pShooter);
 
         this.target = target;
 
@@ -78,7 +78,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if ((this.target == null || this.target.isRemoved() || !this.target.isAlive())) {
             this.discard();

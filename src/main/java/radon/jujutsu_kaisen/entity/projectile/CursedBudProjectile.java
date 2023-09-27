@@ -37,7 +37,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     }
 
     public CursedBudProjectile(LivingEntity pShooter) {
-        super(JJKEntities.CURSED_BUD.get(), pShooter.level, pShooter);
+        super(JJKEntities.CURSED_BUD.get(), pShooter.level(), pShooter);
 
         Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);

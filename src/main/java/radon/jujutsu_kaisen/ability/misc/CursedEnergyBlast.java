@@ -39,7 +39,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
 
         Vec3 look = HelperMethods.getLookAngle(owner);
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(2.0D));
 
             ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), 2.0F, 0.1F, true, (int) RANGE / 2);
@@ -58,7 +58,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 range = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
-                for (Entity entity : owner.level.getEntities(owner, AABB.ofSize(range, RANGE, RANGE, RANGE))) {
+                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(range, RANGE, RANGE, RANGE))) {
                     entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner));
                 }
             });
@@ -77,12 +77,7 @@ public class CursedEnergyBlast extends Ability implements Ability.IChannelened, 
 
     @Override
     public int getDuration() {
-        return 10;
-    }
-
-    @Override
-    public boolean isTechnique() {
-        return true;
+        return 5;
     }
 
     @Override

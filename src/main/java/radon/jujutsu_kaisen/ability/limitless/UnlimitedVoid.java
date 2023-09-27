@@ -51,7 +51,7 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
             int radius = this.getRadius();
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
-            owner.level.addFreshEntity(domain);
+            owner.level().addFreshEntity(domain);
 
             cap.setDomain(domain);
         });

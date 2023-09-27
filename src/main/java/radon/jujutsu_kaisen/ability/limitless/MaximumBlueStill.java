@@ -24,7 +24,7 @@ public class MaximumBlueStill extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, false);
-        owner.level.addFreshEntity(blue);
+        owner.level().addFreshEntity(blue);
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +32,11 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
     }
 
     @Override
-    public void render(ForestWaveEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        BlockState state = pEntity.getState();
+    public void render(@NotNull ForestWaveEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        BlockState state = Blocks.OAK_WOOD.defaultBlockState();
 
         if (state.getRenderShape() == RenderShape.MODEL) {
-            Level level = pEntity.getLevel();
+            Level level = pEntity.level();
 
             if (state != level.getBlockState(pEntity.blockPosition()) && state.getRenderShape() != RenderShape.INVISIBLE) {
                 pPoseStack.pushPose();

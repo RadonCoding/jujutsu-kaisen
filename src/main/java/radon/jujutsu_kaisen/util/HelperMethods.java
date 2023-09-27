@@ -61,7 +61,7 @@ public class HelperMethods {
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, boolean hasToBePickable) {
-        Level level = entity.level;
+        Level level = entity.level();
 
         HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
 

@@ -49,7 +49,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     }
 
     public DivineDogTotalityEntity(LivingEntity owner) {
-        super(JJKEntities.DIVINE_DOG_TOTALITY.get(), owner.level);
+        super(JJKEntities.DIVINE_DOG_TOTALITY.get(), owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
@@ -91,9 +91,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
+    protected void customServerAiStep() {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 

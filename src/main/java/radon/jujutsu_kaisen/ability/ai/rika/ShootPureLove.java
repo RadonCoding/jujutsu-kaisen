@@ -22,7 +22,7 @@ public class ShootPureLove extends Ability {
     @Override
     public void run(LivingEntity owner) {
         PureLoveBeam beam = new PureLoveBeam(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
-        owner.level.addFreshEntity(beam);
+        owner.level().addFreshEntity(beam);
     }
 
     @Override

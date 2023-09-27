@@ -22,7 +22,7 @@ public class ReleaseShikigami extends Ability {
 
             List<TenShadowsSummon> summons = new ArrayList<>();
 
-            for (Entity entity : cap.getSummons((ServerLevel) owner.level)) {
+            for (Entity entity : cap.getSummons((ServerLevel) owner.level())) {
                 if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
             }
             return summons.size() > 0;
@@ -37,10 +37,10 @@ public class ReleaseShikigami extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Entity entity : cap.getSummons((ServerLevel) owner.level)) {
+            for (Entity entity : cap.getSummons((ServerLevel) owner.level())) {
                 if (!(entity instanceof TenShadowsSummon summon && summon.isTame())) continue;
                 summon.discard();
             }

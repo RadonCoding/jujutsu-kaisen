@@ -2,23 +2,19 @@ package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -32,12 +28,12 @@ import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.model.entity.YujiItadoriModel;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
-import radon.jujutsu_kaisen.client.render.entity.*;
+import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
+import radon.jujutsu_kaisen.client.render.entity.MalevolentShrineRenderer;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
@@ -47,7 +43,6 @@ import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
@@ -179,7 +174,7 @@ public class JJKClientEventHandler {
     public static class ModEvents {
         @SubscribeEvent
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
-            event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMaterialColor().col,
+            event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMapColor().col,
                     JJKBlocks.VEIL.get());
         }
 
@@ -311,7 +306,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAXIMUM_UZUMAKI.get(), MaximumUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.MINI_UZUMAKI.get(), MiniUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), HollowPurpleExplosionRenderer::new);
-            event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
             event.registerEntityRenderer(JJKEntities.WATERBALL.get(), WaterballRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_SHIKIGAMI.get(), EelShikigamiRenderer::new);
@@ -325,6 +319,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.WOOD_SHIELD.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_BUD.get(), CursedBudRenderer::new);
             event.registerEntityRenderer(JJKEntities.FOREST_WAVE.get(), ForestWaveRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.LAVA_ROCK.get(), LavaRockRenderer::new);
+            event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
         }
 
         @SubscribeEvent
@@ -339,79 +336,6 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
             JJKShaders.onRegisterShaders(event);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterCreativeModeTabs(CreativeModeTabEvent.Register event) {
-            event.registerCreativeModeTab(new ResourceLocation(JujutsuKaisen.MOD_ID),
-                    builder -> builder.icon(() -> new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()))
-                            .title(Component.translatable(String.format("itemGroup.%s", JujutsuKaisen.MOD_ID)))
-                            .displayItems((pParameters, pOutput) -> {
-                                pOutput.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
-                                pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
-                                pOutput.accept(JJKItems.SPLIT_SOUL_KATANA.get());
-                                pOutput.accept(JJKItems.CHAIN.get());
-                                pOutput.accept(JJKItems.NYOI_STAFF.get());
-                                pOutput.accept(JJKItems.SLAUGHTER_DEMON.get());
-                                pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
-
-                                pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
-                                pOutput.accept(JJKItems.INVENTORY_CURSE.get());
-
-                                pOutput.accept(JJKItems.SATORU_BLINDFOLD.get());
-                                pOutput.accept(JJKItems.SATORU_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.SATORU_LEGGINGS.get());
-                                pOutput.accept(JJKItems.SATORU_BOOTS.get());
-
-                                pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.YUJI_LEGGINGS.get());
-                                pOutput.accept(JJKItems.YUJI_BOOTS.get());
-
-                                pOutput.accept(JJKItems.MEGUMI_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.MEGUMI_LEGGINGS.get());
-                                pOutput.accept(JJKItems.MEGUMI_BOOTS.get());
-
-                                pOutput.accept(JJKItems.TOGE_HELMET.get());
-                                pOutput.accept(JJKItems.TOGE_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.TOGE_LEGGINGS.get());
-                                pOutput.accept(JJKItems.TOGE_BOOTS.get());
-
-                                pOutput.accept(JJKItems.YUTA_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.YUTA_LEGGINGS.get());
-                                pOutput.accept(JJKItems.YUTA_BOOTS.get());
-
-                                pOutput.accept(JJKItems.SUGURU_CHESTPLATE.get());
-                                pOutput.accept(JJKItems.SUGURU_LEGGINGS.get());
-                                pOutput.accept(JJKItems.SUGURU_BOOTS.get());
-
-                                pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.SUKUNA_RYOMEN_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.MEGUMI_FUSHIGURO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.TOJI_ZENIN_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.MEGUNA_RYOMEN_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.YUJI_IDATORI_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.SUGURU_GETO_SPAWN_EGG.get());
-
-                                pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());
-
-                                pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.FISH_CURSE_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.CYCLOPS_CURSE_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.KUCHISAKE_ONNA_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.ZOMBA_CURSE_SPAWN_EGG.get());
-                                pOutput.accept(JJKItems.WORM_CURSE_SPAWN_EGG.get());
-
-                                pOutput.accept(JJKItems.DISPLAY_CASE.get());
-                                pOutput.accept(JJKItems.ALTAR.get());
-                                pOutput.accept(JJKItems.VEIL_ROD.get());
-
-                                pOutput.accept(JJKItems.SUKUNA_FINGER.get());
-                                pOutput.accept(JJKItems.CURSED_TOTEM.get());
-                            }));
         }
     }
 }

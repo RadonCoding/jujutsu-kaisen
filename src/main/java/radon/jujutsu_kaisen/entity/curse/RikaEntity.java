@@ -65,7 +65,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     public RikaEntity(LivingEntity owner) {
-        this(JJKEntities.RIKA.get(), owner.level);
+        this(JJKEntities.RIKA.get(), owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
@@ -169,10 +169,10 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         AABB bounds = this.getBoundingBox();
 
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level.getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
             if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level.destroyBlock(pos, false);
+                this.level().destroyBlock(pos, false);
             }
         });
     }
@@ -181,7 +181,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
                 (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, JJKAbilities.RIKA.get())))) {
             this.discard();
         } else {
@@ -207,11 +207,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 this.yHeadRotO = this.yHeadRot;
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (this.getTime() >= DURATION) {
                     this.discard();
                 }
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
             }

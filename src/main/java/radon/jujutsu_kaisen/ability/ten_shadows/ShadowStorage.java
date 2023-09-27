@@ -32,10 +32,10 @@ public class ShadowStorage extends Ability {
 
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < owner.getBbHeight() * owner.getBbHeight(); j++) {
-                owner.level.addParticle(ParticleTypes.SMOKE, owner.getX() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F), owner.getY(),
+                owner.level().addParticle(ParticleTypes.SMOKE, owner.getX() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F), owner.getY(),
                         owner.getZ() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
                         HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D, HelperMethods.RANDOM.nextGaussian() * 0.075D);
-                owner.level.addParticle(ParticleTypes.LARGE_SMOKE, owner.getX() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F), owner.getY(),
+                owner.level().addParticle(ParticleTypes.LARGE_SMOKE, owner.getX() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F), owner.getY(),
                         owner.getZ() + (owner.getBbWidth() * HelperMethods.RANDOM.nextGaussian() * 0.1F),
                         HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D, HelperMethods.RANDOM.nextGaussian() * 0.075D);
             }
@@ -48,7 +48,7 @@ public class ShadowStorage extends Ability {
                 cap.addShadowInventory(owner.getMainHandItem());
                 owner.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             });
-        } else if (owner.level.isClientSide) {
+        } else if (owner.level().isClientSide) {
             ClientWrapper.openShadowInventory();
         }
     }

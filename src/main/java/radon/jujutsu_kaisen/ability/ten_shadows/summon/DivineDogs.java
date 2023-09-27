@@ -52,26 +52,26 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         return cap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override
     public void spawn(LivingEntity owner, boolean clone) {
-        if (!owner.level.isClientSide) {
+        if (!owner.level().isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+                Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
                 if (!cap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get())) {
                     DivineDogWhiteEntity white = new DivineDogWhiteEntity(owner, false);
                     white.setClone(clone);
-                    owner.level.addFreshEntity(white);
+                    owner.level().addFreshEntity(white);
                     cap.addSummon(white);
                 }
                 if (!cap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get())) {
                     DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
                     black.setClone(clone);
-                    owner.level.addFreshEntity(black);
+                    owner.level().addFreshEntity(black);
                     cap.addSummon(black);
                 }
             });
@@ -80,10 +80,10 @@ public class DivineDogs extends Summon<DivineDogEntity> {
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        if (!owner.level.isClientSide) {
+        if (!owner.level().isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                cap.unsummonByClass((ServerLevel) owner.level, DivineDogWhiteEntity.class);
-                cap.unsummonByClass((ServerLevel) owner.level, DivineDogBlackEntity.class);
+                cap.unsummonByClass((ServerLevel) owner.level(), DivineDogWhiteEntity.class);
+                cap.unsummonByClass((ServerLevel) owner.level(), DivineDogBlackEntity.class);
 
                 if (owner instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

@@ -132,6 +132,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.ZOMBA_CURSE, 0x72AEB3, 0xB49E6A, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> WORM_CURSE_SPAWN_EGG = ITEMS.register("worm_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.WORM_CURSE, 0xCAC7BF, 0x4B8355, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> FELINE_CURSE_SPAWN_EGG = ITEMS.register("feline_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.FELINE_CURSE, 0x79592D, 0x481F0D, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

@@ -42,7 +42,7 @@ public class RequestVisualDataC2SPacket {
 
             assert sender != null;
 
-            LivingEntity target = (LivingEntity) sender.getLevel().getEntity(this.src);
+            LivingEntity target = (LivingEntity) sender.serverLevel().getEntity(this.src);
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {

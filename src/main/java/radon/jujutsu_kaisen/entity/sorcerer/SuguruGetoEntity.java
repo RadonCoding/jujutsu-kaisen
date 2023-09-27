@@ -70,13 +70,13 @@ public class SuguruGetoEntity extends SorcererEntity {
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
-            if (type.create(this.level) instanceof ISorcerer sorcerer && sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
+            if (type.create(this.level()) instanceof ISorcerer sorcerer && sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 for (int i = 0; i < SorcererGrade.values().length - sorcerer.getGrade().ordinal(); i++) {
-                    data.addCurse(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
+                    data.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
                 }
             }
         }
-        data.addCurse(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.KUCHISAKE_ONNA.get());
+        data.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.KUCHISAKE_ONNA.get());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class SuguruGetoEntity extends SorcererEntity {
         if (target != null && this.random.nextInt(20) == 0) {
             ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            Registry<EntityType<?>> registry = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
 
             if (!curses.isEmpty()) {

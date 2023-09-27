@@ -66,7 +66,7 @@ public class ZombaCurseEntity extends CursedSpirit {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (!this.level.isClientSide && pSource.getEntity() instanceof LivingEntity) {
+        if (!this.level().isClientSide && pSource.getEntity() instanceof LivingEntity) {
             AbilityHandler.trigger(this, JJKAbilities.TELEPORT_RANDOM.get());
         }
         return super.hurt(pSource, pAmount);

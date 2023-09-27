@@ -78,7 +78,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
     }
 
     public MiniUzumakiProjectile(LivingEntity pShooter) {
-        this(JJKEntities.MINI_UZUMAKI.get(), pShooter.level);
+        this(JJKEntities.MINI_UZUMAKI.get(), pShooter.level());
 
         this.setOwner(pShooter);
 
@@ -87,14 +87,14 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
 
         pShooter.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            Registry<EntityType<?>> registry = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
             Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
 
             CursedSpirit current = null;
 
             for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
-                Entity entity = entry.getKey().create(this.level);
+                Entity entity = entry.getKey().create(this.level());
                 if (!(entity instanceof CursedSpirit curse)) continue;
                 if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
                 if (current == null || curse.getGrade().ordinal() > current.getGrade().ordinal()) current = curse;
@@ -143,7 +143,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             this.yo = this.getY();
             this.zo = this.getZ();
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.update();
             }
 
@@ -174,8 +174,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MINI_UZUMAKI.get()), DAMAGE * this.power);
             }
 
-            if (!this.level.isClientSide) {
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            if (!this.level().isClientSide) {
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     double radius = SCALE * 2.0F;
 
                     AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
@@ -188,13 +188,13 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                         for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                             for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                                 BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = this.level.getBlockState(pos);
+                                BlockState state = this.level().getBlockState(pos);
 
                                 double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                                 if (distance <= radius) {
                                     if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                        this.level.destroyBlock(pos, false);
+                                        this.level().destroyBlock(pos, false);
                                     }
                                 }
                             }
@@ -238,7 +238,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
     }
 
     private void calculateEndPos() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             this.endPosX = this.getX() + RADIUS * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
             this.endPosZ = this.getZ() + RADIUS * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
             this.endPosY = this.getY() + RADIUS * Math.sin(this.renderPitch);
@@ -250,7 +250,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
     }
 
     public List<Entity> checkCollisions(Vec3 from, Vec3 to) {
-        BlockHitResult result = this.level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        BlockHitResult result = this.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
@@ -271,7 +271,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
                 .inflate(SCALE);
 
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);

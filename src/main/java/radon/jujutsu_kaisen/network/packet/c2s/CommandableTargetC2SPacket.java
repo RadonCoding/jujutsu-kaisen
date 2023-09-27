@@ -41,7 +41,7 @@ public class CommandableTargetC2SPacket {
             assert player != null;
 
             player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                ServerLevel level = player.getLevel();
+                ServerLevel level = player.serverLevel();
                 LivingEntity target = (LivingEntity) level.getEntity(this.target);
 
                 if (target == null) return;

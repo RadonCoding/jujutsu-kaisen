@@ -32,7 +32,7 @@ public class SixEyesOverlay {
         current = new AbstractMap.SimpleEntry<>(identifier, data);
     }
 
-    public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
+    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
 
         assert mc.level != null;
@@ -84,7 +84,7 @@ public class SixEyesOverlay {
                             int y = height - 20 - ((lines.size() - 1) * mc.font.lineHeight + 2);
 
                             for (Component line : lines) {
-                                mc.font.drawShadow(poseStack, line, x, y, 53503);
+                                graphics.drawString(gui.getFont(), line, x, y, 53503);
                                 y += mc.font.lineHeight;
                             }
                         } else {

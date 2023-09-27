@@ -54,7 +54,7 @@ public class SwitchMode extends Ability {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             cap.setMode(cap.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);
 
-            if (!owner.level.isClientSide && owner instanceof Player) {
+            if (!owner.level().isClientSide && owner instanceof Player) {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.switch_mode", JujutsuKaisen.MOD_ID), cap.getMode().name().toLowerCase()));
             }
         });

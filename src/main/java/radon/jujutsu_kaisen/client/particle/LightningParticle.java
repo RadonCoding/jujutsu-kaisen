@@ -29,7 +29,7 @@ public class LightningParticle extends TextureSheetParticle {
         this.bCol = color.z();
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());;
-        this.lifetime = 10;
+        this.lifetime = options.lifetime();
 
         this.sprites = pSprites;
 
@@ -63,16 +63,16 @@ public class LightningParticle extends TextureSheetParticle {
         return j | k << 16;
     }
 
-    public record LightningParticleOptions(Vector3f color, float scalar) implements ParticleOptions {
+    public record LightningParticleOptions(Vector3f color, float scalar, int lifetime) implements ParticleOptions {
         public static Deserializer<LightningParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull LightningParticleOptions fromCommand(@NotNull ParticleType<LightningParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f color = LightningParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new LightningParticleOptions(color, reader.readFloat());
+                return new LightningParticleOptions(color, reader.readFloat(), reader.readInt());
             }
 
             public @NotNull LightningParticleOptions fromNetwork(@NotNull ParticleType<LightningParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new LightningParticleOptions(LightningParticleOptions.readColorFromNetwork(buf), buf.readFloat());
+                return new LightningParticleOptions(LightningParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readInt());
             }
         };
 
@@ -101,12 +101,13 @@ public class LightningParticle extends TextureSheetParticle {
             buf.writeFloat(this.color.y());
             buf.writeFloat(this.color.z());
             buf.writeFloat(this.scalar);
+            buf.writeInt(this.lifetime);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.scalar);
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+                    this.color.x(), this.color.y(), this.color.z(), this.scalar, this.lifetime);
         }
     }
 

@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +15,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 public class CursedEnergyOverlay {
     public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
 
-    public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
+    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         LocalPlayer player = gui.getMinecraft().player;
 
         assert player != null;
@@ -31,21 +30,20 @@ public class CursedEnergyOverlay {
             Vector3f color = cap.isInZone(player) ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
                     ParticleColors.CURSED_ENERGY_SORCERER_COLOR : ParticleColors.CURSED_ENERGY_CURSE_COLOR;
             RenderSystem.setShaderColor(color.x(), color.y(), color.z(), 1.0F);
-            RenderSystem.setShaderTexture(0, TEXTURE);
 
-            GuiComponent.blit(poseStack, 20, 20, 0, 0, 93, 9, 93, 16);
+            graphics.blit(TEXTURE, 20, 20, 0, 0, 93, 9, 93, 16);
 
             float maxEnergy = cap.getMaxEnergy();
             float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
-            GuiComponent.blit(poseStack, 20, 21, 0, 9, (int) energyWidth, 7, 93, 16);
+            graphics.blit(TEXTURE, 20, 21, 0, 9, (int) energyWidth, 7, 93, 16);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            poseStack.pushPose();
-            poseStack.scale(0.5F, 0.5F, 0.5F);
-            gui.getFont().drawShadow(poseStack, String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                    (20.0F * 2.0F) + 5.0F, (20.0F * 2.0F) + 5.5F, 16777215);
-            poseStack.popPose();
+            graphics.pose().pushPose();
+            graphics.pose().scale(0.5F, 0.5F, 0.5F);
+            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
+                    (20 * 2) + 5, (20 * 2) + 5, 16777215);
+            graphics.pose().popPose();
 
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();

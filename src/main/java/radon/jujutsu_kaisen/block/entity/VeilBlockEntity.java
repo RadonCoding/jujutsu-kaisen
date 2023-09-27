@@ -77,7 +77,7 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public boolean isBlacklisted(Entity entity) {
-        if (!(entity.level.getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        if (!(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
 
         if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
 
@@ -90,7 +90,7 @@ public class VeilBlockEntity extends BlockEntity {
                 }
             }
         } else {
-            Registry<EntityType<?>> registry = entity.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = entity.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             ResourceLocation key = registry.getKey(entity.getType());
 
             if (key != null) {
@@ -115,7 +115,7 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public boolean isWhitelisted(Entity entity) {
-        if (!(entity.level.getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        if (!(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
         if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
 
         if (entity instanceof Player player) {
@@ -126,7 +126,7 @@ public class VeilBlockEntity extends BlockEntity {
                 }
             }
         } else {
-            Registry<EntityType<?>> registry = entity.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = entity.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             ResourceLocation key = registry.getKey(entity.getType());
 
             if (key != null) {

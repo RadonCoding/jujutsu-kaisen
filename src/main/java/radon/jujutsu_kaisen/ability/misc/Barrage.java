@@ -32,7 +32,7 @@ public class Barrage extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (int i = 0; i < 8; i++) {
                     cap.delayTickEvent(() -> {
@@ -51,11 +51,11 @@ public class Barrage extends Ability {
                                     offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
                                     0, speed.x(), speed.y(), speed.z(), 1.0D);
                         }
-                        owner.level.playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+                        owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
                         Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
-                        for (Entity entity : owner.level.getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
+                        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
                             if (owner instanceof Player player) {
                                 player.attack(entity);
                             } else {

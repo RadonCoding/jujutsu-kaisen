@@ -23,7 +23,7 @@ public class CommandPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

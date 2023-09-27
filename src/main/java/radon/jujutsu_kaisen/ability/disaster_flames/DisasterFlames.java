@@ -14,6 +14,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -62,9 +63,9 @@ public class DisasterFlames extends Ability {
             double offsetY = y + speed.y();
             double offsetZ = z + speed.z();
 
-            ((ServerLevel) entity.level).sendParticles((ParticleOptions) ParticleTypes.FLAME, offsetX, offsetY, offsetZ, 0,
+            ((ServerLevel) entity.level()).sendParticles((ParticleOptions) ParticleTypes.FLAME, offsetX, offsetY, offsetZ, 0,
                     speed.x(), speed.y(), speed.z(), 1.0D);
-            entity.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+            entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
         }
     }
 
@@ -77,7 +78,7 @@ public class DisasterFlames extends Ability {
     }
 
     private List<Entity> getTargets(LivingEntity owner) {
-        List<Entity> entities = owner.level.getEntities(owner, owner.getBoundingBox().inflate(AOE_RANGE));
+        List<Entity> entities = owner.level().getEntities(owner, owner.getBoundingBox().inflate(AOE_RANGE));
         entities.removeIf(entity -> (entity instanceof LivingEntity living && !owner.canAttack(living)));
         return entities;
     }
@@ -94,7 +95,7 @@ public class DisasterFlames extends Ability {
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                         entity.setSecondsOnFire(5);
 
-                        if (!owner.level.isClientSide) {
+                        if (!owner.level().isClientSide) {
                             this.spawnParticles(entity, 32);
                         }
                     }
@@ -103,7 +104,7 @@ public class DisasterFlames extends Ability {
                 if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getGrade().getRealPower(owner))) {
                     target.setSecondsOnFire(10);
 
-                    if (!owner.level.isClientSide) {
+                    if (!owner.level().isClientSide) {
                         this.spawnParticles(target, 64);
                     }
                 }
@@ -119,5 +120,10 @@ public class DisasterFlames extends Ability {
     @Override
     public int getCooldown() {
         return 15 * 20;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

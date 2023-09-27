@@ -24,7 +24,7 @@ public class CursedBud extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         CursedBudProjectile bud = new CursedBudProjectile(owner);
-        owner.level.addFreshEntity(bud);
+        owner.level().addFreshEntity(bud);
     }
 
     @Override

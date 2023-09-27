@@ -39,12 +39,12 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        if (owner.level.getGameTime() % 20 == 0) {
+        if (owner.level().getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.FISH_SHIKIGAMI.get()), DAMAGE * cap.getGrade().getRealPower(owner)));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getGrade().getRealPower(owner)));
 
-            if (owner.level.getGameTime() % 3 * 20 == 0) {
-                Ability fish = JJKAbilities.FISH_SHIKIGAMI.get();
+            if (owner.level().getGameTime() % 3 * 20 == 0) {
+                Ability fish = JJKAbilities.DEATH_SWARM.get();
                 ((IDomainAttack) fish).perform(owner, domain, entity);
             }
         }
@@ -61,7 +61,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
             int radius = this.getRadius();
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
-            owner.level.addFreshEntity(domain);
+            owner.level().addFreshEntity(domain);
 
             cap.setDomain(domain);
         });

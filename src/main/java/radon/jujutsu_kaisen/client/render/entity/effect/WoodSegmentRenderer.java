@@ -46,7 +46,8 @@ public class WoodSegmentRenderer extends EntityRenderer<WoodSegmentEntity> {
         BakedModel model = this.dispatcher.getBlockModel(state);
 
         for (RenderType tyoe : model.getRenderTypes(state, RandomSource.create(state.getSeed(pEntity.blockPosition())), EMPTY)) {
-            this.dispatcher.getModelRenderer().tesselateBlock(pEntity.getLevel(), model, state, pos, pPoseStack, pBuffer.getBuffer(tyoe), false, RandomSource.create(), state.getSeed(pEntity.blockPosition()), OverlayTexture.NO_OVERLAY, EMPTY, tyoe);
+            this.dispatcher.getModelRenderer().tesselateBlock(pEntity.level(), model, state, pos, pPoseStack, pBuffer.getBuffer(tyoe), false,
+                    RandomSource.create(), state.getSeed(pEntity.blockPosition()), OverlayTexture.NO_OVERLAY, EMPTY, tyoe);
         }
         pPoseStack.popPose();
     }

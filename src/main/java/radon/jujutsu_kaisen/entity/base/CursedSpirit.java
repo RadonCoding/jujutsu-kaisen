@@ -67,12 +67,12 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     }
 
     private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
 
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
+            if (((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
                 success = true;
                 break;
             }
@@ -81,15 +81,15 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     }
 
     private boolean isInFortress() {
-        Structure structure = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
+        Structure structure = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
         if (structure == null) return false;
-        return ((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), structure) != StructureStart.INVALID_START;
+        return ((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), structure) != StructureStart.INVALID_START;
     }
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getBasePower()) / (this.level.isNight() ? 2 : 1)) != 0) return false;
+            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getBasePower()) / (this.level().isNight() ? 2 : 1)) != 0) return false;
 
             if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 if (!this.isInVillage() && !this.isInFortress()) return false;
@@ -160,7 +160,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 
-        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker)) {
+        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
             this.setTarget(attacker);
         }
     }
@@ -176,8 +176,8 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -289,7 +289,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        LivingEntity owner = (LivingEntity) this.level.getEntity(pPacket.getData());
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
 
         if (owner != null) {
             this.setOwner(owner);
