@@ -23,7 +23,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
+        return !owner.level().getEntities(owner, owner.getBoundingBox().inflate(3.0D),
                 entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty();
     }
 

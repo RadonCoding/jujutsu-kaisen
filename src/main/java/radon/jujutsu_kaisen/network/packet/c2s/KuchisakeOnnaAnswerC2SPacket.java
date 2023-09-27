@@ -32,7 +32,7 @@ public class KuchisakeOnnaAnswerC2SPacket {
 
             assert player != null;
 
-            ServerLevel level = player.getLevel();
+            ServerLevel level = player.serverLevel();
 
             if (level.getEntity(this.identifier) instanceof KuchisakeOnnaEntity curse) {
                 curse.attack();

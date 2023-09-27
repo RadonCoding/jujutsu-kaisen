@@ -77,10 +77,10 @@ public class WormCurseEntity extends CursedSpirit {
             AABB bounds = i == 0 ? this.getBoundingBox() : this.segments[i - 1].getBoundingBox();
 
             BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                BlockState state = this.level.getBlockState(pos);
+                BlockState state = this.level().getBlockState(pos);
 
                 if (state.getFluidState().isEmpty() && !state.canOcclude()) {
-                    this.level.destroyBlock(pos, false);
+                    this.level().destroyBlock(pos, false);
                 }
             });
         }
@@ -116,7 +116,7 @@ public class WormCurseEntity extends CursedSpirit {
     public void remove(@NotNull RemovalReason reason) {
         super.remove(reason);
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             for (WormCurseSegmentEntity seg : this.segments) {
                 seg.kill();
             }
@@ -169,8 +169,8 @@ public class WormCurseEntity extends CursedSpirit {
 
             this.yHeadRot = this.getYRot();
 
-            if (!this.level.isClientSide) {
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            if (!this.level().isClientSide) {
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     this.breakBlocks();
                 }
             }
@@ -184,14 +184,14 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 2 * 0.32D)
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 3 * 0.32D)
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
 
     @Override
     public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_1;
+        return SorcererGrade.GRADE_2;
     }
 
     @Override

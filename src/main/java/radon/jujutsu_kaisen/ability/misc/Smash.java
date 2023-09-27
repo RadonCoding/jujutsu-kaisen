@@ -44,7 +44,7 @@ public class Smash extends Ability {
 
             Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 
-            if (!owner.level.isClientSide) {
+            if (!owner.level().isClientSide) {
                 float f2 = radius * 2.0F;
                 int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);
                 int l1 = Mth.floor(explosionPos.x() + (double) f2 + 1.0D);
@@ -52,7 +52,7 @@ public class Smash extends Ability {
                 int i1 = Mth.floor(explosionPos.y() + (double) f2 + 1.0D);
                 int j2 = Mth.floor(explosionPos.z() - (double) f2 - 1.0D);
                 int j1 = Mth.floor(explosionPos.z() + (double) f2 + 1.0D);
-                List<Entity> entities = owner.level.getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
+                List<Entity> entities = owner.level().getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
 
                 for (Entity entity : entities) {
                     if (!entity.ignoreExplosion()) {
@@ -88,8 +88,8 @@ public class Smash extends Ability {
                         }
                     }
                 }
-                owner.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false,
-                        owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false,
+                        owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             }
         });
     }

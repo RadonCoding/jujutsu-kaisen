@@ -45,7 +45,7 @@ public class Die extends Ability {
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level.getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+        return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
 
     private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
@@ -82,7 +82,7 @@ public class Die extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         Vec3 look = HelperMethods.getLookAngle(owner);
 
@@ -90,10 +90,10 @@ public class Die extends Ability {
 
         for (int i = 1; i < RANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
-            ((ServerLevel) owner.level).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
         }
 
-        owner.level.playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
             ownerCap.delayTickEvent(() -> {

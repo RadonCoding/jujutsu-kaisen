@@ -13,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +40,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 10.0F;
     private static final int DELAY = 20;
     private static final int BITE_DURATION = 5;
     private static final double SPEED = 2.0D;
@@ -51,12 +50,14 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     @Nullable
     private LivingEntity cachedTarget;
 
+    private int deathTime;
+
     public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity owner, LivingEntity target, float xOffset, float yOffset) {
-        super(pEntityType, owner.level, owner);
+        super(pEntityType, owner.level(), owner);
 
         this.setTarget(target);
 
@@ -77,8 +78,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public LivingEntity getTarget() {
         if (this.cachedTarget != null && !this.cachedTarget.isRemoved()) {
             return this.cachedTarget;
-        } else if (this.targetUUID != null && this.level instanceof ServerLevel) {
-            this.cachedTarget = (LivingEntity) ((ServerLevel) this.level).getEntity(this.targetUUID);
+        } else if (this.targetUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedTarget = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.targetUUID);
             return this.cachedTarget;
         } else {
             return null;
@@ -98,6 +99,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
+        pCompound.putInt("death_time", this.deathTime);
         pCompound.putFloat("x_offset", this.entityData.get(DATA_OFFSET_X));
         pCompound.putFloat("y_offset", this.entityData.get(DATA_OFFSET_Y));
 
@@ -110,19 +112,13 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
+        this.deathTime = pCompound.getInt("death_time");
         this.entityData.set(DATA_OFFSET_X, pCompound.getFloat("x_offset"));
         this.entityData.set(DATA_OFFSET_Y, pCompound.getFloat("y_offset"));
 
         if (pCompound.hasUUID("target")) {
             this.targetUUID = pCompound.getUUID("target");
         }
-    }
-
-    @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-
-        this.discard();
     }
 
     @Override
@@ -166,11 +162,14 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
-                    if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FISH_SHIKIGAMI.get()),
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                    if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()),
                             DAMAGE * cap.getGrade().getRealPower(owner));
-                    this.entityData.set(DATA_BITE, BITE_DURATION);
+
+                    if (this.deathTime == 0) {
+                        this.deathTime = BITE_DURATION;
+                    }
                 }
             });
         }
@@ -180,10 +179,12 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public void tick() {
         super.tick();
 
-        int bite = this.entityData.get(DATA_BITE);
+        if (!this.level().isClientSide) {
+            int bite = this.entityData.get(DATA_BITE);
 
-        if (bite > 0) {
-            this.entityData.set(DATA_BITE, --bite);
+            if (bite > 0) {
+                this.entityData.set(DATA_BITE, --bite);
+            }
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
@@ -197,17 +198,21 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                     this.applyOffset();
                 }
             } else if (this.getTime() >= DELAY) {
+                this.hurtEntities();
                 this.applyRotation();
 
-                if (!this.level.isClientSide) {
-                    this.hurtEntities();
-
-                    LivingEntity target = this.getTarget();
-
-                    if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
-                        this.setDeltaMovement(target.position().subtract(this.position()).normalize().scale(SPEED));
-                    } else {
+                if (!this.level().isClientSide) {
+                    if (this.deathTime > 0 && --this.deathTime == 0) {
                         this.discard();
+                    } else {
+                        LivingEntity target = this.getTarget();
+
+                        if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
+                            this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
+                                    .subtract(this.position()).normalize().scale(SPEED));
+                        } else {
+                            this.discard();
+                        }
                     }
                 }
             }

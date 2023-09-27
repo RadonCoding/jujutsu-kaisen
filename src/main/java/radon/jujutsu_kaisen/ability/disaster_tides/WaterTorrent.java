@@ -25,7 +25,7 @@ public class WaterTorrent extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         WaterTorrentEntity torrent = new WaterTorrentEntity(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
-        owner.level.addFreshEntity(torrent);
+        owner.level().addFreshEntity(torrent);
     }
 
     @Override

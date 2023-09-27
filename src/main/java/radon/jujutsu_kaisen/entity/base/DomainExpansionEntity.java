@@ -41,7 +41,7 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability) {
-        super(pEntityType, owner.level);
+        super(pEntityType, owner.level());
 
         this.setOwner(owner);
 
@@ -79,8 +79,8 @@ public abstract class DomainExpansionEntity extends Mob {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -105,12 +105,12 @@ public abstract class DomainExpansionEntity extends Mob {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 int time = this.getTime();
 
                 if (owner != null) {
@@ -151,7 +151,7 @@ public abstract class DomainExpansionEntity extends Mob {
                 }
             }
         }
-        return entity instanceof DomainExpansionEntity ? this.isInsideBarrier(entity.blockPosition()) : this.isAffected(entity.blockPosition());
+        return this.isAffected(entity.blockPosition());
     }
 
     @Override
@@ -195,7 +195,7 @@ public abstract class DomainExpansionEntity extends Mob {
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        LivingEntity owner = (LivingEntity) this.level.getEntity(pPacket.getData());
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
 
         if (owner != null) {
             this.setOwner(owner);

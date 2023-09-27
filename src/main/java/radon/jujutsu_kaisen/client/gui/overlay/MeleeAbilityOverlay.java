@@ -62,7 +62,7 @@ public class MeleeAbilityOverlay {
         return index;
     }
 
-    public static IGuiOverlay OVERLAY = (gui, poseStack, partialTicks, width, height) -> {
+    public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
         LocalPlayer player = mc.player;
 
@@ -91,7 +91,7 @@ public class MeleeAbilityOverlay {
                 int duration = durationable.getRealDuration(player);
 
                 if (duration > 0) {
-                    Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), duration / 20);
+                    Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), (float) duration / 20);
                     lines.add(durationText);
                 }
             }
@@ -108,7 +108,7 @@ public class MeleeAbilityOverlay {
             int y = height - (20 + 22 + 24) - ((lines.size() - 1) * mc.font.lineHeight + 2);
 
             for (Component line : lines) {
-                mc.font.drawShadow(poseStack, line, x, y, 16777215);
+                graphics.drawString(gui.getFont(), line, x, y, 16777215);
                 y += mc.font.lineHeight;
             }
         }

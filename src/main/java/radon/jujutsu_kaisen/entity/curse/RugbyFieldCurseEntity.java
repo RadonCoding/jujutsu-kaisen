@@ -2,12 +2,18 @@ package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -24,8 +30,19 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.4D, true));
+        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(4, new HealingGoal(this));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+    }
+
+    @Override
     protected boolean isCustom() {
-        return false;
+        return true;
     }
 
     @Override
@@ -71,14 +88,12 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
+    protected void customServerAiStep() {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 
     @Override
     public float getStepHeight() {
-        return 2.0F;
+        return 1.0F;
     }
 }

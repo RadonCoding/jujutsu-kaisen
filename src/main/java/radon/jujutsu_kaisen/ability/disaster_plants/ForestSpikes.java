@@ -45,7 +45,7 @@ public class ForestSpikes extends Ability {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level.clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         }
         return null;
     }
@@ -67,7 +67,7 @@ public class ForestSpikes extends Ability {
         BlockHitResult hit = this.getBlockHit(owner);
 
         if (hit != null) {
-            owner.level.playSound(null, hit.getBlockPos(), JJKSounds.FOREST_SPIKES.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, hit.getBlockPos(), JJKSounds.FOREST_SPIKES.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Direction dir = hit.getDirection();
             BlockPos pos = hit.getBlockPos();
@@ -87,10 +87,10 @@ public class ForestSpikes extends Ability {
                 Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD);
                 spike.moveTo(offset.x(), offset.y() - spike.getBbHeight() / 2.0F, offset.z(), yRot, xRot);
 
-                if (owner.level.getBlockState(BlockPos.containing(offset.subtract(spike.getLookAngle()))).isAir()) {
+                if (owner.level().getBlockState(BlockPos.containing(offset.subtract(spike.getLookAngle()))).isAir()) {
                     spike.setPos(center);
                 }
-                owner.level.addFreshEntity(spike);
+                owner.level().addFreshEntity(spike);
             }
         }
     }

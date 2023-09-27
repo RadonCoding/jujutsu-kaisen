@@ -21,7 +21,7 @@ public class KuchisakeOnnaPostEffect extends PostEffect {
 
     @Override
     public boolean shouldRender(LocalPlayer player) {
-        for (KuchisakeOnnaEntity curse : player.level.getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(player.position(),
+        for (KuchisakeOnnaEntity curse : player.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(player.position(),
                 64.0D, 64.0D, 64.0D))) {
             Optional<UUID> identifier = curse.getCurrent();
             if (identifier.isEmpty()) continue;

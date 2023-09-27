@@ -44,7 +44,7 @@ public class WheelEntity extends Entity implements GeoEntity {
     }
 
     public WheelEntity(LivingEntity owner) {
-        this(JJKEntities.WHEEL.get(), owner.level);
+        this(JJKEntities.WHEEL.get(), owner.level());
 
         this.setOwner(owner);
 
@@ -68,8 +68,8 @@ public class WheelEntity extends Entity implements GeoEntity {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -80,7 +80,7 @@ public class WheelEntity extends Entity implements GeoEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
                 !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
             this.discard();
         } else {
@@ -144,7 +144,7 @@ public class WheelEntity extends Entity implements GeoEntity {
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        Entity entity = this.level.getEntity(pPacket.getData());
+        Entity entity = this.level().getEntity(pPacket.getData());
 
         if (entity != null) {
             this.setOwner((LivingEntity) entity);

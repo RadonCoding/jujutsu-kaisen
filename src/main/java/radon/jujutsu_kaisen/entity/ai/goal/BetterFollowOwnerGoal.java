@@ -29,7 +29,7 @@ public class BetterFollowOwnerGoal extends Goal {
 
     public BetterFollowOwnerGoal(TamableAnimal pTamable, double pSpeedModifier, float pStartDistance, float pStopDistance, boolean pCanFly) {
         this.tamable = pTamable;
-        this.level = pTamable.level;
+        this.level = pTamable.level();
         this.speedModifier = pSpeedModifier;
         this.navigation = pTamable.getNavigation();
         this.startDistance = pStartDistance;

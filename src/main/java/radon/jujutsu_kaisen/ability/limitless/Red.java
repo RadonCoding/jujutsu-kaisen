@@ -24,7 +24,7 @@ public class Red extends Ability {
     @Override
     public void run(LivingEntity owner) {
         RedProjectile red = new RedProjectile(owner);
-        owner.level.addFreshEntity(red);
+        owner.level().addFreshEntity(red);
     }
 
     @Override

@@ -31,11 +31,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!owner.level.isClientSide) {
+        if (!owner.level().isClientSide) {
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level)) {
+            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level())) {
                 if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
                 return true;
             }

@@ -115,8 +115,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
     private ServerPlayer getIssuer() {
         if (this.cachedIssuer != null && !this.cachedIssuer.isRemoved()) {
             return this.cachedIssuer;
-        } else if (this.issuerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedIssuer = (ServerPlayer) ((ServerLevel) this.level).getEntity(this.issuerUUID);
+        } else if (this.issuerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedIssuer = (ServerPlayer) ((ServerLevel) this.level()).getEntity(this.issuerUUID);
             return this.cachedIssuer;
         } else {
             return null;
@@ -127,8 +127,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
     private ServerPlayer getBounty() {
         if (this.cachedBounty != null && !this.cachedBounty.isRemoved()) {
             return this.cachedBounty;
-        } else if (this.bountyUUID != null && this.level instanceof ServerLevel) {
-            this.cachedBounty = (ServerPlayer) ((ServerLevel) this.level).getEntity(this.bountyUUID);
+        } else if (this.bountyUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedBounty = (ServerPlayer) ((ServerLevel) this.level()).getEntity(this.bountyUUID);
             return this.cachedBounty;
         } else {
             return null;
@@ -164,8 +164,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
         if (!pPlayer.isSecondaryUseActive() && pHand == InteractionHand.MAIN_HAND) {
             this.setCurrentCustomer(pPlayer);
             pPlayer.openMenu(new SimpleMenuProvider((pContainerId, pPlayerInventory, ignored) ->
-                    new BountyMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pPlayer.level, this.blockPosition()), this), Component.empty()));
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+                    new BountyMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pPlayer.level(), this.blockPosition()), this), Component.empty()));
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         return super.mobInteract(pPlayer, pHand);
     }
@@ -236,8 +236,11 @@ public class TojiFushiguroEntity extends SorcererEntity {
         }
 
         target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getToggled().size() > 0) {
-                result.set(INVERTED_SPEAR_OF_HEAVEN);
+            for (Ability toggled : cap.getToggled()) {
+                if (toggled.isTechnique()) {
+                    result.set(INVERTED_SPEAR_OF_HEAVEN);
+                    break;
+                }
             }
         });
 
@@ -282,7 +285,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
                 double d1 = bounty.getY() + HelperMethods.RANDOM.nextInt(3) - 1;
                 double d2 = bounty.getZ() + ((HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) + 0.1D) * TELEPORT_RADIUS + 0.5D;
 
-                if (this.level.noCollision(this.getType().getAABB(d0, d1, d2))) {
+                if (this.level().noCollision(this.getType().getAABB(d0, d1, d2))) {
                     this.setPos(d0, d1, d2);
                 }
             }

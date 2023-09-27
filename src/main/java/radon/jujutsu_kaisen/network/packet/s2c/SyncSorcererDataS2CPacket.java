@@ -7,8 +7,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class SyncSorcererDataS2CPacket {
@@ -35,7 +39,20 @@ public class SyncSorcererDataS2CPacket {
 
             assert player != null;
 
-            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.deserializeNBT(this.nbt));
+            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(oldCap -> {
+                ISorcererData newCap = new SorcererData();
+                newCap.deserializeNBT(this.nbt);
+
+                Set<Ability> oldToggled = oldCap.getToggled();
+                Set<Ability> newToggled = newCap.getToggled();
+
+                oldToggled.removeAll(newToggled);
+
+                for (Ability ability : oldToggled) {
+                    oldCap.toggle(player, ability);
+                }
+                oldCap.deserializeNBT(this.nbt);
+            });
         }));
         ctx.setPacketHandled(true);
     }

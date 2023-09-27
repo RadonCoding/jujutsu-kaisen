@@ -53,14 +53,14 @@ public class AirPunch extends Ability {
                     owner.setDeltaMovement(direction);
                     owner.hurtMarked = true;
 
-                    if (!owner.level.isClientSide) {
+                    if (!owner.level().isClientSide) {
                         cap.scheduleTickEvent(() -> {
                             if (owner.distanceTo(target) < 3.0D) {
                                 owner.swing(InteractionHand.MAIN_HAND);
 
-                                owner.level.explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),
+                                owner.level().explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),
                                         null, owner.getX(), owner.getY(), owner.getZ(), cap.getGrade().getRealPower(owner), false,
-                                        owner.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                                        owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
                                 return true;
                             }
                             return false;

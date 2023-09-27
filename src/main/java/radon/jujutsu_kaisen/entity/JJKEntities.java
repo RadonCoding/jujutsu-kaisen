@@ -48,7 +48,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
             EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)
-                    .sized(3.0F, 4.0F)
+                    .sized(8.4F, 7.2F)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")
                             .toString()));
@@ -98,6 +98,11 @@ public class JJKEntities {
             EntityType.Builder.<WormCurseEntity>of(WormCurseEntity::new, MobCategory.AMBIENT)
                     .sized(1.0F, 0.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse")
+                            .toString()));
+    public static RegistryObject<EntityType<FelineCurseEntity>> FELINE_CURSE = ENTITIES.register("feline_curse", () ->
+            EntityType.Builder.<FelineCurseEntity>of(FelineCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(1.6F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "feline_curse")
                             .toString()));
 
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
@@ -216,11 +221,6 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mini_uzumaki")
                             .toString()));
-    public static RegistryObject<EntityType<LightningProjectile>> LIGHTNING = ENTITIES.register("lightning", () ->
-            EntityType.Builder.<LightningProjectile>of(LightningProjectile::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lightning")
-                            .toString()));
     public static RegistryObject<EntityType<WaterballEntity>> WATERBALL = ENTITIES.register("waterball", () ->
             EntityType.Builder.<WaterballEntity>of(WaterballEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
@@ -270,6 +270,16 @@ public class JJKEntities {
             EntityType.Builder.<ForestWaveEntity>of(ForestWaveEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_wave")
+                            .toString()));
+    public static RegistryObject<EntityType<LavaRockProjectile>> LAVA_ROCK = ENTITIES.register("lava_rock", () ->
+            EntityType.Builder.<LavaRockProjectile>of(LavaRockProjectile::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lava_rock")
+                            .toString()));
+    public static RegistryObject<EntityType<LightningEntity>> LIGHTNING = ENTITIES.register("lightning", () ->
+            EntityType.Builder.<LightningEntity>of(LightningEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lightning")
                             .toString()));
 
 
@@ -397,6 +407,7 @@ public class JJKEntities {
         event.put(KUCHISAKE_ONNA.get(), KuchisakeOnnaEntity.createAttributes().build());
         event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

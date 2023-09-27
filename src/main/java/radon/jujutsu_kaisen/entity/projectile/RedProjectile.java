@@ -33,7 +33,7 @@ public class RedProjectile extends JujutsuProjectile {
     }
 
     public RedProjectile(LivingEntity pShooter) {
-        super(JJKEntities.RED.get(), pShooter.level, pShooter);
+        super(JJKEntities.RED.get(), pShooter.level(), pShooter);
 
         Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
@@ -45,7 +45,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
                     float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
@@ -63,15 +63,15 @@ public class RedProjectile extends JujutsuProjectile {
     protected void onHit(@NotNull HitResult pResult) {
         super.onHit(pResult);
 
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 float radius = EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
-                        this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
+                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();
@@ -100,11 +100,11 @@ public class RedProjectile extends JujutsuProjectile {
 
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                     if (cap.isCooldownDone(JJKAbilities.HOLLOW_PURPLE.get())) {
                         cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
 
-                        this.level.addFreshEntity(new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D)));
+                        this.level().addFreshEntity(new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D)));
 
                         blue.discard();
                         this.discard();

@@ -61,7 +61,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
     }
 
     public PiercingBullEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.PIERCING_BULL.get(), owner.level);
+        this(JJKEntities.PIERCING_BULL.get(), owner.level());
 
         this.setTame(tame);
         this.setOwner(owner);
@@ -81,10 +81,10 @@ public class PiercingBullEntity extends TenShadowsSummon {
         AABB bounds = this.getBoundingBox();
 
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level.getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
             if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level.destroyBlock(pos, false);
+                this.level().destroyBlock(pos, false);
             }
         });
     }
@@ -101,14 +101,14 @@ public class PiercingBullEntity extends TenShadowsSummon {
                 this.setDeltaMovement(target.position().subtract(this.position()).normalize());
                 float distance = this.distanceTo(target);
 
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, this.getBoundingBox())) {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox())) {
                     if (entity == this) continue;
 
                     entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * this.getGrade().getRealPower(this));
                     entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(this.getGrade().getRealPower(this)));
                     entity.hurtMarked = true;
 
-                    this.level.explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getRealPower(this), false, Level.ExplosionInteraction.NONE);
+                    this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getRealPower(this), false, Level.ExplosionInteraction.NONE);
 
                     if (entity == target) {
                         this.setSprinting(false);
@@ -122,8 +122,8 @@ public class PiercingBullEntity extends TenShadowsSummon {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
-            if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 this.breakBlocks();
             }
         }

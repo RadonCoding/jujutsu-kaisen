@@ -20,7 +20,7 @@ public class Feint extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.level.playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
     }
 
     @Override

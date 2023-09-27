@@ -71,12 +71,12 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     private boolean isInVillage() {
-        HolderSet.Named<Structure> structures = this.level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
+        HolderSet.Named<Structure> structures = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(StructureTags.VILLAGE).orElseThrow();
 
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
+            if (((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
                 success = true;
                 break;
             }

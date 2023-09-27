@@ -40,7 +40,7 @@ public class Volcano extends Ability {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level.clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         }
         return null;
     }
@@ -54,7 +54,7 @@ public class Volcano extends Ability {
         if (hit != null) {
             Direction dir = hit.getDirection();
             VolcanoEntity volcano = new VolcanoEntity(owner, hit.getBlockPos(), dir);
-            owner.level.addFreshEntity(volcano);
+            owner.level().addFreshEntity(volcano);
         }
     }
 

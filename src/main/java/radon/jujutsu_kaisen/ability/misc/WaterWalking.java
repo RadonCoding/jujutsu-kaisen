@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 public class WaterWalking extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !owner.getFeetBlockState().getFluidState().isEmpty() || !owner.level.getFluidState(owner.blockPosition().below()).isEmpty() || owner.isInFluidType();
+        return !owner.getFeetBlockState().getFluidState().isEmpty() || !owner.level().getFluidState(owner.blockPosition().below()).isEmpty() || owner.isInFluidType();
     }
 
     @Override

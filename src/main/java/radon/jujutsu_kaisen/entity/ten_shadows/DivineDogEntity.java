@@ -51,7 +51,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual, Variant variant) {
-        super(type, owner.level);
+        super(type, owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
@@ -126,7 +126,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
@@ -148,23 +148,23 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
-    protected float getRiddenSpeed(@NotNull LivingEntity pEntity) {
+    protected float getRiddenSpeed(@NotNull Player pPlayer) {
         return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 2.0F;
     }
 
     @Override
-    protected void tickRidden(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        super.tickRidden(pEntity, pTravelVector);
+    protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        super.tickRidden(pPlayer, pTravelVector);
 
-        Vec2 vec2 = this.getRiddenRotation(pEntity);
+        Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
     }
 
     @Override
-    protected @NotNull Vec3 getRiddenInput(@NotNull LivingEntity pEntity, @NotNull Vec3 pTravelVector) {
-        float f = pEntity.xxa * 0.5F;
-        float f1 = pEntity.zza;
+    protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
+        float f = pPlayer.xxa * 0.5F;
+        float f1 = pPlayer.zza;
 
         if (f1 <= 0.0F) {
             f1 *= 0.25F;
@@ -267,9 +267,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
+    protected void customServerAiStep() {
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
@@ -277,10 +275,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         } else {
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
         }
-    }
 
-    @Override
-    protected void customServerAiStep() {
         int leap = this.entityData.get(DATA_LEAP);
 
         if (leap > 0) {

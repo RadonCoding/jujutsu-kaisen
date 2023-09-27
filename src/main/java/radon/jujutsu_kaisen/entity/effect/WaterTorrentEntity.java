@@ -63,7 +63,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
     }
 
     public WaterTorrentEntity(LivingEntity pShooter, float yaw, float pitch) {
-        this(JJKEntities.WATER_TORRENT.get(), pShooter.level);
+        this(JJKEntities.WATER_TORRENT.get(), pShooter.level());
 
         this.setOwner(pShooter);
 
@@ -90,7 +90,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.update();
         }
 
@@ -128,8 +128,8 @@ public class WaterTorrentEntity extends JujutsuProjectile {
                 }
             });
 
-            if (!this.level.isClientSide) {
-                if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            if (!this.level().isClientSide) {
+                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     double radius = SCALE * 2.0F;
 
                     AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
@@ -142,13 +142,13 @@ public class WaterTorrentEntity extends JujutsuProjectile {
                         for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                             for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                                 BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = this.level.getBlockState(pos);
+                                BlockState state = this.level().getBlockState(pos);
 
                                 double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                                 if (distance <= radius) {
                                     if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                        this.level.destroyBlock(pos, false);
+                                        this.level().destroyBlock(pos, false);
                                     }
                                 }
                             }
@@ -187,7 +187,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
     }
 
     private void calculateEndPos() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             this.endPosX = this.getX() + RANGE * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
             this.endPosZ = this.getZ() + RANGE * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
             this.endPosY = this.getY() + RANGE * Math.sin(this.renderPitch);
@@ -199,7 +199,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
     }
 
     public List<Entity> checkCollisions(Vec3 from, Vec3 to) {
-        BlockHitResult result = this.level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        BlockHitResult result = this.level().clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
@@ -220,7 +220,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
                 .inflate(SCALE);
 
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);

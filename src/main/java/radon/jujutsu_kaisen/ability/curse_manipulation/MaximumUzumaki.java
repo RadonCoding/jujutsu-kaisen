@@ -32,14 +32,14 @@ public class MaximumUzumaki extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         MaximumUzumakiProjectile uzumaki = new MaximumUzumakiProjectile(owner);
-        owner.level.addFreshEntity(uzumaki);
+        owner.level().addFreshEntity(uzumaki);
     }
 
     @Override
     public boolean isUnlocked(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
         return !curses.isEmpty() && super.isUnlocked(owner);
     }

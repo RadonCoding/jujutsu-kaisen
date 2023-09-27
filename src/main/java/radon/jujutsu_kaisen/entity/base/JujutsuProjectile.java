@@ -45,7 +45,7 @@ public class JujutsuProjectile extends Projectile {
     public void tick() {
         Entity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -53,7 +53,7 @@ public class JujutsuProjectile extends Projectile {
             int time = this.getTime();
             this.setTime(++time);
 
-            HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
+            HitResult result = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 
             if (result.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, result)) {
                 this.onHit(result);

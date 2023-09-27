@@ -34,7 +34,7 @@ public class CurseSummonC2SPacket {
 
             assert player != null;
 
-            Registry<EntityType<?>> registry = player.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = player.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             EntityType<?> type = registry.get(this.key);
 
             if (type != null) {

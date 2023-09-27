@@ -24,7 +24,7 @@ public class MaximumBlueProjectile extends BlueProjectile {
     }
 
     public MaximumBlueProjectile(LivingEntity pShooter, boolean motion) {
-        super(JJKEntities.MAXIMUM_BLUE.get(), pShooter.level, pShooter);
+        super(JJKEntities.MAXIMUM_BLUE.get(), pShooter.level(), pShooter);
 
         this.entityData.set(DATA_MOTION, motion);
 

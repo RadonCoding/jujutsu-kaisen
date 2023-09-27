@@ -27,7 +27,7 @@ public class SkyStrike extends Ability {
 
         if (target != null) {
             SkyStrikeEntity strike = new SkyStrikeEntity(owner, target.position());
-            owner.level.addFreshEntity(strike);
+            owner.level().addFreshEntity(strike);
         }
     }
 

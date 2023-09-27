@@ -29,7 +29,7 @@ public class PiercingWater extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return !cap.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
-                cap.hasTamed(owner.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
+                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
                 cap.getMode() == TenShadowsMode.ABILITY;
     }
 
@@ -43,7 +43,7 @@ public class PiercingWater extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         PiercingWaterEntity piercing = new PiercingWaterEntity(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
-        owner.level.addFreshEntity(piercing);
+        owner.level().addFreshEntity(piercing);
     }
 
     @Override

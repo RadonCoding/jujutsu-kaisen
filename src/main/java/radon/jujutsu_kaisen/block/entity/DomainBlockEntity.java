@@ -21,6 +21,8 @@ public class DomainBlockEntity extends BlockEntity {
 
     @Nullable
     private BlockState original;
+    @Nullable
+    private CompoundTag custom;
 
     private CompoundTag deferred;
 
@@ -52,6 +54,14 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
+
+                if (this.custom != null) {
+                    BlockEntity existing = this.level.getBlockEntity(this.getBlockPos());
+
+                    if (existing != null) {
+                        existing.load(this.custom);
+                    }
+                }
             }
             return true;
         }
@@ -73,10 +83,15 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID identifier, BlockState state) {
+    public @Nullable CompoundTag getCustom() {
+        return this.custom;
+    }
+
+    public void create(UUID identifier, BlockState state, CompoundTag custom) {
         this.initialized = true;
         this.identifier = identifier;
         this.original = state;
+        this.custom = custom;
         this.setChanged();
     }
 
@@ -89,6 +104,10 @@ public class DomainBlockEntity extends BlockEntity {
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
             this.deferred = pTag.getCompound("original");
+
+            if (pTag.contains("custom")) {
+                this.custom = pTag.getCompound("custom");
+            }
         }
     }
 
@@ -105,6 +124,10 @@ public class DomainBlockEntity extends BlockEntity {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
             } else {
                 pTag.put("original", this.deferred);
+            }
+
+            if (this.custom != null) {
+                pTag.put("custom", this.custom);
             }
         }
     }

@@ -41,7 +41,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public DismantleProjectile(LivingEntity pShooter) {
-        super(JJKEntities.DISMANTLE.get(), pShooter.level, pShooter);
+        super(JJKEntities.DISMANTLE.get(), pShooter.level(), pShooter);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(HelperMethods.getLookAngle(pShooter));
@@ -71,7 +71,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (this.level.isClientSide || !this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
+        if (this.level().isClientSide || !this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
 
         BlockPos center = pResult.getBlockPos();
         Direction direction = pResult.getDirection();
@@ -91,12 +91,12 @@ public class DismantleProjectile extends JujutsuProjectile {
                 BlockPos end = center.relative(perpendicular, size / 2);
 
                 for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
-                    BlockState state = this.level.getBlockState(pos);
+                    BlockState state = this.level().getBlockState(pos);
 
                     if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                        this.level.destroyBlock(pos, false);
+                        this.level().destroyBlock(pos, false);
                     }
-                    ((ServerLevel) this.level).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
+                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
                             0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
             });
@@ -143,7 +143,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 BlockPos.betweenClosed(start, end).forEach(pos -> {
                     Vec3 vec31 = pos.getCenter();
                     Vec3 vec32 = vec31.add(movement);
-                    entities.add(ProjectileUtil.getEntityHitResult(this.level, this, vec31, vec32,
+                    entities.add(ProjectileUtil.getEntityHitResult(this.level(), this, vec31, vec32,
                             this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity));
                 });
             });

@@ -54,7 +54,7 @@ public class YujiItadoriEntity extends SorcererEntity {
                 stack.shrink(1);
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.convertTo(JJKEntities.SUKUNA_RYOMEN.get(), true);
             }
             return InteractionResult.SUCCESS;

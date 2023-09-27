@@ -58,14 +58,14 @@ public class BlueFistsVisual {
                     new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            entity.level.addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
+            entity.level().addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
                     right.x(), right.y(), right.z(), 0.0D, 0.1D, 0.0D);
 
             Vec3 left = transform3rdPersonLeft(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.5D, 0.0D),
                     new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            entity.level.addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
+            entity.level().addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
                     left.x(), left.y(), left.z(), 0.0D, 0.1D, 0.0D);
         }
     }

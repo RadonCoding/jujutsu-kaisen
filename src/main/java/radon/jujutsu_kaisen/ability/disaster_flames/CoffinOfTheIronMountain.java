@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 
 import java.util.List;
 
@@ -30,12 +31,13 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         super.onHitEntity(domain, owner, entity);
 
-        if (owner.level.getGameTime() % 20 == 0) {
+        if (owner.level().getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
                     entity.setSecondsOnFire(15);
                 }
             });
+            owner.level().addFreshEntity(new LavaRockProjectile(owner, entity));
         }
     }
 
@@ -51,7 +53,7 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
             List<Block> blocks = this.getBlocks();
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
-            owner.level.addFreshEntity(domain);
+            owner.level().addFreshEntity(domain);
 
             cap.setDomain(domain);
         });

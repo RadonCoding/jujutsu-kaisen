@@ -109,10 +109,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < this.getBbHeight() * this.getBbHeight(); j++) {
-                this.level.addParticle(ParticleTypes.SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
+                this.level().addParticle(ParticleTypes.SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
                         this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
                         this.random.nextGaussian() * 0.075D, this.random.nextGaussian() * 0.25D, this.random.nextGaussian() * 0.075D);
-                this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
+                this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F), this.getY(),
                         this.getZ() + (this.getBbWidth() * this.random.nextGaussian() * 0.1F),
                         this.random.nextGaussian() * 0.075D, this.random.nextGaussian() * 0.25D, this.random.nextGaussian() * 0.075D);
             }
@@ -149,7 +149,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             AABB area = new AABB(center.x() - 16.0D, center.y() - 16.0D, center.z() - 16.0D,
                     center.x() + 16.0D, center.y() + 16.0D, center.z() + 16.0D);
 
-            for (LivingEntity participant : this.level.getEntitiesOfClass(LivingEntity.class, area)) {
+            for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
                 if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this) continue;
                 if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
                 this.participants.add(participant.getUUID());
@@ -176,11 +176,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null && !owner.level.isClientSide) {
+        if (owner != null && !owner.level().isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (!this.isTame()) {
                     if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
-                        cap.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                         if (owner instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
@@ -188,7 +188,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     }
                 } else {
                     if (this.getAbility().canDie()) {
-                        cap.kill(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                         if (owner instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
@@ -205,7 +205,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         while (iter.hasNext()) {
             UUID identifier = iter.next();
 
-            LivingEntity participant = (LivingEntity) ((ServerLevel) this.level).getEntity(identifier);
+            LivingEntity participant = (LivingEntity) ((ServerLevel) this.level()).getEntity(identifier);
 
             if (participant == null || participant.isRemoved() || !participant.isAlive() || participant.distanceTo(this) > MAX_DISTANCE) {
                 iter.remove();
@@ -217,13 +217,13 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (this.isTame() && !this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
+        if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
                 (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, this.getAbility())))) {
             this.discard();
         } else {
             super.tick();
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (!this.isTame()) {
                     this.checkParticipants();
 

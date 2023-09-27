@@ -59,7 +59,7 @@ public class MegumiFushiguroEntity extends SorcererEntity {
                 itemstack.shrink(1);
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.convertTo(JJKEntities.MEGUNA_RYOMEN.get(), true);
             }
             return InteractionResult.SUCCESS;
@@ -97,9 +97,9 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     public void init(ISorcererData data) {
         super.init(data);
 
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
-        data.tame(this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
+        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
     }
 
     @Override

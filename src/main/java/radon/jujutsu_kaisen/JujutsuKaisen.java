@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 import radon.jujutsu_kaisen.client.gui.scren.BountyScreen;
+import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.client.gui.scren.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.scren.VeilRodScreen;
@@ -64,6 +65,8 @@ public class JujutsuKaisen {
         JJKProcessors.PROCESSORS.register(bus);
         JJKBiomeModifiers.BIOME_MODIFIERS.register(bus);
         JJKLootModifiers.LOOT_MODIFIERS.register(bus);
+
+        JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);

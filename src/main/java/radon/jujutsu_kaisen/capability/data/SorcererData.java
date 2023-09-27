@@ -269,7 +269,7 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateDomains(LivingEntity owner) {
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.domains.iterator();
 
             while (iter.hasNext()) {
@@ -285,7 +285,7 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateSummons(LivingEntity owner) {
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.summons.iterator();
 
             while (iter.hasNext()) {
@@ -303,7 +303,7 @@ public class SorcererData implements ISorcererData {
     private void updateDomain(LivingEntity owner) {
         if (this.domain == null) return;
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             Entity entity = level.getEntity(this.domain);
 
             if (entity == null || !entity.isAlive() || entity.isRemoved()) {
@@ -375,7 +375,7 @@ public class SorcererData implements ISorcererData {
         this.updateToggled(owner);
         this.updateChanneled(owner);
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             this.updateAdaptation(level);
         }
 
@@ -571,7 +571,7 @@ public class SorcererData implements ISorcererData {
     }
 
     public void toggle(LivingEntity owner, Ability ability) {
-        if (owner.level.isClientSide) {
+        if (owner.level().isClientSide) {
             if (((Ability.IToggled) ability).shouldLog()) {
                 if (this.hasToggled(ability)) {
                     owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
@@ -698,7 +698,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void onBlackFlash(LivingEntity owner) {
-        this.lastBlackFlashTime = owner.level.getGameTime();
+        this.lastBlackFlashTime = owner.level().getGameTime();
 
         if (owner instanceof ServerPlayer player) {
             this.giveAdvancement(player, "black_flash");
@@ -717,7 +717,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return this.lastBlackFlashTime != -1 && ((owner.level.getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
+        return this.lastBlackFlashTime != -1 && ((owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override

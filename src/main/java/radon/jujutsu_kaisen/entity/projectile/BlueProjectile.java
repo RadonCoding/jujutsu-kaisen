@@ -36,7 +36,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     public BlueProjectile(LivingEntity pShooter) {
-        this(JJKEntities.BLUE.get(), pShooter.level, pShooter);
+        this(JJKEntities.BLUE.get(), pShooter.level(), pShooter);
 
         Vec3 look = HelperMethods.getLookAngle(pShooter);
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
@@ -61,7 +61,7 @@ public class BlueProjectile extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : this.level.getEntities(owner, bounds)) {
+            for (Entity entity : this.level().getEntities(owner, bounds)) {
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity instanceof Projectile projectile && projectile.getOwner() == owner)) continue;
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
@@ -81,13 +81,13 @@ public class BlueProjectile extends JujutsuProjectile {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                 for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
                     BlockPos pos = new BlockPos(x, y, z);
-                    BlockState state = this.level.getBlockState(pos);
+                    BlockState state = this.level().getBlockState(pos);
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= this.getRadius()) {
                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                            this.level.destroyBlock(pos, false);
+                            this.level().destroyBlock(pos, false);
                         }
                     }
                 }
@@ -100,7 +100,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
                     if (entity instanceof LivingEntity) {
@@ -127,18 +127,18 @@ public class BlueProjectile extends JujutsuProjectile {
                     if (this.random.nextInt((int) this.getRadius() * 2 * 20) != 0) continue;
 
                     BlockPos pos = new BlockPos(x, y, z);
-                    BlockState state = this.level.getBlockState(pos);
+                    BlockState state = this.level().getBlockState(pos);
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= radius) {
                         if (!state.isAir() && state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                            if (this.level.destroyBlock(pos, false)) {
-                                FallingBlockEntity entity = FallingBlockEntity.fall(this.level, pos, state);
+                            if (this.level().destroyBlock(pos, false)) {
+                                FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
                                 entity.noPhysics = true;
 
-                                if (((ServerLevel) this.level).getEntity(entity.getUUID()) == null) {
-                                    this.level.addFreshEntity(entity);
+                                if (((ServerLevel) this.level()).getEntity(entity.getUUID()) == null) {
+                                    this.level().addFreshEntity(entity);
                                 }
                             }
                         }
@@ -165,7 +165,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -181,7 +181,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level.addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -227,8 +227,8 @@ public class BlueProjectile extends JujutsuProjectile {
                     this.pullEntities();
                     this.hurtEntities();
 
-                    if (!this.level.isClientSide) {
-                        if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    if (!this.level().isClientSide) {
+                        if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                             this.pullBlocks();
                             this.breakBlocks();
                         }

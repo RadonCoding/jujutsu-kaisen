@@ -27,22 +27,22 @@ public class TeleportRandom extends Ability {
     private static void teleport(LivingEntity owner, double pX, double pY, double pZ) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(pX, pY, pZ);
 
-        while (pos.getY() > owner.level.getMinBuildHeight() && !owner.level.getBlockState(pos).getMaterial().blocksMotion()) {
+        while (pos.getY() > owner.level().getMinBuildHeight() && !owner.level().getBlockState(pos).blocksMotion()) {
             pos.move(Direction.DOWN);
         }
-        BlockState blockstate = owner.level.getBlockState(pos);
-        boolean flag = blockstate.getMaterial().blocksMotion();
-        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
+        BlockState state = owner.level().getBlockState(pos);
+        boolean flag = state.blocksMotion();
+        boolean flag1 = state.getFluidState().is(FluidTags.WATER);
 
         if (flag && !flag1) {
             Vec3 current = owner.position();
             boolean success = owner.randomTeleport(pX, pY, pZ, true);
 
             if (success) {
-                owner.level.gameEvent(GameEvent.TELEPORT, current, GameEvent.Context.of(owner));
+                owner.level().gameEvent(GameEvent.TELEPORT, current, GameEvent.Context.of(owner));
 
                 if (!owner.isSilent()) {
-                    owner.level.playSound(null, owner.xo, owner.yo, owner.zo, SoundEvents.ENDERMAN_TELEPORT, owner.getSoundSource(), 1.0F, 1.0F);
+                    owner.level().playSound(null, owner.xo, owner.yo, owner.zo, SoundEvents.ENDERMAN_TELEPORT, owner.getSoundSource(), 1.0F, 1.0F);
                     owner.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
                 }
             }
@@ -51,7 +51,7 @@ public class TeleportRandom extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!owner.level.isClientSide) {
+        if (!owner.level().isClientSide) {
             double d0 = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;
             double d1 = owner.getY() + (double)(HelperMethods.RANDOM.nextInt(64) - 32);
             double d2 = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;

@@ -23,7 +23,7 @@ public class Scissors extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
 
         ((KuchisakeOnnaEntity) owner).getCurrent().ifPresent(identifier -> {
             LivingEntity target = (LivingEntity) level.getEntity(identifier);
@@ -33,7 +33,7 @@ public class Scissors extends Ability {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
                     ScissorEntity scissor = new ScissorEntity(owner, target);
-                    owner.level.addFreshEntity(scissor);
+                    owner.level().addFreshEntity(scissor);
                     cap.addSummon(scissor);
                 }
             });

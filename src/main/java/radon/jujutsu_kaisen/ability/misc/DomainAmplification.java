@@ -21,7 +21,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
-        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level.getEntities(owner, owner.getBoundingBox().inflate(3.0D),
+        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level().getEntities(owner, owner.getBoundingBox().inflate(3.0D),
                 entity -> entity instanceof JujutsuProjectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty()) return true;
         if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
 
@@ -37,7 +37,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        /*if (owner.level instanceof ServerLevel level) {
+        /*if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 8; i++) {
                 level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 2.0F, 0.5F, false, 1),
                         owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).x(),

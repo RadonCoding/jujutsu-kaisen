@@ -28,11 +28,11 @@ public class TeleportTowards extends Ability {
     private static void teleport(LivingEntity owner, double pX, double pY, double pZ) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(pX, pY, pZ);
 
-        while (pos.getY() > owner.level.getMinBuildHeight() && !owner.level.getBlockState(pos).getMaterial().blocksMotion()) {
+        while (pos.getY() > owner.level().getMinBuildHeight() && !owner.level().getBlockState(pos).blocksMotion()) {
             pos.move(Direction.DOWN);
         }
-        BlockState blockstate = owner.level.getBlockState(pos);
-        boolean flag = blockstate.getMaterial().blocksMotion();
+        BlockState blockstate = owner.level().getBlockState(pos);
+        boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
 
         if (flag && !flag1) {
@@ -40,10 +40,10 @@ public class TeleportTowards extends Ability {
             boolean success = owner.randomTeleport(pX, pY, pZ, true);
 
             if (success) {
-                owner.level.gameEvent(GameEvent.TELEPORT, current, GameEvent.Context.of(owner));
+                owner.level().gameEvent(GameEvent.TELEPORT, current, GameEvent.Context.of(owner));
 
                 if (!owner.isSilent()) {
-                    owner.level.playSound(null, owner.xo, owner.yo, owner.zo, SoundEvents.ENDERMAN_TELEPORT, owner.getSoundSource(), 1.0F, 1.0F);
+                    owner.level().playSound(null, owner.xo, owner.yo, owner.zo, SoundEvents.ENDERMAN_TELEPORT, owner.getSoundSource(), 1.0F, 1.0F);
                     owner.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
                 }
             }

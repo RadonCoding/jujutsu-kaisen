@@ -44,7 +44,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
     }
 
     public FireballProjectile(LivingEntity pShooter) {
-        super(JJKEntities.FIREBALL.get(), pShooter.level, pShooter);
+        super(JJKEntities.FIREBALL.get(), pShooter.level(), pShooter);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(HelperMethods.getLookAngle(pShooter));
@@ -70,7 +70,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         Vec3 dir = this.getDeltaMovement();
 
@@ -82,16 +82,16 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
                     dx, dy, dz, 1.0D);
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 location = result.getLocation();
-                this.level.explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
+                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
                         location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner), false,
-                        this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             });
         }
         this.discard();
@@ -108,7 +108,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.5D);
 
-                this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
+                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
 
             Vec3 look = HelperMethods.getLookAngle(owner);
@@ -132,7 +132,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
-                    this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }

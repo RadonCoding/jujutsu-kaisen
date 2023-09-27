@@ -40,7 +40,7 @@ public class ThrownChainItemProjectile extends AbstractArrow {
     }
 
     public ThrownChainItemProjectile(LivingEntity pShooter, ItemStack stack) {
-        super(JJKEntities.THROWN_CHAIN_ITEM.get(), pShooter, pShooter.level);
+        super(JJKEntities.THROWN_CHAIN_ITEM.get(), pShooter, pShooter.level());
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(HelperMethods.getLookAngle(pShooter));

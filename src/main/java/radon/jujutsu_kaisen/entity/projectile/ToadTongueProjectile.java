@@ -34,7 +34,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     }
 
     public ToadTongueProjectile(LivingEntity pShooter, int range, UUID target) {
-        this(JJKEntities.TOAD_TONGUE.get(), pShooter.level);
+        this(JJKEntities.TOAD_TONGUE.get(), pShooter.level());
 
         this.setOwner(pShooter);
 
@@ -92,12 +92,12 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             Entity owner = this.getOwner();
 
             if (owner != null) {
                 if (this.grabbed) {
-                    if (((ServerLevel) this.level).getEntity(this.target) instanceof LivingEntity living) {
+                    if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
                         if (((ToadEntity) owner).getTarget() != living || living.isDeadOrDying() || living.isRemoved()) this.discard();
 
                         living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));

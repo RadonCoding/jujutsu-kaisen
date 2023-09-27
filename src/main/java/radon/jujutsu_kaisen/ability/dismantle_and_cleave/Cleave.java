@@ -121,7 +121,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
     @Override
     public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
-        if (target != null && owner.level instanceof ServerLevel level) {
+        if (target != null && owner.level() instanceof ServerLevel level) {
             double width = target.getBbWidth();
             double height = target.getBbHeight();
 
@@ -132,7 +132,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
             DamageSource source = this.getSource(owner, domain);
             float damage = calculateDamage(source, owner, target);
-            owner.level.playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             target.hurt(source, damage);
         }
     }

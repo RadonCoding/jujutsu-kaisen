@@ -33,7 +33,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     public VolcanoEntity(LivingEntity pShooter, BlockPos pos, Direction dir) {
-        super(JJKEntities.VOLCANO.get(), pShooter.level, pShooter);
+        super(JJKEntities.VOLCANO.get(), pShooter.level(), pShooter);
 
         Vec3 center = pos.relative(dir).getCenter();
         center = center.subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);
@@ -56,7 +56,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
 
             for (int i = 0; i < 48; i++) {
                 Vec3 speed = look.add((this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D);
-                this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
+                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
             }
 
             if (this.getOwner() instanceof LivingEntity owner) {
@@ -64,7 +64,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                 AABB bounds = this.getBoundingBox().inflate(0.0D, length.y(), 0.0D);
 
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (Entity entity : this.level.getEntities(owner, bounds)) {
+                    for (Entity entity : this.level().getEntities(owner, bounds)) {
                         if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
 
                         if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * cap.getGrade().getRealPower(owner))) {
@@ -77,7 +77,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
 
         if (this.getTime() % 5 == 0) {
             Vec3 speed = this.getLookAngle().scale(0.25D);
-            this.level.addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
+            this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
         }
     }
 

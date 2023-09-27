@@ -67,7 +67,7 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     public AgitoEntity(LivingEntity owner) {
-        this(JJKEntities.AGITO.get(), owner.level);
+        this(JJKEntities.AGITO.get(), owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
@@ -93,7 +93,7 @@ public class AgitoEntity extends TenShadowsSummon {
             this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
 
             if (AbilityHandler.trigger(this, JJKAbilities.HEAL_RCT.get()) == Ability.Status.SUCCESS) {
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
             return InteractionResult.FAIL;
         } else {
@@ -136,9 +136,7 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
+    protected void customServerAiStep() {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 
@@ -163,10 +161,10 @@ public class AgitoEntity extends TenShadowsSummon {
         AABB bounds = this.getBoundingBox();
 
         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level.getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
             if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level.destroyBlock(pos, false);
+                this.level().destroyBlock(pos, false);
             }
         });
     }
@@ -175,8 +173,8 @@ public class AgitoEntity extends TenShadowsSummon {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
-            if (this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                 this.breakBlocks();
             }
         }

@@ -27,7 +27,7 @@ public class MaximumMeteor extends Ability {
 
     private boolean canSpawn(LivingEntity owner) {
         Vec3 offset = owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.SIZE, 0.0D);
-        BlockHitResult hit = owner.level.clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        BlockHitResult hit = owner.level().clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         return hit.getType() != HitResult.Type.BLOCK;
     }
 
@@ -37,7 +37,7 @@ public class MaximumMeteor extends Ability {
             owner.swing(InteractionHand.MAIN_HAND);
 
             MeteorEntity meteor = new MeteorEntity(owner);
-            owner.level.addFreshEntity(meteor);
+            owner.level().addFreshEntity(meteor);
         }
     }
 

@@ -43,7 +43,7 @@ public class SimpleDomainEntity extends Mob {
     }
 
     public SimpleDomainEntity(LivingEntity owner) {
-        super(JJKEntities.SIMPLE_DOMAIN.get(), owner.level);
+        super(JJKEntities.SIMPLE_DOMAIN.get(), owner.level());
 
         this.setOwner(owner);
 
@@ -80,7 +80,7 @@ public class SimpleDomainEntity extends Mob {
 
         LivingEntity owner = this.getOwner();
 
-        if (!this.level.isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
             this.discard();
         } else if (owner != null) {
             this.setPos(owner.position());
@@ -94,7 +94,7 @@ public class SimpleDomainEntity extends Mob {
                 double x = this.getX() + RADIUS * Math.cos(phi);
                 double y = this.getY();
                 double z = this.getZ() + RADIUS * Math.sin(phi);
-                this.level.addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
+                this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
             }
         }
     }
@@ -133,8 +133,8 @@ public class SimpleDomainEntity extends Mob {
     public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level).getEntity(this.ownerUUID);
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -179,7 +179,7 @@ public class SimpleDomainEntity extends Mob {
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
 
-        LivingEntity owner = (LivingEntity) this.level.getEntity(pPacket.getData());
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
 
         if (owner != null) {
             this.setOwner(owner);

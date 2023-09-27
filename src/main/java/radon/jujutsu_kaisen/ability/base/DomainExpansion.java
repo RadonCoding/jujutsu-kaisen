@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -33,7 +34,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 result = true;
 
                 if (this instanceof IOpenDomain) {
-                    DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level);
+                    DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level());
                     result = domain != null && domain.isInsideBarrier(target.blockPosition());
                 }
             }
@@ -54,11 +55,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 }
             }
 
-            result = owner.isOnGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
+            result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
                     owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getRealCost(owner) < (cap.getMaxEnergy() / 2) ||
                             target.getHealth() > owner.getHealth() * 2;
 
-            for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level)) {
+            for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level())) {
                 result = true;
             }
 
@@ -78,7 +79,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel level) {
             if (cap.getDomain(level) == null) return Status.FAILURE;
         }
         return  super.checkStatus(owner);
@@ -150,6 +151,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         }
         default List<Block> getFloorBlocks() {
             return List.of();
+        }
+        @Nullable
+        default ParticleOptions getEnvironmentParticle() {
+            return null;
         }
     }
 

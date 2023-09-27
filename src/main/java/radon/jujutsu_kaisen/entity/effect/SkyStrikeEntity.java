@@ -42,7 +42,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
     }
 
     public SkyStrikeEntity(LivingEntity pShooter, Vec3 pos) {
-        this(JJKEntities.SKY_STRIKE.get(), pShooter.level);
+        this(JJKEntities.SKY_STRIKE.get(), pShooter.level());
 
         this.setOwner(pShooter);
 
@@ -86,7 +86,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
 
         this.moveDownToGround();
 
-        if (this.strikeTime >= STRIKE_LENGTH || !this.level.canSeeSkyFromBelowWater(this.blockPosition())) {
+        if (this.strikeTime >= STRIKE_LENGTH || !this.level().canSeeSkyFromBelowWater(this.blockPosition())) {
             this.discard();
         } else if (this.strikeTime == STRIKE_EXPLOSION) {
             this.playSound(SoundEvents.WARDEN_SONIC_BOOM);
@@ -103,9 +103,9 @@ public class SkyStrikeEntity extends JujutsuProjectile {
             BlockHitResult blockHit = (BlockHitResult) hit;
 
             if (blockHit.getDirection() == Direction.UP) {
-                BlockState state = this.level.getBlockState(blockHit.getBlockPos());
+                BlockState state = this.level().getBlockState(blockHit.getBlockPos());
 
-                if (this.strikeTime > STRIKE_LENGTH && state != this.level.getBlockState(blockPosition().below())) {
+                if (this.strikeTime > STRIKE_LENGTH && state != this.level().getBlockState(blockPosition().below())) {
                     this.discard();
                 }
                 if (state.getBlock() instanceof SlabBlock && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.BOTTOM) {
@@ -113,8 +113,8 @@ public class SkyStrikeEntity extends JujutsuProjectile {
                 } else {
                     this.setPos(getX(), blockHit.getBlockPos().getY() + 1.0625F, getZ());
                 }
-                if (this.level instanceof ServerLevel) {
-                    ((ServerLevel) this.level).getChunkSource().broadcast(this, new ClientboundTeleportEntityPacket(this));
+                if (this.level() instanceof ServerLevel) {
+                    ((ServerLevel) this.level()).getChunkSource().broadcast(this, new ClientboundTeleportEntityPacket(this));
                 }
             }
         }
@@ -122,7 +122,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
 
     public void hurtEntities(double radius) {
         AABB bounds = new AABB(this.getX() - radius, this.getY() - 0.5D, this.getZ() - radius, this.getX() + radius, Double.POSITIVE_INFINITY, this.getZ() + radius);
-        List<Entity> entities = this.level.getEntities(this, bounds);
+        List<Entity> entities = this.level().getEntities(this, bounds);
         double radiusSq = radius * radius;
 
         if (this.getOwner() instanceof LivingEntity owner) {
@@ -146,7 +146,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
 
     private HitResult getHitResult() {
         Vec3 startPos = new Vec3(this.getX(), this.getY(), this.getZ());
-        Vec3 endPos = new Vec3(this.getX(), this.level.getMinBuildHeight(), this.getZ());
-        return this.level.clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        Vec3 endPos = new Vec3(this.getX(), this.level().getMinBuildHeight(), this.getZ());
+        return this.level().clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
     }
 }

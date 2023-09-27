@@ -107,7 +107,7 @@ public class CyclopsCurseEntity extends CursedSpirit {
             this.entityData.set(DATA_SMASH, --smash);
         } else {
             if (target != null) {
-                if (this.isOnGround() && this.distanceTo(target) < 3.0D) {
+                if (this.onGround() && this.distanceTo(target) < 3.0D) {
                     this.entityData.set(DATA_SMASH, SMASH_DURATION);
                 }
             }

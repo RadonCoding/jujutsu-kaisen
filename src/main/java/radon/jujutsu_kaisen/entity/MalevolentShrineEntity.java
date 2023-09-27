@@ -80,7 +80,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
                                     if (distance < horizontal && distance >= horizontal - 1) {
                                         BlockPos pos = center.offset(x, vertical, z);
-                                        if (!this.isAffected(pos) || this.level.getBlockState(pos).isAir()) continue;
+                                        if (!this.isAffected(pos) || this.level().getBlockState(pos).isAir()) continue;
                                         this.ability.onHitBlock(this, owner, pos);
                                     }
                                 }
@@ -100,9 +100,9 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         if (owner != null) {
             AABB bounds = this.getBounds();
 
-            for (Entity entity : this.level.getEntities(this, bounds, this::isAffected)) {
+            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level).contains(this)) {
+                    if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level()).contains(this)) {
                         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 3 * 20, 0, false, false));
                         player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
                                 this.getX(), this.getY(), this.getZ(), 1.0F, 1.0F, this.random.nextLong()));

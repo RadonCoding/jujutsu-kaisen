@@ -21,7 +21,7 @@ public class Fireball extends Ability {
     @Override
     public void run(LivingEntity owner) {
         FireballProjectile fireball = new FireballProjectile(owner);
-        owner.level.addFreshEntity(fireball);
+        owner.level().addFreshEntity(fireball);
     }
 
     @Override

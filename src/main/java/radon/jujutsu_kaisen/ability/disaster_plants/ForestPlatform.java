@@ -23,7 +23,7 @@ public class ForestPlatform extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level.isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         BlockState replace = JJKBlocks.FAKE_WOOD.get().defaultBlockState();
 
@@ -33,16 +33,16 @@ public class ForestPlatform extends Ability implements Ability.IChannelened {
 
         for (BlockPos between : BlockPos.betweenClosed(pos.offset(-i, -1, -i), pos.offset(i, -1, i))) {
             if (between.closerToCenterThan(owner.position(), i)) {
-                BlockState state = owner.level.getBlockState(between);
+                BlockState state = owner.level().getBlockState(between);
 
                 if (state.isAir() || !state.canOcclude()) {
-                    owner.level.setBlockAndUpdate(between, replace);
+                    owner.level().setBlockAndUpdate(between, replace);
 
-                    if (owner.level.getBlockEntity(between) instanceof DurationBlockEntity be) {
+                    if (owner.level().getBlockEntity(between) instanceof DurationBlockEntity be) {
                         be.create(1, state);
                     }
                 } else if (state.is(JJKBlocks.FAKE_WOOD.get())) {
-                    if (owner.level.getBlockEntity(between) instanceof DurationBlockEntity be) {
+                    if (owner.level().getBlockEntity(between) instanceof DurationBlockEntity be) {
                         be.setDuration(1);
                     }
                 }

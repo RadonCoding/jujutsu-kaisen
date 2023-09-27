@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.client.gui.scren;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -82,32 +82,32 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
         return this.name.keyPressed(pKeyCode, pScanCode, pModifiers) || this.name.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
-    private void renderSlot(PoseStack pPoseStack, Slot pSlot) {
+    private void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         int i = pSlot.x;
         int j = pSlot.y;
         String s = null;
 
-        pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, 0.0F, 100.0F);
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (this.minecraft != null && this.minecraft.player != null) {
             ItemStack display = new ItemStack(Items.EMERALD, this.menu.getCost());
-            this.itemRenderer.renderAndDecorateItem(pPoseStack, this.minecraft.player, display, i, j, pSlot.x + pSlot.y * this.imageWidth);
-            this.itemRenderer.renderGuiItemDecorations(pPoseStack, this.font, display, i, j, s);
+            pGuiGraphics.renderFakeItem(display, i, j);
+            pGuiGraphics.renderItemDecorations(this.font, display, i, j, s);
         }
 
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        pPoseStack.popPose();
+        pGuiGraphics.pose().popPose();
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
         Slot slot = this.menu.slots.get(0);
 
@@ -115,20 +115,19 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
             int i = this.leftPos;
             int j = this.topPos;
 
-            pPoseStack.pushPose();
-            pPoseStack.translate((float)i, (float)j, 0.0F);
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
 
-            this.renderSlot(pPoseStack, slot);
+            this.renderSlot(pGuiGraphics, slot);
 
-            pPoseStack.popPose();
+            pGuiGraphics.pose().popPose();
         }
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        blit(pPoseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        blit(pPoseStack, this.leftPos + 15, this.topPos + 25, 0, this.imageHeight, 110, 16);
+    protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pX, int pY) {
+        pGuiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(TEXTURE, this.leftPos + 15, this.topPos + 25, 0, this.imageHeight, 110, 16);
     }
 }

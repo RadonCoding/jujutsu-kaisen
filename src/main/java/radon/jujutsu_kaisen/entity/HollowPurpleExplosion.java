@@ -27,7 +27,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     }
 
     public HollowPurpleExplosion(Entity pShooter, Vec3 pos) {
-        super(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), pShooter.level, pShooter);
+        super(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), pShooter.level(), pShooter);
 
         this.setOwner(pShooter);
 
@@ -42,7 +42,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         AABB bounds = this.getBoundingBox().inflate(radius);
 
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level, bounds)) {
+        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
                     (DAMAGE * cap.getGrade().getRealPower(owner)) * (entity == owner ? 0.25F : 1.0F));
@@ -58,8 +58,8 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX() + (this.random.nextDouble() - 0.5D) * radius,
                 this.getY() + (this.random.nextDouble() - 0.5D) * radius,
                 this.getZ() + (this.random.nextDouble() - 0.5D) * radius);
-        this.level.addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
-        this.level.addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        this.level().addParticle(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
+        this.level().addParticle(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 1.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ExplosionHandler.spawn(this.level.dimension(), BlockPos.containing(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)),
+            ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)),
                     RADIUS * cap.getGrade().getRealPower(owner), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
         } else {
             this.hurtEntities();

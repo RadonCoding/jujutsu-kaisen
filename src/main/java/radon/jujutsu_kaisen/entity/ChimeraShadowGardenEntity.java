@@ -2,12 +2,14 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +44,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
 
         int width = this.getWidth();
         int height = this.getHeight();
@@ -79,26 +81,29 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                                     if (!this.isAffected(pos)) return;
 
-                                    BlockState state = this.level.getBlockState(pos);
+                                    BlockState state = this.level().getBlockState(pos);
 
                                     if (!this.isRemoved()) {
-                                        BlockState original = null;
+                                        DomainBlockEntity original = null;
+                                        CompoundTag custom = null;
 
-                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            original = be.getOriginal();
-                                        } else if (this.level.getBlockEntity(pos) != null) {
-                                            return;
+                                        BlockEntity existing = this.level().getBlockEntity(pos);
+
+                                        if (existing instanceof DomainBlockEntity be) {
+                                            original = be;
+                                        } else if (existing != null) {
+                                            custom = existing.saveWithFullMetadata();
                                         } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock ||
                                                 state.getBlock() instanceof FakeWaterDomainBlock || state.getBlock() instanceof FakeWaterDurationBlock) {
                                             return;
                                         }
 
                                         Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
-                                        owner.level.setBlock(pos, block.defaultBlockState(),
+                                        owner.level().setBlock(pos, block.defaultBlockState(),
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
-                                        if (this.level.getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, original == null ? state : original);
+                                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                            be.create(this.uuid, original == null ? state : original.getOriginal(), original == null ? custom : original.getCustom());
                                         }
                                     }
                                 }
@@ -132,7 +137,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 if (this.getTime() == 0) {
                     this.createBarrier(owner);
                 }

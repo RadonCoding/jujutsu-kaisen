@@ -27,7 +27,7 @@ public class NueTotalityLightning extends Ability {
         BlockPos target = owner.blockPosition();
 
         for (int i = 0; i < owner.getY(); i++) {
-            BlockState state = owner.level.getBlockState(target.below(i));
+            BlockState state = owner.level().getBlockState(target.below(i));
 
             if (state.canOcclude()) {
                 target = target.below(i);
@@ -36,7 +36,7 @@ public class NueTotalityLightning extends Ability {
         }
         Vec3 pos = target.getCenter().add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 10.0D, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 10.0D);
         lightning.setPos(pos);
-        owner.level.addFreshEntity(lightning);
+        owner.level().addFreshEntity(lightning);
     }
 
     @Override
