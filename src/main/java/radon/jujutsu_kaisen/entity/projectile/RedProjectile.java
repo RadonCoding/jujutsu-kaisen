@@ -11,6 +11,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -101,7 +102,7 @@ public class RedProjectile extends JujutsuProjectile {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
-                    if (cap.isCooldownDone(JJKAbilities.HOLLOW_PURPLE.get())) {
+                    if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
                         cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
 
                         HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
