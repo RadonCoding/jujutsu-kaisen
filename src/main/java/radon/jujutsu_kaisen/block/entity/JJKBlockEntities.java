@@ -23,6 +23,10 @@ public class JJKBlockEntities {
                             JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get(),
                             JJKBlocks.FAKE_WATER_DOMAIN.get(),
 
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(),
+
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
 

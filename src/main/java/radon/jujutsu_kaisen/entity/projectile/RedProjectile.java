@@ -104,7 +104,8 @@ public class RedProjectile extends JujutsuProjectile {
                     if (cap.isCooldownDone(JJKAbilities.HOLLOW_PURPLE.get())) {
                         cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
 
-                        this.level().addFreshEntity(new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D)));
+                        HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                        this.level().addFreshEntity(explosion);
 
                         blue.discard();
                         this.discard();

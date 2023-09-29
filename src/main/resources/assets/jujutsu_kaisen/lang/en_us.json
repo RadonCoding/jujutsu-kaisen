@@ -10,6 +10,9 @@
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.energy": "Energy: %1$f/%2$f",
 
+  "gui.jujutsu_kaisen.domain_customization": "Domain Customization",
+  "gui.jujutsu_kaisen.domain_customization.size": "Size",
+
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
   "key.jujutsu_kaisen.ability_right": "Switch Ability Right",
@@ -21,6 +24,7 @@
   "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
   "key.jujutsu_kaisen.dash": "Dash",
+  "key.jujutsu_kaisen.open_domain_customization": "Open Domain Customization",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
@@ -37,6 +41,10 @@
   "item.jujutsu_kaisen.nyoi_staff.desc": "Functions as a lightning rod for accumulating charges of cursed energy with lightning nature.",
   "item.jujutsu_kaisen.slaughter_demon": "Slaughter Demon",
   "item.jujutsu_kaisen.slaughter_demon.desc": "Dagger imbued with cursed energy.",
+  "item.jujutsu_kaisen.kamutoke_dagger": "Kamutoke Dagger",
+  "item.jujutsu_kaisen.kamutoke_dagger.desc": "Legendary weapon symbolizing the properties of a diamond and a thunderbolt.",
+  "item.jujutsu_kaisen.trishula_staff": "Trishula Staff",
+  "item.jujutsu_kaisen.trishula_staff.desc": "Legendary weapon that has the power to remove the negative energies and thoughts from mind and body.",
 
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta's Sword",
   "item.jujutsu_kaisen.jet_black_shadow_sword": "Jet-Black Shadow Sword",
@@ -84,6 +92,7 @@
   "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
+  "item.jujutsu_kaisen.heian_sukuna_spawn_egg": "Spawn The King of Curses",
 
   "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -94,6 +103,7 @@
   "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
   "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
   "item.jujutsu_kaisen.feline_curse_spawn_egg": "Spawn Feline Curse",
+  "item.jujutsu_kaisen.hanami_spawn_egg": "Spawn Hanami",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain One",
@@ -209,6 +219,7 @@
   "ability.jujutsu_kaisen.wood_shield.disable": "Deactivated wood shield",
   "ability.jujutsu_kaisen.cursed_bud": "Cursed Bud",
   "ability.jujutsu_kaisen.forest_wave": "Forest Wave",
+  "ability.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
@@ -299,7 +310,7 @@
   "cursed_technique.jujutsu_kaisen.limitless": "Limitless",
   "cursed_technique.jujutsu_kaisen.dismantle_and_cleave": "Dismantle & Cleave",
   "cursed_technique.jujutsu_kaisen.cursed_speech": "Cursed Speech",
-  "cursed_technique.jujutsu_kaisen.rika": "Rika",
+  "cursed_technique.jujutsu_kaisen.copy": "Copy",
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
@@ -334,6 +345,8 @@
   "chat.jujutsu_kaisen.explode": "<%1$s> EXPLODE!",
   "chat.jujutsu_kaisen.die": "<%1$s> DIE!",
 
+  "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
+
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
   "entity.jujutsu_kaisen.satoru_gojo": "Satoru Gojo",
@@ -367,6 +380,8 @@
   "entity.jujutsu_kaisen.kuchisake_onna": "Kuchisake-Onna",
   "entity.jujutsu_kaisen.zomba_curse": "Zomba Curse",
   "entity.jujutsu_kaisen.worm_curse": "Worm Curse",
+  "entity.jujutsu_kaisen.heian_sukuna": "The King of Curses",
+  "entity.jujutsu_kaisen.hanami": "Hanami",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 
@@ -407,6 +422,9 @@
 
   "advancements.jujutsu_kaisen.evolved_curse.title": "Evolved Curse",
   "advancements.jujutsu_kaisen.evolved_curse.description": "You've developed to your final stage",
+
+  "advancements.jujutsu_kaisen.king_of_curses.title": "The King of Curses",
+  "advancements.jujutsu_kaisen.king_of_curses.description": "It's lonely at the top...",
 
   "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
 

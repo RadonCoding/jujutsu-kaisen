@@ -2,13 +2,12 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -31,16 +30,19 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         this.setOwner(pShooter);
 
-        this.setPos(pos);
+        if (this.getOwner() instanceof LivingEntity owner) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            float radius = RADIUS * cap.getGrade().getRealPower(owner);
+            this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
+        }
     }
 
     private void hurtEntities() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float radius = RADIUS * cap.getGrade().getRealPower(owner);
 
-        AABB bounds = this.getBoundingBox().inflate(radius);
+        AABB bounds = this.getBoundingBox();
 
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
@@ -63,7 +65,19 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     }
 
     @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return super.getDimensions(pPose);
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        float radius = RADIUS * cap.getGrade().getRealPower(owner);
+
+        return EntityDimensions.fixed(radius, radius);
+    }
+
+    @Override
     public void tick() {
+        this.refreshDimensions();
+
         this.spawnParticles();
 
         if (this.getTime() >= DURATION) {

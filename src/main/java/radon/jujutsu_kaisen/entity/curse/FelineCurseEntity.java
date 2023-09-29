@@ -6,7 +6,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -18,6 +17,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.base.PackCursedSpirit;
@@ -71,7 +71,7 @@ public class FelineCurseEntity extends PackCursedSpirit {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
+         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.4D, true));
         this.goalSelector.addGoal(4, new LookAtTargetGoal(this));

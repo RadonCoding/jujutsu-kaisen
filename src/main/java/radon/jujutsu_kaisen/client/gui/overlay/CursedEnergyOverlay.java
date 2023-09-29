@@ -42,7 +42,7 @@ public class CursedEnergyOverlay {
             graphics.pose().pushPose();
             graphics.pose().scale(0.5F, 0.5F, 0.5F);
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                    (20 * 2) + 5, (20 * 2) + 5, 16777215);
+                    (20 * 2) + 6, (20 * 2) + 6, 16777215);
             graphics.pose().popPose();
 
             RenderSystem.depthMask(true);

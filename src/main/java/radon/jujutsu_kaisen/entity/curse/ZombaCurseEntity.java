@@ -24,7 +24,7 @@ import java.util.List;
 public class ZombaCurseEntity extends CursedSpirit {
     private static final double ATTACK_RANGE = 32.0D;
 
-    private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
     public ZombaCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {

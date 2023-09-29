@@ -31,6 +31,15 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
     @Override
     public void render(@NotNull LightningEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
+        double collidePosY = pEntity.prevCollidePosY + (pEntity.collidePosY - pEntity.prevCollidePosY) * pPartialTick;
+        double collidePosZ = pEntity.prevCollidePosZ + (pEntity.collidePosZ - pEntity.prevCollidePosZ) * pPartialTick;
+        double posX = pEntity.xo + (pEntity.getX() - pEntity.xo) * pPartialTick;
+        double posY = pEntity.yo + (pEntity.getY() - pEntity.yo) * pPartialTick;
+        double posZ = pEntity.zo + (pEntity.getZ() - pEntity.zo) * pPartialTick;
+
+        float length = (float) Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
+
         float yaw = 180.0F / (float) Math.PI * (pEntity.prevYaw + (pEntity.renderYaw - pEntity.prevYaw) * pPartialTick);
         float pitch = 180.0F / (float) Math.PI * (pEntity.prevPitch + (pEntity.renderPitch - pEntity.prevPitch) * pPartialTick);
 
@@ -60,7 +69,7 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
         for (int j = 0; j < 4; ++j) {
             RandomSource random2 = RandomSource.create(pEntity.seed);
 
-            for(int k = 0; k < 3; ++k) {
+            for (int k = 0; k < 3; ++k) {
                 int l = 7;
                 int i1 = 0;
 

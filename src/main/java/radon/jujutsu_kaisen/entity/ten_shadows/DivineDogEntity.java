@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -24,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -58,7 +58,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
         Vec3 pos = ritual ? owner.position() : owner.position()
                 .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                .add(owner.getLookAngle().yRot(90.0F).scale(this.getVariant() == Variant.WHITE ? -0.45D : 0.45D));
+                .add(HelperMethods.getLookAngle(owner).yRot(90.0F).scale(this.getVariant() == Variant.WHITE ? -0.45D : 0.45D));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -184,7 +184,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
+         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.4D, true));
         this.goalSelector.addGoal(4, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));

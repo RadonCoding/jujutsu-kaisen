@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
@@ -210,6 +211,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level())) {
+            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2) continue;
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
     }

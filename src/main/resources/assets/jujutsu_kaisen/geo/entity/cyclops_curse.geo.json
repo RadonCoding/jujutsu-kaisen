@@ -74,7 +74,7 @@
 					"parent": "right_arm",
 					"pivot": [-20.5, 52, -1],
 					"cubes": [
-						{"origin": [-26, 29, -6], "size": [11, 22, 10], "uv": [0, 117]}
+						{"origin": [-26, 30, -6], "size": [11, 22, 10], "uv": [0, 117]}
 					]
 				},
 				{
@@ -91,7 +91,7 @@
 					"parent": "left_arm",
 					"pivot": [20.5, 52, -1],
 					"cubes": [
-						{"origin": [15, 29, -6], "size": [11, 22, 10], "uv": [0, 117], "mirror": true}
+						{"origin": [15, 30, -6], "size": [11, 22, 10], "uv": [0, 117], "mirror": true}
 					]
 				},
 				{

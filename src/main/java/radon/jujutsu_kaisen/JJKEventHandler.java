@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -43,8 +44,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
-import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -186,8 +186,10 @@ public class JJKEventHandler {
                                 player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                             }
                         }
-                        victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
-                        event.setCanceled(true);
+                        if (((LivingEntity) attacker).canAttack(victim)) {
+                            victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
+                            event.setCanceled(true);
+                        }
                     } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());
                         living.level().explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
@@ -276,7 +278,7 @@ public class JJKEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim instanceof Mob mob) mob.setTarget(event.getEntity());
+            if (victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -307,14 +309,6 @@ public class JJKEventHandler {
 
                 if (killer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData killerCap = killer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                    if (victim instanceof MegunaRyomenEntity || victim instanceof SukunaRyomenEntity) {
-                        killerCap.addTrait(Trait.STRONGEST);
-
-                        if (killer instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
-                        }
-                    }
 
                     if (victimCap.getType() == JujutsuType.CURSE) {
                         double width = victim.getBbWidth();
@@ -403,6 +397,10 @@ public class JJKEventHandler {
 
             if (event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
                 event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
+            }
+
+            if (event.getEntity() instanceof HeianSukunaEntity entity && event.getAbility() == JJKAbilities.BARRAGE.get()) {
+                entity.setBarrage(Barrage.DURATION * 2);
             }
         }
     }

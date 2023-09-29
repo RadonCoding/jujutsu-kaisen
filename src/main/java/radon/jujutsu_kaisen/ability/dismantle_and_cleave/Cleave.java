@@ -132,6 +132,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
             DamageSource source = this.getSource(owner, domain);
             float damage = calculateDamage(source, owner, target);
+
+            if (domain != null) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                damage *= (1.6F - cap.getDomainSize());
+            }
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             target.hurt(source, damage);
         }

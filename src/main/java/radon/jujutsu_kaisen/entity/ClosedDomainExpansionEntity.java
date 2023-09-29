@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
-        Vec3 direction = owner.getLookAngle();
+        Vec3 direction = HelperMethods.getLookAngle(owner);
         Vec3 behind = owner.position().add(direction.scale(radius - 3));
         this.moveTo(behind.x(), behind.y() - (double) (radius / 2), behind.z());
 
@@ -95,7 +96,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         pCompound.putInt("radius", this.getRadius());
     }
 
-    private int getRadius() {
+    public int getRadius() {
         return this.entityData.get(DATA_RADIUS);
     }
 
@@ -122,10 +123,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
-    private void createBarrier(Entity owner) {
+    private void createBarrier(LivingEntity owner) {
         int radius = this.getRadius();
 
-        Vec3 direction = owner.getLookAngle();
+        Vec3 direction = HelperMethods.getLookAngle(owner);
         Vec3 behind = owner.position().add(direction.scale(radius - 3));
         BlockPos center = BlockPos.containing(behind);
 
@@ -163,16 +164,17 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         return;
                                     }
 
-                                    List<Block> blocks = ((DomainExpansion.IClosedDomain) this.ability).getBlocks();
-                                    List<Block> filler = ((DomainExpansion.IClosedDomain) this.ability).getFillBlocks();
-                                    List<Block> floor = ((DomainExpansion.IClosedDomain) this.ability).getFloorBlocks();
+                                    DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
+                                    List<Block> blocks = domain.getBlocks();
+                                    List<Block> filler = domain.getFillBlocks();
+                                    List<Block> floor = domain.getFloorBlocks();
 
                                     Block block = null;
 
                                     if (state.isAir()) {
                                         if (distance >= radius - 1) {
                                             block = blocks.get(this.random.nextInt(blocks.size()));
-                                        } else if (pos.getY() <= floorY && !floor.isEmpty()) {
+                                        } else if (pos.getY() <= floorY && !floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
                                             block = floor.get(this.random.nextInt(floor.size()));
                                         }
                                     } else if (!state.getFluidState().isEmpty()) {

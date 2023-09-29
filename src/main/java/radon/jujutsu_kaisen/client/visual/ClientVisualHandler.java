@@ -35,7 +35,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientVisualHandler {
-    private static final RenderType SIX_EYES = JJKRenderTypes.sixEyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
+    private static final RenderType SIX_EYES = JJKRenderTypes.eyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
     private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
     private static final Map<UUID, VisualData> synced = new HashMap<>();

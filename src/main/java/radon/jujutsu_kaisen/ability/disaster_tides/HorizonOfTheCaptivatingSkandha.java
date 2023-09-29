@@ -18,11 +18,6 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public int getRadius() {
-        return 20;
-    }
-
-    @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
     }
@@ -41,7 +36,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         if (owner.level().getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getGrade().getRealPower(owner)));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getGrade().getRealPower(owner) * (1.6F - cap.getDomainSize())));
 
             if (owner.level().getGameTime() % 3 * 20 == 0) {
                 Ability fish = JJKAbilities.DEATH_SWARM.get();
@@ -58,7 +53,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int radius = this.getRadius();
+            int radius = Math.round(this.getRadius(owner));
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
             owner.level().addFreshEntity(domain);

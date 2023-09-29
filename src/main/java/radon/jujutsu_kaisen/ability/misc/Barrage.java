@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Barrage extends Ability {
     private static final double RANGE = 5.0D;
+    public static int DURATION = 8;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -34,7 +35,7 @@ public class Barrage extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level() instanceof ServerLevel level) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < DURATION; i++) {
                     cap.delayTickEvent(() -> {
                         owner.swing(InteractionHand.MAIN_HAND, true);
 

@@ -20,8 +20,10 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.CHAIN.get());
                         pOutput.accept(JJKItems.NYOI_STAFF.get());
                         pOutput.accept(JJKItems.SLAUGHTER_DEMON.get());
-                        pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
+                        pOutput.accept(JJKItems.KAMUTOKE_DAGGER.get());
+                        pOutput.accept(JJKItems.TRISHULA_STAFF.get());
 
+                        pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
 
@@ -61,6 +63,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.YUJI_IDATORI_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SUGURU_GETO_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.HEIAN_SUKUNA_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());

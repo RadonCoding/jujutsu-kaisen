@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -11,6 +12,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -34,8 +36,7 @@ public class SyncSorcererDataS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Minecraft mc = Minecraft.getInstance();
-            LocalPlayer player = mc.player;
+            Player player = ClientWrapper.getPlayer();
 
             assert player != null;
 

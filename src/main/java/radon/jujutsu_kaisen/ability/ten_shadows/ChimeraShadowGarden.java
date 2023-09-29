@@ -33,8 +33,8 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int width = this.getWidth();
-            int height = this.getHeight();
+            int width = Math.round(this.getWidth() * (1.6F - cap.getDomainSize()));
+            int height = Math.round(this.getWidth() * (1.6F - cap.getDomainSize()));
 
             ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
             owner.level().addFreshEntity(domain);

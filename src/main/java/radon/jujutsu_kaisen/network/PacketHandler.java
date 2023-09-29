@@ -141,6 +141,11 @@ public class PacketHandler {
                 .encoder(ReceiveVisualDataS2CPacket::encode)
                 .consumerMainThread(ReceiveVisualDataS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetDomainSizeC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetDomainSizeC2SPacket::new)
+                .encoder(SetDomainSizeC2SPacket::encode)
+                .consumerMainThread(SetDomainSizeC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

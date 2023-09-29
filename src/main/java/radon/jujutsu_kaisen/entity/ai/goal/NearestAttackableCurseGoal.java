@@ -11,6 +11,9 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -63,7 +66,7 @@ public class NearestAttackableCurseGoal extends TargetGoal {
             if (!(entity instanceof TamableAnimal tamable && entity instanceof ISorcerer && tamable.isTame())) {
                 if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
                 ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                return cap.getType() == JujutsuType.CURSE;
+                return entity instanceof SukunaRyomenEntity || entity instanceof MegunaRyomenEntity || entity instanceof HeianSukunaEntity || cap.getType() == JujutsuType.CURSE;
             }
             return false;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

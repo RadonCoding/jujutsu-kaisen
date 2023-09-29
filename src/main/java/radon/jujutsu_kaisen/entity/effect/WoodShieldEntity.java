@@ -103,7 +103,6 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     public void tick() {
         super.tick();
 
-
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
@@ -144,7 +143,7 @@ public class WoodShieldEntity extends WoodSegmentEntity {
                     this.level().addFreshEntity(this.prevSegment);
                 }
                 if (this.pos != null) {
-                    owner.moveTo(this.pos.x(), this.pos.y(), this.pos.z());
+                    owner.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
                 }
             } else if (!this.level().isClientSide) {
                 this.discard();

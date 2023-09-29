@@ -5,6 +5,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.projectile.MaximumBlueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -25,6 +28,12 @@ public class MaximumBlueMotion extends Ability {
 
         MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, true);
         owner.level().addFreshEntity(blue);
+    }
+
+    @Override
+    public Status checkStatus(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return !cap.isCooldownDone(JJKAbilities.MAXIMUM_BLUE_STILL.get()) ? Status.FAILURE : super.checkStatus(owner);
     }
 
     @Override

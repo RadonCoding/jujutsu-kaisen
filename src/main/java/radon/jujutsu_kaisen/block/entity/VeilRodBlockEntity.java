@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,6 +15,8 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.Modifier;
@@ -24,6 +29,7 @@ import java.util.stream.Stream;
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 5;
+    private static final float COST = 0.1F;
 
     private int counter;
     public int frequency;
@@ -69,6 +75,20 @@ public class VeilRodBlockEntity extends BlockEntity {
                     break;
                 }
             }
+        }
+
+        if (pBlockEntity.ownerUUID == null) return;
+
+        Entity entity = ((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID);
+
+        if (entity == null || !entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
+            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.getEnergy() < COST) return;
+
+            cap.useEnergy(COST);
         }
 
         if (nodes.size() == 4) {

@@ -7,10 +7,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.entity.NueTotalityLightingEntity;
+import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueTotalityLightning extends Ability {
+    private static final float DAMAGE = 5.0F;
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -23,7 +25,7 @@ public class NueTotalityLightning extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        NueTotalityLightingEntity lightning = new NueTotalityLightingEntity(owner);
+        JujutsuLightningEntity lightning = new JujutsuLightningEntity(owner, DAMAGE);
         BlockPos target = owner.blockPosition();
 
         for (int i = 0; i < owner.getY(); i++) {

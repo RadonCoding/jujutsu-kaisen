@@ -61,7 +61,7 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
 
         if (entity.isPresent()) {
             if (entity.get() instanceof ItemFrame frame) {
-                frame.setItem(getRandomCursedTool(level));
+                frame.setItem(getRandomCursedTool(level), false);
                 return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
         }
