@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -33,7 +34,7 @@ public class JJKRenderTypes extends RenderType {
                         .setOverlayState(OVERLAY)
                         .createCompositeState(false));
     });
-    private static final Function<ResourceLocation, RenderType> SIX_EYES = Util.memoize((pLocation) -> {
+    private static final Function<ResourceLocation, RenderType> EYES = Util.memoize((pLocation) -> {
         RenderStateShard.TextureStateShard shard = new RenderStateShard.TextureStateShard(pLocation, false, false);
         return create("six_eyes", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                 false, true, RenderType.CompositeState.builder()
@@ -52,7 +53,7 @@ public class JJKRenderTypes extends RenderType {
         return GLOW.apply(pLocation);
     }
 
-    public static RenderType sixEyes(ResourceLocation pLocation) {
-        return SIX_EYES.apply(pLocation);
+    public static @NotNull RenderType eyes(@NotNull ResourceLocation pLocation) {
+        return EYES.apply(pLocation);
     }
 }

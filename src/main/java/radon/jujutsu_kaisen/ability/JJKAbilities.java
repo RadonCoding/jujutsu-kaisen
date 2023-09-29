@@ -54,6 +54,7 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -109,6 +110,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WOOD_SHIELD = ABILITIES.register("wood_shield", WoodShield::new);
     public static RegistryObject<Ability> CURSED_BUD = ABILITIES.register("cursed_bud", CursedBud::new);
     public static RegistryObject<Ability> FOREST_WAVE = ABILITIES.register("forest_wave", ForestWave::new);
+    public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
@@ -122,7 +124,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
-    public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
@@ -212,7 +213,7 @@ public class JJKAbilities {
                     cap.useEnergy(cost);
                 }
 
-                Vec3 pos = owner.position().subtract(owner.getLookAngle()
+                Vec3 pos = owner.position().subtract(HelperMethods.getLookAngle(owner)
                         .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
                 curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
                 curse.setTame(true);
@@ -317,7 +318,6 @@ public class JJKAbilities {
             abilities.add(JJKAbilities.SMASH.get());
             abilities.add(JJKAbilities.WATER_WALKING.get());
             abilities.add(JJKAbilities.CURSED_ENERGY_FLOW.get());
-            abilities.add(JJKAbilities.CURSED_ENERGY_BLAST.get());
             abilities.add(JJKAbilities.LIGHTNING.get());
 
             abilities.add(JJKAbilities.HEAL.get());

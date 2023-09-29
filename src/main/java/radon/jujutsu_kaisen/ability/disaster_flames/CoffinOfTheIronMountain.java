@@ -16,11 +16,6 @@ import java.util.List;
 public class CoffinOfTheIronMountain extends DomainExpansion implements DomainExpansion.IClosedDomain {
     private static final float DAMAGE = 10.0F;
 
-    @Override
-    public int getRadius() {
-        return 20;
-    }
-
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
                 JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
@@ -33,7 +28,7 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
 
         if (owner.level().getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * cap.getGrade().getRealPower(owner) * (1.6F - cap.getDomainSize()))) {
                     entity.setSecondsOnFire(15);
                 }
             });
@@ -49,8 +44,7 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int radius = this.getRadius();
-            List<Block> blocks = this.getBlocks();
+            int radius = Math.round(this.getRadius(owner));
 
             ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
             owner.level().addFreshEntity(domain);

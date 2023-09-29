@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -17,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -25,53 +28,55 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        boolean result = false;
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasToggled(this)) {
             if (target != null) {
-                result = true;
-
-                if (this instanceof IOpenDomain) {
-                    DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level());
-                    result = domain != null && domain.isInsideBarrier(target.blockPosition());
-                }
+                DomainExpansionEntity domain = cap.getDomain((ServerLevel) owner.level());
+                return domain != null && domain.isInsideBarrier(target.blockPosition());
             }
         } else {
             if (target == null) return false;
 
-            double distance = owner.distanceTo(target);
-
             if (this instanceof DomainExpansion.IClosedDomain closed) {
-                if (distance >= closed.getRadius() / 2.0F) {
+                int radius = Math.round(closed.getRadius(owner));
+                Vec3 direction = HelperMethods.getLookAngle(owner);
+                Vec3 behind = owner.position().add(direction.scale(radius - 3));
+                BlockPos center = BlockPos.containing(behind.x(), behind.y() - (double) (radius / 2), behind.z())
+                        .offset(0, radius / 2, 0);
+                BlockPos relative = target.blockPosition().subtract(center);
+
+                if (relative.distSqr(Vec3i.ZERO) >= (radius - 1) * (radius - 1)) {
                     return false;
                 }
             }
 
             if (this instanceof DomainExpansion.IOpenDomain open) {
-                if (distance >= open.getWidth() / 2.0F) {
+                BlockPos relative = target.blockPosition().subtract(owner.blockPosition());
+
+                if (relative.getY() > open.getHeight() || relative.distSqr(Vec3i.ZERO) >= open.getWidth() * open.getWidth()) {
                     return false;
                 }
             }
 
-            result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.75F :
-                    owner.getHealth() / owner.getMaxHealth() < 0.25F || cap.getEnergy() - this.getRealCost(owner) < (cap.getMaxEnergy() / 2) ||
-                            target.getHealth() > owner.getHealth() * 2;
+            boolean result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
+                    owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
             for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level())) {
                 result = true;
+                break;
             }
 
             Status status = this.getStatus(owner, true, false, false, false);
 
-            if (result && (status == Status.SIMPLE_DOMAIN || status == Status.DOMAIN_AMPLIFICATION)) {
-                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                    cap.toggle(owner, JJKAbilities.SIMPLE_DOMAIN.get());
+            if (result && (status == Status.DOMAIN_AMPLIFICATION)) {
+                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    cap.toggle(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
+            return result;
         }
-        return result;
+        return false;
     }
 
     @Override
@@ -111,7 +116,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this));
+        MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 
     public abstract void onHitBlock(DomainExpansionEntity domain, LivingEntity owner,  BlockPos pos);
@@ -144,7 +149,13 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     public interface IClosedDomain {
-        int getRadius();
+        default int getSize() {
+            return 20;
+        }
+        default float getRadius(LivingEntity owner) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            return this.getSize() * cap.getDomainSize();
+        }
         List<Block> getBlocks();
         default List<Block> getFillBlocks() {
             return this.getBlocks();
@@ -152,9 +163,8 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         default List<Block> getFloorBlocks() {
             return List.of();
         }
-        @Nullable
-        default ParticleOptions getEnvironmentParticle() {
-            return null;
+        default boolean canPlaceFloor(BlockGetter getter, BlockPos pos) {
+            return true;
         }
     }
 

@@ -25,8 +25,9 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
-import radon.jujutsu_kaisen.client.gui.scren.AbilityScreen;
-import radon.jujutsu_kaisen.client.gui.scren.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
+import radon.jujutsu_kaisen.client.gui.screen.DomainCustomizationScreen;
+import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
@@ -97,6 +98,9 @@ public class JJKClientEventHandler {
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
+                }
+                if (JJKKeys.OPEN_DOMAIN_CUSTOMIZATION.isDown()) {
+                    mc.setScreen(new DomainCustomizationScreen());
                 }
                 if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
                     MeleeAbilityOverlay.scroll(1);
@@ -199,6 +203,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
             event.register(JJKKeys.DASH);
+            event.register(JJKKeys.OPEN_DOMAIN_CUSTOMIZATION);
         }
 
         @SubscribeEvent
@@ -296,7 +301,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAX_ELEPHANT.get(), MaxElephantRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
-            event.registerEntityRenderer(JJKEntities.NUE_TOTALITY_LIGHTNING.get(), LightningBoltRenderer::new);
+            event.registerEntityRenderer(JJKEntities.JUJUTSU_LIGHTNING.get(), LightningBoltRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), TranquilDeerRenderer::new);
             event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SKY_STRIKE.get(), SkyStrikeRenderer::new);
@@ -322,6 +327,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.LAVA_ROCK.get(), LavaRockRenderer::new);
             event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
         }
 
         @SubscribeEvent

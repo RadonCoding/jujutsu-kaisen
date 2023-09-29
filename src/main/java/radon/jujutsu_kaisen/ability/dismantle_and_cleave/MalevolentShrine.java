@@ -56,8 +56,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     @Override
     protected void createBarrier(LivingEntity owner) {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int width = this.getWidth();
-            int height = this.getHeight();
+            int width = Math.round(this.getWidth() * cap.getDomainSize());
+            int height = Math.round(this.getWidth() * cap.getDomainSize());
 
             MalevolentShrineEntity domain = new MalevolentShrineEntity(owner, this, width, height);
             owner.level().addFreshEntity(domain);

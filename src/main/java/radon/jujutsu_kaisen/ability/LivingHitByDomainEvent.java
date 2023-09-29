@@ -6,14 +6,20 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 
 public class LivingHitByDomainEvent extends LivingEvent {
     private final DomainExpansion ability;
+    private final LivingEntity attacker;
 
-    public LivingHitByDomainEvent(LivingEntity entity, DomainExpansion ability) {
+    public LivingHitByDomainEvent(LivingEntity entity, DomainExpansion ability, LivingEntity attacker) {
         super(entity);
 
         this.ability = ability;
+        this.attacker = attacker;
     }
 
     public DomainExpansion getAbility() {
         return this.ability;
+    }
+
+    public LivingEntity getAttacker() {
+        return this.attacker;
     }
 }

@@ -69,6 +69,11 @@ public class JJKEntities {
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
                             .toString()));
+    public static RegistryObject<EntityType<HanamiEntity>> HANAMI = ENTITIES.register("hanami", () ->
+            EntityType.Builder.<HanamiEntity>of(HanamiEntity::new, MobCategory.AMBIENT)
+                    .sized(1.4F, 3.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hanami")
+                            .toString()));
 
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.AMBIENT)
@@ -151,6 +156,11 @@ public class JJKEntities {
                     .sized(1.4F, 3.875F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
                             .toString()));
+    public static RegistryObject<EntityType<HeianSukunaEntity>> HEIAN_SUKUNA = ENTITIES.register("heian_sukuna", () ->
+            EntityType.Builder.<HeianSukunaEntity>of(HeianSukunaEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 2.9F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
+                            .toString()));
 
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
             EntityType.Builder.<DismantleProjectile>of(DismantleProjectile::new, MobCategory.MISC)
@@ -202,9 +212,9 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_water")
                             .toString()));
-    public static RegistryObject<EntityType<NueTotalityLightingEntity>> NUE_TOTALITY_LIGHTNING = ENTITIES.register("nue_totality_lightning", () ->
-            EntityType.Builder.<NueTotalityLightingEntity>of(NueTotalityLightingEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue_totality_lightning")
+    public static RegistryObject<EntityType<JujutsuLightningEntity>> JUJUTSU_LIGHTNING = ENTITIES.register("jujutsu_lightning", () ->
+            EntityType.Builder.<JujutsuLightningEntity>of(JujutsuLightningEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jujutsu_lightning")
                             .toString()));
     public static RegistryObject<EntityType<SkyStrikeEntity>> SKY_STRIKE = ENTITIES.register("sky_strike", () ->
             EntityType.Builder.<SkyStrikeEntity>of(SkyStrikeEntity::new, MobCategory.MISC)
@@ -381,6 +391,7 @@ public class JJKEntities {
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
+        event.put(HEIAN_SUKUNA.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 
@@ -401,6 +412,8 @@ public class JJKEntities {
 
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(DAGON.get(), SorcererEntity.createAttributes().build());
+        event.put(HANAMI.get(), SorcererEntity.createAttributes().build());
+
         event.put(RUGBY_FIELD_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FISH_CURSE.get(), FishCurseEntity.createAttributes().build());
         event.put(CYCLOPS_CURSE.get(), SorcererEntity.createAttributes().build());

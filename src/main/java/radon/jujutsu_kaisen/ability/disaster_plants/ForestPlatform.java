@@ -6,11 +6,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 
-public class ForestPlatform extends Ability implements Ability.IChannelened {
+public class ForestPlatform extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null;
@@ -18,7 +17,7 @@ public class ForestPlatform extends Ability implements Ability.IChannelened {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.CHANNELED;
+        return ActivationType.TOGGLED;
     }
 
     @Override
@@ -56,17 +55,17 @@ public class ForestPlatform extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onRelease(LivingEntity owner, int charge) {
-
-    }
-
-    @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
-    }
-
-    @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+
+    }
+
+    @Override
+    public void onDisabled(LivingEntity owner) {
+
     }
 }

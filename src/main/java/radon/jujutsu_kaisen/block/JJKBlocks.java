@@ -78,6 +78,26 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FILL = BLOCKS.register("shining_sea_of_flowers_fill", () ->
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FLOOR = BLOCKS.register("shining_sea_of_flowers_floor", () ->
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .noCollission()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
     public static RegistryObject<ChimeraShadowGardenBlock> CHIMERA_SHADOW_GARDEN = BLOCKS.register("chimera_shadow_garden", () ->
             new ChimeraShadowGardenBlock(JJKFluids.CHIMERA_SHADOW_GARDEN_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 

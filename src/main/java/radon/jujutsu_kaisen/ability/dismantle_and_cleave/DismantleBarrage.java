@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.dismantle_and_cleave;
 
 import net.minecraft.world.entity.LivingEntity;
+import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class DismantleBarrage extends Dismantle {
@@ -22,5 +23,10 @@ public class DismantleBarrage extends Dismantle {
     @Override
     public int getCooldown() {
         return super.getCooldown() * 2;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
     }
 }

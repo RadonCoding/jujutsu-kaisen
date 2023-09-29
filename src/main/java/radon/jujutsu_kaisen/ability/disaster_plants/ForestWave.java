@@ -10,7 +10,6 @@ import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestWave extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final int OFFSET = 3;
     private static final int DELAY = 3;
 
     @Override
@@ -25,7 +24,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
 
     @Override
     public void run(LivingEntity owner) {
-        int charge = this.getCharge(owner) + OFFSET;
+        int charge = this.getCharge(owner);
 
         float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
         float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
@@ -33,12 +32,14 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         for (int i = -1; i < 2; i++) {
             ForestWaveEntity forest = new ForestWaveEntity(owner);
             Vec3 look = HelperMethods.getLookAngle(owner);
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (forest.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(charge + i));
+            Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
+                    .add(look.yRot(90.0F).scale(-forest.getBbWidth()))
+                    .add(look.scale(charge + i));
             forest.moveTo(spawn.x(), spawn.y(), spawn.z(), yRot, xRot);
 
-            if (charge - OFFSET != 0 && HelperMethods.getEntityCollisionsOfClass(ForestWaveEntity.class, owner.level(), forest.getBoundingBox()).isEmpty()) continue;
+            if (charge != 0 && HelperMethods.getEntityCollisionsOfClass(ForestWaveEntity.class, owner.level(), forest.getBoundingBox()).isEmpty()) continue;
 
-            forest.setDamage(charge - OFFSET >= DELAY);
+            forest.setDamage(charge >= DELAY);
 
             owner.level().addFreshEntity(forest);
         }

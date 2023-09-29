@@ -21,8 +21,7 @@ import java.util.List;
 
 public class JogoEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
-    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public JogoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -68,14 +67,9 @@ public class JogoEntity extends CursedSpirit {
         return JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get();
     }
 
-    @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
-
     private PlayState walkPredicate(AnimationState<JogoEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
+            return animationState.setAndContinue(WALK);
         }
         return PlayState.STOP;
     }

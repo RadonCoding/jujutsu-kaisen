@@ -49,9 +49,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (int i = 0; i < 8; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - owner.getLookAngle().scale(0.35D).x();
+                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - owner.getLookAngle().scale(0.35D).z();
+                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
                 level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.1F, true, 1),
                         x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
             }
@@ -90,7 +90,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public float getCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        float cost = 0.3F;
+        float cost = 0.2F;
 
         if (owner.isInWater() && cap.getNature() == CursedEnergyNature.LIGHTNING) {
             return cost * 10.0F;

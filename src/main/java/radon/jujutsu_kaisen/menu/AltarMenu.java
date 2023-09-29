@@ -18,8 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
@@ -72,31 +70,13 @@ public class AltarMenu extends ItemCombinerMenu {
                 .build();
     }
 
-    public int getCost() {
-        int cost = 0;
-
-        for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
-            ItemStack slot = this.inputSlots.getItem(i);
-
-            if (!slot.isEmpty()) cost++;
-        }
-        return cost * 100;
-    }
-
     @Override
     protected boolean mayPickup(@NotNull Player pPlayer, boolean pHasStack) {
-        if (!pPlayer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = pPlayer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (pPlayer.getAbilities().instabuild || cap.getEnergy() >= this.getCost()) && this.getCost() > 0;
+        return true;
     }
 
     @Override
     protected void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
-        if (!pPlayer.getAbilities().instabuild) {
-            pPlayer.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    cap.useEnergy(this.getCost()));
-        }
-
         for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
             ItemStack slot = this.inputSlots.getItem(i);
 
@@ -139,6 +119,8 @@ public class AltarMenu extends ItemCombinerMenu {
         } else {
             ItemStack copy = stack.copy();
 
+            boolean success = false;
+
             for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
                 if (i == 4) continue;
 
@@ -148,10 +130,14 @@ public class AltarMenu extends ItemCombinerMenu {
 
                 if (!slot.isEmpty()) {
                     VeilRodItem.setModifier(copy, index, getModifier(slot, BLACKLIST.contains(i) ? Modifier.Action.DENY : Modifier.Action.ALLOW));
+                    success = true;
                 }
             }
-            this.resultSlots.setItem(0, copy);
-            this.broadcastChanges();
+
+            if (success) {
+                this.resultSlots.setItem(0, copy);
+                this.broadcastChanges();
+            }
         }
     }
 }

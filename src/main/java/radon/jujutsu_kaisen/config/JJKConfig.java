@@ -33,6 +33,7 @@ public class JJKConfig {
         amounts.put(JJKEntities.MEGUNA_RYOMEN.getId(), 10000.0F);
         amounts.put(JJKEntities.SATORU_GOJO.getId(), 5000.0F);
         amounts.put(JJKEntities.YUTA_OKKOTSU.getId(), 7500.0F);
+        amounts.put(JJKEntities.HEIAN_SUKUNA.getId(), 10000.0F);
 
         this.maxCursedEnergyNPC = builder
                 .comment("Maximum cursed energy for NPCs")

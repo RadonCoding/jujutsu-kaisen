@@ -202,8 +202,8 @@ public class Infinity extends Ability implements Ability.IToggled {
         if (projectile instanceof ThrownChainItemProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
-        for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) target.level()))) {
-            if (projectile.getOwner() == domain.getOwner()) return false;
+        for (DomainExpansionEntity ignored : cap.getDomains(((ServerLevel) target.level()))) {
+            return false;
         }
         if (projectile.getOwner() instanceof LivingEntity owner && JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) &&
                 owner.distanceTo(target) <= SimpleDomainEntity.RADIUS) return false;
@@ -278,14 +278,8 @@ public class Infinity extends Ability implements Ability.IToggled {
                     }
 
                     if (target.level() instanceof ServerLevel level) {
-                        for (DomainExpansionEntity domain : targetCap.getDomains(level)) {
-                            if (!domain.checkSureHitEffect()) continue;
-
-                            Entity owner = domain.getOwner();
-
-                            if (owner == source.getEntity()) {
-                                return;
-                            }
+                        for (DomainExpansionEntity ignored : targetCap.getDomains(level)) {
+                            return;
                         }
 
                         for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),

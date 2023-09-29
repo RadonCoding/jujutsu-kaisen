@@ -21,8 +21,7 @@ import java.util.List;
 
 public class DagonEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
-    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
-    private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public DagonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -68,14 +67,9 @@ public class DagonEntity extends CursedSpirit {
         return JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get();
     }
 
-    @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
-
     private PlayState walkPredicate(AnimationState<DagonEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
+            return animationState.setAndContinue(WALK);
         }
         return PlayState.STOP;
     }

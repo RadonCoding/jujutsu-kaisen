@@ -16,8 +16,24 @@
     "announce_to_chat": true
   },
   "criteria": {
-    "impossible": {
-      "trigger": "minecraft:impossible"
+    "killed_sukuna": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "jujutsu_kaisen:heian_sukuna"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
     }
-  }
+  },
+  "requirements": [
+    [
+      "killed_sukuna"
+    ]
+  ]
 }

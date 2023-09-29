@@ -31,4 +31,9 @@ public class CursedBud extends Ability {
     public float getCost(LivingEntity owner) {
         return 300.0F;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
 }

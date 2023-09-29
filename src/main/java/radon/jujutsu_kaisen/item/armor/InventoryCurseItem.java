@@ -74,7 +74,10 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
     public static void removeItem(ItemStack inventory, int slot) {
         CompoundTag nbt = inventory.getOrCreateTag();
         ListTag itemsTag = nbt.getList("items", Tag.TAG_COMPOUND);
-        itemsTag.remove(slot);
+
+        if (itemsTag.size() >= slot) {
+            itemsTag.remove(slot);
+        }
         nbt.put("items", itemsTag);
     }
 

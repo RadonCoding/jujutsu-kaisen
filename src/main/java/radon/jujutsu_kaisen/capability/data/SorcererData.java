@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -45,6 +46,8 @@ import java.util.concurrent.Callable;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
+
+    private float domainSize;
 
     private @Nullable CursedTechnique technique;
 
@@ -105,6 +108,8 @@ public class SorcererData implements ISorcererData {
     private static final int ADAPTATION_STEP = 5 * 20;
 
     public SorcererData() {
+        this.domainSize = 1.0F;
+
         this.type = JujutsuType.SORCERER;
 
         this.copied = new LinkedHashSet<>();
@@ -408,7 +413,10 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil((Math.log(grade.ordinal() + 1) * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)) / 20) * 20;
+            double health = Math.ceil((Math.log(grade.ordinal() + 1)
+                    * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)
+                    * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.25D : 1.0D)
+                    * (this.traits.contains(Trait.CURSED_WOMB) ? 0.5D : 1.0D)) / 20) * 20;
 
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
@@ -423,9 +431,9 @@ public class SorcererData implements ISorcererData {
             double movement = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D);
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
-            float resistanceMultiplier = this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F;
-            int resistance = Mth.floor(resistanceMultiplier * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
+            float resistance = this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F;
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(resistance * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+                    false, false, false));
 
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
         } else {
@@ -449,10 +457,20 @@ public class SorcererData implements ISorcererData {
             }
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            float resistanceMultiplier = this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F;
-            int resistance = Mth.floor(resistanceMultiplier * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
+            float resistance = this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F;
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(resistance * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
+                    false, false, false));
         }
+    }
+
+    @Override
+    public float getDomainSize() {
+        return this.domainSize;
+    }
+
+    @Override
+    public void setDomainSize(float domainSize) {
+        this.domainSize = domainSize;
     }
 
     public @Nullable CursedTechnique getTechnique() {
@@ -717,7 +735,8 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return this.lastBlackFlashTime != -1 && ((owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
+        return owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.TRISHULA_STAFF.get()) || owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.TRISHULA_STAFF.get()) ||
+                this.lastBlackFlashTime != -1 && ((owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override
@@ -737,7 +756,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public Set<CursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.RIKA)) {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.COPY)) {
             return Set.of();
         }
         return this.copied;
@@ -1128,7 +1147,7 @@ public class SorcererData implements ISorcererData {
 
             assert this.technique != null;
 
-            if (this.technique == CursedTechnique.RIKA) {
+            if (this.technique == CursedTechnique.COPY) {
                 this.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
             }
 
@@ -1182,6 +1201,7 @@ public class SorcererData implements ISorcererData {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
+        nbt.putFloat("domain_size", this.domainSize);
 
         if (this.technique != null) {
             nbt.putInt("technique", this.technique.ordinal());
@@ -1333,6 +1353,8 @@ public class SorcererData implements ISorcererData {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         this.initialized = nbt.getBoolean("initialized");
+
+        this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
             this.technique = CursedTechnique.values()[nbt.getInt("technique")];

@@ -30,9 +30,9 @@ import java.util.List;
 
 
 public class DisplayCaseBlockEntity extends BlockEntity {
-    private static final int RARITY = 30;
+    private static final int RARITY = 50;
     private static final double SPAWN_RADIUS = 64.0D;
-    private static final int INTERVAL = 3;
+    private static final int INTERVAL = 5;
 
     private ItemStack stack = ItemStack.EMPTY;
     private int rot = 0;

@@ -24,6 +24,9 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
+    float getDomainSize();
+    void setDomainSize(float domainSize);
+
     List<DomainExpansionEntity> getDomains(ServerLevel level);
     void onInsideDomain(DomainExpansionEntity domain);
 
