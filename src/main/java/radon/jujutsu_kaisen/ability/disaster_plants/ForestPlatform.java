@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 public class ForestPlatform extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
+        return owner.fallDistance > 0.0F;
     }
 
     @Override
@@ -38,11 +38,11 @@ public class ForestPlatform extends Ability implements Ability.IToggled {
                     owner.level().setBlockAndUpdate(between, replace);
 
                     if (owner.level().getBlockEntity(between) instanceof DurationBlockEntity be) {
-                        be.create(1, state);
+                        be.create(2, state);
                     }
                 } else if (state.is(JJKBlocks.FAKE_WOOD.get())) {
                     if (owner.level().getBlockEntity(between) instanceof DurationBlockEntity be) {
-                        be.setDuration(1);
+                        be.setDuration(2);
                     }
                 }
             }

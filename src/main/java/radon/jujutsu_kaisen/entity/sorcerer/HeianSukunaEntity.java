@@ -133,9 +133,11 @@ public class HeianSukunaEntity extends SorcererEntity {
         this.targetSelector.addGoal(4, new NearestAttackableCurseGoal(this, false));
     }
 
-    private PlayState walkPredicate(AnimationState<HeianSukunaEntity> animationState) {
+    private PlayState walkSitPredicate(AnimationState<HeianSukunaEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(WALK);
+        } else if (this.entityData.get(DATA_IDLE)) {
+            return animationState.setAndContinue(SIT);
         }
         return PlayState.STOP;
     }
@@ -150,17 +152,9 @@ public class HeianSukunaEntity extends SorcererEntity {
         return PlayState.STOP;
     }
 
-    private PlayState sitPredicate(AnimationState<HeianSukunaEntity> animationState) {
-        if (this.entityData.get(DATA_IDLE)) {
-            return animationState.setAndContinue(SIT);
-        }
-        return PlayState.STOP;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk", this::walkPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Walk/Sit", this::walkSitPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Sit", this::sitPredicate));
     }
 }

@@ -68,11 +68,6 @@ public class MeteorEntity extends Entity {
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return this.getBbHeight();
-    }
-
-    @Override
     public boolean shouldRiderSit() {
         return false;
     }
@@ -195,7 +190,7 @@ public class MeteorEntity extends Entity {
     }
 
     @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
+    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements) {
         this.lerpX = pX;
         this.lerpY = pY;
         this.lerpZ = pZ;

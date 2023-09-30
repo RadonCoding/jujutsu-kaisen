@@ -105,7 +105,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         AABB bounds = this.getBounds();
 
-        for (DomainExpansionEntity entity : this.level().getEntitiesOfClass(DomainExpansionEntity.class, bounds)) {
+        for (DomainExpansionEntity entity : HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), bounds)) {
             if (this.isInsideBarrier(entity.blockPosition())) {
                 entities.add(entity);
             }

@@ -3,10 +3,10 @@ package radon.jujutsu_kaisen.network;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
@@ -21,11 +21,9 @@ public class PacketHandler {
     }
 
     public static void register() {
-        INSTANCE = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(JujutsuKaisen.MOD_ID, "messages"))
-                .networkProtocolVersion(() -> "1.0")
-                .clientAcceptedVersions(s -> true)
-                .serverAcceptedVersions(s -> true).simpleChannel();
+        INSTANCE = ChannelBuilder
+                .named(new ResourceLocation(JujutsuKaisen.MOD_ID, "main"))
+                .simpleChannel();
         INSTANCE.messageBuilder(SyncSorcererDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SyncSorcererDataS2CPacket::new)
                 .encoder(SyncSorcererDataS2CPacket::encode)
@@ -149,18 +147,14 @@ public class PacketHandler {
     }
 
     public static <MSG> void sendToServer(MSG message) {
-        INSTANCE.sendToServer(message);
+        INSTANCE.send(message, PacketDistributor.SERVER.noArg());
     }
 
     public static <MSG> void sendToClient(MSG message, ServerPlayer player) {
-        INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+        INSTANCE.send(message, PacketDistributor.PLAYER.with(player));
     }
 
     public static <MSG> void sendTracking(MSG message, Entity entity) {
-        INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
-    }
-
-    public static <MSG> void broadcast(MSG message) {
-        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+        INSTANCE.send(message, PacketDistributor.TRACKING_ENTITY.with(entity));
     }
 }

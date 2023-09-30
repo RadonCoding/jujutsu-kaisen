@@ -192,10 +192,10 @@ public class JJKEntities {
                     .sized(MeteorEntity.SIZE * 2, MeteorEntity.SIZE * 2)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meteor")
                             .toString()));
-    public static RegistryObject<EntityType<ThrownChainItemProjectile>> THROWN_CHAIN_ITEM = ENTITIES.register("throw_chain_item", () ->
-            EntityType.Builder.<ThrownChainItemProjectile>of(ThrownChainItemProjectile::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<ThrownChainProjectile>> THROWN_CHAIN = ENTITIES.register("throw_chain", () ->
+            EntityType.Builder.<ThrownChainProjectile>of(ThrownChainProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "throw_chain_item")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "throw_chain")
                             .toString()));
     public static RegistryObject<EntityType<ScissorEntity>> SCISSOR = ENTITIES.register("scissor", () ->
             EntityType.Builder.<ScissorEntity>of(ScissorEntity::new, MobCategory.MISC)

@@ -39,7 +39,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public static final double RANGE = 30.0D;
     private static final int COUNT = 16;
     private static final float COST = 500.0F;
-    private static final float DAMAGE = 20.0F;
+    private static final float DAMAGE = 15.0F;
     private static final int DURATION = 3 * 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

@@ -12,7 +12,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.ChainRenderer;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -60,7 +60,7 @@ public class ChainItem extends CursedToolItem implements GeoItem {
         ItemStack item = pLivingEntity.getOffhandItem();
 
         if (item.getItem() instanceof SwordItem || item.isEmpty() && pRemainingUseDuration == this.getUseDuration(pStack)) {
-            ThrownChainItemProjectile projectile = new ThrownChainItemProjectile(pLivingEntity, item.copy());
+            ThrownChainProjectile projectile = new ThrownChainProjectile(pLivingEntity, item.copy());
             pLevel.addFreshEntity(projectile);
 
             if (!item.isEmpty()) {

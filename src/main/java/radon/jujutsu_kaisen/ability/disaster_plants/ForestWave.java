@@ -6,6 +6,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -14,7 +15,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
+        return JJKAbilities.isChanneling(owner, this) ? target != null : HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override

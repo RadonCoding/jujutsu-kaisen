@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
@@ -14,7 +14,6 @@ import radon.jujutsu_kaisen.network.packet.s2c.ReceiveVisualDataS2CPacket;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class RequestVisualDataC2SPacket {
     private final CompoundTag existing;
@@ -26,7 +25,7 @@ public class RequestVisualDataC2SPacket {
     }
 
     public RequestVisualDataC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readAnySizeNbt(), buf.readUUID());
+        this(buf.readNbt(), buf.readUUID());
     }
 
     public void encode(FriendlyByteBuf buf) {
@@ -34,8 +33,7 @@ public class RequestVisualDataC2SPacket {
         buf.writeUUID(this.src);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
+    public void handle(CustomPayloadEvent.Context ctx) {
 
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
