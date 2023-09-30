@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
 
 import java.util.*;
@@ -35,5 +36,13 @@ public class AbilityScreen extends RadialScreen {
         items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
 
         return items;
+    }
+
+    @Override
+    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+        if (pKeyCode == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue()) {
+            this.onClose();
+        }
+        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
     }
 }

@@ -15,16 +15,16 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
-import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
-import radon.jujutsu_kaisen.item.JJKCreativeTabs;
-import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
+import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.Config;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.menu.JJKMenus;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
@@ -39,8 +39,7 @@ public class JujutsuKaisen {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModLoadingContext ctx = ModLoadingContext.get();
-        ctx.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
-        ctx.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
+        ctx.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
 

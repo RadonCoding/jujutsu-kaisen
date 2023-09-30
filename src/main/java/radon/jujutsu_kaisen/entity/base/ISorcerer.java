@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.Config;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public interface ISorcerer {
         data.addTraits(this.getTraits());
         data.setType(this.getJujutsuType());
 
-        Map<ResourceLocation, Float> config = ConfigHolder.SERVER.getMaxCursedEnergyNPC();
+        Map<ResourceLocation, Float> config = Config.getMaxCursedEnergyNPC();
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(((Entity) this).getType());
 
         if (config.containsKey(key)) {

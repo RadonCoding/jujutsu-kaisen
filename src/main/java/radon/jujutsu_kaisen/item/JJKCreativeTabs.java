@@ -67,6 +67,7 @@ public class JJKCreativeTabs {
 
                         pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.HANAMI_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.RUGBY_FIELD_CURSE_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.FISH_CURSE_SPAWN_EGG.get());

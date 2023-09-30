@@ -28,12 +28,6 @@ public class BountyScreen extends AbstractContainerScreen<BountyMenu> {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    public void containerTick() {
-        super.containerTick();
-
-        this.name.tick();
-    }
-
     @Override
     protected void init() {
         super.init();

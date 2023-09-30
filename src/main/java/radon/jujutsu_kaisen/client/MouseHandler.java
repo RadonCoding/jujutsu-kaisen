@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 public class MouseHandler {
     @SubscribeEvent
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
-        double delta = event.getScrollDelta();
+        double delta = event.getDeltaY();
 
         int i = (int) Math.signum(delta);
 

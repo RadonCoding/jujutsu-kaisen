@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.capability.data;
 
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
-import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.Config;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -344,7 +344,7 @@ public class SorcererData implements ISorcererData {
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
+        AdvancementHolder advancement = server.getAdvancements().m_294099_(new ResourceLocation(JujutsuKaisen.MOD_ID,
                 String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
 
         if (advancement != null) {
@@ -414,7 +414,7 @@ public class SorcererData implements ISorcererData {
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil((Math.log(grade.ordinal() + 1)
-                    * (this.traits.contains(Trait.STRONGEST) ? 80.0D : 40.0D)
+                    * (this.traits.contains(Trait.STRONGEST) ? 100.0D : 50.0D)
                     * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.25D : 1.0D)
                     * (this.traits.contains(Trait.CURSED_WOMB) ? 0.5D : 1.0D)) / 20) * 20;
 
@@ -440,7 +440,7 @@ public class SorcererData implements ISorcererData {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
 
             double health = Math.ceil((Math.log(grade.ordinal() + 1)
-                    * (this.traits.contains(Trait.STRONGEST) ? 40.0D : 20.0D)
+                    * (this.traits.contains(Trait.STRONGEST) ? 50.0D : 25.0D)
                     * (this.traits.contains(Trait.EVOLVED_CURSE) ? 1.25D : 1.0D)
                     * (this.traits.contains(Trait.CURSED_WOMB) ? 0.5D : 1.0D)) / 20) * 20;
 
@@ -681,7 +681,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public float getMaxEnergy() {
         if (this.maxEnergy == 0.0F) {
-            this.maxEnergy = ConfigHolder.SERVER.maxCursedEnergyDefault.get();
+            this.maxEnergy = Config.maxCursedEnergyDefault.get();
         }
         return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)
                 * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F)

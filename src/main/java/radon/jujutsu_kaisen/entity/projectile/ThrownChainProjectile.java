@@ -24,23 +24,23 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 
-public class ThrownChainItemProjectile extends AbstractArrow {
+public class ThrownChainProjectile extends AbstractArrow {
     private static final double PULL_STRENGTH = 5.0D;
 
-    private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainItemProjectile.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainItemProjectile.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
 
     private boolean released;
     private boolean dealtDamage;
 
-    public ThrownChainItemProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
+    public ThrownChainProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
     }
 
-    public ThrownChainItemProjectile(LivingEntity pShooter, ItemStack stack) {
-        super(JJKEntities.THROWN_CHAIN_ITEM.get(), pShooter, pShooter.level());
+    public ThrownChainProjectile(LivingEntity pShooter, ItemStack stack) {
+        super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level());
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(HelperMethods.getLookAngle(pShooter));

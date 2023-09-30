@@ -3,12 +3,10 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-
-import java.util.function.Supplier;
 
 public class TriggerAbilityC2SPacket {
     private final ResourceLocation key;
@@ -25,9 +23,7 @@ public class TriggerAbilityC2SPacket {
         buf.writeResourceLocation(this.key);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
+    public void handle(CustomPayloadEvent.Context ctx) {
         Ability ability = JJKAbilities.getValue(this.key);
 
         ctx.enqueueWork(() -> {

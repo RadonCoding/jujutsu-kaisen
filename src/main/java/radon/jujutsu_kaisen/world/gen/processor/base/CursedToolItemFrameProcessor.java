@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -28,8 +29,8 @@ import java.util.Optional;
 
 public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
     private static ItemStack getRandomCursedTool(ServerLevel level) {
-        InvertedSpearData data = level.getDataStorage().computeIfAbsent(InvertedSpearData::load,
-                InvertedSpearData::new, InvertedSpearData.IDENTIFIER);
+        InvertedSpearData data = level.getDataStorage().computeIfAbsent(InvertedSpearData.factory(),
+                InvertedSpearData.IDENTIFIER);
 
         List<ItemStack> pool = new ArrayList<>();
 
@@ -72,6 +73,10 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
         public static final String IDENTIFIER = "inverted_spear_data";
 
         private boolean exists;
+
+        public static SavedData.Factory<InvertedSpearData> factory() {
+            return new SavedData.Factory<>(InvertedSpearData::new, InvertedSpearData::load, DataFixTypes.LEVEL);
+        }
 
         public static InvertedSpearData load(CompoundTag pCompoundTag) {
             InvertedSpearData data = new InvertedSpearData();

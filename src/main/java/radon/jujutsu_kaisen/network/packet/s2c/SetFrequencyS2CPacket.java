@@ -3,11 +3,9 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
-
-import java.util.function.Supplier;
 
 public class SetFrequencyS2CPacket {
     private final int frequency;
@@ -24,9 +22,7 @@ public class SetFrequencyS2CPacket {
         buf.writeInt(this.frequency);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
+    public void handle(CustomPayloadEvent.Context ctx) {
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             Minecraft mc = Minecraft.getInstance();
 

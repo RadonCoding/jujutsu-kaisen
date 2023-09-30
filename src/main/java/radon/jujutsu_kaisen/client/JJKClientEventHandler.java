@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -113,13 +114,6 @@ public class JJKClientEventHandler {
                 if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
                     mc.setScreen(new DomainScreen());
                 }
-            } else if (event.getAction() == InputConstants.RELEASE) {
-                if (event.getKey() == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) {
-                    mc.screen.onClose();
-                }
-                if (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) {
-                    mc.screen.onClose();
-                }
             }
         }
 
@@ -184,10 +178,10 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {
-            if (event.getSkin("default") instanceof PlayerRenderer renderer) {
+            if (event.getSkin(PlayerSkin.Model.WIDE) instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
-            if (event.getSkin("slim") instanceof PlayerRenderer renderer) {
+            if (event.getSkin(PlayerSkin.Model.SLIM) instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
         }
@@ -275,7 +269,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
-            event.registerEntityRenderer(JJKEntities.THROWN_CHAIN_ITEM.get(), ThrownChainItemRenderer::new);
+            event.registerEntityRenderer(JJKEntities.THROWN_CHAIN.get(), ThrownChainItemRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAHORAGA.get(), MahoragaRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_WHITE.get(), DivineDogRenderer::new);

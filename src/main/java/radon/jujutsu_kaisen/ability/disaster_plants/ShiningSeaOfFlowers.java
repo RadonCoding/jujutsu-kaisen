@@ -23,6 +23,7 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(30 * 20 * (1.6F - cap.getDomainSize())), 4, false, false, false));
         entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, Math.round(30 * 20 * (1.6F - cap.getDomainSize())), 4, false, false, false));
+        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(30 * 20 * (1.6F - cap.getDomainSize())), 4, false, false, false));
     }
 
     @Override

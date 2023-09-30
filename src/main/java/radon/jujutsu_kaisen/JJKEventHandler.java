@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -171,7 +171,7 @@ public class JJKEventHandler {
             if (attacker instanceof LivingEntity living) {
                 ItemStack stack = null;
 
-                if (source.getDirectEntity() instanceof ThrownChainItemProjectile chain) {
+                if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
                     stack = chain.getStack();
                 } else if (melee) {
                     stack = living.getItemInHand(InteractionHand.MAIN_HAND);

@@ -84,23 +84,21 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
-        if (!this.level().isClientSide) {
-            LivingEntity target = this.getTarget();
+        LivingEntity target = this.getTarget();
 
-            if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                    if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                        this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-                    }
-                    return;
+            if (cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+                if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                    this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                 }
+                return;
             }
+        }
 
-            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
-            }
+        if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
         }
     }
 }

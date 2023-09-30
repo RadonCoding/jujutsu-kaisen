@@ -4,12 +4,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-
-import java.util.function.Supplier;
 
 public class ShadowInventoryTakeC2SPacket {
     private final int index;
@@ -26,9 +24,7 @@ public class ShadowInventoryTakeC2SPacket {
         buf.writeInt(this.index);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
+    public void handle(CustomPayloadEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
 

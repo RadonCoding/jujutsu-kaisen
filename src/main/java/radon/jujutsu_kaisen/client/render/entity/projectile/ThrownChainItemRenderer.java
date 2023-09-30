@@ -21,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainItemProjectile;
+import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 
-public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProjectile> {
+public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/chain_link.png");
 
     private final ItemRenderer itemRenderer;
@@ -44,7 +44,7 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProje
     }
 
     @Override
-    public void render(@NotNull ThrownChainItemProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull ThrownChainProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         float scale = 1.5F;
 
         pPoseStack.pushPose();
@@ -127,7 +127,7 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainItemProje
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull ThrownChainItemProjectile pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ThrownChainProjectile pEntity) {
         return null;
     }
 }

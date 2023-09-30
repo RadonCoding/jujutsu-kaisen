@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.gui.screen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
 
 import java.util.ArrayList;
@@ -17,5 +18,13 @@ public class DomainScreen extends RadialScreen {
         abilities.removeIf(ability -> ability.getDisplayType() != DisplayType.DOMAIN);
 
         return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
+    }
+
+    @Override
+    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+        if (pKeyCode == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue()) {
+            this.onClose();
+        }
+        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
     }
 }
