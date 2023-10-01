@@ -83,6 +83,11 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     }
 
     @Override
+    public void onStart(LivingEntity owner) {
+
+    }
+
+    @Override
     public void onRelease(LivingEntity owner, int charge) {
 
     }

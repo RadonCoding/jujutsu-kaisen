@@ -170,6 +170,11 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     @Override
+    public void onStart(LivingEntity owner) {
+
+    }
+
+    @Override
     public void onRelease(LivingEntity owner, int charge) {
 
     }

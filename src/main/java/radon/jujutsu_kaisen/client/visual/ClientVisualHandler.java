@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -48,12 +49,13 @@ public class ClientVisualHandler {
         return synced.containsKey(identifier);
     }
 
+    @Nullable
     public static VisualData getData(UUID identifier) {
         return synced.get(identifier);
     }
 
     @Nullable
-    public static VisualData getOrRequest(LivingEntity entity) {
+    public static VisualData getOrRequest(Entity entity) {
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 
         Minecraft mc = Minecraft.getInstance();
@@ -74,7 +76,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
+                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType(), cap.getSpeedStacks());
                 return synced.put(mc.player.getUUID(), data);
             }
         } else {
@@ -135,7 +137,7 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
+    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type, int speedStacks) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
@@ -162,6 +164,8 @@ public class ClientVisualHandler {
 
             nbt.putInt("type", this.type.ordinal());
 
+            nbt.putInt("speed_stacks", this.speedStacks);
+
             return nbt;
         }
 
@@ -187,7 +191,7 @@ public class ClientVisualHandler {
                     techniques.add(CursedTechnique.values()[tag.getAsInt()]);
                 }
             }
-            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")]);
+            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")], nbt.getInt("speed_stacks"));
         }
     }
 }

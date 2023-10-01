@@ -105,6 +105,7 @@ public interface ISorcererData {
     void setCurrentAbsorbed(@Nullable CursedTechnique technique);
     @Nullable CursedTechnique getCurrentAbsorbed();
 
+    @Nullable Ability getChanneled();
     void channel(LivingEntity owner, @Nullable Ability ability);
     boolean isChanneling(Ability ability);
     int getCharge();
@@ -154,6 +155,9 @@ public interface ISorcererData {
     void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
     Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+
+    int getSpeedStacks();
+    void addSpeedStack();
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

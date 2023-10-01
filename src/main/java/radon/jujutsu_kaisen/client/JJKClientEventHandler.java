@@ -22,7 +22,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
@@ -77,7 +76,7 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-                if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                if (mc.player.hasEffect(JJKEffects.STUN.get()) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
                 } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
@@ -125,30 +124,28 @@ public class JJKClientEventHandler {
 
             LivingEntity target = event.getEntity();
 
-            mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
-                    Entity viewer = Minecraft.getInstance().getCameraEntity();
+            if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
+                Entity viewer = Minecraft.getInstance().getCameraEntity();
 
-                    if (viewer != null && target != viewer) {
-                        Vec3 look = viewer.getLookAngle();
-                        Vec3 start = viewer.getEyePosition();
-                        Vec3 result = target.getEyePosition().subtract(start);
+                if (viewer != null && target != viewer) {
+                    Vec3 look = viewer.getLookAngle();
+                    Vec3 start = viewer.getEyePosition();
+                    Vec3 result = target.getEyePosition().subtract(start);
 
-                        double angle = Math.acos(look.normalize().dot(result.normalize()));
+                    double angle = Math.acos(look.normalize().dot(result.normalize()));
 
-                        double threshold = 0.5D;
+                    double threshold = 0.5D;
 
-                        if (target.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItemTags.CURSED_TOOL) ||
-                                target.getItemInHand(InteractionHand.OFF_HAND).is(JJKItemTags.CURSED_TOOL)) {
-                            threshold = 1.0D;
-                        }
+                    if (target.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItemTags.CURSED_TOOL) ||
+                            target.getItemInHand(InteractionHand.OFF_HAND).is(JJKItemTags.CURSED_TOOL)) {
+                        threshold = 1.0D;
+                    }
 
-                        if (angle > threshold) {
-                            event.setCanceled(true);
-                        }
+                    if (angle > threshold) {
+                        event.setCanceled(true);
                     }
                 }
-            });
+            }
         }
 
         @SubscribeEvent
@@ -323,6 +320,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.PROJECTION_FRAME.get(), ProjectionFrameRenderer::new);
         }
 
         @SubscribeEvent

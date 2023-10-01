@@ -178,10 +178,10 @@ public abstract class RadialScreen extends Screen {
             Dispatcher.overrideCameraOrientation(pCameraOrientation);
         }
         Dispatcher.setRenderShadow(false);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         RenderSystem.runAsFancy(() ->
-                Dispatcher.render(pEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, pPoseStack, multibuffersource$buffersource, 15728880));
-        multibuffersource$buffersource.endBatch();
+                Dispatcher.render(pEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, pPoseStack, buffer, 15728880));
+        buffer.endBatch();
         Dispatcher.setRenderShadow(true);
         pPoseStack.popPose();
         Lighting.setupFor3DItems();

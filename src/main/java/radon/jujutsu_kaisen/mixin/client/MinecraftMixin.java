@@ -22,12 +22,10 @@ public class MinecraftMixin {
 
         if (player == null || !player.hasLineOfSight(instance)) return false;
 
-        if (ClientVisualHandler.isSynced(instance.getUUID())) {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.getData(instance.getUUID());
+        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(instance);
 
-            if (data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                return true;
-            }
+        if (data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            return true;
         }
 
         if (!(instance instanceof LivingEntity entity)) return false;

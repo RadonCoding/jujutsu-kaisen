@@ -34,6 +34,8 @@ import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
+import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
+import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
 import radon.jujutsu_kaisen.ability.rika.CommandPureLove;
 import radon.jujutsu_kaisen.ability.rika.Copy;
 import radon.jujutsu_kaisen.ability.rika.Rika;
@@ -173,6 +175,9 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> BOOGIE_WOOGIE = ABILITIES.register("boogie_woogie", BoogieWoogie::new);
     public static RegistryObject<Ability> FEINT = ABILITIES.register("feint", Feint::new);
+
+    public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
+    public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);

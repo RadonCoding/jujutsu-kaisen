@@ -97,7 +97,7 @@ public abstract class Ability {
     }
 
     public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || owner.hasEffect(JJKEffects.STUN.get())) return Status.FAILURE;
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -224,6 +224,7 @@ public abstract class Ability {
     }
 
     public interface IChannelened {
+        void onStart(LivingEntity owner);
         void onRelease(LivingEntity owner, int charge);
         default int getCharge(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
