@@ -51,7 +51,7 @@ public class RequestVisualDataC2SPacket {
                     if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                     if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
+                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType(), cap.getSpeedStacks());
                     CompoundTag updated = data.serializeNBT();
 
                     if (this.existing != updated) {

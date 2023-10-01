@@ -13,6 +13,7 @@
     "client.HumanoidArmorLayerMixin",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
     "client.PostChainAccessor"
   ],

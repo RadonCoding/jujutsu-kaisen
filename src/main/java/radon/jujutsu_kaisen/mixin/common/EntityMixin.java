@@ -19,22 +19,20 @@ public abstract class EntityMixin {
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {
-        if (ClientVisualHandler.isSynced(this.getUUID())) {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.getData(this.getUUID());
+        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest((Entity) (Object) this);
 
-            if (!data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+        if (data == null || !data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
-            Vector3f color = ParticleColors.getCursedEnergyColor(data.type());
+        Vector3f color = ParticleColors.getCursedEnergyColor(data.type());
 
-            int r = (int)(color.x() * 255.0D);
-            int g = (int)(color.y() * 255.0D);
-            int b = (int)(color.z() * 255.0D);
+        int r = (int)(color.x() * 255.0D);
+        int g = (int)(color.y() * 255.0D);
+        int b = (int)(color.z() * 255.0D);
 
-            r = Math.max(0, Math.min(255, r));
-            g = Math.max(0, Math.min(255, g));
-            b = Math.max(0, Math.min(255, b));
+        r = Math.max(0, Math.min(255, r));
+        g = Math.max(0, Math.min(255, g));
+        b = Math.max(0, Math.min(255, b));
 
-            cir.setReturnValue((r << 16) | (g << 8) | b);
-        }
+        cir.setReturnValue((r << 16) | (g << 8) | b);
     }
 }

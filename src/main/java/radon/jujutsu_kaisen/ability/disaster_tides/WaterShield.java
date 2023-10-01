@@ -70,6 +70,11 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     }
 
     @Override
+    public void onStart(LivingEntity owner) {
+
+    }
+
+    @Override
     public void onRelease(LivingEntity owner, int charge) {
         if (!owner.level().isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level().explode(owner,

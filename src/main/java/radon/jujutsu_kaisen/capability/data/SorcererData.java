@@ -96,16 +96,25 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability, Integer> adapting;
     private TenShadowsMode mode;
 
+    // Curse Manipulation
     private final Map<ResourceLocation, Integer> curses;
+
+    // Projection Sorcery
+    private int speedStacks;
+    private int speedTimer;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
+    private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
+    private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
 
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 30 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
+    private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
+    private static final int PROJECTION_SORCERY_STACK_DURATION = 3 * 20;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -379,6 +388,20 @@ public class SorcererData implements ISorcererData {
         this.updateTickEvents();
         this.updateToggled(owner);
         this.updateChanneled(owner);
+
+        if (this.speedTimer > 0) {
+            if (--this.speedTimer == 0) {
+                this.speedStacks = 0;
+            }
+        }
+
+        if (this.speedStacks > 0) {
+            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        } else {
+            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+        }
 
         if (owner.level() instanceof ServerLevel level) {
             this.updateAdaptation(level);
@@ -808,11 +831,25 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public @Nullable Ability getChanneled() {
+        return this.channeled;
+    }
+
+    @Override
     public void channel(LivingEntity owner, @Nullable Ability ability) {
         if (this.channeled != null) {
             ((Ability.IChannelened) this.channeled).onRelease(owner, this.charge);
         }
-        this.channeled = this.channeled == ability ? null : ability;
+
+        if (this.channeled == ability) {
+            this.channeled = null;
+        } else {
+            this.channeled = ability;
+
+            if (this.channeled != null) {
+                ((Ability.IChannelened) this.channeled).onStart(owner);
+            }
+        }
     }
 
     @Override
@@ -1122,6 +1159,17 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getSpeedStacks() {
+        return this.speedStacks;
+    }
+
+    @Override
+    public void addSpeedStack() {
+        this.speedStacks = Math.min(MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
+        this.speedTimer = PROJECTION_SORCERY_STACK_DURATION;
+    }
+
+    @Override
     public void generate(ServerPlayer player) {
         this.initialized = true;
 
@@ -1226,6 +1274,8 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
+        nbt.putInt("speed_stacks", this.speedStacks);
+        nbt.putInt("speed_timer", this.speedTimer);
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1379,6 +1429,8 @@ public class SorcererData implements ISorcererData {
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
+        this.speedStacks = nbt.getInt("speed_stacks");
+        this.speedTimer = nbt.getInt("speed_timer");
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");
