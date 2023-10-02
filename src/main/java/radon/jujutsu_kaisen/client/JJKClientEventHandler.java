@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.ScreenFlashOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainCustomizationScreen;
@@ -35,6 +36,7 @@ import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
 import radon.jujutsu_kaisen.client.render.entity.MalevolentShrineRenderer;
+import radon.jujutsu_kaisen.client.render.entity.TimeCellMoonPalaceRenderer;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
@@ -202,6 +204,7 @@ public class JJKClientEventHandler {
             event.registerAboveAll("ability_overlay", MeleeAbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
+            event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
         }
 
         @SubscribeEvent
@@ -321,6 +324,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.PROJECTION_FRAME.get(), ProjectionFrameRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FOREST_ROOTS.get(), ForestRootsRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FILM_GAUGE.get(), FilmGaugeRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
         }
 
         @SubscribeEvent

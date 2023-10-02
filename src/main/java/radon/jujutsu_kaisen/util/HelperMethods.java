@@ -47,8 +47,21 @@ public class HelperMethods {
         float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
         float yaw = (entity.yHeadRotO + Mth.wrapDegrees(entity.yHeadRot - entity.yHeadRotO));
 
-        float f = pitch * ((float)Math.PI / 180.0F);
-        float f1 = -yaw * ((float)Math.PI / 180.0F);
+        float f = pitch * ((float) Math.PI / 180.0F);
+        float f1 = -yaw * ((float) Math.PI / 180.0F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
+    }
+
+    public static Vec3 getLookAngle(Entity entity) {
+        float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
+        float yaw = (entity.yRotO + Mth.wrapDegrees(entity.getYRot() - entity.yRotO));
+
+        float f = pitch * ((float) Math.PI / 180.0F);
+        float f1 = -yaw * ((float) Math.PI / 180.0F);
         float f2 = Mth.cos(f1);
         float f3 = Mth.sin(f1);
         float f4 = Mth.cos(f);

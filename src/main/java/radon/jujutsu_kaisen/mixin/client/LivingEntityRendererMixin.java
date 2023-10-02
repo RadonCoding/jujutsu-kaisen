@@ -9,7 +9,7 @@ import net.minecraft.world.entity.WalkAnimationState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import radon.jujutsu_kaisen.client.ClientProjectionHandler;
+import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {

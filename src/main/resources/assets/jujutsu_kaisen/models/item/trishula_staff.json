@@ -14,13 +14,5 @@
     "fixed": {
       "parent": "jujutsu_kaisen:item/trishula_staff_inventory"
     }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "throwing": 1
-      },
-      "model": "jujutsu_kaisen:item/trishula_staff_throwing"
-    }
-  ]
+  }
 }

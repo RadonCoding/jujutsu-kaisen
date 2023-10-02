@@ -8,7 +8,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,43 +15,42 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class ProjectionFrameEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
+public class ForestRootsEntity extends Entity implements GeoEntity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ForestRootsEntity.class, EntityDataSerializers.INT);
 
-    private static final int DURATION = 3 * 20;
+    private static final int DURATION = 5 * 20;
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Nullable
     private UUID victimUUID;
     @Nullable
     private LivingEntity cachedVictim;
 
-    @Nullable
-    private UUID ownerUUID;
-    @Nullable
-    private LivingEntity cachedOwner;
-
     private Vec3 pos;
 
-    public ProjectionFrameEntity(EntityType<?> pEntityType, Level pLevel) {
+    public ForestRootsEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
     }
 
-    public ProjectionFrameEntity(LivingEntity owner, LivingEntity target) {
-        this(JJKEntities.PROJECTION_FRAME.get(), target.level());
+    public ForestRootsEntity(LivingEntity target) {
+        this(JJKEntities.FOREST_ROOTS.get(), target.level());
 
-        this.setOwner(owner);
         this.setVictim(target);
 
         this.pos = target.position();
 
-        this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
+        this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), 0.0F);
     }
 
     @Override
@@ -89,18 +87,8 @@ public class ProjectionFrameEntity extends Entity {
             if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
-
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
-                    victim.setXRot(this.getXRot());
-                    victim.setYRot(this.getYRot());
-
-                    victim.yBodyRot = victim.getYRot();
-                    victim.yBodyRotO = victim.yBodyRot;
-
-                    victim.yHeadRot = victim.getYRot();
-                    victim.yHeadRotO = victim.yHeadRot;
                 }
             }
         }
@@ -125,25 +113,6 @@ public class ProjectionFrameEntity extends Entity {
         }
     }
 
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
-    @Nullable
-    public LivingEntity getOwner() {
-        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
-            return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
-            return this.cachedOwner;
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         pCompound.putDouble("pos_x", this.pos.x());
@@ -152,9 +121,6 @@ public class ProjectionFrameEntity extends Entity {
 
         if (this.victimUUID != null) {
             pCompound.putUUID("victim", this.victimUUID);
-        }
-        if (this.ownerUUID != null) {
-            pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
@@ -165,9 +131,6 @@ public class ProjectionFrameEntity extends Entity {
 
         if (pCompound.hasUUID("victim")) {
             this.victimUUID = pCompound.getUUID("victim");
-        }
-        if (pCompound.hasUUID("owner")) {
-            this.ownerUUID = pCompound.getUUID("owner");
         }
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
     }
@@ -192,5 +155,15 @@ public class ProjectionFrameEntity extends Entity {
         if (owner != null) {
             this.setVictim(owner);
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

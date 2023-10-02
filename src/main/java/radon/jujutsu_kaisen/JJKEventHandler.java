@@ -369,17 +369,6 @@ public class JJKEventHandler {
                             }
                             event.setCanceled(true);
                         }
-                    } else if (victimCap.hasTrait(Trait.CURSED_WOMB)) {
-                        if (!victimCap.hasTrait(Trait.EVOLVED_CURSE)) {
-                            victim.setHealth(victim.getMaxHealth() / 2);
-                            victimCap.addTrait(Trait.EVOLVED_CURSE);
-                            victimCap.removeTrait(Trait.CURSED_WOMB);
-
-                            if (victim instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                            }
-                            event.setCanceled(true);
-                        }
                     }
                 }
             }

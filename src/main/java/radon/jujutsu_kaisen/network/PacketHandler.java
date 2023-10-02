@@ -144,6 +144,11 @@ public class PacketHandler {
                 .encoder(SetDomainSizeC2SPacket::encode)
                 .consumerMainThread(SetDomainSizeC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ScreenFlashS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ScreenFlashS2CPacket::new)
+                .encoder(ScreenFlashS2CPacket::encode)
+                .consumerMainThread(ScreenFlashS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

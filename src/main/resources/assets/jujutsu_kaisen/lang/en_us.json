@@ -219,6 +219,7 @@
   "ability.jujutsu_kaisen.wood_shield.disable": "Deactivated wood shield",
   "ability.jujutsu_kaisen.cursed_bud": "Cursed Bud",
   "ability.jujutsu_kaisen.forest_wave": "Forest Wave",
+  "ability.jujutsu_kaisen.forest_roots": "Forest Roots",
   "ability.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
@@ -298,6 +299,9 @@
 
   "ability.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
   "ability.jujutsu_kaisen.twenty_four_frame_rule": "Twenty Four Frame Rule",
+  "ability.jujutsu_kaisen.twenty_four_frame_rule.enable": "Activated twenty four frame rule",
+  "ability.jujutsu_kaisen.twenty_four_frame_rule.disable": "Deactivated twenty four frame rule",
+  "ability.jujutsu_kaisen.time_cell_moon_palace": "Time Cell Moon Palace",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
@@ -319,6 +323,7 @@
   "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
+  "cursed_technique.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
 
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",

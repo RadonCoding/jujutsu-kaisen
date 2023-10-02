@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.gui.overlay;
+package radon.jujutsu_kaisen.client.ability;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
