@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
@@ -38,10 +40,25 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         Minecraft mc = Minecraft.getInstance();
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
 
-        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float yaw = Mth.lerp(pPartialTick, victim.yRotO, victim.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
+
+        ClientProjectionHandler.frame = true;
+
+        pPoseStack.pushPose();
+        pPoseStack.scale(1.0F, 1.0F, 0.02F);
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+
+        EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
+        EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
+        renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
+
+        ClientProjectionHandler.frame = false;
+
+        pPoseStack.popPose();
+
+        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);
@@ -78,14 +95,6 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         mc.renderBuffers().bufferSource().endBatch(RENDER_TYPE);
 
         pPoseStack.popPose();
-
-        /*ClientProjectionHandler.frame = true;
-
-        EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
-        EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
-        renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-
-        ClientProjectionHandler.frame = false;*/
     }
 
     @Override

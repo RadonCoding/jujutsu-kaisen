@@ -18,7 +18,8 @@ public enum CursedTechnique {
     DISASTER_FLAMES(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.EMBER_INSECTS.get(), JJKAbilities.VOLCANO.get(),
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get()),
     DISASTER_TIDES(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DISASTER_TIDES.get(), JJKAbilities.WATER_SHIELD.get(), JJKAbilities.DEATH_SWARM.get(), JJKAbilities.FISH_SHIKIGAMI.get(), JJKAbilities.WATER_TORRENT.get()),
-    DISASTER_PLANTS(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.FOREST_PLATFORM.get(), JJKAbilities.FOREST_SPIKES.get(), JJKAbilities.WOOD_SHIELD.get(), JJKAbilities.CURSED_BUD.get(), JJKAbilities.FOREST_WAVE.get()),
+    DISASTER_PLANTS(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.FOREST_PLATFORM.get(), JJKAbilities.FOREST_SPIKES.get(), JJKAbilities.WOOD_SHIELD.get(), JJKAbilities.CURSED_BUD.get(),
+            JJKAbilities.FOREST_WAVE.get(), JJKAbilities.FOREST_ROOTS.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),
@@ -31,7 +32,7 @@ public enum CursedTechnique {
             JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.TRANQUIL_DEER.get(),
             JJKAbilities.PIERCING_BULL.get(), JJKAbilities.AGITO.get(), JJKAbilities.MAHORAGA.get()),
     BOOGIE_WOOGIE(null, JJKAbilities.BOOGIE_WOOGIE.get(), JJKAbilities.FEINT.get()),
-    PROJECTION_SORCERY(null, JJKAbilities.PROJECTION_SORCERY.get(), JJKAbilities.TWENTY_FOUR_FRAME_RULE.get());
+    PROJECTION_SORCERY(JJKAbilities.TIME_CELL_MOON_PALACE.get(), JJKAbilities.PROJECTION_SORCERY.get(), JJKAbilities.TWENTY_FOUR_FRAME_RULE.get());
 
     private final @Nullable Ability domain;
     private final Ability[] abilities;

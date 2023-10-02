@@ -296,6 +296,21 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "projection_frame")
                             .toString()));
+    public static RegistryObject<EntityType<ForestRootsEntity>> FOREST_ROOTS = ENTITIES.register("forest_roots", () ->
+            EntityType.Builder.<ForestRootsEntity>of(ForestRootsEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_roots")
+                            .toString()));
+    public static RegistryObject<EntityType<FilmGaugeProjectile>> FILM_GAUGE = ENTITIES.register("film_gauge", () ->
+            EntityType.Builder.<FilmGaugeProjectile>of(FilmGaugeProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "film_gauge")
+                            .toString()));
+    public static RegistryObject<EntityType<TimeCellMoonPalaceEntity>> TIME_CELL_MOON_PALACE = ENTITIES.register("time_cell_moon_palace", () ->
+            EntityType.Builder.<TimeCellMoonPalaceEntity>of(TimeCellMoonPalaceEntity::new, MobCategory.MISC)
+                    .sized(1.9F, 2.4F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "time_cell_moon_palace")
+                            .toString()));
 
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->

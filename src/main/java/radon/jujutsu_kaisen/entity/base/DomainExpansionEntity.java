@@ -21,8 +21,10 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class DomainExpansionEntity extends Mob {
@@ -66,6 +68,18 @@ public abstract class DomainExpansionEntity extends Mob {
     @Override
     protected boolean updateInWaterStateAndDoFluidPushing() {
         return false;
+    }
+
+    @Nullable
+    public DomainExpansionCenterEntity getDomainCenter() {
+        List<DomainExpansionCenterEntity> collisions = HelperMethods.getEntityCollisionsOfClass(DomainExpansionCenterEntity.class, this.level(), this.getBounds());
+
+        for (DomainExpansionCenterEntity collision : collisions) {
+            if (collision.getDomain() == this) {
+                return collision;
+            }
+        }
+        return null;
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {

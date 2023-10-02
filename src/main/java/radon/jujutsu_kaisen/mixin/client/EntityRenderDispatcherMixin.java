@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import radon.jujutsu_kaisen.client.ClientProjectionHandler;
+import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
 import radon.jujutsu_kaisen.client.JJKRenderers;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
@@ -71,13 +71,13 @@ public class EntityRenderDispatcherMixin<E extends Entity> {
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     public void shouldRender(E pEntity, Frustum pFrustum, double pCamX, double pCamY, double pCamZ, CallbackInfoReturnable<Boolean> cir) {
-        //if (!ClientProjectionHandler.frame) {
+        if (!ClientProjectionHandler.frame) {
             for (ProjectionFrameEntity frame : pEntity.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(pEntity.position(),
                     8.0D, 8.0D, 8.0D))) {
                 if (frame.getVictim() == pEntity) {
                     cir.setReturnValue(false);
                 }
             }
-        //}
+        }
     }
 }

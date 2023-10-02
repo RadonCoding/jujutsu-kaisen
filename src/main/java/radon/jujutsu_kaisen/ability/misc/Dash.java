@@ -14,13 +14,12 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dash extends Ability {
-    public static final double PROJECTION_RANGE = 24.0D;
-    public static final double NORMAL_RANGE = 30.0D;
+    public static final double RANGE = 30.0D;
     private static final double SPEED = 2.5D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && (HelperMethods.getLookAtHit(owner, NORMAL_RANGE) instanceof EntityHitResult hit && hit.getEntity() == target);
+        return target != null && (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() == target);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class Dash extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, NORMAL_RANGE) instanceof EntityHitResult hit) {
+        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
             double distanceX = target.getX() - owner.getX();

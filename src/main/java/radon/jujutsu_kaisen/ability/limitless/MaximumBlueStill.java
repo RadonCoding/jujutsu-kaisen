@@ -31,9 +31,9 @@ public class MaximumBlueStill extends Ability {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status checkTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return !cap.isCooldownDone(JJKAbilities.MAXIMUM_BLUE_MOTION.get()) ? Status.FAILURE : super.checkStatus(owner);
+        return !cap.isCooldownDone(JJKAbilities.MAXIMUM_BLUE_MOTION.get()) ? Status.FAILURE : super.checkTriggerable(owner);
     }
 
     @Override

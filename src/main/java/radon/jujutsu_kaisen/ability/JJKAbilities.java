@@ -35,6 +35,7 @@ import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
 import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
+import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
 import radon.jujutsu_kaisen.ability.rika.CommandPureLove;
 import radon.jujutsu_kaisen.ability.rika.Copy;
@@ -112,6 +113,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WOOD_SHIELD = ABILITIES.register("wood_shield", WoodShield::new);
     public static RegistryObject<Ability> CURSED_BUD = ABILITIES.register("cursed_bud", CursedBud::new);
     public static RegistryObject<Ability> FOREST_WAVE = ABILITIES.register("forest_wave", ForestWave::new);
+    public static RegistryObject<Ability> FOREST_ROOTS = ABILITIES.register("forest_roots", ForestRoots::new);
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
@@ -178,6 +180,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
+    public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
