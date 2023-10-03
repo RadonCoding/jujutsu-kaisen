@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -139,7 +140,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-
                         if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
                             victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
                             victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
@@ -162,11 +162,18 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             // Shield
             if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    if (victimCap.getNature() == CursedEnergyNature.LIGHTNING) {
+                        if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
+                                        jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
+                            event.setCanceled(true);
+                        }
+                    }
 
                     event.setAmount(event.getAmount() * 0.9F);
 
-                    switch (cap.getNature()) {
+                    switch (victimCap.getNature()) {
                         case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
                                 false, false, false));
                         case ROUGH -> {

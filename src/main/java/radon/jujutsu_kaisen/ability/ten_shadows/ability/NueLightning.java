@@ -8,7 +8,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
@@ -19,6 +18,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
@@ -95,22 +95,22 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     public void perform(LivingEntity owner, @Nullable LivingEntity target) {
         if (target == null || owner.level().isClientSide) return;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                target.hurt(owner instanceof Player player ? owner.level().damageSources().playerAttack(player) :
-                        owner.level().damageSources().mobAttack(owner), DAMAGE * cap.getGrade().getRealPower(owner)));
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
+        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
+            target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
-        owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        for (int i = 0; i < 32; i++) {
-            double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-            double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-            double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-            ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.VIOLET_LIGHTNING_COLOR, 0.5F, 10),
-                    target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
-                    0, 0.0D, 0.0D, 0.0D, 0.0D);
+            for (int i = 0; i < 32; i++) {
+                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.VIOLET_LIGHTNING_COLOR, 0.5F, 10),
+                        target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
+                        0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
         }
     }
 
@@ -122,5 +122,10 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     @Override
     public boolean isTechnique() {
         return true;
+    }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIGHTNING;
     }
 }

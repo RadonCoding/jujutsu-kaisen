@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.config.Config;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKCreativeTabs;
@@ -39,7 +39,8 @@ public class JujutsuKaisen {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModLoadingContext ctx = ModLoadingContext.get();
-        ctx.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ctx.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
+        ctx.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
 

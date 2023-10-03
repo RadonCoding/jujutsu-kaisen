@@ -57,6 +57,8 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         super.doSureHitEffect(owner);
 
+        if (this.getTime() < MalevolentShrine.DELAY) return;
+
         if (this.first) {
             BlockPos center = this.blockPosition();
 
@@ -103,7 +105,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level()).contains(this)) {
-                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 3 * 20, 0, false, false));
+                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,  MalevolentShrine.DELAY, 0, false, false));
                         player.connection.m_141995_(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
                                 this.getX(), this.getY(), this.getZ(), 1.0F, 1.0F, this.random.nextLong()));
                     }

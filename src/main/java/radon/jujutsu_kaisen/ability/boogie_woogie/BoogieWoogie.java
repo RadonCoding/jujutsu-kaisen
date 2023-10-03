@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -36,6 +37,8 @@ public class BoogieWoogie extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         Entity target = this.getTarget(owner);
 
         if (target != null) {
@@ -43,8 +46,8 @@ public class BoogieWoogie extends Ability {
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 pos = target.position();
-            target.setPos(owner.position());
-            owner.setPos(pos);
+            target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
+            owner.teleportTo(pos.x(), pos.y(), pos.z());
         }
     }
 

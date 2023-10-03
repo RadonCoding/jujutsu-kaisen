@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.item;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -115,7 +114,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         int i = this.getUseDuration(pStack) - pRemainingUseDuration;
         float f = getPowerForTime(i);
 
-        if (pLivingEntity instanceof LocalPlayer && pLevel.isClientSide) {
+        if (pLivingEntity instanceof Player && pLevel.isClientSide) {
             ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), COST * f, COST), false);
         }
     }

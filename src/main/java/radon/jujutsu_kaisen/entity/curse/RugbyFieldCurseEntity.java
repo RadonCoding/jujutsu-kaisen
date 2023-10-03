@@ -89,7 +89,7 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
 
     @Override
     protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 
     @Override

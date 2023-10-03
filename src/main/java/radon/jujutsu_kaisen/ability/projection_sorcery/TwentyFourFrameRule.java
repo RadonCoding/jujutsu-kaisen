@@ -122,9 +122,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())) {
                 ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 cap.addSpeedStack();
-
-                if (JJKAbilities.hasToggled(victim, JJKAbilities.INFINITY.get())) return;
-
+                
                 attacker.level().addFreshEntity(new ProjectionFrameEntity(attacker, victim));
 
                 if (victim instanceof ServerPlayer player) {

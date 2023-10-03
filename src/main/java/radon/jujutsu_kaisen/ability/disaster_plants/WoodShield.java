@@ -53,6 +53,16 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Override
+    public int getCooldown() {
+        return 5 * 20;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
+
+    @Override
     public boolean display() {
         return false;
     }

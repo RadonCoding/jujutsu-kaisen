@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -221,16 +222,6 @@ public class JJKEventHandler {
                     });
                 });
             }
-
-            if (!(victim instanceof MahoragaEntity)) return;
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (cap.isAdaptedTo(event.getSource())) {
-                event.setCanceled(true);
-
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-            }
         }
 
         @SubscribeEvent
@@ -244,8 +235,9 @@ public class JJKEventHandler {
                     if (source.getEntity() instanceof LivingEntity attacker) {
                         if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
                             Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                            attacker.level().explode(attacker, attacker instanceof Player player ? attacker.damageSources().playerAttack(player) : attacker.damageSources().mobAttack(attacker),
-                                    null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                            attacker.level().addParticle(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 1.0D, 0.0D, 0.0D);
+                            attacker.level().playLocalSound(pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F,
+                                    (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F, false);
                         } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                             victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                                 Set<Ability> toggled = new HashSet<>(cap.getToggled());
@@ -272,6 +264,15 @@ public class JJKEventHandler {
                     cap.tryAdapt(event.getSource());
                 }
             });
+
+            if (!(victim instanceof MahoragaEntity)) return;
+
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.isAdaptedTo(event.getSource())) {
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+            }
+            event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(event.getSource())));
         }
 
         @SubscribeEvent

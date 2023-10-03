@@ -30,6 +30,7 @@ import java.util.List;
 public class VeilBlockEntity extends BlockEntity {
     private int counter;
 
+    @Nullable
     private BlockPos parent;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -40,6 +41,8 @@ public class VeilBlockEntity extends BlockEntity {
         if (++pBlockEntity.counter != VeilRodBlockEntity.INTERVAL * 2) return;
 
         pBlockEntity.counter = 0;
+
+        if (pBlockEntity.parent == null) return;
 
         List<BlockPos> nodes = new ArrayList<>();
 
@@ -77,7 +80,7 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public boolean isBlacklisted(Entity entity) {
-        if (!(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        if (this.parent == null || !(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
 
         if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
 
@@ -115,7 +118,7 @@ public class VeilBlockEntity extends BlockEntity {
     }
 
     public boolean isWhitelisted(Entity entity) {
-        if (!(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        if (this.parent == null || !(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
         if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
 
         if (entity instanceof Player player) {
@@ -178,13 +181,17 @@ public class VeilBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
-        pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
+        if (this.parent != null) {
+            pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
+        }
     }
 
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
 
-        this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
+        if (pTag.contains("parent")) {
+            this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
+        }
     }
 }
