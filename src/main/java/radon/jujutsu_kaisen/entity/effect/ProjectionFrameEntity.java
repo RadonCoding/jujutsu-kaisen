@@ -89,7 +89,7 @@ public class ProjectionFrameEntity extends Entity {
             if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
+                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());

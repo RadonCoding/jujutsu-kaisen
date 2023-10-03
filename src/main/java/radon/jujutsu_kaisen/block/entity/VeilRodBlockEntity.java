@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 5;
-    private static final float COST = 0.1F;
+    private static final float COST = 0.001F;
 
     private int counter;
     public int frequency;

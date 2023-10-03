@@ -179,7 +179,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.0D && this.moveControl.getSpeedModifier() > 1.0D);
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
 
         LivingEntity target = this.getTarget();
 

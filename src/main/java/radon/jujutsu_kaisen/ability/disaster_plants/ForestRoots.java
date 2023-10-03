@@ -59,6 +59,16 @@ public class ForestRoots extends Ability {
     }
 
     @Override
+    public int getCooldown() {
+        return 5 * 20;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
+    }
+
+    @Override
     public DisplayType getDisplayType() {
         return DisplayType.SCROLL;
     }

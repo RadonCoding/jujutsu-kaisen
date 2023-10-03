@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
-import radon.jujutsu_kaisen.config.Config;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -111,7 +111,7 @@ public class SorcererData implements ISorcererData {
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
 
     private static final float ENERGY_AMOUNT = 0.25F;
-    private static final int REQUIRED_ADAPTATION = 30 * 20;
+    private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
     private static final int PROJECTION_SORCERY_STACK_DURATION = 3 * 20;
@@ -690,10 +690,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        if (this.maxEnergy == 0.0F) {
-            this.maxEnergy = Config.maxCursedEnergyDefault.get();
-        }
-        return this.maxEnergy * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)
+        return (this.maxEnergy == 0.0F ? ConfigHolder.SERVER.maxCursedEnergyDefault.get().floatValue() : this.maxEnergy) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)
                 * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F);
     }
 
@@ -1036,6 +1033,17 @@ public class SorcererData implements ISorcererData {
         this.shadowInventory.remove(index);
     }
 
+    @Override
+    public float getAdaptation(DamageSource source) {
+        Ability ability = this.getAbility(source);
+        return ability == null ? 0.0F : this.getAdaptation(ability);
+    }
+
+    @Override
+    public float getAdaptation(Ability ability) {
+        return this.isAdaptedTo(ability) ? 1.0F : (float) this.adapting.get(ability) / REQUIRED_ADAPTATION;
+    }
+
     private @Nullable Ability getAbility(DamageSource source) {
         Ability ability;
 
@@ -1179,10 +1187,6 @@ public class SorcererData implements ISorcererData {
             }
 
             assert this.technique != null;
-
-            if (this.technique == CursedTechnique.COPY) {
-                this.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
-            }
 
             player.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
 

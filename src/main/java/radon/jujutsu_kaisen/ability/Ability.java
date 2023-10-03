@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +44,8 @@ public abstract class Ability {
         FLAMES,
         BLUE,
         RED,
-        PURPLE
+        PURPLE,
+        LIGHTNING
     }
 
     public Classification getClassification() {
@@ -97,7 +99,12 @@ public abstract class Ability {
     }
 
     public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || owner.hasEffect(JJKEffects.STUN.get())) return Status.FAILURE;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+
+        MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
+
+        if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
+
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

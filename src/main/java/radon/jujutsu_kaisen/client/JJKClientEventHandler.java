@@ -78,7 +78,7 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-                if (mc.player.hasEffect(JJKEffects.STUN.get()) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
                 } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
@@ -160,7 +160,7 @@ public class JJKClientEventHandler {
                     64.0D, 64.0D, 64.0D))) {
                 curse.getCurrent().ifPresent(identifier -> {
                     event.setCanceled(true);
-                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName(), event.getMessage())));
+                    mc.player.sendSystemMessage(Component.literal(String.format("<%s> %s", mc.player.getName().getString(), event.getMessage())));
                     PacketHandler.sendToServer(new KuchisakeOnnaAnswerC2SPacket(curse.getUUID()));
                 });
             }
@@ -187,6 +187,7 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+            event.register(JJKKeys.ABILITY_SCROLL);
             event.register(JJKKeys.ACTIVATE_ABILITY);
             event.register(JJKKeys.ABILITY_RIGHT);
             event.register(JJKKeys.ABILITY_LEFT);

@@ -53,7 +53,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 5 * 20;
     }
 
     @Override
