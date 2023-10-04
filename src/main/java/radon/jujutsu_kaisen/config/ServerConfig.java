@@ -47,6 +47,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
+    public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
@@ -72,6 +73,8 @@ public class ServerConfig {
                 .defineInRange("curseHealingAmount", 0.1F, 0.0F, 100.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 100000.0F);
+        this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
+                .defineInRange("maximumExperienceAmount", 100.0F, 1.0F, 1000.0F);
 
         builder.pop();
     }

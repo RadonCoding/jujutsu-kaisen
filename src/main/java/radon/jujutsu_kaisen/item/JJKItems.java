@@ -109,8 +109,6 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.YUTA_OKKOTSU, 0xF6F6F6, 0x393A3C, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> MEGUMI_FUSHIGURO_SPAWN_EGG = ITEMS.register("megumi_fushiguro_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.MEGUMI_FUSHIGURO, 0x222534, 0x755F2D, new Item.Properties()));
-    public static RegistryObject<ForgeSpawnEggItem> TOJI_ZENIN_SPAWN_EGG = ITEMS.register("toji_zenin_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.TOJI_ZENIN, 0xEAEAEA, 0xCC9104, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> MEGUNA_RYOMEN_SPAWN_EGG = ITEMS.register("meguna_ryomen_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.MEGUNA_RYOMEN, 0x222534, 0xBF3030, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> YUJI_IDATORI_SPAWN_EGG = ITEMS.register("yuji_itadori_spawn_egg",

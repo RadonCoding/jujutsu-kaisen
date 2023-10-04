@@ -65,6 +65,7 @@ public class SorcererData implements ISorcererData {
 
     private float energy;
     private float maxEnergy;
+    private float extraEnergy;
     private float used;
 
     private JujutsuType type;
@@ -673,7 +674,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        return (this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getPower();
+        return ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getPower()) + this.extraEnergy;
     }
 
     @Override
@@ -694,6 +695,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setEnergy(float energy) {
         this.energy = energy;
+    }
+
+    @Override
+    public void addExtraEnergy(float amount) {
+        this.extraEnergy += amount;
     }
 
     @Override
@@ -1238,6 +1244,7 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
+        nbt.putFloat("extra_energy", this.extraEnergy);
         nbt.putFloat("used", this.used);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
@@ -1392,6 +1399,7 @@ public class SorcererData implements ISorcererData {
         this.experience = nbt.getFloat("experience");
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
+        this.extraEnergy = nbt.getFloat("extra_energy");
         this.used = nbt.getFloat("used");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");

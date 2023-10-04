@@ -227,8 +227,6 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
-            event.registerLayerDefinition(TojiZeninModel.LAYER, SkinModel::createBodyLayer);
-
             event.registerLayerDefinition(MegunaRyomenModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MegunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MegunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
@@ -282,7 +280,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.TOJI_ZENIN.get(), TojiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);

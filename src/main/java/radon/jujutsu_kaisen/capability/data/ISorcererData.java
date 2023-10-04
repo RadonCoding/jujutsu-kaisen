@@ -78,12 +78,15 @@ public interface ISorcererData {
     void resetCooldowns();
     void resetBurnout();
 
-    float getEnergy();
     float getMaxEnergy();
     void setMaxEnergy(float maxEnergy);
+
+    float getEnergy();
     void useEnergy(float amount);
     void addEnergy(float amount);
     void setEnergy(float energy);
+
+    void addExtraEnergy(float amount);
 
     void addUsed(float amount);
 
