@@ -119,12 +119,12 @@ public class ClientAbilityHandler {
                     });
                 }
 
-                if (JJKKeys.ACTIVATE_WATER_WALKING.consumeClick()) {
+                if (JJKKeys.ACTIVATE_WATER_WALKING.isDown()) {
                     PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.WATER_WALKING.get())));
                     ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
                 }
 
-                if (JJKKeys.DASH.consumeClick()) {
+                if (JJKKeys.DASH.isDown()) {
                     PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                     ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
                 }

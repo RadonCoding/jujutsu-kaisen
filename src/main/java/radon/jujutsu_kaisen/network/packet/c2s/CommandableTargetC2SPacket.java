@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class CommandableTargetC2SPacket {
     private final UUID target;
@@ -31,7 +32,9 @@ public class CommandableTargetC2SPacket {
         buf.writeUUID(this.target);
     }
 
-    public void handle(CustomPayloadEvent.Context ctx) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
+
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
 

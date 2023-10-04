@@ -19,7 +19,7 @@ public enum CursedTechnique {
             JJKAbilities.MAXIMUM_METEOR.get(), JJKAbilities.DISASTER_FLAMES.get(), JJKAbilities.FLAMETHROWER.get(), JJKAbilities.FIREBALL.get()),
     DISASTER_TIDES(JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DISASTER_TIDES.get(), JJKAbilities.WATER_SHIELD.get(), JJKAbilities.DEATH_SWARM.get(), JJKAbilities.FISH_SHIKIGAMI.get(), JJKAbilities.WATER_TORRENT.get()),
     DISASTER_PLANTS(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.FOREST_PLATFORM.get(), JJKAbilities.FOREST_SPIKES.get(), JJKAbilities.WOOD_SHIELD.get(), JJKAbilities.CURSED_BUD.get(),
-            JJKAbilities.FOREST_WAVE.get(), JJKAbilities.FOREST_ROOTS.get()),
+            JJKAbilities.FOREST_WAVE.get(), JJKAbilities.FOREST_ROOTS.get(), JJKAbilities.DISASTER_PLANT.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
             JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),

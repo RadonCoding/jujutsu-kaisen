@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -25,16 +27,23 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     }
 
     @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
+    }
+
+    @Override
     public void tick() {
         if (this.getTime() >= DURATION) {
             this.discard();
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
+            if (this.level().isClientSide) return;
+
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
                     if (entity == this || entity == owner) continue;
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * cap.getGrade().getRealPower(owner));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * cap.getPower());
                 }
             });
         }

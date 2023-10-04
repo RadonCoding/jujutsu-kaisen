@@ -54,7 +54,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
                 for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getPower())) {
                         entity.setSecondsOnFire(5);
                     }
                 }

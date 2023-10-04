@@ -44,7 +44,7 @@ public class SukunaRyomenEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN, Trait.STRONGEST);
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
     }
 
     @Override
@@ -55,6 +55,11 @@ public class SukunaRyomenEntity extends SorcererEntity {
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.MALEVOLENT_SHRINE.get();
+    }
+
+    @Override
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
     }
 
     @Override

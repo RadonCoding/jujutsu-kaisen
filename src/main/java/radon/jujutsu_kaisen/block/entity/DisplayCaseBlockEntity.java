@@ -49,7 +49,8 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
-            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer && sorcerer.getGrade().getBasePower() <= energy) {
+            if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
+                    HelperMethods.getPower(sorcerer.getGrade().getRequiredExperience()) <= energy && sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 pool.add(entity);
             }
         }
@@ -59,7 +60,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
     public float getEnergy() {
         if (this.stack.getItem() instanceof CursedObjectItem obj) {
             int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
-            return SorcererGrade.values()[index].getBasePower();
+            return HelperMethods.getPower(SorcererGrade.values()[index].getRequiredExperience());
         }
         return 0.0F;
     }

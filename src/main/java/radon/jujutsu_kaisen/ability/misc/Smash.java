@@ -40,7 +40,7 @@ public class Smash extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            float radius = EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner);
+            float radius = EXPLOSIVE_POWER * cap.getPower();
 
             Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 

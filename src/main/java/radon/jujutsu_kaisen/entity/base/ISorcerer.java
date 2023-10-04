@@ -25,6 +25,9 @@ public interface ISorcerer {
     default @NotNull List<Trait> getTraits() { return List.of(); }
     default @NotNull List<Ability> getCustom() { return List.of(); }
     JujutsuType getJujutsuType();
+    default float getExperience() {
+        return 0.0F;
+    }
 
     @Nullable Ability getDomain();
 
@@ -35,7 +38,11 @@ public interface ISorcerer {
         data.addTraits(this.getTraits());
         data.setType(this.getJujutsuType());
 
-        Map<ResourceLocation, Float> config = ConfigHolder.SERVER.getMaxCursedEnergyNPC();
+        if (this.getExperience() > 0.0F) {
+            data.setExperience(this.getExperience());
+        }
+
+        Map<ResourceLocation, Float> config = ConfigHolder.SERVER.getCursedEnergyAmounts();
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(((Entity) this).getType());
 
         if (config.containsKey(key)) {

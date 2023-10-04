@@ -60,7 +60,7 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN, Trait.STRONGEST);
+        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
     }
 
     @Override
@@ -71,6 +71,11 @@ public class SatoruGojoEntity extends SorcererEntity {
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.UNLIMITED_VOID.get();
+    }
+
+    @Override
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.5F;
     }
 
     @Override

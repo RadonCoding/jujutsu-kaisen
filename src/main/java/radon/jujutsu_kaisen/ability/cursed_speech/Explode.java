@@ -59,16 +59,14 @@ public class Explode extends Ability {
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            cap.delayTickEvent(() -> {
-                for (Entity entity : getEntities(owner)) {
-                    owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
-                            entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner), false, Level.ExplosionInteraction.NONE);
+            for (Entity entity : getEntities(owner)) {
+                owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
+                        entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getPower(), false, Level.ExplosionInteraction.NONE);
 
-                    if (entity instanceof Player player) {
-                        player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
-                    }
+                if (entity instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
                 }
-            }, 20);
+            }
         });
     }
 

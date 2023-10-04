@@ -1,0 +1,79 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0.5, 0]
+			},
+			"bones": [
+				{
+					"name": "dragon",
+					"pivot": [-0.25, -16, -0.51546],
+					"cubes": [
+						{"origin": [0.5, 15.49079, -7.8743], "size": [0, 6, 16], "uv": [0, 75]},
+						{"origin": [-8, -0.10921, -113.68454], "size": [18, 16, 16], "pivot": [1, 7.96202, -52.79023], "rotation": [180, 0, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "dragon",
+					"pivot": [-6.21153, 5.96202, -12.18744],
+					"rotation": [0, 0, -35],
+					"cubes": [
+						{"origin": [-20.99081, 5.34825, -3.08176], "size": [16, 7, 6], "uv": [0, 34]}
+					]
+				},
+				{
+					"name": "right_elbow",
+					"parent": "right_arm",
+					"pivot": [-22.21153, 5.96202, -11.18744],
+					"rotation": [0, 0, -32.5],
+					"cubes": [
+						{"origin": [-31.9399, 4.63884, -2.58176], "size": [12, 6, 5], "uv": [0, 51]}
+					]
+				},
+				{
+					"name": "right_hand",
+					"parent": "right_elbow",
+					"pivot": [-35.21153, 6.96202, -11.18744],
+					"rotation": [10, -57.5, 60],
+					"cubes": [
+						{"origin": [-36.06723, 5.54428, -9.09914], "size": [10, 6, 8], "uv": [0, 75]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "dragon",
+					"pivot": [6.21153, 5.96202, -12.18744],
+					"rotation": [0, 0, 35],
+					"cubes": [
+						{"origin": [4.99081, 5.34825, -3.08176], "size": [16, 7, 6], "uv": [0, 34], "mirror": true}
+					]
+				},
+				{
+					"name": "left_elbow",
+					"parent": "left_arm",
+					"pivot": [22.21153, 5.96202, -11.18744],
+					"rotation": [0, 0, 32.5],
+					"cubes": [
+						{"origin": [19.9399, 4.63884, -2.58176], "size": [12, 6, 5], "uv": [0, 51], "mirror": true}
+					]
+				},
+				{
+					"name": "left_hand",
+					"parent": "left_elbow",
+					"pivot": [35.21153, 6.96202, -11.18744],
+					"rotation": [10, 57.5, -60],
+					"cubes": [
+						{"origin": [26.06723, 5.54428, -9.09914], "size": [10, 6, 8], "uv": [0, 75], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

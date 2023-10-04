@@ -50,7 +50,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
             AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
             if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getGrade().getRealPower(owner));
+                attribute.setBaseValue(STRENGTH * cap.getPower());
                 this.setHealth(this.getMaxHealth());
             }
         });

@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class SetOverlayMessageS2CPacket {
     private final Component component;
@@ -25,7 +27,9 @@ public class SetOverlayMessageS2CPacket {
         buf.writeBoolean(this.animate);
     }
 
-    public void handle(CustomPayloadEvent.Context ctx) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
+
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             Minecraft mc = Minecraft.getInstance();
             mc.gui.setOverlayMessage(this.component, this.animate);

@@ -24,6 +24,12 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
+    float getPower();
+
+    float getExperience();
+    void setExperience(float experience);
+    boolean addExperience(float amount);
+
     float getDomainSize();
     void setDomainSize(float domainSize);
 
@@ -53,9 +59,6 @@ public interface ISorcererData {
 
     void setType(JujutsuType type);
     JujutsuType getType();
-
-    void exorcise(LivingEntity owner, SorcererGrade grade);
-    void consume(LivingEntity owner, SorcererGrade grade);
 
     void toggle(LivingEntity owner, Ability ability);
     void clearToggled();

@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -225,7 +224,7 @@ public abstract class DomainExpansionEntity extends Mob {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (cap.getGrade().getRealPower(owner) * (cap.hasTrait(Trait.STRONGEST) ? 2.0F : 1.0F)) * (owner.getHealth() / owner.getMaxHealth());
+        return cap.getPower() * (owner.getHealth() / owner.getMaxHealth());
     }
 
     public int getTime() {

@@ -21,7 +21,8 @@ public class TwentyFourFrameRuleEffect extends JJKEffect {
         super(pCategory, pColor);
     }
 
-    public boolean m_19443_(int p_297444_, int p_300866_) {
+    @Override
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
         return true;
     }
 

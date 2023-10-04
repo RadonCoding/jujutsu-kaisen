@@ -52,6 +52,8 @@ public class ForestWaveEntity extends Entity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
+        if (this.level().isClientSide) return;
+
         if (!this.damage) return;
 
         LivingEntity owner = this.getOwner();
@@ -65,7 +67,7 @@ public class ForestWaveEntity extends Entity {
                 entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
                 entity.hurtMarked = true;
 
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * cap.getGrade().getRealPower(owner));
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * cap.getPower());
             }
         });
     }

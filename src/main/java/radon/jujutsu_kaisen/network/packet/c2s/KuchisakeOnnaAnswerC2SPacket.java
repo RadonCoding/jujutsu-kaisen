@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 
 import java.util.UUID;
@@ -24,7 +24,8 @@ public class KuchisakeOnnaAnswerC2SPacket {
         buf.writeUUID(this.identifier);
     }
 
-    public void handle(CustomPayloadEvent.Context ctx) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();

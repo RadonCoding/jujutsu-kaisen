@@ -19,7 +19,6 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -195,8 +194,10 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected @NotNull Vector3f m_292594_(@NotNull Entity p_297569_, @NotNull EntityDimensions p_297882_, float p_300288_) {
-        return new Vector3f(0.0F, -p_297569_.getBbHeight() + 0.8F, 0.0F);
+    public double getPassengersRidingOffset() {
+        LivingEntity passenger = this.getControllingPassenger();
+        if (passenger == null) return super.getPassengersRidingOffset();
+        return -passenger.getBbHeight() + 0.8F;
     }
 
     @Override

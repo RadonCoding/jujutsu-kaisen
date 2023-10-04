@@ -42,7 +42,7 @@ public class TojiZeninEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.HEAVENLY_RESTRICTION, Trait.STRONGEST);
+        return List.of(Trait.HEAVENLY_RESTRICTION);
     }
 
     @Override

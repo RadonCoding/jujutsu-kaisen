@@ -104,7 +104,7 @@ public class BlueProjectile extends JujutsuProjectile {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
                     if (entity instanceof LivingEntity) {
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getGrade().getRealPower(owner));
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getPower());
                     } else {
                         entity.discard();
                     }

@@ -8,12 +8,10 @@ import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public class Heal extends Ability implements Ability.IChannelened {
-    private static final float AMOUNT = 0.7F;
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return owner.getHealth() < owner.getMaxHealth();
@@ -27,12 +25,15 @@ public class Heal extends Ability implements Ability.IChannelened {
     @Override
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        owner.heal(AMOUNT * ((float) (Math.max(1, cap.getGrade().ordinal())) / SorcererGrade.values().length));
+        owner.heal(ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * cap.getPower());
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return owner.getHealth() < owner.getMaxHealth() ? 2.5F : 0.0F;
+        if (owner.getHealth() < owner.getMaxHealth()) {
+            return 3.0F;
+        }
+        return 0.0F;
     }
 
     @Override

@@ -30,7 +30,9 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
         float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
-        for (int i = -1; i < 2; i++) {
+        int speed = 3;
+
+        for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
             ForestWaveEntity forest = new ForestWaveEntity(owner);
             Vec3 look = HelperMethods.getLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())

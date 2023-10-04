@@ -4,8 +4,10 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.LazyLoadedValue;
+import radon.jujutsu_kaisen.client.render.entity.curse.RainbowDragonSegmentRenderer;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.GreatSerpentSegmentRenderer;
 import radon.jujutsu_kaisen.client.render.entity.curse.WormCurseSegmentRenderer;
+import radon.jujutsu_kaisen.entity.curse.RainbowDragonSegmentEntity;
 import radon.jujutsu_kaisen.entity.curse.WormCurseSegmentEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentSegmentEntity;
 
@@ -18,6 +20,7 @@ public class JJKRenderers {
     public static void bake(EntityRendererProvider.Context ctx) {
         renderers.put(GreatSerpentSegmentEntity.RENDERER, new LazyLoadedValue<>(() -> new GreatSerpentSegmentRenderer(ctx)));
         renderers.put(WormCurseSegmentEntity.RENDERER, new LazyLoadedValue<>(() -> new WormCurseSegmentRenderer(ctx)));
+        renderers.put(RainbowDragonSegmentEntity.RENDERER, new LazyLoadedValue<>(() -> new RainbowDragonSegmentRenderer(ctx)));
     }
 
     public static EntityRenderer<?> lookup(ResourceLocation location) {

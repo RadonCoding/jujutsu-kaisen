@@ -36,7 +36,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.hasLineOfSight(target);
+        return target != null && owner.distanceTo(target) < 10.0D;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
                         if (!entity.isInWater()) continue;
 
-                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * cap.getGrade().getRealPower(owner))) {
+                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * cap.getPower())) {
                             owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                             for (int i = 0; i < 2; i++) {
@@ -116,6 +116,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             // Damage
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            if (attacker.level().isClientSide) return;
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 

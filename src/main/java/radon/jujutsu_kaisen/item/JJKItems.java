@@ -122,12 +122,14 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> HEIAN_SUKUNA_SPAWN_EGG = ITEMS.register("heian_sukuna_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.HEIAN_SUKUNA, 0xCC8E8C, 0xBF3030, new Item.Properties()));
 
-    public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xC1BA50, 0x3B0F04, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> DAGON_SPAWN_EGG = ITEMS.register("dagon_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.DAGON, 0x8E2D33, 0xD6C0A3, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> HANAMI_SPAWN_EGG = ITEMS.register("hanami_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xDDD4C7, 0x790510, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5D8C9A, 0x888441, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FISH_CURSE_SPAWN_EGG = ITEMS.register("fish_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FISH_CURSE, 0x181A21, 0x252935, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> CYCLOPS_CURSE_SPAWN_EGG = ITEMS.register("cyclops_curse_spawn_egg",
@@ -140,8 +142,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.WORM_CURSE, 0xCAC7BF, 0x4B8355, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FELINE_CURSE_SPAWN_EGG = ITEMS.register("feline_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FELINE_CURSE, 0x79592D, 0x481F0D, new Item.Properties()));
-    public static RegistryObject<ForgeSpawnEggItem> HANAMI_SPAWN_EGG = ITEMS.register("hanami_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xDDD4C7, 0x790510, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> RAINBOW_DRAGON_SPAWN_EGG = ITEMS.register("rainbow_dragon_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xFFFFFF, 0xFFEA59, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

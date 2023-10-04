@@ -17,7 +17,7 @@
 						}
 					}
 				},
-				"right_jaw": {
+				"upper_jaw": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -30,7 +30,7 @@
 						}
 					}
 				},
-				"left_jaw": {
+				"lower_jaw": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]

@@ -59,17 +59,15 @@ public class DontMove extends Ability {
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            cap.delayTickEvent(() -> {
-                for (Entity entity : getEntities(owner)) {
-                    if (!(entity instanceof LivingEntity living)) continue;
+            for (Entity entity : getEntities(owner)) {
+                if (!(entity instanceof LivingEntity living)) continue;
 
-                    living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), DURATION * (cap.getGrade().ordinal() + 1), 0, false, false, false));
+                living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), DURATION * (cap.getGrade().ordinal() + 1), 0, false, false, false));
 
-                    if (entity instanceof Player player) {
-                        player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
-                    }
+                if (entity instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
                 }
-            }, 20);
+            }
         });
     }
 

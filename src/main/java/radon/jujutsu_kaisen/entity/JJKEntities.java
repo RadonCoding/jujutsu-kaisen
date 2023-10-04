@@ -109,6 +109,11 @@ public class JJKEntities {
                     .sized(1.6F, 1.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "feline_curse")
                             .toString()));
+    public static RegistryObject<EntityType<RainbowDragonEntity>> RAINBOW_DRAGON = ENTITIES.register("rainbow_dragon", () ->
+            EntityType.Builder.<RainbowDragonEntity>of(RainbowDragonEntity::new, MobCategory.AMBIENT)
+                    .sized(1.6F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
+                            .toString()));
 
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
             EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
@@ -311,6 +316,11 @@ public class JJKEntities {
                     .sized(1.9F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "time_cell_moon_palace")
                             .toString()));
+    public static RegistryObject<EntityType<DisasterPlantEntity>> DISASTER_PLANT = ENTITIES.register("disaster_plant", () ->
+            EntityType.Builder.<DisasterPlantEntity>of(DisasterPlantEntity::new, MobCategory.MISC)
+                    .sized(3.0F, 5.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "disaster_plant")
+                            .toString()));
 
 
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
@@ -441,6 +451,7 @@ public class JJKEntities {
         event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
 
         event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
         event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());

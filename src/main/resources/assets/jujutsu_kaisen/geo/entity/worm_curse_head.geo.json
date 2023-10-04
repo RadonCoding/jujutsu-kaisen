@@ -19,7 +19,7 @@
 					]
 				},
 				{
-					"name": "right_jaw",
+					"name": "upper_jaw",
 					"parent": "head",
 					"pivot": [0.5, 8, 7.6875],
 					"rotation": [0, 0, 90],
@@ -31,7 +31,7 @@
 					]
 				},
 				{
-					"name": "left_jaw",
+					"name": "lower_jaw",
 					"parent": "head",
 					"pivot": [0.5, 8, 7.6875],
 					"rotation": [0, 0, 90],

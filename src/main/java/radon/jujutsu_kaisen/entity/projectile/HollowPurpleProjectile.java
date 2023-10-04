@@ -53,7 +53,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                     if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                            DAMAGE * cap.getGrade().getRealPower(owner));
+                            DAMAGE * cap.getPower());
                 }
             });
         }
@@ -127,10 +127,11 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
-                    this.hurtEntities();
                     this.spawnParticles();
 
                     if (!this.level().isClientSide) {
+                        this.hurtEntities();
+
                         if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                             this.breakBlocks();
                         }

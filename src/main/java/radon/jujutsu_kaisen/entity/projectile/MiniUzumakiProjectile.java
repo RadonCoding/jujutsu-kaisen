@@ -101,7 +101,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             }
 
             if (current != null) {
-                this.power = current.getGrade().getBasePower();
+                this.power = HelperMethods.getPower(current.getGrade().getRequiredExperience());
                 cap.removeCurse(registry, current.getType());
             }
         });
@@ -166,15 +166,15 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
             this.calculateEndPos();
 
-            List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                    new Vec3(this.endPosX, this.endPosY, this.endPosZ));
-
-            for (Entity entity : entities) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MINI_UZUMAKI.get()), DAMAGE * this.power);
-            }
-
             if (!this.level().isClientSide) {
+                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+
+                for (Entity entity : entities) {
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MINI_UZUMAKI.get()), DAMAGE * this.power);
+                }
+
                 if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                     double radius = SCALE * 2.0F;
 

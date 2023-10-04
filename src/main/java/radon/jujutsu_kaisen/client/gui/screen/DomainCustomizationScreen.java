@@ -60,7 +60,7 @@ public class DomainCustomizationScreen extends Screen {
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int i = (this.width - WINDOW_WIDTH) / 2;
         int j = (this.height - WINDOW_HEIGHT) / 2;
-        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderBackground(pGuiGraphics);
         this.renderInside(pGuiGraphics, pMouseX, pMouseY, i, j);
         this.renderWindow(pGuiGraphics, i, j);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);

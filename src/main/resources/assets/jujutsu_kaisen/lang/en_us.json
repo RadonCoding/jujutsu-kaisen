@@ -94,16 +94,19 @@
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
   "item.jujutsu_kaisen.heian_sukuna_spawn_egg": "Spawn The King of Curses",
 
-  "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
+
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
   "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
+  "item.jujutsu_kaisen.hanami_spawn_egg": "Spawn Hanami",
+
+  "item.jujutsu_kaisen.rugby_field_curse_spawn_egg": "Spawn Rugby Field Curse",
   "item.jujutsu_kaisen.fish_curse_spawn_egg": "Spawn Fish Curse",
   "item.jujutsu_kaisen.cyclops_curse_spawn_egg": "Spawn Cyclops Curse",
   "item.jujutsu_kaisen.kuchisake_onna_spawn_egg": "Spawn Kuchisake-Onna",
   "item.jujutsu_kaisen.zomba_curse_spawn_egg": "Spawn Zomba Curse",
   "item.jujutsu_kaisen.worm_curse_spawn_egg": "Spawn Worm Curse",
   "item.jujutsu_kaisen.feline_curse_spawn_egg": "Spawn Feline Curse",
-  "item.jujutsu_kaisen.hanami_spawn_egg": "Spawn Hanami",
+  "item.jujutsu_kaisen.rainbow_dragon_spawn_egg": "Spawn Rainbow Dragon",
 
   "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
   "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain One",
@@ -213,6 +216,8 @@
   "ability.jujutsu_kaisen.water_torrent": "Water Torrent",
 
   "ability.jujutsu_kaisen.forest_platform": "Forest Platform",
+  "ability.jujutsu_kaisen.forest_platform.enable": "Activated forest platform",
+  "ability.jujutsu_kaisen.forest_platform.disable": "Deactivated forest platform",
   "ability.jujutsu_kaisen.forest_spikes": "Forest Spikes",
   "ability.jujutsu_kaisen.wood_shield": "Wood Shield",
   "ability.jujutsu_kaisen.wood_shield.enable": "Activated wood shield",
@@ -220,6 +225,7 @@
   "ability.jujutsu_kaisen.cursed_bud": "Cursed Bud",
   "ability.jujutsu_kaisen.forest_wave": "Forest Wave",
   "ability.jujutsu_kaisen.forest_roots": "Forest Roots",
+  "ability.jujutsu_kaisen.disaster_plant": "Disaster Plant",
   "ability.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
 
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
@@ -333,9 +339,6 @@
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
   "chat.jujutsu_kaisen.sorcerer": "You're a jujutsu sorcerer",
-  "chat.jujutsu_kaisen.exorcise_curse": "Exorcised curse +%1$f experience! Required: %2$f/%3$f",
-  "chat.jujutsu_kaisen.exorcise_sorcerer": "Exorcised sorcerer +%1$f experience! Required: %2$f/%3$f",
-  "chat.jujutsu_kaisen.consume": "Consumed cursed object +%1$f experience! Required: %2$f/%3$f",
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
   "chat.jujutsu_kaisen.set_target": "Changed %1$s's target",
   "chat.jujutsu_kaisen.set_target_info": "Press shift + right click to set the target",
@@ -354,6 +357,8 @@
   "chat.jujutsu_kaisen.die": "<%1$s> DIE!",
 
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
+
+  "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -391,6 +396,7 @@
   "entity.jujutsu_kaisen.heian_sukuna": "The King of Curses",
   "entity.jujutsu_kaisen.hanami": "Hanami",
   "entity.jujutsu_kaisen.feline_curse": "Feline Curse",
+  "entity.jujutsu_kaisen.rainbow_dragon": "Rainbow Dragon",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 
@@ -422,9 +428,6 @@
 
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
-
-  "advancements.jujutsu_kaisen.strongest.title": "The Strongest",
-  "advancements.jujutsu_kaisen.strongest.description": "Defeat the strongest.",
 
   "advancements.jujutsu_kaisen.cursed_womb.title": "Cursed Womb",
   "advancements.jujutsu_kaisen.cursed_womb.description": "Hmm... Maybe you should try evolving.",
