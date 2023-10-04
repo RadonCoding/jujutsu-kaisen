@@ -181,7 +181,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
             if (target == null) return;
 
             this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * cap.getGrade().getRealPower(this)));
+                target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * cap.getPower()));
         });
         this.reset();
     }

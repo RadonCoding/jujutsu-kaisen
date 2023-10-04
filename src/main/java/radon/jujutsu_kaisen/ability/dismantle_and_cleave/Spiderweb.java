@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class Spiderweb extends Ability {
     private static final int RANGE = 3;
     private static final int DELAY = 20;
-    private static final float EXPLOSIVE_POWER = 10.0F;
+    private static final float EXPLOSIVE_POWER = 2.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -78,7 +78,7 @@ public class Spiderweb extends Ability {
                     }, i * 2);
                 }
                 cap.delayTickEvent(() ->
-                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner),
+                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getPower(),
                                 owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
                                         Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE), DELAY);
             });

@@ -17,7 +17,6 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -41,6 +40,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -89,7 +89,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getBasePower()) / (this.level().isNight() ? 2 : 1)) != 0) return false;
+            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience())) / (this.level().isNight() ? 2 : 1)) != 0) return false;
 
             if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 if (!this.isInVillage() && !this.isInFortress()) return false;
@@ -120,7 +120,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         int target = 1;
         int goal = 1;
 
-        this.goalSelector.addGoal(goal++, new FloatGoal(this));
+        this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));

@@ -5,15 +5,18 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.HealingGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -31,18 +34,35 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.4D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new HealingGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        int target = 1;
+        int goal = 1;
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
+
+        if (this.hasMeleeAttack()) {
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
+        }
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+
+        if (this.isTame()) {
+            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
+
+            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
+        } else {
+            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+            this.targetSelector.addGoal(target, new NearestAttackableSorcererGoal(this, true));
+        }
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
     }
 
     @Override
     protected boolean isCustom() {
-        return true;
+        return false;
     }
 
     @Override

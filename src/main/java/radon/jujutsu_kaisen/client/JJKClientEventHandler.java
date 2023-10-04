@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -177,10 +176,10 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {
-            if (event.getSkin(PlayerSkin.Model.WIDE) instanceof PlayerRenderer renderer) {
+            if (event.getSkin("default") instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
-            if (event.getSkin(PlayerSkin.Model.SLIM) instanceof PlayerRenderer renderer) {
+            if (event.getSkin("slim") instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
         }
@@ -328,6 +327,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FOREST_ROOTS.get(), ForestRootsRenderer::new);
             event.registerEntityRenderer(JJKEntities.FILM_GAUGE.get(), FilmGaugeRenderer::new);
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
         }
 
         @SubscribeEvent

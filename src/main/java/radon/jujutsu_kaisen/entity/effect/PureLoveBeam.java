@@ -135,19 +135,19 @@ public class PureLoveBeam extends JujutsuProjectile {
             if (this.getTime() > CHARGE) {
                 this.calculateEndPos();
 
-                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
-
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (Entity entity : entities) {
-                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                this.getDamage() * cap.getGrade().getRealPower(owner));
-                    }
-                });
-
                 if (!this.level().isClientSide) {
+                    List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                            new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+
+                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        for (Entity entity : entities) {
+                            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+
+                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
+                                    this.getDamage() * cap.getPower());
+                        }
+                    });
+
                     if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                         double radius = this.getScale() * 2.0F;
 

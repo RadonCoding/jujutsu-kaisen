@@ -95,6 +95,11 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
+    @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight();
+    }
+
     private void breakBlocks() {
         AABB bounds = this.getBoundingBox();
 

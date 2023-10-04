@@ -59,6 +59,8 @@ public class BlueFists extends Ability implements Ability.IToggled {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
+            if (attacker.level().isClientSide) return;
+
             LivingEntity victim = event.getEntity();
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
@@ -69,9 +71,8 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
                 victim.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
 
-                if (!attacker.level().isClientSide) {
-                    ((ServerLevel) attacker.level()).getChunkSource().broadcastAndSend(attacker, new ClientboundAnimatePacket(victim, ClientboundAnimatePacket.CRITICAL_HIT));
-                }
+                ((ServerLevel) attacker.level()).getChunkSource().broadcastAndSend(attacker, new ClientboundAnimatePacket(victim, ClientboundAnimatePacket.CRITICAL_HIT));
+
                 victim.invulnerableTime = 0;
                 victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.BLUE_FISTS.get()), event.getAmount() * 0.5F);
             }

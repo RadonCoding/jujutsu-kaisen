@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.disaster_plants;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
@@ -24,6 +25,11 @@ public class CursedBud extends Ability {
         owner.swing(InteractionHand.MAIN_HAND);
 
         CursedBudProjectile bud = new CursedBudProjectile(owner);
+
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (bud.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        bud.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+
         owner.level().addFreshEntity(bud);
     }
 

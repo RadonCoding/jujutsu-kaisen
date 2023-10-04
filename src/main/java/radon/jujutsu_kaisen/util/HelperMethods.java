@@ -25,6 +25,10 @@ public class HelperMethods {
         return enumClass.getEnumConstants()[x];
     }
 
+    public static float getPower(float experience) {
+        return 1.0F + experience / 1000.0F;
+    }
+
     public static float getYaw(Vec3 vec) {
         return (float) (-Mth.atan2(vec.x(), vec.z()) * (180.0D / Math.PI));
     }

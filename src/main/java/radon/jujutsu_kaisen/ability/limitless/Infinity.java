@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -90,10 +89,6 @@ public class Infinity extends Ability implements Ability.IToggled {
 
         public FrozenProjectileData() {
             this.frozen = new HashMap<>();
-        }
-
-        public static SavedData.Factory<FrozenProjectileData> factory() {
-            return new SavedData.Factory<>(FrozenProjectileData::new, FrozenProjectileData::load, DataFixTypes.LEVEL);
         }
 
         public static FrozenProjectileData load(CompoundTag pCompoundTag) {
@@ -222,7 +217,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (event.phase != TickEvent.Phase.START) return;
 
             if (event.level instanceof ServerLevel level) {
-                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.factory(),
+                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                         FrozenProjectileData.IDENTIFIER);
                 data.tick(level);
             }
@@ -234,7 +229,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (!(hit.getEntity() instanceof LivingEntity target)) return;
             if (!(target.level() instanceof ServerLevel level)) return;
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.factory(),
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                     FrozenProjectileData.IDENTIFIER);
 
             if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
@@ -256,7 +251,8 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!(target.level() instanceof ServerLevel level)) return;
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.factory(), FrozenProjectileData.IDENTIFIER);
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
+                    FrozenProjectileData.IDENTIFIER);
 
             if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

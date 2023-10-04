@@ -73,6 +73,11 @@ public class MeteorEntity extends Entity {
     }
 
     @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight();
+    }
+
+    @Override
     public boolean isPushedByFluid(FluidType type) {
         return false;
     }
@@ -160,7 +165,7 @@ public class MeteorEntity extends Entity {
     }
 
     private void pushEntities() {
-        if (this.level().isClientSide()) {
+        if (this.level().isClientSide) {
             this.level().getEntities(EntityTypeTest.forClass(Player.class), this.getBoundingBox(), EntitySelector.pushableBy(this)).forEach(this::doPush);
         } else {
             List<Entity> entities = this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
@@ -190,7 +195,7 @@ public class MeteorEntity extends Entity {
     }
 
     @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements) {
+    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
         this.lerpX = pX;
         this.lerpY = pY;
         this.lerpZ = pZ;
@@ -261,13 +266,13 @@ public class MeteorEntity extends Entity {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         if (this.explosionTime == 0) {
                             for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
-                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getGrade().getRealPower(owner));
+                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getPower());
                             }
                         }
 
                         if (this.onGround()) {
                             if (this.explosionTime == 0) {
-                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getGrade().getRealPower(owner)),
+                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getPower()),
                                         EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                                 this.explosionTime++;
                             }

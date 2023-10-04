@@ -17,5 +17,6 @@ public class JJKCommands {
         RerollCommand.register(event.getDispatcher());
         ResetSummonsCommand.register(event.getDispatcher());
         SetNatureCommand.register(event.getDispatcher());
+        SetExperienceCommand.register(event.getDispatcher());
     }
 }

@@ -68,6 +68,11 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight();
+    }
+
+    @Override
     protected boolean isCustom() {
         return true;
     }

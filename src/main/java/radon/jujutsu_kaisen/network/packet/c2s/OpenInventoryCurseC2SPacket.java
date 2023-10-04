@@ -4,8 +4,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
+
+import java.util.function.Supplier;
 
 public class OpenInventoryCurseC2SPacket {
     public OpenInventoryCurseC2SPacket() {
@@ -18,7 +20,9 @@ public class OpenInventoryCurseC2SPacket {
 
     }
 
-    public void handle(CustomPayloadEvent.Context ctx) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
+
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 

@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -35,10 +33,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -146,6 +141,8 @@ public class JJKEventHandler {
             DamageSource source = event.getSource();
             Entity attacker = source.getEntity();
             LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
@@ -293,57 +290,11 @@ public class JJKEventHandler {
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (event.getSource().getEntity() instanceof LivingEntity source) {
+            if (event.getSource().getEntity() instanceof LivingEntity) {
                 if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
                 ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                LivingEntity killer;
-
-                if (source instanceof TamableAnimal tamable && tamable.isTame()) {
-                    LivingEntity owner = tamable.getOwner();
-                    killer = owner == null ? source : owner;
-                } else {
-                    killer = source;
-                }
-
                 if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
-
-                if (killer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData killerCap = killer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                    if (victimCap.getType() == JujutsuType.CURSE) {
-                        double width = victim.getBbWidth();
-                        double height = victim.getBbHeight();
-                        ParticleOptions one = new VaporParticle.VaporParticleOptions(ParticleColors.PINK_COLOR, (float) width * 2.0F, 0.5F, false, 20);
-                        ParticleOptions two = new VaporParticle.VaporParticleOptions(ParticleColors.PURPLE_COLOR, (float) width * 2.0F, 0.5F, false, 20);
-
-                        for (int j = 0; j < 8; j++) {
-                            double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
-                            double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            ((ServerLevel) victim.level()).sendParticles(one, x, y, z, 0,
-                                    0.0D, 0.0D, 0.0D, 0.0D);
-                        }
-                        for (int j = 0; j < 8; j++) {
-                            double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * height;
-                            double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                            ((ServerLevel) victim.level()).sendParticles(two, x, y, z, 0,
-                                    0.0D, 0.0D, 0.0D, 0.0D);
-                        }
-                    }
-
-                    if (killerCap.getType() == JujutsuType.SORCERER && victimCap.getType() == JujutsuType.CURSE ||
-                            killerCap.getType() == JujutsuType.CURSE && victimCap.getType() == JujutsuType.SORCERER) {
-                        SorcererGrade grade = SorcererGrade.values()[victimCap.getGrade().ordinal()];
-
-                        killerCap.exorcise(killer, grade);
-
-                        if (killer instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(killerCap.serializeNBT()), player);
-                        }
-                    }
-                }
 
                 if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
@@ -377,6 +328,8 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent event) {
+            if (event.getEntity().level().isClientSide) return;
+
             CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());
 
             ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

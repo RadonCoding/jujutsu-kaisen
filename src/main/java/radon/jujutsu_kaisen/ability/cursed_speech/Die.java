@@ -96,24 +96,22 @@ public class Die extends Ability {
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
-            ownerCap.delayTickEvent(() -> {
-                for (Entity entity : getEntities(owner)) {
-                    if (!(entity instanceof LivingEntity living)) continue;
+            for (Entity entity : getEntities(owner)) {
+                if (!(entity instanceof LivingEntity living)) continue;
 
-                    living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getGrade().getRealPower(owner));
+                living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getPower());
 
-                    living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                        if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
-                            DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
-                            entity.hurt(source, calculateDamage(source, owner, living));
-                        }
-                    });
-
-                    if (living instanceof Player player) {
-                        player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
+                living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
+                    if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
+                        DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
+                        entity.hurt(source, calculateDamage(source, owner, living));
                     }
+                });
+
+                if (living instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
                 }
-            }, 20);
+            }
         });
     }
 

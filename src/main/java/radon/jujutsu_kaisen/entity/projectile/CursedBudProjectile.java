@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.util.Mth;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -29,6 +30,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     private static final int EFFECT = 5 * 20;
     private static final double SPEED = 3.0D;
     private static final float DAMAGE = 5.0F;
+
+    private boolean plant;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -44,6 +47,17 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
     }
 
+    public CursedBudProjectile(LivingEntity pShooter, DisasterPlantEntity plant) {
+        super(JJKEntities.CURSED_BUD.get(), pShooter.level(), pShooter);
+
+        Vec3 look = HelperMethods.getLookAngle(plant);
+        Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), plant.getYRot(), plant.getXRot());
+
+        this.plant = true;
+    }
+
+
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
@@ -51,8 +65,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         if (this.getOwner() instanceof LivingEntity owner) {
             if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getGrade().getRealPower(owner)), 0, false, false, false));
-                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getGrade().getRealPower(owner));
+                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getPower()), 0, false, false, false));
+                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getPower());
             }
         }
         this.discard();
@@ -60,10 +74,10 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
     @Override
     public void tick() {
-        super.tick();
-
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
+            if (this.level().isClientSide) return;
+
+            if (!this.plant && this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
@@ -71,24 +85,40 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 look = HelperMethods.getLookAngle(owner);
-
-                    double d0 = look.horizontalDistance();
-                    this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
-                    this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
-                    this.yRotO = this.getYRot();
-                    this.xRotO = this.getXRot();
-
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                    this.setPos(spawn.x(), spawn.y(), spawn.z());
+                    this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }
             } else if (this.getTime() >= DURATION) {
                 this.discard();
+            } else if (this.plant) {
+                if (this.getTime() == 0) {
+                    this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                    this.discard();
+                }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                    this.discard();
                 }
             }
         }
+        super.tick();
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("plant", this.plant);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.plant = pCompound.getBoolean("plant");
     }
 
     @Override

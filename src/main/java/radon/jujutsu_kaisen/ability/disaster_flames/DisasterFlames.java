@@ -87,26 +87,22 @@ public class DisasterFlames extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
+        if (owner.level().isClientSide) return;
+
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             LivingEntity target = this.getTarget(owner);
 
             if (target == null) {
                 for (Entity entity : this.getTargets(owner)) {
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getGrade().getRealPower(owner))) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getPower())) {
                         entity.setSecondsOnFire(5);
-
-                        if (!owner.level().isClientSide) {
-                            this.spawnParticles(entity, 32);
-                        }
+                        this.spawnParticles(entity, 32);
                     }
                 }
             } else {
-                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getGrade().getRealPower(owner))) {
+                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getPower())) {
                     target.setSecondsOnFire(10);
-
-                    if (!owner.level().isClientSide) {
-                        this.spawnParticles(target, 64);
-                    }
+                    this.spawnParticles(target, 64);
                 }
             }
         });

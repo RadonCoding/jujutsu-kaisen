@@ -15,7 +15,7 @@ public class ForestRoots extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return target != null && this.getTarget(owner) == target;
     }
 
     @Override

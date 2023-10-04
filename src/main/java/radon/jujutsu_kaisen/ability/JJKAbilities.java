@@ -114,6 +114,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSED_BUD = ABILITIES.register("cursed_bud", CursedBud::new);
     public static RegistryObject<Ability> FOREST_WAVE = ABILITIES.register("forest_wave", ForestWave::new);
     public static RegistryObject<Ability> FOREST_ROOTS = ABILITIES.register("forest_roots", ForestRoots::new);
+    public static RegistryObject<Ability> DISASTER_PLANT = ABILITIES.register("disaster_plant", DisasterPlant::new);
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
@@ -200,7 +201,7 @@ public class JJKAbilities {
 
     public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return 50.0F * grade.getBasePower() * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+        return 50.0F * HelperMethods.getPower(grade.getRequiredExperience()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
     public static void summonCurse(LivingEntity owner, EntityType<?> type) {

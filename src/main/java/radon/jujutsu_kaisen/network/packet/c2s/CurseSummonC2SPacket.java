@@ -6,8 +6,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+
+import java.util.function.Supplier;
 
 public class CurseSummonC2SPacket {
     private final ResourceLocation key;
@@ -24,7 +26,9 @@ public class CurseSummonC2SPacket {
         buf.writeResourceLocation(this.key);
     }
 
-    public void handle(CustomPayloadEvent.Context ctx) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
+
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
 

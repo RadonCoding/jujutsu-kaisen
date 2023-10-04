@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.capability.data;
 
-import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -26,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraftforge.common.ForgeMod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -62,7 +62,6 @@ public class SorcererData implements ISorcererData {
     private CursedEnergyNature nature;
 
     private float experience;
-    private SorcererGrade grade;
 
     private float energy;
     private float maxEnergy;
@@ -109,12 +108,15 @@ public class SorcererData implements ISorcererData {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
     private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
+    private static final UUID STEP_HEIGHT_ADDITION_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
     private static final int PROJECTION_SORCERY_STACK_DURATION = 3 * 20;
+    public static final float REQUIRED_FOR_STRONGEST = 3000.0F;
+    private static final float REQUIRED_USAGE_FOR_DOMAIN = 10000.0F;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -126,7 +128,6 @@ public class SorcererData implements ISorcererData {
 
         this.nature = CursedEnergyNature.BASIC;
 
-        this.grade = SorcererGrade.GRADE_4;
         this.mode = TenShadowsMode.SUMMON;
 
         this.lastBlackFlashTime = -1;
@@ -353,7 +354,7 @@ public class SorcererData implements ISorcererData {
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
-        AdvancementHolder advancement = server.getAdvancements().m_294099_(new ResourceLocation(JujutsuKaisen.MOD_ID,
+        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
                 String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
 
         if (advancement != null) {
@@ -373,7 +374,6 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE)) this.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.SIMPLE_DOMAIN)) this.giveAdvancement(player, "simple_domain");
         if (this.traits.contains(Trait.DOMAIN_EXPANSION)) this.giveAdvancement(player, "domain_expansion");
-        if (this.traits.contains(Trait.STRONGEST)) this.giveAdvancement(player, "strongest");
     }
 
     public void tick(LivingEntity owner) {
@@ -396,19 +396,21 @@ public class SorcererData implements ISorcererData {
         if (this.speedStacks > 0) {
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
             this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+            this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID);
         }
 
         if (owner.level() instanceof ServerLevel level) {
             this.updateAdaptation(level);
         }
 
-        if (this.used >= 10000.0F) {
+        if (this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal() && this.used >= REQUIRED_USAGE_FOR_DOMAIN) {
             this.traits.add(Trait.DOMAIN_EXPANSION);
         }
-        if (this.used >= 5000.0F) {
+        if (this.getGrade().ordinal() > SorcererGrade.GRADE_2.ordinal() && this.used >= REQUIRED_USAGE_FOR_DOMAIN / 2) {
             this.traits.add(Trait.SIMPLE_DOMAIN);
         }
 
@@ -426,51 +428,71 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
-        SorcererGrade grade = this.getGrade();
-
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil((Math.log(grade.ordinal() + 1)
-                    * (this.traits.contains(Trait.STRONGEST) ? 100.0D : 50.0D)) / 20) * 20;
+            double health = Math.ceil(((this.getPower() - 1.0F) * 30.0D) / 20) * 20;
 
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 6.0D : 3.0D);
+            double damage = this.getPower() * 3.0D;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            double speed = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 1.0D : 0.5D);
+            double speed = this.getPower() * 0.5D;
             this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 0.1D : 0.05D);
+            double movement = this.getPower() * 0.05D;
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
-            float resistance = this.traits.contains(Trait.STRONGEST) ? 2.0F : 1.0F;
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(resistance * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
-
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
+
+            int resistance = Math.round(3 * this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
 
-            double health = Math.ceil((Math.log(grade.ordinal() + 1)
-                    * (this.traits.contains(Trait.STRONGEST) ? 50.0D : 25.0D)) / 20) * 20;
+            double health = Math.ceil(((this.getPower() - 1.0F) * 20.0D) / 20) * 20;
 
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.grade.getRealPower(owner) * (this.traits.contains(Trait.STRONGEST) ? 3.0D : 1.5D) / 2.0F;
+            double damage = (this.getPower() * 1.5D) / 2.0F;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            float resistance = this.traits.contains(Trait.STRONGEST) ? 1.0F : 0.0F;
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, Mth.floor(resistance * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)),
-                    false, false, false));
+            int resistance = Math.round(2 * this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()));
+            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
+    }
+
+    @Override
+    public float getPower() {
+        return HelperMethods.getPower(this.experience);
+    }
+
+    @Override
+    public float getExperience() {
+        return this.experience;
+    }
+
+    @Override
+    public void setExperience(float experience) {
+        this.experience = experience;
+    }
+
+    @Override
+    public boolean addExperience(float amount) {
+        this.experience += amount;
+
+        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
+            this.experience = ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -509,12 +531,19 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public SorcererGrade getGrade() {
-        return this.grade;
+        SorcererGrade result = SorcererGrade.GRADE_4;
+
+        for (SorcererGrade grade : SorcererGrade.values()) {
+            if (this.experience < grade.getRequiredExperience()) break;
+
+            result = grade;
+        }
+        return result;
     }
 
     @Override
     public void setGrade(SorcererGrade grade) {
-        this.grade = grade;
+        this.experience = grade.getRequiredExperience();
     }
 
     @Override
@@ -550,52 +579,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public JujutsuType getType() {
         return this.type;
-    }
-
-    @Override
-    public void exorcise(LivingEntity owner, SorcererGrade grade) {
-        if (this.grade == SorcererGrade.SPECIAL_GRADE) return;
-
-        SorcererGrade next = SorcererGrade.values()[this.grade.ordinal() + 1];
-
-        this.experience += grade.getReward();
-
-        if (owner instanceof Player player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.exorcise_%s", JujutsuKaisen.MOD_ID,
-                            this.type == JujutsuType.SORCERER ? "curse" : "sorcerer"), grade.getReward(), this.experience, next.getRequiredExperience()));
-        }
-
-        // If the owner has enough experience and the curse/sorcerer exorcised was higher or equal to the next rank
-        if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
-            this.setGrade(next);
-
-            if (owner instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getName()));
-            }
-        }
-    }
-
-    @Override
-    public void consume(LivingEntity owner, SorcererGrade grade) {
-        if (this.grade == SorcererGrade.SPECIAL_GRADE) return;
-
-        SorcererGrade next = SorcererGrade.values()[this.grade.ordinal() + 1];
-
-        this.experience += grade.getReward();
-
-        if (owner instanceof Player player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.consume", JujutsuKaisen.MOD_ID), grade.getReward(),
-                    this.experience, next.getRequiredExperience()));
-        }
-
-        // If the owner has enough experience and the cursed object consumed was higher or equal to the next rank
-        if (this.experience >= next.getRequiredExperience() && grade.ordinal() >= next.ordinal()) {
-            this.setGrade(next);
-
-            if (owner instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), next.getName()));
-            }
-        }
     }
 
     public void toggle(LivingEntity owner, Ability ability) {
@@ -690,8 +673,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        return (this.maxEnergy == 0.0F ? ConfigHolder.SERVER.maxCursedEnergyDefault.get().floatValue() : this.maxEnergy) * ((float) (this.grade.ordinal() + 1) / SorcererGrade.values().length)
-                * (this.traits.contains(Trait.STRONGEST) ? 1.5F : 1.0F);
+        return (this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getPower();
     }
 
     @Override
@@ -1259,7 +1241,6 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("used", this.used);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
-        nbt.putInt("grade", this.grade.ordinal());
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
@@ -1414,7 +1395,6 @@ public class SorcererData implements ISorcererData {
         this.used = nbt.getFloat("used");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
-        this.grade = SorcererGrade.values()[nbt.getInt("grade")];
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");

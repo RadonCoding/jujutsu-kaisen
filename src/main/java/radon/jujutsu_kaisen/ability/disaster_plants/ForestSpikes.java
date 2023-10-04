@@ -79,6 +79,7 @@ public class ForestSpikes extends Ability {
                         .subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);
                 float yRot = dir.toYRot() + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
                 float xRot = (float) (Mth.atan2(dir.getStepY(), dir.getStepX()) * 180.0F / Mth.PI) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F;
+
                 switch (dir) {
                     case UP, DOWN -> xRot = -xRot;
                     case WEST -> xRot -= 180.0F;

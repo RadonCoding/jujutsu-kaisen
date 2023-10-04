@@ -32,6 +32,10 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         super(pEntityType, pLevel);
     }
 
+    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height);
+    }
+
     @Override
     public AABB getBounds() {
         int width = this.getWidth();
@@ -47,10 +51,6 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         BlockPos center = this.blockPosition();
         BlockPos relative = pos.subtract(center);
         return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
-    }
-
-    public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
-        super(JJKEntities.MALEVOLENT_SHRINE.get(), owner, ability, width, height);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level()).contains(this)) {
                         player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,  MalevolentShrine.DELAY, 0, false, false));
-                        player.connection.m_141995_(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
+                        player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
                                 this.getX(), this.getY(), this.getZ(), 1.0F, 1.0F, this.random.nextLong()));
                     }
                     cap.onInsideDomain(this);

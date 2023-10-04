@@ -22,6 +22,7 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -87,7 +88,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * this.getGrade().getBasePower())) != 0) return false;
+            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience()))) != 0) return false;
             if (!this.isInVillage()) return false;
             if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D,  16.0D, 64.0D)).size() > 0) return false;
         }

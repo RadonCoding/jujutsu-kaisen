@@ -80,6 +80,8 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
+            if (victim.level().isClientSide) return;
+
             for (ProjectionFrameEntity frame : victim.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(victim.position(),
                     8.0D, 8.0D, 8.0D))) {
                 if (frame.getVictim() != victim) continue;
@@ -94,7 +96,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
                 if (owner != null) {
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * cap.getGrade().getRealPower(owner));
+                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * cap.getPower());
 
                     invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }

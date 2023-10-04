@@ -18,6 +18,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -104,11 +106,13 @@ public class PiercingBullEntity extends TenShadowsSummon {
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox())) {
                     if (entity == this) continue;
 
-                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * this.getGrade().getRealPower(this));
-                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(this.getGrade().getRealPower(this)));
+                    ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getPower());
+                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getPower()));
                     entity.hurtMarked = true;
 
-                    this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), this.getGrade().getRealPower(this), false, Level.ExplosionInteraction.NONE);
+                    this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), cap.getPower(), false, Level.ExplosionInteraction.NONE);
 
                     if (entity == target) {
                         this.setSprinting(false);

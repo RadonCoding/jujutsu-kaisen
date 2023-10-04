@@ -51,7 +51,7 @@ public class RedProjectile extends JujutsuProjectile {
 
                     float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getGrade().getRealPower(owner))) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getPower())) {
                         entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                         entity.hurtMarked = true;
                     }
@@ -68,7 +68,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                float radius = EXPLOSIVE_POWER * cap.getGrade().getRealPower(owner);
+                float radius = EXPLOSIVE_POWER * cap.getPower();
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
                 this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
@@ -83,6 +83,8 @@ public class RedProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.level().isClientSide) return;
+
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();

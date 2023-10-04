@@ -1,0 +1,79 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0.5, 0]
+			},
+			"bones": [
+				{
+					"name": "dragon",
+					"pivot": [-1.25, 0, -6.80452],
+					"cubes": [
+						{"origin": [-0.5, 15.49079, -8.16336], "size": [0, 6, 16], "uv": [0, 75]},
+						{"origin": [-9, -0.10921, -113.97361], "size": [18, 16, 16], "pivot": [0, 7.96202, -53.07929], "rotation": [180, 0, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "dragon",
+					"pivot": [-9, 11.96202, 2.53095],
+					"rotation": [-12.23722, -41.16124, -75.8577],
+					"cubes": [
+						{"origin": [-25.5, 8.89079, -0.36336], "size": [16, 7, 11], "uv": [74, 27]}
+					]
+				},
+				{
+					"name": "right_knee",
+					"parent": "right_leg",
+					"pivot": [-21, 11.96202, 8.53095],
+					"rotation": [0, 45, 0],
+					"cubes": [
+						{"origin": [-33.5, 9.49079, 6.13664], "size": [12, 6, 6], "uv": [92, 58]}
+					]
+				},
+				{
+					"name": "right_foot",
+					"parent": "right_knee",
+					"pivot": [-34, 12.96202, 8.53095],
+					"rotation": [0, 0, 0],
+					"cubes": [
+						{"origin": [-39.5, 8.49079, 0.13664], "size": [6, 8, 13], "uv": [90, 76]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "dragon",
+					"pivot": [9, 11.96202, 2.53095],
+					"rotation": [-12.23722, 41.16124, 75.8577],
+					"cubes": [
+						{"origin": [9.5, 8.89079, -0.36336], "size": [16, 7, 11], "uv": [74, 27], "mirror": true}
+					]
+				},
+				{
+					"name": "left_knee",
+					"parent": "left_leg",
+					"pivot": [21, 11.96202, 8.53095],
+					"rotation": [0, -45, 0],
+					"cubes": [
+						{"origin": [21.5, 9.49079, 6.13664], "size": [12, 6, 6], "uv": [92, 58], "mirror": true}
+					]
+				},
+				{
+					"name": "left_foot",
+					"parent": "left_knee",
+					"pivot": [34, 12.96202, 8.53095],
+					"rotation": [0, 0, 0],
+					"cubes": [
+						{"origin": [33.5, 8.49079, 0.13664], "size": [6, 8, 13], "uv": [90, 76], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

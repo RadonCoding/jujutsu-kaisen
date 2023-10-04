@@ -53,7 +53,7 @@ public class SimpleDomainEntity extends Mob {
             AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
             if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getGrade().getRealPower(owner));
+                attribute.setBaseValue(STRENGTH * cap.getPower());
                 this.setHealth(this.getMaxHealth());
             }
         });

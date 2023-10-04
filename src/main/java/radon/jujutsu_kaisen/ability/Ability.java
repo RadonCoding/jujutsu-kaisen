@@ -8,6 +8,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -90,7 +91,7 @@ public abstract class Ability {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && cap.hasTrait(Trait.STRONGEST))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && cap.getExperience() >= SorcererData.REQUIRED_FOR_STRONGEST)) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
 
         for (Trait trait : this.getRequirements()) {
             if (!cap.hasTrait(trait)) return false;
@@ -117,7 +118,7 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
 
-            if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasTrait(Trait.STRONGEST))) &&
+            if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.getExperience() >= SorcererData.REQUIRED_FOR_STRONGEST)) &&
                     cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 return Status.DOMAIN_AMPLIFICATION;
             }
@@ -224,7 +225,7 @@ public abstract class Ability {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (duration > 0) {
-                duration = (int) (duration * cap.getGrade().getRealPower(owner));
+                duration = (int) (duration * cap.getPower());
             }
             return duration;
         }

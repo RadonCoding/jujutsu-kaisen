@@ -5,12 +5,13 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class UpdateMultipartS2CPacket {
     private int id;
@@ -53,7 +54,9 @@ public class UpdateMultipartS2CPacket {
     }
 
     public static class Handler {
-        public static void onMessage(UpdateMultipartS2CPacket message, CustomPayloadEvent.Context ctx) {
+        public static void onMessage(UpdateMultipartS2CPacket message, Supplier<NetworkEvent.Context> supplier) {
+            NetworkEvent.Context ctx = supplier.get();
+
             ctx.enqueueWork(() -> {
                 Level level = ClientWrapper.getLevel();
 

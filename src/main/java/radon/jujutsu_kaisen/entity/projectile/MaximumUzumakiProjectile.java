@@ -73,7 +73,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
             for (int i = 0; i < entry.getValue(); i++) {
                 if (this.power == MAX_POWER) break;
                 if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
-                this.power = Math.min(MAX_POWER, this.power + curse.getGrade().getBasePower());
+                this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getGrade().getRequiredExperience()));
                 cap.removeCurse(registry, entity.getType());
             }
         }
@@ -138,6 +138,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         this.spawnParticles();
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.level().isClientSide) return;
+
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();

@@ -13,7 +13,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 import java.util.List;
 
@@ -21,13 +20,10 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
-        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && !owner.level().getEntities(owner, owner.getBoundingBox().inflate(3.0D),
-                entity -> entity instanceof JujutsuProjectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty()) return true;
         if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) < 10.0D && (domain == null || JJKAbilities.hasTrait(owner, Trait.STRONGEST) ||
-                !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) < 10.0D && (!JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
