@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -201,7 +202,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D);
     }

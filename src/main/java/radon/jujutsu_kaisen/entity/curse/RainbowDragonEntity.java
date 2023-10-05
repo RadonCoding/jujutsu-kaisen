@@ -5,7 +5,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -25,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -198,9 +198,7 @@ public class RainbowDragonEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 3 * 0.32D)
-                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D)
+        return SorcererEntity.createAttributes().add(Attributes.MAX_HEALTH, 5 * 20.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 

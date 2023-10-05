@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -11,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -64,7 +64,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 2 * 2.0D);
     }

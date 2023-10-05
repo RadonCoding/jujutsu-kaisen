@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -144,7 +145,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
+        return SorcererEntity.createAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.MAX_HEALTH, 10.0D);
     }

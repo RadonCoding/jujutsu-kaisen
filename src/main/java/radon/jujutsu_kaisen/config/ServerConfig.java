@@ -74,7 +74,7 @@ public class ServerConfig {
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 100000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
-                .defineInRange("maximumExperienceAmount", 100.0F, 1.0F, 1000.0F);
+                .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
 
         builder.pop();
     }

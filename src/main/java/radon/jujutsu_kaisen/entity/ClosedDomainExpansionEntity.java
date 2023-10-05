@@ -2,10 +2,12 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -47,7 +49,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Vec3 direction = HelperMethods.getLookAngle(owner);
         Vec3 behind = owner.position().add(direction.scale(radius - 3));
-        this.moveTo(behind.x(), behind.y() - (double) (radius / 2), behind.z());
+        this.moveTo(behind.x(), behind.y() - (double) (radius / 2), behind.z(), owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATA_RADIUS, radius);
 
@@ -70,9 +72,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public AABB getBounds() {
-        int radius = this.getRadius();
-        return new AABB(this.getX() - radius, this.getY(), this.getZ() - radius,
-                this.getX() + radius, this.getY() + radius, this.getZ() + radius);
+        return this.getBoundingBox();
     }
 
     @Override
@@ -126,8 +126,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private void createBarrier(LivingEntity owner) {
         int radius = this.getRadius();
 
-        Vec3 direction = HelperMethods.getLookAngle(owner);
-        Vec3 behind = owner.position().add(direction.scale(radius - 3));
+        Vec3 direction = this.getLookAngle();
+        Vec3 behind = this.position()
+                .subtract(direction.scale(radius - 3))
+                .add(direction.scale(radius - 3))
+                .add(0.0D, (double) radius / 2, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
         int floorY = owner.getBlockY();
@@ -141,7 +144,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         BlockPos pos = center.offset(x, y, z);
                         BlockState state = this.level().getBlockState(pos);
 
-                        // calculate the delay based on the distance from the center to the front of the wall
+                        // Calculate the delay based on the distance from the center to the front of the wall
                         double frontDistance = Math.sqrt((x + direction.x() * radius) * (x + direction.x() * radius) +
                                 (y + direction.y() * radius) * (y + direction.y() * radius) +
                                 (z + direction.z() * radius) * (z + direction.z() * radius));
@@ -150,13 +153,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             cap.delayTickEvent(() -> {
                                 if (!this.isRemoved()) {
-                                    DomainBlockEntity original = null;
                                     CompoundTag custom = null;
 
                                     BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                    if (existing instanceof DomainBlockEntity be) {
-                                        original = be;
+                                    if (existing instanceof DomainBlockEntity) {
+                                        return;
                                     } else if (existing != null) {
                                         custom = existing.saveWithFullMetadata();
                                     } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock ||
@@ -189,7 +191,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, original == null ? state : original.getOriginal(), original == null ? custom : original.getCustom());
+                                        be.create(this.uuid, state, custom);
                                     }
                                 }
                             }, delay);
@@ -327,6 +329,19 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (completed) {
                         this.doSureHitEffect(owner);
+                    }
+                }
+
+                ParticleOptions particle = ((DomainExpansion.IClosedDomain) this.ability).getEnvironmentParticle();
+
+                if (particle != null) {
+                    AABB bounds = this.getBounds();
+
+                    for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, 16, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ,
+                            (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+                        if (!this.isInsideBarrier(pos)) continue;
+                        Vec3 center = pos.getCenter();
+                        ((ServerLevel) this.level()).sendParticles(particle, center.x(), center.y(), center.z(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
                     }
                 }
 

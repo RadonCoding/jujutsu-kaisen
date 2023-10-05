@@ -1,8 +1,11 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -20,6 +23,11 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
         return List.of(JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
                 JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
                 JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_THREE.get());
+    }
+
+    @Override
+    public @Nullable ParticleOptions getEnvironmentParticle() {
+        return ParticleTypes.LARGE_SMOKE;
     }
 
     @Override

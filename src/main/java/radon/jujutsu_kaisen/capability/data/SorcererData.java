@@ -451,7 +451,7 @@ public class SorcererData implements ISorcererData {
 
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
 
-            int resistance = Math.round(3 * this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()));
+            int resistance = Math.round(3 * (this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
@@ -465,7 +465,7 @@ public class SorcererData implements ISorcererData {
             double damage = (this.getPower() * 1.5D) / 2.0F;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            int resistance = Math.round(2 * this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()));
+            int resistance = Math.round(2 * (this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
     }

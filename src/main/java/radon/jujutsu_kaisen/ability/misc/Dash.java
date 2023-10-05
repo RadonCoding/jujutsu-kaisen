@@ -44,7 +44,7 @@ public class Dash extends Ability {
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.isInWater() || owner.onGround()) {
-            owner.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+            owner.setDeltaMovement(HelperMethods.getLookAngle(owner).normalize().scale(SPEED));
             owner.hurtMarked = true;
         }
     }

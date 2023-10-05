@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -130,7 +131,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.FLYING_SPEED)
                 .add(Attributes.MAX_HEALTH, 4 * 20.0D);
     }

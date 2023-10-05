@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -165,6 +166,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         }
         default boolean canPlaceFloor(BlockGetter getter, BlockPos pos) {
             return true;
+        }
+        @Nullable
+        default ParticleOptions getEnvironmentParticle() {
+            return null;
         }
     }
 
