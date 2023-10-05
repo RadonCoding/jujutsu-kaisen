@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -201,7 +202,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 2 * 0.32D)
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 2 * 0.32D)
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }

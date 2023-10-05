@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,8 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RedProjectile extends JujutsuProjectile {
@@ -83,8 +86,6 @@ public class RedProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.level().isClientSide) return;
-
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
@@ -99,19 +100,25 @@ public class RedProjectile extends JujutsuProjectile {
             } else if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (this.getTime() >= DELAY) {
-                this.hurtEntities();
+                if (!this.level().isClientSide) {
+                    this.hurtEntities();
 
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
-                    if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
-                        cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
+                    for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                        if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
+                            cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
 
-                        HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
-                        this.level().addFreshEntity(explosion);
+                            if (owner instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
 
-                        blue.discard();
-                        this.discard();
+                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                            this.level().addFreshEntity(explosion);
+
+                            blue.discard();
+                            this.discard();
+                        }
                     }
                 }
 

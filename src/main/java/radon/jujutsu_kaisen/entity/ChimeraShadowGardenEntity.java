@@ -84,13 +84,12 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                     BlockState state = this.level().getBlockState(pos);
 
                                     if (!this.isRemoved()) {
-                                        DomainBlockEntity original = null;
                                         CompoundTag custom = null;
 
                                         BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                        if (existing instanceof DomainBlockEntity be) {
-                                            original = be;
+                                        if (existing instanceof DomainBlockEntity) {
+                                            return;
                                         } else if (existing != null) {
                                             custom = existing.saveWithFullMetadata();
                                         } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock ||
@@ -103,7 +102,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, original == null ? state : original.getOriginal(), original == null ? custom : original.getCustom());
+                                            be.create(this.uuid, state, custom);
                                         }
                                     }
                                 }

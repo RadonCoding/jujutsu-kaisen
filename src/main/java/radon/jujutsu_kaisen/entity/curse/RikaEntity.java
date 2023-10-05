@@ -15,7 +15,6 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -40,6 +39,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -93,7 +93,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
+        return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 5 * 20.0D)
                 .add(Attributes.FLYING_SPEED)
                 .add(Attributes.ATTACK_DAMAGE)

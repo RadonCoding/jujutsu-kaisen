@@ -1,10 +1,13 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -24,6 +27,11 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     @Override
     public List<Block> getFillBlocks() {
         return List.of(JJKBlocks.UNLIMITED_VOID_FILL.get());
+    }
+
+    @Override
+    public @Nullable ParticleOptions getEnvironmentParticle() {
+        return ParticleTypes.FIREWORK;
     }
 
     @Override
