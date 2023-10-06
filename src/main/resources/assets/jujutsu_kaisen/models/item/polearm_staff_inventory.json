@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "jujutsu_kaisen:item/trishula_staff_inventory"
+    "layer0": "jujutsu_kaisen:item/polearm_staff_inventory"
   }
 }

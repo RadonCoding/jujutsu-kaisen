@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +24,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity {
-    private static final int DURATION = 3 * 20;
+    private static final EntityDataAccessor<Integer> DATA_BUD_COUNT = SynchedEntityData.defineId(DisasterPlantEntity.class, EntityDataSerializers.INT);
+
+    public static final int DEFAULT_BUD_COUNT = 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -43,6 +48,10 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
                 .subtract(HelperMethods.getLookAngle(pShooter)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), pShooter.getXRot(), pShooter.getYRot());
+    }
+
+    public int getBudCount() {
+        return this.entityData.get(DATA_BUD_COUNT);
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -83,12 +92,24 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_BUD_COUNT, DEFAULT_BUD_COUNT);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
+        if (this.level().isClientSide) return;
+
         LivingEntity target = this.getTarget();
 
-        if (target == null) return;
+        if (target == null || !target.isAlive() || target.isRemoved()) {
+            this.discard();
+            return;
+        }
 
         this.setXRot(HelperMethods.getXRotD(this, target.getEyePosition()));
         this.xRotO = this.getXRot();
@@ -98,10 +119,13 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        if (this.getTime() >= DURATION) {
+        int buds = this.entityData.get(DATA_BUD_COUNT);
+
+        if (buds == 0) {
             this.discard();
         } else if (this.getTime() % 5 == 0) {
             this.level().addFreshEntity(new CursedBudProjectile(owner, this));
+            this.entityData.set(DATA_BUD_COUNT, --buds);
         }
     }
 

@@ -198,7 +198,9 @@ public class RainbowDragonEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MAX_HEALTH, 5 * 20.0D)
+        return SorcererEntity.createAttributes()
+                .add(Attributes.ARMOR, 30.0D)
+                .add(Attributes.ARMOR_TOUGHNESS, 20.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 

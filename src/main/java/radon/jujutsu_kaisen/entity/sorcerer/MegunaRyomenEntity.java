@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.PathfinderMob;
@@ -105,10 +105,42 @@ public class MegunaRyomenEntity extends SorcererEntity {
         this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.MEGUMI_BOOTS.get()));
     }
 
-    @Override
-    public void die(@NotNull DamageSource pDamageSource) {
-        super.die(pDamageSource);
+    public void convertTo() {
+        HeianSukunaEntity entity = JJKEntities.HEIAN_SUKUNA.get().create(this.level());
 
-        this.convertTo(JJKEntities.HEIAN_SUKUNA.get(), false);
+        if (entity != null) {
+            entity.copyPosition(this);
+            entity.setBaby(this.isBaby());
+            entity.setNoAi(this.isNoAi());
+            if (this.hasCustomName()) {
+                entity.setCustomName(this.getCustomName());
+                entity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.isPersistenceRequired()) {
+                entity.setPersistenceRequired();
+            }
+
+            entity.setInvulnerable(this.isInvulnerable());
+
+            this.level().addFreshEntity(entity);
+
+            Entity vehicle = this.getVehicle();
+
+            if (vehicle != null) {
+                this.stopRiding();
+                entity.startRiding(vehicle, true);
+            }
+            this.discard();
+        }
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        super.remove(pReason);
+
+        if (pReason == RemovalReason.KILLED) {
+            this.convertTo();
+        }
     }
 }

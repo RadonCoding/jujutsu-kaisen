@@ -97,7 +97,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getPower())) {
+        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getAbilityPower(owner))) {
             target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),

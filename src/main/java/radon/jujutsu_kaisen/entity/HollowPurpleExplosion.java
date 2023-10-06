@@ -33,7 +33,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            float radius = RADIUS * cap.getPower();
+            float radius = RADIUS * cap.getAbilityPower(owner);
             this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
         }
     }
@@ -48,7 +48,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                    (DAMAGE * cap.getPower()) * (entity == owner ? 0.25F : 1.0F));
+                    (DAMAGE * cap.getAbilityPower(owner)) * (entity == owner ? 0.25F : 1.0F));
         }
     }
 
@@ -56,7 +56,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float radius = RADIUS * cap.getPower();
+        float radius = RADIUS * cap.getAbilityPower(owner);
 
         Vec3 center = new Vec3(this.getX() + (this.random.nextDouble() - 0.5D) * radius,
                 this.getY() + (this.random.nextDouble() - 0.5D) * radius,
@@ -70,7 +70,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return super.getDimensions(pPose);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float radius = RADIUS * cap.getPower();
+        float radius = RADIUS * cap.getAbilityPower(owner);
 
         return EntityDimensions.fixed(radius, radius);
     }
@@ -89,7 +89,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)),
-                    Math.min(MAX_EXPLOSION, RADIUS * cap.getPower()), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
+                    Math.min(MAX_EXPLOSION, RADIUS * cap.getAbilityPower(owner)), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
         } else {
             this.hurtEntities();
         }

@@ -22,7 +22,7 @@ public class DomainCustomizationScreen extends Screen {
     public static final int WINDOW_WIDTH = 252;
     public static final int WINDOW_HEIGHT = 140;
 
-    private ForgeSlider slider;
+    private ForgeSlider sizeSlider;
     private float oldSize;
 
     public DomainCustomizationScreen() {
@@ -31,7 +31,7 @@ public class DomainCustomizationScreen extends Screen {
 
     @Override
     public void tick() {
-        float size = (float) this.slider.getValue();
+        float size = (float) this.sizeSlider.getValue();
 
         if (size != this.oldSize) {
             if (this.minecraft != null && this.minecraft.player != null) {
@@ -51,10 +51,10 @@ public class DomainCustomizationScreen extends Screen {
 
         int i = (this.width - WINDOW_WIDTH) / 2;
         int j = (this.height - WINDOW_HEIGHT) / 2;
-        this.slider = new ForgeSlider(i + ((WINDOW_WIDTH - 110) / 2), j + ((WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
+        this.sizeSlider = new ForgeSlider(i + ((WINDOW_WIDTH - 110) / 2), j + ((WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
                 0.5F, 1.5F, cap.getDomainSize(), 0.1D, 0, true);
-        this.addRenderableWidget(this.slider);
-        this.setInitialFocus(this.slider);
+        this.addRenderableWidget(this.sizeSlider);
+        this.setInitialFocus(this.sizeSlider);
     }
 
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {

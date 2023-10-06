@@ -24,7 +24,8 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
-    float getPower();
+    float getAbilityPower(LivingEntity owner);
+    float getRealPower();
 
     float getExperience();
     void setExperience(float experience);

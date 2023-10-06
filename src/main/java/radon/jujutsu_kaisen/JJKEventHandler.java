@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -298,14 +299,14 @@ public class JJKEventHandler {
 
                 if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
-                int chance = 10;
+                int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
 
                 if (victimCap.getType() == JujutsuType.SORCERER) {
                     for (InteractionHand hand : InteractionHand.values()) {
                         ItemStack stack = victim.getItemInHand(hand);
 
                         if (stack.is(Items.TOTEM_OF_UNDYING)) {
-                            chance = 7;
+                            chance /= 2;
                         }
                     }
                 }

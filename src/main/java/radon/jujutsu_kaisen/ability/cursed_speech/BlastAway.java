@@ -62,14 +62,14 @@ public class BlastAway extends Ability {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (Entity entity : getEntities(owner)) {
-                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getPower())) {
+                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getAbilityPower(owner))) {
                     Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                     ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(),  0,1.0D, 0.0D, 0.0D, 1.0D);
                     owner.level().playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                             4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-                    double power = LAUNCH_POWER * cap.getPower();
+                    double power = LAUNCH_POWER * cap.getAbilityPower(owner);
                     entity.setDeltaMovement(look.multiply(power, Math.min(LAUNCH_POWER, power), power));
                     entity.hurtMarked = true;
                 }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
@@ -33,6 +34,8 @@ public class DisasterPlant extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;

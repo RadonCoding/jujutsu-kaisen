@@ -266,13 +266,13 @@ public class MeteorEntity extends Entity {
                     owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         if (this.explosionTime == 0) {
                             for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
-                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getPower());
+                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getAbilityPower(owner));
                             }
                         }
 
                         if (this.onGround()) {
                             if (this.explosionTime == 0) {
-                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getPower()),
+                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getAbilityPower(owner)),
                                         EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                                 this.explosionTime++;
                             }
