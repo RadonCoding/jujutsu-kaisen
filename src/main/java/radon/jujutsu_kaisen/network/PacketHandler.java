@@ -82,10 +82,10 @@ public class PacketHandler {
                 .encoder(RightClickInputListenerC2SPacket::encode)
                 .consumerMainThread(RightClickInputListenerC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SetFrequencyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(SetFrequencyC2SPacket::new)
-                .encoder(SetFrequencyC2SPacket::encode)
-                .consumerMainThread(SetFrequencyC2SPacket::handle)
+        INSTANCE.messageBuilder(SetSizeC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetSizeC2SPacket::new)
+                .encoder(SetSizeC2SPacket::encode)
+                .consumerMainThread(SetSizeC2SPacket::handle)
                 .add();
         INSTANCE.messageBuilder(SetFrequencyS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SetFrequencyS2CPacket::new)

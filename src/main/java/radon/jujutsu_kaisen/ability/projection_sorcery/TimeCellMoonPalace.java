@@ -1,10 +1,13 @@
 package radon.jujutsu_kaisen.ability.projection_sorcery;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -19,6 +22,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansion.IClosedDomain {
+    @Override
+    public @Nullable ParticleOptions getEnvironmentParticle() {
+        return ParticleTypes.WHITE_ASH;
+    }
+
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         super.onHitEntity(domain, owner, entity);

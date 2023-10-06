@@ -21,7 +21,8 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.NYOI_STAFF.get());
                         pOutput.accept(JJKItems.SLAUGHTER_DEMON.get());
                         pOutput.accept(JJKItems.KAMUTOKE_DAGGER.get());
-                        pOutput.accept(JJKItems.TRISHULA_STAFF.get());
+                        pOutput.accept(JJKItems.HITEN_STAFF.get());
+                        pOutput.accept(JJKItems.POLEARM_STAFF.get());
 
                         pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());

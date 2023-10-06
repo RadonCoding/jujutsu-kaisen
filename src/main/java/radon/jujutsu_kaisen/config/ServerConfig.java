@@ -5,13 +5,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class ServerConfig {
-    private static final Map<ResourceLocation, Float> MAX_CURSED_ENERGY_NPC = new HashMap<>();
+    private static final Map<ResourceLocation, Float> MAX_CURSED_ENERGY_NPC = new LinkedHashMap<>();
 
     static {
         MAX_CURSED_ENERGY_NPC.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
@@ -28,7 +25,7 @@ public class ServerConfig {
         MAX_CURSED_ENERGY_NPC.put(JJKEntities.YUTA_OKKOTSU.getId(), 4000.0F);
     }
 
-    private static final Map<SorcererGrade, Float> REQUIRED_EXPERIENCE = new HashMap<>();
+    private static final Map<SorcererGrade, Float> REQUIRED_EXPERIENCE = new LinkedHashMap<>();
 
     static {
         REQUIRED_EXPERIENCE.put(SorcererGrade.GRADE_4, 0.0F);
@@ -48,6 +45,10 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
+    public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
+    public final ForgeConfigSpec.DoubleValue requiredUsageForDomain;
+    public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
+    public final ForgeConfigSpec.IntValue maximumVeilSize;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
@@ -75,6 +76,14 @@ public class ServerConfig {
                 .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 100000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
+        this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
+                .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
+        this.requiredUsageForDomain = builder.comment("The amount of energy usage required for unlocking domain expansion (amount required for simple domain is half of this value)")
+                .defineInRange("requiredUsageForDomain", 10000.0F, 1.0F, 100000.0F);
+        this.requiredExperienceForStrongest = builder.comment("The amount of experience required for a player to be classified as strongest (meaning they can heal CT burnout using RCT and use domain amplification during a domain expansion)")
+                .defineInRange("requiredExperienceForStrongest", 3000.0F, 1.0F, 100000.0F);
+        this.maximumVeilSize = builder.comment("Maximum size for a veil")
+                .defineInRange("maximumVeilSize", 64, 64, 256);
 
         builder.pop();
     }

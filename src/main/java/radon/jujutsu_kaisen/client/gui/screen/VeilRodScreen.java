@@ -8,14 +8,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.SetFrequencyC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.SetSizeC2SPacket;
 
 public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/veil_rod.png");
 
-    private ForgeSlider slider;
+    private ForgeSlider sizeSlider;
 
     private int oldFrequency;
 
@@ -27,13 +28,13 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     protected void containerTick() {
         super.containerTick();
 
-        int frequency = this.slider.getValueInt();
+        int size = this.sizeSlider.getValueInt();
 
-        if (frequency != this.oldFrequency) {
+        if (size != this.oldFrequency) {
             if (this.minecraft != null && this.minecraft.player != null) {
-                PacketHandler.sendToServer(new SetFrequencyC2SPacket(frequency));
+                PacketHandler.sendToServer(new SetSizeC2SPacket(size));
             }
-            this.oldFrequency = frequency;
+            this.oldFrequency = size;
         }
     }
 
@@ -49,7 +50,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        return this.slider.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY) && super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return this.sizeSlider.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY) && super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
     }
 
     @Override
@@ -58,9 +59,10 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.slider = new ForgeSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(), 0.0D, 100.0D, 0, true);
-        this.addRenderableWidget(this.slider);
-        this.setInitialFocus(this.slider);
+        this.sizeSlider = new ForgeSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(),
+                0, ConfigHolder.SERVER.maximumVeilSize.get(), 0, true);
+        this.addRenderableWidget(this.sizeSlider);
+        this.setInitialFocus(this.sizeSlider);
     }
 
     @Override
@@ -76,6 +78,6 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     }
 
     public void setFrequency(int frequency) {
-        this.slider.setValue(frequency);
+        this.sizeSlider.setValue(frequency);
     }
 }

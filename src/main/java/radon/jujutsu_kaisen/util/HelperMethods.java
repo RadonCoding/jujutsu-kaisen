@@ -11,7 +11,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.mixin.common.ILevelAccessor;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,10 @@ public class HelperMethods {
     public static <T extends Enum<?>> T randomEnum(Class<T> enumClass) {
         int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
         return enumClass.getEnumConstants()[x];
+    }
+
+    public static boolean isStrongest(float experience) {
+        return experience >= ConfigHolder.SERVER.requiredExperienceForStrongest.get().floatValue();
     }
 
     public static float getPower(float experience) {
@@ -112,7 +116,7 @@ public class HelperMethods {
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
         List<Entity> collisions = new ArrayList<>();
 
-        for (Entity entity : ((ILevelAccessor) level).getEntitiesInvoker().getAll()) {
+        for (Entity entity : level.getEntities(null, AABB.ofSize(bounds.getCenter(), 64.0D, 64.0D, 64.0D))) {
             if (bounds.intersects(entity.getBoundingBox())) {
                 collisions.add(entity);
             }

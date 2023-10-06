@@ -1,21 +1,21 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.entity.effect.ForestRootsEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestRoots extends Ability {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 10.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && this.getTarget(owner) == target;
+        return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
     @Override
@@ -23,34 +23,14 @@ public class ForestRoots extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (owner.canAttack(target)) {
-                return target;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) return;
-
-        owner.level().addFreshEntity(new ForestRootsEntity(target));
-    }
-
-    @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) {
-            return Status.FAILURE;
+        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+            if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
+            owner.level().addFreshEntity(new ForestRootsEntity(living));
         }
-        return super.checkTriggerable(owner);
     }
 
     @Override
@@ -66,10 +46,5 @@ public class ForestRoots extends Ability {
     @Override
     public boolean isTechnique() {
         return true;
-    }
-
-    @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
     }
 }

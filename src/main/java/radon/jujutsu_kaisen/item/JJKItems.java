@@ -29,11 +29,13 @@ public class JJKItems {
     public static RegistryObject<Item> NYOI_STAFF = ITEMS.register("nyoi_staff",
             () -> new NyoiStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> SLAUGHTER_DEMON = ITEMS.register("slaughter_demon",
-            () -> new SlaughterDemonItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
+            () -> new SlaughterDemonItem(JJKTiers.CURSED_TOOL, 4, -2.0F, new Item.Properties()));
     public static RegistryObject<Item> KAMUTOKE_DAGGER = ITEMS.register("kamutoke_dagger",
-            () -> new KamutokeDaggerItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
-    public static RegistryObject<Item> TRISHULA_STAFF = ITEMS.register("trishula_staff",
-            () -> new TrishulaStaffItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+            () -> new KamutokeDaggerItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> HITEN_STAFF = ITEMS.register("hiten_staff",
+            () -> new HitenStaffItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> POLEARM_STAFF = ITEMS.register("polearm_staff",
+            () -> new PolearmStaffItem(JJKTiers.CURSED_TOOL, 4, -2.4F, new Item.Properties()));
 
     public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
             () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
@@ -141,7 +143,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> FELINE_CURSE_SPAWN_EGG = ITEMS.register("feline_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FELINE_CURSE, 0x79592D, 0x481F0D, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> RAINBOW_DRAGON_SPAWN_EGG = ITEMS.register("rainbow_dragon_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xFFFFFF, 0xFFEA59, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.RAINBOW_DRAGON, 0xFFFFFF, 0xFFEA59, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,

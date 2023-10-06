@@ -39,6 +39,17 @@ public class ForestWaveEntity extends Entity {
         this.setOwner(owner);
     }
 
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
+
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+        d0 *= 64.0D * getViewScale();
+        return pDistance < d0 * d0;
+    }
+
     public void setDamage(boolean damage) {
         this.damage = damage;
     }
@@ -67,7 +78,7 @@ public class ForestWaveEntity extends Entity {
                 entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
                 entity.hurtMarked = true;
 
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * cap.getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * cap.getAbilityPower(owner));
             }
         });
     }

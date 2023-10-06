@@ -6,13 +6,13 @@
   },
   "perspectives": {
     "gui": {
-      "parent": "jujutsu_kaisen:item/trishula_staff_inventory"
+      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
     },
     "ground": {
-      "parent": "jujutsu_kaisen:item/trishula_staff_inventory"
+      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/trishula_staff_inventory"
+      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
     }
   }
 }

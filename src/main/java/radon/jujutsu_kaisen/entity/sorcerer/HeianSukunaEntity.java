@@ -66,7 +66,7 @@ public class HeianSukunaEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.TRISHULA_STAFF.get()));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.HITEN_STAFF.get()));
         this.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(JJKItems.KAMUTOKE_DAGGER.get()));
     }
 

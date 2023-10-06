@@ -1,38 +1,40 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.item.veil.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.Modifier;
 import radon.jujutsu_kaisen.item.veil.ModifierUtils;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.UUID;
 
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
     public static final int INTERVAL = 5;
-    private static final float COST = 0.001F;
+    private static final float COST = 1.0F;
 
     private int counter;
-    public int frequency;
+    private int size;
 
     @Nullable
     public List<Modifier> modifiers;
@@ -48,35 +50,6 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         pBlockEntity.counter = 0;
 
-        BlockPos.MutableBlockPos current = new BlockPos.MutableBlockPos();
-        current.set(pPos);
-
-        List<BlockPos> nodes = new ArrayList<>();
-
-        boolean success = true;
-
-        Set<Modifier> modifiers = new HashSet<>();
-
-        for (Direction direction : Direction.Plane.HORIZONTAL) {
-            if (!success) break;
-
-            success = false;
-
-            for (int i = 1; i < RANGE; i++) {
-                BlockPos relative = current.relative(direction, i);
-
-                if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == pBlockEntity.frequency) {
-                    if (be.modifiers != null) {
-                        modifiers.addAll(be.modifiers);
-                    }
-                    nodes.add(relative);
-                    current.set(relative);
-                    success = true;
-                    break;
-                }
-            }
-        }
-
         if (pBlockEntity.ownerUUID == null) return;
 
         Entity entity = ((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID);
@@ -86,57 +59,59 @@ public class VeilRodBlockEntity extends BlockEntity {
         if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
             ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getEnergy() < COST) return;
+            float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get());
 
-            cap.useEnergy(COST);
+            if (cap.getEnergy() < cost) return;
+
+            cap.useEnergy(cost);
+
+            if (entity instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
         }
 
-        if (nodes.size() == 4) {
-            BlockState state = JJKBlocks.VEIL.get().defaultBlockState();
+        BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
 
-            for (Modifier modifier : modifiers) {
+        if (pBlockEntity.modifiers != null) {
+            for (Modifier modifier : pBlockEntity.modifiers) {
                 if (modifier.getType() == Modifier.Type.COLOR) {
-                    state = state.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
+                    replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
                 } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
-                    state = state.setValue(VeilBlock.TRANSPARENT, true);
+                    replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
                 }
             }
+        }
 
-            int xWidth = nodes.get(2).getX() - nodes.get(0).getX();
-            int zWidth = nodes.get(3).getZ() - nodes.get(0).getZ();
-            int yWidth = (xWidth + zWidth) / 2;
+        for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
+            for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
+                for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
+                    double distance = Math.sqrt(x * x + y * y + z * z);
 
-            BlockPos corner1 = nodes.get(0).west().north().below();
-            BlockPos corner2 = nodes.get(2).above(yWidth).east().south();
-            Stream<BlockPos> box = BlockPos.betweenClosedStream(corner1, corner2);
+                    if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
+                        BlockPos pos = pPos.offset(x, y, z);
+                        BlockState state = pLevel.getBlockState(pos);
 
-            BlockState block = state;
+                        if (!state.isAir() && state.canOcclude()) continue;
 
-            box.forEach(pos -> {
-                if (pos.getX() == corner1.getX() || pos.getX() == corner2.getX() ||
-                        pos.getZ() == corner1.getZ() || pos.getZ() == corner2.getZ() ||
-                        pos.getY() == corner1.getY() || pos.getY() == corner2.getY()) {
-                    BlockState original = pLevel.getBlockState(pos);
-
-                    for (DomainExpansionEntity domain : pLevel.getEntitiesOfClass(DomainExpansionEntity.class, AABB.ofSize(pos.getCenter(),
-                            64.0D, 64.0D, 64.0D))) {
-                        if (domain.isInsideBarrier(pos)) return;
-                    }
-
-                    if (original.isAir() || !original.canOcclude()) {
-                        pLevel.setBlockAndUpdate(pos, block);
+                        pLevel.setBlock(pos, replacement,
+                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
                             be.setParent(pPos);
+                            be.setSize(pBlockEntity.size);
                         }
                     }
                 }
-            });
+            }
         }
     }
 
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
+    public int getSize() {
+        return this.size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
         this.setChanged();
     }
 
@@ -163,7 +138,7 @@ public class VeilRodBlockEntity extends BlockEntity {
             pTag.putUUID("owner", this.ownerUUID);
         }
         pTag.putInt("counter", this.counter);
-        pTag.putInt("frequency", this.frequency);
+        pTag.putInt("size", this.size);
 
         if (this.modifiers != null) {
             pTag.put("modifiers", ModifierUtils.serialize(this.modifiers));
@@ -178,7 +153,7 @@ public class VeilRodBlockEntity extends BlockEntity {
             this.ownerUUID = pTag.getUUID("owner");
         }
         this.counter = pTag.getInt("counter");
-        this.frequency = pTag.getInt("frequency");
+        this.size = pTag.getInt("size");
 
         if (pTag.contains("modifiers")) {
             this.modifiers = ModifierUtils.deserialize(pTag.getList("modifiers", Tag.TAG_COMPOUND));

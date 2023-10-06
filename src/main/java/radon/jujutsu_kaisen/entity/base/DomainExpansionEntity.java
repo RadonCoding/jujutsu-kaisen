@@ -224,7 +224,7 @@ public abstract class DomainExpansionEntity extends Mob {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getPower() * (owner.getHealth() / owner.getMaxHealth());
+        return cap.getAbilityPower(owner) * (owner.getHealth() / owner.getMaxHealth());
     }
 
     public int getTime() {

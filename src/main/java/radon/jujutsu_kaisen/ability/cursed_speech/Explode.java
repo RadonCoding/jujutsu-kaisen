@@ -61,7 +61,7 @@ public class Explode extends Ability {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (Entity entity : getEntities(owner)) {
                 owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
-                        entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getPower(), false, Level.ExplosionInteraction.NONE);
+                        entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getAbilityPower(owner), false, Level.ExplosionInteraction.NONE);
 
                 if (entity instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));

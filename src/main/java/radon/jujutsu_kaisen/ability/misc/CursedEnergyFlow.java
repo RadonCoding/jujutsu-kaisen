@@ -70,7 +70,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
                         if (!entity.isInWater()) continue;
 
-                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * cap.getPower())) {
+                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * cap.getAbilityPower(owner))) {
                             owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                             for (int i = 0; i < 2; i++) {

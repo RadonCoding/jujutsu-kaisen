@@ -67,7 +67,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                     for (Entity entity : this.level().getEntities(owner, bounds)) {
                         if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
 
-                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * cap.getPower())) {
+                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * cap.getAbilityPower(owner))) {
                             entity.setSecondsOnFire(5);
                         }
                     }

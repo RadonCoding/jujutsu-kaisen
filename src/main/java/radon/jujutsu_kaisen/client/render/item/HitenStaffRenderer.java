@@ -6,8 +6,8 @@ import radon.jujutsu_kaisen.item.HitenStaffItem;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
-public class KamutokeDaggerRenderer extends GeoItemRenderer<HitenStaffItem> {
-    public KamutokeDaggerRenderer() {
-        super(new DefaultedItemGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "kamutoke_dagger")));
+public class HitenStaffRenderer extends GeoItemRenderer<HitenStaffItem> {
+    public HitenStaffRenderer() {
+        super(new DefaultedItemGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "hiten_staff")));
     }
 }

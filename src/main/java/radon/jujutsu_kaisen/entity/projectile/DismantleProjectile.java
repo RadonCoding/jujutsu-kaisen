@@ -62,7 +62,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(Mth.floor(LINE_LENGTH * cap.getPower())));
+                    result.set(Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner))));
         }
         return result.get();
     }
@@ -86,7 +86,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getPower());
+                int size = Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner));
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
                 BlockPos end = center.relative(perpendicular, size / 2);
 
@@ -112,7 +112,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * cap.getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * cap.getAbilityPower(owner));
                 }
             });
         }
@@ -136,7 +136,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getPower());
+                int size = Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner));
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
                 BlockPos end = center.relative(perpendicular, size / 2);
 

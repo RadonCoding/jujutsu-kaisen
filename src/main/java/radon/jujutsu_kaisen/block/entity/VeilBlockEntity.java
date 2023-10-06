@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -24,14 +23,14 @@ import radon.jujutsu_kaisen.item.veil.Modifier;
 import radon.jujutsu_kaisen.item.veil.PlayerModifier;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VeilBlockEntity extends BlockEntity {
     private int counter;
 
     @Nullable
     private BlockPos parent;
+
+    private int size;
 
     public VeilBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL.get(), pPos, pBlockState);
@@ -44,32 +43,7 @@ public class VeilBlockEntity extends BlockEntity {
 
         if (pBlockEntity.parent == null) return;
 
-        List<BlockPos> nodes = new ArrayList<>();
-
-        if (pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity parent) {
-            BlockPos.MutableBlockPos current = new BlockPos.MutableBlockPos();
-            current.set(pBlockEntity.parent);
-
-            boolean success = true;
-
-            for (Direction direction : Direction.Plane.HORIZONTAL) {
-                if (!success) break;
-
-                success = false;
-
-                for (int i = 1; i < VeilRodBlockEntity.RANGE; i++) {
-                    BlockPos relative = current.relative(direction, i);
-
-                    if (pLevel.getBlockEntity(relative) instanceof VeilRodBlockEntity be && be.frequency == parent.frequency) {
-                        nodes.add(relative);
-                        current.set(relative);
-                        success = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if (nodes.size() != 4) {
+        if (!(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
             pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
         }
     }
@@ -152,6 +126,11 @@ public class VeilBlockEntity extends BlockEntity {
         return false;
     }
 
+    public void setSize(int size) {
+        this.size = size;
+        this.setChanged();
+    }
+
     public boolean isAllowed(Entity entity) {
         return this.isWhitelisted(entity) || !this.isBlacklisted(entity);
     }
@@ -184,6 +163,7 @@ public class VeilBlockEntity extends BlockEntity {
         if (this.parent != null) {
             pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
         }
+        pTag.putInt("size", this.size);
     }
 
     @Override
@@ -193,5 +173,6 @@ public class VeilBlockEntity extends BlockEntity {
         if (pTag.contains("parent")) {
             this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));
         }
+        this.size = pTag.getInt("size");
     }
 }

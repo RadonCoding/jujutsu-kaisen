@@ -10,8 +10,11 @@ import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import java.util.List;
 
 public class DisasterPlantRenderer extends GeoEntityRenderer<DisasterPlantEntity> {
     public DisasterPlantRenderer(EntityRendererProvider.Context renderManager) {
@@ -26,6 +29,12 @@ public class DisasterPlantRenderer extends GeoEntityRenderer<DisasterPlantEntity
         poseStack.mulPose(Axis.YN.rotationDegrees(yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
+        GeoBone parent = model.getBone("cursed_buds").orElseThrow();
+        List<GeoBone> buds = parent.getChildBones();
+
+        for (int i = 0; i < DisasterPlantEntity.DEFAULT_BUD_COUNT; i++) {
+            buds.get(i).setHidden(i < DisasterPlantEntity.DEFAULT_BUD_COUNT - animatable.getBudCount());
+        }
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

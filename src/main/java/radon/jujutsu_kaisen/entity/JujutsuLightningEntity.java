@@ -104,7 +104,7 @@ public class JujutsuLightningEntity extends LightningBolt {
                         for (Entity entity : entities) {
                             if (entity == owner) continue;
                             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null),
-                                    this.damage * cap.getPower());
+                                    this.damage * cap.getAbilityPower(owner));
                         }
                     });
                 }

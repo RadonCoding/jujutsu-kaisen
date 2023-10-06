@@ -165,7 +165,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                     if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getPower())) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getAbilityPower(owner))) {
                         if (this.deathTime == 0) {
                             this.deathTime = BITE_DURATION;
                         }

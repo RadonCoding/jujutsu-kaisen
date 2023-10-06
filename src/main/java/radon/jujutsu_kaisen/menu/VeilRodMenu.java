@@ -10,16 +10,16 @@ import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 public class VeilRodMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
-    private int frequency;
+    private int size;
 
     public VeilRodMenu(int pContainerId, ContainerLevelAccess pAccess) {
         super(JJKMenus.VEIL_ROD.get(), pContainerId);
 
         this.access = pAccess;
 
-        this.frequency = this.access.evaluate((level, pos) -> {
+        this.size = this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
-                return be.frequency;
+                return be.getSize();
             }
             return 0;
         }).orElse(0);
@@ -34,16 +34,16 @@ public class VeilRodMenu extends AbstractContainerMenu {
         return ItemStack.EMPTY;
     }
 
-    public int getFrequency() {
-        return this.frequency;
+    public int getSize() {
+        return this.size;
     }
 
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
+    public void setSize(int size) {
+        this.size = size;
 
         this.access.evaluate((level, pos) -> {
             if (level.getBlockEntity(pos) instanceof VeilRodBlockEntity be) {
-                be.setFrequency(frequency);
+                be.setSize(size);
                 return true;
             }
             return false;

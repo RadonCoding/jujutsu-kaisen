@@ -116,8 +116,6 @@ public class SorcererData implements ISorcererData {
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
     private static final int PROJECTION_SORCERY_STACK_DURATION = 3 * 20;
-    public static final float REQUIRED_FOR_STRONGEST = 3000.0F;
-    private static final float REQUIRED_USAGE_FOR_DOMAIN = 10000.0F;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -178,7 +176,7 @@ public class SorcererData implements ISorcererData {
             Ability ability = entry.getKey();
             int remaining = entry.getValue();
 
-            if (remaining > 0) {
+            if (remaining >= 0) {
                 this.durations.put(entry.getKey(), --remaining);
             } else {
                 if (ability instanceof Ability.IToggled) {
@@ -408,10 +406,10 @@ public class SorcererData implements ISorcererData {
             this.updateAdaptation(level);
         }
 
-        if (this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal() && this.used >= REQUIRED_USAGE_FOR_DOMAIN) {
+        if (this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal() && this.used >= ConfigHolder.SERVER.requiredUsageForDomain.get().floatValue()) {
             this.traits.add(Trait.DOMAIN_EXPANSION);
         }
-        if (this.getGrade().ordinal() > SorcererGrade.GRADE_2.ordinal() && this.used >= REQUIRED_USAGE_FOR_DOMAIN / 2) {
+        if (this.getGrade().ordinal() > SorcererGrade.GRADE_2.ordinal() && this.used >= ConfigHolder.SERVER.requiredUsageForDomain.get().floatValue() / 2) {
             this.traits.add(Trait.SIMPLE_DOMAIN);
         }
 
@@ -434,44 +432,49 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
-            double health = Math.ceil(((this.getPower() - 1.0F) * 30.0D) / 20) * 20;
+            double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
 
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.getPower() * 3.0D;
+            double damage = this.getRealPower() * 3.0D;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            double speed = this.getPower() * 0.5D;
+            double speed = this.getRealPower() * 0.5D;
             this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
 
-            double movement = this.getPower() * 0.05D;
+            double movement = this.getRealPower() * 0.05D;
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
             owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
 
-            int resistance = Math.round(3 * (this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
+            int resistance = Math.round(3 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
 
-            double health = Math.ceil(((this.getPower() - 1.0F) * 20.0D) / 20) * 20;
+            double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
             if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = (this.getPower() * 1.5D) / 2.0F;
+            double damage = (this.getRealPower() * 1.5D) / 2.0F;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            int resistance = Math.round(2 * (this.getPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
+            int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
     }
 
     @Override
-    public float getPower() {
+    public float getAbilityPower(LivingEntity owner) {
+        return HelperMethods.getPower(this.experience) * (this.isInZone(owner) ? 1.2F : 1.0F);
+    }
+
+    @Override
+    public float getRealPower() {
         return HelperMethods.getPower(this.experience);
     }
 
@@ -674,7 +677,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaxEnergy() {
-        return ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getPower()) + this.extraEnergy;
+        return ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower()) + this.extraEnergy;
     }
 
     @Override
@@ -728,7 +731,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone(LivingEntity owner) {
-        return owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.TRISHULA_STAFF.get()) || owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.TRISHULA_STAFF.get()) ||
+        return owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.HITEN_STAFF.get()) || owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.HITEN_STAFF.get()) ||
                 this.lastBlackFlashTime != -1 && ((owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 

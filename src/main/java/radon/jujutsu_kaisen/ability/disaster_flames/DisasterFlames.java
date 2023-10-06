@@ -94,13 +94,13 @@ public class DisasterFlames extends Ability {
 
             if (target == null) {
                 for (Entity entity : this.getTargets(owner)) {
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getPower())) {
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getAbilityPower(owner))) {
                         entity.setSecondsOnFire(5);
                         this.spawnParticles(entity, 32);
                     }
                 }
             } else {
-                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getPower())) {
+                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getAbilityPower(owner))) {
                     target.setSecondsOnFire(10);
                     this.spawnParticles(target, 64);
                 }

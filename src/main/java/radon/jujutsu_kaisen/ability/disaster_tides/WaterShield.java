@@ -79,7 +79,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
         if (!owner.level().isClientSide) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level().explode(owner,
                     JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
-                cap.getPower() * 2.0F, false, Level.ExplosionInteraction.NONE));
+                cap.getAbilityPower(owner) * 2.0F, false, Level.ExplosionInteraction.NONE));
         }
     }
 

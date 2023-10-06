@@ -63,7 +63,7 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
             return InteractionResult.SUCCESS;
         } else {
             pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
-            PacketHandler.sendToClient(new SetFrequencyS2CPacket(((VeilRodMenu) pPlayer.containerMenu).getFrequency()), (ServerPlayer) pPlayer);
+            PacketHandler.sendToClient(new SetFrequencyS2CPacket(((VeilRodMenu) pPlayer.containerMenu).getSize()), (ServerPlayer) pPlayer);
             return InteractionResult.CONSUME;
         }
     }

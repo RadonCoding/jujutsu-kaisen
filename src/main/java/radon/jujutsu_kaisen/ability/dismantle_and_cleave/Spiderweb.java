@@ -78,7 +78,7 @@ public class Spiderweb extends Ability {
                     }, i * 2);
                 }
                 cap.delayTickEvent(() ->
-                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getPower(),
+                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getAbilityPower(owner),
                                 owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
                                         Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE), DELAY);
             });

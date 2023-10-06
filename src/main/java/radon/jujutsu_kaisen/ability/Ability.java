@@ -8,12 +8,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -91,7 +91,7 @@ public abstract class Ability {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && cap.getExperience() >= SorcererData.REQUIRED_FOR_STRONGEST)) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isStrongest(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
 
         for (Trait trait : this.getRequirements()) {
             if (!cap.hasTrait(trait)) return false;
@@ -101,10 +101,6 @@ public abstract class Ability {
 
     public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
-
-        MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
-
-        if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -118,7 +114,7 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
 
-            if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.getExperience() >= SorcererData.REQUIRED_FOR_STRONGEST)) &&
+            if ((this.isTechnique() && !(this instanceof DomainExpansion && HelperMethods.isStrongest(cap.getExperience()))) &&
                     cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 return Status.DOMAIN_AMPLIFICATION;
             }
@@ -151,6 +147,10 @@ public abstract class Ability {
     }
 
     public Status checkTriggerable(LivingEntity owner) {
+        MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
+
+        if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
+
         return this.getStatus(owner, true, true, true, false);
     }
 
@@ -225,7 +225,7 @@ public abstract class Ability {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (duration > 0) {
-                duration = (int) (duration * cap.getPower());
+                duration = (int) (duration * cap.getAbilityPower(owner));
             }
             return duration;
         }

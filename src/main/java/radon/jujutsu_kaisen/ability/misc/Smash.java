@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
@@ -13,15 +15,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class Smash extends Ability {
+public class Smash extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final float EXPLOSIVE_POWER = 1.0F;
     private static final double LAUNCH_POWER = 2.5D;
 
@@ -32,15 +36,47 @@ public class Smash extends Ability {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.CHANNELED;
     }
 
     @Override
     public void run(LivingEntity owner) {
+        if (!(owner instanceof Player) || !owner.level().isClientSide) return;
+        ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
+                Math.round(((float) this.getCharge(owner) / this.getRealDuration(owner)) * 100)), false);
+    }
+
+    @Override
+    public float getCost(LivingEntity owner) {
+        return 10;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3 * 20;
+    }
+
+    @Override
+    public int getRealDuration(LivingEntity owner) {
+        return 20;
+    }
+
+    @Override
+    public DisplayType getDisplayType() {
+        return DisplayType.SCROLL;
+    }
+
+    @Override
+    public void onStart(LivingEntity owner) {
+
+    }
+
+    @Override
+    public void onRelease(LivingEntity owner, int charge) {
         owner.swing(InteractionHand.MAIN_HAND);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            float radius = EXPLOSIVE_POWER * cap.getPower();
+            float radius = EXPLOSIVE_POWER * cap.getAbilityPower(owner) * ((float) charge / this.getRealDuration(owner));
 
             Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 
@@ -92,20 +128,5 @@ public class Smash extends Ability {
                         owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
             }
         });
-    }
-
-    @Override
-    public float getCost(LivingEntity owner) {
-        return 10;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 3 * 20;
-    }
-
-    @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
     }
 }

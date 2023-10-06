@@ -62,11 +62,13 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
+        if (this.level().isClientSide) return;
+
         if (this.getOwner() instanceof LivingEntity owner) {
             if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getPower()), 0, false, false, false));
-                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getPower());
+                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getAbilityPower(owner)), 0, false, false, false));
+                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getAbilityPower(owner));
             }
         }
         this.discard();

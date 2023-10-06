@@ -43,8 +43,10 @@
   "item.jujutsu_kaisen.slaughter_demon.desc": "Dagger imbued with cursed energy.",
   "item.jujutsu_kaisen.kamutoke_dagger": "Kamutoke Dagger",
   "item.jujutsu_kaisen.kamutoke_dagger.desc": "Legendary weapon symbolizing the properties of a diamond and a thunderbolt.",
-  "item.jujutsu_kaisen.trishula_staff": "Trishula Staff",
-  "item.jujutsu_kaisen.trishula_staff.desc": "Legendary weapon that has the power to remove the negative energies and thoughts from mind and body.",
+  "item.jujutsu_kaisen.hiten_staff": "Hiten Staff",
+  "item.jujutsu_kaisen.hiten_staff.desc": "Legendary weapon that has the power to remove the negative energies and thoughts from mind and body.",
+  "item.jujutsu_kaisen.polearm_staff": "Polearm Staff",
+  "item.jujutsu_kaisen.polearm_staff.desc": "Staff imbued with cursed energy.",
 
   "item.jujutsu_kaisen.yuta_okkotsu_sword": "Yuta's Sword",
   "item.jujutsu_kaisen.jet_black_shadow_sword": "Jet-Black Shadow Sword",
@@ -358,6 +360,8 @@
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
 
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
+
+  "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
