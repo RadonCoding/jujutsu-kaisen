@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

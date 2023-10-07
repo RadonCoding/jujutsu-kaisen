@@ -49,7 +49,7 @@ public class VeilBlock extends Block implements EntityBlock {
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return Shapes.empty();
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
 
             Entity entity = ctx.getEntity();
 
@@ -61,7 +61,7 @@ public class VeilBlock extends Block implements EntityBlock {
                 return be.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
             }
         }
-        return Shapes.empty();
+        return super.getCollisionShape(pState, pLevel, pPos, pContext);
     }
 
     @Nullable

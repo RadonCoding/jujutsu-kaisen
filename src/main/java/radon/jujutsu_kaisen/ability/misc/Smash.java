@@ -48,7 +48,7 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10;
+        return 0.5F;
     }
 
     @Override

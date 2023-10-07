@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.item.Tier;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
