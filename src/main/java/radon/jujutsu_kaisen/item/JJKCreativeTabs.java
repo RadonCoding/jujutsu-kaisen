@@ -84,6 +84,9 @@ public class JJKCreativeTabs {
 
                         pOutput.accept(JJKItems.SUKUNA_FINGER.get());
                         pOutput.accept(JJKItems.CURSED_TOTEM.get());
+                        pOutput.accept(JJKItems.CURSED_COMPASS.get());
+                        pOutput.accept(JJKItems.CURSED_MUSIC_DISC.get());
+                        pOutput.accept(JJKItems.CURSED_EYE_OF_ENDER.get());
                     }))
                     .build());
 }

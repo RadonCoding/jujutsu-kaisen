@@ -14,6 +14,8 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.item.armor.JJKArmorMaterial;
+import radon.jujutsu_kaisen.item.cursed_object.*;
+import radon.jujutsu_kaisen.item.cursed_tool.*;
 
 public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JujutsuKaisen.MOD_ID);
@@ -92,6 +94,13 @@ public class JJKItems {
             () -> new SukunaFingerItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
     public static RegistryObject<Item> CURSED_TOTEM = ITEMS.register("cursed_totem",
             () -> new CursedTotemItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+    public static RegistryObject<Item> CURSED_COMPASS = ITEMS.register("cursed_compass",
+            () -> new CursedCompassItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+    public static RegistryObject<Item> CURSED_MUSIC_DISC = ITEMS.register("cursed_music_disc",
+            () -> new CursedMusicDiscItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+    public static RegistryObject<Item> CURSED_EYE_OF_ENDER = ITEMS.register("cursed_eye_of_ender",
+            () -> new CursedEyeOfEnderItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+
     public static RegistryObject<Item> CURSED_SPIRIT_ORB = ITEMS.register("cursed_spirit_orb",
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 

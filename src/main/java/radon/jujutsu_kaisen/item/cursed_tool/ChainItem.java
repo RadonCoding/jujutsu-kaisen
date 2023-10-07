@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

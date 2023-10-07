@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_object;
 
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;

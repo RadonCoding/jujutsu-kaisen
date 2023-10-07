@@ -1,15 +1,15 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_object;
 
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 
-public class CursedTotemItem extends CursedObjectItem {
-    public CursedTotemItem(Properties pProperties) {
+public class CursedEyeOfEnderItem extends CursedObjectItem {
+    public CursedEyeOfEnderItem(Properties pProperties) {
         super(pProperties);
     }
 
     @Override
     public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_1;
+        return SorcererGrade.GRADE_2;
     }
 }

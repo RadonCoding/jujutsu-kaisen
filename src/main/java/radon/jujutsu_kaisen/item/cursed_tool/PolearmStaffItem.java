@@ -1,9 +1,9 @@
-package radon.jujutsu_kaisen.item;
+package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.item.Tier;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.client.render.item.HitenStaffRenderer;
+import radon.jujutsu_kaisen.client.render.item.PolearmStaffRenderer;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -12,26 +12,26 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class HitenStaffItem extends CursedToolItem implements GeoItem {
+public class PolearmStaffItem extends CursedToolItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public HitenStaffItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
+    public PolearmStaffItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
     @Override
     protected SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+        return SorcererGrade.GRADE_4;
     }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private HitenStaffRenderer renderer;
+            private PolearmStaffRenderer renderer;
 
             @Override
-            public HitenStaffRenderer getCustomRenderer() {
-                if (this.renderer == null) this.renderer = new HitenStaffRenderer();
+            public PolearmStaffRenderer getCustomRenderer() {
+                if (this.renderer == null) this.renderer = new PolearmStaffRenderer();
                 return this.renderer;
             }
         });

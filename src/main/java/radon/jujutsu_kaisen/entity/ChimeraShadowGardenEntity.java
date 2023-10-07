@@ -89,12 +89,9 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                         BlockEntity existing = this.level().getBlockEntity(pos);
 
                                         if (existing instanceof DomainBlockEntity) {
-                                            return;
+                                            continue;
                                         } else if (existing != null) {
                                             custom = existing.saveWithFullMetadata();
-                                        } else if (state.getBlock() instanceof DomainBlock || state.getBlock() instanceof ChimeraShadowGardenBlock ||
-                                                state.getBlock() instanceof FakeWaterDomainBlock || state.getBlock() instanceof FakeWaterDurationBlock) {
-                                            return;
                                         }
 
                                         Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
