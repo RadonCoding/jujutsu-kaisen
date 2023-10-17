@@ -3,14 +3,18 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dash extends Ability {
@@ -47,6 +51,28 @@ public class Dash extends Ability {
             owner.setDeltaMovement(HelperMethods.getLookAngle(owner).normalize().scale(SPEED));
             owner.hurtMarked = true;
         }
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getSpeedStacks() == 0) return;
+
+        List<Entity> hit = new ArrayList<>();
+
+        cap.scheduleTickEvent(() -> {
+            if (owner.getDeltaMovement().length() / SPEED >= 0.5D) {
+                for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), owner.getBoundingBox().inflate(1.0D))) {
+                    if (entity == owner || hit.contains(entity)) continue;
+
+                    if (owner instanceof Player player) {
+                        player.attack(entity);
+                    } else {
+                        owner.doHurtTarget(entity);
+                    }
+                    hit.add(entity);
+                }
+            }
+            return false;
+        }, 5);
     }
 
     @Override

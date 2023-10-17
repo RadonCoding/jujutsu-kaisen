@@ -14,9 +14,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -68,42 +66,6 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        super.onHitBlock(pResult);
-
-        if (this.level().isClientSide || !this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
-
-        BlockPos center = pResult.getBlockPos();
-        Direction direction = pResult.getDirection();
-
-        Direction perpendicular;
-
-        if (direction.getAxis() == Direction.Axis.Y) {
-            perpendicular = Direction.fromYRot(this.getYRot()).getCounterClockWise();
-        } else {
-            perpendicular = direction.getCounterClockWise();
-        }
-
-        if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner));
-                BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
-                BlockPos end = center.relative(perpendicular, size / 2);
-
-                for (BlockPos pos : BlockPos.betweenClosed(start, end)) {
-                    BlockState state = this.level().getBlockState(pos);
-
-                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                        this.level().destroyBlock(pos, false);
-                    }
-                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
-                            0, 1.0D, 0.0D, 0.0D, 1.0D);
-                }
-            });
-        }
-    }
-
-    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
@@ -118,11 +80,10 @@ public class DismantleProjectile extends JujutsuProjectile {
         }
     }
 
-    public List<EntityHitResult> getHitResults() {
-        Vec3 movement = this.getDeltaMovement();
-
+    public List<HitResult> getHitResults() {
         BlockPos center = this.blockPosition();
-        Direction direction = this.getDirection();
+        Vec3 movement = this.getDeltaMovement();
+        Direction direction = Direction.getNearest(movement.x(), movement.y(), movement.z()).getOpposite();
 
         Direction perpendicular;
 
@@ -132,32 +93,47 @@ public class DismantleProjectile extends JujutsuProjectile {
             perpendicular = direction.getCounterClockWise();
         }
 
-        List<EntityHitResult> entities = new ArrayList<>();
+        List<HitResult> hits = new ArrayList<>();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 int size = Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner));
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
-                BlockPos end = center.relative(perpendicular, size / 2);
+                BlockPos end = center.relative(direction, Math.round(SPEED)).relative(perpendicular, size / 2);
 
                 BlockPos.betweenClosed(start, end).forEach(pos -> {
-                    Vec3 vec31 = pos.getCenter();
-                    Vec3 vec32 = vec31.add(movement);
-                    entities.add(ProjectileUtil.getEntityHitResult(this.level(), this, vec31, vec32,
-                            this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity));
+                    Vec3 current = pos.getCenter();
+
+                    AABB bounds = AABB.ofSize(current, 1.0D, 1.0D, 1.0D);
+
+                    for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                        hits.add(new EntityHitResult(entity));
+                    }
+
+                    BlockState state = this.level().getBlockState(pos);
+
+                    if (state.isAir()) return;
+
+                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                        this.level().destroyBlock(pos, false);
+                    }
+                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
+                            0, 1.0D, 0.0D, 0.0D, 1.0D);
                 });
             });
         }
-        return entities;
+        return hits;
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        for (EntityHitResult hit : this.getHitResults()) {
-            if (hit != null && !ForgeEventFactory.onProjectileImpact(this, hit)) {
-                this.onHitEntity(hit);
+        if (!this.level().isClientSide) {
+            for (HitResult result : this.getHitResults()) {
+                if (result.getType() != HitResult.Type.MISS) {
+                    this.onHit(result);
+                }
             }
         }
 

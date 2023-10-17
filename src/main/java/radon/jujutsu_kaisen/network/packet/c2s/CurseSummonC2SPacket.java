@@ -30,15 +30,15 @@ public class CurseSummonC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            Registry<EntityType<?>> registry = player.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            Registry<EntityType<?>> registry = sender.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             EntityType<?> type = registry.get(this.key);
 
             if (type != null) {
-                JJKAbilities.summonCurse(player, type);
+                JJKAbilities.summonCurse(sender, type);
             }
         });
         ctx.setPacketHandled(true);

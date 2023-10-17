@@ -26,7 +26,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.ScreenFlashOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
-import radon.jujutsu_kaisen.client.gui.screen.DomainCustomizationScreen;
+import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
@@ -100,8 +100,8 @@ public class JJKClientEventHandler {
                 if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
                 }
-                if (JJKKeys.OPEN_DOMAIN_CUSTOMIZATION.isDown()) {
-                    mc.setScreen(new DomainCustomizationScreen());
+                if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
+                    mc.setScreen(new JujutsuScreen());
                 }
                 if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
                     MeleeAbilityOverlay.scroll(1);
@@ -196,7 +196,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
             event.register(JJKKeys.DASH);
-            event.register(JJKKeys.OPEN_DOMAIN_CUSTOMIZATION);
+            event.register(JJKKeys.OPEN_JUJUTSU_MENU);
         }
 
         @SubscribeEvent
@@ -242,6 +242,8 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SuguruGetoModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(SuguruGetoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SuguruGetoModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(HerobrineModel.LAYER, SkinModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -326,6 +328,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HEROBRINE.get(), HerobrineRenderer::new);
         }
 
         @SubscribeEvent

@@ -18,5 +18,7 @@ public class JJKCommands {
         ResetSummonsCommand.register(event.getDispatcher());
         SetNatureCommand.register(event.getDispatcher());
         SetExperienceCommand.register(event.getDispatcher());
+        PactAcceptCommand.register(event.getDispatcher());
+        PactDeclineCommand.register(event.getDispatcher());
     }
 }

@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.tags.JJKBlockTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
         Vec3 direction = HelperMethods.getLookAngle(owner);
-        Vec3 behind = owner.position().add(direction.scale(radius - 3));
+        Vec3 behind = owner.position().add(direction.scale(radius - OFFSET));
         this.moveTo(behind.x(), behind.y() - (double) (radius / 2), behind.z(), owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATA_RADIUS, radius);
@@ -124,8 +125,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Vec3 direction = this.getLookAngle();
         Vec3 behind = this.position()
-                .subtract(direction.scale(radius - 3))
-                .add(direction.scale(radius - 3))
+                .subtract(direction.scale(radius - OFFSET))
+                .add(direction.scale(radius - OFFSET))
                 .add(0.0D, (double) radius / 2, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
@@ -153,7 +154,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                                     BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                    if (existing instanceof DomainBlockEntity) {
+                                    if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN)) {
                                         return;
                                     } else if (existing != null) {
                                         custom = existing.saveWithFullMetadata();

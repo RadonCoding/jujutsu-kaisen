@@ -36,25 +36,25 @@ public class CommandableTargetC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                ServerLevel level = player.serverLevel();
+            sender.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                ServerLevel level = sender.serverLevel();
                 LivingEntity target = (LivingEntity) level.getEntity(this.target);
 
                 if (target == null) return;
 
                 for (Entity entity : cap.getSummons(level)) {
                     if (entity instanceof ICommandable commandable) {
-                        if (target == entity || (target instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == player)) continue;
+                        if (target == entity || (target instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == sender)) continue;
 
                         if (commandable.canChangeTarget()) {
                             commandable.changeTarget(target);
 
                             PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.set_target", JujutsuKaisen.MOD_ID),
-                                    entity.getName()), false), player);
+                                    entity.getName()), false), sender);
                         }
                     }
                 }

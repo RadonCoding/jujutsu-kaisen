@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.*;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.tags.JJKBlockTags;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -88,7 +89,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                                         BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                        if (existing instanceof DomainBlockEntity) {
+                                        if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN)) {
                                             continue;
                                         } else if (existing != null) {
                                             custom = existing.saveWithFullMetadata();

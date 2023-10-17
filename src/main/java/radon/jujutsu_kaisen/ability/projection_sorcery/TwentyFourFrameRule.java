@@ -38,7 +38,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return target != null && owner.distanceTo(target) <= 10.0D;
     }
 
     @Override

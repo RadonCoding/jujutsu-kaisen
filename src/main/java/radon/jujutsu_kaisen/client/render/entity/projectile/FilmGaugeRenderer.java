@@ -32,7 +32,8 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
         LivingEntity target = pEntity.getTarget();
-        Vec3 pos = target != null && pEntity.isAttached() ? getPosition(target, target.getBbHeight() * 0.5F, pPartialTick) : getPosition(pEntity, pEntity.getBbHeight() * 0.5F, pPartialTick);
+        Vec3 pos = target != null && pEntity.isAttached() ? target.position().add(0.0D, target.getBbHeight() * 0.5F, 0.0D) :
+                pEntity.position().add(0.0D, pEntity.getBbHeight() * 0.5F, 0.0D);
 
         Vec3 relative = pEntity.getStart().subtract(pos);
         float f0 = (float) relative.length();
@@ -90,12 +91,5 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
-    }
-
-    private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
-        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
-        double d1 = yOffset + entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick;
-        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
-        return new Vec3(d0, d1, d2);
     }
 }

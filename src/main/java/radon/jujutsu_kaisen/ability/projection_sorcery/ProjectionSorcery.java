@@ -7,11 +7,12 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ProjectionSorcery extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
@@ -23,6 +24,12 @@ public class ProjectionSorcery extends Ability {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.addSpeedStack();
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+
+        return super.isUnlocked(owner);
     }
 
     @Override

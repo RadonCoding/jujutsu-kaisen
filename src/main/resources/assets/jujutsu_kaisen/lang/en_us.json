@@ -13,6 +13,11 @@
   "gui.jujutsu_kaisen.domain_customization": "Domain Customization",
   "gui.jujutsu_kaisen.domain_customization.size": "Size",
 
+  "gui.jujutsu_kaisen.pacts": "Pacts",
+  "gui.jujutsu_kaisen.pacts.players": "Players",
+  "gui.jujutsu_kaisen.pacts.pacts": "Pacts",
+  "gui.jujutsu_kaisen.pacts.create": "Create",
+
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
   "key.jujutsu_kaisen.ability_right": "Switch Ability Right",
@@ -24,7 +29,7 @@
   "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
   "key.jujutsu_kaisen.dash": "Dash",
-  "key.jujutsu_kaisen.open_domain_customization": "Open Domain Customization",
+  "key.jujutsu_kaisen.open_jujutsu_menu": "Open Jujutsu Menu",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
@@ -113,19 +118,34 @@
   "item.jujutsu_kaisen.feline_curse_spawn_egg": "Spawn Feline Curse",
   "item.jujutsu_kaisen.rainbow_dragon_spawn_egg": "Spawn Rainbow Dragon",
 
-  "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
-  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain One",
-  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_two": "Coffin of the Iron Mountain Two",
-  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_three": "Coffin of the Iron Mountain Three",
   "block.jujutsu_kaisen.unlimited_void": "Unlimited Void",
-  "block.jujutsu_kaisen.unlimited_void_fill": "Unlimited Void Fill",
+  "block.jujutsu_kaisen.unlimited_void_fill": "Unlimited Void",
 
-  "block.jujutsu_kaisen.fake_water": "Water",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_two": "Coffin of the Iron Mountain",
+  "block.jujutsu_kaisen.coffin_of_the_iron_mountain_three": "Coffin of the Iron Mountain",
+
+  "block.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
+  "block.jujutsu_kaisen.horizon_of_the_captivating_skandha_fill": "Horizon of the Captivating Skandha",
+
+  "block.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
+  "block.jujutsu_kaisen.shining_sea_of_flowers_fill": "Shining Sea of Flowers",
+  "block.jujutsu_kaisen.shining_sea_of_flowers_floor": "Shining Sea of Flowers",
+
+  "block.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Carden",
 
   "block.jujutsu_kaisen.display_case": "Display Case",
+
   "block.jujutsu_kaisen.veil_rod": "Veil Rod",
   "block.jujutsu_kaisen.veil": "Veil",
   "block.jujutsu_kaisen.altar": "Altar",
+
+  "block.jujutsu_kaisen.fake_water_duration": "Water",
+  "block.jujutsu_kaisen.fake_water_domain": "Water",
+
+  "block.jujutsu_kaisen.fake_wood": "Fake Wood",
+
+  "block.jujutsu_kaisen.limbo": "Limbo",
 
   "item.jujutsu_kaisen.veil_rod_item.modifiers": "Modifiers: ",
   "item.jujutsu_kaisen.veil_rod.entity.allow": "Allow entity: %1$s",
@@ -340,6 +360,9 @@
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",
   "cursed_energy_nature.jujutsu_kaisen.lightning": "lightning",
 
+  "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
+  "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
+
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
@@ -362,10 +385,16 @@
   "chat.jujutsu_kaisen.die": "<%1$s> DIE!",
 
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
-
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
-
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
+
+  "chat.jujutsu_kaisen.pact_request": "Sent a pact request to %1$s",
+  "chat.jujutsu_kaisen.pact_question": "Do you %1$s or %2$s a %3$s pact with %4$s?",
+  "chat.jujutsu_kaisen.pact_question_accept": "accept",
+  "chat.jujutsu_kaisen.pact_question_decline": "decline",
+  "chat.jujutsu_kaisen.pact_accept": "You've formed a %1$s pact with %2$s",
+  "chat.jujutsu_kaisen.pact_decline": "%1$s has declined a %2$s pact",
+  "chat.jujutsu_kaisen.pact_failure": "%1$s hasn't requested a %2$s pact with you",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
@@ -403,6 +432,7 @@
   "entity.jujutsu_kaisen.hanami": "Hanami",
   "entity.jujutsu_kaisen.feline_curse": "Feline Curse",
   "entity.jujutsu_kaisen.rainbow_dragon": "Rainbow Dragon",
+  "entity.jujutsu_kaisen.herobrine": "Herobrine",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 

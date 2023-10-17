@@ -30,21 +30,21 @@ public class ShadowInventoryTakeC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+            sender.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 ItemStack stack = cap.getShadowInventory(this.index);
 
-                if (player.getMainHandItem().isEmpty()) {
-                    player.setItemSlot(EquipmentSlot.MAINHAND, stack);
+                if (sender.getMainHandItem().isEmpty()) {
+                    sender.setItemSlot(EquipmentSlot.MAINHAND, stack);
                 } else {
-                    if (!player.addItem(stack)) return;
+                    if (!sender.addItem(stack)) return;
                 }
                 cap.removeShadowInventory(this.index);
 
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), sender);
             });
         });
         ctx.setPacketHandled(true);

@@ -31,9 +31,11 @@ public class TriggerAbilityC2SPacket {
         Ability ability = JJKAbilities.getValue(this.key);
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
-            assert player != null;
-            AbilityHandler.trigger(player, ability);
+            ServerPlayer sender = ctx.getSender();
+
+            assert sender != null;
+
+            AbilityHandler.trigger(sender, ability);
         });
         ctx.setPacketHandled(true);
     }

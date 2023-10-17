@@ -13,22 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class JJKRenderTypes extends RenderType {
-    private static final RenderStateShard.TransparencyStateShard GLOWING_TRANSPARENCY = new RenderStateShard.TransparencyStateShard("glowing_transparency", () -> {
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE,
-                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-    }, () -> {
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-    });
-
     private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) -> {
         TextureStateShard shard = new TextureStateShard(pLocation, false, false);
         return create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                 false, false, CompositeState.builder()
                         .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
                         .setTextureState(shard)
-                        .setTransparencyState(GLOWING_TRANSPARENCY)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(NO_CULL)
                         .setWriteMaskState(COLOR_WRITE)
                         .setOverlayState(OVERLAY)

@@ -18,11 +18,19 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 @AutoRegisterCapability
 public interface ISorcererData {
     void tick(LivingEntity owner);
+
+    void createPact(UUID recipient, Pact pact);
+    boolean hasPact(UUID recipient, Pact pact);
+
+    void createPactRequest(UUID recipient, Pact pact);
+    void removePactRequest(UUID recipient, Pact pact);
+    boolean hasRequestedPact(UUID recipient, Pact pact);
 
     float getAbilityPower(LivingEntity owner);
     float getRealPower();
