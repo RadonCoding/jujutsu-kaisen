@@ -87,6 +87,9 @@ public class SorcererData implements ISorcererData {
     private final Map<Ability, Integer> durations;
     private final Set<UUID> domains;
     private final Set<UUID> summons;
+    private final Map<UUID, Set<Pact>> acceptedPacts;
+    private final Map<UUID, Set<Pact>> requestedPacts;
+    private final Map<UUID, Integer> requestExpirations;
 
     // Ten shadows
     private final Set<ResourceLocation> tamed;
@@ -139,6 +142,9 @@ public class SorcererData implements ISorcererData {
         this.durations = new HashMap<>();
         this.domains = new HashSet<>();
         this.summons = new HashSet<>();
+        this.acceptedPacts = new HashMap<>();
+        this.requestedPacts = new HashMap<>();
+        this.requestExpirations = new HashMap<>();
 
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
@@ -350,6 +356,23 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    private void updateRequestExpirations() {
+        Iterator<Map.Entry<UUID, Integer>> iter = this.requestExpirations.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<UUID, Integer> entry = iter.next();
+
+            int remaining = entry.getValue();
+
+            if (remaining > 0) {
+                this.requestExpirations.put(entry.getKey(), --remaining);
+            } else {
+                iter.remove();
+                this.requestedPacts.remove(entry.getKey());
+            }
+        }
+    }
+
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
@@ -385,6 +408,8 @@ public class SorcererData implements ISorcererData {
         this.updateTickEvents();
         this.updateToggled(owner);
         this.updateChanneled(owner);
+
+        this.updateRequestExpirations();
 
         if (this.speedTimer > 0) {
             if (--this.speedTimer == 0) {
@@ -469,6 +494,40 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void createPact(UUID recipient, Pact pact) {
+        if (!this.acceptedPacts.containsKey(recipient)) {
+            this.acceptedPacts.put(recipient, new HashSet<>());
+        }
+        this.acceptedPacts.get(recipient).add(pact);
+    }
+
+    @Override
+    public boolean hasPact(UUID recipient, Pact pact) {
+        return this.acceptedPacts.getOrDefault(recipient, new HashSet<>()).contains(pact);
+    }
+
+    @Override
+    public void createPactRequest(UUID recipient, Pact pact) {
+        if (!this.requestedPacts.containsKey(recipient)) {
+            this.requestedPacts.put(recipient, new HashSet<>());
+        }
+        this.requestedPacts.get(recipient).add(pact);
+        this.requestExpirations.put(recipient, 30 * 20);
+    }
+
+    @Override
+    public void removePactRequest(UUID recipient, Pact pact) {
+        this.requestedPacts.getOrDefault(recipient, new HashSet<>()).remove(pact);
+        this.requestExpirations.remove(recipient);
+    }
+
+    @Override
+    public boolean hasRequestedPact(UUID recipient, Pact pact) {
+        this.requestedPacts.getOrDefault(recipient, new HashSet<>()).forEach(System.out::println);
+        return this.requestedPacts.getOrDefault(recipient, new HashSet<>()).contains(pact);
+    }
+
+    @Override
     public float getAbilityPower(LivingEntity owner) {
         return HelperMethods.getPower(this.experience) * (this.isInZone(owner) ? 1.2F : 1.0F);
     }
@@ -485,7 +544,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void setExperience(float experience) {
-        this.experience = experience;
+        this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), experience);
     }
 
     @Override
@@ -1296,20 +1355,20 @@ public class SorcererData implements ISorcererData {
         ListTag cooldownsTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.cooldowns.entrySet()) {
-            CompoundTag cooldown = new CompoundTag();
-            cooldown.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
-            cooldown.putInt("cooldown", entry.getValue());
-            cooldownsTag.add(cooldown);
+            CompoundTag data = new CompoundTag();
+            data.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putInt("cooldown", entry.getValue());
+            cooldownsTag.add(data);
         }
         nbt.put("cooldowns", cooldownsTag);
 
         ListTag durationsTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.durations.entrySet()) {
-            CompoundTag cooldown = new CompoundTag();
-            cooldown.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
-            cooldown.putInt("duration", entry.getValue());
-            durationsTag.add(cooldown);
+            CompoundTag data = new CompoundTag();
+            data.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putInt("duration", entry.getValue());
+            durationsTag.add(data);
         }
         nbt.put("durations", durationsTag);
 
@@ -1328,6 +1387,45 @@ public class SorcererData implements ISorcererData {
             summonsTag.add(LongTag.valueOf(identifier.getMostSignificantBits()));
         }
         nbt.put("summons", summonsTag);
+
+        ListTag acceptedPactsTag = new ListTag();
+
+        for (Map.Entry<UUID, Set<Pact>> entry : this.acceptedPacts.entrySet()) {
+            CompoundTag data = new CompoundTag();
+            data.putUUID("recipient", entry.getKey());
+
+            ListTag pacts = new ListTag();
+
+            for (Pact pact : entry.getValue()) {
+                pacts.add(IntTag.valueOf(pact.ordinal()));
+            }
+            data.put("entries", pacts);
+        }
+        nbt.put("accepted_pacts", acceptedPactsTag);
+
+        ListTag requestedPactsTag = new ListTag();
+
+        for (Map.Entry<UUID, Set<Pact>> entry : this.requestedPacts.entrySet()) {
+            CompoundTag data = new CompoundTag();
+            data.putUUID("recipient", entry.getKey());
+
+            ListTag pacts = new ListTag();
+
+            for (Pact pact : entry.getValue()) {
+                pacts.add(IntTag.valueOf(pact.ordinal()));
+            }
+            data.put("entries", pacts);
+        }
+        nbt.put("requested_pacts", requestedPactsTag);
+
+        ListTag requsedExpirationTag = new ListTag();
+
+        for (Map.Entry<UUID, Integer> entry : this.requestExpirations.entrySet()) {
+            CompoundTag data = new CompoundTag();
+            data.putUUID("recipient", entry.getKey());
+            data.putInt("expiration", entry.getValue());
+        }
+        nbt.put("request_expiration", requsedExpirationTag);
 
         ListTag tamedTag = new ListTag();
 
@@ -1353,10 +1451,10 @@ public class SorcererData implements ISorcererData {
         ListTag adaptingTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.adapting.entrySet()) {
-            CompoundTag adaptation = new CompoundTag();
-            adaptation.putString("key", JJKAbilities.getKey(entry.getKey()).toString());
-            adaptation.putInt("stage", entry.getValue());
-            adaptingTag.add(adaptation);
+            CompoundTag data = new CompoundTag();
+            data.putString("key", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putInt("stage", entry.getValue());
+            adaptingTag.add(data);
         }
         nbt.put("adapting", adaptingTag);
 
@@ -1370,10 +1468,10 @@ public class SorcererData implements ISorcererData {
         ListTag cursesTag = new ListTag();
 
         for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
-            CompoundTag curse = new CompoundTag();
-            curse.putString("key", entry.getKey().toString());
-            curse.putInt("count", entry.getValue());
-            cursesTag.add(curse);
+            CompoundTag data = new CompoundTag();
+            data.putString("key", entry.getKey().toString());
+            data.putInt("count", entry.getValue());
+            cursesTag.add(data);
         }
         nbt.put("curses", cursesTag);
 
@@ -1449,17 +1547,17 @@ public class SorcererData implements ISorcererData {
         this.cooldowns.clear();
 
         for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
-            CompoundTag cooldown = (CompoundTag) key;
-            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(cooldown.getString("identifier"))),
-                    cooldown.getInt("cooldown"));
+            CompoundTag data = (CompoundTag) key;
+            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
+                    data.getInt("cooldown"));
         }
 
         this.durations.clear();
 
         for (Tag key : nbt.getList("duration", Tag.TAG_COMPOUND)) {
-            CompoundTag durations = (CompoundTag) key;
-            this.durations.put(JJKAbilities.getValue(new ResourceLocation(durations.getString("identifier"))),
-                    durations.getInt("duration"));
+            CompoundTag data = (CompoundTag) key;
+            this.durations.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
+                    data.getInt("duration"));
         }
 
         this.domains.clear();
@@ -1480,6 +1578,39 @@ public class SorcererData implements ISorcererData {
             if (summonsTag.get(i) instanceof LongTag least && summonsTag.get(i + 1) instanceof LongTag most) {
                 this.summons.add(new UUID(least.getAsLong(), most.getAsLong()));
             }
+        }
+
+        this.acceptedPacts.clear();
+
+        for (Tag key : nbt.getList("accepted_pacts", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+
+            Set<Pact> pacts = new HashSet<>();
+
+            for (Tag entry : data.getList("entries", Tag.TAG_COMPOUND)) {
+                pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
+            }
+            this.acceptedPacts.put(data.getUUID("recipient"), pacts);
+        }
+
+        this.requestedPacts.clear();
+
+        for (Tag key : nbt.getList("requested_pacts", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+
+            Set<Pact> pacts = new HashSet<>();
+
+            for (Tag entry : data.getList("entries", Tag.TAG_COMPOUND)) {
+                pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
+            }
+            this.requestedPacts.put(data.getUUID("recipient"), pacts);
+        }
+
+        this.requestExpirations.clear();
+
+        for (Tag key : nbt.getList("request_expirations", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+            this.requestExpirations.put(data.getUUID("recipient"), data.getInt("expiration"));
         }
 
         this.tamed.clear();

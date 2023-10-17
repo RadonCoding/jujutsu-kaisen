@@ -43,5 +43,10 @@
     "sounds": [
       "jujutsu_kaisen:electricity"
     ]
+  },
+  "cleave": {
+    "sounds": [
+      "jujutsu_kaisen:cleave"
+    ]
   }
 }

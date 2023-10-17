@@ -16,9 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -132,7 +135,11 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                if (!JJKAbilities.hasToggled(owner, JJKAbilities.TIME_CELL_MOON_PALACE.get())) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+
+                if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.TIME_CELL_MOON_PALACE.get())) {
                     this.discard();
                 }
             }
@@ -143,7 +150,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
                 if (this.entityData.get(DATA_ATTACHED)) {
                     target.addEffect(new MobEffectInstance(JJKEffects.TWENTY_FOUR_FRAME_RULE.get(), 20, 0));
                 }
-
                 Vec3 src = this.position();
                 Vec3 dst = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 this.setDeltaMovement(dst.subtract(src).normalize().scale(SPEED));

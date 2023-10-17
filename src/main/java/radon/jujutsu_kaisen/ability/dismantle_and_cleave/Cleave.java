@@ -13,11 +13,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -123,23 +126,41 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target != null && owner.level() instanceof ServerLevel level) {
-            double width = target.getBbWidth();
-            double height = target.getBbHeight();
+            float padding = 0.5F;
+            int count = Math.round(target.getBbHeight() / padding);
 
-            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-            double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
-            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-            level.sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-
-            DamageSource source = this.getSource(owner, domain);
-            float damage = calculateDamage(source, owner, target);
-
-            if (domain != null) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                damage *= (1.6F - cap.getDomainSize());
-            }
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-            target.hurt(source, damage);
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            for (int i = 0; i < count; i++) {
+                float offset = (i * padding);
+                double width = target.getBbWidth();
+                double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
+                double y = target.getY() + offset;
+                double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
+                level.sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
+
+            cap.delayTickEvent(() -> {
+                DamageSource source = this.getSource(owner, domain);
+                float damage = calculateDamage(source, owner, target);
+
+                if (domain != null) {
+                    damage *= (1.6F - cap.getDomainSize());
+                }
+                target.hurt(source, damage);
+
+                for (int i = 0; i < count; i++) {
+                    float offset = (i * padding);
+                    double width = target.getBbWidth();
+                    double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
+                    double y = target.getY() + offset;
+                    double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
+                    level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                }
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            }, count * 2);
         }
     }
 

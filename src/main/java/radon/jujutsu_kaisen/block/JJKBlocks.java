@@ -116,7 +116,6 @@ public class JJKBlocks {
                     .strength(3.0F, 6.0F)
                     .sound(SoundType.COPPER)
                     .noOcclusion()));
-
     public static RegistryObject<Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(100.0F, 14.0F)
@@ -130,4 +129,7 @@ public class JJKBlocks {
 
     public static RegistryObject<FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
             new FakeWoodBlock(BlockBehaviour.Properties.copy(Blocks.STONE)));
+
+    public static RegistryObject<Block> LIMBO = BLOCKS.register("limbo", () ->
+            new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
 }

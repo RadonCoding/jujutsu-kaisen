@@ -28,11 +28,11 @@ public class KuchisakeOnnaAnswerC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            ServerLevel level = player.serverLevel();
+            ServerLevel level = sender.serverLevel();
 
             if (level.getEntity(this.identifier) instanceof KuchisakeOnnaEntity curse) {
                 curse.attack();

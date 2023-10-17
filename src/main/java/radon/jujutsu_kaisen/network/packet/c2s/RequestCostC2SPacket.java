@@ -33,20 +33,20 @@ public class RequestCostC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            ServerPlayer target = player.server.getPlayerList().getPlayerByName(String.valueOf(this.name));
+            ServerPlayer target = sender.server.getPlayerList().getPlayerByName(String.valueOf(this.name));
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     int cost = (Mth.floor(64 * ((float) (cap.getGrade().ordinal() + 1) / SorcererGrade.values().length)));
 
-                    if (player.containerMenu instanceof BountyMenu menu) {
+                    if (sender.containerMenu instanceof BountyMenu menu) {
                         menu.setCost(cost);
                     }
-                    PacketHandler.sendToClient(new SetCostS2CPacket(cost), player);
+                    PacketHandler.sendToClient(new SetCostS2CPacket(cost), sender);
                 });
             }
         });

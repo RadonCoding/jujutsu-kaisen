@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,6 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.*;
@@ -33,6 +40,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -137,6 +145,12 @@ public class JJKEventHandler {
             });
         }
 
+        @SubscribeEvent
+        public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+            event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    event.setNewSpeed((float) (event.getNewSpeed() * (cap.getSpeedStacks() * 3.0D))));
+        }
+
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
@@ -147,22 +161,26 @@ public class JJKEventHandler {
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
+            // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
             if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
                     return;
                 } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
-                    if (tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
+                    // Prevent tames with the same owner from attacking each other
+                    if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
                         event.setCanceled(true);
                         return;
                     }
                 }
             } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
+                // Prevent the owner from attacking the tame
                 if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
                 }
             } else if (victim instanceof DomainExpansionEntity domain && domain.getOwner() == attacker) {
+                // Prevent the owner from destroying their own domain
                 event.setCanceled(true);
                 return;
             }
@@ -226,30 +244,40 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (!victim.level().isClientSide) {
-                DamageSource source = event.getSource();
+            if (victim.level().isClientSide()) return;
 
-                if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
-                    if (source.getEntity() instanceof LivingEntity attacker) {
-                        if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
-                            Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                            attacker.level().addParticle(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 1.0D, 0.0D, 0.0D);
-                            attacker.level().playLocalSound(pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F,
-                                    (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F, false);
-                        } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                                Set<Ability> toggled = new HashSet<>(cap.getToggled());
+            DamageSource source = event.getSource();
 
-                                for (Ability ability : toggled) {
-                                    if (!ability.isTechnique()) continue;
-                                    cap.toggle(victim, ability);
-                                }
+            if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
+                if (source.getEntity() instanceof LivingEntity attacker) {
+                    if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
+                        Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
+                        attacker.level().addParticle(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 1.0D, 0.0D, 0.0D);
+                        attacker.level().playLocalSound(pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F,
+                                (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F, false);
+                    } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                            Set<Ability> toggled = new HashSet<>(cap.getToggled());
 
-                                if (victim instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                                }
-                            });
-                        }
+                            for (Ability ability : toggled) {
+                                if (!ability.isTechnique()) continue;
+                                cap.toggle(victim, ability);
+                            }
+
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    if (attackerCap.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
+                        //attacker.changeDimension();
                     }
                 }
             }

@@ -26,11 +26,11 @@ public class RightClickInputListenerC2SPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> {
-            ServerPlayer player = ctx.getSender();
+            ServerPlayer sender = ctx.getSender();
 
-            assert player != null;
+            assert sender != null;
 
-            if (player.getVehicle() instanceof IRightClickInputListener listener) {
+            if (sender.getVehicle() instanceof IRightClickInputListener listener) {
                 listener.setDown(this.down);
             }
         });

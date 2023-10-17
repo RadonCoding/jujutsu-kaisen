@@ -162,6 +162,10 @@ public class JJKEntities {
                     .sized(1.0F, 2.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
                             .toString()));
+    public static RegistryObject<EntityType<HerobrineEntity>> HEROBRINE = ENTITIES.register("herobrine", () ->
+            EntityType.Builder.<HerobrineEntity>of(HerobrineEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "herobrine")
+                            .toString()));
 
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
             EntityType.Builder.<DismantleProjectile>of(DismantleProjectile::new, MobCategory.MISC)
@@ -417,6 +421,7 @@ public class JJKEntities {
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
         event.put(HEIAN_SUKUNA.get(), SorcererEntity.createAttributes().build());
+        event.put(HEROBRINE.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

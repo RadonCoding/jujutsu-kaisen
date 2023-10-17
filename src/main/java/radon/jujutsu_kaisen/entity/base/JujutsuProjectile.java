@@ -53,10 +53,10 @@ public class JujutsuProjectile extends Projectile {
             int time = this.getTime();
             this.setTime(++time);
 
-            HitResult result = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 
-            if (result.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, result)) {
-                this.onHit(result);
+            if (hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit)) {
+                this.onHit(hit);
             }
 
             this.checkInsideBlocks();

@@ -60,6 +60,8 @@ public class Explode extends Ability {
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             for (Entity entity : getEntities(owner)) {
+                if (!(entity instanceof LivingEntity)) continue;
+
                 owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
                         entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getAbilityPower(owner), false, Level.ExplosionInteraction.NONE);
 

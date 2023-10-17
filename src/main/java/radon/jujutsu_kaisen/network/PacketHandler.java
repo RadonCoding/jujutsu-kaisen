@@ -152,6 +152,11 @@ public class PacketHandler {
                 .encoder(ScreenFlashS2CPacket::encode)
                 .consumerMainThread(ScreenFlashS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(QuestionCreatePactC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(QuestionCreatePactC2SPacket::new)
+                .encoder(QuestionCreatePactC2SPacket::encode)
+                .consumerMainThread(QuestionCreatePactC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

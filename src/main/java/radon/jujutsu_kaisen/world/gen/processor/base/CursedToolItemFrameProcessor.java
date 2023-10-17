@@ -28,9 +28,6 @@ import java.util.Optional;
 
 public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
     private static ItemStack getRandomCursedTool(ServerLevel level) {
-        InvertedSpearData data = level.getDataStorage().computeIfAbsent(InvertedSpearData::load, InvertedSpearData::new,
-                InvertedSpearData.IDENTIFIER);
-
         List<ItemStack> pool = new ArrayList<>();
 
         Registry<Item> registry = level.registryAccess().registryOrThrow(Registries.ITEM);
@@ -42,15 +39,7 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
                 pool.add(stack);
             }
         }
-        pool.removeIf(x -> data.exists && x.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-
-        ItemStack stack = pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
-
-        if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-            data.exists = true;
-            data.setDirty();
-        }
-        return stack;
+        return pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
     }
 
     @Override
@@ -66,23 +55,5 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
             }
         }
         return super.processEntity(world, seedPos, rawEntityInfo, entityInfo, placementSettings, template);
-    }
-
-    public static class InvertedSpearData extends SavedData {
-        public static final String IDENTIFIER = "inverted_spear_data";
-
-        private boolean exists;
-
-        public static InvertedSpearData load(CompoundTag pCompoundTag) {
-            InvertedSpearData data = new InvertedSpearData();
-            data.exists = pCompoundTag.getBoolean("exists");
-            return data;
-        }
-
-        @Override
-        public @NotNull CompoundTag save(@NotNull CompoundTag pCompoundTag) {
-            pCompoundTag.putBoolean("exists", this.exists);
-            return pCompoundTag;
-        }
     }
 }
