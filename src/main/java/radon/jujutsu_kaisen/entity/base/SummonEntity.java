@@ -199,8 +199,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity entity = this.getOwner();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+        LivingEntity owner = this.getOwner();
+        return new ClientboundAddEntityPacket(this, owner == null ? 0 : owner.getId());
     }
 
     @Override

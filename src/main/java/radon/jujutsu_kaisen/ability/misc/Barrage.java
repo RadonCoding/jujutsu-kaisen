@@ -52,7 +52,7 @@ public class Barrage extends Ability {
                                     offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
                                     0, speed.x(), speed.y(), speed.z(), 1.0D);
                         }
-                        owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+                        owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.NEUTRAL, 1.0F, 0.3F);
 
                         Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 

@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -34,11 +35,13 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final int LINE_LENGTH = 3;
     private static final float SPEED = 5.0F;
 
+    private boolean vertical;
+
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public DismantleProjectile(LivingEntity pShooter) {
+    public DismantleProjectile(LivingEntity pShooter, boolean vertical) {
         super(JJKEntities.DISMANTLE.get(), pShooter.level(), pShooter);
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
@@ -46,6 +49,22 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
 
         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+
+        this.vertical = vertical;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("vertical", this.vertical);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.vertical = pCompound.getBoolean("vertical");
     }
 
     @Override
@@ -87,10 +106,10 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         Direction perpendicular;
 
-        if (direction.getAxis() == Direction.Axis.Y) {
-            perpendicular = Direction.fromYRot(this.getYRot()).getCounterClockWise();
+        if (this.vertical) {
+            perpendicular = direction.getAxis() == Direction.Axis.Y ? Direction.fromYRot(this.getYRot()).getOpposite() : Direction.UP;
         } else {
-            perpendicular = direction.getCounterClockWise();
+            perpendicular = direction.getAxis() == Direction.Axis.Y ? Direction.fromYRot(this.getYRot()).getCounterClockWise() : direction.getCounterClockWise();
         }
 
         List<HitResult> hits = new ArrayList<>();
@@ -112,9 +131,9 @@ public class DismantleProjectile extends JujutsuProjectile {
 
                     BlockState state = this.level().getBlockState(pos);
 
-                    if (state.isAir()) return;
+                    if (!state.getFluidState().isEmpty() || state.isAir()) return;
 
-                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                    if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                         this.level().destroyBlock(pos, false);
                     }
                     ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),

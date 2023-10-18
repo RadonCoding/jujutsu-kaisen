@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.DisplayType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -129,7 +130,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             float padding = 0.5F;
             int count = Math.round(target.getBbHeight() / padding);
 
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -159,7 +160,23 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                     double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
                     level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
-                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+
+                for (int i = 0; i < 12; i++) {
+                    for (int j = 0; j < 16; j++) {
+                        double d0 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+                        double d1 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+                        double d2 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
+
+                        if (!(d0 * d0 + d1 * d1 + d2 * d2 > 1.0D)) {
+                            double d3 = target.getX(d0 / 4.0D);
+                            double d4 = target.getY(0.5D + d1 / 4.0D);
+                            double d5 = target.getZ(d2 / 4.0D);
+                            ((ServerLevel) target.level()).sendParticles(JJKParticles.BLOOD.get(), d3, d4, d5,
+                                    0, d0, d1 + 0.2D, d2, 1.0D);
+                        }
+                    }
+                }
             }, count * 2);
         }
     }

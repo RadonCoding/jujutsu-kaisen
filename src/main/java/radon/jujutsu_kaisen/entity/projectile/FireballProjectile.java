@@ -132,7 +132,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }

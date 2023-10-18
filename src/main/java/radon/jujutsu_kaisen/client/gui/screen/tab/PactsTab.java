@@ -8,6 +8,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -81,6 +84,11 @@ public class PactsTab extends JJKTab {
         return list;
     }
 
+    @Nullable
+    public PlayerListWidget.PlayerEntry getSelectedPlayer() {
+        return this.player;
+    }
+
     public void setSelectedPlayer(PlayerListWidget.PlayerEntry entry) {
         this.player = entry;
     }
@@ -97,11 +105,15 @@ public class PactsTab extends JJKTab {
         this.width = l + 3 + 5;
     }
 
-    public <T extends ObjectSelectionList.Entry<T>> void buildPlayerList(Consumer<T> consumer, Function<Player, T> result) {
-        if (this.minecraft.level == null) return;
+    public <T extends ObjectSelectionList.Entry<T>> void buildPlayerList(Consumer<T> consumer, Function<PlayerInfo, T> result) {
+        if (this.minecraft.player == null) return;
 
-        for (Player player : this.minecraft.level.players()) {
-            if (player == this.minecraft.player) continue;
+        ClientPacketListener connection = this.minecraft.getConnection();
+
+        if (connection == null) return;
+
+        for (PlayerInfo player : connection.getOnlinePlayers()) {
+            if (player.getProfile().getId().equals(this.minecraft.player.getUUID())) continue;
             consumer.accept(result.apply(player));
         }
     }
@@ -180,15 +192,15 @@ public class PactsTab extends JJKTab {
         this.addRenderableWidget(new PlayerListWidget(this::buildPlayerList, this::setSelectedPlayer, this.minecraft, 68, 85,
                 xOffset, yOffset + this.getFontRenderer().lineHeight + 1));
         this.addRenderableWidget(new PactListWidget(this::buildPactList, this::setSelectedPact, this.minecraft, 68, 85,
-                xOffset + 74, yOffset + this.getFontRenderer().lineHeight + 1));
+                xOffset + 74, yOffset + this.getFontRenderer().lineHeight + 1, this));
 
         this.create = Button.builder(Component.translatable(String.format("gui.%s.pacts.create", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.player == null || this.pact == null) return;
 
             this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request", JujutsuKaisen.MOD_ID), this.player.get().getName()));
-                PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getUUID(), this.pact.get()));
-                cap.createPactRequest(this.player.get().getUUID(), this.pact.get());
+                this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
+                PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
+                cap.createPactRequest(this.player.get().getProfile().getId(), this.pact.get());
             });
         }).size(60, 20).pos(xOffset + 152, yOffset + this.getFontRenderer().lineHeight + 66).build();
         this.addRenderableWidget(this.create);

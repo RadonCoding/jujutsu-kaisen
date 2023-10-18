@@ -89,7 +89,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 Vec3 center = new Vec3(frame.getX(), frame.getY(), frame.getZ());
                 ((ServerLevel) frame.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
 
-                frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 1.0F, 1.0F);
                 frame.discard();
 
                 LivingEntity owner = frame.getOwner();

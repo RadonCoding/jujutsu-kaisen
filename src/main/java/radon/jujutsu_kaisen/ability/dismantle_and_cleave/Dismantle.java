@@ -26,11 +26,11 @@ public class Dismantle extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        DismantleProjectile dismantle = new DismantleProjectile(owner);
+        DismantleProjectile dismantle = new DismantleProjectile(owner, owner.isShiftKeyDown());
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
         }
     }
 

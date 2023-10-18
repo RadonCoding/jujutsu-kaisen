@@ -200,7 +200,6 @@ public class RainbowDragonEntity extends CursedSpirit {
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.ARMOR, 30.0D)
-                .add(Attributes.ARMOR_TOUGHNESS, 20.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 
@@ -218,7 +217,7 @@ public class RainbowDragonEntity extends CursedSpirit {
 
     @Override
     public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_1;
+        return SorcererGrade.SPECIAL_GRADE;
     }
 
     @Override

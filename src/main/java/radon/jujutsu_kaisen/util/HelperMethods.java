@@ -1,12 +1,24 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -19,6 +31,50 @@ import java.util.Random;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
+
+    private static BlockPos getTopNonCollidingPos(LevelReader level, EntityType<?> type, int x, int z) {
+        int i = level.getHeight(SpawnPlacements.getHeightmapType(type), x, z);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, i, z);
+
+        if (level.dimensionType().hasCeiling()) {
+            do {
+                pos.move(Direction.DOWN);
+            } while(!level.getBlockState(pos).isAir());
+
+            do {
+                pos.move(Direction.DOWN);
+            } while (level.getBlockState(pos).isAir() && pos.getY() > level.getMinBuildHeight());
+        }
+
+        if (SpawnPlacements.getPlacementType(type) == SpawnPlacements.Type.ON_GROUND) {
+            BlockPos below = pos.below();
+
+            if (level.getBlockState(below).isPathfindable(level, below, PathComputationType.LAND)) {
+                return below;
+            }
+        }
+        return pos.immutable();
+    }
+
+    public static BlockPos findSafePos(ServerLevel level, Player player) {
+        BlockPos.MutableBlockPos pos = player.blockPosition().mutable();
+
+        level.getPoiManager().ensureLoadedAndValid(level, pos, 16);
+
+        double minX = level.getWorldBorder().getMinX();
+        double maxX = level.getWorldBorder().getMaxX();
+        double minZ = level.getWorldBorder().getMinZ();
+        double maxZ = level.getWorldBorder().getMaxZ();
+
+        while (!NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(player.getType()), level, pos, player.getType())) {
+            pos.set(minX + RANDOM.nextDouble() * (maxX - minX), 0, minZ + RANDOM.nextDouble() * (maxZ - minZ));
+
+            level.getPoiManager().ensureLoadedAndValid(level, pos, 16);
+
+            pos.set(getTopNonCollidingPos(level, player.getType(), pos.getX(), pos.getZ()));
+        }
+        return pos.immutable();
+    }
 
     public static <T extends Enum<?>> T randomEnum(Class<T> enumClass) {
         int x = RANDOM.nextInt(enumClass.getEnumConstants().length);

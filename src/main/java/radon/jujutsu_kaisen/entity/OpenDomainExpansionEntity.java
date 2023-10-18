@@ -133,8 +133,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean checkSureHitEffect() {
         for (DomainExpansionEntity domain : this.getDomains()) {
-            //if (!domain.isInsideBarrier(this.blockPosition()) && !this.isInsideBarrier(domain.blockPosition())) continue;
-            if (!this.getBoundingBox().intersects(domain.getBoundingBox())) continue;
+            if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition())) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();

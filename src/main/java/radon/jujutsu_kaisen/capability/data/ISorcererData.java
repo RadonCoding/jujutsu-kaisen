@@ -27,6 +27,8 @@ public interface ISorcererData {
 
     void createPact(UUID recipient, Pact pact);
     boolean hasPact(UUID recipient, Pact pact);
+    void removePact(UUID recipient, Pact pact);
+    void clearPacts();
 
     void createPactRequest(UUID recipient, Pact pact);
     void removePactRequest(UUID recipient, Pact pact);
