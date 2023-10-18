@@ -53,7 +53,7 @@ public class ExplosionHandler {
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.getX(), explosion.position.getY(), explosion.position.getZ(),
-                        JJKSounds.EXPLOSION.get(), SoundSource.MASTER, 10.0F, 1.0F);
+                        JJKSounds.EXPLOSION.get(), SoundSource.NEUTRAL, 10.0F, 1.0F);
                 AABB bounds = new AABB(explosion.position.getX() - (explosion.radius * 2.0F), explosion.position.getY() - (explosion.radius * 2.0F),
                         explosion.position.getZ() - (explosion.radius * 2.0F),
                         explosion.position.getX() + (explosion.radius * 2.0F), explosion.position.getY() + (explosion.radius * 2.0F),

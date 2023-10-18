@@ -42,6 +42,7 @@ public class PactAcceptCommand {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(dstCap.serializeNBT()), dst);
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(srcCap.serializeNBT()), src);
 
+            src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), dst.getName()));
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), src.getName()));
         } else {
             src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_failure", JujutsuKaisen.MOD_ID), dst.getName(), pact.getName().getString().toLowerCase()));

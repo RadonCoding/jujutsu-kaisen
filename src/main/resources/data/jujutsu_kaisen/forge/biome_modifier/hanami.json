@@ -5,12 +5,12 @@
       "#forge:no_mob_spawns"
     ],
     "if_any": [
-      "#forge:is_mountain"
+      "#minecraft:is_forest"
     ]
   },
   "spawners": [
     {
-      "type": "jujutsu_kaisen:jogo",
+      "type": "jujutsu_kaisen:hanami",
       "weight": 1,
       "minCount": 1,
       "maxCount": 1

@@ -15,7 +15,7 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     protected final PactListWidget.IBuilder<T, E> builder;
     protected final PactListWidget.ICallback<E> callback;
 
-    public JJKSelectionList(PactListWidget.IBuilder<T, E> parent, PactListWidget.ICallback<E> callback, Minecraft minecraft, int width, int height, int x, int y) {
+    public JJKSelectionList(PactListWidget.IBuilder<T, E> builder, PactListWidget.ICallback<E> callback, Minecraft minecraft, int width, int height, int x, int y) {
         super(minecraft, width, height, x, y, minecraft.font.lineHeight * 2 - 2);
 
         this.x0 = x;
@@ -26,7 +26,7 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
         this.setRenderBackground(false);
         this.setRenderTopAndBottom(false);
 
-        this.builder = parent;
+        this.builder = builder;
         this.refreshList();
 
         this.callback = callback;

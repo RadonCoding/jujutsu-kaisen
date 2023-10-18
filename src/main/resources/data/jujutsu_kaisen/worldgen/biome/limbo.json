@@ -31,16 +31,7 @@
       "probability": 0.118093334
     }
   },
-  "spawners": {
-    "misc": [
-      {
-        "type": "jujutsu_kaisen:herobrine",
-        "weight": 1,
-        "minCount": 1,
-        "maxCount": 1
-      }
-    ]
-  },
+  "spawners": {},
   "spawn_costs": {},
   "carvers": {
     "air": [

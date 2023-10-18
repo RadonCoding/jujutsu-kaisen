@@ -507,6 +507,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void removePact(UUID recipient, Pact pact) {
+        this.acceptedPacts.remove(recipient);
+    }
+
+    @Override
+    public void clearPacts() {
+        this.acceptedPacts.clear();
+    }
+
+    @Override
     public void createPactRequest(UUID recipient, Pact pact) {
         if (!this.requestedPacts.containsKey(recipient)) {
             this.requestedPacts.put(recipient, new HashSet<>());

@@ -313,7 +313,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
                     }
-                    target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+                    target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.NEUTRAL, 1.0F, 1.0F);
                     event.setCanceled(true);
                 }
             });

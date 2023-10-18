@@ -49,7 +49,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
-    private static final int RARITY = 5;
+    protected static final int RARITY = 5;
 
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.INT);
 
@@ -278,13 +278,8 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity entity = this.getOwner();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
+        LivingEntity owner = this.getOwner();
+        return new ClientboundAddEntityPacket(this, owner == null ? 0 : owner.getId());
     }
 
     @Override
@@ -296,6 +291,11 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         if (owner != null) {
             this.setOwner(owner);
         }
+    }
+
+    @Override
+    public JujutsuType getJujutsuType() {
+        return JujutsuType.CURSE;
     }
 
     @Override

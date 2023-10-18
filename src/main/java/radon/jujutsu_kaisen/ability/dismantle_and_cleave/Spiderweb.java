@@ -62,15 +62,17 @@ public class Spiderweb extends Ability {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 center = hit.getBlockPos().getCenter();
 
-                AABB bounds = AABB.ofSize(center, EXPLOSIVE_POWER, 1.0D, EXPLOSIVE_POWER);
+                float power = EXPLOSIVE_POWER * cap.getAbilityPower(owner);
+
+                AABB bounds = AABB.ofSize(center, power, 1.0D, power);
 
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
                     cap.delayTickEvent(() -> {
                         owner.level().playSound(null, center.x(), center.y(), center.z(),
-                                JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+                                JJKSounds.SLASH.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
 
                         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                            if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                            if (HelperMethods.RANDOM.nextInt(Math.round(power) * 2) == 0) {
                                 level.sendParticles(ParticleTypes.SWEEP_ATTACK, pos.getX(), pos.getY(), pos.getZ(),
                                         0, 0.0D, 0.0D, 0.0D, 0.0D);
                             }
@@ -78,7 +80,7 @@ public class Spiderweb extends Ability {
                     }, i * 2);
                 }
                 cap.delayTickEvent(() ->
-                        owner.level().explode(owner, center.x(), center.y(), center.z(), EXPLOSIVE_POWER * cap.getAbilityPower(owner),
+                        owner.level().explode(owner, center.x(), center.y(), center.z(), power,
                                 owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
                                         Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE), DELAY);
             });

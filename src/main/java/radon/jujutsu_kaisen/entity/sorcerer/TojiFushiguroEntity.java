@@ -66,16 +66,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
         super(pEntityType, pLevel);
     }
 
-    @Override
-    public Collection<ItemEntity> captureDrops() {
-        Collection<ItemEntity> drops = super.captureDrops();
-
-        if (drops != null) {
-            drops.removeIf(x -> x.getItem().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
-        }
-        return drops;
-    }
-
     public void setCurrentCustomer(@Nullable Player pPlayer) {
         this.currentCustomer = pPlayer;
     }
@@ -208,7 +198,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
+        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(4, new SorcererGoal(this));
@@ -278,7 +268,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         ServerPlayer bounty = this.getBounty();
 
         if (bounty != null) {
-            this.setTarget(bounty);
+            if (this.getTarget() == null) this.setTarget(bounty);
 
             if (this.distanceTo(bounty) >= this.getAttributeValue(Attributes.FOLLOW_RANGE)) {
                 double d0 = bounty.getX() + ((HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) + 0.1D) * TELEPORT_RADIUS + 0.5D;

@@ -1,10 +1,11 @@
-package radon.jujutsu_kaisen.ability.ai.scissor;
+package radon.jujutsu_kaisen.ability.ai.zomba_curse;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TeleportRandom extends Ability {
+public class TeleportTowards extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -30,9 +31,9 @@ public class TeleportRandom extends Ability {
         while (pos.getY() > owner.level().getMinBuildHeight() && !owner.level().getBlockState(pos).blocksMotion()) {
             pos.move(Direction.DOWN);
         }
-        BlockState state = owner.level().getBlockState(pos);
-        boolean flag = state.blocksMotion();
-        boolean flag1 = state.getFluidState().is(FluidTags.WATER);
+        BlockState blockstate = owner.level().getBlockState(pos);
+        boolean flag = blockstate.blocksMotion();
+        boolean flag1 = blockstate.getFluidState().is(FluidTags.WATER);
 
         if (flag && !flag1) {
             Vec3 current = owner.position();
@@ -51,12 +52,16 @@ public class TeleportRandom extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!owner.level().isClientSide) {
-            double d0 = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;
-            double d1 = owner.getY() + (double)(HelperMethods.RANDOM.nextInt(64) - 32);
-            double d2 = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;
-            teleport(owner, d0, d1, d2);
-        }
+        LivingEntity target;
+
+        if (!(owner instanceof Mob mob) || (target = mob.getTarget()) == null) return;
+
+        Vec3 pos = new Vec3(owner.getX() - target.getX(), owner.getY(0.5D) - target.getEyeY(),  owner.getZ() - target.getZ()).normalize();
+        double d0 = 16.0D;
+        double d1 = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 8.0D - pos.x * d0;
+        double d2 = owner.getY() + (double)(HelperMethods.RANDOM.nextInt(16) - 8) - pos.y * d0;
+        double d3 = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 8.0D - pos.z * d0;
+        teleport(owner, d1, d2, d3);
     }
 
     @Override

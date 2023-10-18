@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +27,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -44,13 +46,9 @@ public class DisplayCaseBlockEntity extends BlockEntity {
     private static @Nullable Entity getRandomCurse(Level level, float energy) {
         List<Entity> pool = new ArrayList<>();
 
-        Collection<RegistryObject<EntityType<?>>> registry = JJKEntities.ENTITIES.getEntries();
-
-        for (RegistryObject<EntityType<?>> entry : registry) {
-            EntityType<?> type = entry.get();
-
+        for (EntityType<?> type : level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE)) {
             if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
-                    HelperMethods.getPower(sorcerer.getGrade().getRequiredExperience()) <= energy && sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
+                    HelperMethods.getPower(sorcerer.getGrade().getRequiredExperience()) <= energy) {
                 pool.add(entity);
             }
         }

@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
+import radon.jujutsu_kaisen.client.render.entity.CloneRenderer;
 import radon.jujutsu_kaisen.client.render.entity.MalevolentShrineRenderer;
 import radon.jujutsu_kaisen.client.render.entity.TimeCellMoonPalaceRenderer;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
@@ -242,8 +243,6 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SuguruGetoModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(SuguruGetoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SuguruGetoModel.OUTER_LAYER, SkinModel::createOuterLayer);
-
-            event.registerLayerDefinition(HerobrineModel.LAYER, SkinModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -328,7 +327,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
-            event.registerEntityRenderer(JJKEntities.HEROBRINE.get(), HerobrineRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CLONE.get(), CloneRenderer::new);
         }
 
         @SubscribeEvent
@@ -338,6 +337,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.BLOOD.get(), BloodParticle.Provider::new);
         }
 
         @SubscribeEvent

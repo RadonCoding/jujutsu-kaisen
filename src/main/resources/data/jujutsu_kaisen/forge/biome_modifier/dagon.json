@@ -5,7 +5,7 @@
       "#forge:no_mob_spawns"
     ],
     "if_any": [
-      "#jujutsu_kaisen:has_mobs"
+      "#minecraft:is_beach"
     ]
   },
   "spawners": [
