@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -37,15 +37,15 @@ public class Heal extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.NONE;
+    public MenuType getMenuType() {
+        return MenuType.NONE;
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
+    public boolean isValid(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && super.isUnlocked(owner);
+        return cap.getType() == JujutsuType.CURSE && super.isValid(owner);
     }
 
     @Override

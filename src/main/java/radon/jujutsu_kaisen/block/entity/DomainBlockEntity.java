@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,13 +22,15 @@ public class DomainBlockEntity extends BlockEntity {
 
     @Nullable
     private BlockState original;
-    @Nullable
-    private CompoundTag custom;
 
     private CompoundTag deferred;
 
     public DomainBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.DOMAIN.get(), pPos, pBlockState);
+    }
+
+    public DomainBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+        super(pType, pPos, pBlockState);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
@@ -54,14 +57,6 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
-
-                if (this.custom != null) {
-                    BlockEntity existing = this.level.getBlockEntity(this.getBlockPos());
-
-                    if (existing != null) {
-                        existing.load(this.custom);
-                    }
-                }
             }
             return true;
         }
@@ -83,15 +78,10 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public @Nullable CompoundTag getCustom() {
-        return this.custom;
-    }
-
-    public void create(UUID identifier, BlockState state, CompoundTag custom) {
+    public void create(UUID identifier, BlockState state) {
         this.initialized = true;
         this.identifier = identifier;
         this.original = state;
-        this.custom = custom;
         this.setChanged();
     }
 
@@ -104,10 +94,6 @@ public class DomainBlockEntity extends BlockEntity {
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
             this.deferred = pTag.getCompound("original");
-
-            if (pTag.contains("custom")) {
-                this.custom = pTag.getCompound("custom");
-            }
         }
     }
 
@@ -124,10 +110,6 @@ public class DomainBlockEntity extends BlockEntity {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));
             } else {
                 pTag.put("original", this.deferred);
-            }
-
-            if (this.custom != null) {
-                pTag.put("custom", this.custom);
             }
         }
     }

@@ -21,7 +21,6 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
@@ -29,8 +28,6 @@ import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
-
-import java.util.List;
 
 public class MegumiFushiguroEntity extends SorcererEntity {
     public MegumiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
@@ -76,11 +73,6 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.TEN_SHADOWS;
-    }
-
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
     }
 
     @Override

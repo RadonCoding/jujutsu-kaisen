@@ -78,11 +78,6 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
-    }
-
-    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.SHINING_SEA_OF_FLOWERS.get();
     }

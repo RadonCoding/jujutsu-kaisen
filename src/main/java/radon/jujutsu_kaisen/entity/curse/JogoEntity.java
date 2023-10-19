@@ -59,11 +59,6 @@ public class JogoEntity extends DisasterCurse {
     }
 
     @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
-    }
-
-    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get();
     }

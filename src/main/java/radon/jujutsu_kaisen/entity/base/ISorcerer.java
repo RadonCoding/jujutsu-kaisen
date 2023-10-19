@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ISorcerer {
-    SorcererGrade getGrade();
+    @Nullable SorcererGrade getGrade();
     @Nullable CursedTechnique getTechnique();
     default @Nullable CursedTechnique getAdditional() {
         return null;
@@ -48,6 +49,6 @@ public interface ISorcerer {
         if (config.containsKey(key)) {
             data.setMaxEnergy(config.get(key));
         }
-        data.setEnergy(data.getMaxEnergy());
+        data.setEnergy(data.getMaxEnergy((LivingEntity) this));
     }
 }

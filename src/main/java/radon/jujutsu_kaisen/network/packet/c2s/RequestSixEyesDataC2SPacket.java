@@ -39,7 +39,7 @@ public class RequestSixEyesDataC2SPacket {
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    SixEyesOverlay.SixEyesData data = new SixEyesOverlay.SixEyesData(cap.getTechnique(), cap.getGrade(), cap.getEnergy(), cap.getMaxEnergy());
+                    SixEyesOverlay.SixEyesData data = new SixEyesOverlay.SixEyesData(cap.getTechnique(), cap.getGrade(), cap.getEnergy(), cap.getMaxEnergy(target));
                     PacketHandler.sendToClient(new ReceiveSixEyesDataS2CPacket(this.src, data.serializeNBT()), sender);
                 });
             }

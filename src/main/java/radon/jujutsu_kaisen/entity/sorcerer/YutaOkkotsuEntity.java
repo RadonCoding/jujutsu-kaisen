@@ -63,7 +63,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE, Trait.SIMPLE_DOMAIN, Trait.DOMAIN_EXPANSION);
+        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

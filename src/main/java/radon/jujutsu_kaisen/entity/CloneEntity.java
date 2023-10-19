@@ -46,7 +46,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     @Nullable
     private UUID ownerUUID;
     @Nullable
-    private Player cachedOwner;
+    private LivingEntity cachedOwner;
 
     private ResourceLocation original;
 
@@ -57,7 +57,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
         Arrays.fill(this.handDropChances, 0.0F);
     }
 
-    public CloneEntity(Player owner, ResourceLocation original) {
+    public CloneEntity(LivingEntity owner, ResourceLocation original) {
         super(JJKEntities.CLONE.get(), owner.level());
 
         this.moveTo(owner.getX(), owner.getY(), owner.getZ(), owner.getYRot(), owner.getXRot());
@@ -71,7 +71,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        Player owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
 
         if (owner != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src ->
@@ -81,7 +81,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
 
     @Override
     public void tick() {
-        Player owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
@@ -92,7 +92,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
 
     @Override
     protected void customServerAiStep() {
-        Player owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
 
         if (owner != null) {
             this.setItemInHand(InteractionHand.MAIN_HAND, owner.getMainHandItem());
@@ -119,7 +119,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     public void die(@NotNull DamageSource pDamageSource) {
         super.die(pDamageSource);
 
-        Player owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
 
@@ -168,7 +168,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
-    public void setOwner(@Nullable Player pOwner) {
+    public void setOwner(@Nullable LivingEntity pOwner) {
         if (pOwner != null) {
             this.ownerUUID = pOwner.getUUID();
             this.cachedOwner = pOwner;
@@ -176,11 +176,11 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     }
 
     @Nullable
-    public Player getOwner() {
+    public LivingEntity getOwner() {
         if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
             return this.cachedOwner;
         } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedOwner = (Player) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             return this.cachedOwner;
         } else {
             return null;
@@ -206,7 +206,7 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
 
     @Override
     public @NotNull Component getName() {
-        Player owner = this.getOwner();
+        LivingEntity owner = this.getOwner();
         return owner == null ? super.getName() : owner.getName();
     }
 

@@ -25,14 +25,24 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
+    int getPoints();
+    void addPoints(int points);
+
+    boolean isUnlocked(Ability ability);
+    void unlock(Ability ability);
+
     void createPact(UUID recipient, Pact pact);
     boolean hasPact(UUID recipient, Pact pact);
     void removePact(UUID recipient, Pact pact);
-    void clearPacts();
 
     void createPactRequest(UUID recipient, Pact pact);
     void removePactRequest(UUID recipient, Pact pact);
     boolean hasRequestedPact(UUID recipient, Pact pact);
+
+    void addBindingVow(BindingVow vow);
+    void removeBindingVow(BindingVow vow);
+    boolean hasBindingVow(BindingVow vow);
+    Set<BindingVow> getBindingVows();
 
     float getAbilityPower(LivingEntity owner);
     float getRealPower();
@@ -89,7 +99,7 @@ public interface ISorcererData {
     void resetCooldowns();
     void resetBurnout();
 
-    float getMaxEnergy();
+    float getMaxEnergy(LivingEntity owner);
     void setMaxEnergy(float maxEnergy);
 
     float getEnergy();

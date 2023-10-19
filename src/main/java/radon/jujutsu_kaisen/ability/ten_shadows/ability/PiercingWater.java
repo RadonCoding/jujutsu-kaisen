@@ -22,8 +22,8 @@ public class PiercingWater extends Ability {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        if (!super.isUnlocked(owner)) return false;
+    public boolean isValid(LivingEntity owner) {
+        if (!super.isValid(owner)) return false;
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

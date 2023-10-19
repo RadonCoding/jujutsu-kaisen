@@ -56,7 +56,7 @@ public class HelperMethods {
         return pos.immutable();
     }
 
-    public static BlockPos findSafePos(ServerLevel level, Player player) {
+    public static BlockPos findSafePos(ServerLevel level, LivingEntity player) {
         BlockPos.MutableBlockPos pos = player.blockPosition().mutable();
 
         level.getPoiManager().ensureLoadedAndValid(level, pos, 16);

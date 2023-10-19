@@ -10,7 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -69,8 +70,8 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.DOMAIN;
+    public MenuType getMenuType() {
+        return MenuType.DOMAIN;
     }
 
     @Override
@@ -79,8 +80,8 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
-    public List<Trait> getRequirements() {
-        return List.of(Trait.SIMPLE_DOMAIN);
+    public int getPointsCost() {
+        return 50;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

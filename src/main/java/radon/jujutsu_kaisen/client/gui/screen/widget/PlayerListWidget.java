@@ -7,12 +7,10 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 
-public class PlayerListWidget extends JJKSelectionList<PlayerInfo, PlayerListWidget.PlayerEntry> {
-    public PlayerListWidget(IBuilder<PlayerInfo, PlayerEntry> builder, ICallback<PlayerEntry> callback, Minecraft minecraft, int width, int height, int x, int y) {
+public class PlayerListWidget extends JJKSelectionList<PlayerInfo, PlayerListWidget.Entry> {
+    public PlayerListWidget(IBuilder<PlayerInfo, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {
         super(builder, callback, minecraft, width, height, x, y);
     }
 
@@ -20,13 +18,13 @@ public class PlayerListWidget extends JJKSelectionList<PlayerInfo, PlayerListWid
     public void refreshList() {
         super.refreshList();
 
-        this.builder.build(this::addEntry, PlayerEntry::new);
+        this.builder.build(this::addEntry, Entry::new);
     }
 
-    public class PlayerEntry extends ObjectSelectionList.Entry<PlayerEntry> {
+    public class Entry extends ObjectSelectionList.Entry<Entry> {
         private final PlayerInfo player;
 
-        PlayerEntry(PlayerInfo player) {
+        Entry(PlayerInfo player) {
             this.player = player;
         }
 

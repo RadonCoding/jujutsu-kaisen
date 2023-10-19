@@ -5,7 +5,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class Fly extends Ability implements Ability.IChannelened {
@@ -20,12 +20,12 @@ public class Fly extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
+    public boolean isValid(LivingEntity owner) {
         return JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get());
     }
 

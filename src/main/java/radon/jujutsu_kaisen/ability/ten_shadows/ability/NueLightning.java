@@ -11,7 +11,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -35,8 +35,8 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        if (!super.isUnlocked(owner)) return false;
+    public boolean isValid(LivingEntity owner) {
+        if (!super.isValid(owner)) return false;
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !cap.hasToggled(JJKAbilities.NUE.get()) &&
@@ -115,8 +115,8 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 
     @Override

@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.DisplayCaseBlockEntity;
-import radon.jujutsu_kaisen.client.tile.DisplayCaseItemRenderer;
+import radon.jujutsu_kaisen.client.render.item.DisplayCaseItemRenderer;
 
 public class DisplayCaseItem extends BlockItem {
     public DisplayCaseItem(Block pBlock, Properties pProperties) {

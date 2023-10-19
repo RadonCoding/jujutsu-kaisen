@@ -2,14 +2,18 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -60,13 +64,26 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.DOMAIN;
+    public MenuType getMenuType() {
+        return MenuType.DOMAIN;
+    }
+
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        CursedTechnique technique = cap.getTechnique();
+        return technique == null ? null : technique.getDomain();
     }
 
     @Override
-    public List<Trait> getRequirements() {
-        return List.of(Trait.DOMAIN_EXPANSION);
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(4.0F, 0.0F);
+    }
+
+    @Override
+    public int getPointsCost() {
+        return 100;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

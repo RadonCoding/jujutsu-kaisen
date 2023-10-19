@@ -23,6 +23,6 @@ public class CloneRenderer extends HumanoidMobRenderer<CloneEntity, PlayerModel<
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(CloneEntity pEntity) {
-        return pEntity.getOwner() == null ? STEVE : ((AbstractClientPlayer) pEntity.getOwner()).getSkinTextureLocation();
+        return pEntity.getOwner() == null ? STEVE : this.entityRenderDispatcher.getRenderer(pEntity.getOwner()).getTextureLocation(pEntity.getOwner());
     }
 }

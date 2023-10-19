@@ -46,7 +46,6 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
-    public final ForgeConfigSpec.DoubleValue requiredUsageForDomain;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
 
@@ -78,8 +77,6 @@ public class ServerConfig {
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
-        this.requiredUsageForDomain = builder.comment("The amount of energy usage required for unlocking domain expansion (amount required for simple domain is half of this value)")
-                .defineInRange("requiredUsageForDomain", 10000.0F, 1.0F, 100000.0F);
         this.requiredExperienceForStrongest = builder.comment("The amount of experience required for a player to be classified as strongest (meaning they can heal CT burnout using RCT and use domain amplification during a domain expansion)")
                 .defineInRange("requiredExperienceForStrongest", 3000.0F, 1.0F, 100000.0F);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")

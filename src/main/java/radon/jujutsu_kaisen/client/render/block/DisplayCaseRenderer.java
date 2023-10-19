@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.tile;
+package radon.jujutsu_kaisen.client.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

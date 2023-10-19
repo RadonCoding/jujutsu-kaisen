@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec2;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -49,6 +50,37 @@ public abstract class Ability {
         LIGHTNING
     }
 
+    // Used for skill tree
+    public boolean isDisplayed(LivingEntity owner) {
+        return this.getPointsCost() > 0;
+    }
+    public int getPointsCost() {
+        return 0;
+    }
+    public boolean isUnlocked(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isUnlocked(this);
+    }
+    public boolean isUnlockable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return !this.isBlocked(owner) && cap.getPoints() >= this.getPointsCost();
+    }
+    public boolean isBlocked(LivingEntity owner) {
+        Ability parent = this.getParent(owner);
+        return parent != null && !parent.isUnlocked(owner);
+    }
+    public Vec2 getDisplayCoordinates() {
+        return Vec2.ZERO;
+    }
+    public AbilityDisplayInfo getDisplay() {
+        Vec2 coordinates = this.getDisplayCoordinates();
+        return new AbilityDisplayInfo(JJKAbilities.getKey(this).getPath(), coordinates.x, coordinates.y);
+    }
+    @Nullable
+    public Ability getParent(LivingEntity owner) {
+        return null;
+    }
+
     public Classification getClassification() {
         return Classification.NONE;
     }
@@ -83,12 +115,13 @@ public abstract class Ability {
         return cooldown.get();
     }
 
-    public DisplayType getDisplayType() {
-        return DisplayType.RADIAL;
+    public MenuType getMenuType() {
+        return MenuType.RADIAL;
     }
 
-    public boolean isUnlocked(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+    public boolean isValid(LivingEntity owner) {
+        if (this.getPointsCost() > 0 && !this.isUnlocked(owner)) return false;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isStrongest(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;

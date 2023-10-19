@@ -6,14 +6,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.domain.UnlimitedVoidBlock;
 
 public class JJKBlockEntities {
     public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<BlockEntityType<DomainBlockEntity>> DOMAIN = BLOCK_ENTITIES.register("domain", () ->
             BlockEntityType.Builder.of(DomainBlockEntity::new,
-                            JJKBlocks.UNLIMITED_VOID.get(),
-                            JJKBlocks.UNLIMITED_VOID_FILL.get(),
+                            JJKBlocks.DOMAIN.get(),
 
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
@@ -28,6 +28,11 @@ public class JJKBlockEntities {
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(),
 
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
+                    .build(null));
+
+    public static RegistryObject<BlockEntityType<UnlimitedVoidBlockEntity>> UNLIMITED_VOID = BLOCK_ENTITIES.register("unlimited_void", () ->
+            BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
+                            JJKBlocks.UNLIMITED_VOID.get())
                     .build(null));
 
     public static RegistryObject<BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->

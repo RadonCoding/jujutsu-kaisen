@@ -85,14 +85,12 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                     BlockState state = this.level().getBlockState(pos);
 
                                     if (!this.isRemoved()) {
-                                        CompoundTag custom = null;
-
                                         BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                        if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN)) {
+                                        if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN_IGNORE)) {
                                             continue;
                                         } else if (existing != null) {
-                                            custom = existing.saveWithFullMetadata();
+                                            return;
                                         }
 
                                         Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
@@ -100,7 +98,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, state, custom);
+                                            be.create(this.uuid, state);
                                         }
                                     }
                                 }

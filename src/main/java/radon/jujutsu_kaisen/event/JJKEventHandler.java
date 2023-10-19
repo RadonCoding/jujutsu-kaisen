@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen;
+package radon.jujutsu_kaisen.event;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -57,32 +58,32 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
-                player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
+                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
-                player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
+                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
-                player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player));
+                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
             Player player = event.getEntity();
-            player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    cap.setEnergy(cap.getMaxEnergy()));
+            ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.setEnergy(cap.getMaxEnergy(player));
         }
 
         @SubscribeEvent
@@ -92,20 +93,19 @@ public class JJKEventHandler {
 
             original.reviveCaps();
 
-            original.getCapability(SorcererDataHandler.INSTANCE).ifPresent(oldCap -> {
-                player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(newCap -> {
-                    newCap.deserializeNBT(oldCap.serializeNBT());
+            ISorcererData oldCap = original.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData newCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (event.isWasDeath()) {
-                        newCap.setEnergy(newCap.getMaxEnergy());
-                        newCap.resetCooldowns();
-                        newCap.resetBurnout();
-                        newCap.clearToggled();
-                        newCap.revive(false);
-                        newCap.resetBlackFlash();
-                    }
-                });
-            });
+            newCap.deserializeNBT(oldCap.serializeNBT());
+
+            if (event.isWasDeath()) {
+                newCap.setEnergy(newCap.getMaxEnergy(player));
+                newCap.resetCooldowns();
+                newCap.resetBurnout();
+                newCap.clearToggled();
+                newCap.revive(false);
+                newCap.resetBlackFlash();
+            }
             original.invalidateCaps();
         }
 

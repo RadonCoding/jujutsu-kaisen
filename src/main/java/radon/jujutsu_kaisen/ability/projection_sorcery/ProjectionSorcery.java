@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -27,9 +27,9 @@ public class ProjectionSorcery extends Ability {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
+    public boolean isValid(LivingEntity owner) {
 
-        return super.isUnlocked(owner);
+        return super.isValid(owner);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ProjectionSorcery extends Ability {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }

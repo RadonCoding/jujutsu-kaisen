@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client.tile;
+package radon.jujutsu_kaisen.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

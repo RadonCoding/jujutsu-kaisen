@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability;
 
-public enum DisplayType {
+public enum MenuType {
     RADIAL,
     DOMAIN,
     SCROLL,

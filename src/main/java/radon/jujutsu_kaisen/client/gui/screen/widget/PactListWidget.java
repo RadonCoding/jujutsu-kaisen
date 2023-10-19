@@ -2,38 +2,33 @@ package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FastColor;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
-import radon.jujutsu_kaisen.client.gui.screen.tab.PactsTab;
+import radon.jujutsu_kaisen.client.gui.screen.tab.PactTab;
 
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.PactEntry> {
-    private final PactsTab parent;
+public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry> {
+    private final PactTab parent;
 
-    public PactListWidget(IBuilder<Pact, PactEntry> builder, ICallback<PactEntry> callback, Minecraft minecraft, int width, int height, int x, int y, PactsTab parent) {
+    public PactListWidget(IBuilder<Pact, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y, PactTab parent) {
         super(builder, callback, minecraft, width, height, x, y);
 
         this.parent = parent;
     }
 
-    private boolean isInvalid(PactListWidget.PactEntry entry) {
+    private boolean isInvalid(Entry entry) {
         if (this.minecraft.player == null) return false;
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        PlayerListWidget.PlayerEntry selected = this.parent.getSelectedPlayer();
+        PlayerListWidget.Entry selected = this.parent.getSelectedPlayer();
 
         return selected != null && cap.hasPact(selected.get().getProfile().getId(), entry.get());
     }
@@ -56,13 +51,13 @@ public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.PactEn
     public void refreshList() {
         super.refreshList();
 
-        this.builder.build(this::addEntry, PactEntry::new);
+        this.builder.build(this::addEntry, PactListWidget.Entry::new);
     }
 
-    public class PactEntry extends ObjectSelectionList.Entry<PactEntry> {
+    public class Entry extends ObjectSelectionList.Entry<Entry> {
         private final Pact pact;
 
-        PactEntry(Pact pact) {
+        Entry(Pact pact) {
             this.pact = pact;
         }
 
@@ -72,15 +67,18 @@ public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.PactEn
 
         @Override
         public void render(@NotNull GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
-            String text = this.pact.getName().getString();
+            FormattedText formatted = FormattedText.of(this.pact.getName().getString());
 
-            int delta = PactListWidget.this.minecraft.font.width(text) - pWidth;
+            int delta = PactListWidget.this.minecraft.font.width(formatted) - pWidth;
+
+            formatted = PactListWidget.this.minecraft.font.substrByWidth(formatted, pWidth);
 
             if (delta > 0) {
-                text = String.format("%s...", text.substring(0, text.length() - 1 - delta));
+                String text = formatted.getString();
+                formatted = FormattedText.of(String.format("%s...", text.substring(0, text.length() - 3)));
             }
             pGuiGraphics.drawString(PactListWidget.this.minecraft.font, Language.getInstance()
-                            .getVisualOrder(FormattedText.composite(Component.literal(text))),
+                            .getVisualOrder(FormattedText.composite(formatted)),
                     pLeft + 3, pTop + 2, 0xFFFFFF, false);
         }
 

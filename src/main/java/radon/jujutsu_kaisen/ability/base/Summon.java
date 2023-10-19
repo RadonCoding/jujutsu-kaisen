@@ -76,8 +76,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        if (!super.isUnlocked(owner)) return false;
+    public boolean isValid(LivingEntity owner) {
+        if (!super.isValid(owner)) return false;
 
         if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;

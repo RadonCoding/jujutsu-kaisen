@@ -13,16 +13,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -150,7 +148,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                 if (domain != null) {
                     damage *= (1.6F - cap.getDomainSize());
                 }
-                target.hurt(source, damage);
+
+                boolean success = target.hurt(source, damage);
 
                 for (int i = 0; i < count; i++) {
                     float offset = (i * padding);
@@ -161,6 +160,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                     level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
                 owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+
+                if (!success || target instanceof SimpleDomainEntity || target instanceof DomainExpansionEntity) return;
 
                 for (int i = 0; i < 12; i++) {
                     for (int j = 0; j < 16; j++) {
@@ -192,8 +193,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 
     @Override
