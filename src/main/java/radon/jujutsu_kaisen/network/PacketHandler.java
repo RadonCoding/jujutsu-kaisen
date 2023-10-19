@@ -167,6 +167,11 @@ public class PacketHandler {
                 .encoder(RemoveBindingVowC2SPacket::encode)
                 .consumerMainThread(RemoveBindingVowC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UnlockAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UnlockAbilityC2SPacket::new)
+                .encoder(UnlockAbilityC2SPacket::encode)
+                .consumerMainThread(UnlockAbilityC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

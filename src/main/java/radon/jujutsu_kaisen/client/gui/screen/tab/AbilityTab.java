@@ -60,6 +60,26 @@ public class AbilityTab extends JJKTab {
         }
     }
 
+
+
+    @Override
+    public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.drawContents(pGuiGraphics, pX, pY);
+
+        if (this.minecraft.player == null) return;
+
+        int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
+        int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
+
+        int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
+        int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
+
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), cap.getPoints()),
+                xOffset, yOffset, 16777215, true);
+    }
+
     @Override
     protected void drawCustom(GuiGraphics graphics, int x, int y) {
         this.root.drawConnectivity(graphics, x, y, true);
@@ -128,5 +148,20 @@ public class AbilityTab extends JJKTab {
     @Override
     public void addWidgets() {
 
+    }
+
+    @Override
+    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        int i = Mth.floor(this.scrollX);
+        int j = Mth.floor(this.scrollY);
+
+        if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
+            for (AbilityWidget widget : this.abilities.values()) {
+                if (widget.isMouseOver(i, j, (int) pMouseX, (int) pMouseY)) {
+                    widget.unlock();
+                    break;
+                }
+            }
+        }
     }
 }

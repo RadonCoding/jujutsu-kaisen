@@ -122,4 +122,9 @@ public class PactTab extends JJKTab {
                 .setMaxWidth(87);
         this.addRenderableWidget(this.description);
     }
+
+    @Override
+    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
+
+    }
 }

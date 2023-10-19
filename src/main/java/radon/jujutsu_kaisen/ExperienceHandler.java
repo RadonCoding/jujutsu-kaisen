@@ -98,7 +98,7 @@ public class ExperienceHandler {
                 }
             }
 
-            int points = Math.round(amount * 0.1F);
+            int points = (int) Math.floor(amount * 0.1F);
 
             if (points > 0) {
                 cap.addPoints(points);
