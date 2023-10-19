@@ -106,6 +106,8 @@ public abstract class JJKTab {
         this.type.drawIcon(pGuiGraphics, pOffsetX, pOffsetY, this.index, this.icon);
     }
 
+    public abstract void mouseClicked(double pMouseX, double pMouseY, int pButton);
+
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
         pGuiGraphics.enableScissor(pX, pY, pX + JujutsuScreen.WINDOW_INSIDE_WIDTH, pY + JujutsuScreen.WINDOW_INSIDE_HEIGHT);
         pGuiGraphics.pose().pushPose();

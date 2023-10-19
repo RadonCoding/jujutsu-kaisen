@@ -9,13 +9,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.UnlockAbilityC2SPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -82,6 +88,10 @@ public class AbilityWidget  {
         this.unlockable = this.ability.isUnlockable(this.minecraft.player);
         this.unlocked = this.ability.isUnlocked(this.minecraft.player);
         this.blocked = this.ability.isBlocked(this.minecraft.player);
+
+        for (AbilityWidget widget : this.children) {
+            widget.update();
+        }
     }
 
     private static float getMaxWidth(StringSplitter pManager, List<FormattedText> pText) {
@@ -182,6 +192,21 @@ public class AbilityWidget  {
         this.children.add(widget);
     }
 
+    public void unlock() {
+        if (this.minecraft.player == null) return;
+
+        if (this.unlockable && !this.unlocked) {
+            this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+
+            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
+            cap.unlock(this.ability);
+
+            this.update();
+        }
+    }
+
     public void drawHover(GuiGraphics pGuiGraphics, int pX, int pY, float pFade, int pWidth, int pHeight) {
         boolean flag = pWidth + pX + this.x + this.width + 26 >= this.tab.getScreen().width;
         boolean flag1 = JujutsuScreen.WINDOW_INSIDE_HEIGHT - pY - this.y - 26 <= 6 + this.description.size() * 9;
@@ -208,7 +233,7 @@ public class AbilityWidget  {
         }
         pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, 26, i, 26);
         pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, 26, j, 26);
-        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, 128 + 26, 26, 26);
+        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, 154, 26, 26);
 
         if (flag) {
             pGuiGraphics.drawString(this.minecraft.font, this.title, k + 5, pY + this.y + 9, -1);

@@ -22,7 +22,6 @@ public class JJKParticleRenderTypes {
             RenderSystem.enableBlend();
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
-            RenderSystem.setShader(JJKShaders::getTranslucentParticleShader);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
@@ -42,7 +41,6 @@ public class JJKParticleRenderTypes {
             RenderSystem.enableBlend();
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
-            RenderSystem.setShader(JJKShaders::getTranslucentParticleShader);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);

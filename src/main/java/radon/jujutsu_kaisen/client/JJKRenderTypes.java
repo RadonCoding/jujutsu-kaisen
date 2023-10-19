@@ -37,8 +37,7 @@ public class JJKRenderTypes extends RenderType {
     private static final RenderType UNLIMITED_VOID = create("unlimited_void", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
             false, false, RenderType.CompositeState.builder()
                     .setShaderState(new ShaderStateShard(JJKShaders::getUnlimitedVoidShader))
-                    .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
-                            .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
+                    .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
                     .createCompositeState(false));
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {

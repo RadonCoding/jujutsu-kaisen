@@ -117,4 +117,9 @@ public class BindingVowTab extends JJKTab {
                 .setMaxWidth(129);
         this.addRenderableWidget(this.description);
     }
+
+    @Override
+    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
+
+    }
 }

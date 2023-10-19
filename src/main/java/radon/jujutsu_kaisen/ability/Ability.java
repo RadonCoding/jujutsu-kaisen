@@ -62,6 +62,9 @@ public abstract class Ability {
         return cap.isUnlocked(this);
     }
     public boolean isUnlockable(LivingEntity owner) {
+        if (owner instanceof Player player && player.getAbilities().instabuild) {
+            return true;
+        }
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !this.isBlocked(owner) && cap.getPoints() >= this.getPointsCost();
     }

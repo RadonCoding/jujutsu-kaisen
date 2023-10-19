@@ -105,6 +105,12 @@ public class JujutsuScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (this.selectedTab != null) {
+            int i = (this.width - WINDOW_WIDTH) / 2;
+            int j = (this.height - WINDOW_HEIGHT) / 2;
+            this.selectedTab.mouseClicked(pMouseX - i - 9, pMouseY - j - 18, pButton);
+        }
+
         if (pButton == 0) {
             int i = (this.width - WINDOW_WIDTH) / 2;
             int j = (this.height - WINDOW_HEIGHT) / 2;
