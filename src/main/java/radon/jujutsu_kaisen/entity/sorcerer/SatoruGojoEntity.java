@@ -60,7 +60,7 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE, Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
+        return List.of(Trait.SIX_EYES, Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override

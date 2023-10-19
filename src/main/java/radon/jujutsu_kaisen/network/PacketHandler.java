@@ -157,6 +157,16 @@ public class PacketHandler {
                 .encoder(QuestionCreatePactC2SPacket::encode)
                 .consumerMainThread(QuestionCreatePactC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(AddBindingVowC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(AddBindingVowC2SPacket::new)
+                .encoder(AddBindingVowC2SPacket::encode)
+                .consumerMainThread(AddBindingVowC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RemoveBindingVowC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RemoveBindingVowC2SPacket::new)
+                .encoder(RemoveBindingVowC2SPacket::encode)
+                .consumerMainThread(RemoveBindingVowC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

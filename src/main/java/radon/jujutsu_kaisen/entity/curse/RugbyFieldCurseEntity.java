@@ -40,7 +40,7 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
         this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));

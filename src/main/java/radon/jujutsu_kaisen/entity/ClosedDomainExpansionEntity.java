@@ -22,6 +22,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -45,8 +46,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
         Vec3 direction = HelperMethods.getLookAngle(owner);
-        Vec3 behind = owner.position().add(direction.scale(radius - OFFSET));
-        this.moveTo(behind.x(), behind.y() - (double) (radius / 2), behind.z(), owner.getYRot(), owner.getXRot());
+        Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
+        this.moveTo(behind.x(), behind.y(), behind.z(), owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATA_RADIUS, radius);
 
@@ -115,7 +116,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
 
         int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
+        BlockPos center = this.blockPosition().offset(0, radius, 0);
         BlockPos relative = pos.subtract(center);
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
@@ -124,10 +125,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         int radius = this.getRadius();
 
         Vec3 direction = this.getLookAngle();
-        Vec3 behind = this.position()
-                .subtract(direction.scale(radius - OFFSET))
-                .add(direction.scale(radius - OFFSET))
-                .add(0.0D, (double) radius / 2, 0.0D);
+        Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
         int floorY = owner.getBlockY();
@@ -142,22 +140,20 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         BlockState state = this.level().getBlockState(pos);
 
                         // Calculate the delay based on the distance from the center to the front of the wall
-                        double frontDistance = Math.sqrt((x + direction.x() * radius) * (x + direction.x() * radius) +
+                        double front = Math.sqrt((x + direction.x() * radius) * (x + direction.x() * radius) +
                                 (y + direction.y() * radius) * (y + direction.y() * radius) +
                                 (z + direction.z() * radius) * (z + direction.z() * radius));
-                        int delay = (int) Math.round(frontDistance);
+                        int delay = (int) Math.round(front);
 
                         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                             cap.delayTickEvent(() -> {
                                 if (!this.isRemoved()) {
-                                    CompoundTag custom = null;
-
                                     BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                    if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN)) {
+                                    if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN_IGNORE)) {
                                         return;
                                     } else if (existing != null) {
-                                        custom = existing.saveWithFullMetadata();
+                                        return;
                                     }
 
                                     DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
@@ -167,16 +163,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                                     Block block = null;
 
-                                    if (state.isAir()) {
-                                        if (distance >= radius - 1) {
+                                    if (distance >= radius - 1) {
+                                        block = JJKBlocks.DOMAIN.get();
+                                    } else if (state.isAir()) {
+                                        if (distance >= radius - 2) {
                                             block = blocks.get(this.random.nextInt(blocks.size()));
                                         } else if (pos.getY() <= floorY && !floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
                                             block = floor.get(this.random.nextInt(floor.size()));
                                         }
                                     } else if (!state.getFluidState().isEmpty()) {
-                                        block = distance >= radius - 1 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
+                                        block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
                                     } else {
-                                        block = distance >= radius - 1 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
+                                        block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
                                     }
 
                                     if (block == null) return;
@@ -185,7 +183,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, state, custom);
+                                        be.create(this.uuid, state);
                                     }
                                 }
                             }, delay);

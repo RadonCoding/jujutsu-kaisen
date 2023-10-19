@@ -41,8 +41,8 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        if (!super.isUnlocked(owner)) return false;
+    public boolean isValid(LivingEntity owner) {
+        if (!super.isValid(owner)) return false;
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&

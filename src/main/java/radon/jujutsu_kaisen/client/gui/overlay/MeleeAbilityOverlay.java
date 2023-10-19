@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class MeleeAbilityOverlay {
         assert player != null;
 
         abilities = JJKAbilities.getAbilities(player);
-        abilities.removeIf(ability -> ability.getDisplayType() != DisplayType.SCROLL);
+        abilities.removeIf(ability -> ability.getMenuType() != MenuType.SCROLL);
 
         if (!abilities.isEmpty()) {
             int index = getIndex();

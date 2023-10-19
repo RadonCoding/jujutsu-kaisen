@@ -36,12 +36,12 @@ public class MaximumUzumaki extends Ability {
     }
 
     @Override
-    public boolean isUnlocked(LivingEntity owner) {
+    public boolean isValid(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
-        return !curses.isEmpty() && super.isUnlocked(owner);
+        return !curses.isEmpty() && super.isValid(owner);
     }
 
     @Override

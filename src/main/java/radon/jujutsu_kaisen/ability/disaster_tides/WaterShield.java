@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
@@ -89,7 +89,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }

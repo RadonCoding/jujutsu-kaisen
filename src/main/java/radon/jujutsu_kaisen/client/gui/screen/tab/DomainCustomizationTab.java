@@ -22,7 +22,7 @@ public class DomainCustomizationTab extends JJKTab {
     private float oldSize;
 
     public DomainCustomizationTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
-        super(minecraft, screen, type, index, page, Items.NETHER_STAR.getDefaultInstance(), TITLE, BACKGROUND);
+        super(minecraft, screen, type, index, page, Items.NETHER_STAR.getDefaultInstance(), TITLE, BACKGROUND, false);
     }
 
     @Override
@@ -45,8 +45,13 @@ public class DomainCustomizationTab extends JJKTab {
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
         int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
-        pGuiGraphics.drawString(this.getFontRenderer(), Component.translatable(String.format("gui.%s.domain_customization.size", JujutsuKaisen.MOD_ID)),
-                i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16 - this.getFontRenderer().lineHeight - 8) / 2), 16777215, true);
+        pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.domain_customization.size", JujutsuKaisen.MOD_ID)),
+                i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16 - this.minecraft.font.lineHeight - 8) / 2), 16777215, true);
+    }
+
+    @Override
+    protected void drawCustom(GuiGraphics graphics, int x, int y) {
+
     }
 
     @Override

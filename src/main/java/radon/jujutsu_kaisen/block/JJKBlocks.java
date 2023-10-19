@@ -15,6 +15,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.block.domain.ChimeraShadowGardenBlock;
+import radon.jujutsu_kaisen.block.domain.DomainBlock;
+import radon.jujutsu_kaisen.block.domain.FakeWaterDomainBlock;
+import radon.jujutsu_kaisen.block.domain.UnlimitedVoidBlock;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 
 import javax.annotation.Nullable;
@@ -34,14 +38,15 @@ public class JJKBlocks {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JujutsuKaisen.MOD_ID);
 
-    public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
+    public static RegistryObject<DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
             new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-    public static RegistryObject<DomainBlock> UNLIMITED_VOID_FILL = BLOCKS.register("unlimited_void_fill", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+
+    public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
+            new UnlimitedVoidBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)

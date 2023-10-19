@@ -13,10 +13,18 @@
   "gui.jujutsu_kaisen.domain_customization": "Domain Customization",
   "gui.jujutsu_kaisen.domain_customization.size": "Size",
 
-  "gui.jujutsu_kaisen.pacts": "Pacts",
-  "gui.jujutsu_kaisen.pacts.players": "Players",
-  "gui.jujutsu_kaisen.pacts.pacts": "Pacts",
-  "gui.jujutsu_kaisen.pacts.create": "Create",
+  "gui.jujutsu_kaisen.pact": "Pacts",
+  "gui.jujutsu_kaisen.pact.players": "Players",
+  "gui.jujutsu_kaisen.pact.pacts": "Pacts",
+  "gui.jujutsu_kaisen.pact.create": "Create",
+
+  "gui.jujutsu_kaisen.binding_vow": "Binding Vows",
+  "gui.jujutsu_kaisen.binding_vow.binding_vows": "Binding Vows",
+  "gui.jujutsu_kaisen.binding_vow.add": "Add",
+  "gui.jujutsu_kaisen.binding_vow.remove": "Remove",
+
+  "gui.jujutsu_kaisen.ability": "Abilities",
+  "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
 
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
@@ -363,6 +371,12 @@
   "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
   "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",
 
+  "binding_vow.jujutsu_kaisen.overtime": "Overtime",
+  "binding_vow.jujutsu_kaisen.overtime.description": "Your cursed energy is limited to 80-90% during the day, but increases to 110-120% during the night.",
+
+  "binding_vow.jujutsu_kaisen.recoil": "Recoil",
+  "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
+
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
@@ -386,6 +400,7 @@
 
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
+  "chat.jujutsu_kaisen.points": "You've gained %1$d points from your battle",
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
 
   "chat.jujutsu_kaisen.pact_request": "Sent a pact request to %1$s",
@@ -450,12 +465,6 @@
   "advancements.jujutsu_kaisen.black_flash.title": "Black Flash",
   "advancements.jujutsu_kaisen.black_flash.description": "The sparks of Black Flash do not choose whom to bless.",
 
-  "advancements.jujutsu_kaisen.simple_domain.title": "Simple Domain",
-  "advancements.jujutsu_kaisen.simple_domain.description": "Learn barrier and anti-domain techniques.",
-
-  "advancements.jujutsu_kaisen.domain_expansion.title": "Domain Expansion",
-  "advancements.jujutsu_kaisen.domain_expansion.description": "Reach the pinnacle of jujutsu sorcery.",
-
   "advancements.jujutsu_kaisen.heavenly_restriction.title": "Heavenly Restriction",
   "advancements.jujutsu_kaisen.heavenly_restriction.description": "You were granted unrivaled physical abilities in exchange for your cursed energy.",
 
@@ -464,15 +473,6 @@
 
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
-
-  "advancements.jujutsu_kaisen.cursed_womb.title": "Cursed Womb",
-  "advancements.jujutsu_kaisen.cursed_womb.description": "Hmm... Maybe you should try evolving.",
-
-  "advancements.jujutsu_kaisen.evolved_curse.title": "Evolved Curse",
-  "advancements.jujutsu_kaisen.evolved_curse.description": "You've developed to your final stage",
-
-  "advancements.jujutsu_kaisen.king_of_curses.title": "The King of Curses",
-  "advancements.jujutsu_kaisen.king_of_curses.description": "It's lonely at the top...",
 
   "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
 

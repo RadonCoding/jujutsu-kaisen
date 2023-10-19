@@ -10,7 +10,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -93,7 +93,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }

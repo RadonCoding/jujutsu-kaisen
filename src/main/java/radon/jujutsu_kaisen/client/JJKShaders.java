@@ -10,14 +10,22 @@ import java.io.IOException;
 
 public class JJKShaders {
     private static ShaderInstance translucentParticleShader;
+    private static ShaderInstance unlimitedVoidShader;
 
     public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceProvider(),
                         new ResourceLocation(JujutsuKaisen.MOD_ID, "translucent_particle"), DefaultVertexFormat.PARTICLE),
                 shader -> translucentParticleShader = shader);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(),
+                        new ResourceLocation(JujutsuKaisen.MOD_ID, "unlimited_void"), DefaultVertexFormat.POSITION),
+                shader -> unlimitedVoidShader = shader);
     }
 
     public static ShaderInstance getTranslucentParticleShader() {
         return translucentParticleShader;
+    }
+
+    public static ShaderInstance getUnlimitedVoidShader() {
+        return unlimitedVoidShader;
     }
 }

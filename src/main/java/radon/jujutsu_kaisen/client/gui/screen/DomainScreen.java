@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
@@ -15,7 +15,7 @@ public class DomainScreen extends RadialScreen {
         assert this.minecraft != null;
 
         List<Ability> abilities =  JJKAbilities.getAbilities(this.minecraft.player);
-        abilities.removeIf(ability -> ability.getDisplayType() != DisplayType.DOMAIN);
+        abilities.removeIf(ability -> ability.getMenuType() != MenuType.DOMAIN);
 
         return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
     }

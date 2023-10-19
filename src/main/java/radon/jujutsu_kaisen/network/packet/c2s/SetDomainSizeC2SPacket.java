@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import java.util.function.Supplier;
@@ -31,8 +32,8 @@ public class SetDomainSizeC2SPacket {
 
             assert sender != null;
 
-            sender.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    cap.setDomainSize(Mth.clamp(this.domainSize, 0.5F, 1.5F)));
+            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.setDomainSize(Mth.clamp(this.domainSize, 0.5F, 1.5F));
         });
         ctx.setPacketHandled(true);
     }

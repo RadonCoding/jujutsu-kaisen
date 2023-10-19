@@ -29,6 +29,7 @@ import net.minecraftforge.common.ForgeMod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.ten_shadows.summon.RabbitEscape;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -46,6 +47,9 @@ import java.util.concurrent.Callable;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
+
+    private int points;
+    private Set<Ability> unlocked;
 
     private float domainSize;
 
@@ -90,6 +94,7 @@ public class SorcererData implements ISorcererData {
     private final Map<UUID, Set<Pact>> acceptedPacts;
     private final Map<UUID, Set<Pact>> requestedPacts;
     private final Map<UUID, Integer> requestExpirations;
+    private final Set<BindingVow> bindingVows;
 
     // Ten shadows
     private final Set<ResourceLocation> tamed;
@@ -123,6 +128,8 @@ public class SorcererData implements ISorcererData {
     public SorcererData() {
         this.domainSize = 1.0F;
 
+        this.unlocked = new HashSet<>();
+
         this.type = JujutsuType.SORCERER;
 
         this.copied = new LinkedHashSet<>();
@@ -145,6 +152,7 @@ public class SorcererData implements ISorcererData {
         this.acceptedPacts = new HashMap<>();
         this.requestedPacts = new HashMap<>();
         this.requestExpirations = new HashMap<>();
+        this.bindingVows = new HashSet<>();
 
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
@@ -394,8 +402,6 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.SIX_EYES)) this.giveAdvancement(player, "six_eyes");
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) this.giveAdvancement(player, "heavenly_restriction");
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE)) this.giveAdvancement(player, "reverse_cursed_technique");
-        if (this.traits.contains(Trait.SIMPLE_DOMAIN)) this.giveAdvancement(player, "simple_domain");
-        if (this.traits.contains(Trait.DOMAIN_EXPANSION)) this.giveAdvancement(player, "domain_expansion");
     }
 
     public void tick(LivingEntity owner) {
@@ -431,13 +437,6 @@ public class SorcererData implements ISorcererData {
             this.updateAdaptation(level);
         }
 
-        if (this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal() && this.used >= ConfigHolder.SERVER.requiredUsageForDomain.get().floatValue()) {
-            this.traits.add(Trait.DOMAIN_EXPANSION);
-        }
-        if (this.getGrade().ordinal() > SorcererGrade.GRADE_2.ordinal() && this.used >= ConfigHolder.SERVER.requiredUsageForDomain.get().floatValue() / 2) {
-            this.traits.add(Trait.SIMPLE_DOMAIN);
-        }
-
         if (owner instanceof ServerPlayer player) {
             if (!this.initialized) {
                 this.initialized = true;
@@ -450,7 +449,7 @@ public class SorcererData implements ISorcererData {
             this.burnout--;
         }
 
-        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
+        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy(owner));
 
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
@@ -494,6 +493,26 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getPoints() {
+        return this.points;
+    }
+
+    @Override
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    @Override
+    public boolean isUnlocked(Ability ability) {
+        return this.unlocked.contains(ability);
+    }
+
+    @Override
+    public void unlock(Ability ability) {
+        this.unlocked.add(ability);
+    }
+
+    @Override
     public void createPact(UUID recipient, Pact pact) {
         if (!this.acceptedPacts.containsKey(recipient)) {
             this.acceptedPacts.put(recipient, new HashSet<>());
@@ -509,11 +528,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void removePact(UUID recipient, Pact pact) {
         this.acceptedPacts.remove(recipient);
-    }
-
-    @Override
-    public void clearPacts() {
-        this.acceptedPacts.clear();
     }
 
     @Override
@@ -535,6 +549,26 @@ public class SorcererData implements ISorcererData {
     public boolean hasRequestedPact(UUID recipient, Pact pact) {
         this.requestedPacts.getOrDefault(recipient, new HashSet<>()).forEach(System.out::println);
         return this.requestedPacts.getOrDefault(recipient, new HashSet<>()).contains(pact);
+    }
+
+    @Override
+    public void addBindingVow(BindingVow vow) {
+        this.bindingVows.add(vow);
+    }
+
+    @Override
+    public void removeBindingVow(BindingVow vow) {
+        this.bindingVows.remove(vow);
+    }
+
+    @Override
+    public boolean hasBindingVow(BindingVow vow) {
+        return this.bindingVows.contains(vow);
+    }
+
+    @Override
+    public Set<BindingVow> getBindingVows() {
+        return this.bindingVows;
     }
 
     @Override
@@ -745,8 +779,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public float getMaxEnergy() {
-        return ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower()) + this.extraEnergy;
+    public float getMaxEnergy(LivingEntity owner) {
+        long time = owner.level().getLevelData().getDayTime();
+        boolean night = time >= 13000 && time < 24000;
+        return (this.bindingVows.contains(BindingVow.OVERTIME) ? night  ? 1.2F : 0.9F : 1.0F) *
+                ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower()) + this.extraEnergy;
     }
 
     @Override
@@ -1256,7 +1293,7 @@ public class SorcererData implements ISorcererData {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
             }
         }
-        this.energy = this.getMaxEnergy();
+        this.energy = this.getMaxEnergy(player);
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
     }
@@ -1298,6 +1335,7 @@ public class SorcererData implements ISorcererData {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
+        nbt.putInt("points", this.points);
         nbt.putFloat("domain_size", this.domainSize);
 
         if (this.technique != null) {
@@ -1333,6 +1371,13 @@ public class SorcererData implements ISorcererData {
         if (this.channeled != null) {
             nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
         }
+
+        ListTag unlockedTag = new ListTag();
+
+        for (Ability ability : this.unlocked) {
+            unlockedTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
+        }
+        nbt.put("unlocked", unlockedTag);
 
         ListTag copiedTag = new ListTag();
 
@@ -1437,6 +1482,13 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("request_expiration", requsedExpirationTag);
 
+        ListTag bindingVowsTag = new ListTag();
+
+        for (BindingVow vow : this.bindingVows) {
+            bindingVowsTag.add(IntTag.valueOf(vow.ordinal()));
+        }
+        nbt.put("binding_vows", bindingVowsTag);
+
         ListTag tamedTag = new ListTag();
 
         for (ResourceLocation key : this.tamed) {
@@ -1492,6 +1544,7 @@ public class SorcererData implements ISorcererData {
     public void deserializeNBT(CompoundTag nbt) {
         this.initialized = nbt.getBoolean("initialized");
 
+        this.points = nbt.getInt("points");
         this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
@@ -1528,6 +1581,12 @@ public class SorcererData implements ISorcererData {
             this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));
         }
 
+        this.unlocked.clear();
+
+        for (Tag tag : nbt.getList("unlocked", Tag.TAG_STRING)) {
+            this.unlocked.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
+        }
+
         this.copied.clear();
 
         for (Tag tag : nbt.getList("copied", Tag.TAG_INT)) {
@@ -1549,9 +1608,7 @@ public class SorcererData implements ISorcererData {
         this.traits.clear();
 
         for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-            if (key instanceof IntTag tag) {
-                this.traits.add(Trait.values()[tag.getAsInt()]);
-            }
+            this.traits.add(Trait.values()[((IntTag) key).getAsInt()]);
         }
 
         this.cooldowns.clear();
@@ -1621,6 +1678,12 @@ public class SorcererData implements ISorcererData {
         for (Tag key : nbt.getList("request_expirations", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
             this.requestExpirations.put(data.getUUID("recipient"), data.getInt("expiration"));
+        }
+
+        this.bindingVows.clear();
+
+        for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
+            this.bindingVows.add(BindingVow.values()[((IntTag) key).getAsInt()]);
         }
 
         this.tamed.clear();

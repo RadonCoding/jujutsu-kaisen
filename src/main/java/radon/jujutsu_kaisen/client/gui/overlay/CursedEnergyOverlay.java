@@ -33,7 +33,7 @@ public class CursedEnergyOverlay {
 
             graphics.blit(TEXTURE, 20, 20, 0, 0, 93, 9, 93, 16);
 
-            float maxEnergy = cap.getMaxEnergy();
+            float maxEnergy = cap.getMaxEnergy(player);
             float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
             graphics.blit(TEXTURE, 20, 21, 0, 9, (int) energyWidth, 7, 93, 16);
 

@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class WaterWalking extends Ability implements Ability.IToggled {
@@ -44,8 +44,8 @@ public class WaterWalking extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.NONE;
+    public MenuType getMenuType() {
+        return MenuType.NONE;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

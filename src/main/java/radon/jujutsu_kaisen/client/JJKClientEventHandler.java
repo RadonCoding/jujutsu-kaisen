@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
+import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
 import radon.jujutsu_kaisen.client.render.entity.CloneRenderer;
 import radon.jujutsu_kaisen.client.render.entity.MalevolentShrineRenderer;
@@ -42,7 +43,7 @@ import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
-import radon.jujutsu_kaisen.client.tile.DisplayCaseRenderer;
+import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -328,6 +329,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLONE.get(), CloneRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
         }
 
         @SubscribeEvent

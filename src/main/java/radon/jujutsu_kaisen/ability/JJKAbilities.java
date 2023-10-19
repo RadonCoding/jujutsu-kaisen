@@ -183,12 +183,16 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
 
+    public static String getName(Ability ability) {
+        return ABILITY_REGISTRY.get().getKey(ability).getPath();
+    }
+    
     public static ResourceLocation getKey(Ability ability) {
-        return JJKAbilities.ABILITY_REGISTRY.get().getKey(ability);
+        return ABILITY_REGISTRY.get().getKey(ability);
     }
 
     public static Ability getValue(ResourceLocation key) {
-        return JJKAbilities.ABILITY_REGISTRY.get().getValue(key);
+        return ABILITY_REGISTRY.get().getValue(key);
     }
 
     public static boolean hasToggled(LivingEntity owner, Ability ability) {
@@ -205,7 +209,7 @@ public class JJKAbilities {
     }
 
     public static void summonCurse(LivingEntity owner, EntityType<?> type) {
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
 
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
@@ -319,21 +323,21 @@ public class JJKAbilities {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        abilities.add(JJKAbilities.AIR_PUNCH.get());
-        abilities.add(JJKAbilities.BARRAGE.get());
-        abilities.add(JJKAbilities.DASH.get());
+        abilities.add(AIR_PUNCH.get());
+        abilities.add(BARRAGE.get());
+        abilities.add(DASH.get());
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            abilities.add(JJKAbilities.SMASH.get());
-            abilities.add(JJKAbilities.WATER_WALKING.get());
-            abilities.add(JJKAbilities.CURSED_ENERGY_FLOW.get());
-            abilities.add(JJKAbilities.LIGHTNING.get());
+            abilities.add(SMASH.get());
+            abilities.add(WATER_WALKING.get());
+            abilities.add(CURSED_ENERGY_FLOW.get());
+            abilities.add(LIGHTNING.get());
 
-            abilities.add(JJKAbilities.HEAL.get());
-            abilities.add(JJKAbilities.RCT.get());
+            abilities.add(HEAL.get());
+            abilities.add(RCT.get());
 
-            abilities.add(JJKAbilities.SIMPLE_DOMAIN.get());
-            abilities.add(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            abilities.add(SIMPLE_DOMAIN.get());
+            abilities.add(DOMAIN_AMPLIFICATION.get());
 
             CursedTechnique technique = cap.getTechnique();
 
@@ -355,7 +359,7 @@ public class JJKAbilities {
             CursedTechnique absorbed = cap.getCurrentAbsorbed();
             if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));
         }
-        abilities.removeIf(ability -> !ability.isUnlocked(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
+        abilities.removeIf(ability -> !ability.isValid(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
 
         return new ArrayList<>(abilities);
     }

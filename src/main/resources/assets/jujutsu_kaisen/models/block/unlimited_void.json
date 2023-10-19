@@ -1,6 +1,5 @@
 {
-  "parent": "block/cube_all",
   "textures": {
-    "all": "jujutsu_kaisen:block/black"
+    "particle": "minecraft:block/obsidian"
   }
 }

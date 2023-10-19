@@ -9,15 +9,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -149,13 +148,37 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.DOMAIN;
+    public MenuType getMenuType() {
+        return MenuType.DOMAIN;
     }
 
     @Override
-    public List<Trait> getRequirements() {
-        return List.of(Trait.DOMAIN_EXPANSION);
+    public boolean isDisplayed(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        CursedTechnique technique = cap.getTechnique();
+        return technique != null && technique.getDomain() == this && super.isDisplayed(owner);
+    }
+
+    @Override
+    public AbilityDisplayInfo getDisplay() {
+        Vec2 coordinates = this.getDisplayCoordinates();
+        return new AbilityDisplayInfo("domain_expansion", coordinates.x, coordinates.y);
+    }
+
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        return JJKAbilities.SIMPLE_DOMAIN.get();
+    }
+
+    @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(2.0F, 0.0F);
+    }
+
+    @Override
+    public int getPointsCost() {
+        return 500;
     }
 
     public interface IClosedDomain {

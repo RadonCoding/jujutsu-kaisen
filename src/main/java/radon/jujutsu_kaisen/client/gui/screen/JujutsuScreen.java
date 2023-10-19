@@ -11,10 +11,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.client.gui.screen.tab.DomainCustomizationTab;
-import radon.jujutsu_kaisen.client.gui.screen.tab.JJKTab;
-import radon.jujutsu_kaisen.client.gui.screen.tab.JJKTabType;
-import radon.jujutsu_kaisen.client.gui.screen.tab.PactsTab;
+import radon.jujutsu_kaisen.client.gui.screen.tab.*;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -40,6 +37,8 @@ public class JujutsuScreen extends Screen {
     private JJKTab selectedTab;
     private static int tabPage, maxPages;
 
+    private boolean isScrolling;
+
     public JujutsuScreen() {
         super(GameNarrator.NO_TITLE);
     }
@@ -53,6 +52,14 @@ public class JujutsuScreen extends Screen {
         }
         this.selectedTab = tab;
         this.selectedTab.addWidgets();
+    }
+
+    public void removeWidgets() {
+        if (this.selectedTab != null) {
+            for (GuiEventListener widget : this.selectedTab.getRenderables()) {
+                this.removeWidget(widget);
+            }
+        }
     }
 
     @Override
@@ -75,9 +82,13 @@ public class JujutsuScreen extends Screen {
         this.selectedTab = null;
 
         int index = 0;
-        this.tabs.add(new DomainCustomizationTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
+        this.tabs.add(new DomainCustomizationTab(this.minecraft, this, JJKTabType.ABOVE, 0, 0));
         index++;
-        this.tabs.add(new PactsTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
+        this.tabs.add(new PactTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
+        index++;
+        this.tabs.add(new BindingVowTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
+        index++;
+        this.tabs.add(new AbilityTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
 
         this.setSelectedTab(this.tabs.get(0));
 
@@ -161,13 +172,33 @@ public class JujutsuScreen extends Screen {
 
     private void renderTooltips(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
         if (this.selectedTab != null) {
-            this.selectedTab.drawTooltips(pGuiGraphics, pMouseX, pMouseY, pOffsetX, pOffsetY);
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().translate((float) (pOffsetX + 9), (float) (pOffsetY + 18), 400.0F);
+            RenderSystem.enableDepthTest();
+            this.selectedTab.drawTooltips(pGuiGraphics, pMouseX - pOffsetX - 9, pMouseY - pOffsetY - 18, pOffsetX, pOffsetY);
+            RenderSystem.disableDepthTest();
+            pGuiGraphics.pose().popPose();
         }
 
         for (JJKTab JJKTab : this.tabs) {
             if (JJKTab.getPage() == tabPage && JJKTab.isMouseOver(pOffsetX, pOffsetY, pMouseX, pMouseY)) {
                 pGuiGraphics.renderTooltip(this.font, JJKTab.getTitle(), pMouseX, pMouseY);
             }
+        }
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (pButton != 0) {
+            this.isScrolling = false;
+            return false;
+        } else {
+            if (!this.isScrolling) {
+                this.isScrolling = true;
+            } else if (this.selectedTab != null) {
+                this.selectedTab.scroll(pDragX, pDragY);
+            }
+            return true;
         }
     }
 }

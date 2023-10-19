@@ -1,12 +1,11 @@
 package radon.jujutsu_kaisen.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +34,12 @@ public class JJKRenderTypes extends RenderType {
                         .setWriteMaskState(COLOR_WRITE)
                         .createCompositeState(false));
     });
+    private static final RenderType UNLIMITED_VOID = create("unlimited_void", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
+            false, false, RenderType.CompositeState.builder()
+                    .setShaderState(new ShaderStateShard(JJKShaders::getUnlimitedVoidShader))
+                    .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
+                            .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
+                    .createCompositeState(false));
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -46,5 +51,9 @@ public class JJKRenderTypes extends RenderType {
 
     public static @NotNull RenderType eyes(@NotNull ResourceLocation pLocation) {
         return EYES.apply(pLocation);
+    }
+
+    public static RenderType unlimitedVoid() {
+        return UNLIMITED_VOID;
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
@@ -72,7 +72,7 @@ public class ShadowStorage extends Ability {
     }
 
     @Override
-    public DisplayType getDisplayType() {
-        return DisplayType.SCROLL;
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }

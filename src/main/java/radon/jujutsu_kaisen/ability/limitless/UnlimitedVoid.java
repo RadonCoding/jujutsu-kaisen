@@ -25,16 +25,6 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    public List<Block> getFillBlocks() {
-        return List.of(JJKBlocks.UNLIMITED_VOID_FILL.get());
-    }
-
-    @Override
-    public @Nullable ParticleOptions getEnvironmentParticle() {
-        return ParticleTypes.FIREWORK;
-    }
-
-    @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         super.onHitEntity(domain, owner, entity);
 

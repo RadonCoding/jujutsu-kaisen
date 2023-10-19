@@ -59,11 +59,6 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.DOMAIN_EXPANSION, Trait.SIMPLE_DOMAIN);
-    }
-
-    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get();
     }

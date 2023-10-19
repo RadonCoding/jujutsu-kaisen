@@ -21,13 +21,16 @@ public class BloodParticle extends TextureSheetParticle {
         this.xd += pXSpeed * 0.4D;
         this.yd += pYSpeed * 0.4D;
         this.zd += pZSpeed * 0.4D;
-        this.rCol = ParticleColors.BLACK_FLASH.x();
-        this.gCol = ParticleColors.BLACK_FLASH.y();
-        this.bCol = ParticleColors.BLACK_FLASH.z();
-        this.quadSize *= 2.5F;
+        this.rCol = this.randomizeColor(1.0F);
+        this.gCol = this.randomizeColor(0.5F);
+        this.bCol = this.randomizeColor(0.5F);
         this.lifetime = Math.max((int) (6.0D / (Math.random() * 0.8D + 0.6D)), 1);
+        this.quadSize *= 0.75F;
         this.hasPhysics = false;
-        this.alpha = 0.3F;
+    }
+
+    private float randomizeColor(float color) {
+        return color - this.random.nextFloat() * color * 0.5F;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class BloodParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return JJKParticleRenderTypes.TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {

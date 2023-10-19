@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.client.gui.screen;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import radon.jujutsu_kaisen.ability.Ability;
-import radon.jujutsu_kaisen.ability.DisplayType;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -22,7 +22,7 @@ public class AbilityScreen extends RadialScreen {
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities =  JJKAbilities.getAbilities(this.minecraft.player);
-        abilities.removeIf(ability -> ability.getDisplayType() != DisplayType.RADIAL);
+        abilities.removeIf(ability -> ability.getMenuType() != MenuType.RADIAL);
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
