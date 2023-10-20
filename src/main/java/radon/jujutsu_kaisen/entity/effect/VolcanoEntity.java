@@ -32,8 +32,8 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         super(pEntityType, pLevel);
     }
 
-    public VolcanoEntity(LivingEntity pShooter, BlockPos pos, Direction dir) {
-        super(JJKEntities.VOLCANO.get(), pShooter.level(), pShooter);
+    public VolcanoEntity(LivingEntity owner, float power, BlockPos pos, Direction dir) {
+        super(JJKEntities.VOLCANO.get(), owner.level(), owner, power);
 
         Vec3 center = pos.relative(dir).getCenter();
         center = center.subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);
@@ -63,15 +63,13 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                 Vec3 length = look.scale(5.0D);
                 AABB bounds = this.getBoundingBox().inflate(0.0D, length.y(), 0.0D);
 
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (Entity entity : this.level().getEntities(owner, bounds)) {
-                        if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
+                for (Entity entity : this.level().getEntities(owner, bounds)) {
+                    if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
 
-                        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * cap.getAbilityPower(owner))) {
-                            entity.setSecondsOnFire(5);
-                        }
+                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.VOLCANO.get()), DAMAGE * getPower())) {
+                        entity.setSecondsOnFire(5);
                     }
-                });
+                }
             }
         }
 

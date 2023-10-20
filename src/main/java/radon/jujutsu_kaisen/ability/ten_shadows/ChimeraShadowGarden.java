@@ -70,7 +70,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onAbilityTrigger(AbilityTriggerEvent event) {
+        public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             LivingEntity owner = event.getEntity();
 
             if (JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {

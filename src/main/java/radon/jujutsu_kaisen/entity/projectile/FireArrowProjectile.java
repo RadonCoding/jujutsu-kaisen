@@ -38,12 +38,12 @@ public class FireArrowProjectile extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public FireArrowProjectile(LivingEntity pShooter) {
-        super(JJKEntities.FIRE_ARROW.get(), pShooter.level(), pShooter);
+    public FireArrowProjectile(LivingEntity owner, float power) {
+        super(JJKEntities.FIRE_ARROW.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look.scale(OFFSET));
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     @Override
@@ -53,11 +53,9 @@ public class FireArrowProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * getPower());
+            }
         }
     }
 
@@ -82,12 +80,10 @@ public class FireArrowProjectile extends JujutsuProjectile {
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                Vec3 location = result.getLocation();
-                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
-                        location.x(), location.y(), location.z(), EXPLOSIVE_POWER * cap.getAbilityPower(owner), false,
-                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
-            });
+            Vec3 location = result.getLocation();
+            this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
+                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * getPower(), false,
+                    this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
         this.discard();
     }

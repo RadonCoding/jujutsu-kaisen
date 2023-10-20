@@ -5,7 +5,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -42,7 +42,7 @@ public class PiercingWater extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        PiercingWaterEntity piercing = new PiercingWaterEntity(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
+        PiercingWaterEntity piercing = new PiercingWaterEntity(owner, getPower(owner), (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
         owner.level().addFreshEntity(piercing);
     }
 

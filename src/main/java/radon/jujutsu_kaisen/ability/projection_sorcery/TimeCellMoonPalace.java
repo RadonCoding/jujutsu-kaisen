@@ -38,7 +38,7 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
 
             if (center == null) return;
 
-            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, entity, center));
+            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, getPower(owner), entity, center));
         }
     }
 

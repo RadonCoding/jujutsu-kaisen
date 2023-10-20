@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -59,7 +59,7 @@ public class AirPunch extends Ability {
                                 owner.swing(InteractionHand.MAIN_HAND);
 
                                 owner.level().explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),
-                                        null, owner.getX(), owner.getY(), owner.getZ(), cap.getAbilityPower(owner), false,
+                                        null, owner.getX(), owner.getY(), owner.getZ(), getPower(owner), false,
                                         owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
                                 return true;
                             }

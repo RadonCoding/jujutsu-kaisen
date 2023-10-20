@@ -4,7 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -28,7 +28,7 @@ public class Lightning extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LightningEntity lightning = new LightningEntity(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
+        LightningEntity lightning = new LightningEntity(owner, getPower(owner), (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
         owner.level().addFreshEntity(lightning);
     }
 

@@ -33,29 +33,23 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public HollowPurpleProjectile(LivingEntity pShooter) {
-        this(JJKEntities.HOLLOW_PURPLE.get(), pShooter);
-    }
+    public HollowPurpleProjectile(LivingEntity owner, float power) {
+        super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
-    public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity pShooter) {
-        super(pEntityType, pShooter.level(), pShooter);
-
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     private void hurtEntities() {
         AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                    if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                            DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
+                        DAMAGE * getPower());
+            }
         }
     }
 

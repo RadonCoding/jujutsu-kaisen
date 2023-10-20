@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
@@ -32,7 +32,7 @@ public class Scissors extends Ability {
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
-                    ScissorEntity scissor = new ScissorEntity(owner, target);
+                    ScissorEntity scissor = new ScissorEntity(owner, getPower(owner), target);
                     owner.level().addFreshEntity(scissor);
                     cap.addSummon(scissor);
                 }

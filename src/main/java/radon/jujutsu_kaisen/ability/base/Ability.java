@@ -1,5 +1,6 @@
-package radon.jujutsu_kaisen.ability;
+package radon.jujutsu_kaisen.ability.base;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -7,7 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -48,6 +51,11 @@ public abstract class Ability {
         RED,
         PURPLE,
         LIGHTNING
+    }
+
+    public static float getPower(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getAbilityPower(owner);
     }
 
     // Used for skill tree
@@ -103,6 +111,7 @@ public abstract class Ability {
     }
 
     public int getCooldown() { return 0; }
+
     public boolean isTechnique() {
         return false;
     }
@@ -258,10 +267,8 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             if (duration > 0) {
-                duration = (int) (duration * cap.getAbilityPower(owner));
+                duration = (int) (duration * getPower(owner));
             }
             return duration;
         }

@@ -62,16 +62,17 @@ public class WaterTorrentEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public WaterTorrentEntity(LivingEntity pShooter, float yaw, float pitch) {
-        this(JJKEntities.WATER_TORRENT.get(), pShooter.level());
+    public WaterTorrentEntity(LivingEntity owner, float power, float yaw, float pitch) {
+        this(JJKEntities.WATER_TORRENT.get(), owner.level());
 
-        this.setOwner(pShooter);
+        this.setOwner(owner);
+        this.setPower(power);
 
         this.setYaw(yaw);
         this.setPitch(pitch);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
         this.calculateEndPos();
@@ -120,13 +121,11 @@ public class WaterTorrentEntity extends JujutsuProjectile {
             List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
                     new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            for (Entity entity : entities) {
+                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * getPower());
+            }
 
             if (!this.level().isClientSide) {
                 if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

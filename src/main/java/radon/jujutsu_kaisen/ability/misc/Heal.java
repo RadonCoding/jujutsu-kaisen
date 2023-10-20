@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -24,8 +24,7 @@ public class Heal extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        owner.heal(ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * cap.getAbilityPower(owner));
+        owner.heal(ConfigHolder.SERVER.curseHealingAmount.get().floatValue() * getPower(owner));
     }
 
     @Override

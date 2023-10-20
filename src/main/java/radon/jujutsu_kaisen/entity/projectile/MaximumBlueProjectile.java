@@ -23,14 +23,14 @@ public class MaximumBlueProjectile extends BlueProjectile {
         super(pEntityType, level);
     }
 
-    public MaximumBlueProjectile(LivingEntity pShooter, boolean motion) {
-        super(JJKEntities.MAXIMUM_BLUE.get(), pShooter.level(), pShooter);
+    public MaximumBlueProjectile(LivingEntity owner, float power, boolean motion) {
+        super(JJKEntities.MAXIMUM_BLUE.get(), owner.level(), owner, power);
 
         this.entityData.set(DATA_MOTION, motion);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     @Override

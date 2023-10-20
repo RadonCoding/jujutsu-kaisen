@@ -13,7 +13,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -62,7 +62,7 @@ public class Spiderweb extends Ability {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 center = hit.getBlockPos().getCenter();
 
-                float power = EXPLOSIVE_POWER * cap.getAbilityPower(owner);
+                float power = EXPLOSIVE_POWER * getPower(owner);
 
                 AABB bounds = AABB.ofSize(center, power, 1.0D, power);
 

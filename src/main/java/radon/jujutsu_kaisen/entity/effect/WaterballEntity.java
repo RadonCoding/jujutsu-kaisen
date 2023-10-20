@@ -42,12 +42,12 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super(pEntityType, pLevel);
     }
 
-    public WaterballEntity(LivingEntity pShooter) {
-        super(JJKEntities.WATERBALL.get(), pShooter.level(), pShooter);
+    public WaterballEntity(LivingEntity owner, float power) {
+        super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(HelperMethods.getLookAngle(pShooter));
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(HelperMethods.getLookAngle(owner));
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     private static boolean isInside(LivingEntity owner, BlockPos pos) {
@@ -68,10 +68,9 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         BlockPos center = owner.blockPosition();
 
         for (Entity entity : owner.level().getEntities(owner, getBounds(owner))) {
-            if ((!(entity instanceof LivingEntity living) || !owner.canAttack(living)) && !isInside(owner, entity.blockPosition()))
-                continue;
+            if ((!(entity instanceof LivingEntity living) || !owner.canAttack(living)) && !isInside(owner, entity.blockPosition())) continue;
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISASTER_TIDES.get()), DAMAGE * cap.getAbilityPower(owner))) {
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISASTER_TIDES.get()), DAMAGE * getPower())) {
                 entity.setDeltaMovement(entity.position().subtract(center.getCenter()));
             }
         }

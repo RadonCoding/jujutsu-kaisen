@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -51,14 +52,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.set(DATA_RADIUS, radius);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getAbilityPower(owner));
-                this.setHealth(this.getMaxHealth());
-            }
-        });
+        AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
+
+        if (attribute != null) {
+            attribute.setBaseValue(STRENGTH * cap.getAbilityPower(owner));
+            this.setHealth(this.getMaxHealth());
+        }
     }
 
     @Override

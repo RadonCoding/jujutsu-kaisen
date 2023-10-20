@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -49,14 +50,14 @@ public class SimpleDomainEntity extends Mob {
 
         this.setPos(owner.position());
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getAbilityPower(owner));
-                this.setHealth(this.getMaxHealth());
-            }
-        });
+        AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
+
+        if (attribute != null) {
+            attribute.setBaseValue(STRENGTH * cap.getAbilityPower(owner));
+            this.setHealth(this.getMaxHealth());
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.TeleportRandom;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
 import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;

@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -20,35 +21,35 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 
-public class ToadTongueProjectile extends JujutsuProjectile {
+public class ToadTongueProjectile extends AbstractHurtingProjectile {
     public static final float SPEED = 2.0F;
 
     private int range;
     private UUID target;
     private boolean grabbed;
 
-    public ToadTongueProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    public ToadTongueProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
     }
 
-    public ToadTongueProjectile(LivingEntity pShooter, int range, UUID target) {
-        this(JJKEntities.TOAD_TONGUE.get(), pShooter.level());
+    public ToadTongueProjectile(LivingEntity owner, int range, UUID target) {
+        this(JJKEntities.TOAD_TONGUE.get(), owner.level());
 
-        this.setOwner(pShooter);
+        this.setOwner(owner);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, pShooter.getZ());
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, owner.getZ());
         this.setPos(spawn);
 
-        this.setDeltaMovement(HelperMethods.getLookAngle(pShooter).scale(SPEED * (((ToadEntity) pShooter).hasWings() ? 5.0D : 1.0D)));
+        this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
 
         this.target = target;
         this.range = range;
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("range", this.range);
@@ -56,7 +57,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
         this.range = pCompound.getInt("range");

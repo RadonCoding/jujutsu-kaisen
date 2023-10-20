@@ -77,16 +77,17 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         this.noCulling = true;
     }
 
-    public MiniUzumakiProjectile(LivingEntity pShooter) {
-        this(JJKEntities.MINI_UZUMAKI.get(), pShooter.level());
+    public MiniUzumakiProjectile(LivingEntity owner, float power) {
+        this(JJKEntities.MINI_UZUMAKI.get(), owner.level());
 
-        this.setOwner(pShooter);
+        this.setOwner(owner);
+        this.setPower(power);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
 
-        pShooter.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
             Map<EntityType<?>, Integer> curses = cap.getCurses(registry);

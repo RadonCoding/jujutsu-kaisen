@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.WaterballEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -20,7 +20,7 @@ public class DisasterTides extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        WaterballEntity waterball = new WaterballEntity(owner);
+        WaterballEntity waterball = new WaterballEntity(owner, getPower(owner));
         owner.level().addFreshEntity(waterball);
     }
 

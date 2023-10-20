@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.ai.rika;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -21,7 +21,7 @@ public class ShootPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        PureLoveBeam beam = new PureLoveBeam(owner, (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
+        PureLoveBeam beam = new PureLoveBeam(owner, getPower(owner), (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
         owner.level().addFreshEntity(beam);
     }
 

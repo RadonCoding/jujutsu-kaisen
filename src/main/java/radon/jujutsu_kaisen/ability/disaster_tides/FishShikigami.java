@@ -5,7 +5,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
@@ -46,9 +46,9 @@ public class FishShikigami extends Ability {
         if (target == null) return;
 
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[] {
-                new EelShikigamiProjectile(owner, target, 0.0F, 0.0F),
-                new SharkShikigamiProjectile(owner, target, 0.0F, 0.0F),
-                new PiranhaShikigamiProjectile(owner, target, 0.0F, 0.0F)
+                new EelShikigamiProjectile(owner, getPower(owner), target, 0.0F, 0.0F),
+                new SharkShikigamiProjectile(owner, getPower(owner), target, 0.0F, 0.0F),
+                new PiranhaShikigamiProjectile(owner,getPower(owner), target, 0.0F, 0.0F)
         };
         owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
     }

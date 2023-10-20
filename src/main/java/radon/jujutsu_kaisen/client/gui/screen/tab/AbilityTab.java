@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -9,12 +8,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityWidget;
 

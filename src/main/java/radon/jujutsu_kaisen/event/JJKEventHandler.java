@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
@@ -338,7 +338,7 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onAbilityTrigger(AbilityTriggerEvent event) {
+        public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             if (event.getEntity().level().isClientSide) return;
 
             CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());

@@ -8,7 +8,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -36,7 +36,7 @@ public class MaximumMeteor extends Ability {
         if (this.canSpawn(owner)) {
             owner.swing(InteractionHand.MAIN_HAND);
 
-            MeteorEntity meteor = new MeteorEntity(owner);
+            MeteorEntity meteor = new MeteorEntity(owner, getPower(owner));
             owner.level().addFreshEntity(meteor);
         }
     }

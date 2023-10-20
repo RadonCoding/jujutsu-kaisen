@@ -12,6 +12,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -34,14 +35,14 @@ public class LavaRockProjectile extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public LavaRockProjectile(LivingEntity pShooter, LivingEntity target) {
-        super(JJKEntities.LAVA_ROCK.get(), pShooter.level(), pShooter);
+    public LavaRockProjectile(LivingEntity owner, float power, LivingEntity target) {
+        super(JJKEntities.LAVA_ROCK.get(), owner.level(), owner, power);
 
         this.setTarget(target);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(HelperMethods.getLookAngle(pShooter));
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(HelperMethods.getLookAngle(owner));
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -90,15 +91,15 @@ public class LavaRockProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (domain == null) return;
+            DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
 
-                if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+            if (domain == null) return;
+
+            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * getPower());
+            }
         }
         this.discard();
     }

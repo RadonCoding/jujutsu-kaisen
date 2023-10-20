@@ -12,7 +12,7 @@ public class PiranhaShikigamiProjectile extends FishShikigamiProjectile {
         super(pEntityType, pLevel);
     }
 
-    public PiranhaShikigamiProjectile(LivingEntity pShooter, LivingEntity target, float xOffset, float yOffset) {
-        super(JJKEntities.PIRANHA_SHIKIGAMI.get(), pShooter, target, xOffset, yOffset);
+    public PiranhaShikigamiProjectile(LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
+        super(JJKEntities.PIRANHA_SHIKIGAMI.get(), owner, power, target, xOffset, yOffset);
     }
 }

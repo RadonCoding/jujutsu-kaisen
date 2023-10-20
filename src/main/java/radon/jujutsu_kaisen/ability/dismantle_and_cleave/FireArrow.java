@@ -4,7 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -23,7 +23,7 @@ public class FireArrow extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        FireArrowProjectile arrow = new FireArrowProjectile(owner);
+        FireArrowProjectile arrow = new FireArrowProjectile(owner, getPower(owner));
         owner.level().addFreshEntity(arrow);
     }
 

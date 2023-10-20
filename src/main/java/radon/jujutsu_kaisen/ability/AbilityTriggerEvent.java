@@ -2,11 +2,12 @@ package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import radon.jujutsu_kaisen.ability.base.Ability;
 
 public class AbilityTriggerEvent extends LivingEvent {
     private final Ability ability;
 
-    public AbilityTriggerEvent(LivingEntity entity, Ability ability) {
+    protected AbilityTriggerEvent(LivingEntity entity, Ability ability) {
         super(entity);
 
         this.ability = ability;
@@ -14,5 +15,17 @@ public class AbilityTriggerEvent extends LivingEvent {
 
     public Ability getAbility() {
         return this.ability;
+    }
+
+    public static class Pre extends AbilityTriggerEvent {
+        public Pre(LivingEntity entity, Ability ability) {
+            super(entity, ability);
+        }
+    }
+
+    public static class Post extends AbilityTriggerEvent {
+        public Post(LivingEntity entity, Ability ability) {
+            super(entity, ability);
+        }
     }
 }

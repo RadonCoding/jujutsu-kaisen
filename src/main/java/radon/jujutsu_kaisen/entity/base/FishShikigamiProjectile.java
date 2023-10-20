@@ -56,8 +56,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         super(pEntityType, pLevel);
     }
 
-    public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity owner, LivingEntity target, float xOffset, float yOffset) {
-        super(pEntityType, owner.level(), owner);
+    public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
+        super(pEntityType, owner.level(), owner, power);
 
         this.setTarget(target);
 
@@ -161,17 +161,15 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         AABB bounds = this.getBoundingBox().inflate(1.0D);
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                    if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * cap.getAbilityPower(owner))) {
-                        if (this.deathTime == 0) {
-                            this.deathTime = BITE_DURATION;
-                        }
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * getPower())) {
+                    if (this.deathTime == 0) {
+                        this.deathTime = BITE_DURATION;
                     }
                 }
-            });
+            }
         }
     }
 

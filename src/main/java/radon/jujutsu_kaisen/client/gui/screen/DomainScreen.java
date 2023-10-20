@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.JJKKeys;

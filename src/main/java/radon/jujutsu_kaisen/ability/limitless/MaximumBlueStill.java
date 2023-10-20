@@ -4,7 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -26,7 +26,7 @@ public class MaximumBlueStill extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, false);
+        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, getPower(owner), false);
         owner.level().addFreshEntity(blue);
     }
 
