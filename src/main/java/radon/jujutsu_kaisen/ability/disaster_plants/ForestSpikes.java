@@ -67,7 +67,7 @@ public class ForestSpikes extends Ability {
         BlockHitResult hit = this.getBlockHit(owner);
 
         if (hit != null) {
-            owner.level().playSound(null, hit.getBlockPos(), JJKSounds.FOREST_SPIKES.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            owner.level().playSound(null, hit.getBlockPos(), JJKSounds.FOREST_SPIKES.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Direction dir = hit.getDirection();
             BlockPos pos = hit.getBlockPos();

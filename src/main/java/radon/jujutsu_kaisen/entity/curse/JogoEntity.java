@@ -59,6 +59,11 @@ public class JogoEntity extends DisasterCurse {
     }
 
     @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get();
     }

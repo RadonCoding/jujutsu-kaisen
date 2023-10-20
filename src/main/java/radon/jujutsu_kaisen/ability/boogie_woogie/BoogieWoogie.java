@@ -42,8 +42,8 @@ public class BoogieWoogie extends Ability {
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.NEUTRAL, 2.0F, 1.0F);
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLAP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 pos = target.position();
             target.teleportTo(owner.getX(), owner.getY(), owner.getZ());

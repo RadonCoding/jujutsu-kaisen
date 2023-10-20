@@ -9,8 +9,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 
 public class BlueFistsVisual {
     private static Vec3 rotateRoll(Vec3 pos, float roll) {
@@ -52,20 +52,20 @@ public class BlueFistsVisual {
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
 
         if (renderer instanceof LivingEntityRenderer<?, ?> living && living.getModel() instanceof HumanoidModel<?> humanoid) {
-            float scalar = 0.5F;
+            float scalar = 0.2F;
 
             Vec3 right = transform3rdPersonRight(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.5D, 0.0D),
                     new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            entity.level().addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
+            entity.level().addParticle(new GenericParticle.GenericParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 3),
                     right.x(), right.y(), right.z(), 0.0D, 0.1D, 0.0D);
 
             Vec3 left = transform3rdPersonLeft(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.5D, 0.0D),
                     new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            entity.level().addParticle(new VaporParticle.VaporParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 0.5F, true, 3),
+            entity.level().addParticle(new GenericParticle.GenericParticleOptions(ParticleColors.LIGHT_BLUE_COLOR, scalar, 3),
                     left.x(), left.y(), left.z(), 0.0D, 0.1D, 0.0D);
         }
     }

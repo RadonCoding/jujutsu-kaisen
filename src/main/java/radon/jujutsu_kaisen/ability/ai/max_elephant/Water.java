@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
+import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -89,8 +89,8 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
-        ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
-                0.5F, false, HelperMethods.RANDOM.nextInt(20) + 1);
+        ParticleOptions particle = new GenericParticle.GenericParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
+                HelperMethods.RANDOM.nextInt(20) + 1);
 
         for (int i = 0; i < 32; i++) {
             Vec3 dir = HelperMethods.getLookAngle(owner).scale(3.0D);

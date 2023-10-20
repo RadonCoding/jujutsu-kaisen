@@ -160,7 +160,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public AbilityDisplayInfo getDisplay() {
+    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
         Vec2 coordinates = this.getDisplayCoordinates();
         return new AbilityDisplayInfo("domain_expansion", coordinates.x, coordinates.y);
     }

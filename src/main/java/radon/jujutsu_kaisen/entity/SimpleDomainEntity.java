@@ -18,8 +18,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -87,8 +87,7 @@ public class SimpleDomainEntity extends Mob {
 
             float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
 
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
-                    1.0F, true, 1);
+            ParticleOptions particle = new GenericParticle.GenericParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F, 1);
 
             for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
                 double x = this.getX() + RADIUS * Math.cos(phi);

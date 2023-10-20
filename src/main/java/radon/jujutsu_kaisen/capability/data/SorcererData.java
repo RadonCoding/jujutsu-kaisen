@@ -513,6 +513,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void unlockAll(List<Ability> abilities) {
+        this.unlocked.addAll(abilities);
+    }
+
+    @Override
     public void createPact(UUID recipient, Pact pact) {
         if (!this.acceptedPacts.containsKey(recipient)) {
             this.acceptedPacts.put(recipient, new HashSet<>());

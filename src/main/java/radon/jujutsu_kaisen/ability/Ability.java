@@ -75,7 +75,7 @@ public abstract class Ability {
     public Vec2 getDisplayCoordinates() {
         return Vec2.ZERO;
     }
-    public AbilityDisplayInfo getDisplay() {
+    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
         Vec2 coordinates = this.getDisplayCoordinates();
         return new AbilityDisplayInfo(JJKAbilities.getKey(this).getPath(), coordinates.x, coordinates.y);
     }

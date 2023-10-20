@@ -93,7 +93,7 @@ public class Die extends Ability {
             ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
         }
 
-        owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.NEUTRAL, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
             for (Entity entity : getEntities(owner)) {

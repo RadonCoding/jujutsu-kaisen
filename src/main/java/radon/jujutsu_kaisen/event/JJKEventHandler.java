@@ -278,7 +278,7 @@ public class JJKEventHandler {
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.isAdaptedTo(event.getSource())) {
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
             }
             event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(event.getSource())));
         }

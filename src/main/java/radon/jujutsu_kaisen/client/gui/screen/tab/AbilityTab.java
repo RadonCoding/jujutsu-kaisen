@@ -30,7 +30,7 @@ public class AbilityTab extends JJKTab {
 
     private final Map<Ability, AbilityWidget> abilities = new HashMap<>();
 
-    private AbilityWidget root;
+    private final List<AbilityWidget> roots = new ArrayList<>();
     private float fade;
 
     public AbilityTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
@@ -43,7 +43,6 @@ public class AbilityTab extends JJKTab {
 
             if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == null) {
                 this.addAbilityAndChildren(ability);
-                break;
             }
         }
     }
@@ -59,8 +58,6 @@ public class AbilityTab extends JJKTab {
             }
         }
     }
-
-
 
     @Override
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
@@ -82,9 +79,11 @@ public class AbilityTab extends JJKTab {
 
     @Override
     protected void drawCustom(GuiGraphics graphics, int x, int y) {
-        this.root.drawConnectivity(graphics, x, y, true);
-        this.root.drawConnectivity(graphics, x, y, false);
-        this.root.draw(graphics, x, y);
+        for (AbilityWidget root : this.roots) {
+            root.drawConnectivity(graphics, x, y, true);
+            root.drawConnectivity(graphics, x, y, false);
+            root.draw(graphics, x, y);
+        }
     }
 
     @Nullable
@@ -124,8 +123,8 @@ public class AbilityTab extends JJKTab {
     public void addAbility(Ability ability) {
         AbilityWidget widget = new AbilityWidget(this, this.minecraft, ability);
 
-        if (this.abilities.size() == 0) {
-            this.root = widget;
+        if (ability.getParent(this.minecraft.player) == null) {
+            this.roots.add(widget);
         }
 
         this.abilities.put(ability, widget);

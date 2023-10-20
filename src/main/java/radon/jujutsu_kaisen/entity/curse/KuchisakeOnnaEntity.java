@@ -164,7 +164,10 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         return null;
     }
 
-
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get());
+    }
 
     @Override
     public @Nullable Ability getDomain() {

@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -29,6 +30,8 @@ import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
+import java.util.List;
+
 public class MegumiFushiguroEntity extends SorcererEntity {
     public MegumiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -36,7 +39,7 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
+        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(4, new SorcererGoal(this));
@@ -73,6 +76,11 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.TEN_SHADOWS;
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.CHIMERA_SHADOW_GARDEN.get());
     }
 
     @Override
