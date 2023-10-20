@@ -3,7 +3,8 @@ package radon.jujutsu_kaisen.ability.disaster_flames;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.projectile.EmberInsectProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -21,18 +22,18 @@ public class EmberInsects extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 12; i++) {
-                int delay = i * 2;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                cap.delayTickEvent(() -> {
-                    EmberInsectProjectile insect = new EmberInsectProjectile(owner,
-                            HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
-                            HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));
-                    owner.level().addFreshEntity(insect);
-                }, delay);
-            }
-        });
+        for (int i = 0; i < 12; i++) {
+            int delay = i * 2;
+
+            cap.delayTickEvent(() -> {
+                EmberInsectProjectile insect = new EmberInsectProjectile(owner, getPower(owner),
+                        HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
+                        HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));
+                owner.level().addFreshEntity(insect);
+            }, delay);
+        }
     }
 
     @Override

@@ -22,8 +22,8 @@ public class ForestSpikeEntity extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public ForestSpikeEntity(LivingEntity pShooter) {
-        super(JJKEntities.FOREST_SPIKE.get(), pShooter.level(), pShooter);
+    public ForestSpikeEntity(LivingEntity owner, float power) {
+        super(JJKEntities.FOREST_SPIKE.get(), owner.level(), owner, power);
     }
 
     @Override
@@ -40,12 +40,10 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
             if (this.level().isClientSide) return;
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
-                    if (entity == this || entity == owner) continue;
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
+                if (entity == this || entity == owner) continue;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * getPower());
+            }
         }
         super.tick();
     }

@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;

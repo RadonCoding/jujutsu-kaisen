@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 
 public class SkyStrike extends Ability {
@@ -26,7 +26,7 @@ public class SkyStrike extends Ability {
         LivingEntity target = ((Mob) owner).getTarget();
 
         if (target != null) {
-            SkyStrikeEntity strike = new SkyStrikeEntity(owner, target.position());
+            SkyStrikeEntity strike = new SkyStrikeEntity(owner, getPower(owner), target.position());
             owner.level().addFreshEntity(strike);
         }
     }

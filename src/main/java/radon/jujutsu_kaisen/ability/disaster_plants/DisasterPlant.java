@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -40,7 +40,7 @@ public class DisasterPlant extends Ability {
 
         if (target == null) return;
 
-        DisasterPlantEntity plant = new DisasterPlantEntity(owner, target);
+        DisasterPlantEntity plant = new DisasterPlantEntity(owner, getPower(owner), target);
         owner.level().addFreshEntity(plant);
     }
 

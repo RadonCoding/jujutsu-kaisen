@@ -47,10 +47,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         super(pEntityType, pLevel);
     }
 
-    public MaximumUzumakiProjectile(LivingEntity owner) {
-        this(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level());
-
-        this.setOwner(owner);
+    public MaximumUzumakiProjectile(LivingEntity owner, float power) {
+        super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner, power);
 
         Vec3 pos = owner.position()
                 .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))

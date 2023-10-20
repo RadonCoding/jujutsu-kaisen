@@ -17,10 +17,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -95,24 +97,24 @@ public class Die extends Ability {
 
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
-            for (Entity entity : getEntities(owner)) {
-                if (!(entity instanceof LivingEntity living)) continue;
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * ownerCap.getAbilityPower(owner));
+        for (Entity entity : getEntities(owner)) {
+            if (!(entity instanceof LivingEntity living)) continue;
 
-                living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                    if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
-                        DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
-                        entity.hurt(source, calculateDamage(source, owner, living));
-                    }
-                });
+            living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * getPower(owner));
 
-                if (living instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
+            living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
+                if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
+                    DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
+                    entity.hurt(source, calculateDamage(source, owner, living));
                 }
+            });
+
+            if (living instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
             }
-        });
+        }
     }
 
     @Override

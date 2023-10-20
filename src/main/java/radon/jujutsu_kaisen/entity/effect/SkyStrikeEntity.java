@@ -41,10 +41,11 @@ public class SkyStrikeEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public SkyStrikeEntity(LivingEntity pShooter, Vec3 pos) {
-        this(JJKEntities.SKY_STRIKE.get(), pShooter.level());
+    public SkyStrikeEntity(LivingEntity owner, float power, Vec3 pos) {
+        this(JJKEntities.SKY_STRIKE.get(), owner.level());
 
-        this.setOwner(pShooter);
+        this.setOwner(owner);
+        this.setPower(power);
 
         this.setPos(pos.x() + 0.5F, pos.y() + 1.0625F, pos.z() + 0.5F);
     }
@@ -126,15 +127,13 @@ public class SkyStrikeEntity extends JujutsuProjectile {
         double radiusSq = radius * radius;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : entities) {
-                    if (entity == owner) continue;
+            for (Entity entity : entities) {
+                if (entity == owner) continue;
 
-                    if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SKY_STRIKE.get()), DAMAGE * cap.getAbilityPower(owner));
-                    }
+                if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SKY_STRIKE.get()), DAMAGE * getPower());
                 }
-            });
+            }
         }
     }
 

@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.disaster_flames;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.projectile.FireballProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -20,7 +20,7 @@ public class Fireball extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        FireballProjectile fireball = new FireballProjectile(owner);
+        FireballProjectile fireball = new FireballProjectile(owner, getPower(owner));
         owner.level().addFreshEntity(fireball);
     }
 

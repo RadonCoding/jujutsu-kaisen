@@ -12,7 +12,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -51,25 +51,23 @@ public class Explode extends Ability {
 
         Vec3 src = owner.getEyePosition();
 
-        for(int i = 1; i < RANGE + 7; i++) {
+        for (int i = 1; i < RANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
             ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
         }
 
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Entity entity : getEntities(owner)) {
-                if (!(entity instanceof LivingEntity)) continue;
+        for (Entity entity : getEntities(owner)) {
+            if (!(entity instanceof LivingEntity)) continue;
 
-                owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
-                        entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * cap.getAbilityPower(owner), false, Level.ExplosionInteraction.NONE);
+            owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
+                    entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * getPower(owner), false, Level.ExplosionInteraction.NONE);
 
-                if (entity instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
-                }
+            if (entity instanceof Player player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
             }
-        });
+        }
     }
 
     @Override

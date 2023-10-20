@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -12,16 +11,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RedProjectile extends JujutsuProjectile {
@@ -36,30 +29,28 @@ public class RedProjectile extends JujutsuProjectile {
         super(pEntityType, level);
     }
 
-    public RedProjectile(LivingEntity pShooter) {
-        super(JJKEntities.RED.get(), pShooter.level(), pShooter);
+    public RedProjectile(LivingEntity owner, float power) {
+        super(JJKEntities.RED.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     private void hurtEntities() {
         AABB bounds = this.getBoundingBox().inflate(1.0D);
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                    float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
+                float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * cap.getAbilityPower(owner))) {
-                        entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
-                        entity.hurtMarked = true;
-                    }
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * getPower())) {
+                    entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+                    entity.hurtMarked = true;
                 }
-            });
+            }
         }
     }
 
@@ -70,13 +61,11 @@ public class RedProjectile extends JujutsuProjectile {
         if (this.level().isClientSide) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                float radius = EXPLOSIVE_POWER * cap.getAbilityPower(owner);
+            float radius = EXPLOSIVE_POWER * getPower();
 
-                Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
-                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
-            });
+            Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+            this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
+                    this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
         this.discard();
     }
@@ -103,7 +92,7 @@ public class RedProjectile extends JujutsuProjectile {
                 if (!this.level().isClientSide) {
                     this.hurtEntities();
 
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    /*ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                         if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
@@ -113,13 +102,13 @@ public class RedProjectile extends JujutsuProjectile {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                             }
 
-                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
                             this.level().addFreshEntity(explosion);
 
                             blue.discard();
                             this.discard();
                         }
-                    }
+                    }*/
                 }
 
                 if (this.getTime() == DELAY) {

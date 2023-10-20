@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -30,17 +30,17 @@ public class RCT extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * cap.getAbilityPower(owner));
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) {
-                int burnout = cap.getBurnout();
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner));
 
-                if (burnout > 0) {
-                    cap.setBurnout(Math.max(0, burnout - 10));
-                }
+        if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) {
+            int burnout = cap.getBurnout();
+
+            if (burnout > 0) {
+                cap.setBurnout(Math.max(0, burnout - 10));
             }
-        });
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,12 +24,13 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class MeteorEntity extends Entity {
+public class MeteorEntity extends JujutsuProjectile {
     public static final int SIZE = 10;
     public static final int HEIGHT = 30;
 
@@ -54,14 +56,12 @@ public class MeteorEntity extends Entity {
     private double lerpYRot;
     private double lerpXRot;
 
-    public MeteorEntity(EntityType<?> pEntityType, Level pLevel) {
+    public MeteorEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public MeteorEntity(LivingEntity owner) {
-        this(JJKEntities.METEOR.get(), owner.level());
-
-        this.setOwner(owner);
+    public MeteorEntity(LivingEntity owner, float power) {
+        super(JJKEntities.METEOR.get(), owner.level(), owner, power);
 
         this.setPos(owner.position().add(0.0D, HEIGHT, 0.0D));
         owner.startRiding(this);
@@ -263,38 +263,36 @@ public class MeteorEntity extends Entity {
 
             if (!this.level().isClientSide) {
                 if (owner != null) {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                    if (this.explosionTime == 0) {
+                        for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
+                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * getPower());
+                        }
+                    }
+
+                    if (this.onGround()) {
                         if (this.explosionTime == 0) {
-                            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
-                                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * cap.getAbilityPower(owner));
-                            }
+                            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * getPower()),
+                                    EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
+                            this.explosionTime++;
                         }
+                    }
 
-                        if (this.onGround()) {
-                            if (this.explosionTime == 0) {
-                                ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * cap.getAbilityPower(owner)),
-                                        EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
-                                this.explosionTime++;
+                    if (this.explosionTime > 0) {
+                        if (this.explosionTime >= MAXIMUM_TIME) {
+                            this.discard();
+                        } else {
+                            if (this.explosionTime < MAXIMUM_TIME / 4) {
+                                BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
+                                    BlockState state = this.level().getBlockState(pos);
+
+                                    if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
+                                        this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                                    }
+                                });
                             }
+                            this.explosionTime++;
                         }
-
-                        if (this.explosionTime > 0) {
-                            if (this.explosionTime >= MAXIMUM_TIME) {
-                                this.discard();
-                            } else {
-                                if (this.explosionTime < MAXIMUM_TIME / 4) {
-                                    BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
-                                        BlockState state = this.level().getBlockState(pos);
-
-                                        if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                            this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                                        }
-                                    });
-                                }
-                                this.explosionTime++;
-                            }
-                        }
-                    });
+                    }
                 }
             }
         }

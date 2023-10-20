@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.capability.data.sorcerer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public enum CursedTechnique {

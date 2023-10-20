@@ -9,10 +9,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -50,15 +49,13 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 level.sendParticles(ParticleTypes.FLAME, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
             }
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
+            Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
 
-                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getAbilityPower(owner))) {
-                        entity.setSecondsOnFire(5);
-                    }
+            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
+                if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * getPower(owner))) {
+                    entity.setSecondsOnFire(5);
                 }
-            });
+            }
         }
     }
 

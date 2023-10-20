@@ -21,14 +21,25 @@ import org.jetbrains.annotations.NotNull;
 public class JujutsuProjectile extends Projectile {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
 
+    private float power;
+
     public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel, Entity pShooter) {
+    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel, Entity pShooter, float power) {
         super(pEntityType, pLevel);
 
         this.setOwner(pShooter);
+        this.setPower(power);
+    }
+
+    protected void setPower(float power) {
+        this.power = power;
+    }
+
+    protected float getPower() {
+        return this.power;
     }
 
     @Override

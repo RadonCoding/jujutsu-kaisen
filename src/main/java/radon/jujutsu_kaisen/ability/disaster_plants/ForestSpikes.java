@@ -14,7 +14,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.ForestSpikeEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -73,7 +73,7 @@ public class ForestSpikes extends Ability {
             BlockPos pos = hit.getBlockPos();
 
             for (int i = 0; i < 16; i++) {
-                ForestSpikeEntity spike = new ForestSpikeEntity(owner);
+                ForestSpikeEntity spike = new ForestSpikeEntity(owner, getPower(owner));
 
                 Vec3 center = pos.relative(dir).getCenter()
                         .subtract(dir.getStepX() * 0.5D, dir.getStepY() * 0.5D, dir.getStepZ() * 0.5D);

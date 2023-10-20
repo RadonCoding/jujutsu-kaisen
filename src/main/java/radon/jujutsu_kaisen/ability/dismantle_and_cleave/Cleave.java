@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -55,8 +55,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     private static float getMaxDamage(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return MAX_DAMAGE * cap.getAbilityPower(owner);
+        return MAX_DAMAGE * getPower(owner);
     }
 
     private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {

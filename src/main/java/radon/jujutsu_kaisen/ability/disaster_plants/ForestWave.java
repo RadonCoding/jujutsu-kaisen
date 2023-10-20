@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
@@ -33,7 +33,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         int speed = 3;
 
         for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner);
+            ForestWaveEntity forest = new ForestWaveEntity(owner, getPower(owner));
             Vec3 look = HelperMethods.getLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth()))

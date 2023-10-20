@@ -41,12 +41,12 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public DismantleProjectile(LivingEntity pShooter, boolean vertical) {
-        super(JJKEntities.DISMANTLE.get(), pShooter.level(), pShooter);
+    public DismantleProjectile(LivingEntity owner, float power, boolean vertical) {
+        super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(HelperMethods.getLookAngle(pShooter));
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(HelperMethods.getLookAngle(owner));
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
 
         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
 
@@ -75,13 +75,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public int getSize() {
-        AtomicInteger result = new AtomicInteger();
-
-        if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    result.set(Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner))));
-        }
-        return result.get();
+        return Mth.floor(LINE_LENGTH * getPower());
     }
 
     @Override
@@ -93,7 +87,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * cap.getAbilityPower(owner));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * getPower());
                 }
             });
         }
@@ -116,7 +110,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * cap.getAbilityPower(owner));
+                int size = Mth.floor(LINE_LENGTH * getPower());
                 BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
                 BlockPos end = center.relative(direction, Math.round(SPEED)).relative(perpendicular, size / 2);
 

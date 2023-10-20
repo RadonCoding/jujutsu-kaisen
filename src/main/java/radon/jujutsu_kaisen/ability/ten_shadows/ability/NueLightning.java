@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -95,9 +95,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     public void perform(LivingEntity owner, @Nullable LivingEntity target) {
         if (target == null || owner.level().isClientSide) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * cap.getAbilityPower(owner))) {
+        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * getPower(owner))) {
             target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),

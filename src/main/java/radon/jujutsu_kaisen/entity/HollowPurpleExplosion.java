@@ -26,16 +26,11 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         super(pEntityType, pLevel);
     }
 
-    public HollowPurpleExplosion(Entity pShooter, Vec3 pos) {
-        super(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), pShooter.level(), pShooter);
+    public HollowPurpleExplosion(LivingEntity owner, float power, Vec3 pos) {
+        super(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), owner.level(), owner, power);
 
-        this.setOwner(pShooter);
-
-        if (this.getOwner() instanceof LivingEntity owner) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            float radius = RADIUS * cap.getAbilityPower(owner);
-            this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
-        }
+        float radius = RADIUS * getPower();
+        this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
     }
 
     private void hurtEntities() {
@@ -48,15 +43,14 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                    (DAMAGE * cap.getAbilityPower(owner)) * (entity == owner ? 0.25F : 1.0F));
+                    (DAMAGE * getPower()) * (entity == owner ? 0.25F : 1.0F));
         }
     }
 
     private void spawnParticles() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float radius = RADIUS * cap.getAbilityPower(owner);
+        float radius = RADIUS * getPower();
 
         Vec3 center = new Vec3(this.getX() + (this.random.nextDouble() - 0.5D) * radius,
                 this.getY() + (this.random.nextDouble() - 0.5D) * radius,
@@ -67,11 +61,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        if (!(this.getOwner() instanceof LivingEntity owner)) return super.getDimensions(pPose);
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        float radius = RADIUS * cap.getAbilityPower(owner);
-
+        float radius = RADIUS * getPower();
         return EntityDimensions.fixed(radius, radius);
     }
 
@@ -87,9 +77,8 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             this.discard();
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)),
-                    Math.min(MAX_EXPLOSION, RADIUS * cap.getAbilityPower(owner)), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
+                    Math.min(MAX_EXPLOSION, RADIUS * getPower()), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
         } else {
             this.hurtEntities();
         }

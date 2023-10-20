@@ -13,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -181,9 +181,10 @@ public class ClientAbilityHandler {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.addUsed(ability.getRealCost(owner));
                 ability.run(owner);
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
@@ -191,9 +192,12 @@ public class ClientAbilityHandler {
 
             if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
                 if (!cap.hasToggled(ability)) {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent(owner, ability));
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                    cap.toggle(owner, ability);
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                } else {
+                    cap.toggle(owner, ability);
                 }
-                cap.toggle(owner, ability);
             }
             return status;
         } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {

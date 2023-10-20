@@ -47,8 +47,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         super(pEntityType, pLevel);
     }
 
-    public EmberInsectProjectile(LivingEntity pShooter, float xOffset, float yOffset) {
-        super(JJKEntities.EMBER_INSECT.get(), pShooter.level(), pShooter);
+    public EmberInsectProjectile(LivingEntity owner, float power, float xOffset, float yOffset) {
+        super(JJKEntities.EMBER_INSECT.get(), owner.level(), owner, power);
 
         this.entityData.set(DATA_OFFSET_X, xOffset);
         this.entityData.set(DATA_OFFSET_Y, yOffset);
@@ -87,11 +87,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * cap.getAbilityPower(owner));
-                }
-            });
+            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * getPower());
+            }
         }
     }
 
@@ -115,12 +113,10 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                Vec3 location = result.getLocation();
-                this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), null, location,
-                        EXPLOSIVE_POWER * cap.getAbilityPower(owner), false,
-                        this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
-            });
+            Vec3 location = result.getLocation();
+            this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), null, location,
+                    EXPLOSIVE_POWER * getPower(), false,
+                    this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
         this.discard();
     }

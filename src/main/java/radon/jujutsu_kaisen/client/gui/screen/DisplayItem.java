@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.world.entity.EntityType;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 
 import java.util.AbstractMap;

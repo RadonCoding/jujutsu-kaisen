@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -115,16 +115,14 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 collision = this.getCollision(owner, spawn, end);
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Entity entity : entities) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+        for (Entity entity : entities) {
+            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
-                entity.hurtMarked = true;
+            entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
+            entity.hurtMarked = true;
 
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), DAMAGE * cap.getAbilityPower(owner));
-            }
-        });
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), DAMAGE * getPower(owner));
+        }
 
         if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             double radius = SCALE * 2.0F;

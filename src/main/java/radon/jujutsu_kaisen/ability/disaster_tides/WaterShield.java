@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final double RADIUS = 3.0D;
     private static final double X_STEP = 0.05D;
+    private static final float EXPLOSIVE_POWER = 2.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -77,9 +78,8 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     @Override
     public void onRelease(LivingEntity owner, int charge) {
         if (!owner.level().isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> owner.level().explode(owner,
-                    JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
-                cap.getAbilityPower(owner) * 2.0F, false, Level.ExplosionInteraction.NONE));
+            owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
+                    EXPLOSIVE_POWER * getPower(owner), false, Level.ExplosionInteraction.NONE);
         }
     }
 

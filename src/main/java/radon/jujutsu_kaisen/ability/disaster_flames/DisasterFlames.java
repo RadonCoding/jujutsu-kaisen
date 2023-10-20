@@ -13,9 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -88,27 +87,25 @@ public class DisasterFlames extends Ability {
 
         if (owner.level().isClientSide) return;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            LivingEntity target = this.getTarget(owner);
+        LivingEntity target = this.getTarget(owner);
 
-            if (target == null) {
-                for (Entity entity : this.getTargets(owner)) {
-                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+        if (target == null) {
+            for (Entity entity : this.getTargets(owner)) {
+                entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                    if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getAbilityPower(owner))) {
-                        entity.setSecondsOnFire(5);
-                        this.spawnParticles(entity, 32);
-                    }
-                }
-            } else {
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-
-                if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getAbilityPower(owner))) {
-                    target.setSecondsOnFire(10);
-                    this.spawnParticles(target, 64);
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * getPower(owner))) {
+                    entity.setSecondsOnFire(5);
+                    this.spawnParticles(entity, 32);
                 }
             }
-        });
+        } else {
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+
+            if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * getPower(owner))) {
+                target.setSecondsOnFire(10);
+                this.spawnParticles(target, 64);
+            }
+        }
     }
 
     @Override

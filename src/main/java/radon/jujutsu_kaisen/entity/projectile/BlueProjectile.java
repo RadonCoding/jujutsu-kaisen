@@ -31,16 +31,16 @@ public class BlueProjectile extends JujutsuProjectile {
         super(pEntityType, level);
     }
 
-    public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level, LivingEntity pShooter) {
-        super(pEntityType, level, pShooter);
+    public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level, LivingEntity owner, float power) {
+        super(pEntityType, level, owner, power);
     }
 
-    public BlueProjectile(LivingEntity pShooter) {
-        this(JJKEntities.BLUE.get(), pShooter.level(), pShooter);
+    public BlueProjectile(LivingEntity owner, float power) {
+        this(JJKEntities.BLUE.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
     public float getRadius() {
@@ -99,17 +99,15 @@ public class BlueProjectile extends JujutsuProjectile {
         AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
-                    if (entity instanceof LivingEntity) {
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * cap.getAbilityPower(owner));
-                    } else {
-                        entity.discard();
-                    }
+                if (entity instanceof LivingEntity) {
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * getPower());
+                } else {
+                    entity.discard();
                 }
-            });
+            }
         }
     }
 
@@ -165,7 +163,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -181,7 +179,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

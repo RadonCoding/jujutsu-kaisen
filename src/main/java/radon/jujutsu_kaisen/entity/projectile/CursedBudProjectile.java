@@ -39,16 +39,16 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         super(pEntityType, level);
     }
 
-    public CursedBudProjectile(LivingEntity pShooter) {
-        super(JJKEntities.CURSED_BUD.get(), pShooter.level(), pShooter);
+    public CursedBudProjectile(LivingEntity owner, float power) {
+        super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(pShooter);
-        Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), pShooter.getYRot(), pShooter.getXRot());
+        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
-    public CursedBudProjectile(LivingEntity pShooter, DisasterPlantEntity plant) {
-        super(JJKEntities.CURSED_BUD.get(), pShooter.level(), pShooter);
+    public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
+        super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
         Vec3 look = HelperMethods.getLookAngle(plant);
         Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
@@ -66,9 +66,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         if (this.getOwner() instanceof LivingEntity owner) {
             if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * cap.getAbilityPower(owner)), 0, false, false, false));
-                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * cap.getAbilityPower(owner));
+                living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * getPower()), 0, false, false, false));
+                living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * getPower());
             }
         }
         this.discard();
