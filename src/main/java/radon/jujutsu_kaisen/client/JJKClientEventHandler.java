@@ -334,7 +334,7 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.GENERIC.get(), GenericParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);

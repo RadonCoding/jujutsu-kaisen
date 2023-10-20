@@ -93,7 +93,7 @@ public class DisasterFlames extends Ability {
 
             if (target == null) {
                 for (Entity entity : this.getTargets(owner)) {
-                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
                     if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * cap.getAbilityPower(owner))) {
                         entity.setSecondsOnFire(5);
@@ -101,7 +101,7 @@ public class DisasterFlames extends Ability {
                     }
                 }
             } else {
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
                 if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * cap.getAbilityPower(owner))) {
                     target.setSecondsOnFire(10);

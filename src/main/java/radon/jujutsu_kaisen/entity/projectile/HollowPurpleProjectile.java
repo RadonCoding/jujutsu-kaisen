@@ -139,7 +139,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
                     if (this.getTime() == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
-                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 1.0F, 1.0F);
+                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                         this.discard();
                     }

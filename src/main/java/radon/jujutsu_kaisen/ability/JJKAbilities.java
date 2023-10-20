@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
-import radon.jujutsu_kaisen.ability.divergent_fist.DivergentFist;
+import radon.jujutsu_kaisen.ability.misc.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
@@ -329,6 +329,7 @@ public class JJKAbilities {
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             abilities.add(SMASH.get());
+            abilities.add(DIVERGENT_FIST.get());
             abilities.add(WATER_WALKING.get());
             abilities.add(CURSED_ENERGY_FLOW.get());
             abilities.add(LIGHTNING.get());

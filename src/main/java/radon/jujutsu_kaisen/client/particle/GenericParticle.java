@@ -11,36 +11,35 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Locale;
 
-public class LightningParticle extends TextureSheetParticle {
+public class GenericParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
-    protected LightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, LightningParticleOptions options, SpriteSet pSprites) {
+    protected GenericParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, GenericParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
+
+        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.lifetime = options.lifetime();
 
         Vector3f color = options.color();
         this.rCol = color.x();
         this.gCol = color.y();
         this.bCol = color.z();
-
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());;
-        this.lifetime = options.lifetime();
-
+        
         this.sprites = pSprites;
 
-        this.setSprite(this.sprites.get(this.random));
+        this.setSprite(this.sprites.get(this.level.random));
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.setSprite(this.sprites.get(this.random));
+        this.setSprite(this.sprites.get(this.level.random));
     }
 
     @Override
@@ -48,37 +47,22 @@ public class LightningParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    @Override
-    protected int getLightColor(float pPartialTick) {
-        float f = ((float) this.age + pPartialTick) / (float)this.lifetime;
-        f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightColor(pPartialTick);
-        int j = i & 255;
-        int k = i >> 16 & 255;
-        j += (int)(f * 15.0F * 16.0F);
-
-        if (j > 240) {
-            j = 240;
-        }
-        return j | k << 16;
-    }
-
-    public record LightningParticleOptions(Vector3f color, float scalar, int lifetime) implements ParticleOptions {
-        public static Deserializer<LightningParticleOptions> DESERIALIZER = new Deserializer<>() {
-            public @NotNull LightningParticleOptions fromCommand(@NotNull ParticleType<LightningParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                Vector3f color = LightningParticleOptions.readColorVector3f(reader);
+    public record GenericParticleOptions(Vector3f color, float scalar, int lifetime) implements ParticleOptions {
+        public static Deserializer<GenericParticleOptions> DESERIALIZER = new Deserializer<>() {
+            public @NotNull GenericParticleOptions fromCommand(@NotNull ParticleType<GenericParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
+                Vector3f color = GenericParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new LightningParticleOptions(color, reader.readFloat(), reader.readInt());
+                return new GenericParticleOptions(color, reader.readFloat(), reader.readInt());
             }
 
-            public @NotNull LightningParticleOptions fromNetwork(@NotNull ParticleType<LightningParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new LightningParticleOptions(LightningParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readInt());
+            public @NotNull GenericParticleOptions fromNetwork(@NotNull ParticleType<GenericParticleOptions> type, @NotNull FriendlyByteBuf buf) {
+                return new GenericParticleOptions(GenericParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readInt());
             }
         };
 
         @Override
         public @NotNull ParticleType<?> getType() {
-            return JJKParticles.LIGHTNING.get();
+            return JJKParticles.GENERIC.get();
         }
 
         public static Vector3f readColorVector3f(StringReader reader) throws CommandSyntaxException {
@@ -111,7 +95,7 @@ public class LightningParticle extends TextureSheetParticle {
         }
     }
 
-    public static class Provider implements ParticleProvider<LightningParticleOptions> {
+    public static class Provider implements ParticleProvider<GenericParticleOptions> {
         private final SpriteSet sprites;
 
         public Provider(SpriteSet sprites) {
@@ -119,9 +103,9 @@ public class LightningParticle extends TextureSheetParticle {
         }
 
         @Override
-        public LightningParticle createParticle(@NotNull LightningParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
-                                                   double xSpeed, double ySpeed, double zSpeed) {
-            return new LightningParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options, this.sprites);
+        public GenericParticle createParticle(@NotNull GenericParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
+                                             double xSpeed, double ySpeed, double zSpeed) {
+            return new GenericParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options, this.sprites);
         }
     }
 }

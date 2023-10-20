@@ -86,6 +86,11 @@ public class HeianSukunaEntity extends SorcererEntity {
     }
 
     @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    }
+
+    @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }

@@ -30,6 +30,7 @@ public interface ISorcererData {
 
     boolean isUnlocked(Ability ability);
     void unlock(Ability ability);
+    void unlockAll(List<Ability> abilities);
 
     void createPact(UUID recipient, Pact pact);
     boolean hasPact(UUID recipient, Pact pact);

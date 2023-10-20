@@ -140,9 +140,7 @@ public class TravelParticle extends TextureSheetParticle {
         @Override
         public TravelParticle createParticle(@NotNull TravelParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
                                              double xSpeed, double ySpeed, double zSpeed) {
-            TravelParticle particle = new TravelParticle(level, x, y, z, options, this.sprites);
-            particle.pickSprite(this.sprites);
-            return particle;
+            return new TravelParticle(level, x, y, z, options, this.sprites);
         }
     }
 }

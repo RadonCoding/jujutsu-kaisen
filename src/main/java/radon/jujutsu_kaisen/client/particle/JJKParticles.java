@@ -22,17 +22,17 @@ public class JJKParticles {
                     return null;
                 }
             });
-    public static RegistryObject<ParticleType<VaporParticle.VaporParticleOptions>> VAPOR = PARTICLES.register("vapor", () ->
-            new ParticleType<>(false, VaporParticle.VaporParticleOptions.DESERIALIZER) {
-                @Override
-                public Codec<VaporParticle.VaporParticleOptions> codec() {
-                    return null;
-                }
-            });
     public static RegistryObject<ParticleType<TravelParticle.TravelParticleOptions>> TRAVEL = PARTICLES.register("travel", () ->
             new ParticleType<>(false, TravelParticle.TravelParticleOptions.DESERIALIZER) {
                 @Override
                 public @NotNull Codec<TravelParticle.TravelParticleOptions> codec() {
+                    return null;
+                }
+            });
+    public static RegistryObject<ParticleType<GenericParticle.GenericParticleOptions>> GENERIC = PARTICLES.register("generic", () ->
+            new ParticleType<>(false, GenericParticle.GenericParticleOptions.DESERIALIZER) {
+                @Override
+                public @NotNull Codec<GenericParticle.GenericParticleOptions> codec() {
                     return null;
                 }
             });

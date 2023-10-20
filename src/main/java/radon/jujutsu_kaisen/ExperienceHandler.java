@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -43,19 +44,22 @@ public class ExperienceHandler {
         LivingEntity victim = event.getEntity();
 
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent() || !attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
-            if (battles.containsKey(attacker.getUUID())) {
-                battles.get(attacker.getUUID()).attack(event.getAmount());
-            } else {
-                battles.put(attacker.getUUID(), new BattleData(victim));
+            if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                if (battles.containsKey(attacker.getUUID())) {
+                    battles.get(attacker.getUUID()).attack(event.getAmount());
+                } else {
+                    battles.put(attacker.getUUID(), new BattleData(victim));
+                }
             }
 
-            if (battles.containsKey(victim.getUUID())) {
-                battles.get(victim.getUUID()).hurt(event.getAmount());
-            } else {
-                battles.put(victim.getUUID(), new BattleData(attacker));
+            if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                if (battles.containsKey(victim.getUUID())) {
+                    battles.get(victim.getUUID()).hurt(event.getAmount());
+                } else {
+                    battles.put(victim.getUUID(), new BattleData(attacker));
+                }
             }
         }
     }
@@ -81,14 +85,27 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
-            if (!owner.isAlive() || owner.isRemoved()) return;
-
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float amount = 10.0F;
+
+            // Multiply by duration / 10 seconds
             amount *= (float) this.duration / (10 * 20);
+
+            // Multiply by total damage dealt during battle / 10
             amount *= this.totalDamage / 10;
+
+            // Multiply by the difference of the lowest health factors of both owner and target
             amount *= 1.0F - Math.abs(this.lowestOwnerHealth - this.lowestTargetHealth);
+
+            // If owner has less health than target increase experience, if target has less health than owner decrease experience
+            amount *= owner.getMaxHealth() / this.target.getMaxHealth();
+
+            // If owner is dead they get 10% of the experience
+            amount *= owner.isAlive() ? 1.0F : 0.1F;
+
+            // Limit the experience to the max health of the target
+            amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);
 
             if (amount == 0.0F) return;
 

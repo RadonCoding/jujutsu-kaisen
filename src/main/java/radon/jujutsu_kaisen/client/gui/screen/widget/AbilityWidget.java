@@ -62,7 +62,7 @@ public class AbilityWidget  {
     public AbilityWidget(AbilityTab tab, Minecraft minecraft, Ability ability) {
         this.tab = tab;
         this.ability = ability;
-        this.display = ability.getDisplay();
+        this.display = ability.getDisplay(minecraft.player);
         this.minecraft = minecraft;
         this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(ability.getName(), 163));
         this.x = Mth.floor(this.display.getX() * 28.0F);

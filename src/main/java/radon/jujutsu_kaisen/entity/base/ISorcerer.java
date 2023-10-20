@@ -25,6 +25,7 @@ public interface ISorcerer {
     }
     default @NotNull List<Trait> getTraits() { return List.of(); }
     default @NotNull List<Ability> getCustom() { return List.of(); }
+    default List<Ability> getUnlocked() { return List.of(); }
     JujutsuType getJujutsuType();
     default float getExperience() {
         return 0.0F;
@@ -38,6 +39,7 @@ public interface ISorcerer {
         data.setAdditional(this.getAdditional());
         data.addTraits(this.getTraits());
         data.setType(this.getJujutsuType());
+        data.unlockAll(this.getUnlocked());
 
         if (this.getExperience() > 0.0F) {
             data.setExperience(this.getExperience());

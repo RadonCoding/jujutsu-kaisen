@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -79,6 +80,13 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public Vec2 getDisplayCoordinates() {
         return new Vec2(4.0F, 0.0F);
+    }
+
+    @Override
+    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Vec2 coordinates = this.getDisplayCoordinates();
+        return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
     }
 
     @Override

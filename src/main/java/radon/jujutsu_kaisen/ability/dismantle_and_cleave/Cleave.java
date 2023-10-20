@@ -128,7 +128,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             float padding = 0.5F;
             int count = Math.round(target.getBbHeight() / padding);
 
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -159,7 +159,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                     double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
                     level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
-                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                 if (!success || target instanceof SimpleDomainEntity || target instanceof DomainExpansionEntity) return;
 

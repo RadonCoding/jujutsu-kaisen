@@ -30,7 +30,7 @@ public class Dismantle extends Ability {
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
         }
     }
 

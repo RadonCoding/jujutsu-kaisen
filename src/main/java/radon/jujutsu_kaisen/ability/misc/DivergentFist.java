@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.divergent_fist;
+package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -6,17 +6,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.Ability;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -24,8 +28,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class DivergentFist extends Ability {
-    private static final float EXPLOSIVE_POWER = 1.5F;
-    private static final double LAUNCH_POWER = 10.0D;
+    private static final float EXPLOSIVE_POWER = 1.0F;
+    private static final double LAUNCH_POWER = 2.5D;
     private static final double RANGE = 3.0D;
 
     @Override
@@ -46,18 +50,53 @@ public class DivergentFist extends Ability {
     }
 
     @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(0.0F, 1.0F);
+    }
+
+    @Override
+    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Vec2 coordinates = this.getDisplayCoordinates();
+        return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
+    }
+
+    @Override
+    public int getPointsCost() {
+        return 50;
+    }
+
+    @Override
     public void run(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            owner.swing(InteractionHand.MAIN_HAND);
-
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                float radius = EXPLOSIVE_POWER * cap.getAbilityPower(owner);
+                owner.swing(InteractionHand.MAIN_HAND, true);
 
-                Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
+                if (owner instanceof Player player) {
+                    player.attack(target);
+                } else {
+                    owner.doHurtTarget(target);
+                }
+                target.invulnerableTime = 0;
 
-                if (!owner.level().isClientSide) {
+                cap.delayTickEvent(() -> {
+                    owner.swing(InteractionHand.MAIN_HAND, true);
+
+                    if (owner instanceof Player player) {
+                        player.attack(target);
+                    } else {
+                        owner.doHurtTarget(target);
+                    }
+                    target.invulnerableTime = 0;
+
+                    float radius = EXPLOSIVE_POWER * cap.getAbilityPower(owner);
+
+                    Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
+
                     float f2 = radius * 2.0F;
                     int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);
                     int l1 = Mth.floor(explosionPos.x() + (double) f2 + 1.0D);
@@ -101,11 +140,10 @@ public class DivergentFist extends Ability {
                             }
                         }
                     }
-                    owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DIVERGENT_FIST.get()), null, explosionPos, radius, false,
-                            owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
-                }
+                    owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false,
+                            Level.ExplosionInteraction.NONE);
+                }, 5);
             });
-
         }
     }
 

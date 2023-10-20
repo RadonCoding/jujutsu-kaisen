@@ -101,13 +101,13 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
             target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.NEUTRAL, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
             for (int i = 0; i < 32; i++) {
                 double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                 double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                 double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.VIOLET_LIGHTNING_COLOR, 0.5F, 10),
+                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 10),
                         target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
                         0, 0.0D, 0.0D, 0.0D, 0.0D);
             }

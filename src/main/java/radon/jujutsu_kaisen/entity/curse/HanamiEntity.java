@@ -78,6 +78,11 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.SHINING_SEA_OF_FLOWERS.get();
     }

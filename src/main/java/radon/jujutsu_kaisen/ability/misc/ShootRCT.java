@@ -16,8 +16,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -60,8 +60,8 @@ public class ShootRCT extends Ability {
         for (LivingEntity target : this.getTargets(owner)) {
             double width = target.getBbWidth();
             double height = target.getBbHeight();
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR,
-                    (float) width * 2.0F, 0.5F, false, 1);
+            ParticleOptions particle = new GenericParticle.GenericParticleOptions(ParticleColors.RCT_COLOR,
+                    (float) width * 2.0F, 1);
 
             for (int i = 0; i < 8; i++) {
                 ownerCap.delayTickEvent(() -> {

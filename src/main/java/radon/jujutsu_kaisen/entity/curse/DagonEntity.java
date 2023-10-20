@@ -59,6 +59,11 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get();
     }

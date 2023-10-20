@@ -37,7 +37,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
         if (owner.level() instanceof ServerLevel) {
             BlockState state = owner.level().getBlockState(pos);
 
-            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL,
+            owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
                     1.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.5F);
 
             if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

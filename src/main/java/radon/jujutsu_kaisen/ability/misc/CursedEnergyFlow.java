@@ -21,9 +21,9 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
+import radon.jujutsu_kaisen.client.particle.GenericParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
@@ -49,12 +49,12 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 8; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
+            for (int i = 0; i < 16; i++) {
+                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() * 2.0D - HelperMethods.getLookAngle(owner).scale(0.35D).x();
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.5F, true, 1),
-                        x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() * 2.0D - HelperMethods.getLookAngle(owner).scale(0.35D).z();
+                level.sendParticles(new GenericParticle.GenericParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.2F, 5),
+                        x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 2.5D, 0.0D, 1.0D);
             }
 
             if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
@@ -62,7 +62,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
                     double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
                     double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
-                    level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(owner), 0.2F, 10),
+                    level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
                             x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                 }
 
@@ -71,13 +71,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         if (!entity.isInWater()) continue;
 
                         if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * cap.getAbilityPower(owner))) {
-                            owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                            owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                             for (int i = 0; i < 2; i++) {
                                 double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
                                 double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
                                 double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
-                                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(owner), 0.2F, 10),
+                                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
                                         x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                             }
                         }
