@@ -22,6 +22,10 @@ public class ChantHandler {
     private static final Map<UUID, List<String>> messages = new HashMap<>();
     private static final int CLEAR_INTERVAL = 10 * 20;
 
+    public static boolean isChanted(LivingEntity owner, Ability ability) {
+        return getChant(owner, ability) > 1.0F;
+    }
+
     public static float getChant(LivingEntity owner, Ability ability) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -44,7 +48,6 @@ public class ChantHandler {
             count++;
             length += chant.length();
         }
-        System.out.println(count);
         return 1.0F + (count * 0.1F) + (length * 0.01F);
     }
 
@@ -69,7 +72,7 @@ public class ChantHandler {
         }
 
         @SubscribeEvent
-        public static void onAbilityTrigger(AbilityTriggerEvent event) {
+        public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
             LivingEntity owner = event.getEntity();
             messages.remove(owner.getUUID());
         }
@@ -86,6 +89,23 @@ public class ChantHandler {
                 if (!messages.containsKey(owner.getUUID())) {
                     messages.put(owner.getUUID(), new ArrayList<>());
                 }
+
+                List<String> chants = new ArrayList<>(cap.getChants(ability));
+
+                List<String> latest = messages.get(owner.getUUID());
+
+                int index = 0;
+
+                Iterator<String> iter = chants.iterator();
+
+                for (String chant : latest) {
+                    if (!iter.hasNext() || !chant.equals(iter.next())) break;
+
+                    index++;
+                }
+
+                if (!chants.get(index).equals(msg)) return;
+
                 messages.get(owner.getUUID()).add(msg);
                 timers.put(owner.getUUID(), CLEAR_INTERVAL);
 

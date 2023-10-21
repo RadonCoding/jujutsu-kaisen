@@ -132,14 +132,7 @@ public class JujutsuScreen extends Screen {
         if (this.selectedTab != null) {
             this.selectedTab.keyPressed(pKeyCode, pScanCode, pModifiers);
         }
-
-        if (this.minecraft != null && this.minecraft.options.keyAdvancements.matches(pKeyCode, pScanCode)) {
-            this.minecraft.setScreen(null);
-            this.minecraft.mouseHandler.grabMouse();
-            return true;
-        } else {
-            return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-        }
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
     @Override
