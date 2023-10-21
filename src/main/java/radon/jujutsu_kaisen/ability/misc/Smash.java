@@ -29,6 +29,11 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) <= 5.0D;
     }

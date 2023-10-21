@@ -19,6 +19,11 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 

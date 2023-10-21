@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen;
 
 import com.google.common.collect.Lists;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.ServerChatEvent;
@@ -11,6 +12,8 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 
 import java.util.*;
 
@@ -30,21 +33,18 @@ public class ChantHandler {
 
         if (latest == null || latest.isEmpty()) return 1.0F;
 
-        ListIterator<String> iter = latest.listIterator(latest.size());
-
         int count = 0;
         int length = 0;
 
-        for (String chant : Lists.reverse(new ArrayList<>(chants))) {
-            if (!iter.hasPrevious()) break;
+        Iterator<String> iter = chants.iterator();
 
-            String msg = iter.previous();
+        for (String chant : latest) {
+            if (!iter.hasNext() || !chant.equals(iter.next())) break;
 
-            if (msg.equals(chant)) {
-                count++;
-                length += chant.length();
-            }
+            count++;
+            length += chant.length();
         }
+        System.out.println(count);
         return 1.0F + (count * 0.1F) + (length * 0.01F);
     }
 
@@ -77,17 +77,20 @@ public class ChantHandler {
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
             ServerPlayer owner = event.getPlayer();
-
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             String msg = event.getRawText();
 
-            if (cap.hasChant(msg)) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            Ability ability = cap.getAbility(msg);
+
+            if (ability != null) {
                 if (!messages.containsKey(owner.getUUID())) {
                     messages.put(owner.getUUID(), new ArrayList<>());
                 }
                 messages.get(owner.getUUID()).add(msg);
                 timers.put(owner.getUUID(), CLEAR_INTERVAL);
+
+                PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
+                        Math.round(getChant(owner, ability) * 100)), false), owner);
             }
         }
     }

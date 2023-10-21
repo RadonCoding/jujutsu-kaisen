@@ -17,6 +17,11 @@ import java.util.Map;
 
 public class MiniUzumaki extends Ability {
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.hasLineOfSight(target);
     }

@@ -10,6 +10,11 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class Fly extends Ability implements Ability.IChannelened {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

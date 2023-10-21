@@ -88,6 +88,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public int getPointsCost() {
         return 100;
     }

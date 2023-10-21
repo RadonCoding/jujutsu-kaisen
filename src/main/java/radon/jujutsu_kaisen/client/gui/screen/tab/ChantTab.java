@@ -60,7 +60,7 @@ public class ChantTab extends JJKTab {
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
 
         for (Ability ability : abilities) {
-            if (ability instanceof DomainExpansion || !ability.isTechnique()) continue;
+            if (!ability.isChantable()) continue;
             consumer.accept(result.apply(ability));
         }
     }

@@ -15,6 +15,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AbilityMode extends Ability implements Ability.IToggled {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 

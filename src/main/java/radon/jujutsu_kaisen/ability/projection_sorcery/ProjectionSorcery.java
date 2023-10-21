@@ -11,6 +11,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ProjectionSorcery extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }

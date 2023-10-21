@@ -14,6 +14,11 @@ public class NueTotalityLightning extends Ability {
     private static final float DAMAGE = 5.0F;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

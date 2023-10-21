@@ -10,6 +10,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ShootPureLove extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return ((RikaEntity) owner).isOpen() || (target != null && owner.hasLineOfSight(target) && HelperMethods.RANDOM.nextInt(10) == 0);
     }

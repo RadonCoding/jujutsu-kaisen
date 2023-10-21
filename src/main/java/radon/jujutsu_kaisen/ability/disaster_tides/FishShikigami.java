@@ -17,6 +17,11 @@ public class FishShikigami extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && this.getTarget(owner) == target;
     }

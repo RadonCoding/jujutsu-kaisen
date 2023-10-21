@@ -10,6 +10,11 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class Feint extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

@@ -18,6 +18,11 @@ public class Teleport extends Ability {
     private static final double RANGE = 100.0D;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.hasLineOfSight(target) && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
     }

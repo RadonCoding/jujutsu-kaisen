@@ -18,6 +18,11 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 public class BlueFists extends Ability implements Ability.IToggled {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) < 5.0D;
     }

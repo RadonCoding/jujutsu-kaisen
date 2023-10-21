@@ -26,6 +26,11 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

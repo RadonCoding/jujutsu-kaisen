@@ -35,6 +35,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) < 10.0D;
     }

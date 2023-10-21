@@ -26,6 +26,11 @@ public class DisasterFlames extends Ability {
     private static final float DAMAGE = 5.0F;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }

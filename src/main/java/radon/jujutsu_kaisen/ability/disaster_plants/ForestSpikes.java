@@ -25,6 +25,11 @@ public class ForestSpikes extends Ability {
     private static final float SPREAD = 5.0F;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
     }

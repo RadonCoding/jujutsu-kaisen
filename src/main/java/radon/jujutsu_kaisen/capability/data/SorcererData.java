@@ -593,11 +593,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasChant(String chant) {
+    public @Nullable Ability getAbility(String chant) {
         for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
-            if (entry.getValue().contains(chant)) return true;
+            if (entry.getValue().contains(chant)) return entry.getKey();
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -1520,6 +1520,8 @@ public class SorcererData implements ISorcererData {
                 pacts.add(IntTag.valueOf(pact.ordinal()));
             }
             data.put("entries", pacts);
+
+            acceptedPactsTag.add(data);
         }
         nbt.put("accepted_pacts", acceptedPactsTag);
 
@@ -1535,6 +1537,8 @@ public class SorcererData implements ISorcererData {
                 pacts.add(IntTag.valueOf(pact.ordinal()));
             }
             data.put("entries", pacts);
+
+            requestedPactsTag.add(data);
         }
         nbt.put("requested_pacts", requestedPactsTag);
 
@@ -1570,6 +1574,8 @@ public class SorcererData implements ISorcererData {
                 chants.add(StringTag.valueOf(chant));
             }
             data.put("entries", chants);
+
+            chantsTag.add(data);
         }
         nbt.put("chants", chantsTag);
 

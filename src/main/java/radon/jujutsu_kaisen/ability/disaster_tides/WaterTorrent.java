@@ -11,6 +11,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterTorrent extends Ability {
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
     }

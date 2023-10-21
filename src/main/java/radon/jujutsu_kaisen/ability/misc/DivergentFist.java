@@ -61,6 +61,11 @@ public class DivergentFist extends Ability {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public int getPointsCost() {
         return 50;
     }

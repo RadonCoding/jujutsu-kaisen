@@ -80,6 +80,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public int getPointsCost() {
         return 50;
     }

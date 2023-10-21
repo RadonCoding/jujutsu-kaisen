@@ -14,6 +14,11 @@ public class ForestRoots extends Ability {
     public static final double RANGE = 10.0D;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
@@ -29,7 +34,7 @@ public class ForestRoots extends Ability {
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
             if (!(entity instanceof LivingEntity living) || !owner.canAttack(living)) continue;
-            owner.level().addFreshEntity(new ForestRootsEntity(living));
+            owner.level().addFreshEntity(new ForestRootsEntity(owner, this.getPower(owner), living));
         }
     }
 

@@ -23,6 +23,11 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     private static final float EXPLOSIVE_POWER = 2.0F;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return !owner.level().getEntities(owner, owner.getBoundingBox().inflate(1.0D), entity -> entity instanceof Projectile).isEmpty();
     }

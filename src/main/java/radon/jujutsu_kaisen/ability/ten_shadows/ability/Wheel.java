@@ -23,6 +23,11 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (owner instanceof MahoragaEntity) return true;
         if (target == null) return false;

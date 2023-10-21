@@ -424,6 +424,8 @@
   "chat.jujutsu_kaisen.pact_decline": "%1$s has declined a %2$s pact",
   "chat.jujutsu_kaisen.pact_failure": "%1$s hasn't requested a %2$s pact with you",
 
+  "chat.jujutsu_kaisen.chant": "Total chant boost: %1$d%%",
+
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
   "entity.jujutsu_kaisen.satoru_gojo": "Satoru Gojo",

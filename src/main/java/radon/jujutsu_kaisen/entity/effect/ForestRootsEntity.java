@@ -11,11 +11,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -23,7 +25,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class ForestRootsEntity extends Entity implements GeoEntity {
+public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ForestRootsEntity.class, EntityDataSerializers.INT);
 
     private static final int DURATION = 5 * 20;
@@ -37,14 +39,17 @@ public class ForestRootsEntity extends Entity implements GeoEntity {
 
     private Vec3 pos;
 
-    public ForestRootsEntity(EntityType<?> pEntityType, Level pLevel) {
+    public ForestRootsEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
     }
 
-    public ForestRootsEntity(LivingEntity target) {
+    public ForestRootsEntity(LivingEntity owner, float power, LivingEntity target) {
         this(JJKEntities.FOREST_ROOTS.get(), target.level());
+
+        this.setOwner(owner);
+        this.setPower(power);
 
         this.setVictim(target);
 
