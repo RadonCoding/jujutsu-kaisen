@@ -26,7 +26,7 @@ public class Dismantle extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        DismantleProjectile dismantle = new DismantleProjectile(owner, getPower(owner), owner.isShiftKeyDown());
+        DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), owner.isShiftKeyDown());
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {

@@ -5,7 +5,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class MouseHandler {
@@ -20,7 +20,7 @@ public class MouseHandler {
         }
 
         if (JJKKeys.ABILITY_SCROLL.isDown()) {
-            if (MeleeAbilityOverlay.scroll(i)) {
+            if (AbilityOverlay.scroll(i)) {
                 event.setCanceled(true);
             }
         }

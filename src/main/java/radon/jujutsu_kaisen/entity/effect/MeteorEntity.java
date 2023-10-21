@@ -265,13 +265,13 @@ public class MeteorEntity extends JujutsuProjectile {
                 if (owner != null) {
                     if (this.explosionTime == 0) {
                         for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
-                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * getPower());
+                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower());
                         }
                     }
 
                     if (this.onGround()) {
                         if (this.explosionTime == 0) {
-                            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * getPower()),
+                            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * this.getPower()),
                                     EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                             this.explosionTime++;
                         }

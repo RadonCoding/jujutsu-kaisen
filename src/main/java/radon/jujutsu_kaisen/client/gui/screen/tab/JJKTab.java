@@ -29,10 +29,12 @@ public abstract class JJKTab {
 
     protected double scrollX;
     protected double scrollY;
+
     protected int minX = Integer.MAX_VALUE;
     protected int minY = Integer.MAX_VALUE;
     protected int maxX = Integer.MIN_VALUE;
     protected int maxY = Integer.MIN_VALUE;
+
     private boolean centered;
 
     private final List<GuiEventListener> widgets = new ArrayList<>();
@@ -137,7 +139,7 @@ public abstract class JJKTab {
         pGuiGraphics.disableScissor();
     }
 
-    protected abstract void drawCustom(GuiGraphics graphics, int x, int y);
+    protected void drawCustom(GuiGraphics graphics, int x, int y) {}
 
     public void drawTooltips(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pWidth, int pHeight) {
         for (GuiEventListener widget : this.widgets) {
@@ -154,5 +156,9 @@ public abstract class JJKTab {
 
     public boolean isMouseOver(int pOffsetX, int pOffsetY, double pMouseX, double pMouseY) {
         return this.type.isMouseOver(pOffsetX, pOffsetY, this.index, pMouseX, pMouseY);
+    }
+
+    public void keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+
     }
 }

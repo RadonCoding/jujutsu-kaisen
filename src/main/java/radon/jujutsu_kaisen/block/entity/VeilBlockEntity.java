@@ -18,9 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.item.veil.EntityModifier;
-import radon.jujutsu_kaisen.item.veil.Modifier;
-import radon.jujutsu_kaisen.item.veil.PlayerModifier;
+import radon.jujutsu_kaisen.item.veil.modifier.EntityModifier;
+import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
+import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
 import javax.annotation.Nullable;
 

@@ -72,7 +72,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     public Ability getParent(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
-        return technique == null ? null : technique.getDomain();
+        return technique == null || technique.getDomain() == null ? JJKAbilities.SIMPLE_DOMAIN.get() : technique.getDomain();
     }
 
     @Override

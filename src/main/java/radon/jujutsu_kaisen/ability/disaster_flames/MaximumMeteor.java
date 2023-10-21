@@ -36,7 +36,7 @@ public class MaximumMeteor extends Ability {
         if (this.canSpawn(owner)) {
             owner.swing(InteractionHand.MAIN_HAND);
 
-            MeteorEntity meteor = new MeteorEntity(owner, getPower(owner));
+            MeteorEntity meteor = new MeteorEntity(owner, this.getPower(owner));
             owner.level().addFreshEntity(meteor);
         }
     }

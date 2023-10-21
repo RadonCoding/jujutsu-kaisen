@@ -29,7 +29,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     public HollowPurpleExplosion(LivingEntity owner, float power, Vec3 pos) {
         super(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), owner.level(), owner, power);
 
-        float radius = RADIUS * getPower();
+        float radius = RADIUS * this.getPower();
         this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
     }
 
@@ -43,14 +43,14 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                    (DAMAGE * getPower()) * (entity == owner ? 0.25F : 1.0F));
+                    (DAMAGE * this.getPower()) * (entity == owner ? 0.25F : 1.0F));
         }
     }
 
     private void spawnParticles() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        float radius = RADIUS * getPower();
+        float radius = RADIUS * this.getPower();
 
         Vec3 center = new Vec3(this.getX() + (this.random.nextDouble() - 0.5D) * radius,
                 this.getY() + (this.random.nextDouble() - 0.5D) * radius,
@@ -61,7 +61,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float radius = RADIUS * getPower();
+        float radius = RADIUS * this.getPower();
         return EntityDimensions.fixed(radius, radius);
     }
 
@@ -78,7 +78,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
             ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)),
-                    Math.min(MAX_EXPLOSION, RADIUS * getPower()), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
+                    Math.min(MAX_EXPLOSION, RADIUS * this.getPower()), DURATION, owner, JJKAbilities.HOLLOW_PURPLE.get());
         } else {
             this.hurtEntities();
         }

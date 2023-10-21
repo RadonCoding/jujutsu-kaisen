@@ -95,8 +95,4 @@ public class ReleaseCurse extends Ability {
         return true;
     }
     
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.SCROLL;
-    }
 }

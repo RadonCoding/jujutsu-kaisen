@@ -24,9 +24,4 @@ public class DismantleBarrage extends Dismantle {
     public int getCooldown() {
         return super.getCooldown() * 2;
     }
-
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.SCROLL;
-    }
 }

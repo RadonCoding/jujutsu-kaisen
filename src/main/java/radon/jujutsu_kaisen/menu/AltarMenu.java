@@ -18,8 +18,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.item.VeilRodItem;
-import radon.jujutsu_kaisen.item.veil.*;
+import radon.jujutsu_kaisen.item.veil.VeilRodItem;
+import radon.jujutsu_kaisen.item.veil.modifier.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 

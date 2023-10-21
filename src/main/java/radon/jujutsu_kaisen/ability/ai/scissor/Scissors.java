@@ -32,7 +32,7 @@ public class Scissors extends Ability {
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
-                    ScissorEntity scissor = new ScissorEntity(owner, getPower(owner), target);
+                    ScissorEntity scissor = new ScissorEntity(owner, this.getPower(owner), target);
                     owner.level().addFreshEntity(scissor);
                     cap.addSummon(scissor);
                 }

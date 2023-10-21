@@ -20,7 +20,7 @@ public class DisasterTides extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        WaterballEntity waterball = new WaterballEntity(owner, getPower(owner));
+        WaterballEntity waterball = new WaterballEntity(owner, this.getPower(owner));
         owner.level().addFreshEntity(waterball);
     }
 

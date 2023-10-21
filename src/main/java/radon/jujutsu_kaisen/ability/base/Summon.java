@@ -185,17 +185,17 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     @Override
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (this.shouldRemove()) {
-                    cap.unsummonByClass((ServerLevel) owner.level(), this.clazz);
-                } else {
-                    cap.removeSummonByClass((ServerLevel) owner.level(), this.clazz);
-                }
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
-            });
+            if (this.shouldRemove()) {
+                cap.unsummonByClass((ServerLevel) owner.level(), this.clazz);
+            } else {
+                cap.removeSummonByClass((ServerLevel) owner.level(), this.clazz);
+            }
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
         }
     }
 

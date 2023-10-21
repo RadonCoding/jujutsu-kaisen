@@ -16,7 +16,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -27,7 +26,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 30.0F;
-    private static final float RADIUS = 5.0F;
+    private static final float RADIUS = 1.0F;
 
     public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -41,6 +40,10 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
+    public float getRadius() {
+        return RADIUS * this.getPower();
+    }
+
     private void hurtEntities() {
         AABB bounds = this.getBoundingBox();
 
@@ -48,31 +51,34 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                 if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) continue;
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                        DAMAGE * getPower());
+                        DAMAGE * this.getPower());
             }
         }
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox().inflate(RADIUS);
-        double centerX = bounds.getCenter().x();
-        double centerY = bounds.getCenter().y();
-        double centerZ = bounds.getCenter().z();
+        for (int i = 0; i < SPEED; i++) {
+            double radius = Math.max(Math.PI, this.getRadius());
+            AABB bounds = this.getBoundingBox().inflate(radius);
+            double centerX = bounds.getCenter().x();
+            double centerY = bounds.getCenter().y();
+            double centerZ = bounds.getCenter().z();
 
-        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    BlockState state = this.level().getBlockState(pos);
+            for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                    for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                        BlockPos pos = new BlockPos(x, y, z);
+                        BlockState state = this.level().getBlockState(pos);
 
-                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                        double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= RADIUS) {
-                        if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                            if (state.getFluidState().isEmpty()) {
-                                this.level().destroyBlock(pos, false);
-                            } else {
-                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                        if (distance <= radius) {
+                            if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                                if (state.getFluidState().isEmpty()) {
+                                    this.level().destroyBlock(pos, false);
+                                } else {
+                                    this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                                }
                             }
                         }
                     }
@@ -96,7 +102,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return EntityDimensions.fixed(RADIUS, RADIUS);
+        return EntityDimensions.fixed(this.getRadius(), this.getRadius());
     }
 
     @Override

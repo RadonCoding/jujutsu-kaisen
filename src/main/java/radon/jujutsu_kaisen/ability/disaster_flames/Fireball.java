@@ -20,7 +20,7 @@ public class Fireball extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        FireballProjectile fireball = new FireballProjectile(owner, getPower(owner));
+        FireballProjectile fireball = new FireballProjectile(owner, this.getPower(owner));
         owner.level().addFreshEntity(fireball);
     }
 

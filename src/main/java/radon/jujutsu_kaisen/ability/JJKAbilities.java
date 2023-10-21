@@ -43,7 +43,7 @@ import radon.jujutsu_kaisen.ability.rika.Copy;
 import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.ShadowStorage;
-import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
+import radon.jujutsu_kaisen.ability.ten_shadows.AbilityMode;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
@@ -145,7 +145,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> TRANQUIL_DEER = ABILITIES.register("tranquil_deer", TranquilDeer::new);
     public static RegistryObject<Summon<?>> PIERCING_BULL = ABILITIES.register("piercing_bull", PiercingBull::new);
     public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
-    public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
+    public static RegistryObject<Ability> ABILITY_MODE = ABILITIES.register("ability_mode", AbilityMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
@@ -187,11 +187,13 @@ public class JJKAbilities {
     public static String getName(Ability ability) {
         return ABILITY_REGISTRY.get().getKey(ability).getPath();
     }
-    
+
+    @Nullable
     public static ResourceLocation getKey(Ability ability) {
         return ABILITY_REGISTRY.get().getKey(ability);
     }
 
+    @Nullable
     public static Ability getValue(ResourceLocation key) {
         return ABILITY_REGISTRY.get().getValue(key);
     }
@@ -324,9 +326,10 @@ public class JJKAbilities {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        abilities.add(DASH.get());
+
         abilities.add(AIR_PUNCH.get());
         abilities.add(BARRAGE.get());
-        abilities.add(DASH.get());
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             abilities.add(SMASH.get());

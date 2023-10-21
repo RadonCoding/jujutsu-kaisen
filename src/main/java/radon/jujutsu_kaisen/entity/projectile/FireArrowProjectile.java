@@ -54,7 +54,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
             }
         }
     }
@@ -82,7 +82,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
             this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
-                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * getPower(), false,
+                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * this.getPower(), false,
                     this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
         this.discard();

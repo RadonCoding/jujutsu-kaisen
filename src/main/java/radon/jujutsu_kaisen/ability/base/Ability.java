@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.ability.base;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -8,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -53,40 +53,53 @@ public abstract class Ability {
         LIGHTNING
     }
 
-    public static float getPower(LivingEntity owner) {
+    public static float getPower(Ability ability, LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower(owner);
+        return cap.getAbilityPower(owner) * (ChantHandler.getChant(owner, ability));
+    }
+
+    public float getPower(LivingEntity owner) {
+        return getPower(this, owner);
     }
 
     // Used for skill tree
     public boolean isDisplayed(LivingEntity owner) {
         return this.getPointsCost() > 0;
     }
+
     public int getPointsCost() {
         return 0;
     }
+
     public boolean isUnlocked(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.isUnlocked(this);
     }
+
     public boolean isUnlockable(LivingEntity owner) {
+        if (this.isBlocked(owner)) return false;
+
         if (owner instanceof Player player && player.getAbilities().instabuild) {
             return true;
         }
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return !this.isBlocked(owner) && cap.getPoints() >= this.getPointsCost();
+        return cap.getPoints() >= this.getPointsCost();
     }
+
     public boolean isBlocked(LivingEntity owner) {
         Ability parent = this.getParent(owner);
         return parent != null && !parent.isUnlocked(owner);
     }
+
     public Vec2 getDisplayCoordinates() {
         return Vec2.ZERO;
     }
+
     public AbilityDisplayInfo getDisplay(LivingEntity owner) {
         Vec2 coordinates = this.getDisplayCoordinates();
         return new AbilityDisplayInfo(JJKAbilities.getKey(this).getPath(), coordinates.x, coordinates.y);
     }
+
     @Nullable
     public Ability getParent(LivingEntity owner) {
         return null;
@@ -104,6 +117,7 @@ public abstract class Ability {
     public abstract boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target);
 
     public abstract ActivationType getActivationType(LivingEntity owner);
+
     public abstract void run(LivingEntity owner);
 
     public List<Trait> getRequirements() {
@@ -268,7 +282,7 @@ public abstract class Ability {
             int duration = this.getDuration();
 
             if (duration > 0) {
-                duration = (int) (duration * getPower(owner));
+                duration = (int) (duration * ((Ability) this).getPower(owner));
             }
             return duration;
         }
@@ -298,12 +312,18 @@ public abstract class Ability {
         default Component getEnableMessage() {
             Ability ability = (Ability) this;
             ResourceLocation key = JJKAbilities.getKey(ability);
+
+            if (key == null) return Component.empty();
+
             return Component.translatable(String.format("ability.%s.%s.enable", key.getNamespace(), key.getPath()));
         }
 
         default Component getDisableMessage() {
             Ability ability = (Ability) this;
             ResourceLocation key = JJKAbilities.getKey(ability);
+
+            if (key == null) return Component.empty();
+
             return Component.translatable(String.format("ability.%s.%s.disable", key.getNamespace(), key.getPath()));
         }
     }

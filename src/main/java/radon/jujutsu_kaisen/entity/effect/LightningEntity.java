@@ -128,7 +128,7 @@ public class LightningEntity extends JujutsuProjectile {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                this.getDamage() * getPower());
+                                this.getDamage() * this.getPower());
                     }
 
                     if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

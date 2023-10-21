@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
@@ -131,11 +132,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     }
 
     @Override
-    public boolean fireImmune() {
-        return true;
-    }
-
-    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 
@@ -190,8 +186,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
                 Ability ability = this.getAbility();
 
                 if (ability != null && JJKAbilities.hasToggled(owner, ability)) {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                            cap.toggle(owner, ability));
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cap.toggle(owner, ability);
                 }
             }
         }

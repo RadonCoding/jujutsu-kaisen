@@ -41,12 +41,6 @@ public class BindingVowTab extends JJKTab {
     public void setSelectedBindingVow(BindingVowListWidget.Entry entry) {
         this.vow = entry;
         this.description.setMessage(entry.get().getDescription());
-
-        if (this.minecraft.player == null) return;
-
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        this.add.active = !cap.hasBindingVow(this.vow.get());
-        this.remove.active = cap.hasBindingVow(this.vow.get());
     }
 
     public <T extends ObjectSelectionList.Entry<T>> void buildBindingVowList(Consumer<T> consumer, Function<BindingVow, T> result) {
@@ -70,8 +64,14 @@ public class BindingVowTab extends JJKTab {
     }
 
     @Override
-    protected void drawCustom(GuiGraphics graphics, int x, int y) {
+    public void tick() {
+        super.tick();
 
+        if (this.minecraft.player == null) return;
+
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        this.add.active = this.vow != null && !cap.hasBindingVow(this.vow.get());
+        this.remove.active = this.vow != null && cap.hasBindingVow(this.vow.get());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BindingVowTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        this.addRenderableWidget(new BindingVowListWidget(this::buildBindingVowList, this::setSelectedBindingVow, this.minecraft, 80, 85,
+        this.addRenderableWidget(new BindingVowListWidget(this::buildBindingVowList, this::setSelectedBindingVow, this.minecraft, 74, 85,
                 xOffset, yOffset + this.minecraft.font.lineHeight + 1));
 
         this.add = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.add", JujutsuKaisen.MOD_ID)), pButton -> {

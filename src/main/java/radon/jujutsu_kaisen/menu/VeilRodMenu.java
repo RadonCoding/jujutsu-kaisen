@@ -6,6 +6,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public class VeilRodMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
@@ -22,7 +23,7 @@ public class VeilRodMenu extends AbstractContainerMenu {
                 return be.getSize();
             }
             return 0;
-        }).orElse(0);
+        }).orElse(ConfigHolder.SERVER.minimumVeilSize.get());
     }
 
     public VeilRodMenu(int pContainerId) {

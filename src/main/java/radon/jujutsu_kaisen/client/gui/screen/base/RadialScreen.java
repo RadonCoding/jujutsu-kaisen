@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
+import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -45,9 +46,11 @@ public abstract class RadialScreen extends Screen {
     private static final float RADIUS_IN = 50.0F;
     private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
 
-    private final List<DisplayItem> items = new ArrayList<>();
+    private final List<List<DisplayItem>> pages = new ArrayList<>();
 
     private int hovered = -1;
+    private int hover;
+    private static int page;
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));
@@ -62,18 +65,37 @@ public abstract class RadialScreen extends Screen {
     protected void init() {
         super.init();
 
-        assert this.minecraft != null;
-        this.items.addAll(this.getItems());
+        List<DisplayItem> items = this.getItems();
 
-        if (this.items.isEmpty()) {
+        int count = items.size() / 12;
+
+        for (int i = 0; i < count; i++) {
+            int index = i * 12;
+            this.pages.add(items.subList(index, index + 12));
+        }
+
+        int remainder = items.size() % 12;
+
+        if (remainder > 0) {
+            int index = count * 12;
+            this.pages.add(items.subList(index, index + remainder));
+        }
+
+        if (this.pages.isEmpty()) {
             this.onClose();
         }
     }
 
+    public List<DisplayItem> getCurrent() {
+        if (page > this.pages.size()) {
+            page = 0;
+        }
+        return this.pages.get(page);
+    }
+
     protected abstract List<DisplayItem> getItems();
 
-    private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY,
-                          float startAngle, float endAngle, int color) {
+    private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY, float startAngle, float endAngle, int color) {
         float angle = endAngle - startAngle;
         float precision = 2.5F / 360.0F;
         int sections = Math.max(1, Mth.ceil(angle / precision));
@@ -115,32 +137,32 @@ public abstract class RadialScreen extends Screen {
                 if (this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    DisplayItem item = this.items.get(this.hovered);
+                    DisplayItem item = this.getCurrent().get(this.hovered);
 
-                    if (item.type == DisplayItem.Type.ABILITY) {
-                        Ability ability = item.ability;
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                        ClientAbilityHandler.trigger(ability);
-                    } else if (item.type == DisplayItem.Type.CURSE) {
-                        EntityType<?> type = item.curse.getKey();
-                        Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                        PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
-                    } else if (item.type == DisplayItem.Type.COPIED) {
-                        PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
-                        cap.setCurrentCopied(item.copied);
-                    } else if (item.type == DisplayItem.Type.ABSORBED) {
-                        PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
-                        cap.setCurrentAbsorbed(item.absorbed);
+                    switch (item.type) {
+                        case ABILITY -> {
+                            Ability ability = item.ability;
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                            ClientAbilityHandler.trigger(ability);
+                        }
+                        case CURSE -> {
+                            EntityType<?> type = item.curse.getKey();
+                            Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+                            PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
+                        }
+                        case COPIED -> {
+                            PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
+                            cap.setCurrentCopied(item.copied);
+                        }
+                        case ABSORBED -> {
+                            PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
+                            cap.setCurrentAbsorbed(item.absorbed);
+                        }
                     }
                 }
             }
         }
         super.onClose();
-    }
-
-    public static void drawCenteredString(@NotNull GuiGraphics pGuiGraphics, Font pFont, Component pText, int pX, int pY, int pColor) {
-        FormattedCharSequence sql = pText.getVisualOrderText();
-        pGuiGraphics.drawString(pFont, sql, pX - pFont.width(sql) / 2, pY, pColor);
     }
 
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
@@ -212,11 +234,11 @@ public abstract class RadialScreen extends Screen {
         BufferBuilder buffer = tesselator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        for (int i = 0; i < this.items.size(); i++) {
-            float startAngle = getAngleFor(i - 0.5F);
-            float endAngle = getAngleFor(i + 0.5F);
+        for (int i = 0; i < this.getCurrent().size(); i++) {
+            float startAngle = this.getAngleFor(i - 0.5F);
+            float endAngle = this.getAngleFor(i + 0.5F);
 
-            DisplayItem item = this.items.get(i);
+            DisplayItem item = this.getCurrent().get(i);
             int white = HelperMethods.toRGB24(255, 255, 255, 150);
             int black = HelperMethods.toRGB24(0, 0, 0, 150);
 
@@ -235,16 +257,36 @@ public abstract class RadialScreen extends Screen {
         tesselator.end();
         RenderSystem.disableBlend();
         pGuiGraphics.pose().popPose();
+
+        if (this.pages.size() > 1) {
+            if (this.pages.size() - 1 > page) {
+                String symbol = ">";
+
+                int x = centerX + Math.round(RADIUS_OUT) + 20;
+                int y = centerY - this.minecraft.font.lineHeight;
+
+                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);
+            }
+            if (page > 0) {
+                String symbol = "<";
+
+                int x = centerX - Math.round(RADIUS_OUT) - 20;
+                int y = centerY - this.minecraft.font.lineHeight;
+
+                pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);
+            }
+        }
+
         float radius = (RADIUS_IN + RADIUS_OUT) / 2.0F;
 
-        for (int i = 0; i < this.items.size(); i++) {
-            float start = getAngleFor(i - 0.5F);
-            float end = getAngleFor(i + 0.5F);
+        for (int i = 0; i < this.getCurrent().size(); i++) {
+            float start = this.getAngleFor(i - 0.5F);
+            float end = this.getAngleFor(i + 0.5F);
             float middle = (start + end) / 2.0F;
             int posX = (int) (centerX + radius * (float) Math.cos(middle));
             int posY = (int) (centerY + radius * (float) Math.sin(middle));
 
-            DisplayItem item = this.items.get(i);
+            DisplayItem item = this.getCurrent().get(i);
 
             if (this.hovered == i) {
                 List<Component> lines = new ArrayList<>();
@@ -280,7 +322,7 @@ public abstract class RadialScreen extends Screen {
                 int y = this.height / 2 - this.font.lineHeight / 2 - ((lines.size() - 1) * this.font.lineHeight);
 
                 for (Component line : lines) {
-                    drawCenteredString(pGuiGraphics, this.font, line, x, y, 0xFFFFFF);
+                    pGuiGraphics.drawCenteredString(this.font, line, x, y, 0xFFFFFF);
                     y += this.font.lineHeight;
                 }
             }
@@ -301,7 +343,7 @@ public abstract class RadialScreen extends Screen {
                 pGuiGraphics.pose().pushPose();
                 pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
-                drawCenteredString(pGuiGraphics, this.font, item.ability.getName(), posX, y, 0xFFFFFF);
+                pGuiGraphics.drawCenteredString(this.font, item.ability.getName(), posX, y, 0xFFFFFF);
                 pGuiGraphics.pose().popPose();
             } else if (item.type == DisplayItem.Type.COPIED || item.type == DisplayItem.Type.ABSORBED) {
                 int y = posY - this.font.lineHeight / 2;
@@ -309,7 +351,7 @@ public abstract class RadialScreen extends Screen {
                 pGuiGraphics.pose().pushPose();
                 pGuiGraphics.pose().scale(0.5F, 0.5F, 0.0F);
                 pGuiGraphics.pose().translate(posX, y, 0.0F);
-                drawCenteredString(pGuiGraphics, this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
+                pGuiGraphics.drawCenteredString(this.font, item.type == DisplayItem.Type.COPIED ? item.copied.getName() : item.absorbed.getName(), posX, y, 0xAA00AA);
                 pGuiGraphics.pose().popPose();
             }
         }
@@ -325,9 +367,9 @@ public abstract class RadialScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.items.size() > 0) {
-            float startAngle = getAngleFor(-0.5F);
-            float endAngle = getAngleFor(this.items.size() - 0.5F);
+        if (this.getCurrent().size() > 0) {
+            float startAngle = this.getAngleFor(-0.5F);
+            float endAngle = this.getAngleFor(this.getCurrent().size() - 0.5F);
 
             while (mouseAngle < startAngle) {
                 mouseAngle += Mth.TWO_PI;
@@ -335,25 +377,43 @@ public abstract class RadialScreen extends Screen {
             while (mouseAngle >= endAngle) {
                 mouseAngle -= Mth.TWO_PI;
             }
-        }
 
-        this.hovered = -1;
+            this.hovered = -1;
 
-        for (int i = 0; i < this.items.size(); i++) {
-            float startAngle = getAngleFor(i - 0.5F);
-            float endAngle = getAngleFor(i + 0.5F);
+            for (int i = 0; i < this.getCurrent().size(); i++) {
+                float currentStart = this.getAngleFor(i - 0.5F);
+                float currentEnd = this.getAngleFor(i + 0.5F);
 
-            if (mouseAngle >= startAngle && mouseAngle < endAngle && mousePos >= RADIUS_IN && mousePos < RADIUS_OUT) {
-                this.hovered = i;
-                break;
+                if (mouseAngle >= currentStart && mouseAngle < currentEnd && mousePos >= RADIUS_IN && mousePos < RADIUS_OUT) {
+                    this.hovered = i;
+                    break;
+                }
+            }
+
+            if (mousePos < RADIUS_OUT) return;
+
+            if (this.pages.size() > 1) {
+                if (this.pages.size() - 1 > page) {
+                    if (pMouseX > (double) this.width / 2 && pMouseX < this.width && pMouseY > 0 && pMouseY < this.height) {
+                        if (++this.hover == 20) page++;
+                        return;
+                    }
+                }
+                if (page > 0) {
+                    if (pMouseX > 0 && pMouseX < (double) this.width / 2 && pMouseY > 0 && pMouseY < this.height) {
+                        if (++this.hover == 20) page--;
+                        return;
+                    }
+                }
+                if (this.hover > 0) this.hover = 0;
             }
         }
     }
 
     private float getAngleFor(double i) {
-        if (this.items.size() == 0) {
+        if (this.getCurrent().size() == 0) {
             return 0;
         }
-        return (float) (((i / this.items.size()) + 0.25) * Mth.TWO_PI + Math.PI);
+        return (float) (((i / this.getCurrent().size()) + 0.25D) * Mth.TWO_PI + Math.PI);
     }
 }

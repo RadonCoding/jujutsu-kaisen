@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
-import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.ScreenFlashOverlay;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
@@ -106,9 +106,9 @@ public class JJKClientEventHandler {
                     mc.setScreen(new JujutsuScreen());
                 }
                 if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
-                    MeleeAbilityOverlay.scroll(1);
+                    AbilityOverlay.scroll(1);
                 } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {
-                    MeleeAbilityOverlay.scroll(-1);
+                    AbilityOverlay.scroll(-1);
                 }
                 if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
                     mc.setScreen(new AbilityScreen());
@@ -203,7 +203,7 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("ability_overlay", MeleeAbilityOverlay.OVERLAY);
+            event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
             event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);

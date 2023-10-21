@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item.veil;
+package radon.jujutsu_kaisen.item.veil.modifier;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

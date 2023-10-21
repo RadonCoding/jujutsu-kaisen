@@ -111,8 +111,4 @@ public class ShootRCT extends Ability {
         return cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.SCROLL;
-    }
 }

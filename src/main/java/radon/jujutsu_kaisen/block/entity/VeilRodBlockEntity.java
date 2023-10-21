@@ -13,14 +13,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.item.veil.ColorModifier;
-import radon.jujutsu_kaisen.item.veil.Modifier;
-import radon.jujutsu_kaisen.item.veil.ModifierUtils;
+import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
+import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
+import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -43,9 +44,13 @@ public class VeilRodBlockEntity extends BlockEntity {
 
     public VeilRodBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.VEIL_ROD.get(), pPos, pBlockState);
+
+        this.size = ConfigHolder.SERVER.minimumVeilSize.get();
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
+        VeilHandler.create(pLevel.dimension(), pPos);
+
         if (++pBlockEntity.counter != INTERVAL) return;
 
         pBlockEntity.counter = 0;

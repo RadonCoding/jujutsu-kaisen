@@ -74,10 +74,6 @@ public class DismantleProjectile extends JujutsuProjectile {
         }
     }
 
-    public int getSize() {
-        return Mth.floor(LINE_LENGTH * getPower());
-    }
-
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
@@ -87,7 +83,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
                 }
             });
         }
@@ -108,33 +104,29 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         List<HitResult> hits = new ArrayList<>();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                int size = Mth.floor(LINE_LENGTH * getPower());
-                BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
-                BlockPos end = center.relative(direction, Math.round(SPEED)).relative(perpendicular, size / 2);
+        int size = Mth.floor(LINE_LENGTH * this.getPower());
+        BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
+        BlockPos end = center.relative(direction, Math.round(SPEED)).relative(perpendicular, size / 2);
 
-                BlockPos.betweenClosed(start, end).forEach(pos -> {
-                    Vec3 current = pos.getCenter();
+        BlockPos.betweenClosed(start, end).forEach(pos -> {
+            Vec3 current = pos.getCenter();
 
-                    AABB bounds = AABB.ofSize(current, 1.0D, 1.0D, 1.0D);
+            AABB bounds = AABB.ofSize(current, 1.0D, 1.0D, 1.0D);
 
-                    for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                        hits.add(new EntityHitResult(entity));
-                    }
+            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+                hits.add(new EntityHitResult(entity));
+            }
 
-                    BlockState state = this.level().getBlockState(pos);
+            BlockState state = this.level().getBlockState(pos);
 
-                    if (!state.getFluidState().isEmpty() || state.isAir()) return;
+            if (!state.getFluidState().isEmpty() || state.isAir()) return;
 
-                    if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                        this.level().destroyBlock(pos, false);
-                    }
-                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
-                            0, 1.0D, 0.0D, 0.0D, 1.0D);
-                });
-            });
-        }
+            if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                this.level().destroyBlock(pos, false);
+            }
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
+                    0, 1.0D, 0.0D, 0.0D, 1.0D);
+        });
         return hits;
     }
 

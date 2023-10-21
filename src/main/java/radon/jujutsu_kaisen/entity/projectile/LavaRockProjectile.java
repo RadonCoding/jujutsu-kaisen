@@ -98,7 +98,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
             if (domain == null) return;
 
             if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower());
             }
         }
         this.discard();

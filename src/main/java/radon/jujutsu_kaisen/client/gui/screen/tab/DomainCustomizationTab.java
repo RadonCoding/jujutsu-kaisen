@@ -50,11 +50,6 @@ public class DomainCustomizationTab extends JJKTab {
     }
 
     @Override
-    protected void drawCustom(GuiGraphics graphics, int x, int y) {
-
-    }
-
-    @Override
     public void addWidgets() {
         if (this.minecraft == null || this.minecraft.player == null) return;
 

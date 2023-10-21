@@ -60,7 +60,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.sizeSlider = new ForgeSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(),
-                0, ConfigHolder.SERVER.maximumVeilSize.get(), 0, true);
+                ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get(), this.menu.getSize(), true);
         this.addRenderableWidget(this.sizeSlider);
         this.setInitialFocus(this.sizeSlider);
     }

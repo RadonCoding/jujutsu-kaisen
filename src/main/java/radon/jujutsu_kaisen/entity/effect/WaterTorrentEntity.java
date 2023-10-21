@@ -124,7 +124,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
             for (Entity entity : entities) {
                 if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), DAMAGE * this.getPower());
             }
 
             if (!this.level().isClientSide) {

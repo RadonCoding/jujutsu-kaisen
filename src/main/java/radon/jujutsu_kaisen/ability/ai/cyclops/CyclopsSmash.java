@@ -6,7 +6,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class CyclopsSmash extends Ability {
     private static final float SMASH_EXPLOSION = 1.0F;
@@ -24,7 +23,7 @@ public class CyclopsSmash extends Ability {
     @Override
     public void run(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            owner.level().explode(owner, owner.getX(), owner.getY(), owner.getZ(), SMASH_EXPLOSION * getPower(owner), false,
+            owner.level().explode(owner, owner.getX(), owner.getY(), owner.getZ(), SMASH_EXPLOSION * this.getPower(owner), false,
                     owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
     }

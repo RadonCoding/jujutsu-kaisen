@@ -87,6 +87,6 @@ public enum JJKTabType {
     public boolean isMouseOver(int pOffsetX, int pOffsetY, int pIndex, double pMouseX, double pMouseY) {
         int i = pOffsetX + this.getX(pIndex);
         int j = pOffsetY + this.getY(pIndex);
-        return pMouseX > (double)i && pMouseX < (double)(i + this.width) && pMouseY > (double)j && pMouseY < (double)(j + this.height);
+        return pMouseX > (double) i && pMouseX < (double) (i + this.width) && pMouseY > (double)j && pMouseY < (double)(j + this.height);
     }
 }

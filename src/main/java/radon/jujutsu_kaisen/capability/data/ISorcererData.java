@@ -43,8 +43,14 @@ public interface ISorcererData {
     void addBindingVow(BindingVow vow);
     void removeBindingVow(BindingVow vow);
     boolean hasBindingVow(BindingVow vow);
-    Set<BindingVow> getBindingVows();
 
+    void addChant(Ability ability, String chant);
+    void removeChant(Ability ability, String chant);
+    boolean hasChant(Ability ability, String chant);
+    boolean hasChant(String chant);
+    Set<String> getChants(Ability ability);
+
+    float getOutput(LivingEntity owner);
     float getAbilityPower(LivingEntity owner);
     float getRealPower();
 

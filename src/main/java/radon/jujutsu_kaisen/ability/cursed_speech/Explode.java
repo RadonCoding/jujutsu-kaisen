@@ -13,7 +13,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -62,7 +61,7 @@ public class Explode extends Ability {
             if (!(entity instanceof LivingEntity)) continue;
 
             owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
-                    entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * getPower(owner), false, Level.ExplosionInteraction.NONE);
+                    entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * this.getPower(owner), false, Level.ExplosionInteraction.NONE);
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));

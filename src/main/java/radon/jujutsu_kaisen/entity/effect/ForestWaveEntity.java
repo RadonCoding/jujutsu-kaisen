@@ -39,11 +39,6 @@ public class ForestWaveEntity extends JujutsuProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-
-    }
-
-    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
@@ -60,7 +55,7 @@ public class ForestWaveEntity extends JujutsuProjectile {
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
             entity.hurtMarked = true;
 
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * getPower());
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * this.getPower());
         }
     }
 
@@ -77,11 +72,15 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
         pCompound.putBoolean("damage", this.damage);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
         this.damage = pCompound.getBoolean("damage");
     }
 }

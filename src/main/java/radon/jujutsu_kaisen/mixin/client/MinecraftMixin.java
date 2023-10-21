@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.curse_manipulation.AbsorbCurse;
-import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 @Mixin(Minecraft.class)
@@ -30,7 +30,7 @@ public class MinecraftMixin {
 
         if (!(instance instanceof LivingEntity entity)) return false;
 
-        return MeleeAbilityOverlay.getSelected() == JJKAbilities.ABSORB_CURSE.get() &&
+        return AbilityOverlay.getSelected() == JJKAbilities.ABSORB_CURSE.get() &&
                 AbsorbCurse.canAbsorb(player, entity);
     }
 }

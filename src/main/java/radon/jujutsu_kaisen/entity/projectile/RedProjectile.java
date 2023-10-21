@@ -46,7 +46,7 @@ public class RedProjectile extends JujutsuProjectile {
 
                 float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * getPower())) {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
                     entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                     entity.hurtMarked = true;
                 }
@@ -61,7 +61,7 @@ public class RedProjectile extends JujutsuProjectile {
         if (this.level().isClientSide) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            float radius = EXPLOSIVE_POWER * getPower();
+            float radius = EXPLOSIVE_POWER * this.getPower();
 
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
             this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
@@ -102,7 +102,7 @@ public class RedProjectile extends JujutsuProjectile {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                             }
 
-                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
                             this.level().addFreshEntity(explosion);
 
                             blue.discard();

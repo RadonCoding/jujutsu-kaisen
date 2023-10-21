@@ -36,7 +36,7 @@ public class SetSizeC2SPacket {
                 if (!menu.stillValid(sender)) {
                     return;
                 }
-                menu.setSize(Mth.clamp(this.size, 0, ConfigHolder.SERVER.maximumVeilSize.get()));
+                menu.setSize(Mth.clamp(this.size, ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get()));
             }
         });
         ctx.setPacketHandled(true);

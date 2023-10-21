@@ -28,6 +28,7 @@ public class PactTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.pact", JujutsuKaisen.MOD_ID));
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
+    private Button create;
     private MultiLineTextWidget description;
 
     @Nullable
@@ -48,7 +49,7 @@ public class PactTab extends JJKTab {
         this.player = entry;
     }
 
-    public  void setSelectedPact(PactListWidget.Entry entry) {
+    public void setSelectedPact(PactListWidget.Entry entry) {
         this.pact = entry;
         this.description.setMessage(entry.get().getDescription());
     }
@@ -89,8 +90,10 @@ public class PactTab extends JJKTab {
     }
 
     @Override
-    protected void drawCustom(GuiGraphics graphics, int x, int y) {
+    public void tick() {
+        super.tick();
 
+        this.create.active = this.player != null && this.pact != null;
     }
 
     @Override
@@ -103,12 +106,12 @@ public class PactTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        this.addRenderableWidget(new PlayerListWidget(this::buildPlayerList, this::setSelectedPlayer, this.minecraft, 58, 85,
+        this.addRenderableWidget(new PlayerListWidget(this::buildPlayerList, this::setSelectedPlayer, this.minecraft, 52, 85,
                 xOffset, yOffset + this.minecraft.font.lineHeight + 1));
-        this.addRenderableWidget(new PactListWidget(this::buildPactList, this::setSelectedPact, this.minecraft, 58, 85,
+        this.addRenderableWidget(new PactListWidget(this::buildPactList, this::setSelectedPact, this.minecraft, 52, 85,
                 xOffset + 64, yOffset + this.minecraft.font.lineHeight + 1, this));
 
-        this.addRenderableWidget(Button.builder(Component.translatable(String.format("gui.%s.pact.create", JujutsuKaisen.MOD_ID)), pButton -> {
+        this.create = Button.builder(Component.translatable(String.format("gui.%s.pact.create", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.player == null || this.pact == null) return;
 
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -116,7 +119,8 @@ public class PactTab extends JJKTab {
             this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
             PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
             cap.createPactRequest(this.player.get().getProfile().getId(), this.pact.get());
-        }).size(87, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build());
+        }).size(87, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build();
+        this.addRenderableWidget(this.create);
 
         this.description = new MultiLineTextWidget(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 1, Component.empty(), this.minecraft.font)
                 .setMaxWidth(87);

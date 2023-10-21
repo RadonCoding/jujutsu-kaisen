@@ -79,7 +79,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     public void onRelease(LivingEntity owner, int charge) {
         if (!owner.level().isClientSide) {
             owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
-                    EXPLOSIVE_POWER * getPower(owner), false, Level.ExplosionInteraction.NONE);
+                    EXPLOSIVE_POWER * this.getPower(owner), false, Level.ExplosionInteraction.NONE);
         }
     }
 

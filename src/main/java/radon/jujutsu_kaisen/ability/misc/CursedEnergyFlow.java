@@ -54,7 +54,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
                 double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() * 2.0D - HelperMethods.getLookAngle(owner).scale(0.35D).z();
                 level.sendParticles(new GenericParticle.GenericParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.2F, 5),
-                        x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 2.5D, 0.0D, 1.0D);
+                        x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.3D, 0.0D, 1.0D);
             }
 
             if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
@@ -70,7 +70,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
                         if (!entity.isInWater()) continue;
 
-                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * getPower(owner))) {
+                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
                             owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                             for (int i = 0; i < 2; i++) {

@@ -28,7 +28,7 @@ public class EmberInsects extends Ability {
             int delay = i * 2;
 
             cap.delayTickEvent(() -> {
-                EmberInsectProjectile insect = new EmberInsectProjectile(owner, getPower(owner),
+                EmberInsectProjectile insect = new EmberInsectProjectile(owner, this.getPower(owner),
                         HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
                         HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));
                 owner.level().addFreshEntity(insect);

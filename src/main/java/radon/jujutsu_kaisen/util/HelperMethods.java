@@ -86,7 +86,7 @@ public class HelperMethods {
     }
 
     public static float getPower(float experience) {
-        return 1.0F + experience / 1000.0F;
+        return 1.0F + experience / 1500.0F;
     }
 
     public static float getYaw(Vec3 vec) {

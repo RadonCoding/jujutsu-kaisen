@@ -100,7 +100,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 LivingEntity owner = frame.getOwner();
 
                 if (owner != null) {
-                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * getPower(owner));
+                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * Ability.getPower(JJKAbilities.PROJECTION_SORCERY.get(), owner));
 
                     invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }
