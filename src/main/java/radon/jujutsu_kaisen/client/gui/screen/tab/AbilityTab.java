@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -93,15 +94,19 @@ public class AbilityTab extends JJKTab {
         super.drawTooltips(pGuiGraphics, pMouseX, pMouseY, pOffsetX, pOffsetY);
 
         pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate((float) (pOffsetX + 9), (float) (pOffsetY + 18), 400.0F);
+        RenderSystem.enableDepthTest();
+
+        pGuiGraphics.pose().pushPose();
         pGuiGraphics.pose().translate(0.0D, 0.0D, -200.0D);
         pGuiGraphics.fill(0, 0, JujutsuScreen.WINDOW_INSIDE_WIDTH, JujutsuScreen.WINDOW_INSIDE_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean hovered = false;
         int i = Mth.floor(this.scrollX);
         int j = Mth.floor(this.scrollY);
 
-        if (pMouseX > 0 && pMouseX < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY > 0 && pMouseY < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
+        if (pMouseX - pOffsetX - 9 > 0 && pMouseX - pOffsetX - 9 < JujutsuScreen.WINDOW_INSIDE_WIDTH && pMouseY - pOffsetY - 18 > 0 && pMouseY - pOffsetY - 18 < JujutsuScreen.WINDOW_INSIDE_HEIGHT) {
             for (AbilityWidget widget : this.abilities.values()) {
-                if (widget.isMouseOver(i, j, pMouseX, pMouseY)) {
+                if (widget.isMouseOver(i, j, pMouseX - pOffsetX - 9, pMouseY - pOffsetY - 18)) {
                     hovered = true;
                     widget.drawHover(pGuiGraphics, i, j, this.fade, pOffsetX, pOffsetY);
                     break;
@@ -115,6 +120,8 @@ public class AbilityTab extends JJKTab {
         } else {
             this.fade = Mth.clamp(this.fade - 0.04F, 0.0F, 1.0F);
         }
+        RenderSystem.disableDepthTest();
+        pGuiGraphics.pose().popPose();
     }
 
     public void addAbility(Ability ability) {

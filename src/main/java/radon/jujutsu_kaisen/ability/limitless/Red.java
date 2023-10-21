@@ -23,7 +23,7 @@ public class Red extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        RedProjectile red = new RedProjectile(owner, getPower(owner));
+        RedProjectile red = new RedProjectile(owner, this.getPower(owner));
         owner.level().addFreshEntity(red);
     }
 

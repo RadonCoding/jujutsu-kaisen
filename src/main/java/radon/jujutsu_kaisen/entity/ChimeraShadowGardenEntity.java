@@ -80,7 +80,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                 if (distance <= horizontal && distance >= horizontal - 1) {
                                     BlockPos pos = center.offset(x, -vertical, z);
 
-                                    if (!this.isAffected(pos)) return;
+                                    if (!this.isAffected(pos)) continue;
 
                                     BlockState state = this.level().getBlockState(pos);
 
@@ -90,7 +90,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                         if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN_IGNORE)) {
                                             continue;
                                         } else if (existing != null) {
-                                            return;
+                                            continue;
                                         }
 
                                         Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();

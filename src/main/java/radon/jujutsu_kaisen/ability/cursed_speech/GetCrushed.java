@@ -19,7 +19,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -66,7 +65,7 @@ public class GetCrushed extends Ability {
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (Entity entity : getEntities(owner)) {
-            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * getPower(owner))) {
+            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                 Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
@@ -101,7 +100,7 @@ public class GetCrushed extends Ability {
                         }
                     }
                 }
-                entity.setDeltaMovement(0.0D, CRUSH_POWER * getPower(owner) * -1.0D, 0.0D);
+                entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
                 entity.hurtMarked = true;
             }
             if (entity instanceof Player player) {

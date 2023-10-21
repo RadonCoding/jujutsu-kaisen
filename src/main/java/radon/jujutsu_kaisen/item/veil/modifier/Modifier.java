@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.item.veil;
+package radon.jujutsu_kaisen.item.veil.modifier;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -57,7 +57,7 @@ public class Modifier {
         if (!(obj instanceof Modifier other)) {
             return false;
         }
-        return this.type.equals(other.type);
+        return this.type == other.type;
     }
 
     @Override

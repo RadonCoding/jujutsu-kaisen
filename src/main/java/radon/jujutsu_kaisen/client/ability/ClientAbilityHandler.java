@@ -20,7 +20,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.gui.overlay.MeleeAbilityOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
 import radon.jujutsu_kaisen.client.gui.screen.ShadowInventoryScreen;
@@ -99,7 +99,7 @@ public class ClientAbilityHandler {
 
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.ACTIVATE_ABILITY.isDown()) {
-                    Ability ability = MeleeAbilityOverlay.getSelected();
+                    Ability ability = AbilityOverlay.getSelected();
 
                     if (ability != null) {
                         if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {

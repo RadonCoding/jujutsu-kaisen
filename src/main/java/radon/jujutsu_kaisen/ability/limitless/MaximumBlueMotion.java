@@ -26,7 +26,7 @@ public class MaximumBlueMotion extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, getPower(owner), true);
+        MaximumBlueProjectile blue = new MaximumBlueProjectile(owner, this.getPower(owner), true);
         owner.level().addFreshEntity(blue);
     }
 

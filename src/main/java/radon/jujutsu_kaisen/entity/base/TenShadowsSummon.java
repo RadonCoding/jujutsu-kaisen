@@ -177,25 +177,25 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         LivingEntity owner = this.getOwner();
 
         if (owner != null && !owner.level().isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!this.isTame()) {
-                    if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
-                        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                        }
-                    }
-                } else {
-                    if (this.getAbility().canDie()) {
-                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+            if (!this.isTame()) {
+                if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
+                    cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                        }
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                     }
                 }
-            });
+            } else {
+                if (this.getAbility().canDie()) {
+                    cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+
+                    if (owner instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    }
+                }
+            }
         }
     }
 
@@ -282,20 +282,26 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public SorcererGrade getGrade() {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return SorcererGrade.GRADE_4;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner == null) return SorcererGrade.GRADE_4;
 
-        SorcererGrade grade = cap.getGrade();
-        int index = Mth.clamp(grade.ordinal() - 1, 0, SorcererGrade.values().length - 1);
-        return SorcererGrade.values()[index];
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getGrade();
+    }
+
+    @Override
+    public float getExperience() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return 0.0F;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getExperience() * 0.75F;
     }
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
-
-
 
     @Override
     public @Nullable Ability getDomain() {

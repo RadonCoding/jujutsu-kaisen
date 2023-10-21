@@ -42,7 +42,7 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
                 if (entity == this || entity == owner) continue;
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * getPower());
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower());
             }
         }
         super.tick();

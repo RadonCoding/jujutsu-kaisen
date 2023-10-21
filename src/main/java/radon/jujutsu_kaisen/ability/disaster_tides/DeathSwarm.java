@@ -90,9 +90,9 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
                 float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
 
                 FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[] {
-                        new EelShikigamiProjectile(owner, getPower(owner), target, xOffset, yOffset),
-                        new SharkShikigamiProjectile(owner, getPower(owner), target, xOffset, yOffset),
-                        new PiranhaShikigamiProjectile(owner, getPower(owner), target, xOffset, yOffset)
+                        new EelShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
+                        new SharkShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
+                        new PiranhaShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset)
                 };
 
                 int delay = i * 2;

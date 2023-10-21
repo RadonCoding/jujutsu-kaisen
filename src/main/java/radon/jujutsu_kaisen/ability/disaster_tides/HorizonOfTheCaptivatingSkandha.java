@@ -36,7 +36,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
         if (owner.level().getGameTime() % 20 == 0) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * getPower(owner) * (1.6F - cap.getDomainSize())));
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower(owner) * (1.6F - cap.getDomainSize())));
 
             if (owner.level().getGameTime() % 3 * 20 == 0) {
                 Ability fish = JJKAbilities.DEATH_SWARM.get();

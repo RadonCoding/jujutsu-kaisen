@@ -23,7 +23,7 @@ public class FireArrow extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        FireArrowProjectile arrow = new FireArrowProjectile(owner, getPower(owner));
+        FireArrowProjectile arrow = new FireArrowProjectile(owner, this.getPower(owner));
         owner.level().addFreshEntity(arrow);
     }
 

@@ -172,6 +172,16 @@ public class PacketHandler {
                 .encoder(UnlockAbilityC2SPacket::encode)
                 .consumerMainThread(UnlockAbilityC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(AddChantC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(AddChantC2SPacket::new)
+                .encoder(AddChantC2SPacket::encode)
+                .consumerMainThread(AddChantC2SPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RemoveChantC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(RemoveChantC2SPacket::new)
+                .encoder(RemoveChantC2SPacket::encode)
+                .consumerMainThread(RemoveChantC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

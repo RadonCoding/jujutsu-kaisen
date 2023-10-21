@@ -175,7 +175,7 @@ public class AbilityWidget  {
     }
 
     public void draw(GuiGraphics pGuiGraphics, int pX, int pY) {
-        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, 154, 26, 26);
+        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
         pGuiGraphics.blit(this.display.getIcon(), pX + this.x + 8, pY + this.y + 5, 0, 0, 16, 16, 16, 16);
 
         for (AbilityWidget widget : this.children) {
@@ -232,7 +232,7 @@ public class AbilityWidget  {
         }
         pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, 26, i, 26);
         pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, 26, j, 26);
-        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, 154, 26, 26);
+        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
 
         if (flag) {
             pGuiGraphics.drawString(this.minecraft.font, this.title, k + 5, pY + this.y + 9, -1);

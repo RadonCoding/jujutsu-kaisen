@@ -95,7 +95,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     public void perform(LivingEntity owner, @Nullable LivingEntity target) {
         if (target == null || owner.level().isClientSide) return;
 
-        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * getPower(owner))) {
+        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
             target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),

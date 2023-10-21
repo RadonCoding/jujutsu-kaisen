@@ -62,7 +62,7 @@ public class Spiderweb extends Ability {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 Vec3 center = hit.getBlockPos().getCenter();
 
-                float power = EXPLOSIVE_POWER * getPower(owner);
+                float power = EXPLOSIVE_POWER * this.getPower(owner);
 
                 AABB bounds = AABB.ofSize(center, power, 1.0D, power);
 

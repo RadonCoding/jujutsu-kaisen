@@ -21,7 +21,7 @@ public enum CursedTechnique {
     DISASTER_PLANTS(JJKAbilities.SHINING_SEA_OF_FLOWERS.get(), JJKAbilities.FOREST_PLATFORM.get(), JJKAbilities.FOREST_SPIKES.get(), JJKAbilities.WOOD_SHIELD.get(), JJKAbilities.CURSED_BUD.get(),
             JJKAbilities.FOREST_WAVE.get(), JJKAbilities.FOREST_ROOTS.get(), JJKAbilities.DISASTER_PLANT.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
-            JJKAbilities.SWITCH_MODE.get(),
+            JJKAbilities.ABILITY_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),
             JJKAbilities.SHADOW_STORAGE.get(),
 

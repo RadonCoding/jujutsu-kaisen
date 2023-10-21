@@ -89,6 +89,8 @@ public class JujutsuScreen extends Screen {
         this.tabs.add(new BindingVowTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
         index++;
         this.tabs.add(new AbilityTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
+        index++;
+        this.tabs.add(new ChantTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
 
         this.setSelectedTab(this.tabs.get(0));
 
@@ -127,6 +129,10 @@ public class JujutsuScreen extends Screen {
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if (this.selectedTab != null) {
+            this.selectedTab.keyPressed(pKeyCode, pScanCode, pModifiers);
+        }
+
         if (this.minecraft != null && this.minecraft.options.keyAdvancements.matches(pKeyCode, pScanCode)) {
             this.minecraft.setScreen(null);
             this.minecraft.mouseHandler.grabMouse();
@@ -178,12 +184,7 @@ public class JujutsuScreen extends Screen {
 
     private void renderTooltips(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
         if (this.selectedTab != null) {
-            pGuiGraphics.pose().pushPose();
-            pGuiGraphics.pose().translate((float) (pOffsetX + 9), (float) (pOffsetY + 18), 400.0F);
-            RenderSystem.enableDepthTest();
-            this.selectedTab.drawTooltips(pGuiGraphics, pMouseX - pOffsetX - 9, pMouseY - pOffsetY - 18, pOffsetX, pOffsetY);
-            RenderSystem.disableDepthTest();
-            pGuiGraphics.pose().popPose();
+            this.selectedTab.drawTooltips(pGuiGraphics, pMouseX, pMouseY, pOffsetX, pOffsetY);
         }
 
         for (JJKTab JJKTab : this.tabs) {

@@ -33,7 +33,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         int speed = 3;
 
         for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
-            ForestWaveEntity forest = new ForestWaveEntity(owner, getPower(owner));
+            ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
             Vec3 look = HelperMethods.getLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth()))

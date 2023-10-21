@@ -83,22 +83,4 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     public int getPointsCost() {
         return 50;
     }
-
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
-        @SubscribeEvent
-        public static void onLivingHurt(LivingDamageEvent event) {
-            LivingEntity victim = event.getEntity();
-
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                    cap.toggle(victim, JJKAbilities.SIMPLE_DOMAIN.get());
-
-                    if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                    }
-                }
-            });
-        }
-    }
 }

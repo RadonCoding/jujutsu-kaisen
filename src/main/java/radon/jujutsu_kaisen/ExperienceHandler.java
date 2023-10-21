@@ -49,7 +49,7 @@ public class ExperienceHandler {
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 if (battles.containsKey(attacker.getUUID())) {
                     battles.get(attacker.getUUID()).attack(event.getAmount());
-                } else {
+                } else if (attacker.getLastHurtByMob() == victim) {
                     battles.put(attacker.getUUID(), new BattleData(victim));
                 }
             }
@@ -85,6 +85,8 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
+            if (this.lowestOwnerHealth == 1.0F || this.lowestTargetHealth == 1.0F) return;
+
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float amount = 10.0F;

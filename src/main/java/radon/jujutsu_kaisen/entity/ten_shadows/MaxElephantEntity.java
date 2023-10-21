@@ -54,6 +54,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SHOOT = RawAnimation.begin().thenLoop("attack.shoot");
 
+    private int riding;
+
     public MaxElephantEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -132,6 +134,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
+            this.riding = this.tickCount;
+
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
                 pPlayer.setXRot(this.getXRot());
@@ -236,17 +240,16 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-    }
-
-    @Override
     protected void customServerAiStep() {
         this.entityData.set(DATA_SHOOTING, JJKAbilities.isChanneling(this, JJKAbilities.WATER.get()));
+
         LivingEntity passenger = this.getControllingPassenger();
 
-
-        if (passenger != null) return;
+        if (passenger != null) {
+            this.setSprinting(passenger.getDeltaMovement().lengthSqr() > 0.0D);
+        } else {
+            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
+        }
 
         LivingEntity target = this.getTarget();
 
@@ -258,23 +261,6 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
             }
         } else if (JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
             AbilityHandler.trigger(this, JJKAbilities.WATER.get());
-        }
-    }
-
-    @Override
-    public void onRemovedFromWorld() {
-        super.onRemovedFromWorld();
-
-        if (this.isTame()) {
-            LivingEntity owner = this.getOwner();
-
-            if (owner != null) {
-                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                        dstCap.addAdapted(srcCap.getAdapted());
-                    });
-                });
-            }
         }
     }
 
@@ -291,6 +277,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public void setDown(boolean down) {
         if (this.level().isClientSide) return;
+        if (this.riding - this.tickCount < 20) return;
 
         boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
 

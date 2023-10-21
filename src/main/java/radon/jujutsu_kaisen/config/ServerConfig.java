@@ -47,6 +47,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
     public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
+    public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
@@ -79,6 +80,8 @@ public class ServerConfig {
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
         this.requiredExperienceForStrongest = builder.comment("The amount of experience required for a player to be classified as strongest (meaning they can heal CT burnout using RCT and use domain amplification during a domain expansion)")
                 .defineInRange("requiredExperienceForStrongest", 3000.0F, 1.0F, 100000.0F);
+        this.minimumVeilSize = builder.comment("Minimum size for a veil")
+                .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
 

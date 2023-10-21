@@ -101,8 +101,4 @@ public class AbsorbCurse extends Ability {
         return true;
     }
 
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.SCROLL;
-    }
 }

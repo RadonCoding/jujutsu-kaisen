@@ -93,9 +93,9 @@ public class DivergentFist extends Ability {
                 }
                 target.invulnerableTime = 0;
 
-                float radius = EXPLOSIVE_POWER * getPower(owner);
+                float radius = EXPLOSIVE_POWER * this.getPower(owner);
 
-                Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
+                Vec3 explosionPos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
 
                 float f2 = radius * 2.0F;
                 int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);

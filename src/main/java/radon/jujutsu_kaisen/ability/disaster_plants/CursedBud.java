@@ -24,7 +24,7 @@ public class CursedBud extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        CursedBudProjectile bud = new CursedBudProjectile(owner, getPower(owner));
+        CursedBudProjectile bud = new CursedBudProjectile(owner, this.getPower(owner));
 
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (bud.getBbHeight() / 2.0F), owner.getZ()).add(look);

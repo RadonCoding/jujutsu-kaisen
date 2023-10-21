@@ -5,14 +5,15 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeleeAbilityOverlay {
+public class AbilityOverlay {
     private static int selected;
     private static List<Ability> abilities = new ArrayList<>();
 
@@ -104,8 +105,8 @@ public class MeleeAbilityOverlay {
                 }
             }
 
-            int x = 20;
-            int y = height - (20 + 22 + 24) - ((lines.size() - 1) * mc.font.lineHeight + 2);
+            int x = width - 66 - offset;
+            int y = height - 66 - (lines.size() * mc.font.lineHeight + 2);
 
             for (Component line : lines) {
                 graphics.drawString(gui.getFont(), line, x, y, 16777215);

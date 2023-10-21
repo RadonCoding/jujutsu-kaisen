@@ -38,6 +38,8 @@ public class UnlockAbilityC2SPacket {
 
             Ability ability = JJKAbilities.getValue(this.key);
 
+            if (ability == null) return;
+
             if (ability.isUnlockable(sender)) {
                 cap.unlock(ability);
             }

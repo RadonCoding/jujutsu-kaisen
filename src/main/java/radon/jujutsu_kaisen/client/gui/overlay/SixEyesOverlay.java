@@ -80,8 +80,8 @@ public class SixEyesOverlay {
                                 }
                             }
 
-                            int x = width - offset - 20;
-                            int y = height - 20 - ((lines.size() - 1) * mc.font.lineHeight + 2);
+                            int x = (width - offset) / 2;
+                            int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
 
                             for (Component line : lines) {
                                 graphics.drawString(gui.getFont(), line, x, y, 53503);

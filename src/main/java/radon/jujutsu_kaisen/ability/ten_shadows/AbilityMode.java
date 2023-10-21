@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class SwitchMode extends Ability {
+public class AbilityMode extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
@@ -37,7 +37,7 @@ public class SwitchMode extends Ability {
                 }
 
                 if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                    return true;
+                    return false;
                 }
             }
         }
@@ -46,22 +46,29 @@ public class SwitchMode extends Ability {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.TOGGLED;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            cap.setMode(cap.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);
 
-            if (!owner.level().isClientSide && owner instanceof Player) {
-                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.switch_mode", JujutsuKaisen.MOD_ID), cap.getMode().name().toLowerCase()));
-            }
-        });
     }
+
 
     @Override
     public float getCost(LivingEntity owner) {
         return 0;
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setMode(TenShadowsMode.ABILITY);
+    }
+
+    @Override
+    public void onDisabled(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setMode(TenShadowsMode.SUMMON);
     }
 }

@@ -1,6 +1,8 @@
 {
   "creative_mode_tab.jujutsu_kaisen.main": "Jujutsu Kaisen",
 
+  "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$s",
+
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
@@ -22,6 +24,13 @@
   "gui.jujutsu_kaisen.binding_vow.binding_vows": "Binding Vows",
   "gui.jujutsu_kaisen.binding_vow.add": "Add",
   "gui.jujutsu_kaisen.binding_vow.remove": "Remove",
+
+  "gui.jujutsu_kaisen.chant": "Chants",
+  "gui.jujutsu_kaisen.chant.add": "Add",
+  "gui.jujutsu_kaisen.chant.remove": "Remove",
+  "gui.jujutsu_kaisen.chant.techniques": "Techniques",
+  "gui.jujutsu_kaisen.chant.chants": "Chants",
+  "gui.jujutsu_kaisen.chant.chant": "Chant",
 
   "gui.jujutsu_kaisen.ability": "Abilities",
   "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
@@ -315,7 +324,10 @@
 
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
-  "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
+  "ability.jujutsu_kaisen.ability_mode": "Ability Mode",
+  "ability.jujutsu_kaisen.ability_mode.enable": "Switched to ability mode",
+  "ability.jujutsu_kaisen.ability_mode.disable": "Switched to summon mode",
+
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
 
@@ -377,7 +389,7 @@
   "binding_vow.jujutsu_kaisen.overtime.description": "Your cursed energy is limited to 80-90% during the day, but increases to 110-120% during the night.",
 
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
-  "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
+  "page.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
@@ -390,7 +402,6 @@
   "chat.jujutsu_kaisen.bounty_success": "Successfully completed the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
-  "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s mode",
   "chat.jujutsu_kaisen.kuchisake_onna": "<%1$s> Am... Am I... pretty?",
   "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
 

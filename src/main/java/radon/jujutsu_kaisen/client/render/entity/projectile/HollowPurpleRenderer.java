@@ -28,7 +28,6 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
     private static final RenderType PURPLE = JJKRenderTypes.glow(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/hollow_purple.png"));
 
     private static final int ANIMATION_DURATION = 20;
-    private static final float SIZE = 1.0F;
 
     public HollowPurpleRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -36,12 +35,14 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
 
     @Override
     public void render(@NotNull HollowPurpleProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        float size = pEntity.getRadius() / Mth.PI;
+
         if (pEntity.tickCount >= ANIMATION_DURATION) {
-            this.render(pEntity, pPartialTick, pPoseStack, PURPLE, SIZE);
+            this.render(pEntity, pPartialTick, pPoseStack, PURPLE, size);
         } else {
             float fraction = (pEntity.tickCount + pPartialTick) / ANIMATION_DURATION;
             fraction = fraction < 0.5F ? 2 * fraction * fraction : fraction;
-            float offset = Mth.lerp(fraction, SIZE * 2, 0.0F);
+            float offset = Mth.lerp(fraction, size * 2, 0.0F);
             Entity viewer = Minecraft.getInstance().getCameraEntity();
 
             if (viewer != null) {
@@ -54,12 +55,12 @@ public class HollowPurpleRenderer extends EntityRenderer<HollowPurpleProjectile>
 
                 pPoseStack.pushPose();
                 pPoseStack.translate(pos.x(), pos.y(), pos.z());
-                this.render(pEntity, pPartialTick, pPoseStack, RED, SIZE / 2);
+                this.render(pEntity, pPartialTick, pPoseStack, RED, size / 2);
                 pPoseStack.popPose();
 
                 pPoseStack.pushPose();
                 pPoseStack.translate(-pos.x(), -pos.y(), -pos.z());
-                this.render(pEntity, pPartialTick, pPoseStack, BLUE, SIZE / 2);
+                this.render(pEntity, pPartialTick, pPoseStack, BLUE, size / 2);
                 pPoseStack.popPose();
             }
         }

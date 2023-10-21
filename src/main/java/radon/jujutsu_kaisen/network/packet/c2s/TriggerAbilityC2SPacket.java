@@ -28,12 +28,14 @@ public class TriggerAbilityC2SPacket {
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
 
-        Ability ability = JJKAbilities.getValue(this.key);
-
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
             assert sender != null;
+
+            Ability ability = JJKAbilities.getValue(this.key);
+
+            if (ability == null) return;
 
             AbilityHandler.trigger(sender, ability);
         });

@@ -131,7 +131,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
                 if (entity == owner) continue;
 
                 if (this.getDistanceSqXZToEntity(entity) < radiusSq) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SKY_STRIKE.get()), DAMAGE * getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SKY_STRIKE.get()), DAMAGE * this.getPower());
                 }
             }
         }

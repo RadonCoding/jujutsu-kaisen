@@ -40,7 +40,7 @@ public class DisasterPlant extends Ability {
 
         if (target == null) return;
 
-        DisasterPlantEntity plant = new DisasterPlantEntity(owner, getPower(owner), target);
+        DisasterPlantEntity plant = new DisasterPlantEntity(owner, this.getPower(owner), target);
         owner.level().addFreshEntity(plant);
     }
 

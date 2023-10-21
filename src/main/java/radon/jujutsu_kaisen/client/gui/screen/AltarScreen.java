@@ -67,10 +67,12 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
 
     }
 
+    @Override
     public void resize(@NotNull Minecraft pMinecraft, int pWidth, int pHeight) {
         this.init(pMinecraft, pWidth, pHeight);
     }
 
+    @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == 256) {
             if (this.minecraft != null && this.minecraft.player != null) {
@@ -78,9 +80,5 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
             }
         }
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-    }
-
-    protected void renderErrorIcon(@NotNull PoseStack pPoseStack, int pX, int pY) {
-
     }
 }

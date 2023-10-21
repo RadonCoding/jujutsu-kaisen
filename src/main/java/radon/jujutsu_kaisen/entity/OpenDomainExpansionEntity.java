@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -58,6 +59,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     protected boolean isAffected(BlockPos pos) {
+        if (VeilHandler.isProtected(this.level(), pos)) return false;
+
         for (DomainExpansionEntity domain : this.getDomains()) {
             if (domain.isInsideBarrier(pos)) return false;
         }

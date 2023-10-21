@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.item.armor.JJKArmorMaterial;
 import radon.jujutsu_kaisen.item.cursed_object.*;
 import radon.jujutsu_kaisen.item.cursed_tool.*;
+import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 
 public class JJKItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, JujutsuKaisen.MOD_ID);

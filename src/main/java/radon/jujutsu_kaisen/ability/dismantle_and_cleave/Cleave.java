@@ -54,11 +54,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         return domain == null ? JJKDamageSources.jujutsuAttack(owner, this) : JJKDamageSources.indirectJujutsuAttack(domain, owner, this);
     }
 
-    private static float getMaxDamage(LivingEntity owner) {
-        return MAX_DAMAGE * getPower(owner);
+    private float getMaxDamage(LivingEntity owner) {
+        return MAX_DAMAGE * this.getPower(owner);
     }
 
-    private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
+    private float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
         float damage = target.getMaxHealth();
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
@@ -87,7 +87,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             float f2 = Mth.clamp(k, 0.0F, 20.0F);
             damage /= 1.0F - f2 / 25.0F;
         }
-        return Math.min(getMaxDamage(owner), damage);
+        return Math.min(this.getMaxDamage(owner), damage);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         LivingEntity target = this.getTarget(owner);
 
         if (target != null && target.isAlive()) {
-            return calculateDamage(this.getSource(owner, null), owner, target);
+            return this.calculateDamage(this.getSource(owner, null), owner, target);
         }
         return 0.0F;
     }
@@ -142,7 +142,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
             cap.delayTickEvent(() -> {
                 DamageSource source = this.getSource(owner, domain);
-                float damage = calculateDamage(source, owner, target);
+                float damage = this.calculateDamage(source, owner, target);
 
                 if (domain != null) {
                     damage *= (1.6F - cap.getDomainSize());

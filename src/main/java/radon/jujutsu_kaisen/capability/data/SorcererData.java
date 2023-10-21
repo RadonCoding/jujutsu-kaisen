@@ -48,7 +48,7 @@ public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private int points;
-    private Set<Ability> unlocked;
+    private final Set<Ability> unlocked;
 
     private float domainSize;
 
@@ -65,6 +65,7 @@ public class SorcererData implements ISorcererData {
     private CursedEnergyNature nature;
 
     private float experience;
+    private float output;
 
     private float energy;
     private float maxEnergy;
@@ -94,6 +95,7 @@ public class SorcererData implements ISorcererData {
     private final Map<UUID, Set<Pact>> requestedPacts;
     private final Map<UUID, Integer> requestExpirations;
     private final Set<BindingVow> bindingVows;
+    private final Map<Ability, Set<String>> chants;
 
     // Ten shadows
     private final Set<ResourceLocation> tamed;
@@ -136,6 +138,8 @@ public class SorcererData implements ISorcererData {
 
         this.nature = CursedEnergyNature.BASIC;
 
+        this.output = 1.0F;
+
         this.mode = TenShadowsMode.SUMMON;
 
         this.lastBlackFlashTime = -1;
@@ -152,6 +156,7 @@ public class SorcererData implements ISorcererData {
         this.requestedPacts = new HashMap<>();
         this.requestExpirations = new HashMap<>();
         this.bindingVows = new HashSet<>();
+        this.chants = new HashMap<>();
 
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
@@ -526,7 +531,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasPact(UUID recipient, Pact pact) {
-        return this.acceptedPacts.getOrDefault(recipient, new HashSet<>()).contains(pact);
+        return this.acceptedPacts.getOrDefault(recipient, Set.of()).contains(pact);
     }
 
     @Override
@@ -551,8 +556,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasRequestedPact(UUID recipient, Pact pact) {
-        this.requestedPacts.getOrDefault(recipient, new HashSet<>()).forEach(System.out::println);
-        return this.requestedPacts.getOrDefault(recipient, new HashSet<>()).contains(pact);
+        return this.requestedPacts.getOrDefault(recipient, Set.of()).contains(pact);
     }
 
     @Override
@@ -571,13 +575,49 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<BindingVow> getBindingVows() {
-        return this.bindingVows;
+    public void addChant(Ability ability, String chant) {
+        if (!this.chants.containsKey(ability)) {
+            this.chants.put(ability, new LinkedHashSet<>());
+        }
+        this.chants.get(ability).add(chant);
+    }
+
+    @Override
+    public void removeChant(Ability ability, String chant) {
+        this.chants.getOrDefault(ability, new LinkedHashSet<>()).remove(chant);
+    }
+
+    @Override
+    public boolean hasChant(Ability ability, String chant) {
+        return this.chants.getOrDefault(ability, Set.of()).contains(chant);
+    }
+
+    @Override
+    public boolean hasChant(String chant) {
+        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+            if (entry.getValue().contains(chant)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Set<String> getChants(Ability ability) {
+        return this.chants.getOrDefault(ability, Set.of());
+    }
+
+    @Override
+    public float getOutput(LivingEntity owner) {
+        float power = this.output;
+
+        if (this.isInZone(owner)) {
+            power += 0.2F;
+        }
+        return power;
     }
 
     @Override
     public float getAbilityPower(LivingEntity owner) {
-        return HelperMethods.getPower(this.experience) * (this.isInZone(owner) ? 1.2F : 1.0F);
+        return HelperMethods.getPower(this.experience) * this.getOutput(owner);
     }
 
     @Override
@@ -1356,6 +1396,7 @@ public class SorcererData implements ISorcererData {
         }
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
+        nbt.putFloat("output", this.output);
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("extra_energy", this.extraEnergy);
@@ -1373,13 +1414,21 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.channeled != null) {
-            nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
+            ResourceLocation key = JJKAbilities.getKey(this.channeled);
+
+            if (key != null) {
+                nbt.putString("channeled", key.toString());
+            }
         }
 
         ListTag unlockedTag = new ListTag();
 
         for (Ability ability : this.unlocked) {
-            unlockedTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
+            ResourceLocation key = JJKAbilities.getKey(ability);
+
+            if (key == null) continue;
+
+            unlockedTag.add(StringTag.valueOf(key.toString()));
         }
         nbt.put("unlocked", unlockedTag);
 
@@ -1400,7 +1449,11 @@ public class SorcererData implements ISorcererData {
         ListTag toggledTag = new ListTag();
 
         for (Ability ability : this.toggled) {
-            toggledTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
+            ResourceLocation key = JJKAbilities.getKey(ability);
+
+            if (key == null) continue;
+
+            toggledTag.add(StringTag.valueOf(key.toString()));
         }
         nbt.put("toggled", toggledTag);
 
@@ -1414,8 +1467,12 @@ public class SorcererData implements ISorcererData {
         ListTag cooldownsTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.cooldowns.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
             CompoundTag data = new CompoundTag();
-            data.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putString("identifier", key.toString());
             data.putInt("cooldown", entry.getValue());
             cooldownsTag.add(data);
         }
@@ -1424,8 +1481,12 @@ public class SorcererData implements ISorcererData {
         ListTag durationsTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.durations.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
             CompoundTag data = new CompoundTag();
-            data.putString("identifier", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putString("identifier", key.toString());
             data.putInt("duration", entry.getValue());
             durationsTag.add(data);
         }
@@ -1493,6 +1554,25 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("binding_vows", bindingVowsTag);
 
+        ListTag chantsTag = new ListTag();
+
+        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
+            CompoundTag data = new CompoundTag();
+            data.putString("ability", key.toString());
+
+            ListTag chants = new ListTag();
+
+            for (String chant : entry.getValue()) {
+                chants.add(StringTag.valueOf(chant));
+            }
+            data.put("entries", chants);
+        }
+        nbt.put("chants", chantsTag);
+
         ListTag tamedTag = new ListTag();
 
         for (ResourceLocation key : this.tamed) {
@@ -1510,15 +1590,23 @@ public class SorcererData implements ISorcererData {
         ListTag adaptedTag = new ListTag();
 
         for (Ability ability : this.adapted) {
-            adaptedTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
+            ResourceLocation key = JJKAbilities.getKey(ability);
+
+            if (key == null) continue;
+
+            adaptedTag.add(StringTag.valueOf(key.toString()));
         }
         nbt.put("adapted", adaptedTag);
 
         ListTag adaptingTag = new ListTag();
 
         for (Map.Entry<Ability, Integer> entry : this.adapting.entrySet()) {
+            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
+
+            if (key == null) continue;
+
             CompoundTag data = new CompoundTag();
-            data.putString("key", JJKAbilities.getKey(entry.getKey()).toString());
+            data.putString("key", key.toString());
             data.putInt("stage", entry.getValue());
             adaptingTag.add(data);
         }
@@ -1565,6 +1653,7 @@ public class SorcererData implements ISorcererData {
         }
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
+        this.output = nbt.getFloat("output");
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
         this.extraEnergy = nbt.getFloat("extra_energy");
@@ -1688,6 +1777,19 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
             this.bindingVows.add(BindingVow.values()[((IntTag) key).getAsInt()]);
+        }
+
+        this.chants.clear();
+
+        for (Tag key : nbt.getList("chants", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+
+            Set<String> chants = new HashSet<>();
+
+            for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
+                chants.add(entry.getAsString());
+            }
+            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
         }
 
         this.tamed.clear();

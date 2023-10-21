@@ -112,7 +112,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
 
         int i = this.getUseDuration(pStack) - pRemainingUseDuration;
-        float f = getPowerForTime(i);
+        float f = this.getPowerForTime(i);
 
         if (pLivingEntity instanceof Player && pLevel.isClientSide) {
             ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), COST * f, COST), false);
@@ -126,7 +126,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         int i = this.getUseDuration(stack) - count;
-        float f = getPowerForTime(i);
+        float f = this.getPowerForTime(i);
         float cost = COST * f;
 
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
