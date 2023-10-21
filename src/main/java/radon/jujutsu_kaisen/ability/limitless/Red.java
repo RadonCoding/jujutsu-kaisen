@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.limitless;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.projectile.RedProjectile;
@@ -23,7 +24,7 @@ public class Red extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        RedProjectile red = new RedProjectile(owner, this.getPower(owner));
+        RedProjectile red = new RedProjectile(owner, this.getPower(owner), ChantHandler.isChanted(owner, this));
         owner.level().addFreshEntity(red);
     }
 

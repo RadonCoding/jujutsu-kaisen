@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ChantListWidget;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 
@@ -125,6 +126,7 @@ public class ChantTab extends JJKTab {
         this.addRenderableWidget(this.chants);
 
         this.text = new EditBox(this.minecraft.font, xOffset + 154, yOffset + this.minecraft.font.lineHeight + 2, 62, 20, Component.empty());
+        this.text.setMaxLength(ConfigHolder.SERVER.maximumChantLength.get());
         this.addRenderableWidget(this.text);
 
         this.add = Button.builder(Component.translatable(String.format("gui.%s.chant.add", JujutsuKaisen.MOD_ID)), pButton -> {

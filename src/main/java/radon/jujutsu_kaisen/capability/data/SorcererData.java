@@ -584,7 +584,9 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void removeChant(Ability ability, String chant) {
-        this.chants.getOrDefault(ability, new LinkedHashSet<>()).remove(chant);
+        if (this.chants.containsKey(ability)) {
+            this.chants.get(ability).remove(chant);
+        }
     }
 
     @Override
@@ -1790,7 +1792,7 @@ public class SorcererData implements ISorcererData {
         for (Tag key : nbt.getList("chants", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
 
-            Set<String> chants = new HashSet<>();
+            Set<String> chants = new LinkedHashSet<>();
 
             for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 chants.add(entry.getAsString());

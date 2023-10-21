@@ -49,6 +49,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
+    public final ForgeConfigSpec.IntValue maximumChantLength;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
@@ -84,6 +85,8 @@ public class ServerConfig {
                 .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
+        this.maximumChantLength = builder.comment("Maximum length for a chant")
+                        .defineInRange("maximumChantLength", 16, 1, 256);
 
         builder.pop();
     }

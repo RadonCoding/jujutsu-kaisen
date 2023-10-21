@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -12,9 +14,15 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RedProjectile extends JujutsuProjectile {
@@ -25,16 +33,34 @@ public class RedProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
     private static final float DAMAGE = 25.0F;
 
+    private boolean chanted;
+
     public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
         super(pEntityType, level);
     }
 
-    public RedProjectile(LivingEntity owner, float power) {
+    public RedProjectile(LivingEntity owner, float power, boolean chanted) {
         super(JJKEntities.RED.get(), owner.level(), owner, power);
+
+        this.chanted = chanted;
 
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("chanted", this.chanted);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.chanted = pCompound.getBoolean("chanted");
     }
 
     private void hurtEntities() {
@@ -92,23 +118,25 @@ public class RedProjectile extends JujutsuProjectile {
                 if (!this.level().isClientSide) {
                     this.hurtEntities();
 
-                    /*ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    if (this.chanted) {
+                        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
-                        if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
-                            cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
+                        for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                            if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
+                                cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
 
-                            if (owner instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                if (owner instanceof ServerPlayer player) {
+                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                                }
+
+                                HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                                this.level().addFreshEntity(explosion);
+
+                                blue.discard();
+                                this.discard();
                             }
-
-                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
-                            this.level().addFreshEntity(explosion);
-
-                            blue.discard();
-                            this.discard();
                         }
-                    }*/
+                    }
                 }
 
                 if (this.getTime() == DELAY) {

@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.function.Supplier;
 
@@ -37,6 +38,8 @@ public class AddChantC2SPacket {
             ServerPlayer sender = ctx.getSender();
 
             assert sender != null;
+
+            if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get()) return;
 
             Ability ability = JJKAbilities.getValue(this.key);
 

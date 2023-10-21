@@ -9,13 +9,18 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -39,9 +44,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         return false;
     }
 
+    private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
+        return owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth();
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) < 10.0D;
+        return target != null && owner.distanceTo(target) <= this.getAttackReachSqr(owner, target) * 2.0D;
     }
 
     @Override
@@ -167,26 +176,29 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
 
             // Shield
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (victim instanceof Mob && !JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+            }
+            if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
-                    if (victimCap.getNature() == CursedEnergyNature.LIGHTNING) {
-                        if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
-                                        jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
-                            event.setCanceled(true);
-                        }
+            if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (victimCap.getNature() == CursedEnergyNature.LIGHTNING) {
+                    if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
+                            jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
+                        event.setCanceled(true);
                     }
+                }
 
-                    event.setAmount(event.getAmount() * 0.9F);
+                event.setAmount(event.getAmount() * 0.9F);
 
-                    switch (victimCap.getNature()) {
-                        case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
-                                false, false, false));
-                        case ROUGH -> {
-                            if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
-                                attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
-                            }
+                switch (victimCap.getNature()) {
+                    case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
+                            false, false, false));
+                    case ROUGH -> {
+                        if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
+                            attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
                         }
                     }
                 }
