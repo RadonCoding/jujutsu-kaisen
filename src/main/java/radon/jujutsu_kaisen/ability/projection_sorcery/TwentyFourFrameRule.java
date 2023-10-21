@@ -37,6 +37,11 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     private static final Map<UUID, Long> invulnerable = new HashMap<>();
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) <= 10.0D;
     }
@@ -100,8 +105,8 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 LivingEntity owner = frame.getOwner();
 
                 if (owner != null) {
-                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * Ability.getPower(JJKAbilities.PROJECTION_SORCERY.get(), owner));
-
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * cap.getAbilityPower(owner));
                     invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }
                 return;

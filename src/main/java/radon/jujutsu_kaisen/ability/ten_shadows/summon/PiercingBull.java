@@ -18,6 +18,11 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!this.isTamed(owner)) return false;
 

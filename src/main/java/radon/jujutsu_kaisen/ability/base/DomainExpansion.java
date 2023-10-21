@@ -30,6 +30,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public static final int BURNOUT = 30 * 20;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

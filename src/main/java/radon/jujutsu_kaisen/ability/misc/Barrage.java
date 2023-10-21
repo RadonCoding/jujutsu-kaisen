@@ -80,6 +80,11 @@ public class Barrage extends Ability {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean isMelee() {
         return true;
     }

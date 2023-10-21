@@ -47,7 +47,7 @@ public interface ISorcererData {
     void addChant(Ability ability, String chant);
     void removeChant(Ability ability, String chant);
     boolean hasChant(Ability ability, String chant);
-    boolean hasChant(String chant);
+    @Nullable Ability getAbility(String chant);
     Set<String> getChants(Ability ability);
 
     float getOutput(LivingEntity owner);

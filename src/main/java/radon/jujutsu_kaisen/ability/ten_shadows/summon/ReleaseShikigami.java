@@ -15,6 +15,11 @@ import java.util.List;
 
 public class ReleaseShikigami extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) {
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;

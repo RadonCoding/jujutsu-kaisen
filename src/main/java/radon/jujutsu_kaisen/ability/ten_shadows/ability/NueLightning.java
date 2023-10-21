@@ -123,6 +123,11 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     }
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public Classification getClassification() {
         return Classification.LIGHTNING;
     }

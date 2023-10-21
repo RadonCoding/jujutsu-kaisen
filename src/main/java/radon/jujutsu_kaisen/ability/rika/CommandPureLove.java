@@ -12,6 +12,11 @@ import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 public class CommandPureLove extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.getHealth() / owner.getMaxHealth() <= 0.25F;
     }

@@ -62,6 +62,8 @@ public abstract class Ability {
         return getPower(this, owner);
     }
 
+    public abstract boolean isChantable();
+
     // Used for skill tree
     public boolean isDisplayed(LivingEntity owner) {
         return this.getPointsCost() > 0;

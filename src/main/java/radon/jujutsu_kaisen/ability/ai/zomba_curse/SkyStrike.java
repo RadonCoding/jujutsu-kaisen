@@ -10,6 +10,11 @@ import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 
 public class SkyStrike extends Ability {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

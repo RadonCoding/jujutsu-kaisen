@@ -50,6 +50,11 @@ public class Dismantle extends Ability {
     }
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public Classification getClassification() {
         return Classification.SLASHING;
     }

@@ -20,6 +20,11 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     private static final double RANGE = 5.0D;
 
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(5) == 0 && target != null &&
                 owner.hasLineOfSight(target) && owner.distanceTo(target) <= RANGE;

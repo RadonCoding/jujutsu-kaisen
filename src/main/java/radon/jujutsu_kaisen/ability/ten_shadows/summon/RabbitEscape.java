@@ -18,6 +18,11 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.getLastHurtByMobTimestamp() - owner.tickCount == 0;
     }

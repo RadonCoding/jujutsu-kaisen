@@ -18,6 +18,11 @@ public class BoogieWoogie extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

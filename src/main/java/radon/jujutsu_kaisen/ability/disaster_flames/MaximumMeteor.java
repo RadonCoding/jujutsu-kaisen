@@ -15,6 +15,11 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MaximumMeteor extends Ability {
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) && owner.getHealth() / owner.getMaxHealth() <= 0.5F &&
                 HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.distanceTo(target) <= 5.0D && owner.hasLineOfSight(target);

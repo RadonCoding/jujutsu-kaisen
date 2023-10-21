@@ -23,6 +23,11 @@ public class AbsorbCurse extends Ability {
     private static final double RANGE = 5.0D;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

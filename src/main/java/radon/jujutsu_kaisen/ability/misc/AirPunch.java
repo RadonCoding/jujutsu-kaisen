@@ -91,6 +91,11 @@ public class AirPunch extends Ability {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean isMelee() {
         return true;
     }

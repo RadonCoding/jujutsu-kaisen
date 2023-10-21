@@ -18,6 +18,11 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!this.isTamed(owner)) return false;
 

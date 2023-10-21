@@ -13,6 +13,11 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public class Heal extends Ability implements Ability.IChannelened {
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return owner.getHealth() < owner.getMaxHealth();
     }

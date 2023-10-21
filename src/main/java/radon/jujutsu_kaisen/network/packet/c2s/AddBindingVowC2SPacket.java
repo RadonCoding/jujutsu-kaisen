@@ -34,7 +34,7 @@ public class AddBindingVowC2SPacket {
             assert sender != null;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-             cap.addBindingVow(this.vow);
+            cap.addBindingVow(this.vow);
         });
         ctx.setPacketHandled(true);
     }

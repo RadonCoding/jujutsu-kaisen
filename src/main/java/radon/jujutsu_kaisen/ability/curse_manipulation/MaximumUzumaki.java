@@ -16,6 +16,11 @@ import java.util.Map;
 
 public class MaximumUzumaki extends Ability {
     @Override
+    public boolean isChantable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 

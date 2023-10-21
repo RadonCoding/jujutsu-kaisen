@@ -30,6 +30,11 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     private static final float DAMAGE = 1.0F;
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }

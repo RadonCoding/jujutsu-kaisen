@@ -25,8 +25,6 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-
-
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
     private static final float MAX_DAMAGE = 16.0F;
@@ -194,6 +192,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
+    }
+
+    @Override
+    public boolean isChantable() {
+        return true;
     }
 
     @Override

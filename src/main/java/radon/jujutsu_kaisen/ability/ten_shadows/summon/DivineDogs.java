@@ -26,6 +26,11 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
+    public boolean isChantable() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
