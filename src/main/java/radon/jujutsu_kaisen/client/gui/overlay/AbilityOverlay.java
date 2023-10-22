@@ -105,8 +105,8 @@ public class AbilityOverlay {
                 }
             }
 
-            int x = width - 66 - offset;
-            int y = height - 66 - (lines.size() * mc.font.lineHeight + 2);
+            int x = width - 20 - offset;
+            int y = height - 20 - (lines.size() * mc.font.lineHeight + 2);
 
             for (Component line : lines) {
                 graphics.drawString(gui.getFont(), line, x, y, 16777215);

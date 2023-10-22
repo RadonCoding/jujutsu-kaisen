@@ -1,7 +1,8 @@
 {
   "creative_mode_tab.jujutsu_kaisen.main": "Jujutsu Kaisen",
 
-  "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$s",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
@@ -22,12 +23,15 @@
 
   "gui.jujutsu_kaisen.binding_vow": "Binding Vows",
   "gui.jujutsu_kaisen.binding_vow.binding_vows": "Binding Vows",
+  "gui.jujutsu_kaisen.binding_vow.cooldown.minutes": "Cooldown: %1$dm %2$ds",
+  "gui.jujutsu_kaisen.binding_vow.cooldown.seconds": "Cooldown: %1$ds",
   "gui.jujutsu_kaisen.binding_vow.add": "Add",
   "gui.jujutsu_kaisen.binding_vow.remove": "Remove",
 
   "gui.jujutsu_kaisen.chant": "Chants",
   "gui.jujutsu_kaisen.chant.add": "Add",
   "gui.jujutsu_kaisen.chant.remove": "Remove",
+  "gui.jujutsu_kaisen.chant.save": "Save",
   "gui.jujutsu_kaisen.chant.techniques": "Techniques",
   "gui.jujutsu_kaisen.chant.chants": "Chants",
   "gui.jujutsu_kaisen.chant.chant": "Chant",
@@ -232,6 +236,7 @@
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
   "ability.jujutsu_kaisen.dismantle_barrage": "Dismantle Barrage",
   "ability.jujutsu_kaisen.fire_arrow": "Open ■",
+  "ability.jujutsu_kaisen.world_slash": "World Slash",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
   "ability.jujutsu_kaisen.rika": "Rika",
@@ -389,7 +394,7 @@
   "binding_vow.jujutsu_kaisen.overtime.description": "Your cursed energy is limited to 80-90% during the day, but increases to 110-120% during the night.",
 
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
-  "page.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
+  "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",

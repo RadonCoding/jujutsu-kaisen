@@ -33,7 +33,11 @@ public class RemoveBindingVowC2SPacket {
             assert sender != null;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.isCooldownDone(this.vow)) return;
+
             cap.removeBindingVow(this.vow);
+            cap.addBindingVowCooldown(this.vow);
         });
         ctx.setPacketHandled(true);
     }

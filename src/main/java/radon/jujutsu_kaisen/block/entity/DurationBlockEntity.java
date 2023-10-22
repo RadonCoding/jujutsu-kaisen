@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,8 +21,12 @@ public class DurationBlockEntity extends BlockEntity {
 
     private CompoundTag deferred;
 
+    public DurationBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+        super(pType, pPos, pBlockState);
+    }
+
     public DurationBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(JJKBlockEntities.DURATION.get(), pPos, pBlockState);
+        this(JJKBlockEntities.DURATION.get(), pPos, pBlockState);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DurationBlockEntity pBlockEntity) {

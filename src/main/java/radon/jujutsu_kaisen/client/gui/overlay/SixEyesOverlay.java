@@ -10,6 +10,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -38,62 +39,63 @@ public class SixEyesOverlay {
         assert mc.level != null;
         assert mc.player != null;
 
-        mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-                if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
-                    if (hit.getEntity() instanceof LivingEntity target) {
-                        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent() || target.hasEffect(JJKEffects.UNDETECTABLE.get())) return;
+        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        if (current == null) {
-                            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
-                            return;
-                        } else if (mc.level.getGameTime() % 20 == 0) {
-                            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+        if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
+            if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
+                if (hit.getEntity() instanceof LivingEntity target) {
+                    if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent() || target.hasEffect(JJKEffects.UNDETECTABLE.get()))
+                        return;
+
+                    if (current == null) {
+                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+                        return;
+                    } else if (mc.level.getGameTime() % 20 == 0) {
+                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+                    }
+
+                    UUID identifier = current.getKey();
+
+                    if (target.getUUID().equals(identifier)) {
+                        SixEyesData data = current.getValue();
+
+                        List<Component> lines = new ArrayList<>();
+
+                        if (data.technique != null) {
+                            Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
+                                    data.technique.getName());
+                            lines.add(techniqueText);
                         }
 
-                        UUID identifier = current.getKey();
+                        Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
+                                data.grade.getName());
+                        lines.add(gradeText);
 
-                        if (target.getUUID().equals(identifier)) {
-                            SixEyesData data = current.getValue();
+                        Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
+                                data.energy, data.maxEnergy);
+                        lines.add(energyText);
 
-                            List<Component> lines = new ArrayList<>();
+                        int offset = 0;
 
-                            if (data.technique != null) {
-                                Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                                        data.technique.getName());
-                                lines.add(techniqueText);
+                        for (Component line : lines) {
+                            if (mc.font.width(line) > offset) {
+                                offset = mc.font.width(line);
                             }
-
-                            Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                                    data.grade.getName());
-                            lines.add(gradeText);
-
-                            Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
-                                    data.energy, data.maxEnergy);
-                            lines.add(energyText);
-
-                            int offset = 0;
-
-                            for (Component line : lines) {
-                                if (mc.font.width(line) > offset) {
-                                    offset = mc.font.width(line);
-                                }
-                            }
-
-                            int x = (width - offset) / 2;
-                            int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
-
-                            for (Component line : lines) {
-                                graphics.drawString(gui.getFont(), line, x, y, 53503);
-                                y += mc.font.lineHeight;
-                            }
-                        } else {
-                            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
                         }
+
+                        int x = (width - offset) / 2;
+                        int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
+
+                        for (Component line : lines) {
+                            graphics.drawString(gui.getFont(), line, x, y, 53503);
+                            y += mc.font.lineHeight;
+                        }
+                    } else {
+                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
                     }
                 }
             }
-        });
+        }
     };
 
     public record SixEyesData(@Nullable CursedTechnique technique, SorcererGrade grade, float energy, float maxEnergy) {

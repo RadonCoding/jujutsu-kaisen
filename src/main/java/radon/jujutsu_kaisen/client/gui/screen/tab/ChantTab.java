@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,18 +12,15 @@ import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityListWidget;
-import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ChantListWidget;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.*;
+import radon.jujutsu_kaisen.network.packet.c2s.AddChantC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.RemoveChantC2SPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -152,11 +148,6 @@ public class ChantTab extends JJKTab {
             this.chants.refreshList();
         }).size(62, 20).pos(xOffset + 154, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);
-    }
-
-    @Override
-    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
-
     }
 
     @Override

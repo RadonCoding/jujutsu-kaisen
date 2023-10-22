@@ -6,7 +6,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.block.domain.UnlimitedVoidBlock;
 
 public class JJKBlockEntities {
     public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, JujutsuKaisen.MOD_ID);
@@ -26,6 +25,8 @@ public class JJKBlockEntities {
                             JJKBlocks.SHINING_SEA_OF_FLOWERS.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(),
+
+                            JJKBlocks.TIME_CELL_MOON_PALACE.get(),
 
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));

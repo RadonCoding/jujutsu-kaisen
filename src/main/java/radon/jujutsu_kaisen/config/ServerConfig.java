@@ -50,6 +50,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
     public final ForgeConfigSpec.IntValue maximumChantLength;
+    public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
@@ -86,7 +87,9 @@ public class ServerConfig {
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
         this.maximumChantLength = builder.comment("Maximum length for a chant")
-                        .defineInRange("maximumChantLength", 16, 1, 256);
+                .defineInRange("maximumChantLength", 16, 1, 256);
+        this.realisticWorldSlash = builder.comment("Whether or not world slash can destroy unbreakable blocks")
+                .define("realisticWorldSlash", true);
 
         builder.pop();
     }

@@ -33,22 +33,26 @@ public class CursedEnergyOverlay {
                     ParticleColors.CURSED_ENERGY_SORCERER_COLOR : ParticleColors.CURSED_ENERGY_CURSE_COLOR;
             RenderSystem.setShaderColor(color.x(), color.y(), color.z(), 1.0F);
 
-            graphics.blit(TEXTURE, 20, 26, 0, 0, 93, 9, 93, 16);
+            graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
 
             float maxEnergy = cap.getMaxEnergy(player);
             float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
-            graphics.blit(TEXTURE, 20, 27, 0, 9, (int) energyWidth, 7, 93, 16);
+            graphics.blit(TEXTURE, 20, 33, 0, 9, (int) energyWidth, 7, 93, 16);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            float scale = 0.5F;
+            float scale = 0.6F;
 
             graphics.pose().pushPose();
             graphics.pose().scale(scale, scale, scale);
-            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), cap.getOutput(player)),
+
+            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), cap.getOutput(player) * 100),
                     Math.round(20 * (1.0F / scale)), Math.round(20 * (1.0F / scale)), 16777215);
+            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), cap.getOutput(player) * 100),
+                    Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
+
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                    Math.round(23 * (1.0F / scale)), Math.round(29 * (1.0F / scale)), 16777215);
+                    Math.round(23 * (1.0F / scale)), Math.round(34 * (1.0F / scale)), 16777215);
             graphics.pose().popPose();
 
             RenderSystem.depthMask(true);

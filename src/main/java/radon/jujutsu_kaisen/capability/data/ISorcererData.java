@@ -44,6 +44,10 @@ public interface ISorcererData {
     void removeBindingVow(BindingVow vow);
     boolean hasBindingVow(BindingVow vow);
 
+    void addBindingVowCooldown(BindingVow vow);
+    int getRemainingCooldown(BindingVow vow);
+    boolean isCooldownDone(BindingVow vow);
+
     void addChant(Ability ability, String chant);
     void removeChant(Ability ability, String chant);
     boolean hasChant(Ability ability, String chant);
@@ -56,7 +60,7 @@ public interface ISorcererData {
 
     float getExperience();
     void setExperience(float experience);
-    boolean addExperience(float amount);
+    boolean addExperience(LivingEntity owner, float amount);
 
     float getDomainSize();
     void setDomainSize(float domainSize);

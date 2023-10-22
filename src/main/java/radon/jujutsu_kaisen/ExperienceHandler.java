@@ -89,10 +89,10 @@ public class ExperienceHandler {
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float amount = 10.0F;
+            float amount = this.target.getMaxHealth() / 2;
 
-            // Multiply by duration / 10 seconds
-            amount *= (float) this.duration / (10 * 20);
+            // Multiply by duration / 30 seconds
+            amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
 
             // Multiply by total damage dealt during battle / 10
             amount *= this.totalDamage / 10;
@@ -111,7 +111,7 @@ public class ExperienceHandler {
 
             if (amount == 0.0F) return;
 
-            if (cap.addExperience(amount)) {
+            if (cap.addExperience(owner, amount)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), amount));
                 }

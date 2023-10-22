@@ -139,8 +139,8 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-            event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    event.setNewSpeed((float) (event.getNewSpeed() * (cap.getSpeedStacks() * 3.0D))));
+            ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            event.setNewSpeed((float) (event.getNewSpeed() * (1.0D + (cap.getSpeedStacks() * 3.0D))));
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)

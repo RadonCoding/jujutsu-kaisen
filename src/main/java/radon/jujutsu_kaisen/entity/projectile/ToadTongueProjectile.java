@@ -91,26 +91,28 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
 
     @Override
     public void tick() {
-        super.tick();
+        Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide) {
-            Entity owner = this.getOwner();
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+            this.discard();
+        } else {
+            super.tick();
 
-            if (owner != null) {
-                if (this.grabbed) {
-                    if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
-                        if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || living.isDeadOrDying() || living.isRemoved()) this.discard();
+            if (this.level().isClientSide || owner == null) return;
 
-                        living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
-                        this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
-                    }
-                    this.setDeltaMovement(Vec3.ZERO);
-                } else {
-                    if (this.distanceTo(owner) >= this.range) {
-                        this.discard();
-                    } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                        this.discard();
-                    }
+            if (this.grabbed) {
+                if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
+                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || living.isDeadOrDying() || living.isRemoved()) this.discard();
+
+                    living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
+                    this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
+                }
+                this.setDeltaMovement(Vec3.ZERO);
+            } else {
+                if (this.distanceTo(owner) >= this.range) {
+                    this.discard();
+                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                    this.discard();
                 }
             }
         }
