@@ -63,7 +63,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < 8; i++) {
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() * 2.0D - HelperMethods.getLookAngle(owner).scale(0.35D).x();
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
                 double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() * 2.0D - HelperMethods.getLookAngle(owner).scale(0.35D).z();

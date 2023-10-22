@@ -71,6 +71,11 @@ public class Barrage extends Ability {
     }
 
     @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        return owner.isUsingItem() ? Status.FAILURE : super.checkTriggerable(owner);
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 0;
     }

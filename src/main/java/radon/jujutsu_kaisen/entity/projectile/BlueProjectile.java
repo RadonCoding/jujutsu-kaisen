@@ -47,7 +47,7 @@ public class BlueProjectile extends JujutsuProjectile {
         return 3.0F;
     }
     protected int getDuration() {
-        return 3 * 20;
+        return 5 * 20;
     }
 
     protected float getDamage() {
@@ -100,7 +100,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
+                if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
                 if (entity instanceof LivingEntity) {
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * this.getPower());
@@ -163,7 +163,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -179,7 +179,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.1F, 1.0F, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

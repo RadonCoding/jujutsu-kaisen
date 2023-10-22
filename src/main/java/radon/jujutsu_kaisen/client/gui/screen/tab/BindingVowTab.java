@@ -61,6 +61,25 @@ public class BindingVowTab extends JJKTab {
 
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.binding_vow.binding_vows", JujutsuKaisen.MOD_ID)),
                 xOffset, yOffset, 16777215, true);
+
+        if (this.minecraft.player == null) return;
+
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (this.vow != null && !cap.isCooldownDone(this.vow.get())) {
+            int seconds = cap.getRemainingCooldown(this.vow.get()) / 20;
+
+            int minutes = seconds / 60;
+            int remaining = seconds - (minutes * 60);
+
+            if (seconds > 60) {
+                pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.binding_vow.cooldown.minutes", JujutsuKaisen.MOD_ID),
+                        minutes, remaining), xOffset + 86, yOffset + this.minecraft.font.lineHeight + 1 - this.minecraft.font.lineHeight + 1, 16777215, true);
+            } else if (seconds % 60 != 0) {
+                pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.binding_vow.cooldown.seconds", JujutsuKaisen.MOD_ID),
+                        remaining), xOffset + 86, yOffset + this.minecraft.font.lineHeight + 1 - this.minecraft.font.lineHeight + 1, 16777215, true);
+            }
+        }
     }
 
     @Override
@@ -70,8 +89,8 @@ public class BindingVowTab extends JJKTab {
         if (this.minecraft.player == null) return;
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        this.add.active = this.vow != null && !cap.hasBindingVow(this.vow.get());
-        this.remove.active = this.vow != null && cap.hasBindingVow(this.vow.get());
+        this.add.active = this.vow != null && !cap.hasBindingVow(this.vow.get()) && cap.isCooldownDone(this.vow.get());
+        this.remove.active = this.vow != null && cap.hasBindingVow(this.vow.get()) && cap.isCooldownDone(this.vow.get());
     }
 
     @Override
@@ -97,6 +116,8 @@ public class BindingVowTab extends JJKTab {
 
             this.add.active = !cap.hasBindingVow(this.vow.get());
             this.remove.active = cap.hasBindingVow(this.vow.get());
+
+            cap.addBindingVowCooldown(this.vow.get());
         }).size(62, 20).pos(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.add);
 
@@ -110,16 +131,13 @@ public class BindingVowTab extends JJKTab {
 
             this.add.active = !cap.hasBindingVow(this.vow.get());
             this.remove.active = cap.hasBindingVow(this.vow.get());
+
+            cap.addBindingVowCooldown(this.vow.get());
         }).size(62, 20).pos(xOffset + 154, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);
 
         this.description = new MultiLineTextWidget(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 1, Component.empty(), this.minecraft.font)
                 .setMaxWidth(129);
         this.addRenderableWidget(this.description);
-    }
-
-    @Override
-    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
-
     }
 }

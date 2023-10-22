@@ -88,6 +88,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
     public static RegistryObject<Ability> DISMANTLE_BARRAGE = ABILITIES.register("dismantle_barrage", DismantleBarrage::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
+    public static RegistryObject<Ability> WORLD_SLASH = ABILITIES.register("world_slash", WorldSlash::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
@@ -185,15 +186,13 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
 
     public static String getName(Ability ability) {
-        return ABILITY_REGISTRY.get().getKey(ability).getPath();
+        return getKey(ability).getPath();
     }
 
-    @Nullable
     public static ResourceLocation getKey(Ability ability) {
         return ABILITY_REGISTRY.get().getKey(ability);
     }
 
-    @Nullable
     public static Ability getValue(ResourceLocation key) {
         return ABILITY_REGISTRY.get().getValue(key);
     }
@@ -219,7 +218,7 @@ public class JJKAbilities {
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (!cap.hasCurse(registry, type)) return;
 
-            if (type.create(owner.level()) instanceof CursedSpirit curse) {
+            if (type.create(owner.level()) instanceof CursedSpirit curse && curse.getGrade() != null) {
                 float cost = getCurseCost(owner, curse.getGrade());
 
                 if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {

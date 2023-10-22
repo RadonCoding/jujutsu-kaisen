@@ -95,6 +95,7 @@ public class SorcererData implements ISorcererData {
     private final Map<UUID, Set<Pact>> requestedPacts;
     private final Map<UUID, Integer> requestExpirations;
     private final Set<BindingVow> bindingVows;
+    private final Map<BindingVow, Integer> bindingVowCooldowns;
     private final Map<Ability, Set<String>> chants;
 
     // Ten shadows
@@ -156,6 +157,7 @@ public class SorcererData implements ISorcererData {
         this.requestedPacts = new HashMap<>();
         this.requestExpirations = new HashMap<>();
         this.bindingVows = new HashSet<>();
+        this.bindingVowCooldowns = new HashMap<>();
         this.chants = new HashMap<>();
 
         this.tamed = new HashSet<>();
@@ -385,6 +387,23 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    private void updateBindingVowCooldowns() {
+        Iterator<Map.Entry<BindingVow, Integer>> iter = this.bindingVowCooldowns.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<BindingVow, Integer> entry = iter.next();
+
+            int remaining = entry.getValue();
+
+            if (remaining > 0) {
+                this.bindingVowCooldowns.put(entry.getKey(), --remaining);
+            } else {
+                iter.remove();
+                this.bindingVowCooldowns.remove(entry.getKey());
+            }
+        }
+    }
+
     private void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
@@ -420,6 +439,7 @@ public class SorcererData implements ISorcererData {
         this.updateChanneled(owner);
 
         this.updateRequestExpirations();
+        this.updateBindingVowCooldowns();
 
         if (this.speedTimer > 0) {
             if (--this.speedTimer == 0) {
@@ -575,6 +595,21 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void addBindingVowCooldown(BindingVow vow) {
+        this.bindingVowCooldowns.put(vow, 20 * 60 * 30);
+    }
+
+    @Override
+    public int getRemainingCooldown(BindingVow vow) {
+        return this.bindingVowCooldowns.get(vow);
+    }
+
+    @Override
+    public boolean isCooldownDone(BindingVow vow) {
+        return !this.bindingVowCooldowns.containsKey(vow);
+    }
+
+    @Override
     public void addChant(Ability ability, String chant) {
         if (!this.chants.containsKey(ability)) {
             this.chants.put(ability, new LinkedHashSet<>());
@@ -638,8 +673,18 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean addExperience(float amount) {
+    public boolean addExperience(LivingEntity owner, float amount) {
+        SorcererGrade previous = this.getGrade();
+
         this.experience += amount;
+
+        SorcererGrade current = this.getGrade();
+
+        if (owner.level().isClientSide && owner instanceof Player) {
+            if (previous != current) {
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
+            }
+        }
 
         if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
             this.experience = ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue();
@@ -735,7 +780,7 @@ public class SorcererData implements ISorcererData {
     }
 
     public void toggle(LivingEntity owner, Ability ability) {
-        if (owner.level().isClientSide) {
+        if (owner.level().isClientSide && owner instanceof Player) {
             if (((Ability.IToggled) ability).shouldLog()) {
                 if (this.hasToggled(ability)) {
                     owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
@@ -1527,38 +1572,21 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("accepted_pacts", acceptedPactsTag);
 
-        ListTag requestedPactsTag = new ListTag();
-
-        for (Map.Entry<UUID, Set<Pact>> entry : this.requestedPacts.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.putUUID("recipient", entry.getKey());
-
-            ListTag pacts = new ListTag();
-
-            for (Pact pact : entry.getValue()) {
-                pacts.add(IntTag.valueOf(pact.ordinal()));
-            }
-            data.put("entries", pacts);
-
-            requestedPactsTag.add(data);
-        }
-        nbt.put("requested_pacts", requestedPactsTag);
-
-        ListTag requsedExpirationTag = new ListTag();
-
-        for (Map.Entry<UUID, Integer> entry : this.requestExpirations.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.putUUID("recipient", entry.getKey());
-            data.putInt("expiration", entry.getValue());
-        }
-        nbt.put("request_expiration", requsedExpirationTag);
-
         ListTag bindingVowsTag = new ListTag();
 
         for (BindingVow vow : this.bindingVows) {
             bindingVowsTag.add(IntTag.valueOf(vow.ordinal()));
         }
         nbt.put("binding_vows", bindingVowsTag);
+
+        ListTag bindingVowCooldownsTag = new ListTag();
+
+        for (Map.Entry<BindingVow, Integer> entry : this.bindingVowCooldowns.entrySet()) {
+            CompoundTag data = new CompoundTag();
+            data.putInt("vow", entry.getKey().ordinal());
+            data.putInt("cooldown", entry.getValue());
+        }
+        nbt.put("binding_vow_cooldowns", bindingVowCooldownsTag);
 
         ListTag chantsTag = new ListTag();
 
@@ -1761,30 +1789,17 @@ public class SorcererData implements ISorcererData {
             this.acceptedPacts.put(data.getUUID("recipient"), pacts);
         }
 
-        this.requestedPacts.clear();
-
-        for (Tag key : nbt.getList("requested_pacts", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-
-            Set<Pact> pacts = new HashSet<>();
-
-            for (Tag entry : data.getList("entries", Tag.TAG_COMPOUND)) {
-                pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
-            }
-            this.requestedPacts.put(data.getUUID("recipient"), pacts);
-        }
-
-        this.requestExpirations.clear();
-
-        for (Tag key : nbt.getList("request_expirations", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.requestExpirations.put(data.getUUID("recipient"), data.getInt("expiration"));
-        }
-
         this.bindingVows.clear();
 
         for (Tag key : nbt.getList("binding_vows", Tag.TAG_INT)) {
             this.bindingVows.add(BindingVow.values()[((IntTag) key).getAsInt()]);
+        }
+
+        this.bindingVowCooldowns.clear();
+
+        for (Tag key : nbt.getList("binding_vow_cooldowns", Tag.TAG_COMPOUND)) {
+            CompoundTag data = (CompoundTag) key;
+            this.bindingVowCooldowns.put(BindingVow.values()[data.getInt("vow")], data.getInt("cooldown"));
         }
 
         this.chants.clear();

@@ -58,17 +58,6 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), 0.0F);
     }
 
-    @Override
-    public boolean shouldRenderAtSqrDistance(double pDistance) {
-        double d0 = this.getBoundingBox().getSize() * 10.0D;
-
-        if (Double.isNaN(d0)) {
-            d0 = 1.0D;
-        }
-        d0 *= 64.0D * getViewScale();
-        return pDistance < d0 * d0;
-    }
-
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }
@@ -142,6 +131,8 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
+
         this.entityData.define(DATA_TIME, 0);
     }
 
