@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen;
 
-import com.google.common.collect.Lists;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +47,7 @@ public class ChantHandler {
             count++;
             length += chant.length();
         }
-        return 1.0F + (count * 0.1F) + (length * 0.01F);
+        return 1.0F + (count * 0.075F) + (length * 0.01F);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

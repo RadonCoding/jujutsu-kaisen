@@ -9,15 +9,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
-import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
@@ -101,20 +102,21 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public int getPointsCost() {
-        return 100;
+        return ConfigHolder.SERVER.domainAmplificationCost.get();
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
+            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
+
             LivingEntity owner = event.getEntity();
 
             if (owner instanceof Mob && !JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 AbilityHandler.trigger(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
             }
             if (!JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
-            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             Ability ability = source.getAbility();
 

@@ -52,6 +52,12 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue maximumChantLength;
     public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
 
+    public final ForgeConfigSpec.IntValue simpleDomainCost;
+    public final ForgeConfigSpec.IntValue domainExpansionCost;
+    public final ForgeConfigSpec.IntValue domainAmplificationCost;
+    public final ForgeConfigSpec.IntValue divergentFistCost;
+
+
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
                 .push("server");
@@ -87,9 +93,19 @@ public class ServerConfig {
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
         this.maximumChantLength = builder.comment("Maximum length for a chant")
-                .defineInRange("maximumChantLength", 16, 1, 256);
+                .defineInRange("maximumChantLength", 24, 1, 256);
         this.realisticWorldSlash = builder.comment("Whether or not world slash can destroy unbreakable blocks")
                 .define("realisticWorldSlash", true);
+
+        this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
+                        .defineInRange("simpleDomainCost", 50, 1, 10000);
+        this.domainExpansionCost = builder.comment("The amount of points domain expansion costs to unlock")
+                .defineInRange("domainExpansionCost", 200, 1, 10000);
+        this.domainAmplificationCost = builder.comment("The amount of points domain amplification costs to unlock")
+                .defineInRange("domainAmplificationCost", 100, 1, 10000);
+
+        this.divergentFistCost = builder.comment("The amount of points divergent fist costs to unlock")
+                .defineInRange("divergentFistCost", 50, 1, 10000);
 
         builder.pop();
     }

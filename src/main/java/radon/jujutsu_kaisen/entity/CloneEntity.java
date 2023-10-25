@@ -4,9 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -188,23 +184,6 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity owner = this.getOwner();
-        return new ClientboundAddEntityPacket(this, owner == null ? 0 : owner.getId());
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        Player owner = (Player) this.level().getEntity(pPacket.getData());
-
-        if (owner != null) {
-            this.setOwner(owner);
-        }
-    }
-
-    @Override
     public @NotNull Component getName() {
         LivingEntity owner = this.getOwner();
         return owner == null ? super.getName() : owner.getName();
@@ -212,6 +191,11 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
 
     @Override
     public boolean isPersistenceRequired() {
+        return true;
+    }
+
+    @Override
+    public boolean canPerformSorcery() {
         return true;
     }
 

@@ -50,7 +50,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 

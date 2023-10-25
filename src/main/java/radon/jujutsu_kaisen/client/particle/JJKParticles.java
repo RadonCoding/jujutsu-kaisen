@@ -29,10 +29,10 @@ public class JJKParticles {
                     return null;
                 }
             });
-    public static RegistryObject<ParticleType<GenericParticle.GenericParticleOptions>> GENERIC = PARTICLES.register("generic", () ->
-            new ParticleType<>(false, GenericParticle.GenericParticleOptions.DESERIALIZER) {
+    public static RegistryObject<ParticleType<VaporParticle.VaporParticleOptions>> VAPOR = PARTICLES.register("vapor", () ->
+            new ParticleType<>(false, VaporParticle.VaporParticleOptions.DESERIALIZER) {
                 @Override
-                public @NotNull Codec<GenericParticle.GenericParticleOptions> codec() {
+                public Codec<VaporParticle.VaporParticleOptions> codec() {
                     return null;
                 }
             });

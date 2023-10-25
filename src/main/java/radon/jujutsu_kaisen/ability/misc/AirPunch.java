@@ -59,7 +59,7 @@ public class AirPunch extends Ability {
                                 owner.swing(InteractionHand.MAIN_HAND);
 
                                 owner.level().explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),
-                                        null, owner.getX(), owner.getY(), owner.getZ(), this.getPower(owner), false,
+                                        null, owner.getX(), owner.getY(), owner.getZ(), 1.0F + this.getPower(owner) * 0.5F, false,
                                         owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
                                 return true;
                             }

@@ -42,6 +42,11 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    public boolean canPerformSorcery() {
+        return true;
+    }
+
+    @Override
     public int getMaxHeadXRot() {
         return 180;
     }

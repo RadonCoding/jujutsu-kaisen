@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface ISorcerer {
-    @Nullable SorcererGrade getGrade();
+    boolean canPerformSorcery();
+    SorcererGrade getGrade();
     @Nullable CursedTechnique getTechnique();
     default @Nullable CursedTechnique getAdditional() {
         return null;

@@ -453,7 +453,7 @@ public class SorcererData implements ISorcererData {
             this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+            this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
             this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID);
         }
 
@@ -524,6 +524,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addPoints(int points) {
         this.points += points;
+    }
+
+    @Override
+    public void usePoints(int count) {
+        this.points -= count;
     }
 
     @Override
@@ -680,7 +685,7 @@ public class SorcererData implements ISorcererData {
 
         SorcererGrade current = this.getGrade();
 
-        if (owner.level().isClientSide && owner instanceof Player) {
+        if (!owner.level().isClientSide && owner instanceof Player) {
             if (previous != current) {
                 owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
             }
@@ -780,7 +785,7 @@ public class SorcererData implements ISorcererData {
     }
 
     public void toggle(LivingEntity owner, Ability ability) {
-        if (owner.level().isClientSide && owner instanceof Player) {
+        if (!owner.level().isClientSide && owner instanceof Player) {
             if (((Ability.IToggled) ability).shouldLog()) {
                 if (this.hasToggled(ability)) {
                     owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
@@ -949,7 +954,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public Set<CursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.COPY)) {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.MIMICRY)) {
             return Set.of();
         }
         return this.copied;
@@ -1008,7 +1013,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void channel(LivingEntity owner, @Nullable Ability ability) {
         if (this.channeled != null) {
-            ((Ability.IChannelened) this.channeled).onRelease(owner, this.charge);
+            ((Ability.IChannelened) this.channeled).onRelease(owner);
         }
 
         if (this.channeled == ability) {

@@ -51,7 +51,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 

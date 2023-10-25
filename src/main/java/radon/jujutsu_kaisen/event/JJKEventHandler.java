@@ -121,6 +121,9 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity owner = event.getEntity();
+
+            if (owner.isDeadOrDying()) return;
+
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.tick(owner));
         }
 

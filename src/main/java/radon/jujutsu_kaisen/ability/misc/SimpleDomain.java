@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -86,6 +87,6 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public int getPointsCost() {
-        return 50;
+        return ConfigHolder.SERVER.simpleDomainCost.get();
     }
 }

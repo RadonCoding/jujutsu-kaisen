@@ -2,9 +2,6 @@ package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,8 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -198,23 +195,6 @@ public abstract class DomainExpansionEntity extends Mob {
         super.defineSynchedData();
 
         this.entityData.define(DATA_TIME, 0);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        Entity entity = this.getOwner();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
-
-        if (owner != null) {
-            this.setOwner(owner);
-        }
     }
 
     // If strength is more than 75% larger than this

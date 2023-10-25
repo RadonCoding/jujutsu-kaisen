@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -14,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -84,7 +82,7 @@ public class WheelEntity extends Entity implements GeoEntity {
                 !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
             this.discard();
         } else {
-            if (owner != null) {
+            if (!this.level().isClientSide && owner != null) {
                 int spin = this.entityData.get(DATA_SPIN);
 
                 float yRot = owner.getYRot();
@@ -127,27 +125,9 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         if (owner != null) {
             if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.toggle(owner, JJKAbilities.WHEEL.get());
-                });
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.toggle(owner, JJKAbilities.WHEEL.get());
             }
-        }
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        Entity entity = this.getOwner();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        Entity entity = this.level().getEntity(pPacket.getData());
-
-        if (entity != null) {
-            this.setOwner((LivingEntity) entity);
         }
     }
 

@@ -71,7 +71,7 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 
@@ -81,7 +81,7 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SEMI_GRADE_2;
     }
 

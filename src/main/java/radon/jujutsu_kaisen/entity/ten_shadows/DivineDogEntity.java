@@ -84,7 +84,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 

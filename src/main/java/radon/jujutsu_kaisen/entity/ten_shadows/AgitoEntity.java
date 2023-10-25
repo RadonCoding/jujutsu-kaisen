@@ -57,7 +57,7 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return true;
     }
 

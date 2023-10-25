@@ -74,7 +74,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return true;
     }
 
@@ -290,6 +290,11 @@ public class MahoragaEntity extends TenShadowsSummon {
                 this.breakBlocks();
             }
         }
+    }
+
+    @Override
+    public float getExperience() {
+        return 0.0F;
     }
 
     @Override

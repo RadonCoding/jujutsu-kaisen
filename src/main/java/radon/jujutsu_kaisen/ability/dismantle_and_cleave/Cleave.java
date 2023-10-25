@@ -156,9 +156,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                     double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
                     level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
-                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                 if (!success || target instanceof SimpleDomainEntity || target instanceof DomainExpansionEntity) return;
+
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                 for (int i = 0; i < 12; i++) {
                     for (int j = 0; j < 16; j++) {

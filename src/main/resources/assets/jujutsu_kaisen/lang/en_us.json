@@ -243,9 +243,9 @@
   "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
   "ability.jujutsu_kaisen.rika.disable": "Released Rika",
 
-  "ability.jujutsu_kaisen.copy": "Copy",
-  "ability.jujutsu_kaisen.copy.enable": "Activated copy",
-  "ability.jujutsu_kaisen.copy.disable": "Deactivated copy",
+  "ability.jujutsu_kaisen.mimicry": "Mimicry",
+  "ability.jujutsu_kaisen.mimicry.enable": "Activated mimicry",
+  "ability.jujutsu_kaisen.mimicry.disable": "Deactivated mimicry",
 
   "ability.jujutsu_kaisen.command_pure_love": "Pure Love",
 
@@ -375,7 +375,7 @@
   "cursed_technique.jujutsu_kaisen.limitless": "Limitless",
   "cursed_technique.jujutsu_kaisen.dismantle_and_cleave": "Dismantle & Cleave",
   "cursed_technique.jujutsu_kaisen.cursed_speech": "Cursed Speech",
-  "cursed_technique.jujutsu_kaisen.copy": "Copy",
+  "cursed_technique.jujutsu_kaisen.mimicry": "Mimicry",
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
@@ -408,7 +408,7 @@
   "chat.jujutsu_kaisen.bounty_fail": "Failed to complete the bounty set on %1$s.",
   "chat.jujutsu_kaisen.bounty_set": "Successfully set bounty on %1$s.",
   "chat.jujutsu_kaisen.kuchisake_onna": "<%1$s> Am... Am I... pretty?",
-  "chat.jujutsu_kaisen.copy": "Copied cursed technique %1$s",
+  "chat.jujutsu_kaisen.mimicry": "Copied cursed technique %1$s",
 
   "chat.jujutsu_kaisen.dont_move": "<%1$s> DON'T MOVE!",
   "chat.jujutsu_kaisen.get_crushed": "<%1$s> GET CRUSHED!",

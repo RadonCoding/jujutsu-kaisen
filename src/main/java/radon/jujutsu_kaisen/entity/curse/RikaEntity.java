@@ -224,6 +224,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
+    public boolean canPerformSorcery() {
+        return false;
+    }
+
+    @Override
     public SorcererGrade getGrade() {
         LivingEntity owner = this.getOwner();
 

@@ -71,4 +71,8 @@ public class BoogieWoogie extends Ability {
         return super.checkTriggerable(owner);
     }
 
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
+    }
 }

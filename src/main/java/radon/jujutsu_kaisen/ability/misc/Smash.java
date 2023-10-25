@@ -16,8 +16,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -25,7 +25,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class Smash extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final float EXPLOSIVE_POWER = 1.0F;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -47,12 +46,12 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
     public void run(LivingEntity owner) {
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
-                Math.round(((float) this.getCharge(owner) / this.getRealDuration(owner)) * 100)), false);
+                Math.round(((float) Math.min(20, this.getCharge(owner)) / 20) * 100)), false);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return this.getCharge(owner) >= 20 ? 0.0F : 0.5F;
     }
 
     @Override
@@ -61,23 +60,17 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     @Override
-    public int getRealDuration(LivingEntity owner) {
-        return 20;
-    }
-
-
-    @Override
     public void onStart(LivingEntity owner) {
 
     }
 
     @Override
-    public void onRelease(LivingEntity owner, int charge) {
+    public void onRelease(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (owner.level().isClientSide) return;
 
-        float radius = EXPLOSIVE_POWER * this.getPower(owner) * ((float) charge / this.getRealDuration(owner));
+        float radius = 1.0F + this.getPower(owner) * 0.5F * ((float) Math.min(20, this.getCharge(owner)) / 20);
 
         Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
 

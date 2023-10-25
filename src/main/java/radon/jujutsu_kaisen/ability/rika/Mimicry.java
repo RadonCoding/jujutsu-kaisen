@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-public class Copy extends Ability implements Ability.IToggled {
+public class Mimicry extends Ability implements Ability.IToggled {
     @Override
     public boolean isChantable() {
         return false;
@@ -75,7 +75,7 @@ public class Copy extends Ability implements Ability.IToggled {
 
             if (event.getSource().getEntity() instanceof LivingEntity attacker) {
                 attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                    if (attackerCap.hasToggled(JJKAbilities.COPY.get())) {
+                    if (attackerCap.hasToggled(JJKAbilities.MIMICRY.get())) {
                         victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
                             CursedTechnique current = attackerCap.getTechnique();
                             CursedTechnique copied = victimCap.getTechnique();
@@ -86,7 +86,7 @@ public class Copy extends Ability implements Ability.IToggled {
                                 attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.copy", JujutsuKaisen.MOD_ID), copied.getName()));
 
                                 attackerCap.copy(copied);
-                                attackerCap.toggle(attacker, JJKAbilities.COPY.get());
+                                attackerCap.toggle(attacker, JJKAbilities.MIMICRY.get());
 
                                 if (attacker instanceof ServerPlayer player) {
                                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);

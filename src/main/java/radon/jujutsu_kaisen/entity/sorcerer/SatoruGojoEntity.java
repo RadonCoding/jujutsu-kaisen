@@ -49,7 +49,7 @@ public class SatoruGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
     }
 

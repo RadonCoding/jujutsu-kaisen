@@ -52,13 +52,13 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
     }
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.COPY;
+        return CursedTechnique.MIMICRY;
     }
 
     @Override

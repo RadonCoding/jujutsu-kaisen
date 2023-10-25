@@ -69,7 +69,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     }
 
     @Override
-    public void onRelease(LivingEntity owner, int charge) {
+    public void onRelease(LivingEntity owner) {
 
     }
 
