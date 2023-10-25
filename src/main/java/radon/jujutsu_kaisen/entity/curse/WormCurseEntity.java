@@ -50,7 +50,7 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 

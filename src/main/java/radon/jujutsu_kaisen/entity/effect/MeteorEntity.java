@@ -2,10 +2,6 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -17,18 +13,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.UUID;
 
 public class MeteorEntity extends JujutsuProjectile {
     public static final int SIZE = 10;
@@ -40,11 +32,6 @@ public class MeteorEntity extends JujutsuProjectile {
     private static final float MAX_EXPLOSION = 20.0F;
 
     private int explosionTime;
-
-    @Nullable
-    private UUID ownerUUID;
-    @Nullable
-    private LivingEntity cachedOwner;
 
     private float xxa;
     private float zza;
@@ -78,47 +65,16 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    public boolean isPushedByFluid(FluidType type) {
-        return false;
-    }
-
-    public void setOwner(@Nullable LivingEntity pOwner) {
-        if (pOwner != null) {
-            this.ownerUUID = pOwner.getUUID();
-            this.cachedOwner = pOwner;
-        }
-    }
-
-    @Nullable
-    public LivingEntity getOwner() {
-        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
-            return this.cachedOwner;
-        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
-            return this.cachedOwner;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    protected void defineSynchedData() {
-
-    }
-
-    @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        if (pCompound.hasUUID("owner")) {
-            this.ownerUUID = pCompound.getUUID("owner");
-        }
+        super.readAdditionalSaveData(pCompound);
+
         this.explosionTime = pCompound.getInt("explosion_time");
     }
 
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        if (this.ownerUUID != null) {
-            pCompound.putUUID("owner", this.ownerUUID);
-        }
+        super.addAdditionalSaveData(pCompound);
+
         pCompound.putInt("explosion_time", this.explosionTime);
     }
 
@@ -244,76 +200,46 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    public boolean fireImmune() {
-        return true;
-    }
-
-    @Override
     public void tick() {
-        LivingEntity owner = this.getOwner();
+        super.tick();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
-            this.discard();
-        } else {
-            super.tick();
+        if (!this.isRemoved()) {
+            this.aiStep();
+        }
 
-            if (!this.isRemoved()) {
-                this.aiStep();
-            }
+        if (!this.level().isClientSide) {
+            if (this.getOwner() instanceof LivingEntity owner) {
+                if (this.explosionTime == 0) {
+                    for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower());
+                    }
+                }
 
-            if (!this.level().isClientSide) {
-                if (owner != null) {
+                if (this.onGround()) {
                     if (this.explosionTime == 0) {
-                        for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
-                            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower());
-                        }
+                        ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * this.getPower()),
+                                EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
+                        this.explosionTime++;
                     }
+                }
 
-                    if (this.onGround()) {
-                        if (this.explosionTime == 0) {
-                            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * this.getPower()),
-                                    EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
-                            this.explosionTime++;
+                if (this.explosionTime > 0) {
+                    if (this.explosionTime >= MAXIMUM_TIME) {
+                        this.discard();
+                    } else {
+                        if (this.explosionTime < MAXIMUM_TIME / 4) {
+                            BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
+                                BlockState state = this.level().getBlockState(pos);
+
+                                if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
+                                    this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                                }
+                            });
                         }
-                    }
-
-                    if (this.explosionTime > 0) {
-                        if (this.explosionTime >= MAXIMUM_TIME) {
-                            this.discard();
-                        } else {
-                            if (this.explosionTime < MAXIMUM_TIME / 4) {
-                                BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
-                                    BlockState state = this.level().getBlockState(pos);
-
-                                    if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                        this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                                    }
-                                });
-                            }
-                            this.explosionTime++;
-                        }
+                        this.explosionTime++;
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity owner = this.getOwner();
-
-        int ownerId = owner == null ? 0 : owner.getId();
-        return new ClientboundAddEntityPacket(this, ownerId);
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
-
-        if (owner != null) {
-            this.setOwner(owner);
         }
     }
 }

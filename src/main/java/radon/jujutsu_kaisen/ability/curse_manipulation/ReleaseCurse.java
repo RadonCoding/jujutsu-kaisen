@@ -99,5 +99,9 @@ public class ReleaseCurse extends Ability {
     public boolean isTechnique() {
         return true;
     }
-    
+
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
+    }
 }

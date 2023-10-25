@@ -21,10 +21,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
-import radon.jujutsu_kaisen.client.gui.overlay.CursedEnergyOverlay;
-import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
-import radon.jujutsu_kaisen.client.gui.overlay.ScreenFlashOverlay;
-import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
+import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
@@ -205,6 +202,7 @@ public class JJKClientEventHandler {
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
+            event.registerAboveAll("experience_overlay", ExperienceOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
             event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
         }
@@ -335,7 +333,7 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(JJKParticles.GENERIC.get(), GenericParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);

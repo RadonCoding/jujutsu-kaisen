@@ -41,6 +41,7 @@ public class UnlockAbilityC2SPacket {
             if (ability == null) return;
 
             if (ability.isUnlockable(sender)) {
+                cap.usePoints(ability.getPointsCost());
                 cap.unlock(ability);
             }
         });

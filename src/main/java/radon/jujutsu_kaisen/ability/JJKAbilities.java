@@ -39,7 +39,7 @@ import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
 import radon.jujutsu_kaisen.ability.rika.CommandPureLove;
-import radon.jujutsu_kaisen.ability.rika.Copy;
+import radon.jujutsu_kaisen.ability.rika.Mimicry;
 import radon.jujutsu_kaisen.ability.rika.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.ShadowStorage;
@@ -92,7 +92,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
-    public static RegistryObject<Ability> COPY = ABILITIES.register("copy", Copy::new);
+    public static RegistryObject<Ability> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
     public static RegistryObject<Ability> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
@@ -319,7 +319,11 @@ public class JJKAbilities {
         Set<Ability> abilities = new LinkedHashSet<>();
 
         if (owner instanceof ISorcerer sorcerer) {
-            abilities.addAll(sorcerer.getCustom());
+            List<Ability> custom = sorcerer.getCustom();
+
+            if (custom.isEmpty() && !sorcerer.canPerformSorcery()) return List.of();
+
+            abilities.addAll(custom);
         }
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);

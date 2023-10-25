@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -22,10 +23,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -114,8 +116,8 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         int i = this.getUseDuration(pStack) - pRemainingUseDuration;
         float f = this.getPowerForTime(i);
 
-        if (pLivingEntity instanceof Player && pLevel.isClientSide) {
-            ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), COST * f, COST), false);
+        if (pLivingEntity instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), COST * f, COST), false), player);
         }
     }
 

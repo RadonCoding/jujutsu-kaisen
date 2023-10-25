@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -67,7 +68,7 @@ public class DivergentFist extends Ability {
 
     @Override
     public int getPointsCost() {
-        return 50;
+        return ConfigHolder.SERVER.divergentFistCost.get();
     }
 
     @Override

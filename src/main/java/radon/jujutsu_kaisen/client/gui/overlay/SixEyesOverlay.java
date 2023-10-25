@@ -36,8 +36,9 @@ public class SixEyesOverlay {
     public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
 
-        assert mc.level != null;
-        assert mc.player != null;
+        if (mc.level == null || mc.player == null) return;
+
+        if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

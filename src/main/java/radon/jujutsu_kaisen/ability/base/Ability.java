@@ -292,7 +292,7 @@ public abstract class Ability {
 
     public interface IChannelened {
         void onStart(LivingEntity owner);
-        void onRelease(LivingEntity owner, int charge);
+        void onRelease(LivingEntity owner);
         default int getCharge(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             return cap.getCharge();

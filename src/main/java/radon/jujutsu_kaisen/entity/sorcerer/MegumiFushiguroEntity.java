@@ -69,7 +69,7 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_1;
     }
 

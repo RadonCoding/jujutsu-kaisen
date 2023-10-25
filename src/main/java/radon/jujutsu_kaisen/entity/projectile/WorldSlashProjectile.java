@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorldSlashProjectile extends JujutsuProjectile {
-    private static final float DAMAGE = 15.0F;
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 3;
     private static final float SPEED = 5.0F;
@@ -76,12 +75,14 @@ public class WorldSlashProjectile extends JujutsuProjectile {
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
+        if (this.level().isClientSide) return;
+
         Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectWorldSlashAttack(this, owner, JJKAbilities.WORLD_SLASH.get()), DAMAGE * this.getPower());
+                    entity.hurt(JJKDamageSources.indirectWorldSlashAttack(this, owner, JJKAbilities.WORLD_SLASH.get()), DismantleProjectile.DAMAGE * this.getPower());
                 }
             });
         }

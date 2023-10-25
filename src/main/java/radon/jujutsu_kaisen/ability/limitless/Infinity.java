@@ -278,7 +278,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     DamageSource source = event.getSource();
 
-                    if (!source.is(JJKDamageSources.SOUL) && source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) {
+                    if (source.getEntity() == target || !source.is(JJKDamageSources.SOUL) && source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) {
                         return;
                     }
 

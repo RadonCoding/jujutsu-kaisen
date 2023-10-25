@@ -27,6 +27,7 @@ public interface ISorcererData {
 
     int getPoints();
     void addPoints(int points);
+    void usePoints(int count);
 
     boolean isUnlocked(Ability ability);
     void unlock(Ability ability);

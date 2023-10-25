@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -161,10 +162,14 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         AABB bounds = this.getBoundingBox().inflate(1.0D);
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                 if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower())) {
+                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower())) {
                     if (this.deathTime == 0) {
                         this.deathTime = BITE_DURATION;
                     }
@@ -206,6 +211,9 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                     } else {
                         LivingEntity target = this.getTarget();
 
+                        if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+                            this.discard();
+                        }
                         if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
                             this.setDeltaMovement(target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D)
                                     .subtract(this.position()).normalize().scale(SPEED));

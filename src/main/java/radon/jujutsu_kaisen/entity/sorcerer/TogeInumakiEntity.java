@@ -65,7 +65,7 @@ public class TogeInumakiEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SEMI_GRADE_1;
     }
 

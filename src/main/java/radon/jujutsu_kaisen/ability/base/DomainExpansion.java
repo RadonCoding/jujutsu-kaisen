@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -183,7 +184,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public int getPointsCost() {
-        return 500;
+        return ConfigHolder.SERVER.domainExpansionCost.get();
     }
 
     public interface IClosedDomain {

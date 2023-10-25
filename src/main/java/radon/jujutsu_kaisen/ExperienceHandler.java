@@ -89,12 +89,12 @@ public class ExperienceHandler {
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float amount = this.target.getMaxHealth() / 2;
+            float amount = 10.0F;
 
             // Multiply by duration / 30 seconds
             amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
 
-            // Multiply by total damage dealt during battle / 10
+            // Multiply by total damage dealt during battle / 100
             amount *= this.totalDamage / 10;
 
             // Multiply by the difference of the lowest health factors of both owner and target
@@ -104,7 +104,7 @@ public class ExperienceHandler {
             amount *= owner.getMaxHealth() / this.target.getMaxHealth();
 
             // If owner is dead they get 10% of the experience
-            amount *= owner.isAlive() ? 1.0F : 0.1F;
+            amount *= owner.isDeadOrDying() ? 0.1F : 1.0F;
 
             // Limit the experience to the max health of the target
             amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);

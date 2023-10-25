@@ -36,7 +36,7 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return true;
     }
 

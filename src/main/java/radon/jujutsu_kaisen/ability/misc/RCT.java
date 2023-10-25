@@ -81,7 +81,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onRelease(LivingEntity owner, int charge) {
+    public void onRelease(LivingEntity owner) {
 
     }
 }

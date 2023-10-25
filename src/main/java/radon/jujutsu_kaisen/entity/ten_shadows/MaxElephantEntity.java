@@ -22,12 +22,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -71,7 +70,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 
@@ -251,16 +250,18 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
         }
 
-        LivingEntity target = this.getTarget();
+        if (passenger == null) {
+            LivingEntity target = this.getTarget();
 
-        boolean trigger = target != null && this.distanceTo(target) <= Water.RANGE && this.hasLineOfSight(target);
+            boolean trigger = target != null && this.distanceTo(target) <= Water.RANGE && this.hasLineOfSight(target);
 
-        if (trigger) {
-            if (!JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
+            if (trigger) {
+                if (!JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
+                    AbilityHandler.trigger(this, JJKAbilities.WATER.get());
+                }
+            } else if (JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
                 AbilityHandler.trigger(this, JJKAbilities.WATER.get());
             }
-        } else if (JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
-            AbilityHandler.trigger(this, JJKAbilities.WATER.get());
         }
     }
 
@@ -277,7 +278,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public void setDown(boolean down) {
         if (this.level().isClientSide) return;
-        if (this.riding - this.tickCount < 20) return;
+        if (this.tickCount - this.riding < 20) return;
 
         boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
 

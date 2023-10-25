@@ -5,9 +5,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -113,7 +110,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     protected abstract boolean isCustom();
     protected abstract boolean canFly();
-    protected abstract boolean canPerformSorcery();
     protected abstract boolean hasMeleeAttack();
 
     private void createGoals() {
@@ -274,23 +270,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity owner = this.getOwner();
-        return new ClientboundAddEntityPacket(this, owner == null ? 0 : owner.getId());
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
-
-        if (owner != null) {
-            this.setOwner(owner);
-        }
     }
 
     @Override

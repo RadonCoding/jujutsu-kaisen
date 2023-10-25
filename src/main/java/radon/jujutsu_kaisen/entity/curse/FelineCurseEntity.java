@@ -112,7 +112,7 @@ public class FelineCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    protected boolean canPerformSorcery() {
+    public boolean canPerformSorcery() {
         return false;
     }
 
@@ -122,7 +122,7 @@ public class FelineCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    public @NotNull SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_3;
     }
 
