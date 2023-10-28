@@ -221,7 +221,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
             LivingEntity target = this.getTarget();
 
-            if (target == null || target.isRemoved() || !target.isAlive()) {
+            if (target == null || target.isRemoved() || !target.isAlive() || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())) {
                 return;
             }
 

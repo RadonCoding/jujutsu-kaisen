@@ -8,21 +8,21 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.*;
 
 public class ServerConfig {
-    private static final Map<ResourceLocation, Float> MAX_CURSED_ENERGY_NPC = new LinkedHashMap<>();
+    private static final Map<ResourceLocation, Float> CURSED_ENERGY_AMOUNTS = new LinkedHashMap<>();
 
     static {
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.MAHORAGA.getId(), 6000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.MAHORAGA.getId(), 6000.0F);
 
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.JOGO.getId(), 1000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.DAGON.getId(), 1000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.HANAMI.getId(), 1000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.JOGO.getId(), 1000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.DAGON.getId(), 1000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.HANAMI.getId(), 1000.0F);
 
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.SUKUNA_RYOMEN.getId(), 6000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.MEGUNA_RYOMEN.getId(), 6000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.HEIAN_SUKUNA.getId(), 6000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.SATORU_GOJO.getId(), 2000.0F);
-        MAX_CURSED_ENERGY_NPC.put(JJKEntities.YUTA_OKKOTSU.getId(), 4000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.SUKUNA.getId(), 6000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.MEGUNA.getId(), 6000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.HEIAN_SUKUNA.getId(), 6000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.SATORU_GOJO.getId(), 2000.0F);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.YUTA_OKKOTSU.getId(), 4000.0F);
     }
 
     private static final Map<SorcererGrade, Float> REQUIRED_EXPERIENCE = new LinkedHashMap<>();
@@ -38,7 +38,21 @@ public class ServerConfig {
         REQUIRED_EXPERIENCE.put(SorcererGrade.SPECIAL_GRADE, 2500.0F);
     }
 
+    private static final Map<ResourceLocation, Float> EXPERIENCE_MULTIPLIERS = new LinkedHashMap<>();
+
+    static {
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.SUKUNA.getId(), 3.5F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.MEGUNA.getId(), 3.5F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.HEIAN_SUKUNA.getId(), 4.0F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.SATORU_GOJO.getId(), 3.0F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.YUTA_OKKOTSU.getId(), 2.0F);
+
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.JOGO.getId(), 2.0F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.HANAMI.getId(), 2.0F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.DAGON.getId(), 2.0F);
+    }
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> cursedEnergyAmounts;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> experienceMultipliers;
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> requiredExperience;
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
@@ -49,6 +63,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
+    public final ForgeConfigSpec.IntValue maximumChantCount;
     public final ForgeConfigSpec.IntValue maximumChantLength;
     public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
 
@@ -57,13 +72,18 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue domainAmplificationCost;
     public final ForgeConfigSpec.IntValue divergentFistCost;
 
-
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
                 .push("server");
-
+        
         this.cursedEnergyAmounts = builder.comment("Cursed energy amounts for NPCs (scales with experience)")
-                .defineList("maxCursedEnergyNPC", MAX_CURSED_ENERGY_NPC
+                .defineList("maxCursedEnergyNPC", CURSED_ENERGY_AMOUNTS
+                        .entrySet()
+                        .stream()
+                        .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().toString(), x.getValue()))
+                        .toList(), obj -> obj instanceof String);
+        this.experienceMultipliers = builder.comment("Experience multipliers for NPCs")
+                .defineList("experienceMultipliers", EXPERIENCE_MULTIPLIERS
                         .entrySet()
                         .stream()
                         .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().toString(), x.getValue()))
@@ -77,7 +97,7 @@ public class ServerConfig {
                         .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().name(), x.getValue()))
                         .toList(), obj -> obj instanceof String);
         this.sorcererHealingAmount = builder.comment("The maximum amount of health sorcerers can heal per tick (scales with experience)")
-                .defineInRange("sorcererHealingAmount", 0.05F, 0.0F, 100.0F);
+                .defineInRange("sorcererHealingAmount", 0.9F, 0.0F, 100.0F);
         this.curseHealingAmount = builder.comment("The maximum amount of health curses can heal per tick (scales with experience)")
                 .defineInRange("curseHealingAmount", 0.1F, 0.0F, 100.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
@@ -92,6 +112,8 @@ public class ServerConfig {
                 .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
+        this.maximumChantCount = builder.comment("Maximum count for chants")
+                .defineInRange("maximumChantCount", 5, 1, 16);
         this.maximumChantLength = builder.comment("Maximum length for a chant")
                 .defineInRange("maximumChantLength", 24, 1, 256);
         this.realisticWorldSlash = builder.comment("Whether or not world slash can destroy unbreakable blocks")
@@ -114,6 +136,18 @@ public class ServerConfig {
         Map<ResourceLocation, Float> amounts = new HashMap<>();
 
         for (String line : this.cursedEnergyAmounts.get()) {
+            String[] parts = line.split("=");
+            String key = parts[0];
+            float value = Float.parseFloat(parts[1]);
+            amounts.put(new ResourceLocation(key), value);
+        }
+        return amounts;
+    }
+
+    public Map<ResourceLocation, Float> getExperienceMultipliers() {
+        Map<ResourceLocation, Float> amounts = new HashMap<>();
+
+        for (String line : this.experienceMultipliers.get()) {
             String[] parts = line.split("=");
             String key = parts[0];
             float value = Float.parseFloat(parts[1]);

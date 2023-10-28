@@ -8,10 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.model.entity.SukunaRyomenModel;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 
-public class SukunaRyomenRenderer extends HumanoidMobRenderer<SukunaRyomenEntity, SukunaRyomenModel> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/sukuna_ryomen.png");
+public class SukunaRyomenRenderer extends HumanoidMobRenderer<SukunaEntity, SukunaRyomenModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/sukuna.png");
 
     public SukunaRyomenRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new SukunaRyomenModel(pContext.bakeLayer(SukunaRyomenModel.LAYER)), 0.5F);
@@ -21,7 +21,7 @@ public class SukunaRyomenRenderer extends HumanoidMobRenderer<SukunaRyomenEntity
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaRyomenEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaEntity pEntity) {
         return TEXTURE;
     }
 }

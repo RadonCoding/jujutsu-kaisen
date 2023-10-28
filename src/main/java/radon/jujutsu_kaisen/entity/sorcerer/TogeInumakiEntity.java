@@ -56,7 +56,7 @@ public class TogeInumakiEntity extends SorcererEntity {
             }
 
             if (!this.level().isClientSide) {
-                this.convertTo(JJKEntities.MEGUNA_RYOMEN.get(), true);
+                this.convertTo(JJKEntities.MEGUNA.get(), true);
             }
             return InteractionResult.SUCCESS;
         } else {

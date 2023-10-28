@@ -120,6 +120,7 @@ public interface ISorcererData {
     void setEnergy(float energy);
 
     void addExtraEnergy(float amount);
+    void resetExtraEnergy();
 
     void addUsed(float amount);
 
@@ -200,6 +201,7 @@ public interface ISorcererData {
 
     int getSpeedStacks();
     void addSpeedStack();
+    void resetSpeedStacks();
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

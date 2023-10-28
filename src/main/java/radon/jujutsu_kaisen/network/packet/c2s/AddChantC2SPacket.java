@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -47,7 +46,7 @@ public class AddChantC2SPacket {
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getChants(ability).size() == 5 || this.chant.isEmpty() || this.chant.isBlank() || cap.hasChant(ability, this.chant)) return;
+            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || this.chant.isEmpty() || this.chant.isBlank() || cap.hasChant(ability, this.chant)) return;
 
             cap.addChant(ability, this.chant);
         });

@@ -17,13 +17,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
 public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/projection_frame.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/block/glass.png");
     private static final RenderType RENDER_TYPE = JJKRenderTypes.entityCutoutNoCull(TEXTURE);
     private static final float SIZE = 1.0F;
 
@@ -41,7 +40,7 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
 
         pPoseStack.pushPose();
 
-        float yaw = Mth.lerp(pPartialTick, victim.yRotO, victim.getYRot());
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
         ClientProjectionHandler.frame = true;
@@ -58,7 +57,9 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
 
         pPoseStack.popPose();
 
-        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+        pPoseStack.translate(0.0D, victim.getBbHeight() / 2.0F , 0.0D);
+        float scale = Math.max(victim.getBbWidth(), victim.getBbHeight() * 0.5F + 0.3F);
+        pPoseStack.scale(scale, scale, 1.0F);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(RENDER_TYPE);

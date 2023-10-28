@@ -293,11 +293,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public float getExperience() {
-        return 0.0F;
-    }
-
-    @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.WHEEL.get());
     }

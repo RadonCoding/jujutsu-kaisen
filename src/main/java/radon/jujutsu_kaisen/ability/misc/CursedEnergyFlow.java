@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,13 +42,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         return false;
     }
 
-    private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
-        return owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth();
-    }
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) <= this.getAttackReachSqr(owner, target) * 2.0D;
+        return false;
     }
 
     @Override
@@ -59,43 +56,43 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 8; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        for (int i = 0; i < 8; i++) {
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
+            double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
+            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.5F, false, 1),
+                    x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+        }
+
+        if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
+            for (int i = 0; i < 2; i++) {
+                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.5F, false, 1),
-                        x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
+                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
+                        x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
 
-            if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
-                for (int i = 0; i < 2; i++) {
-                    double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
-                    double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                    double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
-                    level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
-                            x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                }
+            if (owner.isInWater()) {
+                for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
+                    if (!entity.isInWater()) continue;
 
-                if (owner.isInWater()) {
-                    for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
-                        if (!entity.isInWater()) continue;
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
+                        owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
-                        if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
-                            owner.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-                            for (int i = 0; i < 2; i++) {
-                                double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
-                                double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                                double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
-                                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
-                                        x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                            }
+                        for (int i = 0; i < 2; i++) {
+                            double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
+                            double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
+                            double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
+                            level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
+                                    x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                         }
                     }
                 }
             }
-        });
+        }
     }
 
     @Override
@@ -122,6 +119,19 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            if (!source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
+                if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                    AbilityHandler.trigger(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get());
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             // Damage

@@ -86,6 +86,8 @@ public class ProjectionFrameEntity extends Entity {
         } else {
             super.tick();
 
+            if (this.level().isClientSide) return;
+
             if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {

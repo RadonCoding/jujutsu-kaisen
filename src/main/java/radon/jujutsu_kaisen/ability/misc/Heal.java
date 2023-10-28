@@ -35,7 +35,7 @@ public class Heal extends Ability implements Ability.IChannelened {
     @Override
     public float getCost(LivingEntity owner) {
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return 3.0F;
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner) * 4.0F;
         }
         return 0.0F;
     }

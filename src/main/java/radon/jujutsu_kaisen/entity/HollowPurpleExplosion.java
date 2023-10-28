@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
     public static final int DURATION = 3 * 20;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 10.0F;
     private static final float RADIUS = 5.0F;
     private static final float MAX_EXPLOSION = 10.0F;
 

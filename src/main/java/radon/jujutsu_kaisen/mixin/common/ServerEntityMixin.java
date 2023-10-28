@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.mixin.server;
+package radon.jujutsu_kaisen.mixin.common;
 
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.entity.Entity;

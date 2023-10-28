@@ -43,7 +43,7 @@ public class TwentyFourFrameRuleEffect extends JJKEffect {
             Vec3 center = new Vec3(pLivingEntity.getX(), pLivingEntity.getY() + (pLivingEntity.getBbHeight() / 2.0F), pLivingEntity.getZ());
             ((ServerLevel) pLivingEntity.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
 
-            pLivingEntity.hurt(JJKDamageSources.jujutsuAttack(pLivingEntity, JJKAbilities.TIME_CELL_MOON_PALACE.get()), 10.0F);
+            pLivingEntity.hurt(JJKDamageSources.jujutsuAttack(pLivingEntity, JJKAbilities.TIME_CELL_MOON_PALACE.get()), 25.0F);
         }
         this.positions.put(pLivingEntity.getUUID(), pLivingEntity.position());
     }

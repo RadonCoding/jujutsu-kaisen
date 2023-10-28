@@ -12,7 +12,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,27 +22,14 @@ import radon.jujutsu_kaisen.item.veil.modifier.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class AltarMenu extends ItemCombinerMenu {
-    private static final Map<Item, ResourceLocation> ENTITY_DROPS = new HashMap<>();
-
     private static final List<Integer> BLACKLIST = List.of(2, 5, 7, 8);
 
     public AltarMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(JJKMenus.ALTAR.get(), pContainerId, pPlayerInventory, pAccess);
-
-        if (ENTITY_DROPS.isEmpty()) {
-            pAccess.evaluate((level, pos) -> {
-                ENTITY_DROPS.put(Items.ROTTEN_FLESH, getKey(level.registryAccess(), EntityType.ZOMBIE));
-                ENTITY_DROPS.put(Items.BONE, getKey(level.registryAccess(), EntityType.SKELETON));
-                ENTITY_DROPS.put(Items.GUNPOWDER, getKey(level.registryAccess(), EntityType.CREEPER));
-                return true;
-            });
-        }
     }
 
     public AltarMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -104,8 +90,6 @@ public class AltarMenu extends ItemCombinerMenu {
             return new CurseModifier(action);
         } else if (stack.is(JJKItemTags.CURSED_TOOL)) {
             return new SorcererModifier(action);
-        } else if (ENTITY_DROPS.containsKey(stack.getItem())) {
-            return new EntityModifier(ENTITY_DROPS.get(stack.getItem()), action);
         }
         throw new NotImplementedException();
     }

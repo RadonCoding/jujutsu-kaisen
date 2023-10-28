@@ -16,7 +16,6 @@ public class ModifierUtils {
         return switch (type) {
             case NONE -> new Modifier(nbt);
             case PLAYER -> new PlayerModifier(nbt);
-            case ENTITY -> new EntityModifier(nbt);
             case COLOR -> new ColorModifier(nbt);
             case TRANSPARENT -> new TransparentModifier(nbt);
             case CURSE -> new CurseModifier(nbt);

@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -131,7 +132,8 @@ public class JJKBlocks {
     public static RegistryObject<Block> VEIL = BLOCKS.register("veil", () ->
             new VeilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(100.0F, 14.0F)
-                    .isViewBlocking(JJKBlocks::always)
+                    .isViewBlocking(JJKBlocks::never)
+                    .isSuffocating(JJKBlocks::never)
                     .noOcclusion()));
 
     public static RegistryObject<FakeWaterDurationBlock> FAKE_WATER_DURATION = BLOCKS.register("fake_water_duration", () ->
@@ -140,8 +142,15 @@ public class JJKBlocks {
             new FakeWaterDomainBlock(JJKFluids.FAKE_WATER_SOURCE, BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     public static RegistryObject<FakeWoodBlock> FAKE_WOOD = BLOCKS.register("fake_wood", () ->
-            new FakeWoodBlock(BlockBehaviour.Properties.copy(Blocks.STONE)));
+            new FakeWoodBlock(BlockBehaviour.Properties.of()
+                    .instrument(NoteBlockInstrument.BASS)
+                    .strength(2.0F)
+                    .sound(SoundType.WOOD)
+                    .ignitedByLava()));
 
     public static RegistryObject<Block> LIMBO = BLOCKS.register("limbo", () ->
-            new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
+            new Block(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(2.0F, 6.0F)));
 }

@@ -117,15 +117,14 @@
 
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
-  "item.jujutsu_kaisen.sukuna_ryomen_spawn_egg": "Spawn Sukuna Ryomen",
+  "item.jujutsu_kaisen.sukuna_spawn_egg": "Spawn Sukuna",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
-  "item.jujutsu_kaisen.meguna_ryomen_spawn_egg": "Spawn Meguna Ryomen",
+  "item.jujutsu_kaisen.meguna_spawn_egg": "Spawn Meguna",
   "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
   "item.jujutsu_kaisen.heian_sukuna_spawn_egg": "Spawn The King of Curses",
-
 
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
   "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
@@ -432,7 +431,7 @@
   "chat.jujutsu_kaisen.chant": "Total chant boost: %1$d%%",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
-  "entity.jujutsu_kaisen.sukuna_ryomen": "Sukuna Ryomen",
+  "entity.jujutsu_kaisen.sukuna": "Sukuna",
   "entity.jujutsu_kaisen.satoru_gojo": "Satoru Gojo",
   "entity.jujutsu_kaisen.yuta_okkotsu": "Yuta Okkotsu",
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
@@ -454,7 +453,7 @@
   "entity.jujutsu_kaisen.tranquil_deer": "Tranquil Deer",
   "entity.jujutsu_kaisen.piercing_bull": "Piercing Bull",
   "entity.jujutsu_kaisen.agito": "Agito",
-  "entity.jujutsu_kaisen.meguna_ryomen": "Meguna Ryomen",
+  "entity.jujutsu_kaisen.meguna": "Meguna",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
   "entity.jujutsu_kaisen.toge_inumaki": "Toge Inumaki",
   "entity.jujutsu_kaisen.suguru_geto": "Suguru Geto",
@@ -493,6 +492,15 @@
 
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
+
+  "advancements.jujutsu_kaisen.disastrous.title": "Disastrous",
+  "advancements.jujutsu_kaisen.disastrous.description": "Defeat all four disaster cursed spirits.",
+
+  "advancements.jujutsu_kaisen.the_strongest_of_modern_times.title": "The Strongest of Modern Times",
+  "advancements.jujutsu_kaisen.the_strongest_of_modern_times.description": "Defeat Satoru Gojo.",
+
+  "advancements.jujutsu_kaisen.the_strongest_of_all_time.title": "The Strongest of All Time",
+  "advancements.jujutsu_kaisen.the_strongest_of_all_time.description": "Defeat Sukuna.",
 
   "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
 

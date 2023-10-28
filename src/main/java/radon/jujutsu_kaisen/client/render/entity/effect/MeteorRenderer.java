@@ -30,7 +30,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
 
         assert mc.level != null;
 
-        int radius = MeteorEntity.SIZE;
+        int size = entity.getSize();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         BlockRenderDispatcher renderer = mc.getBlockRenderer();
 
@@ -39,12 +39,12 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
 
         ModelBlockRenderer.enableCaching();
 
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
+        for (int x = -size; x <= size; x++) {
+            for (int y = -size; y <= size; y++) {
+                for (int z = -size; z <= size; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < radius && distance >= radius - 1) {
+                    if (distance < size && distance >= size - 1) {
                         pos.set(entity.blockPosition().offset(x, y, z));
 
                         BlockState state = Blocks.MAGMA_BLOCK.defaultBlockState();

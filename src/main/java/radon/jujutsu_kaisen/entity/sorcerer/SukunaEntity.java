@@ -24,8 +24,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
 
-public class SukunaRyomenEntity extends SorcererEntity {
-    public SukunaRyomenEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+public class SukunaEntity extends SorcererEntity {
+    public SukunaEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -57,11 +57,6 @@ public class SukunaRyomenEntity extends SorcererEntity {
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.MALEVOLENT_SHRINE.get();
-    }
-
-    @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
     }
 
     @Override

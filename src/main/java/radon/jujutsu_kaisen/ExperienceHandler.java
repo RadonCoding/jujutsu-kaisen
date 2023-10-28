@@ -16,13 +16,18 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExperienceHandler {
-    private static final Map<UUID, BattleData> battles = new HashMap<>();
+    private static final Map<UUID, Set<BattleData>> battles = new HashMap<>();
+
+    private static void addBattle(UUID owner, BattleData data) {
+        if (!battles.containsKey(owner)) {
+            battles.put(owner, new HashSet<>());
+        }
+        battles.get(owner).add(data);
+    }
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
@@ -31,11 +36,18 @@ public class ExperienceHandler {
         if (owner.level().isClientSide) return;
         if (!battles.containsKey(owner.getUUID())) return;
 
-        boolean fighting = battles.get(owner.getUUID()).tick(owner);
+        for (BattleData battle : battles.get(owner.getUUID())) {
+            boolean fighting = battle.tick(owner);
 
-        if (!fighting) {
-            battles.get(owner.getUUID()).end(owner);
-            battles.remove(owner.getUUID());
+            if (!fighting) {
+                battle.end(owner);
+
+                battles.get(owner.getUUID()).remove(battle);
+
+                if (battles.get(owner.getUUID()).isEmpty()) {
+                    battles.remove(owner.getUUID());
+                }
+            }
         }
     }
 
@@ -48,17 +60,23 @@ public class ExperienceHandler {
 
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 if (battles.containsKey(attacker.getUUID())) {
-                    battles.get(attacker.getUUID()).attack(event.getAmount());
+                    for (BattleData battle : battles.get(attacker.getUUID())) {
+                        if (battle.target != victim) continue;
+                        battle.attack(event.getAmount());
+                    }
                 } else if (attacker.getLastHurtByMob() == victim) {
-                    battles.put(attacker.getUUID(), new BattleData(victim));
+                    addBattle(attacker.getUUID(), new BattleData(victim));
                 }
             }
 
             if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 if (battles.containsKey(victim.getUUID())) {
-                    battles.get(victim.getUUID()).hurt(event.getAmount());
+                    for (BattleData battle : battles.get(victim.getUUID())) {
+                        if (battle.target != attacker) continue;
+                        battle.hurt(event.getAmount());
+                    }
                 } else {
-                    battles.put(victim.getUUID(), new BattleData(attacker));
+                    addBattle(victim.getUUID(), new BattleData(attacker));
                 }
             }
         }
@@ -72,44 +90,35 @@ public class ExperienceHandler {
 
     private static class BattleData {
         private final LivingEntity target;
-
         private int duration;
-
-        private float lowestOwnerHealth;
-        private float lowestTargetHealth;
-
-        private float totalDamage;
+        private int idle;
+        private float damage;
 
         public BattleData(LivingEntity target) {
             this.target = target;
         }
 
         public void end(LivingEntity owner) {
-            if (this.lowestOwnerHealth == 1.0F || this.lowestTargetHealth == 1.0F) return;
-
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float amount = 10.0F;
+            float amount = this.damage * 2.0F;
 
             // Multiply by duration / 30 seconds
             amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
 
-            // Multiply by total damage dealt during battle / 100
-            amount *= this.totalDamage / 10;
-
-            // Multiply by the difference of the lowest health factors of both owner and target
-            amount *= 1.0F - Math.abs(this.lowestOwnerHealth - this.lowestTargetHealth);
-
             // If owner has less health than target increase experience, if target has less health than owner decrease experience
-            amount *= owner.getMaxHealth() / this.target.getMaxHealth();
+            amount *= this.target.getMaxHealth() / owner.getMaxHealth();
 
             // If owner is dead they get 10% of the experience
             amount *= owner.isDeadOrDying() ? 0.1F : 1.0F;
 
+            // Decrease amount to a minimum of 25% depending on the health of owner and target, if both are relatively on the same health amount owner gets the full amount
+            amount *= Math.min(1.0F, 0.25F + 1.0F - Math.abs((owner.getHealth() / owner.getMaxHealth()) - (this.target.getHealth() / this.target.getMaxHealth())));
+
             // Limit the experience to the max health of the target
             amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);
 
-            if (amount == 0.0F) return;
+            if (amount < 0.1F) return;
 
             if (cap.addExperience(owner, amount)) {
                 if (owner instanceof Player player) {
@@ -133,23 +142,19 @@ public class ExperienceHandler {
         }
 
         public void attack(float damage) {
-            this.totalDamage += damage;
+            this.idle = 0;
+            this.damage += damage;
         }
 
         public void hurt(float damage) {
-            this.totalDamage += damage;
+            this.idle = 0;
+            this.damage += damage;
         }
 
         public boolean tick(LivingEntity owner) {
+            this.idle++;
             this.duration++;
-
-            if (this.lowestOwnerHealth == 0.0F) this.lowestOwnerHealth = owner.getHealth();
-            if (this.lowestTargetHealth == 0.0F) this.lowestTargetHealth = this.target.getHealth();
-
-            if (owner.getHealth() / owner.getMaxHealth() < this.lowestOwnerHealth) this.lowestOwnerHealth = owner.getHealth() / owner.getMaxHealth();
-            if (this.target.getHealth() / this.target.getMaxHealth() < this.lowestTargetHealth) this.lowestTargetHealth = this.target.getHealth() / this.target.getMaxHealth();
-
-            return owner.isAlive() && !owner.isRemoved() && this.target.isAlive() && !this.target.isRemoved();
+            return this.idle < 10 * 60 * 20 && owner.isAlive() && this.target.isAlive();
         }
     }
 }

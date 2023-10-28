@@ -1,0 +1,33 @@
+{
+  "parent": "jujutsu_kaisen:jujutsu_kaisen/the_strongest_of_modern_times",
+  "display": {
+    "icon": {
+      "item": "minecraft:netherite_sword"
+    },
+    "title": {
+      "translate": "advancements.jujutsu_kaisen.the_strongest_of_all_time.title"
+    },
+    "description": {
+      "translate": "advancements.jujutsu_kaisen.the_strongest_of_all_time.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "sukuna": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "jujutsu_kaisen:heian_sukuna"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "sukuna"
+    ]
+  ]
+}

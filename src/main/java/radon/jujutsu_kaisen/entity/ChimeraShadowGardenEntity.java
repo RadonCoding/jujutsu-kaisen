@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,8 +13,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.block.*;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.tags.JJKBlockTags;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -28,6 +29,10 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
     public ChimeraShadowGardenEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), owner, ability, width, height);
     }
 
     @Override
@@ -45,17 +50,13 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier().equals(this.uuid)) return true;
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
 
         int width = this.getWidth();
         int height = this.getHeight();
         BlockPos center = this.blockPosition().below();
         BlockPos relative = pos.subtract(center);
         return relative.getY() >= 0 && relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
-    }
-
-    public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {
-        super(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), owner, ability, width, height);
     }
 
     private void createBarrier(Entity owner) {
@@ -66,46 +67,45 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                int delay = i;
-
                 int horizontal = i;
-                int vertical = j;
 
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.delayTickEvent(() -> {
-                        for (int x = -horizontal; x <= horizontal; x++) {
-                            for (int z = -horizontal; z <= horizontal; z++) {
-                                double distance = Math.sqrt(x * x + -vertical * -vertical + z * z);
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                                if (distance <= horizontal && distance >= horizontal - 1) {
-                                    BlockPos pos = center.offset(x, -vertical, z);
+                cap.delayTickEvent(() -> {
+                    for (int x = -horizontal; x <= horizontal; x++) {
+                        for (int z = -horizontal; z <= horizontal; z++) {
+                            double distance = Math.sqrt(x * x + z * z);
 
-                                    if (!this.isAffected(pos)) continue;
+                            if (distance <= horizontal && distance >= horizontal - 1) {
+                                BlockPos pos = center.offset(x, 0, z);
 
-                                    BlockState state = this.level().getBlockState(pos);
+                                BlockState state = this.level().getBlockState(pos);
 
-                                    if (!this.isRemoved()) {
-                                        BlockEntity existing = this.level().getBlockEntity(pos);
+                                if (!this.isRemoved()) {
+                                    BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                        if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN_IGNORE)) {
-                                            continue;
-                                        } else if (existing != null) {
-                                            continue;
-                                        }
+                                    if (existing instanceof VeilBlockEntity be) {
+                                        be.destroy();
 
-                                        Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
-                                        owner.level().setBlock(pos, block.defaultBlockState(),
-                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                        state = this.level().getBlockState(pos);
+                                    } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
+                                        continue;
+                                    } else if (existing != null) {
+                                        continue;
+                                    }
 
-                                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                            be.create(this.uuid, state);
-                                        }
+                                    Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
+                                    owner.level().setBlock(pos, block.defaultBlockState(),
+                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                    if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                        be.create(this.uuid, state);
                                     }
                                 }
                             }
                         }
-                    }, delay);
-                });
+                    }
+                }, i);
             }
         }
     }

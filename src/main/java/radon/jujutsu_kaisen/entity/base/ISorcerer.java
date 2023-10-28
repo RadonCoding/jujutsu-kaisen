@@ -28,7 +28,7 @@ public interface ISorcerer {
     default @NotNull List<Ability> getCustom() { return List.of(); }
     default List<Ability> getUnlocked() { return List.of(); }
     JujutsuType getJujutsuType();
-    default float getExperience() {
+    default float getExperienceMultiplier() {
         return 0.0F;
     }
 
@@ -42,16 +42,19 @@ public interface ISorcerer {
         data.setType(this.getJujutsuType());
         data.unlockAll(this.getUnlocked());
 
-        if (this.getExperience() > 0.0F) {
-            data.setExperience(this.getExperience());
-        }
-
-        Map<ResourceLocation, Float> config = ConfigHolder.SERVER.getCursedEnergyAmounts();
+        Map<ResourceLocation, Float> energy = ConfigHolder.SERVER.getCursedEnergyAmounts();
+        Map<ResourceLocation, Float> experience = ConfigHolder.SERVER.getExperienceMultipliers();
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(((Entity) this).getType());
 
-        if (config.containsKey(key)) {
-            data.setMaxEnergy(config.get(key));
+        if (energy.containsKey(key)) {
+            data.setMaxEnergy(energy.get(key));
         }
         data.setEnergy(data.getMaxEnergy((LivingEntity) this));
+
+        if (experience.containsKey(key)) {
+            data.setExperience(data.getExperience() * experience.get(key));
+        } else if (this.getExperienceMultiplier() > 0.0F) {
+            data.setExperience(data.getExperience() * this.getExperienceMultiplier());
+        }
     }
 }

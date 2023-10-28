@@ -101,11 +101,6 @@ public class HeianSukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4;
-    }
-
-    @Override
     protected void customServerAiStep() {
         this.entityData.set(DATA_IDLE, this.getTarget() == null);
 

@@ -1,14 +1,11 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -18,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.item.veil.modifier.EntityModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.PlayerModifier;
 
@@ -29,6 +25,13 @@ public class VeilBlockEntity extends BlockEntity {
 
     @Nullable
     private BlockPos parent;
+
+    private boolean initialized;
+
+    @Nullable
+    private BlockState original;
+
+    private CompoundTag deferred;
 
     private int size;
 
@@ -41,75 +44,45 @@ public class VeilBlockEntity extends BlockEntity {
 
         pBlockEntity.counter = 0;
 
-        if (pBlockEntity.parent == null) return;
-
-        if (!(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
-            pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
+        if (pBlockEntity.parent == null || !(pLevel.getBlockEntity(pBlockEntity.parent) instanceof VeilRodBlockEntity be) || be.getSize() != pBlockEntity.size) {
+            pBlockEntity.destroy();
         }
     }
 
-    public void setParent(BlockPos parent) {
-        this.parent = parent;
-        this.sendUpdates();
-    }
+    public void destroy() {
+        if (this.level == null) return;
 
-    public boolean isBlacklisted(Entity entity) {
-        if (this.parent == null || !(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
+        BlockState original = this.getOriginal();
 
-        if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
-
-        if (entity instanceof Player player) {
-            for (Modifier modifier : be.modifiers) {
-                if (modifier.getAction() != Modifier.Action.DENY || modifier.getType() != Modifier.Type.PLAYER)
-                    continue;
-                if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
-                    return true;
+        if (original != null) {
+            if (original.isAir()) {
+                if (!this.getBlockState().getFluidState().isEmpty()) {
+                    this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+                } else {
+                    this.level.destroyBlock(this.getBlockPos(), false);
                 }
+            } else {
+                this.level.setBlockAndUpdate(this.getBlockPos(), original);
             }
         } else {
-            Registry<EntityType<?>> registry = entity.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            ResourceLocation key = registry.getKey(entity.getType());
-
-            if (key != null) {
-                for (Modifier modifier : be.modifiers) {
-                    if (modifier.getAction() != Modifier.Action.DENY || modifier.getType() != Modifier.Type.ENTITY)
-                        continue;
-                    if (key.equals(((EntityModifier) modifier).getKey())) return true;
-                }
+            if (!this.getBlockState().getFluidState().isEmpty()) {
+                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+            } else {
+                this.level.destroyBlock(this.getBlockPos(), false);
             }
         }
-
-        for (Modifier modifier : be.modifiers) {
-            if (modifier.getAction() == Modifier.Action.DENY && (modifier.getType() == Modifier.Type.CURSE || modifier.getType() == Modifier.Type.SORCERER)) {
-                if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                return cap.getType() == JujutsuType.CURSE && modifier.getType() == Modifier.Type.CURSE ||
-                        cap.getType() != JujutsuType.CURSE && modifier.getType() == Modifier.Type.SORCERER;
-            }
-        }
-        return false;
     }
 
-    public boolean isWhitelisted(Entity entity) {
-        if (this.parent == null || !(entity.level().getBlockEntity(this.parent) instanceof VeilRodBlockEntity be)) return false;
-        if (entity.getUUID().equals(be.ownerUUID) || be.modifiers == null) return false;
+    public static boolean isWhitelisted(@Nullable BlockPos parent, Entity entity) {
+        if (parent == null || !(entity.level().getBlockEntity(parent) instanceof VeilRodBlockEntity be)) return false;
+        if (entity.getUUID().equals(be.ownerUUID)) return true;
+        if (be.modifiers == null) return false;
 
         if (entity instanceof Player player) {
             for (Modifier modifier : be.modifiers) {
                 if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER) continue;
                 if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
                     return true;
-                }
-            }
-        } else {
-            Registry<EntityType<?>> registry = entity.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            ResourceLocation key = registry.getKey(entity.getType());
-
-            if (key != null) {
-                for (Modifier modifier : be.modifiers) {
-                    if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.ENTITY) continue;
-                    if (key.equals(((EntityModifier) modifier).getKey())) return true;
                 }
             }
         }
@@ -126,13 +99,30 @@ public class VeilBlockEntity extends BlockEntity {
         return false;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-        this.setChanged();
+    public @Nullable BlockState getOriginal() {
+        if (this.level == null) return this.original;
+
+        if (this.original == null && this.deferred != null) {
+            this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
+            this.deferred = null;
+            this.setChanged();
+        }
+        return this.original;
     }
 
-    public boolean isAllowed(Entity entity) {
-        return this.isWhitelisted(entity) || !this.isBlacklisted(entity);
+    public void create(BlockPos parent, int size, BlockState original) {
+        this.parent = parent;
+        this.size = size;
+        this.original = original;
+        this.sendUpdates();
+    }
+
+    public @Nullable BlockPos getParent() {
+        return this.parent;
+    }
+
+    public static boolean isAllowed(BlockPos pos, Entity entity) {
+        return isWhitelisted(pos, entity);
     }
 
     public void sendUpdates() {
@@ -160,6 +150,16 @@ public class VeilBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
 
+        pTag.putBoolean("initialized", this.initialized);
+
+        if (this.initialized) {
+            if (this.original != null) {
+                pTag.put("original", NbtUtils.writeBlockState(this.original));
+            } else {
+                pTag.put("original", this.deferred);
+            }
+        }
+
         if (this.parent != null) {
             pTag.put("parent", NbtUtils.writeBlockPos(this.parent));
         }
@@ -169,6 +169,12 @@ public class VeilBlockEntity extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
+
+        this.initialized = pTag.getBoolean("initialized");
+
+        if (this.initialized) {
+            this.deferred = pTag.getCompound("original");
+        }
 
         if (pTag.contains("parent")) {
             this.parent = NbtUtils.readBlockPos(pTag.getCompound("parent"));

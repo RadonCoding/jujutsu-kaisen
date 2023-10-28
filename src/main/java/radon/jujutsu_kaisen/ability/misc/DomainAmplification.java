@@ -4,6 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,18 +24,13 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
-    private double getAttackReachSqr(LivingEntity owner, LivingEntity target) {
-        return owner.getBbWidth() * 2.0F * owner.getBbWidth() * 2.0F + target.getBbWidth();
-    }
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
         if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) <= this.getAttackReachSqr(owner, target) * 2.0D && (!JJKAbilities.hasToggled(owner, domain)) &&
-                JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && !JJKAbilities.hasToggled(owner, domain) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -108,15 +104,25 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (JJKAbilities.hasToggled(victim, JJKAbilities.INFINITY.get())) {
+                if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    AbilityHandler.trigger(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
-            LivingEntity owner = event.getEntity();
+            LivingEntity victim = event.getEntity();
 
-            if (owner instanceof Mob && !JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                AbilityHandler.trigger(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-            }
-            if (!JJKAbilities.hasToggled(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+            if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
             Ability ability = source.getAbility();
 
