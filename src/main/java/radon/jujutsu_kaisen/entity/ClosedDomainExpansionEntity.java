@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
+import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -100,16 +101,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private List<DomainExpansionEntity> getDomainsInside() {
-        List<DomainExpansionEntity> entities = new ArrayList<>();
-
         AABB bounds = this.getBounds();
-
-        for (DomainExpansionEntity entity : HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), bounds)) {
-            if (this.isInsideBarrier(entity.blockPosition())) {
-                entities.add(entity);
-            }
-        }
-        return entities;
+        return new ArrayList<>(HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), bounds));
     }
 
     @Override
@@ -138,57 +131,62 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (distance < radius) {
                         BlockPos pos = center.offset(x, y, z);
-                        BlockState state = this.level().getBlockState(pos);
 
                         // Calculate the delay based on the distance from the center to the front of the wall
                         double front = Math.sqrt((x + direction.x() * radius) * (x + direction.x() * radius) +
                                 (y + direction.y() * radius) * (y + direction.y() * radius) +
                                 (z + direction.z() * radius) * (z + direction.z() * radius));
-                        int delay = (int) Math.round(front);
+                        int delay = (int) Math.round(front) / 2;
 
-                        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            cap.delayTickEvent(() -> {
-                                if (!this.isRemoved()) {
-                                    BlockEntity existing = this.level().getBlockEntity(pos);
+                        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                                    if (state.getBlock().builtInRegistryHolder().is(JJKBlockTags.DOMAIN_IGNORE)) {
-                                        return;
-                                    } else if (existing != null) {
-                                        return;
-                                    }
+                        cap.delayTickEvent(() -> {
+                            if (!this.isRemoved()) {
+                                BlockState state = this.level().getBlockState(pos);
 
-                                    DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
-                                    List<Block> blocks = domain.getBlocks();
-                                    List<Block> filler = domain.getFillBlocks();
-                                    List<Block> floor = domain.getFloorBlocks();
+                                BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                    Block block = null;
+                                if (existing instanceof VeilBlockEntity be) {
+                                    be.destroy();
 
-                                    if (distance >= radius - 1) {
-                                        block = JJKBlocks.DOMAIN.get();
-                                    } else if (state.isAir()) {
-                                        if (distance >= radius - 2) {
-                                            block = blocks.get(this.random.nextInt(blocks.size()));
-                                        } else if (pos.getY() <= floorY && !floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
-                                            block = floor.get(this.random.nextInt(floor.size()));
-                                        }
-                                    } else if (!state.getFluidState().isEmpty()) {
-                                        block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
-                                    } else {
-                                        block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
-                                    }
-
-                                    if (block == null) return;
-
-                                    owner.level().setBlock(pos, block.defaultBlockState(),
-                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-
-                                    if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, state);
-                                    }
+                                    state = this.level().getBlockState(pos);
+                                } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
+                                    return;
+                                } else if (existing != null) {
+                                    return;
                                 }
-                            }, delay);
-                        });
+
+                                DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
+                                List<Block> blocks = domain.getBlocks();
+                                List<Block> filler = domain.getFillBlocks();
+                                List<Block> floor = domain.getFloorBlocks();
+
+                                Block block = null;
+
+                                if (distance >= radius - 1) {
+                                    block = JJKBlocks.DOMAIN.get();
+                                } else if (state.isAir()) {
+                                    if (distance >= radius - 2) {
+                                        block = blocks.get(this.random.nextInt(blocks.size()));
+                                    } else if (pos.getY() <= floorY && !floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
+                                        block = floor.get(this.random.nextInt(floor.size()));
+                                    }
+                                } else if (!state.getFluidState().isEmpty()) {
+                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
+                                } else {
+                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
+                                }
+
+                                if (block == null) return;
+
+                                owner.level().setBlock(pos, block.defaultBlockState(),
+                                        Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                    be.create(this.uuid, state);
+                                }
+                            }
+                        }, delay);
                     }
                 }
             }

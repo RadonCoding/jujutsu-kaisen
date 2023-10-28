@@ -17,14 +17,13 @@
     "client.MinecraftMixin",
     "client.PostChainAccessor"
   ],
-  "server": [
-    "server.ServerEntityMixin"
-  ],
   "mixins": [
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
     "common.MobMixin",
-    "common.PathNavigationMixin"
+    "common.ServerEntityMixin",
+    "common.PathNavigationMixin",
+    "common.MeleeAttackGoalMixin"
   ]
 }

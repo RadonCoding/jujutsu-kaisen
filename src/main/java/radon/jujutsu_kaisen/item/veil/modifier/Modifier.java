@@ -39,7 +39,6 @@ public class Modifier {
     public enum Type {
         NONE,
         PLAYER,
-        ENTITY,
         COLOR,
         TRANSPARENT,
         CURSE,

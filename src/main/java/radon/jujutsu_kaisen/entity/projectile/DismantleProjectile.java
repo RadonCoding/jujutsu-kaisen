@@ -19,7 +19,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -82,11 +81,9 @@ public class DismantleProjectile extends JujutsuProjectile {
         Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
-                }
-            });
+            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
+            }
         }
     }
 

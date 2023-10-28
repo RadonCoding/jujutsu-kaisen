@@ -46,7 +46,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
-    protected static final int RARITY = 5;
+    private static final int RARITY = 5;
 
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(CursedSpirit.class, EntityDataSerializers.INT);
 

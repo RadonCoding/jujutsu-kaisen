@@ -100,7 +100,8 @@ public class ChantTab extends JJKTab {
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         String text = this.text.getValue();
-        this.add.active = this.chants.children().size() < 5 && !text.isEmpty() && !text.isBlank() && this.ability != null && !cap.hasChant(this.ability.get(), text);
+        this.add.active = this.chants.children().size() < ConfigHolder.SERVER.maximumChantCount.get() && !text.isEmpty() && !text.isBlank() &&
+                this.ability != null && !cap.hasChant(this.ability.get(), text);
         this.remove.active = this.ability != null && this.chant != null;
     }
 

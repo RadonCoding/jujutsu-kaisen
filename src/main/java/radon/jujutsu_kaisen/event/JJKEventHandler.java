@@ -25,10 +25,11 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -55,6 +56,13 @@ import java.util.Set;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
+            if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
+                event.setSpawnCancelled(true);
+            }
+        }
+
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
@@ -105,6 +113,8 @@ public class JJKEventHandler {
                 newCap.clearToggled();
                 newCap.revive(false);
                 newCap.resetBlackFlash();
+                newCap.resetSpeedStacks();
+                newCap.resetExtraEnergy();
             }
             original.invalidateCaps();
         }

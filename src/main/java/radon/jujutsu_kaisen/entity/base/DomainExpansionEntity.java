@@ -17,6 +17,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -156,9 +158,15 @@ public abstract class DomainExpansionEntity extends Mob {
             if (!owner.canAttack(living)) return false;
 
             if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData victimCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (cap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                    SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
+
+                    if (simple != null) {
+                        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower(owner) * 10.0F);
+                    }
                     return false;
                 }
             }

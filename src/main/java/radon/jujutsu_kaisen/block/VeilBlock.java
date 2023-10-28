@@ -42,6 +42,11 @@ public class VeilBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public boolean propagatesSkylightDown(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos) {
+        return true;
+    }
+
+    @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return pState.getValue(TRANSPARENT) ? RenderShape.INVISIBLE : super.getRenderShape(pState);
     }
@@ -58,7 +63,7 @@ public class VeilBlock extends Block implements EntityBlock {
                     return Shapes.empty();
                 }
                 if (entity instanceof Projectile projectile) entity = projectile.getOwner();
-                return be.isAllowed(entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
+                return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
             }
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);

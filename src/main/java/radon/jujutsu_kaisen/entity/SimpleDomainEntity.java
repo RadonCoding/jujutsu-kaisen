@@ -2,8 +2,12 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -163,6 +167,23 @@ public class SimpleDomainEntity extends Mob {
 
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
+        }
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        Entity entity = this.getOwner();
+        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
+
+        if (owner != null) {
+            this.setOwner(owner);
         }
     }
 }

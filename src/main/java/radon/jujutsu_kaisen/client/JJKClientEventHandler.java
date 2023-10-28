@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,13 +24,14 @@ import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
-import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
+import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
+import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
 import radon.jujutsu_kaisen.client.render.entity.CloneRenderer;
@@ -40,7 +42,6 @@ import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
-import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -76,7 +77,9 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player != null) {
-                if (mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                MobEffectInstance instance = mc.player.getEffect(JJKEffects.STUN.get());
+
+                if ((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
                 } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
@@ -253,7 +256,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
-            event.registerEntityRenderer(JJKEntities.SUKUNA_RYOMEN.get(), SukunaRyomenRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRyomenRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
@@ -281,7 +284,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MEGUNA_RYOMEN.get(), MegunaRyomenRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MEGUNA.get(), MegunaRyomenRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOGE_INUMAKI.get(), TogeInumakiRenderer::new);

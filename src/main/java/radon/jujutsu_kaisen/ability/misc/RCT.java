@@ -53,7 +53,7 @@ public class RCT extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) && cap.getBurnout() > 0)) {
-            return 5.0F;
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner) * 8.0F;
         }
         return 0.0F;
     }

@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public class SorcererData implements ISorcererData {
+        public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private int points;
@@ -125,7 +125,7 @@ public class SorcererData implements ISorcererData {
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
-    private static final int PROJECTION_SORCERY_STACK_DURATION = 3 * 20;
+    private static final int PROJECTION_SORCERY_STACK_DURATION = 5 * 20;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -449,7 +449,7 @@ public class SorcererData implements ISorcererData {
 
         if (this.speedStacks > 0) {
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
             this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
@@ -486,7 +486,7 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = this.getRealPower() * 3.0D;
+            double damage = this.getRealPower() * 2.0D;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double speed = this.getRealPower() * 0.5D;
@@ -508,7 +508,7 @@ public class SorcererData implements ISorcererData {
                 owner.setHealth(owner.getMaxHealth());
             }
 
-            double damage = (this.getRealPower() * 1.5D) / 2.0F;
+            double damage = this.getRealPower();
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
@@ -905,6 +905,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addExtraEnergy(float amount) {
         this.extraEnergy += amount;
+    }
+
+    @Override
+    public void resetExtraEnergy() {
+        this.extraEnergy = 0.0F;
     }
 
     @Override
@@ -1353,6 +1358,11 @@ public class SorcererData implements ISorcererData {
     public void addSpeedStack() {
         this.speedStacks = Math.min(MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
         this.speedTimer = PROJECTION_SORCERY_STACK_DURATION;
+    }
+
+    @Override
+    public void resetSpeedStacks() {
+        this.speedStacks = 0;
     }
 
     @Override

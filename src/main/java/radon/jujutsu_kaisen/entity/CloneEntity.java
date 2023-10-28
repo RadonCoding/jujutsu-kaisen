@@ -91,9 +91,12 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            this.setItemInHand(InteractionHand.MAIN_HAND, owner.getMainHandItem());
-            this.setItemInHand(InteractionHand.OFF_HAND, owner.getOffhandItem());
-
+            if (!this.getMainHandItem().is(owner.getMainHandItem().getItem())) {
+                this.setItemInHand(InteractionHand.MAIN_HAND, owner.getMainHandItem().copy());
+            }
+            if (!this.getOffhandItem().is(owner.getOffhandItem().getItem())) {
+                this.setItemInHand(InteractionHand.OFF_HAND, owner.getOffhandItem().copy());
+            }
             this.setItemSlot(EquipmentSlot.HEAD, owner.getItemBySlot(EquipmentSlot.HEAD));
             this.setItemSlot(EquipmentSlot.CHEST, owner.getItemBySlot(EquipmentSlot.CHEST));
             this.setItemSlot(EquipmentSlot.LEGS, owner.getItemBySlot(EquipmentSlot.LEGS));

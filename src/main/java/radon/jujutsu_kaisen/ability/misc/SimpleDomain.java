@@ -1,32 +1,23 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability.IDurationable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.List;
 
-public class SimpleDomain extends Summon<SimpleDomainEntity> {
+public class SimpleDomain extends Summon<SimpleDomainEntity> implements IDurationable {
     public SimpleDomain() {
         super(SimpleDomainEntity.class);
     }

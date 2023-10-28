@@ -5,7 +5,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.UUID;
 
@@ -34,17 +34,13 @@ public class DomainBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
-        if (pBlockEntity.identifier == null) return;
-
-        Entity domain = ((ServerLevel) pLevel).getEntity(pBlockEntity.identifier);
-
-        if (domain == null || domain.isRemoved() || !domain.isAlive()) {
+        if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
             pBlockEntity.destroy();
         }
     }
 
-    public boolean destroy() {
-        if (this.level == null) return false;
+    public void destroy() {
+        if (this.level == null) return;
 
         BlockState original = this.getOriginal();
 
@@ -58,12 +54,16 @@ public class DomainBlockEntity extends BlockEntity {
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
             }
-            return true;
+        } else {
+            if (!this.getBlockState().getFluidState().isEmpty()) {
+                this.level.setBlockAndUpdate(this.getBlockPos(), Blocks.AIR.defaultBlockState());
+            } else {
+                this.level.destroyBlock(this.getBlockPos(), false);
+            }
         }
-        return false;
     }
 
-    public UUID getIdentifier() {
+    public @Nullable UUID getIdentifier() {
         return this.identifier;
     }
 

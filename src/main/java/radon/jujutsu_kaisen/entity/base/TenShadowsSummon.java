@@ -287,13 +287,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     @Override
-    public float getExperience() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return 0.0F;
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getExperience() * 0.75F;
+    public float getExperienceMultiplier() {
+        return 0.75F;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
+        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(4, new SorcererGoal(this));
@@ -84,11 +84,6 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     @Override
     public @Nullable Ability getDomain() {
         return null;
-    }
-
-    @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 1.5F;
     }
 
     @Override

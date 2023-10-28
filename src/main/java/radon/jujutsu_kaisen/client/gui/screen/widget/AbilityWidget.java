@@ -200,7 +200,10 @@ public class AbilityWidget  {
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
-            cap.usePoints(this.ability.getPointsCost());
+
+            if (!this.minecraft.player.getAbilities().instabuild) {
+                cap.usePoints(this.ability.getPointsCost());
+            }
             cap.unlock(this.ability);
 
             this.update();

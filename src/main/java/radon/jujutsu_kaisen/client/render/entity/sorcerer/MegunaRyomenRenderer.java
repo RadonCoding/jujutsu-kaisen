@@ -8,10 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.model.entity.MegunaRyomenModel;
-import radon.jujutsu_kaisen.entity.sorcerer.MegunaRyomenEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.MegunaEntity;
 
-public class MegunaRyomenRenderer extends HumanoidMobRenderer<MegunaRyomenEntity, MegunaRyomenModel> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/meguna_ryomen.png");
+public class MegunaRyomenRenderer extends HumanoidMobRenderer<MegunaEntity, MegunaRyomenModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/meguna.png");
 
     public MegunaRyomenRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new MegunaRyomenModel(pContext.bakeLayer(MegunaRyomenModel.LAYER)), 0.5F);
@@ -20,7 +20,7 @@ public class MegunaRyomenRenderer extends HumanoidMobRenderer<MegunaRyomenEntity
                 new HumanoidModel<>(pContext.bakeLayer(MegunaRyomenModel.OUTER_LAYER)), pContext.getModelManager()));
     }
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull MegunaRyomenEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull MegunaEntity pEntity) {
         return TEXTURE;
     }
 }

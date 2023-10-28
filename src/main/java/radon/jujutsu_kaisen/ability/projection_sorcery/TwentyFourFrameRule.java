@@ -63,7 +63,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        return 0.5F;
     }
 
     @Override
@@ -111,6 +111,8 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 }
                 return;
             }
+
+            if (!attacker.getMainHandItem().isEmpty()) return;
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 

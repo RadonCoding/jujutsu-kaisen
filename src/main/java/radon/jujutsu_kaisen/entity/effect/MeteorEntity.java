@@ -23,13 +23,13 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import java.util.List;
 
 public class MeteorEntity extends JujutsuProjectile {
-    public static final int SIZE = 10;
+    public static final int SIZE = 5;
     public static final int HEIGHT = 30;
+    private static final int MAX_SIZE = 20;
 
-    private static final float DAMAGE = 50.0F;
+    private static final float DAMAGE = 40.0F;
     private static final int EXPLOSION_DURATION = (SIZE / 2) * 20;
     private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
-    private static final float MAX_EXPLOSION = 20.0F;
 
     private int explosionTime;
 
@@ -199,9 +199,21 @@ public class MeteorEntity extends JujutsuProjectile {
         this.pushEntities();
     }
 
+    public int getSize() {
+        return Math.min(MAX_SIZE, Math.round(SIZE * this.getPower()));
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        int size = this.getSize();
+        return EntityDimensions.fixed(size * 2, size * 2);
+    }
+
     @Override
     public void tick() {
         super.tick();
+
+        this.refreshDimensions();
 
         if (!this.isRemoved()) {
             this.aiStep();
@@ -210,14 +222,14 @@ public class MeteorEntity extends JujutsuProjectile {
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
                 if (this.explosionTime == 0) {
-                    for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -SIZE / 2, 0.0D))) {
+                    for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(0.0D, (double) -this.getSize() / 2, 0.0D))) {
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower());
                     }
                 }
 
                 if (this.onGround()) {
                     if (this.explosionTime == 0) {
-                        ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), Math.min(MAX_EXPLOSION, SIZE * this.getPower()),
+                        ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), this.getSize() * 1.5F,
                                 EXPLOSION_DURATION, owner, JJKAbilities.MAXIMUM_METEOR.get());
                         this.explosionTime++;
                     }

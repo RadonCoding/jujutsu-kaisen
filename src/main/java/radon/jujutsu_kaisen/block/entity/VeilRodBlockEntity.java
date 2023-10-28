@@ -6,12 +6,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -19,11 +20,13 @@ import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.item.veil.modifier.ColorModifier;
 import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,8 +34,8 @@ import java.util.UUID;
 
 public class VeilRodBlockEntity extends BlockEntity {
     public static final int RANGE = 128;
-    public static final int INTERVAL = 5;
-    private static final float COST = 1.0F;
+    public static final int INTERVAL = 10;
+    private static final float COST = 0.5F;
 
     private int counter;
     private int size;
@@ -57,12 +60,10 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         if (pBlockEntity.ownerUUID == null) return;
 
-        Entity entity = ((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID);
+        if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-        if (entity == null || !entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-        if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get());
 
@@ -70,7 +71,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
             cap.useEnergy(cost);
 
-            if (entity instanceof ServerPlayer player) {
+            if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
@@ -87,6 +88,10 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
+        AABB bounds = AABB.ofSize(pPos.getCenter(), pBlockEntity.size, pBlockEntity.size, pBlockEntity.size);
+
+        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, pLevel, bounds);
+
         for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
             for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
                 for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
@@ -94,16 +99,46 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                     if (distance < pBlockEntity.size && distance >= pBlockEntity.size - 1) {
                         BlockPos pos = pPos.offset(x, y, z);
-                        BlockState state = pLevel.getBlockState(pos);
 
-                        if (!state.isAir() && state.canOcclude()) continue;
+                        boolean blocked = false;
+
+                        for (DomainExpansionEntity domain : domains) {
+                            LivingEntity opponent = domain.getOwner();
+
+                            if (opponent == null) continue;
+
+                            ISorcererData veilCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                            ISorcererData domainCap = opponent.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                            if (domainCap.getAbilityPower(opponent) < veilCap.getAbilityPower(owner)) continue;
+
+                            if (domain.isInsideBarrier(pos)) {
+                                if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
+                                    be.destroy();
+                                }
+                                blocked = true;
+                            }
+                        }
+
+                        if (blocked) continue;
+
+                        BlockEntity existing = pLevel.getBlockEntity(pos);
+
+                        BlockState state;
+
+                        if (existing instanceof VeilBlockEntity be) {
+                            state = be.getOriginal();
+                        } else if (existing != null) {
+                            continue;
+                        } else {
+                            state = pLevel.getBlockState(pos);
+                        }
 
                         pLevel.setBlock(pos, replacement,
                                 Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
-                            be.setParent(pPos);
-                            be.setSize(pBlockEntity.size);
+                            be.create(pPos, pBlockEntity.size, state);
                         }
                     }
                 }

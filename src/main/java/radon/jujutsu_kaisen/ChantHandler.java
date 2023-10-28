@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 
@@ -47,7 +48,9 @@ public class ChantHandler {
             count++;
             length += chant.length();
         }
-        return 1.0F + (count * 0.075F) + (length * 0.01F);
+        float countFactor = (float) count / ConfigHolder.SERVER.maximumChantCount.get();
+        float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
+        return 1.0F + 0.75F * (0.6F * countFactor + 0.4F * lengthFactor);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -72,8 +75,10 @@ public class ChantHandler {
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
-            LivingEntity owner = event.getEntity();
-            messages.remove(owner.getUUID());
+            if (isChanted(event.getEntity(), event.getAbility())) {
+                LivingEntity owner = event.getEntity();
+                messages.remove(owner.getUUID());
+            }
         }
 
         @SubscribeEvent
@@ -103,13 +108,16 @@ public class ChantHandler {
                     index++;
                 }
 
-                if (!chants.get(index).equals(msg)) return;
+                if (index >= chants.size() || !chants.get(index).equals(msg)) return;
 
                 messages.get(owner.getUUID()).add(msg);
                 timers.put(owner.getUUID(), CLEAR_INTERVAL);
 
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
                         Math.round(getChant(owner, ability) * 100)), false), owner);
+
+                int delta = messages.get(owner.getUUID()).size() - 5;
+                messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
             }
         }
     }
