@@ -145,7 +145,7 @@ public class HelperMethods {
         return (float) (Mth.atan2(d1, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F;
     }
 
-    public static Vec3 getLookAngle(LivingEntity entity) {
+    /*public static Vec3 getLookAngle(LivingEntity entity) {
         float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
         float yaw = (entity.yHeadRotO + Mth.wrapDegrees(entity.yHeadRot - entity.yHeadRotO));
 
@@ -156,10 +156,12 @@ public class HelperMethods {
         float f4 = Mth.cos(f);
         float f5 = Mth.sin(f);
         return new Vec3(f3 * f4, -f5, f2 * f4);
-    }
+    }*/
 
     public static Vec3 getLookAngle(Entity entity) {
-        float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
+        return entity.getLookAngle();
+
+        /*float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
         float yaw = (entity.yRotO + Mth.wrapDegrees(entity.getYRot() - entity.yRotO));
 
         float f = pitch * ((float) Math.PI / 180.0F);
@@ -168,7 +170,7 @@ public class HelperMethods {
         float f3 = Mth.sin(f1);
         float f4 = Mth.cos(f);
         float f5 = Mth.sin(f);
-        return new Vec3(f3 * f4, -f5, f2 * f4);
+        return new Vec3(f3 * f4, -f5, f2 * f4);*/
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {

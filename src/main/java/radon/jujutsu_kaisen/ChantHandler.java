@@ -75,6 +75,8 @@ public class ChantHandler {
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
+            if (event.getEntity().level().isClientSide) return;
+
             if (isChanted(event.getEntity(), event.getAbility())) {
                 LivingEntity owner = event.getEntity();
                 messages.remove(owner.getUUID());
@@ -117,7 +119,10 @@ public class ChantHandler {
                         Math.round(getChant(owner, ability) * 100)), false), owner);
 
                 int delta = messages.get(owner.getUUID()).size() - 5;
-                messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
+
+                if (delta > 0) {
+                    messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
+                }
             }
         }
     }

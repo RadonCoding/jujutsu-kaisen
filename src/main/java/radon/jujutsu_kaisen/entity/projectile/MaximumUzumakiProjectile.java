@@ -19,8 +19,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -123,9 +121,6 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
             double z = center.z() + zOffset * (radius * 0.1F);
 
             Vector3f offset = new Vec3(x, y, z).toVector3f();
-
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(offset, ParticleColors.BLACK_COLOR, 0.2F, 1.0F, 10),
-                    center.x(), center.y(), center.z(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -159,7 +154,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(offset), this.power * 1.5F, 3 * 20, owner, JJKAbilities.MAXIMUM_UZUMAKI.get());
+                ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(offset), this.power * 2.0F, 3 * 20, owner,
+                        JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()));
 
                 this.hurtEntities();
             }

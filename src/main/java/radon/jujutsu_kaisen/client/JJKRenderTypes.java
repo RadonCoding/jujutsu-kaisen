@@ -18,7 +18,7 @@ public class JJKRenderTypes extends RenderType {
                 false, false, CompositeState.builder()
                         .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
                         .setTextureState(shard)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setTransparencyState(ADDITIVE_TRANSPARENCY)
                         .setCullState(NO_CULL)
                         .setWriteMaskState(COLOR_WRITE)
                         .setOverlayState(OVERLAY)

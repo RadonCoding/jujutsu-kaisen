@@ -112,8 +112,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 return;
             }
 
-            if (!attacker.getMainHandItem().isEmpty()) return;
-
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
             if (!melee) return;

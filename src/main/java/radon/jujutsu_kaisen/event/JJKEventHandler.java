@@ -352,8 +352,6 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
-            if (event.getEntity().level().isClientSide) return;
-
             CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());
 
             ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -362,7 +360,7 @@ public class JJKEventHandler {
                 cap.unabsorb(technique);
             }
 
-            if (event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
+            if (!event.getEntity().level().isClientSide && event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
                 event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
             }
 

@@ -62,8 +62,8 @@
   "item.jujutsu_kaisen.playful_cloud.desc": "Relies on the raw power of its user for attacks.",
   "item.jujutsu_kaisen.split_soul_katana": "Split Soul Katana",
   "item.jujutsu_kaisen.split_soul_katana.desc": "Bypasses all resistance and cuts directly at the soul.",
-  "item.jujutsu_kaisen.chain": "Chain of a Thousand Miles",
-  "item.jujutsu_kaisen.chain.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
+  "item.jujutsu_kaisen.chain_of_a_thousand_miles": "Chain of a Thousand Miles",
+  "item.jujutsu_kaisen.chain_of_a_thousand_miles.desc": "Mysterious chain that can keep extending its length forever as long as the back end is hidden from view.",
   "item.jujutsu_kaisen.nyoi_staff": "Nyoi Staff",
   "item.jujutsu_kaisen.nyoi_staff.desc": "Functions as a lightning rod for accumulating charges of cursed energy with lightning nature.",
   "item.jujutsu_kaisen.slaughter_demon": "Slaughter Demon",
@@ -276,6 +276,8 @@
   "ability.jujutsu_kaisen.disaster_plant": "Disaster Plant",
   "ability.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
 
+  "ability.jujutsu_kaisen.idle_transfiguration": "Idle Transfiguration",
+
   "ability.jujutsu_kaisen.mahoraga": "Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.enable": "Summoned Mahoraga",
   "ability.jujutsu_kaisen.mahoraga.disable": "Released Mahoraga",
@@ -378,6 +380,7 @@
   "cursed_technique.jujutsu_kaisen.disaster_flames": "Disaster Flames",
   "cursed_technique.jujutsu_kaisen.disaster_tides": "Disaster Tides",
   "cursed_technique.jujutsu_kaisen.disaster_plants": "Disaster Plants",
+  "cursed_technique.jujutsu_kaisen.idle_transfiguration": "Idle Transfiguration",
   "cursed_technique.jujutsu_kaisen.ten_shadows": "Ten Shadows",
   "cursed_technique.jujutsu_kaisen.boogie_woogie": "Boogie Woogie",
   "cursed_technique.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",

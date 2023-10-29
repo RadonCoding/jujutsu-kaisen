@@ -5,8 +5,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
@@ -19,11 +21,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
-import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class ExplosionHandler {
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.getX(), explosion.position.getY(), explosion.position.getZ(),
-                        JJKSounds.EXPLOSION.get(), SoundSource.MASTER, 10.0F, 1.0F);
+                        SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 10.0F, 1.0F);
                 AABB bounds = new AABB(explosion.position.getX() - (explosion.radius * 2.0F), explosion.position.getY() - (explosion.radius * 2.0F),
                         explosion.position.getZ() - (explosion.radius * 2.0F),
                         explosion.position.getX() + (explosion.radius * 2.0F), explosion.position.getY() + (explosion.radius * 2.0F),
@@ -77,9 +77,9 @@ public class ExplosionHandler {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
 
-                            for (Entity entity : event.level.getEntities(explosion.source, new AABB(pos).inflate(1.0D))) {
-                                entity.hurt(explosion.ability == null || explosion.source == null ? event.level.damageSources().explosion(explosion.source, null) :
-                                        JJKDamageSources.jujutsuAttack(explosion.source, explosion.ability), explosion.radius);
+                            for (Entity entity : event.level.getEntities(null, new AABB(pos).inflate(1.0D))) {
+                                entity.hurt(explosion.source, explosion.radius * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
+                                        entity == explosion.instigator ? 0.5F : 1.0F));
                             }
 
                             if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
@@ -106,8 +106,8 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity source, @Nullable Ability ability) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, source, ability));
+    public static void spawn(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, instigator, source));
     }
 
     private static class ExplosionData {
@@ -116,16 +116,16 @@ public class ExplosionHandler {
         private final float radius;
         private final int duration;
         private int age;
-        private final @Nullable LivingEntity source;
-        private final @Nullable Ability ability;
+        private final @Nullable LivingEntity instigator;
+        private final DamageSource source;
 
-        public ExplosionData(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity source, @Nullable Ability ability) {
+        public ExplosionData(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source) {
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
             this.duration = duration;
+            this.instigator = instigator;
             this.source = source;
-            this.ability = ability;
         }
     }
 }

@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-        public class SorcererData implements ISorcererData {
+public class SorcererData implements ISorcererData {
     private boolean initialized;
 
     private int points;
@@ -70,7 +70,6 @@ import java.util.concurrent.Callable;
     private float energy;
     private float maxEnergy;
     private float extraEnergy;
-    private float used;
 
     private JujutsuType type;
 
@@ -913,11 +912,6 @@ import java.util.concurrent.Callable;
     }
 
     @Override
-    public void addUsed(float amount) {
-        this.used += amount;
-    }
-
-    @Override
     public void onBlackFlash(LivingEntity owner) {
         this.lastBlackFlashTime = owner.level().getGameTime();
 
@@ -1462,7 +1456,6 @@ import java.util.concurrent.Callable;
         nbt.putFloat("energy", this.energy);
         nbt.putFloat("max_energy", this.maxEnergy);
         nbt.putFloat("extra_energy", this.extraEnergy);
-        nbt.putFloat("used", this.used);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("mode", this.mode.ordinal());
@@ -1708,7 +1701,6 @@ import java.util.concurrent.Callable;
         this.energy = nbt.getFloat("energy");
         this.maxEnergy = nbt.getFloat("max_energy");
         this.extraEnergy = nbt.getFloat("extra_energy");
-        this.used = nbt.getFloat("used");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
