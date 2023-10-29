@@ -182,7 +182,6 @@ public class ClientAbilityHandler {
 
             if (isSuccess(ability, (status = ability.checkTriggerable(owner)))) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                cap.addUsed(ability.getRealCost(owner));
                 ability.run(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }

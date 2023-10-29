@@ -52,7 +52,7 @@ public class BlueFistsVisual {
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
 
         if (renderer instanceof LivingEntityRenderer<?, ?> living && living.getModel() instanceof HumanoidModel<?> humanoid) {
-            float scalar = 0.5F;
+            float scalar = 0.75F;
 
             Vec3 right = transform3rdPersonRight(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.5D, 0.0D),
                     new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, mc.getPartialTick())

@@ -1,18 +1,20 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -27,7 +29,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 10.0D;
-    private static final float EXPLOSIVE_POWER = 1.5F;
+    private static final float EXPLOSIVE_POWER = 5.0F;
+    private static final float MAX_EXPLOSION = 15.0F;
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
@@ -87,11 +90,9 @@ public class RedProjectile extends JujutsuProjectile {
         if (this.level().isClientSide) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            float radius = EXPLOSIVE_POWER * this.getPower();
-
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-            this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), null, offset, radius, false,
-                    this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(offset), Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()), 20, owner,
+                    JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()));
         }
         this.discard();
     }
@@ -122,18 +123,23 @@ public class RedProjectile extends JujutsuProjectile {
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                         for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
-                            if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) == Ability.Status.SUCCESS) {
-                                cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
-
-                                if (owner instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                                if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) != Ability.Status.SUCCESS) {
+                                    continue;
                                 }
-                                HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
-                                this.level().addFreshEntity(explosion);
-
-                                blue.discard();
-                                this.discard();
+                                cap.addCooldown(owner, JJKAbilities.HOLLOW_PURPLE.get());
                             }
+
+                            if (owner instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            }
+                            HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));
+                            this.level().addFreshEntity(explosion);
+
+                            blue.discard();
+                            this.discard();
+
+                            break;
                         }
                     }
                 }

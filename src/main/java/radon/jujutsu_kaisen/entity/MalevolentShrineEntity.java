@@ -92,26 +92,6 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                 }
             }
             this.first = false;
-        } else {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    int delay = i * 4;
-
-                    if (this.getTime() < delay) continue;
-
-                    for (int x = -i; x <= i; x++) {
-                        for (int z = -i; z <= i; z++) {
-                            double distance = Math.sqrt(x * x + j * j + z * z);
-
-                            if (distance < i && distance >= i - 1) {
-                                BlockPos pos = center.offset(x, j, z);
-                                if (!this.isAffected(pos) || this.level().getBlockState(pos).isAir()) continue;
-                                this.ability.onHitBlock(this, owner, pos);
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 

@@ -122,8 +122,6 @@ public interface ISorcererData {
     void addExtraEnergy(float amount);
     void resetExtraEnergy();
 
-    void addUsed(float amount);
-
     void onBlackFlash(LivingEntity owner);
     long getLastBlackFlashTime();
     void resetBlackFlash();

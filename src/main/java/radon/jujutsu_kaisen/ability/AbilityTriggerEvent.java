@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 
-public class AbilityTriggerEvent extends LivingEvent {
+public abstract class AbilityTriggerEvent extends LivingEvent {
     private final Ability ability;
 
     protected AbilityTriggerEvent(LivingEntity entity, Ability ability) {

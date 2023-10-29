@@ -20,6 +20,7 @@ import java.util.Locale;
 public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 center;
+    private final boolean glow;
 
     protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
@@ -35,6 +36,8 @@ public class TravelParticle extends TextureSheetParticle {
         this.bCol = color.z();
 
         this.alpha = options.opacity();
+
+        this.glow = options.glow();
 
         this.sprites = pSprites;
 
@@ -59,21 +62,21 @@ public class TravelParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return this.glow ? JJKParticleRenderTypes.GLOW : JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
+    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow, int lifetime) implements ParticleOptions {
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticle.TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f center = TravelParticleOptions.readCenterVector3f(reader);
                 reader.expect(' ');
                 Vector3f color = TravelParticleOptions.readColorVector3f(reader);
                 reader.expect(' ');
-                return new TravelParticleOptions(center, color, reader.readFloat(), reader.readFloat(), reader.readInt());
+                return new TravelParticleOptions(center, color, reader.readFloat(), reader.readFloat(), reader.readBoolean(), reader.readInt());
             }
 
             public @NotNull TravelParticle.TravelParticleOptions fromNetwork(@NotNull ParticleType<TravelParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new TravelParticleOptions(TravelParticleOptions.readCenterFromNetwork(buf), TravelParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readInt());
+                return new TravelParticleOptions(TravelParticleOptions.readCenterFromNetwork(buf), TravelParticleOptions.readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readInt());
             }
         };
 
@@ -120,13 +123,14 @@ public class TravelParticle extends TextureSheetParticle {
             buf.writeFloat(this.color.z());
             buf.writeFloat(this.scalar);
             buf.writeFloat(this.opacity);
+            buf.writeBoolean(this.glow);
             buf.writeInt(this.lifetime);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.target.x(), this.target.y(), this.target.z(), this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.lifetime);
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+                    this.target.x(), this.target.y(), this.target.z(), this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.glow, this.lifetime);
         }
     }
 

@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.ability.misc.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
@@ -118,6 +119,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FOREST_ROOTS = ABILITIES.register("forest_roots", ForestRoots::new);
     public static RegistryObject<Ability> DISASTER_PLANT = ABILITIES.register("disaster_plant", DisasterPlant::new);
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
+
+    public static RegistryObject<Ability> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
