@@ -112,11 +112,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     @Override
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
-            });
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
         }
     }
 
@@ -130,7 +130,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
         return 2.5F;
     }
 
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 

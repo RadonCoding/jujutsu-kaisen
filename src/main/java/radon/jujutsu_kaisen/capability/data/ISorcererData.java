@@ -134,6 +134,7 @@ public interface ISorcererData {
     void delayTickEvent(Runnable task, int delay);
     void scheduleTickEvent(Callable<Boolean> task, int duration);
 
+    void uncopy(CursedTechnique technique);
     void copy(@Nullable CursedTechnique technique);
     Set<CursedTechnique> getCopied();
 

@@ -85,14 +85,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public void warn() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner != null) {
-            AABB bounds = this.getBounds();
-
-            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
-            }
+        for (Entity entity : this.getAffected()) {
+            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
         }
     }
 
@@ -128,7 +122,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
             if (entity instanceof LivingEntity living) {
-                this.ability.onHitEntity(this, owner, living);
+                this.ability.onHitEntity(this, owner, living, false);
             }
         }
     }

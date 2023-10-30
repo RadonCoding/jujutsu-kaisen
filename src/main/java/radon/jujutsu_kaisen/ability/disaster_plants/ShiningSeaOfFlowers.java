@@ -17,8 +17,8 @@ import java.util.List;
 
 public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        super.onHitEntity(domain, owner, entity);
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitEntity(domain, owner, entity, instant);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, Math.round(30 * 20 * (1.6F - cap.getDomainSize())), 4, false, false, false));

@@ -32,10 +32,10 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     }
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        super.onHitEntity(domain, owner, entity);
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitEntity(domain, owner, entity, instant);
 
-        if (owner.level().getGameTime() % 20 == 0) {
+        if (instant || owner.level().getGameTime() % 20 == 0) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getPower(owner) * (1.6F - cap.getDomainSize()))) {
@@ -52,13 +52,13 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
 
     @Override
     protected void createBarrier(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int radius = Math.round(this.getRadius(owner));
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
-            owner.level().addFreshEntity(domain);
+        int radius = Math.round(this.getRadius(owner));
 
-            cap.setDomain(domain);
-        });
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        owner.level().addFreshEntity(domain);
+
+        cap.setDomain(domain);
     }
 }

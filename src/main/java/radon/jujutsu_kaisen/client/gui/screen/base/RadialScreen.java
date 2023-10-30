@@ -1,10 +1,10 @@
 package radon.jujutsu_kaisen.client.gui.screen.base;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,20 +21,16 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
-import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.CurseSummonC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.SetAbsorbedC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.SetAdditionalC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -87,7 +82,7 @@ public abstract class RadialScreen extends Screen {
     }
 
     public List<DisplayItem> getCurrent() {
-        if (page > this.pages.size()) {
+        if (page >= this.pages.size()) {
             page = 0;
         }
         return this.pages.get(page);
@@ -131,34 +126,49 @@ public abstract class RadialScreen extends Screen {
     }
 
     @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
+            if (this.minecraft != null && this.minecraft.player != null) {
+                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                DisplayItem item = this.getCurrent().get(this.hovered);
+
+                if (item.type == DisplayItem.Type.COPIED) {
+                    PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
+                    cap.uncopy(item.copied);
+                }
+            }
+        }
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
     public void onClose() {
         if (this.hovered != -1) {
-            if (this.minecraft != null && this.minecraft.level != null && this.minecraft.player != null) {
-                if (this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-                    DisplayItem item = this.getCurrent().get(this.hovered);
+            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    switch (item.type) {
-                        case ABILITY -> {
-                            Ability ability = item.ability;
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                            ClientAbilityHandler.trigger(ability);
-                        }
-                        case CURSE -> {
-                            EntityType<?> type = item.curse.getKey();
-                            Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                            PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
-                        }
-                        case COPIED -> {
-                            PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
-                            cap.setCurrentCopied(item.copied);
-                        }
-                        case ABSORBED -> {
-                            PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
-                            cap.setCurrentAbsorbed(item.absorbed);
-                        }
-                    }
+            DisplayItem item = this.getCurrent().get(this.hovered);
+
+            switch (item.type) {
+                case ABILITY -> {
+                    Ability ability = item.ability;
+                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                    ClientAbilityHandler.trigger(ability);
+                }
+                case CURSE -> {
+                    EntityType<?> type = item.curse.getKey();
+                    Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
+                }
+                case COPIED -> {
+                    PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
+                    cap.setCurrentCopied(item.copied);
+                }
+                case ABSORBED -> {
+                    PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
+                    cap.setCurrentAbsorbed(item.absorbed);
                 }
             }
         }

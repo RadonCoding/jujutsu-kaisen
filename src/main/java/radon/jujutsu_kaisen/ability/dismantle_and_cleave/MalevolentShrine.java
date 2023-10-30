@@ -23,10 +23,10 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
     private static final int INTERVAL = 5;
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        super.onHitEntity(domain, owner, entity);
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitEntity(domain, owner, entity, instant);
 
-        if (domain.getTime() == DELAY || (domain.level().getGameTime() % INTERVAL == 0 && domain.getTime() >= DELAY)) {
+        if (instant || domain.getTime() == DELAY || (domain.level().getGameTime() % INTERVAL == 0 && domain.getTime() >= DELAY)) {
             Ability cleave = JJKAbilities.CLEAVE.get();
             ((IDomainAttack) cleave).perform(owner, domain, entity);
         }

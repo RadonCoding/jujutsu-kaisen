@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ChimeraShadowGarden extends DomainExpansion implements DomainExpansion.IOpenDomain {
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
 
     }
 
