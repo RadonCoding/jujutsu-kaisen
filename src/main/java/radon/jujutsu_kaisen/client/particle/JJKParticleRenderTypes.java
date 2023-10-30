@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -16,7 +15,6 @@ public class JJKParticleRenderTypes {
     public static ParticleRenderType GLOW = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
-            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
             RenderSystem.enableCull();
@@ -29,7 +27,6 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
-            Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
         }
     };
 
@@ -38,9 +35,7 @@ public class JJKParticleRenderTypes {
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
-            RenderSystem.enableCull();
-            RenderSystem.enableDepthTest();
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }

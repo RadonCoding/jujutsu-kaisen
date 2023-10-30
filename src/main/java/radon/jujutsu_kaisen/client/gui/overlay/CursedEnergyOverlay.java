@@ -45,7 +45,7 @@ public class CursedEnergyOverlay {
             graphics.pose().pushPose();
             graphics.pose().scale(scale, scale, scale);
 
-            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), cap.getOutput(mc.player) * 100),
+            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput(mc.player) * 100)),
                     Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
 
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),

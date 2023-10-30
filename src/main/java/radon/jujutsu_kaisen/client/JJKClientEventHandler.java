@@ -22,6 +22,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
@@ -47,6 +49,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.KuchisakeOnnaAnswerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
@@ -105,9 +108,9 @@ public class JJKClientEventHandler {
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
                     mc.setScreen(new JujutsuScreen());
                 }
-                if (JJKKeys.ABILITY_RIGHT.consumeClick()) {
+                if (JJKKeys.ABILITY_UP.consumeClick()) {
                     AbilityOverlay.scroll(1);
-                } else if (JJKKeys.ABILITY_LEFT.consumeClick()) {
+                } else if (JJKKeys.ABILITY_DOWN.consumeClick()) {
                     AbilityOverlay.scroll(-1);
                 }
                 if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
@@ -115,6 +118,16 @@ public class JJKClientEventHandler {
                 }
                 if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
                     mc.setScreen(new DomainScreen());
+                }
+                if (JJKKeys.INCREASE_OUTPUT.isDown()) {
+                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
+                    cap.increaseOutput(mc.player);
+                }
+                if (JJKKeys.DECREASE_OUTPUT.isDown()) {
+                    ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.DECREASE));
+                    cap.decreaseOutput();
                 }
             }
         }
@@ -190,8 +203,8 @@ public class JJKClientEventHandler {
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
             event.register(JJKKeys.ABILITY_SCROLL);
             event.register(JJKKeys.ACTIVATE_ABILITY);
-            event.register(JJKKeys.ABILITY_RIGHT);
-            event.register(JJKKeys.ABILITY_LEFT);
+            event.register(JJKKeys.ABILITY_UP);
+            event.register(JJKKeys.ABILITY_DOWN);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
             event.register(JJKKeys.ACTIVATE_WATER_WALKING);
@@ -251,7 +264,6 @@ public class JJKClientEventHandler {
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(JJKEntities.RED.get(), RedRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLUE.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MAXIMUM_BLUE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), HollowPurpleRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);

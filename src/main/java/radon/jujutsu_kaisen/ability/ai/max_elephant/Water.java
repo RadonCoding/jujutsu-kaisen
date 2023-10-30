@@ -94,7 +94,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
-                0.5F, false, HelperMethods.RANDOM.nextInt(20) + 1);
+                0.5F, HelperMethods.RANDOM.nextInt(20) + 1);
 
         for (int i = 0; i < 32; i++) {
             Vec3 dir = HelperMethods.getLookAngle(owner).scale(3.0D);

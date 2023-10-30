@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
@@ -23,8 +27,15 @@ import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueProjectile extends JujutsuProjectile {
+    private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
+
     private static final double RANGE = 15.0D;
     private static final int DELAY = 20;
+    private static final float DAMAGE = 3.0F;
+    private static final int DURATION = 5 * 20;
+    private static final float RADIUS = 3.0F;
+    private static final float MAX_RADIUS = 5.0F;
+    private static final double OFFSET = 8.0D;
 
     public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
         super(pEntityType, level);
@@ -34,28 +45,27 @@ public class BlueProjectile extends JujutsuProjectile {
         super(pEntityType, level, owner, power);
     }
 
-    public BlueProjectile(LivingEntity owner, float power) {
+    public BlueProjectile(LivingEntity owner, float power, boolean motion) {
         this(JJKEntities.BLUE.get(), owner.level(), owner, power);
+
+        this.entityData.set(DATA_MOTION, motion);
 
         Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
-    public float getRadius() {
-        return 3.0F;
-    }
-    protected int getDuration() {
-        return 5 * 20;
-    }
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
 
-    protected float getDamage() {
-        return 3.0F;
+        this.entityData.define(DATA_MOTION, false);
     }
-
+    
     private void pullEntities() {
-        AABB bounds = new AABB(this.getX() - this.getRadius(), this.getY() - this.getRadius(), this.getZ() - this.getRadius(),
-                this.getX() + this.getRadius(), this.getY() + this.getRadius(), this.getZ() + this.getRadius());
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
+                this.getX() + radius, this.getY() + radius, this.getZ() + radius);
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
@@ -71,7 +81,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
-        AABB bounds = this.getBoundingBox().inflate(this.getRadius());
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        AABB bounds = this.getBoundingBox().inflate(radius);
         double centerX = bounds.getCenter().x();
         double centerY = bounds.getCenter().y();
         double centerZ = bounds.getCenter().z();
@@ -84,7 +95,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= this.getRadius()) {
+                    if (distance <= radius) {
                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             this.level().destroyBlock(pos, false);
                         }
@@ -102,7 +113,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
 
                 if (entity instanceof LivingEntity) {
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.BLUE.get()), this.getDamage() * this.getPower());
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
                 } else {
                     entity.discard();
                 }
@@ -111,7 +122,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullBlocks() {
-        double radius = this.getRadius() * 2.0F;
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * 2.0F;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
         double centerX = bounds.getCenter().x();
@@ -121,7 +132,7 @@ public class BlueProjectile extends JujutsuProjectile {
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
                 for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                    if (this.random.nextInt((int) this.getRadius() * 2 * 20) != 0) continue;
+                    if (this.random.nextInt(Math.round(radius * 2 * 20)) != 0) continue;
 
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = this.level().getBlockState(pos);
@@ -147,7 +158,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = this.getRadius();
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.getTime() < DELAY ? 0.25F : 1.0F);
         int count = (int) (radius * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
@@ -162,7 +173,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, 0.5F, 1.0F,  false, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, radius * 0.15F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -178,14 +189,40 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, 0.5F, 1.0F, false, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, radius * 0.15F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return EntityDimensions.fixed(this.getRadius(), this.getRadius());
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        return EntityDimensions.fixed(radius, radius);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.entityData.set(DATA_MOTION, pCompound.getBoolean("motion"));
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("motion", this.entityData.get(DATA_MOTION));
+    }
+
+    private void spin() {
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
+            }
+            Vec3 center = owner.getEyePosition();
+            Vec3 pos = center.add(HelperMethods.getLookAngle(owner).scale(OFFSET));
+            this.setPos(pos.x(), pos.y() - (this.getBbHeight() / 2.0F), pos.z());
+        }
     }
 
     @Override
@@ -194,7 +231,13 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.refreshDimensions();
 
-        if (this.getTime() >= this.getDuration()) {
+        if (this.entityData.get(DATA_MOTION)) {
+            if (this.getTime() >= DELAY) {
+                this.spin();
+            }
+        }
+
+        if (this.getTime() >= DURATION) {
             this.discard();
         } else {
             this.spawnParticles();

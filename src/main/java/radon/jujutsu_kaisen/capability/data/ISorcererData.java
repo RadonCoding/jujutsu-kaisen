@@ -25,6 +25,10 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
+    float getMaximumOutput(LivingEntity owner);
+    void increaseOutput(LivingEntity owner);
+    void decreaseOutput();
+
     int getPoints();
     void addPoints(int points);
     void usePoints(int count);

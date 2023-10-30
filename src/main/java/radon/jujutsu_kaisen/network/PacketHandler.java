@@ -182,6 +182,11 @@ public class PacketHandler {
                 .encoder(RemoveChantC2SPacket::encode)
                 .consumerMainThread(RemoveChantC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ChangeOutputC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ChangeOutputC2SPacket::new)
+                .encoder(ChangeOutputC2SPacket::encode)
+                .consumerMainThread(ChangeOutputC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

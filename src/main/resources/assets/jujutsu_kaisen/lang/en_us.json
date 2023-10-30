@@ -42,8 +42,8 @@
 
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
-  "key.jujutsu_kaisen.ability_right": "Switch Ability Right",
-  "key.jujutsu_kaisen.ability_left": "Switch Ability Left",
+  "key.jujutsu_kaisen.ability_up": "Switch Ability Up",
+  "key.jujutsu_kaisen.ability_down": "Switch Ability DOwn",
   "key.jujutsu_kaisen.ability_scroll": "Cycle Abilities With Scroll Wheel",
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
   "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
@@ -52,6 +52,8 @@
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
   "key.jujutsu_kaisen.dash": "Dash",
   "key.jujutsu_kaisen.open_jujutsu_menu": "Open Jujutsu Menu",
+  "key.jujutsu_kaisen.increase_output": "Increase Output",
+  "key.jujutsu_kaisen.decrease_output": "Decrease Output",
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
@@ -218,9 +220,8 @@
 
   "ability.jujutsu_kaisen.red": "Red",
   "ability.jujutsu_kaisen.maximum_red": "Maximum Red",
-  "ability.jujutsu_kaisen.blue": "Blue",
-  "ability.jujutsu_kaisen.maximum_blue_motion": "Maximum Blue: Motion",
-  "ability.jujutsu_kaisen.maximum_blue_still": "Maximum Blue: Still",
+  "ability.jujutsu_kaisen.blue_still": "Blue: Still",
+  "ability.jujutsu_kaisen.blue_motion": "Blue: Motion",
   "ability.jujutsu_kaisen.blue_fists": "Blue Fists",
   "ability.jujutsu_kaisen.blue_fists.enable": "Activated blue fists",
   "ability.jujutsu_kaisen.blue_fists.disable": "Deactivated blue fists",

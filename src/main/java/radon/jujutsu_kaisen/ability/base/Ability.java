@@ -267,7 +267,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return cost;
+        return Math.round((double) cost * cap.getOutput(owner));
     }
 
     public interface IDomainAttack {

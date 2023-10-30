@@ -75,9 +75,8 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> INFINITY = ABILITIES.register("infinity", Infinity::new);
     public static RegistryObject<Ability> RED = ABILITIES.register("red", Red::new);
-    public static RegistryObject<Ability> BLUE = ABILITIES.register("blue", Blue::new);
-    public static RegistryObject<Ability> MAXIMUM_BLUE_MOTION = ABILITIES.register("maximum_blue_motion", MaximumBlueMotion::new);
-    public static RegistryObject<Ability> MAXIMUM_BLUE_STILL = ABILITIES.register("maximum_blue_still", MaximumBlueStill::new);
+    public static RegistryObject<Ability> BLUE_STILL = ABILITIES.register("blue_still", BlueStill::new);
+    public static RegistryObject<Ability> BLUE_MOTION = ABILITIES.register("blue_motion", BlueMotion::new);
     public static RegistryObject<Ability> BLUE_FISTS = ABILITIES.register("blue_fists", BlueFists::new);
     public static RegistryObject<Ability> HOLLOW_PURPLE = ABILITIES.register("hollow_purple", HollowPurple::new);
     public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);

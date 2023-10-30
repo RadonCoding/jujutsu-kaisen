@@ -516,6 +516,21 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public float getMaximumOutput(LivingEntity owner) {
+        return this.isInZone(owner) ? 1.2F : 1.0F;
+    }
+
+    @Override
+    public void increaseOutput(LivingEntity owner) {
+        this.output = Math.min(this.getMaximumOutput(owner), this.output + 0.1F);
+    }
+
+    @Override
+    public void decreaseOutput() {
+        this.output = Math.max(0.1F, this.output - 0.1F);
+    }
+
+    @Override
     public int getPoints() {
         return this.points;
     }
@@ -648,12 +663,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getOutput(LivingEntity owner) {
-        float power = this.output;
-
-        if (this.isInZone(owner)) {
-            power += 0.2F;
-        }
-        return power;
+        return this.output;
     }
 
     @Override
@@ -914,6 +924,8 @@ public class SorcererData implements ISorcererData {
     @Override
     public void onBlackFlash(LivingEntity owner) {
         this.lastBlackFlashTime = owner.level().getGameTime();
+
+        this.output = this.getMaximumOutput(owner);
 
         if (owner instanceof ServerPlayer player) {
             this.giveAdvancement(player, "black_flash");
