@@ -10,9 +10,9 @@ public class JJKKeys {
             InputConstants.KEY_LALT);
     public static KeyMapping ACTIVATE_ABILITY  = createKeyMapping("activate_ability",
             InputConstants.KEY_R);
-    public static KeyMapping ABILITY_RIGHT = createKeyMapping("ability_right",
+    public static KeyMapping ABILITY_UP = createKeyMapping("ability_up",
             -1);
-    public static KeyMapping ABILITY_LEFT = createKeyMapping("ability_left",
+    public static KeyMapping ABILITY_DOWN = createKeyMapping("ability_down",
             -1);
     public static KeyMapping ACTIVATE_RCT_OR_HEAL = createKeyMapping("activate_rct_or_heal",
             InputConstants.KEY_X);
@@ -28,6 +28,10 @@ public class JJKKeys {
             InputConstants.KEY_G);
     public static KeyMapping OPEN_JUJUTSU_MENU = createKeyMapping("open_jujutsu_menu",
             InputConstants.KEY_P);
+    public static KeyMapping INCREASE_OUTPUT = createKeyMapping("increase_output",
+            InputConstants.KEY_UP);
+    public static KeyMapping DECREASE_OUTPUT = createKeyMapping("decrease_output",
+            InputConstants.KEY_DOWN);
 
     private static KeyMapping createKeyMapping(String name, int keyCode) {
         return new KeyMapping(String.format("key.%s.%s", JujutsuKaisen.MOD_ID, name), keyCode, KEY_CATEGORY_JUJUTSU_KAISEN);

@@ -65,7 +65,7 @@ public class ShootRCT extends Ability {
             double width = target.getBbWidth();
             double height = target.getBbHeight();
             ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR,
-                    (float) width * 2.0F, 0.5F, false, 1);
+                    (float) width * 2.0F, 0.5F, 1);
 
             for (int i = 0; i < 8; i++) {
                 ownerCap.delayTickEvent(() -> {
