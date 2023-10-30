@@ -50,6 +50,11 @@ public abstract class DomainExpansionEntity extends Mob {
         this.ability = ability;
     }
 
+    public List<Entity> getAffected() {
+        AABB bounds = this.getBounds();
+        return this.level().getEntities(this, bounds, this::isAffected);
+    }
+
     public boolean hasSureHitEffect() {
         return true;
     }

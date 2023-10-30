@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.ability.ai.zomba_curse.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.base.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
 import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
@@ -134,6 +135,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
+    public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
+
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
@@ -342,6 +345,7 @@ public class JJKAbilities {
             abilities.add(WATER_WALKING.get());
             abilities.add(CURSED_ENERGY_FLOW.get());
             abilities.add(LIGHTNING.get());
+            abilities.add(ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get());
 
             abilities.add(HEAL.get());
             abilities.add(RCT.get());

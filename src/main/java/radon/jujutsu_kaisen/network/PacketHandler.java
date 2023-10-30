@@ -187,6 +187,11 @@ public class PacketHandler {
                 .encoder(ChangeOutputC2SPacket::encode)
                 .consumerMainThread(ChangeOutputC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UncopyAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UncopyAbilityC2SPacket::new)
+                .encoder(UncopyAbilityC2SPacket::encode)
+                .consumerMainThread(UncopyAbilityC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

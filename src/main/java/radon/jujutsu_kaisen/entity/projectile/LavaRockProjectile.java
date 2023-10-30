@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -83,8 +82,13 @@ public class LavaRockProjectile extends JujutsuProjectile {
         }
     }
 
-    private void hurtEntities() {
-        AABB bounds = this.getBoundingBox().inflate(1.0D);
+    @Override
+    protected void onHitEntity(@NotNull EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+
+        if (this.level().isClientSide) return;
+
+        Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -93,15 +97,13 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
             if (domain == null) return;
 
-            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                if (entity instanceof FishShikigamiProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower())) {
-                    this.discard();
-                }
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower())) {
+                this.discard();
             }
         }
+        this.discard();
     }
+
 
     @Override
     public void tick() {
@@ -110,8 +112,6 @@ public class LavaRockProjectile extends JujutsuProjectile {
         this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
 
         if (!this.level().isClientSide) {
-            this.hurtEntities();
-
             LivingEntity target = this.getTarget();
 
             if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {

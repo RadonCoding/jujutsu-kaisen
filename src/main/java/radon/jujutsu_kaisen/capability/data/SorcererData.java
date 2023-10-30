@@ -959,6 +959,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void uncopy(CursedTechnique technique) {
+        this.copied.remove(technique);
+    }
+
+    @Override
     public void copy(@Nullable CursedTechnique technique) {
         this.copied.add(technique);
     }

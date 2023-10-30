@@ -80,10 +80,10 @@ public class Mimicry extends Ability implements Ability.IToggled {
                             CursedTechnique current = attackerCap.getTechnique();
                             CursedTechnique copied = victimCap.getTechnique();
 
-                            if (current == null || attackerCap.hasTechnique(copied)) return;
+                            if (copied == null || current == null || attackerCap.hasTechnique(copied)) return;
 
-                            if (!current.equals(copied)) {
-                                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.copy", JujutsuKaisen.MOD_ID), copied.getName()));
+                            if (current != copied) {
+                                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
                                 attackerCap.copy(copied);
                                 attackerCap.toggle(attacker, JJKAbilities.MIMICRY.get());

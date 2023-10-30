@@ -58,13 +58,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        int count = (int) (owner.getBbWidth() * owner.getBbHeight()) * 32;
+        int count = (int) (owner.getBbWidth() * owner.getBbHeight()) * 8;
 
         for (int i = 0; i < count; i++) {
             double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
             double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
-            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 2.0F, 0.5F, 1),
+            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.5F, 1),
                     x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
         }
 

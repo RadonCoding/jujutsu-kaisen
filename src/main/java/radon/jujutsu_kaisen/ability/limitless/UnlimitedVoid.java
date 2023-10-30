@@ -1,13 +1,10 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -25,8 +22,8 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     }
 
     @Override
-    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity) {
-        super.onHitEntity(domain, owner, entity);
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitEntity(domain, owner, entity, instant);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), 0, false, false, false));

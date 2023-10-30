@@ -245,11 +245,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void doSureHitEffect(@NotNull LivingEntity owner) {
-        AABB bounds = this.getBounds();
-
-        for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
+        for (Entity entity : this.getAffected()) {
             if (entity instanceof LivingEntity living) {
-                this.ability.onHitEntity(this, owner, living);
+                this.ability.onHitEntity(this, owner, living, false);
             }
         }
 
@@ -302,6 +300,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 });
             }
         }
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        this.refreshDimensions();
     }
 
     @Override
