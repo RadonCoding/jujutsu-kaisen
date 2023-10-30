@@ -16,11 +16,11 @@ public class JJKRenderTypes extends RenderType {
         TextureStateShard shard = new TextureStateShard(pLocation, false, false);
         return create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                 false, false, CompositeState.builder()
-                        .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
                         .setTextureState(shard)
                         .setTransparencyState(ADDITIVE_TRANSPARENCY)
                         .setCullState(NO_CULL)
-                        .setWriteMaskState(COLOR_WRITE)
+                        .setLightmapState(LIGHTMAP)
                         .setOverlayState(OVERLAY)
                         .createCompositeState(false));
     });
