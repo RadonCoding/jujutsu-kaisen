@@ -140,7 +140,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
             float xOffset = this.entityData.get(DATA_OFFSET_X);
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
 
             this.applyRotation();
 

@@ -19,15 +19,29 @@ import java.util.Map;
 
 public interface ISorcerer {
     boolean canPerformSorcery();
+
     SorcererGrade getGrade();
+
     @Nullable CursedTechnique getTechnique();
+
     default @Nullable CursedTechnique getAdditional() {
         return null;
     }
-    default @NotNull List<Trait> getTraits() { return List.of(); }
-    default @NotNull List<Ability> getCustom() { return List.of(); }
-    default List<Ability> getUnlocked() { return List.of(); }
+
+    default @NotNull List<Trait> getTraits() {
+        return List.of();
+    }
+
+    default @NotNull List<Ability> getCustom() {
+        return List.of();
+    }
+
+    default List<Ability> getUnlocked() {
+        return List.of();
+    }
+
     JujutsuType getJujutsuType();
+
     default float getExperienceMultiplier() {
         return 0.0F;
     }

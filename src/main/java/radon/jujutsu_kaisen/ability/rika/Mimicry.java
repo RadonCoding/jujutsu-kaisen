@@ -67,6 +67,7 @@ public class Mimicry extends Ability implements Ability.IToggled {
         return true;
     }
 
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent

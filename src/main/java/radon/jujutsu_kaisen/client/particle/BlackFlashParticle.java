@@ -25,13 +25,13 @@ public class BlackFlashParticle extends TextureSheetParticle {
         this.gCol = ParticleColors.BLACK_FLASH.y();
         this.bCol = ParticleColors.BLACK_FLASH.z();
         this.quadSize *= 0.75F;
-        this.lifetime = Math.max((int)(6.0D / (Math.random() * 0.8D + 0.6D)), 1);
+        this.lifetime = Math.max((int) (6.0D / (Math.random() * 0.8D + 0.6D)), 1);
         this.hasPhysics = false;
     }
 
     @Override
     public float getQuadSize(float pScaleFactor) {
-        return this.quadSize * Mth.clamp(((float)this.age + pScaleFactor) / (float)this.lifetime * 32.0F, 0.0F, 1.0F);
+        return this.quadSize * Mth.clamp(((float) this.age + pScaleFactor) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BlackFlashParticle extends TextureSheetParticle {
 
         @Override
         public BlackFlashParticle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z,
-                                                   double xSpeed, double ySpeed, double zSpeed) {
+                                                 double xSpeed, double ySpeed, double zSpeed) {
             BlackFlashParticle particle = new BlackFlashParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.pickSprite(this.sprites);
             return particle;

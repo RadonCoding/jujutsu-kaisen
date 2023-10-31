@@ -111,7 +111,7 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
         this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, ALPHA, packedLight);
     }
 
-    private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));

@@ -139,38 +139,10 @@ public class HelperMethods {
         return (float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)));
     }
 
-    public static float getYRotD(Entity src,Vec3 target) {
+    public static float getYRotD(Entity src, Vec3 target) {
         double d0 = target.x() - src.getX();
         double d1 = target.z() - src.getZ();
         return (float) (Mth.atan2(d1, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F;
-    }
-
-    /*public static Vec3 getLookAngle(LivingEntity entity) {
-        float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
-        float yaw = (entity.yHeadRotO + Mth.wrapDegrees(entity.yHeadRot - entity.yHeadRotO));
-
-        float f = pitch * ((float) Math.PI / 180.0F);
-        float f1 = -yaw * ((float) Math.PI / 180.0F);
-        float f2 = Mth.cos(f1);
-        float f3 = Mth.sin(f1);
-        float f4 = Mth.cos(f);
-        float f5 = Mth.sin(f);
-        return new Vec3(f3 * f4, -f5, f2 * f4);
-    }*/
-
-    public static Vec3 getLookAngle(Entity entity) {
-        return entity.getLookAngle();
-
-        /*float pitch = entity.xRotO + Mth.wrapDegrees(entity.getXRot() - entity.xRotO);
-        float yaw = (entity.yRotO + Mth.wrapDegrees(entity.getYRot() - entity.yRotO));
-
-        float f = pitch * ((float) Math.PI / 180.0F);
-        float f1 = -yaw * ((float) Math.PI / 180.0F);
-        float f2 = Mth.cos(f1);
-        float f3 = Mth.sin(f1);
-        float f4 = Mth.cos(f);
-        float f5 = Mth.sin(f);
-        return new Vec3(f3 * f4, -f5, f2 * f4);*/
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
@@ -240,13 +212,13 @@ public class HelperMethods {
     public static int toRGB24(int r, int g, int b, int a) {
         return ((a & 0xFF) << 24) |
                 ((r & 0xFF) << 16) |
-                ((g & 0xFF) << 8)  |
+                ((g & 0xFF) << 8) |
                 ((b & 0xFF));
     }
 
     public static int toRGB24(Vector3f color) {
         return (((int) (color.x() * 255.0F) & 0xFF) << 16) |
-                (((int) (color.y() * 255.0F) & 0xFF) << 8)  |
+                (((int) (color.y() * 255.0F) & 0xFF) << 8) |
                 (((int) (color.z() * 255.0F) & 0xFF));
     }
 }

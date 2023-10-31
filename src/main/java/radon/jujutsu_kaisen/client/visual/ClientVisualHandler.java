@@ -137,7 +137,8 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type, int speedStacks) {
+    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type,
+                             int speedStacks) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 

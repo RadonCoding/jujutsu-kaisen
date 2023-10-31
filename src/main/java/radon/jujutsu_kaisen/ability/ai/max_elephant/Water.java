@@ -90,14 +90,14 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
                 0.5F, HelperMethods.RANDOM.nextInt(20) + 1);
 
         for (int i = 0; i < 32; i++) {
-            Vec3 dir = HelperMethods.getLookAngle(owner).scale(3.0D);
+            Vec3 dir = owner.getLookAngle().scale(3.0D);
             double dx = dir.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
             double dy = dir.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
             double dz = dir.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);

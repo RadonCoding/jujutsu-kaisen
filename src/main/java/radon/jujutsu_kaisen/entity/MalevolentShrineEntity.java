@@ -105,7 +105,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
                 entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                     if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level()).contains(this)) {
-                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,  MalevolentShrine.DELAY, 0, false, false));
+                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
                         player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
                                 player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
                     }

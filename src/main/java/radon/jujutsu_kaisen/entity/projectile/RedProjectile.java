@@ -47,7 +47,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         this.chanted = chanted;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
@@ -109,7 +109,7 @@ public class RedProjectile extends JujutsuProjectile {
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = HelperMethods.getLookAngle(owner);
+                    Vec3 look = owner.getLookAngle();
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }

@@ -16,7 +16,7 @@ public class JJKRenderTypes extends RenderType {
         TextureStateShard shard = new TextureStateShard(pLocation, false, false);
         return create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                 false, false, CompositeState.builder()
-                        .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                        .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
                         .setTextureState(shard)
                         .setTransparencyState(ADDITIVE_TRANSPARENCY)
                         .setCullState(NO_CULL)

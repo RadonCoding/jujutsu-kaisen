@@ -40,8 +40,8 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !cap.hasToggled(JJKAbilities.NUE.get()) &&
-                        cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
-                        cap.getMode() == TenShadowsMode.ABILITY;
+                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
+                cap.getMode() == TenShadowsMode.ABILITY;
     }
 
     @Override

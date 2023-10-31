@@ -29,12 +29,13 @@ public class VeilHandler {
             ResourceKey<Level> dimension = entry.getKey();
             BlockPos pos = entry.getValue();
 
-            if (mob.level().dimension() != dimension || !(mob.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
+            if (mob.level().dimension() != dimension || !(mob.level().getBlockEntity(pos) instanceof VeilRodBlockEntity be))
+                continue;
 
             int radius = be.getSize();
             BlockPos relative = target.subtract(pos);
 
-            if (relative.distSqr(Vec3i.ZERO) < radius  * radius) {
+            if (relative.distSqr(Vec3i.ZERO) < radius * radius) {
                 return false; //VeilBlockEntity.isAllowed(pos, mob);
             }
         }
@@ -46,12 +47,13 @@ public class VeilHandler {
             ResourceKey<Level> dimension = entry.getKey();
             BlockPos pos = entry.getValue();
 
-            if (accessor.dimension() != dimension || !(accessor.getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
+            if (accessor.dimension() != dimension || !(accessor.getBlockEntity(pos) instanceof VeilRodBlockEntity be))
+                continue;
 
             int radius = be.getSize();
             BlockPos relative = target.subtract(pos);
 
-            if (relative.distSqr(Vec3i.ZERO) < radius  * radius) {
+            if (relative.distSqr(Vec3i.ZERO) < radius * radius) {
                 return true;
             }
         }
@@ -60,7 +62,8 @@ public class VeilHandler {
 
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide) return;
+        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide)
+            return;
 
         veils.entrySet().removeIf(entry ->
                 event.level.dimension() == entry.getKey() && !(event.level.getBlockEntity(entry.getValue()) instanceof VeilRodBlockEntity));

@@ -52,7 +52,7 @@ public class BetterFollowOwnerGoal extends Goal {
             return false;
         } else if (this.unableToMove()) {
             return false;
-        } else if (this.tamable.distanceToSqr(owner) < (double)(this.startDistance * this.startDistance)) {
+        } else if (this.tamable.distanceToSqr(owner) < (double) (this.startDistance * this.startDistance)) {
             return false;
         } else {
             this.owner = owner;
@@ -67,7 +67,7 @@ public class BetterFollowOwnerGoal extends Goal {
         } else if (this.unableToMove()) {
             return false;
         } else {
-            return !(this.tamable.distanceToSqr(this.owner) <= (double)(this.stopDistance * this.stopDistance));
+            return !(this.tamable.distanceToSqr(this.owner) <= (double) (this.stopDistance * this.stopDistance));
         }
     }
 
@@ -91,7 +91,7 @@ public class BetterFollowOwnerGoal extends Goal {
 
     @Override
     public void tick() {
-        this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float)this.tamable.getMaxHeadXRot());
+        this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float) this.tamable.getMaxHeadXRot());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (this.tamable.distanceToSqr(this.owner) >= 144.0D) {
@@ -106,7 +106,7 @@ public class BetterFollowOwnerGoal extends Goal {
     private void teleportToOwner() {
         BlockPos pos = this.owner.blockPosition();
 
-        for(int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i) {
             int j = this.randomIntInclusive(-3, 3);
             int k = this.randomIntInclusive(-1, 1);
             int l = this.randomIntInclusive(-3, 3);
@@ -118,12 +118,12 @@ public class BetterFollowOwnerGoal extends Goal {
     }
 
     private boolean maybeTeleportTo(int pX, int pY, int pZ) {
-        if (Math.abs((double)pX - this.owner.getX()) < 2.0D && Math.abs((double)pY - this.owner.getY()) < 2.0D && Math.abs((double)pZ - this.owner.getZ()) < 2.0D) {
+        if (Math.abs((double) pX - this.owner.getX()) < 2.0D && Math.abs((double) pY - this.owner.getY()) < 2.0D && Math.abs((double) pZ - this.owner.getZ()) < 2.0D) {
             return false;
         } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
             return false;
         } else {
-            this.tamable.moveTo((double)pX + 0.5D, pY, (double)pZ + 0.5D, this.tamable.getYRot(), this.tamable.getXRot());
+            this.tamable.moveTo((double) pX + 0.5D, pY, (double) pZ + 0.5D, this.tamable.getYRot(), this.tamable.getXRot());
             this.navigation.stop();
             return true;
         }

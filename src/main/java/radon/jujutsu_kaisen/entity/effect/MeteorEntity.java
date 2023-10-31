@@ -104,7 +104,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double d2 = vec35.y;
 
             if (this.level().isClientSide && !this.level().hasChunkAt(blockpos)) {
-                if (this.getY() > (double)this.level().getMinBuildHeight()) {
+                if (this.getY() > (double) this.level().getMinBuildHeight()) {
                     d2 = -0.1D;
                 } else {
                     d2 = 0.0D;
@@ -112,7 +112,7 @@ public class MeteorEntity extends JujutsuProjectile {
             } else if (!this.isNoGravity()) {
                 d2 -= d0;
             }
-            this.setDeltaMovement(vec35.x * (double)f3, d2 * (double)0.98F, vec35.z * (double)f3);
+            this.setDeltaMovement(vec35.x * (double) f3, d2 * (double) 0.98F, vec35.z * (double) f3);
         }
     }
 
@@ -162,12 +162,12 @@ public class MeteorEntity extends JujutsuProjectile {
 
     public void aiStep() {
         if (this.lerpSteps > 0) {
-            double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
-            double d2 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
-            double d4 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
-            double d6 = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
-            this.setYRot(this.getYRot() + (float)d6 / (float)this.lerpSteps);
-            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
+            double d2 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
+            double d4 = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
+            double d6 = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
+            this.setYRot(this.getYRot() + (float) d6 / (float) this.lerpSteps);
+            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
             --this.lerpSteps;
             this.setPos(d0, d2, d4);
             this.setRot(this.getYRot(), this.getXRot());

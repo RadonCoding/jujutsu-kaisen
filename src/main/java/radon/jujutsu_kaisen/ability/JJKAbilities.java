@@ -33,6 +33,7 @@ import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.InstantSpiritBodyOfDistortedKilling;
 import radon.jujutsu_kaisen.ability.misc.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
@@ -121,6 +122,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
 
     public static RegistryObject<Ability> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
+    public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
@@ -233,7 +235,7 @@ public class JJKAbilities {
                     cap.useEnergy(cost);
                 }
 
-                Vec3 pos = owner.position().subtract(HelperMethods.getLookAngle(owner)
+                Vec3 pos = owner.position().subtract(owner.getLookAngle()
                         .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
                 curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
                 curse.setTame(true);

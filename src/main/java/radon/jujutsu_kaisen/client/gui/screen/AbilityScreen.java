@@ -21,7 +21,7 @@ public class AbilityScreen extends RadialScreen {
         if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return List.of();
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        List<Ability> abilities =  JJKAbilities.getAbilities(this.minecraft.player);
+        List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType() != MenuType.RADIAL);
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());

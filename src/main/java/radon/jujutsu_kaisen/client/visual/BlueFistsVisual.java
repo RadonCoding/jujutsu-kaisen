@@ -20,7 +20,7 @@ public class BlueFistsVisual {
     private static Vec3 rotateRoll(Vec3 pos, float roll) {
         float f = Mth.cos(roll);
         float f1 = Mth.sin(roll);
-        double d0 = pos.x() * (double )f - pos.y() * (double) f1;
+        double d0 = pos.x() * (double) f - pos.y() * (double) f1;
         double d1 = pos.y() * (double) f + pos.x() * (double) f1;
         double d2 = pos.z();
         return new Vec3(d0, d1, d2);

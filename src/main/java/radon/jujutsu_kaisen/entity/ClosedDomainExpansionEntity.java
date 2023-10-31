@@ -47,7 +47,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
-        Vec3 direction = HelperMethods.getLookAngle(owner);
+        Vec3 direction = owner.getLookAngle();
         Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
         this.moveTo(behind.x(), behind.y(), behind.z(), owner.getYRot(), owner.getXRot());
 
@@ -107,7 +107,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid))
+            return true;
 
         int radius = this.getRadius();
         BlockPos center = this.blockPosition().offset(0, radius, 0);
@@ -219,7 +220,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public void aiStep() {}
+    public void aiStep() {
+    }
 
     @Override
     public boolean isPushable() {

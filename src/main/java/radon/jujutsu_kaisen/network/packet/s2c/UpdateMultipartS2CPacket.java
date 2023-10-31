@@ -83,7 +83,8 @@ public class UpdateMultipartS2CPacket {
         }
     }
 
-    public record PartDataHolder(double x, double y, double z, float yRot, float xRot, float width, float height, boolean fixed, boolean dirty, List<SynchedEntityData.DataValue<?>> data) {
+    public record PartDataHolder(double x, double y, double z, float yRot, float xRot, float width, float height,
+                                 boolean fixed, boolean dirty, List<SynchedEntityData.DataValue<?>> data) {
         public void encode(FriendlyByteBuf buffer) {
             buffer.writeDouble(this.x);
             buffer.writeDouble(this.y);

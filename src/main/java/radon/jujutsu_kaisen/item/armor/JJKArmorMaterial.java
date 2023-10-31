@@ -10,8 +10,10 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 import java.util.function.Supplier;
 
-public record JJKArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, int enchantmentValue, SoundEvent sound, float toughness, float knockbackResistance, Supplier<Ingredient> repairIngredient) implements ArmorMaterial {
-    private static final int[] HEALTH_PER_SLOT = new int[] { 13, 15, 16, 11 };
+public record JJKArmorMaterial(String name, int durabilityMultiplier, int[] slotProtections, int enchantmentValue,
+                               SoundEvent sound, float toughness, float knockbackResistance,
+                               Supplier<Ingredient> repairIngredient) implements ArmorMaterial {
+    private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
 
     @Override
     public int getDurabilityForType(ArmorItem.@NotNull Type pType) {

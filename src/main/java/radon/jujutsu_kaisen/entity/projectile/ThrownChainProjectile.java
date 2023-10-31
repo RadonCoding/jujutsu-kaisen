@@ -20,7 +20,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +42,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         super(JJKEntities.THROWN_CHAIN.get(), pShooter, pShooter.level());
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
-                .add(HelperMethods.getLookAngle(pShooter));
+                .add(pShooter.getLookAngle());
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
         this.entityData.set(DATA_ITEM, stack);
@@ -137,7 +136,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
                 Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
                         .xRot(pitch).yRot(-yaw);
-                Vec3 position = owner.position().add(HelperMethods.getLookAngle(owner).scale(2.5D)).add(offset);
+                Vec3 position = owner.position().add(owner.getLookAngle().scale(2.5D)).add(offset);
 
                 if (owner.isUsingItem()) {
                     this.setPos(position.x(), position.y(), position.z());
@@ -149,11 +148,11 @@ public class ThrownChainProjectile extends AbstractArrow {
                     }
                 } else {
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                            .add(HelperMethods.getLookAngle(owner));
+                            .add(owner.getLookAngle());
                     this.setPos(spawn.x(), spawn.y(), spawn.z());
                     this.setRot(-owner.getYRot(), owner.getXRot());
 
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
+                    this.setDeltaMovement(owner.getLookAngle().scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
                     this.released = true;
                 }
             } else {

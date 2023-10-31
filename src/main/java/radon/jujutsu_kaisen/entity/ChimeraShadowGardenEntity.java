@@ -50,7 +50,8 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
     @Override
     public boolean isInsideBarrier(BlockPos pos) {
-        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid)) return true;
+        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.uuid))
+            return true;
 
         int width = this.getWidth();
         int height = this.getHeight();

@@ -11,6 +11,7 @@ public class ClientWrapper {
     public static @Nullable Level getLevel() {
         return Minecraft.getInstance().level;
     }
+
     public static @Nullable Player getPlayer() {
         return Minecraft.getInstance().player;
     }
@@ -18,6 +19,7 @@ public class ClientWrapper {
     public static void setOverlayMessage(Component component, boolean animate) {
         Minecraft.getInstance().gui.setOverlayMessage(component, animate);
     }
+
     public static void openShadowInventory() {
         Minecraft.getInstance().setScreen(new ShadowInventoryScreen());
     }

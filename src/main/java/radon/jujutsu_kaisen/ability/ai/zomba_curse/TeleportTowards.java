@@ -61,10 +61,10 @@ public class TeleportTowards extends Ability {
 
         if (!(owner instanceof Mob mob) || (target = mob.getTarget()) == null) return;
 
-        Vec3 pos = new Vec3(owner.getX() - target.getX(), owner.getY(0.5D) - target.getEyeY(),  owner.getZ() - target.getZ()).normalize();
+        Vec3 pos = new Vec3(owner.getX() - target.getX(), owner.getY(0.5D) - target.getEyeY(), owner.getZ() - target.getZ()).normalize();
         double d0 = 16.0D;
         double d1 = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 8.0D - pos.x * d0;
-        double d2 = owner.getY() + (double)(HelperMethods.RANDOM.nextInt(16) - 8) - pos.y * d0;
+        double d2 = owner.getY() + (double) (HelperMethods.RANDOM.nextInt(16) - 8) - pos.y * d0;
         double d3 = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 8.0D - pos.z * d0;
         teleport(owner, d1, d2, d3);
     }

@@ -21,14 +21,15 @@ public class LightningParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     protected LightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, LightningParticleOptions options, SpriteSet pSprites) {
-        super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
+        super(pLevel, pX, pY, pZ);
 
         Vector3f color = options.color();
         this.rCol = color.x();
         this.gCol = color.y();
         this.bCol = color.z();
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());;
+        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        ;
         this.lifetime = options.lifetime();
 
         this.sprites = pSprites;
@@ -45,17 +46,17 @@ public class LightningParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return JJKParticleRenderTypes.ADDITIVE;
     }
 
     @Override
     protected int getLightColor(float pPartialTick) {
-        float f = ((float) this.age + pPartialTick) / (float)this.lifetime;
+        float f = ((float) this.age + pPartialTick) / (float) this.lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
         int i = super.getLightColor(pPartialTick);
         int j = i & 255;
         int k = i >> 16 & 255;
-        j += (int)(f * 15.0F * 16.0F);
+        j += (int) (f * 15.0F * 16.0F);
 
         if (j > 240) {
             j = 240;
@@ -120,7 +121,7 @@ public class LightningParticle extends TextureSheetParticle {
 
         @Override
         public LightningParticle createParticle(@NotNull LightningParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
-                                                   double xSpeed, double ySpeed, double zSpeed) {
+                                                double xSpeed, double ySpeed, double zSpeed) {
             return new LightningParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options, this.sprites);
         }
     }

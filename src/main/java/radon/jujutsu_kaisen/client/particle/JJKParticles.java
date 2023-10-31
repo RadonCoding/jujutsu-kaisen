@@ -36,6 +36,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<CursedEnergyParticle.CursedEnergyParticleOptions>> CURSED_ENERGY = PARTICLES.register("cursed_energy", () ->
+            new ParticleType<>(false, CursedEnergyParticle.CursedEnergyParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<CursedEnergyParticle.CursedEnergyParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->

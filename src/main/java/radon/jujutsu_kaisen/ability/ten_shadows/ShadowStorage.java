@@ -45,7 +45,7 @@ public class ShadowStorage extends Ability {
                         HelperMethods.RANDOM.nextGaussian() * 0.075D, HelperMethods.RANDOM.nextGaussian() * 0.25D, HelperMethods.RANDOM.nextGaussian() * 0.075D);
             }
         }
-        
+
         if (owner.isShiftKeyDown()) {
             if (owner.getMainHandItem().isEmpty()) return;
 

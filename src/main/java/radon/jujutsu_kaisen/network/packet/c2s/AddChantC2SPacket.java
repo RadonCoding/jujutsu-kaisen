@@ -46,7 +46,8 @@ public class AddChantC2SPacket {
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || this.chant.isEmpty() || this.chant.isBlank() || cap.hasChant(ability, this.chant)) return;
+            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || this.chant.isEmpty() || this.chant.isBlank() || cap.hasChant(ability, this.chant))
+                return;
 
             cap.addChant(ability, this.chant);
         });

@@ -43,7 +43,9 @@ public abstract class PostEffect implements ResourceManagerReloadListener {
     }
 
     public abstract boolean shouldRender(LocalPlayer player);
-    protected void applyUniforms(PostPass pass) {}
+
+    protected void applyUniforms(PostPass pass) {
+    }
 
     public void render(float partialTicks) {
         Minecraft mc = Minecraft.getInstance();

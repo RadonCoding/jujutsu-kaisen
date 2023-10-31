@@ -21,9 +21,9 @@
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
+    "common.MeleeAttackGoalMixin",
     "common.MobMixin",
-    "common.ServerEntityMixin",
     "common.PathNavigationMixin",
-    "common.MeleeAttackGoalMixin"
+    "common.ServerEntityMixin"
   ]
 }

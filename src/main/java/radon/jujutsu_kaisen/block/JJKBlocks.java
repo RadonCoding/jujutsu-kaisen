@@ -28,6 +28,7 @@ public class JJKBlocks {
     private static boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return false;
     }
+
     private static boolean always(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return true;
     }

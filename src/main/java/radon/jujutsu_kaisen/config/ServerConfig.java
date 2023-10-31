@@ -51,6 +51,7 @@ public class ServerConfig {
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.HANAMI.getId(), 2.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.DAGON.getId(), 2.0F);
     }
+
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> cursedEnergyAmounts;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> experienceMultipliers;
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
@@ -76,7 +77,7 @@ public class ServerConfig {
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Server configuration settings")
                 .push("server");
-        
+
         this.cursedEnergyAmounts = builder.comment("Cursed energy amounts for NPCs (scales with experience)")
                 .defineList("maxCursedEnergyNPC", CURSED_ENERGY_AMOUNTS
                         .entrySet()
@@ -121,7 +122,7 @@ public class ServerConfig {
                 .define("realisticWorldSlash", true);
 
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
-                        .defineInRange("simpleDomainCost", 50, 1, 10000);
+                .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.domainExpansionCost = builder.comment("The amount of points domain expansion costs to unlock")
                 .defineInRange("domainExpansionCost", 200, 1, 10000);
         this.domainAmplificationCost = builder.comment("The amount of points domain amplification costs to unlock")

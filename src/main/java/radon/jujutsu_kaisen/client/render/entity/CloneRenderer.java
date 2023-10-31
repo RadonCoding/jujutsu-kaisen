@@ -17,7 +17,7 @@ public class CloneRenderer extends HumanoidMobRenderer<CloneEntity, PlayerModel<
     public CloneRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), false), 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer( ModelLayers.PLAYER_INNER_ARMOR)),
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
                 new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), pContext.getModelManager()));
     }
 

@@ -102,4 +102,5 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     public float getCost(LivingEntity owner) {
         return 100.0F;
     }
+
 }

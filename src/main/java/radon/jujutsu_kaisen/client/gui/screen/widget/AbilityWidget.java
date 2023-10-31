@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.UnlockAbilityC2SPacket;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AbilityWidget  {
+public class AbilityWidget {
     private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
     private static final int HEIGHT = 26;
     private static final int BOX_X = 0;
@@ -39,7 +39,7 @@ public class AbilityWidget  {
     private static final int TITLE_X = 32;
     private static final int TITLE_Y = 9;
     private static final int TITLE_MAX_WIDTH = 163;
-    private static final int[] TEST_SPLIT_OFFSETS = new int[] { 0, 10, -10, 25, -25 };
+    private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final AbilityTab tab;
     private final Ability ability;
@@ -104,7 +104,7 @@ public class AbilityWidget  {
 
         for (int i : TEST_SPLIT_OFFSETS) {
             List<FormattedText> lines = splitter.splitLines(pComponent, pMaxWidth - i, Style.EMPTY);
-            float f1 = Math.abs(getMaxWidth(splitter, lines) - (float)pMaxWidth);
+            float f1 = Math.abs(getMaxWidth(splitter, lines) - (float) pMaxWidth);
 
             if (f1 <= 10.0F) {
                 return lines;

@@ -12,7 +12,8 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 
 @Mixin(Mob.class)
 public class MobMixin {
-    @Shadow protected MoveControl moveControl;
+    @Shadow
+    protected MoveControl moveControl;
 
     @Inject(method = "serverAiStep", at = @At("HEAD"), cancellable = true)
     public void serverAiStep(CallbackInfo ci) {

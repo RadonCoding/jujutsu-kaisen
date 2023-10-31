@@ -66,7 +66,8 @@ public abstract class JJKTab {
         }
     }
 
-    public void tick() {}
+    public void tick() {
+    }
 
     public List<GuiEventListener> getRenderables() {
         return this.widgets;
@@ -79,7 +80,7 @@ public abstract class JJKTab {
         this.widgets.clear();
     }
 
-    protected  <T extends GuiEventListener & Renderable & NarratableEntry> void addRenderableWidget(@NotNull T pWidget) {
+    protected <T extends GuiEventListener & Renderable & NarratableEntry> void addRenderableWidget(@NotNull T pWidget) {
         this.widgets.add(pWidget);
         this.screen.addRenderableWidget(pWidget);
     }
@@ -108,7 +109,8 @@ public abstract class JJKTab {
         this.type.drawIcon(pGuiGraphics, pOffsetX, pOffsetY, this.index, this.icon);
     }
 
-    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {}
+    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    }
 
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
         pGuiGraphics.enableScissor(pX, pY, pX + JujutsuScreen.WINDOW_INSIDE_WIDTH, pY + JujutsuScreen.WINDOW_INSIDE_HEIGHT);
@@ -139,7 +141,8 @@ public abstract class JJKTab {
         pGuiGraphics.disableScissor();
     }
 
-    protected void drawCustom(GuiGraphics graphics, int x, int y) {}
+    protected void drawCustom(GuiGraphics graphics, int x, int y) {
+    }
 
     public void drawTooltips(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pWidth, int pHeight) {
         for (GuiEventListener widget : this.widgets) {

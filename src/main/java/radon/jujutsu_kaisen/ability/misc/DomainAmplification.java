@@ -43,9 +43,9 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         /*if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 8; i++) {
                 level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 2.0F, 0.5F, false, 1),
-                        owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - HelperMethods.getLookAngle(owner).scale(0.3D).x(),
+                        owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).x(),
                         owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
-                        owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - HelperMethods.getLookAngle(owner).scale(0.3D).z(),
+                        owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).z(),
                         0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
             }
         }*/
@@ -133,4 +133,5 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             }
         }
     }
+
 }

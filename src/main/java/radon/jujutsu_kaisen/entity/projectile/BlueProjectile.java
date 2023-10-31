@@ -50,7 +50,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATA_MOTION, motion);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
@@ -61,7 +61,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.entityData.define(DATA_MOTION, false);
     }
-    
+
     private void pullEntities() {
         float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
@@ -71,7 +71,8 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level().getEntities(owner, bounds)) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity instanceof Projectile projectile && projectile.getOwner() == owner)) continue;
+                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity instanceof Projectile projectile && projectile.getOwner() == owner))
+                    continue;
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
                 entity.setDeltaMovement(direction);
@@ -110,7 +111,8 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this) continue;
+                if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this)
+                    continue;
 
                 if (entity instanceof LivingEntity) {
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
@@ -155,6 +157,7 @@ public class BlueProjectile extends JujutsuProjectile {
             }
         }
     }
+
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
@@ -220,7 +223,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(HelperMethods.getLookAngle(owner).scale(OFFSET));
+            Vec3 pos = center.add(owner.getLookAngle().scale(OFFSET));
             this.setPos(pos.x(), pos.y() - (this.getBbHeight() / 2.0F), pos.z());
         }
     }
@@ -250,14 +253,14 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = HelperMethods.getLookAngle(owner);
+                        Vec3 look = owner.getLookAngle();
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
-                        Vec3 look = HelperMethods.getLookAngle(owner);
+                        Vec3 look = owner.getLookAngle();
                         Vec3 end = start.add(look.scale(RANGE));
                         HitResult result = HelperMethods.getHitResult(owner, start, end);
 

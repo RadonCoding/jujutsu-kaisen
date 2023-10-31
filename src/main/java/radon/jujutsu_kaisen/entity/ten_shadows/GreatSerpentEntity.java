@@ -66,7 +66,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -175,7 +175,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
             double distance = Mth.sqrt((float) (diff.x() * diff.x() + diff.z() * diff.z()));
             this.segments[i].setRot((float) (Math.atan2(diff.z(), diff.x()) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y(), distance) * 180.0D / Math.PI));
-         }
+        }
     }
 
     @Override

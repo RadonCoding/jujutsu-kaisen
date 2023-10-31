@@ -107,7 +107,9 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public abstract AABB getBounds();
+
     public abstract boolean isInsideBarrier(BlockPos pos);
+
     public abstract void warn();
 
     @Override

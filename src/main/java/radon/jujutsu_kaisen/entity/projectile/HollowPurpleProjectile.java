@@ -35,7 +35,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(LivingEntity owner, float power) {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
@@ -123,7 +123,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                                .add(HelperMethods.getLookAngle(owner));
+                                .add(owner.getLookAngle());
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {

@@ -35,7 +35,7 @@ public class TogeInumakiEntity extends SorcererEntity {
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
+        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(4, new SorcererGoal(this));

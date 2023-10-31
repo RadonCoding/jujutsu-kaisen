@@ -58,7 +58,9 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     protected abstract boolean isCustom();
+
     protected abstract boolean canFly();
+
     protected abstract boolean hasMeleeAttack();
 
     private void createGoals() {
@@ -148,7 +150,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     center.x() + 16.0D, center.y() + 16.0D, center.z() + 16.0D);
 
             for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
-                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this) continue;
+                if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)
+                    continue;
                 if (!participant.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
                 this.participants.add(participant.getUUID());
             }

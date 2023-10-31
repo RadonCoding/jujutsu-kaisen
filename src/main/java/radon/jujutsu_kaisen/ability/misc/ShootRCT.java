@@ -46,7 +46,7 @@ public class ShootRCT extends Ability {
     }
 
     private List<LivingEntity> getTargets(LivingEntity owner) {
-        Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
+        Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
         List<LivingEntity> entities = owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE));
         entities.removeIf(entity -> entity == owner || entity instanceof DomainExpansionEntity);
         return entities;

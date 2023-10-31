@@ -14,7 +14,7 @@ public class DomainScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         assert this.minecraft != null;
 
-        List<Ability> abilities =  JJKAbilities.getAbilities(this.minecraft.player);
+        List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType() != MenuType.DOMAIN);
 
         return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());

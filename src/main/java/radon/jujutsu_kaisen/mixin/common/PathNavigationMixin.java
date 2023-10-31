@@ -12,7 +12,9 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 
 @Mixin(PathNavigation.class)
 public class PathNavigationMixin {
-    @Shadow @Final protected Mob mob;
+    @Shadow
+    @Final
+    protected Mob mob;
 
     @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/control/MoveControl;setWantedPosition(DDDD)V"))
     public void tick(MoveControl instance, double pX, double pY, double pZ, double pSpeed) {

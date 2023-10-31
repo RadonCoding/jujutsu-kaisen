@@ -423,7 +423,8 @@ public class SorcererData implements ISorcererData {
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) this.giveAdvancement(player, "six_eyes");
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) this.giveAdvancement(player, "heavenly_restriction");
-        if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE)) this.giveAdvancement(player, "reverse_cursed_technique");
+        if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE))
+            this.giveAdvancement(player, "reverse_cursed_technique");
     }
 
     public void tick(LivingEntity owner) {
@@ -887,7 +888,7 @@ public class SorcererData implements ISorcererData {
     public float getMaxEnergy(LivingEntity owner) {
         long time = owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
-        return (this.bindingVows.contains(BindingVow.OVERTIME) ? night  ? 1.2F : 0.9F : 1.0F) *
+        return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
                 ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower()) + this.extraEnergy;
     }
 

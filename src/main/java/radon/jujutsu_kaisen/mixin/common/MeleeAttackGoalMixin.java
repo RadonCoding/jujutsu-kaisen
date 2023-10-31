@@ -13,7 +13,9 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 
 @Mixin(MeleeAttackGoal.class)
 public class MeleeAttackGoalMixin {
-    @Shadow @Final protected PathfinderMob mob;
+    @Shadow
+    @Final
+    protected PathfinderMob mob;
 
     @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
     public void canUse(CallbackInfoReturnable<Boolean> cir) {
