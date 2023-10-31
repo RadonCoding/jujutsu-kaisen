@@ -42,7 +42,7 @@ public class UnlockAbilityC2SPacket {
 
             if (ability.isUnlockable(sender)) {
                 if (!sender.getAbilities().instabuild) {
-                    cap.usePoints(ability.getPointsCost());
+                    cap.usePoints(ability.getRealPointsCost(sender));
                 }
                 cap.unlock(ability);
             }

@@ -27,18 +27,6 @@ import java.util.List;
 
 public class AbilityWidget {
     private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
-    private static final int HEIGHT = 26;
-    private static final int BOX_X = 0;
-    private static final int BOX_WIDTH = 200;
-    private static final int FRAME_WIDTH = 26;
-    private static final int ICON_X = 8;
-    private static final int ICON_Y = 5;
-    private static final int ICON_WIDTH = 26;
-    private static final int TITLE_PADDING_LEFT = 3;
-    private static final int TITLE_PADDING_RIGHT = 5;
-    private static final int TITLE_X = 32;
-    private static final int TITLE_Y = 9;
-    private static final int TITLE_MAX_WIDTH = 163;
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final AbilityTab tab;
@@ -69,7 +57,7 @@ public class AbilityWidget {
         int l = 29 + minecraft.font.width(this.title);
 
         MutableComponent component = Component.empty();
-        component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), this.ability.getPointsCost()));
+        component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), this.minecraft.player == null ? 0 : this.ability.getRealPointsCost(this.minecraft.player)));
         this.description = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component.copy(), Style.EMPTY), l));
 
         for (FormattedCharSequence sequence : this.description) {
@@ -202,7 +190,7 @@ public class AbilityWidget {
             PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
 
             if (!this.minecraft.player.getAbilities().instabuild) {
-                cap.usePoints(this.ability.getPointsCost());
+                cap.usePoints(this.ability.getRealPointsCost(this.minecraft.player));
             }
             cap.unlock(this.ability);
 

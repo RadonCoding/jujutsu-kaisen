@@ -24,14 +24,12 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -248,20 +246,6 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
             this.setSprinting(passenger.getDeltaMovement().lengthSqr() > 0.0D);
         } else {
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
-
-        if (passenger == null) {
-            LivingEntity target = this.getTarget();
-
-            boolean trigger = target != null && this.distanceTo(target) <= Water.RANGE && this.hasLineOfSight(target);
-
-            if (trigger) {
-                if (!JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
-                    AbilityHandler.trigger(this, JJKAbilities.WATER.get());
-                }
-            } else if (JJKAbilities.isChanneling(this, JJKAbilities.WATER.get())) {
-                AbilityHandler.trigger(this, JJKAbilities.WATER.get());
-            }
         }
     }
 

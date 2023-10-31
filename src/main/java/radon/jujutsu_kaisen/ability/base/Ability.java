@@ -21,7 +21,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public abstract class Ability {
@@ -73,6 +72,15 @@ public abstract class Ability {
         return 0;
     }
 
+    public int getRealPointsCost(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasTrait(Trait.SIX_EYES)) {
+            return this.getPointsCost() / 2;
+        }
+        return this.getPointsCost();
+    }
+
     public boolean isUnlocked(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.isUnlocked(this);
@@ -85,7 +93,7 @@ public abstract class Ability {
             return true;
         }
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getPoints() >= this.getPointsCost();
+        return cap.getPoints() >= this.getRealPointsCost(owner);
     }
 
     public boolean isBlocked(LivingEntity owner) {
@@ -135,14 +143,12 @@ public abstract class Ability {
     }
 
     public int getRealCooldown(LivingEntity owner) {
-        AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (this.isMelee() ? cap.hasTrait(Trait.HEAVENLY_RESTRICTION) : cap.hasTrait(Trait.SIX_EYES)) {
-                cooldown.set(cooldown.get() / 2);
-            }
-        });
-        return cooldown.get();
+        if (this.isMelee() ? cap.hasTrait(Trait.HEAVENLY_RESTRICTION) : cap.hasTrait(Trait.SIX_EYES)) {
+            return this.getCooldown() / 2;
+        }
+        return this.getCooldown();
     }
 
     public MenuType getMenuType() {

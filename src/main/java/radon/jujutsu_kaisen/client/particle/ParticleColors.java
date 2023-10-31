@@ -13,7 +13,7 @@ public class ParticleColors {
     public static Vector3f LIGHT_BLUE_COLOR = Vec3.fromRGB24(6205439).toVector3f();
     public static Vector3f RCT_COLOR = Vec3.fromRGB24(16776670).toVector3f();
     public static Vector3f SIMPLE_DOMAIN = Vec3.fromRGB24(9756159).toVector3f();
-    public static Vector3f CURSED_ENERGY_SORCERER_COLOR = Vec3.fromRGB24(3721983).toVector3f();
+    public static Vector3f CURSED_ENERGY_SORCERER_COLOR = Vec3.fromRGB24(5108735).toVector3f();
     public static Vector3f CURSED_ENERGY_CURSE_COLOR = Vec3.fromRGB24(10890961).toVector3f();
     public static Vector3f PURPLE_LIGHTNING_COLOR = Vec3.fromRGB24(9267447).toVector3f();
     public static Vector3f BLACK_FLASH = Vec3.fromRGB24(6553600).toVector3f();

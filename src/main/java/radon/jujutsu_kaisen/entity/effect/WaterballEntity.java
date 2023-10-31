@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -56,19 +55,13 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         return relative.getY() <= HEIGHT && relative.distSqr(Vec3i.ZERO) < WIDTH * WIDTH;
     }
 
-    private static AABB getBounds(LivingEntity owner) {
-        BlockPos center = owner.blockPosition();
-        return new AABB(center.getX() - WIDTH, center.getY() - HEIGHT, center.getZ() - WIDTH,
-                center.getX() + WIDTH, center.getY() + HEIGHT, center.getZ() + WIDTH);
-    }
-
     private void createWave(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         BlockPos center = owner.blockPosition();
 
-        for (Entity entity : owner.level().getEntities(owner, getBounds(owner))) {
-            if ((!(entity instanceof LivingEntity living) || !owner.canAttack(living)) && !isInside(owner, entity.blockPosition()))
+        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), WIDTH, HEIGHT, WIDTH))) {
+            if ((!(entity instanceof LivingEntity living) || !owner.canAttack(living)) || !isInside(owner, entity.blockPosition()))
                 continue;
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISASTER_TIDES.get()), DAMAGE * this.getPower())) {
@@ -79,7 +72,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         for (int i = 0; i < WIDTH; i++) {
             int horizontal = i;
 
-            int duration = i + 1;
+            int duration = (i + 1) / 2;
 
             cap.delayTickEvent(() -> {
                 for (int j = -HEIGHT; j < HEIGHT; j++) {

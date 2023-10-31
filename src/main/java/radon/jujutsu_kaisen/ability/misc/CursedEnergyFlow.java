@@ -58,9 +58,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        int count = (int) (owner.getBbWidth() * owner.getBbHeight()) * 8;
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 8; i++) {
             double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).x();
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight());
             double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).z();
@@ -89,7 +87,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                             double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
                             double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
                             double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * entity.getBbWidth();
-                            level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
+                            level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
                                     x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                         }
                     }
@@ -176,7 +174,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                     double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                                     double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                                     double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 10),
+                                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
                                             victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
                                             0, 0.0D, 0.0D, 0.0D, 0.0D);
                                 }
