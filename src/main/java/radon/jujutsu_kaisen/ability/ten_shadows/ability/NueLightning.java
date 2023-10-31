@@ -105,7 +105,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
                 double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                 double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                 double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 10),
+                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 1),
                         target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
                         0, 0.0D, 0.0D, 0.0D, 0.0D);
             }

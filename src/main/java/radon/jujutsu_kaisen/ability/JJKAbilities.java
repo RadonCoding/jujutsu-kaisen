@@ -18,12 +18,10 @@ import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
-import radon.jujutsu_kaisen.ability.ai.zomba_curse.TeleportRandom;
-import radon.jujutsu_kaisen.ability.ai.zomba_curse.TeleportTowards;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.base.ZeroPointTwoSecondDomainExpansion;
+import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
 import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
@@ -170,8 +168,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
     public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
-    public static RegistryObject<Ability> TELEPORT_TOWARDS = ABILITIES.register("teleport_towards", TeleportTowards::new);
-    public static RegistryObject<Ability> TELEPORT_RANDOM = ABILITIES.register("teleport_random", TeleportRandom::new);
 
     public static RegistryObject<Ability> ABSORB_CURSE = ABILITIES.register("absorb_curse", AbsorbCurse::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
@@ -326,11 +322,9 @@ public class JJKAbilities {
         Set<Ability> abilities = new LinkedHashSet<>();
 
         if (owner instanceof ISorcerer sorcerer) {
-            List<Ability> custom = sorcerer.getCustom();
+            abilities.addAll(sorcerer.getCustom());
 
-            if (custom.isEmpty() && !sorcerer.canPerformSorcery()) return List.of();
-
-            abilities.addAll(custom);
+            if (!sorcerer.canPerformSorcery()) return new ArrayList<>(abilities);
         }
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);

@@ -45,10 +45,6 @@ public class ClientVisualHandler {
         synced.put(identifier, data);
     }
 
-    public static boolean isSynced(UUID identifier) {
-        return synced.containsKey(identifier);
-    }
-
     @Nullable
     public static VisualData getData(UUID identifier) {
         return synced.get(identifier);

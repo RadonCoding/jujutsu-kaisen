@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,8 +14,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -62,19 +61,15 @@ public class ShootRCT extends Ability {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (LivingEntity target : this.getTargets(owner)) {
-            double width = target.getBbWidth();
-            double height = target.getBbHeight();
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.RCT_COLOR,
-                    (float) width * 2.0F, 0.5F, 1);
-
             for (int i = 0; i < 8; i++) {
                 ownerCap.delayTickEvent(() -> {
                     for (int j = 0; j < 8; j++) {
-                        double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                        double y = target.getY() + HelperMethods.RANDOM.nextDouble() * height;
-                        double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width;
-                        level.sendParticles(particle,
-                                x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+                        double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - target.getLookAngle().scale(0.35D).x();
+                        double y = target.getY() + HelperMethods.RANDOM.nextDouble() * (target.getBbHeight());
+                        double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - target.getLookAngle().scale(0.35D).z();
+                        double speed = (target.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
+                        level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.RCT_COLOR, target.getBbWidth() * 0.5F,
+                                0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
                     }
                 }, i * 2);
             }

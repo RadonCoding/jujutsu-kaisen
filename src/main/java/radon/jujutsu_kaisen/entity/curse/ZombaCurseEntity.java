@@ -1,15 +1,12 @@
 package radon.jujutsu_kaisen.entity.curse;
 
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
@@ -22,8 +19,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class ZombaCurseEntity extends CursedSpirit {
-    private static final double ATTACK_RANGE = 32.0D;
-
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
@@ -49,27 +44,6 @@ public class ZombaCurseEntity extends CursedSpirit {
     @Override
     protected boolean hasMeleeAttack() {
         return true;
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        LivingEntity target = this.getTarget();
-
-        if (target != null) {
-            if (this.distanceTo(target) <= ATTACK_RANGE) {
-                AbilityHandler.trigger(this, JJKAbilities.SKY_STRIKE.get());
-            } else {
-                AbilityHandler.trigger(this, JJKAbilities.TELEPORT_TOWARDS.get());
-            }
-        }
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (!this.level().isClientSide && pSource.getEntity() instanceof LivingEntity) {
-            AbilityHandler.trigger(this, JJKAbilities.TELEPORT_RANDOM.get());
-        }
-        return super.hurt(pSource, pAmount);
     }
 
     @Override

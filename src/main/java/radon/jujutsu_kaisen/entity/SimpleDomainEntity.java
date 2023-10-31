@@ -89,7 +89,7 @@ public class SimpleDomainEntity extends Mob {
             float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
 
             ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
-                    1.0F, 1);
+                    1.0F, true, 1);
 
             for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
                 double x = this.getX() + RADIUS * Math.cos(phi);

@@ -4,7 +4,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability.IDurationable;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -79,5 +84,29 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> implements IDuratio
     @Override
     public int getPointsCost() {
         return ConfigHolder.SERVER.simpleDomainCost.get();
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
+            if (!(event.getSource().getDirectEntity() instanceof DomainExpansionEntity)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get()))
+                return;
+
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            SimpleDomainEntity domain = cap.getSummonByClass((ServerLevel) victim.level(), SimpleDomainEntity.class);
+
+            if (domain != null) {
+                domain.hurt(event.getSource(), event.getAmount());
+                event.setCanceled(true);
+            }
+        }
     }
 }
