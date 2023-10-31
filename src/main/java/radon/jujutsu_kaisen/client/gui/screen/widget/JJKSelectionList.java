@@ -38,9 +38,9 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
         int j = this.x0 + this.width / 2;
         int k = j - i;
         int l = j + i;
-        int i1 = Mth.floor(pMouseY - (double)this.y0) - this.headerHeight + (int) this.getScrollAmount() - 4;
+        int i1 = Mth.floor(pMouseY - (double) this.y0) - this.headerHeight + (int) this.getScrollAmount() - 4;
         int j1 = i1 / this.itemHeight;
-        return pMouseX < (double)this.getScrollbarPosition() && pMouseX >= (double)k && pMouseX <= (double)l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.children().get(j1) : null;
+        return pMouseX < (double) this.getScrollbarPosition() && pMouseX >= (double) k && pMouseX <= (double) l && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.children().get(j1) : null;
     }
 
     public void refreshList() {
@@ -67,7 +67,7 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
 
     @Override
     protected int getRowTop(int pIndex) {
-        return this.y0 + 2 - (int)this.getScrollAmount() + pIndex * this.itemHeight + this.headerHeight;
+        return this.y0 + 2 - (int) this.getScrollAmount() + pIndex * this.itemHeight + this.headerHeight;
     }
 
     @Override
@@ -76,8 +76,7 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     }
 
     @Override
-    public int getRowWidth()
-    {
+    public int getRowWidth() {
         return this.width;
     }
 

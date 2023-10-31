@@ -18,7 +18,7 @@ public class PactDeclineCommand {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactdecline")
                 .then(Commands.argument("player", EntityArgument.entity())
                         .then(Commands.argument("pact", EnumArgument.enumArgument(Pact.class))
-                        .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
+                                .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
 
         dispatcher.register(Commands.literal("pactdecline").redirect(node));
     }

@@ -13,7 +13,9 @@ import radon.jujutsu_kaisen.network.packet.s2c.UpdateMultipartS2CPacket;
 
 @Mixin(ServerEntity.class)
 public class ServerEntityMixin {
-    @Shadow @Final private Entity entity;
+    @Shadow
+    @Final
+    private Entity entity;
 
     @Inject(method = "sendDirtyEntityData", at = @At("HEAD"))
     public void sendDirtyEntityData(CallbackInfo ci) {

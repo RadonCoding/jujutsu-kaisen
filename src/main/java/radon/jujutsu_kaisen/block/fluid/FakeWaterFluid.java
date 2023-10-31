@@ -22,8 +22,7 @@ public abstract class FakeWaterFluid extends ForgeFlowingFluid {
         return false;
     }
 
-    public static class Flowing extends FakeWaterFluid
-    {
+    public static class Flowing extends FakeWaterFluid {
         public Flowing(Properties properties) {
             super(properties);
 
@@ -45,10 +44,8 @@ public abstract class FakeWaterFluid extends ForgeFlowingFluid {
         }
     }
 
-    public static class Source extends FakeWaterFluid
-    {
-        public Source(Properties properties)
-        {
+    public static class Source extends FakeWaterFluid {
+        public Source(Properties properties) {
             super(properties);
         }
 

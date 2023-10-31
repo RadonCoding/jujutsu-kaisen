@@ -71,7 +71,7 @@ public class ExplosionHandler {
                                 (y - explosion.position.getY()) * (y - explosion.position.getY()) +
                                 (z - explosion.position.getZ()) * (z - explosion.position.getZ());
 
-                        double adjusted = radius *  ((double) explosion.age / explosion.duration);
+                        double adjusted = radius * ((double) explosion.age / explosion.duration);
 
                         if (distance <= adjusted * adjusted) {
                             BlockPos pos = new BlockPos(x, y, z);

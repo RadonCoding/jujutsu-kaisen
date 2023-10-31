@@ -71,6 +71,7 @@ public class ZombaCurseEntity extends CursedSpirit {
         }
         return super.hurt(pSource, pAmount);
     }
+
     @Override
     public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_1;

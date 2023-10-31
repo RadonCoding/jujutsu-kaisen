@@ -126,7 +126,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float xOffset = this.entityData.get(DATA_OFFSET_X);
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(),
                     owner.getEyeY() - (this.getBbHeight() / 2.0F),
                     owner.getZ())
@@ -153,7 +153,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }

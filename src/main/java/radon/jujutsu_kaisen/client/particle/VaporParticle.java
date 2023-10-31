@@ -50,7 +50,8 @@ public class VaporParticle<T extends VaporParticle.VaporParticleOptions> extends
         return JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record VaporParticleOptions(Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {
+    public record VaporParticleOptions(Vector3f color, float scalar, float opacity,
+                                       int lifetime) implements ParticleOptions {
         public static Deserializer<VaporParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull VaporParticleOptions fromCommand(@NotNull ParticleType<VaporParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f color = VaporParticleOptions.readColorVector3f(reader);

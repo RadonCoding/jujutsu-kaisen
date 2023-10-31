@@ -58,7 +58,7 @@ public class TeleportRandom extends Ability {
     public void run(LivingEntity owner) {
         if (!owner.level().isClientSide) {
             double d0 = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;
-            double d1 = owner.getY() + (double)(HelperMethods.RANDOM.nextInt(64) - 32);
+            double d1 = owner.getY() + (double) (HelperMethods.RANDOM.nextInt(64) - 32);
             double d2 = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 64.0D;
             teleport(owner, d0, d1, d2);
         }

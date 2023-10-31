@@ -41,10 +41,8 @@ public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
         }
     }
 
-    public static class Flowing extends ChimeraShadowGardenFluid
-    {
-        public Flowing(Properties properties)
-        {
+    public static class Flowing extends ChimeraShadowGardenFluid {
+        public Flowing(Properties properties) {
             super(properties);
 
             registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
@@ -65,10 +63,8 @@ public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
         }
     }
 
-    public static class Source extends ChimeraShadowGardenFluid
-    {
-        public Source(Properties properties)
-        {
+    public static class Source extends ChimeraShadowGardenFluid {
+        public Source(Properties properties) {
             super(properties);
         }
 

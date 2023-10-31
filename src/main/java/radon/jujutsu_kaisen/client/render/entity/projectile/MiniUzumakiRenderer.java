@@ -194,7 +194,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
         this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, 0, maxU, minV, 1, packedLight);
     }
 
-    private void renderBeam(float length, float yaw, float pitch, int frame,  PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));

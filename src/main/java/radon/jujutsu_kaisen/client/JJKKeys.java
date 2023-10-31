@@ -6,9 +6,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKKeys {
     public static String KEY_CATEGORY_JUJUTSU_KAISEN = String.format("key.category.%s", JujutsuKaisen.MOD_ID);
-    public static KeyMapping ABILITY_SCROLL  = createKeyMapping("ability_scroll",
+    public static KeyMapping ABILITY_SCROLL = createKeyMapping("ability_scroll",
             InputConstants.KEY_LALT);
-    public static KeyMapping ACTIVATE_ABILITY  = createKeyMapping("activate_ability",
+    public static KeyMapping ACTIVATE_ABILITY = createKeyMapping("activate_ability",
             InputConstants.KEY_R);
     public static KeyMapping ABILITY_UP = createKeyMapping("ability_up",
             -1);

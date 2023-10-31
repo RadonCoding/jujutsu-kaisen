@@ -19,6 +19,7 @@ public class YujiItadoriRenderer extends HumanoidMobRenderer<YujiItadoriEntity, 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(YujiItadoriModel.INNER_LAYER)),
                 new HumanoidModel<>(pContext.bakeLayer(YujiItadoriModel.OUTER_LAYER)), pContext.getModelManager()));
     }
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull YujiItadoriEntity pEntity) {
         return TEXTURE;

@@ -168,6 +168,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     }
 
     public abstract Summon<?> getAbility();
+
     protected boolean shouldToggleOnDeath() {
         return true;
     }

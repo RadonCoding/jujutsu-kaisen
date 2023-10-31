@@ -206,8 +206,7 @@ public class ShadowInventoryScreen extends Screen {
         }
     }
 
-    private float getAngleFor(double i)
-    {
+    private float getAngleFor(double i) {
         if (this.items.size() == 0) {
             return 0;
         }

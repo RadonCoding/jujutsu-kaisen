@@ -19,6 +19,7 @@ public class MegunaRyomenRenderer extends HumanoidMobRenderer<MegunaEntity, Megu
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(MegunaRyomenModel.INNER_LAYER)),
                 new HumanoidModel<>(pContext.bakeLayer(MegunaRyomenModel.OUTER_LAYER)), pContext.getModelManager()));
     }
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MegunaEntity pEntity) {
         return TEXTURE;

@@ -119,16 +119,16 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
     }
 
     private static void quad(Matrix4f matrix, VertexConsumer consumer, float x1, float z1, int y, float x2, float z2, float red, float green, float blue, float scale1, float scale2, boolean flipX, boolean flipZ, boolean nextX, boolean nextZ) {
-        consumer.vertex(matrix, x1 + (flipX ? scale2 : -scale2), (float)(y * 16), z1 + (flipZ ? scale2 : -scale2))
+        consumer.vertex(matrix, x1 + (flipX ? scale2 : -scale2), (float) (y * 16), z1 + (flipZ ? scale2 : -scale2))
                 .color(red, green, blue, 0.3F)
                 .endVertex();
-        consumer.vertex(matrix, x2 + (flipX ? scale1 : -scale1), (float)((y + 1) * 16), z2 + (flipZ ? scale1 : -scale1))
+        consumer.vertex(matrix, x2 + (flipX ? scale1 : -scale1), (float) ((y + 1) * 16), z2 + (flipZ ? scale1 : -scale1))
                 .color(red, green, blue, 0.3F)
                 .endVertex();
-        consumer.vertex(matrix, x2 + (nextX ? scale1 : -scale1), (float)((y + 1) * 16), z2 + (nextZ ? scale1 : -scale1))
+        consumer.vertex(matrix, x2 + (nextX ? scale1 : -scale1), (float) ((y + 1) * 16), z2 + (nextZ ? scale1 : -scale1))
                 .color(red, green, blue, 0.3F)
                 .endVertex();
-        consumer.vertex(matrix, x1 + (nextX ? scale2 : -scale2), (float)(y * 16), z1 + (nextZ ? scale2 : -scale2))
+        consumer.vertex(matrix, x1 + (nextX ? scale2 : -scale2), (float) (y * 16), z1 + (nextZ ? scale2 : -scale2))
                 .color(red, green, blue, 0.3F)
                 .endVertex();
     }

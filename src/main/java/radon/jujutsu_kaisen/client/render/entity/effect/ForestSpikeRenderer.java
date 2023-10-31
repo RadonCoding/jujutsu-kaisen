@@ -72,7 +72,7 @@ public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
     }
-    
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull ForestSpikeEntity pEntity) {
         return TEXTURE;

@@ -11,14 +11,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -42,7 +39,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     public CursedBudProjectile(LivingEntity owner, float power) {
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
@@ -50,7 +47,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(plant);
+        Vec3 look = plant.getLookAngle();
         Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), plant.getYRot(), plant.getXRot());
 
@@ -85,7 +82,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = HelperMethods.getLookAngle(owner);
+                    Vec3 look = owner.getLookAngle();
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                 }
@@ -93,13 +90,13 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                 this.discard();
             } else if (this.plant) {
                 if (this.getTime() == 0) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
+                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }

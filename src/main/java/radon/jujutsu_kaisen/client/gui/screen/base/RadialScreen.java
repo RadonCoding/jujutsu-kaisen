@@ -82,7 +82,7 @@ public abstract class RadialScreen extends Screen {
     }
 
     public List<DisplayItem> getCurrent() {
-        if (page >= this.pages.size()) {
+        if (page > this.pages.size()) {
             page = 0;
         }
         return this.pages.get(page);
@@ -200,7 +200,7 @@ public abstract class RadialScreen extends Screen {
         RenderSystem.applyModelViewMatrix();
         pPoseStack.pushPose();
         pPoseStack.translate(pX, pY, -950.0D);
-        pPoseStack.mulPoseMatrix((new Matrix4f()).scaling((float)pScale, (float)pScale, (float)(-pScale)));
+        pPoseStack.mulPoseMatrix((new Matrix4f()).scaling((float) pScale, (float) pScale, (float) (-pScale)));
         pPoseStack.mulPose(p_275229_);
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher Dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();

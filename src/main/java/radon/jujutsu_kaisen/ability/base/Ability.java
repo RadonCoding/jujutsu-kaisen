@@ -126,7 +126,9 @@ public abstract class Ability {
         return List.of();
     }
 
-    public int getCooldown() { return 0; }
+    public int getCooldown() {
+        return 0;
+    }
 
     public boolean isTechnique() {
         return false;
@@ -152,7 +154,8 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isStrongest(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return false;
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isStrongest(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
+            return false;
 
         for (Trait trait : this.getRequirements()) {
             if (!cap.hasTrait(trait)) return false;
@@ -267,7 +270,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Math.round((double) cost * cap.getOutput(owner));
+        return Math.round((double) cost * (this.isChantable() ? 1.0F : cap.getOutput(owner)));
     }
 
     public interface IDomainAttack {
@@ -279,7 +282,10 @@ public abstract class Ability {
     }
 
     public interface IDurationable {
-        default int getDuration() { return 0; }
+        default int getDuration() {
+            return 0;
+        }
+
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
@@ -292,7 +298,9 @@ public abstract class Ability {
 
     public interface IChannelened {
         void onStart(LivingEntity owner);
+
         void onRelease(LivingEntity owner);
+
         default int getCharge(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             return cap.getCharge();
@@ -301,6 +309,7 @@ public abstract class Ability {
 
     public interface IToggled {
         void onEnabled(LivingEntity owner);
+
         void onDisabled(LivingEntity owner);
 
         default boolean shouldLog() {

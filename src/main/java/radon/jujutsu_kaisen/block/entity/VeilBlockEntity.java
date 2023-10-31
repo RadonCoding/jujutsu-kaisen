@@ -80,7 +80,8 @@ public class VeilBlockEntity extends BlockEntity {
 
         if (entity instanceof Player player) {
             for (Modifier modifier : be.modifiers) {
-                if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER) continue;
+                if (modifier.getAction() != Modifier.Action.ALLOW || modifier.getType() != Modifier.Type.PLAYER)
+                    continue;
                 if (((PlayerModifier) modifier).getName().equals(player.getDisplayName().getString())) {
                     return true;
                 }

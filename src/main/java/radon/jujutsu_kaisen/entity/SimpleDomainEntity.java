@@ -106,7 +106,8 @@ public class SimpleDomainEntity extends Mob {
     }
 
     @Override
-    public void aiStep() {}
+    public void aiStep() {
+    }
 
     @Override
     public boolean isPushable() {

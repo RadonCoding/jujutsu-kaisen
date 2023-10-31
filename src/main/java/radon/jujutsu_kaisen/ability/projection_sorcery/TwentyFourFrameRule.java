@@ -33,12 +33,13 @@ import java.util.UUID;
 public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     private static final float DAMAGE = 15.0F;
     private static final int INVULNERABLE_TIME = 5 * 20;
+    private static final double LAUNCH_POWER = 10.0D;
 
     private static final Map<UUID, Long> invulnerable = new HashMap<>();
 
     @Override
     public boolean isChantable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -99,14 +100,18 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 Vec3 center = new Vec3(frame.getX(), frame.getY(), frame.getZ());
                 ((ServerLevel) frame.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
 
+                frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
                 frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                 frame.discard();
+
+                victim.setDeltaMovement(attacker.getLookAngle().scale(LAUNCH_POWER));
+                victim.hurtMarked = true;
 
                 LivingEntity owner = frame.getOwner();
 
                 if (owner != null) {
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * cap.getAbilityPower(owner));
+                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * frame.getPower());
                     invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }
                 return;
@@ -128,13 +133,14 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 }
             }
 
-            if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.PROJECTION_SORCERY.get()) return;
+            if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.PROJECTION_SORCERY.get())
+                return;
 
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())) {
                 ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 cap.addSpeedStack();
-                
-                attacker.level().addFreshEntity(new ProjectionFrameEntity(attacker, victim));
+
+                attacker.level().addFreshEntity(new ProjectionFrameEntity(attacker, victim, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), attacker)));
 
                 if (victim instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);

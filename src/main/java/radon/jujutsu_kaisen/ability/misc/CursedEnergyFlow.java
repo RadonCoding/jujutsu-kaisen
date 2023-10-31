@@ -24,9 +24,9 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
@@ -61,19 +61,20 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         int count = (int) (owner.getBbWidth() * owner.getBbHeight()) * 8;
 
         for (int i = 0; i < count; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).x();
-            double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth() - HelperMethods.getLookAngle(owner).scale(0.35D).z();
-            level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 3.0F, 0.5F, 1),
-                    x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).x();
+            double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight());
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).z();
+            double speed = (owner.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
+            level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.5F,
+                            0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
         }
 
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
-            for (int i = 0; i < 2; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
-                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * owner.getBbWidth();
-                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 10),
+            for (int i = 0; i < 4; i++) {
+                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
+                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F);
+                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2);
+                level.sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 0.2F, 1),
                         x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
 
@@ -151,7 +152,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     if (melee) {
                         switch (attackerCap.getNature()) {
                             case BASIC -> event.setAmount(event.getAmount() * 1.25F);
-                            case LIGHTNING -> event.setAmount(event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
+                            case LIGHTNING ->
+                                    event.setAmount(event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
                             case ROUGH -> event.setAmount(event.getAmount() * 1.5F);
                         }
                     }

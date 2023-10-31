@@ -70,7 +70,7 @@ public class SukunaEntity extends SorcererEntity {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this,false));
+        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, false));
         this.targetSelector.addGoal(4, new NearestAttackableCurseGoal(this, false));
     }
 

@@ -32,7 +32,7 @@ public class AvoidDomainsGoal extends Goal {
     public AvoidDomainsGoal(PathfinderMob pMob, double pWalkSpeedModifier, double pSprintSpeedModifier) {
         this(pMob, (entity) -> true, pWalkSpeedModifier, pSprintSpeedModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
     }
-    
+
     public AvoidDomainsGoal(PathfinderMob pMob, Predicate<LivingEntity> pAvoidPredicate, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
         this.mob = pMob;
         this.avoidPredicate = pAvoidPredicate;
@@ -46,7 +46,7 @@ public class AvoidDomainsGoal extends Goal {
     public AvoidDomainsGoal(PathfinderMob pMob, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
         this(pMob, entity -> true, pWalkSpeedModifier, pSprintSpeedModifier, pPredicateOnAvoidEntity);
     }
-    
+
     public boolean canUse() {
         this.mob.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             DomainExpansionEntity current = null;
@@ -77,19 +77,19 @@ public class AvoidDomainsGoal extends Goal {
             }
         }
     }
-    
+
     public boolean canContinueToUse() {
         return !this.pathNav.isDone();
     }
-    
+
     public void start() {
         this.pathNav.moveTo(this.path, this.walkSpeedModifier);
     }
-    
+
     public void stop() {
         this.toAvoid = null;
     }
-    
+
     public void tick() {
         assert this.toAvoid != null;
 

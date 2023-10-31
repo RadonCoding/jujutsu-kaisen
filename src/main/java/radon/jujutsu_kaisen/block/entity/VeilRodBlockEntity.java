@@ -60,7 +60,8 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         if (pBlockEntity.ownerUUID == null) return;
 
-        if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+            return;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

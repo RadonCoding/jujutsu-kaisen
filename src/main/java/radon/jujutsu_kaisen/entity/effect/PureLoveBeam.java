@@ -71,7 +71,7 @@ public class PureLoveBeam extends JujutsuProjectile {
         this.setYaw(yaw);
         this.setPitch(pitch);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.setPos(spawn.x(), spawn.y(), spawn.z());
 
@@ -141,7 +141,8 @@ public class PureLoveBeam extends JujutsuProjectile {
                             new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
                     for (Entity entity : entities) {
-                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
+                            continue;
 
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
                                 this.getDamage() * this.getPower());
@@ -262,7 +263,7 @@ public class PureLoveBeam extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.setPos(spawn.x(), spawn.y(), spawn.z());
         }

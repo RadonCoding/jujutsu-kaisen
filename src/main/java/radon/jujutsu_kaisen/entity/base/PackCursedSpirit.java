@@ -24,7 +24,9 @@ public abstract class PackCursedSpirit extends CursedSpirit {
     }
 
     protected abstract int getMinCount();
+
     protected abstract int getMaxCount();
+
     protected abstract PackCursedSpirit spawn();
 
     @Nullable

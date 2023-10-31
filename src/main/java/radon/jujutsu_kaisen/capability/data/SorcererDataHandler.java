@@ -16,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class SorcererDataHandler {
-    public static Capability<ISorcererData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<ISorcererData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static void attach(AttachCapabilitiesEvent<Entity> event) {
         SorcererDataProvider provider = new SorcererDataProvider();

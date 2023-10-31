@@ -99,7 +99,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             }
 
             for (EntityType<?> fusion : this.getFusions()) {
-                if (this.isBottomlessWell() ? !JJKAbilities.hasTamed(owner, fusion) : !JJKAbilities.isDead(owner, fusion)) return false;
+                if (this.isBottomlessWell() ? !JJKAbilities.hasTamed(owner, fusion) : !JJKAbilities.isDead(owner, fusion))
+                    return false;
             }
         }
         return !this.isDead(owner);
@@ -203,4 +204,5 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public float getRealCost(LivingEntity owner) {
         return this.isTenShadows() && this.isTamed(owner) && JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
     }
+
 }

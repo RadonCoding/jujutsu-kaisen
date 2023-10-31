@@ -40,8 +40,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pEntityType, owner, ability);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
-                .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(owner.getLookAngle()
+                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getXRot(), owner.getYRot());
 
         this.entityData.set(DATA_WIDTH, width);
@@ -130,7 +130,8 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean checkSureHitEffect() {
         for (DomainExpansionEntity domain : this.getDomains()) {
-            if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition())) continue;
+            if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition()))
+                continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();

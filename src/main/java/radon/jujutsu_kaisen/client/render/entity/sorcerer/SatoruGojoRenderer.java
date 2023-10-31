@@ -21,6 +21,7 @@ public class SatoruGojoRenderer extends HumanoidMobRenderer<SatoruGojoEntity, Sa
                 new HumanoidModel<>(pContext.bakeLayer(SatoruGojoModel.OUTER_LAYER)), pContext.getModelManager()));
         this.addLayer(new JJKOverlayLayer<>(this));
     }
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SatoruGojoEntity pEntity) {
         return TEXTURE;

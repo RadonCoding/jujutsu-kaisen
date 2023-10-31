@@ -83,7 +83,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         this.setOwner(owner);
         this.setPower(power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
 
@@ -97,7 +97,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
                 Entity entity = entry.getKey().create(this.level());
                 if (!(entity instanceof CursedSpirit curse)) continue;
-                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
+                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null)
+                    cap.absorb(curse.getTechnique());
                 if (current == null || curse.getGrade().ordinal() > current.getGrade().ordinal()) current = curse;
             }
 
@@ -172,7 +173,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                         new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
                 for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
+                        continue;
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MINI_UZUMAKI.get()), DAMAGE * this.power);
                 }
 
@@ -208,7 +210,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 }
             }
         } else {
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
         }
@@ -295,7 +297,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         if (this.getOwner() instanceof LivingEntity owner) {
             this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.setPos(spawn.x(), spawn.y(), spawn.z());
         }

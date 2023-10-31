@@ -37,6 +37,7 @@ public class ProjectionFrameEntity extends Entity {
     private LivingEntity cachedOwner;
 
     private Vec3 pos;
+    private float power;
 
     public ProjectionFrameEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -44,15 +45,21 @@ public class ProjectionFrameEntity extends Entity {
         this.noCulling = true;
     }
 
-    public ProjectionFrameEntity(LivingEntity owner, LivingEntity target) {
+    public ProjectionFrameEntity(LivingEntity owner, LivingEntity target, float power) {
         this(JJKEntities.PROJECTION_FRAME.get(), target.level());
 
         this.setOwner(owner);
         this.setVictim(target);
 
+        this.power = power;
+
         this.pos = target.position();
 
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
+    }
+
+    public float getPower() {
+        return this.power;
     }
 
     @Override
@@ -158,6 +165,7 @@ public class ProjectionFrameEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
+        pCompound.putFloat("power", this.power);
         pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
@@ -171,6 +179,7 @@ public class ProjectionFrameEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
+        this.power = pCompound.getFloat("power");
         this.entityData.set(DATA_TIME, pCompound.getInt("time"));
     }
 

@@ -35,7 +35,7 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectil
     }
 
     private Vec3 calculateViewVector(float pYRot) {
-        float f1 = -pYRot * ((float)Math.PI / 180.0F);
+        float f1 = -pYRot * ((float) Math.PI / 180.0F);
         float f2 = Mth.cos(f1);
         float f3 = Mth.sin(f1);
         float f4 = Mth.cos(0.0F);

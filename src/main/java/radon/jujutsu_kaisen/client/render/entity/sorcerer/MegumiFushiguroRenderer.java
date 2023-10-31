@@ -19,6 +19,7 @@ public class MegumiFushiguroRenderer extends HumanoidMobRenderer<MegumiFushiguro
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(MegumiFushiguroModel.INNER_LAYER)),
                 new HumanoidModel<>(pContext.bakeLayer(MegumiFushiguroModel.OUTER_LAYER)), pContext.getModelManager()));
     }
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MegumiFushiguroEntity pEntity) {
         return TEXTURE;

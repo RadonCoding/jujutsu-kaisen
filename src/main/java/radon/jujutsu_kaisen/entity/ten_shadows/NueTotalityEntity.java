@@ -76,7 +76,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -176,6 +176,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_TOTALITY_LIGHTNING.get());
     }
+
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && !this.isVehicle()) {

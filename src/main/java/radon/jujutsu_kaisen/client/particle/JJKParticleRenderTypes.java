@@ -30,6 +30,22 @@ public class JJKParticleRenderTypes {
         }
     };
 
+    public static ParticleRenderType ADDITIVE = new ParticleRenderType() {
+        @Override
+        public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
+            RenderSystem.depthMask(false);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        @Override
+        public void end(Tesselator tesselator) {
+            tesselator.end();
+        }
+    };
+
     public static ParticleRenderType TRANSLUCENT = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {

@@ -41,7 +41,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public FireArrowProjectile(LivingEntity owner, float power) {
         super(JJKEntities.FIRE_ARROW.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
@@ -108,7 +108,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (int i = 0; i < 2; i++) {
-                Vec3 dir = HelperMethods.getLookAngle(owner).reverse().scale(0.1D);
+                Vec3 dir = owner.getLookAngle().reverse().scale(0.1D);
                 double dx = dir.x() + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.5D);
@@ -116,7 +116,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
 
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = owner.getLookAngle();
             double d0 = look.horizontalDistance();
             this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
             this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
@@ -135,7 +135,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                     this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                 } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();

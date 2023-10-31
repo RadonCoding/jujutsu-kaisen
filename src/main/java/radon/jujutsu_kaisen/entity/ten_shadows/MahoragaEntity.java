@@ -90,7 +90,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
@@ -211,7 +211,8 @@ public class MahoragaEntity extends TenShadowsSummon {
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level())) {
-            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2) continue;
+            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2)
+                continue;
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
     }

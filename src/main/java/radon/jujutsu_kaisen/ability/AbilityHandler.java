@@ -7,7 +7,6 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 
-
 public class AbilityHandler {
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;

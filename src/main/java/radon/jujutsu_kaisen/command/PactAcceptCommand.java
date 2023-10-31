@@ -20,7 +20,7 @@ public class PactAcceptCommand {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactaccept")
                 .then(Commands.argument("player", EntityArgument.entity())
                         .then(Commands.argument("pact", EnumArgument.enumArgument(Pact.class))
-                        .executes(ctx -> accept(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
+                                .executes(ctx -> accept(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
 
         dispatcher.register(Commands.literal("pactaccept").redirect(node));
     }

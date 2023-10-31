@@ -21,6 +21,7 @@ public class TogeInumakiRenderer extends HumanoidMobRenderer<TogeInumakiEntity, 
                 new HumanoidModel<>(pContext.bakeLayer(TogeInumakiModel.OUTER_LAYER)), pContext.getModelManager()));
         this.addLayer(new JJKOverlayLayer<>(this));
     }
+
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull TogeInumakiEntity pEntity) {
         return TEXTURE;

@@ -54,7 +54,7 @@ public class AltarScreen extends ItemCombinerScreen<AltarMenu> {
             int j = this.topPos;
 
             pGuiGraphics.pose().pushPose();
-            pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
+            pGuiGraphics.pose().translate((float) i, (float) j, 0.0F);
 
             this.renderSlot(pGuiGraphics, slot);
 

@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
+import radon.jujutsu_kaisen.client.model.item.armor.InstantSpiritBodyOfDistortedKillingModel;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
@@ -260,6 +261,13 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SuguruGetoModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(SuguruGetoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SuguruGetoModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(InstantSpiritBodyOfDistortedKillingModel.LAYER_LOCATION, InstantSpiritBodyOfDistortedKillingModel::createBodyLayer);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
+            event.registerReloadListener(new JJKResourceManager());
         }
 
         @SubscribeEvent
@@ -351,6 +359,7 @@ public class JJKClientEventHandler {
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
             event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);

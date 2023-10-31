@@ -40,7 +40,7 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, owner.getZ());
         this.setPos(spawn);
 
-        this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
+        this.setDeltaMovement(owner.getLookAngle().scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
 
         this.target = target;
         this.range = range;
@@ -105,7 +105,8 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
 
             if (this.grabbed) {
                 if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
-                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || living.isDeadOrDying() || living.isRemoved()) this.discard();
+                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || living.isDeadOrDying() || living.isRemoved())
+                        this.discard();
 
                     living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
                     this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());

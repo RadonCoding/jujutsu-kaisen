@@ -49,7 +49,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner, power);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
@@ -68,7 +68,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
             for (int i = 0; i < entry.getValue(); i++) {
                 if (this.power == MAX_POWER) break;
-                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
+                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null)
+                    cap.absorb(curse.getTechnique());
                 this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getGrade().getRequiredExperience()));
                 cap.removeCurse(registry, entity.getType());
             }
@@ -138,7 +139,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     this.discard();
                 } else {
                     Vec3 pos = owner.position()
-                            .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                            .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                             .add(0.0D, this.getBbHeight(), 0.0D);
                     this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
                 }
@@ -146,7 +147,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.discard();
             } else if (this.getTime() == DELAY) {
                 Vec3 start = owner.getEyePosition();
-                Vec3 look = HelperMethods.getLookAngle(owner);
+                Vec3 look = owner.getLookAngle();
                 Vec3 end = start.add(look.scale(RANGE));
                 HitResult result = HelperMethods.getHitResult(owner, start, end);
 

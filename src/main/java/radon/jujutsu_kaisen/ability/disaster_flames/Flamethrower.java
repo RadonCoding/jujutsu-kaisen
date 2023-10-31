@@ -39,7 +39,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = owner.getLookAngle();
 
         if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 96; i++) {
@@ -50,11 +50,11 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
                 Vec3 speed = look.add(x, y, z);
-                Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
+                Vec3 offset = owner.getEyePosition().add(owner.getLookAngle());
                 level.sendParticles(ParticleTypes.FLAME, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
             }
 
-            Vec3 offset = owner.getEyePosition().add(HelperMethods.getLookAngle(owner).scale(RANGE / 2));
+            Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
 
             for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
                 if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {

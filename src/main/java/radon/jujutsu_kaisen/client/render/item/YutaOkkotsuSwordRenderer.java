@@ -6,7 +6,7 @@ import radon.jujutsu_kaisen.item.YutaOkkotsuSword;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
-public class YutaOkkotsuSwordRenderer  extends GeoItemRenderer<YutaOkkotsuSword> {
+public class YutaOkkotsuSwordRenderer extends GeoItemRenderer<YutaOkkotsuSword> {
     public YutaOkkotsuSwordRenderer() {
         super(new DefaultedItemGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuta_okkotsu_sword")));
     }

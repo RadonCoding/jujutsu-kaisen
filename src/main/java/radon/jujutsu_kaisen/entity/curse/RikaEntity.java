@@ -71,7 +71,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x(), pos.y(), pos.z());
 
@@ -111,7 +111,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     protected void registerGoals() {
-         this.goalSelector.addGoal(1, new BetterFloatGoal(this));
+        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
         this.goalSelector.addGoal(2, new SorcererGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
@@ -199,8 +199,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 this.entityData.set(DATA_OPEN, remaining);
 
                 Vec3 pos = owner.position()
-                        .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                        .add(HelperMethods.getLookAngle(owner).yRot(90.0F).scale(-0.45D));
+                        .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                        .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
                 this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
 
                 this.yHeadRot = this.getYRot();
@@ -232,7 +232,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     public SorcererGrade getGrade() {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return SorcererGrade.SPECIAL_GRADE;
+        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+            return SorcererGrade.SPECIAL_GRADE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return cap.getGrade();

@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
 
         float radius = 1.0F + this.getPower(owner) * 0.5F * ((float) Math.min(20, this.getCharge(owner)) / 20);
 
-        Vec3 explosionPos = owner.getEyePosition().add(HelperMethods.getLookAngle(owner));
+        Vec3 explosionPos = owner.getEyePosition().add(owner.getLookAngle());
 
         float f2 = radius * 2.0F;
         int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);
@@ -110,8 +109,8 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
                         d5 *= d11;
                         d7 *= d11;
                         d9 *= d11;
-                        Vec3 vec31 = new Vec3(d5, d7, d9);
-                        entity.setDeltaMovement(entity.getDeltaMovement().add(vec31.scale(LAUNCH_POWER)));
+                        Vec3 movement = new Vec3(d5, d7, d9);
+                        entity.setDeltaMovement(entity.getDeltaMovement().add(movement.scale(LAUNCH_POWER)));
                         entity.hurtMarked = true;
                     }
                 }
