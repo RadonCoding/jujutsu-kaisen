@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -57,27 +58,32 @@ public class Dash extends Ability {
             owner.hurtMarked = true;
         }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!owner.level().isClientSide) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getSpeedStacks() == 0) return;
+            if (cap.getSpeedStacks() == 0) return;
 
-        List<Entity> hit = new ArrayList<>();
+            List<Entity> hit = new ArrayList<>();
 
-        cap.scheduleTickEvent(() -> {
-            if (owner.getDeltaMovement().length() / SPEED >= 0.5D) {
-                for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), owner.getBoundingBox().inflate(1.0D))) {
-                    if (entity == owner || hit.contains(entity)) continue;
+            cap.scheduleTickEvent(() -> {
+                // Assert owner is moving at least 50% of SPEED
+                if (owner.getDeltaMovement().length() / SPEED >= 0.5D) {
+                    for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), owner.getBoundingBox().inflate(1.0D))) {
+                        if (entity == owner || hit.contains(entity)) continue;
 
-                    if (owner instanceof Player player) {
-                        player.attack(entity);
-                    } else {
-                        owner.doHurtTarget(entity);
+                        owner.swing(InteractionHand.MAIN_HAND, true);
+
+                        if (owner instanceof Player player) {
+                            player.attack(entity);
+                        } else {
+                            owner.doHurtTarget(entity);
+                        }
+                        hit.add(entity);
                     }
-                    hit.add(entity);
                 }
-            }
-            return false;
-        }, 5);
+                return false;
+            }, 10);
+        }
     }
 
     @Override

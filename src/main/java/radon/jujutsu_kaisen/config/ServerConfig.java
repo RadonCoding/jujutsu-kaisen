@@ -67,7 +67,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue maximumChantCount;
     public final ForgeConfigSpec.IntValue maximumChantLength;
     public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
-    public final ForgeConfigSpec.DoubleValue sparkSoundTreshold;
+    public final ForgeConfigSpec.DoubleValue sparkSoundThreshold;
 
     public final ForgeConfigSpec.IntValue simpleDomainCost;
     public final ForgeConfigSpec.IntValue domainExpansionCost;
@@ -121,8 +121,8 @@ public class ServerConfig {
                 .defineInRange("maximumChantLength", 24, 1, 256);
         this.realisticWorldSlash = builder.comment("Whether or not world slash can destroy unbreakable blocks")
                 .define("realisticWorldSlash", true);
-        this.sparkSoundTreshold = builder.comment("The maximum amount of cursed energy a ability has to use to create a \"spark\"")
-                .defineInRange("maximumExperienceAmount", 200.0F, 1.0F, 10000.0F);
+        this.sparkSoundThreshold = builder.comment("The maximum amount of cursed energy a ability has to use to create a \"spark\"")
+                .defineInRange("sparkSoundThreshold", 200.0F, 1.0F, 10000.0F);
 
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
