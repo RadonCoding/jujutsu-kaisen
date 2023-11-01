@@ -176,7 +176,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.1F);
             double z = center.z() + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, radius * 0.15F, 1.0F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE_COLOR, radius * 0.25F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -192,7 +192,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, radius * 0.15F, 1.0F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, radius * 0.25F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

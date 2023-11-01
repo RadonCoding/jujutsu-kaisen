@@ -97,18 +97,13 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
             if (domain == null) return;
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower())) {
-                this.discard();
-            }
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower());
+            this.discard();
         }
-        this.discard();
     }
-
 
     @Override
     public void tick() {
-        super.tick();
-
         this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
 
         if (!this.level().isClientSide) {
@@ -131,5 +126,6 @@ public class LavaRockProjectile extends JujutsuProjectile {
                 this.discard();
             }
         }
+        super.tick();
     }
 }

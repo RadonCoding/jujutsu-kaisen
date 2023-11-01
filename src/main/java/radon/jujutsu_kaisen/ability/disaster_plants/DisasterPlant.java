@@ -14,7 +14,7 @@ public class DisasterPlant extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

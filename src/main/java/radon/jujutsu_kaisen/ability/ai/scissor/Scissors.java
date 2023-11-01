@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Scissors extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

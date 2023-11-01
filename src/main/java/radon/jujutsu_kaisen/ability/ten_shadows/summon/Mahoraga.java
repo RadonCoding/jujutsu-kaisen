@@ -19,7 +19,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

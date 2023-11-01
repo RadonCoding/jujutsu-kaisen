@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -86,6 +87,11 @@ public class ExplosionHandler {
                                 if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                     event.level.destroyBlock(pos, false);
 
+                                    if (explosion.fire) {
+                                        if (HelperMethods.RANDOM.nextInt(3) == 0 && event.level.getBlockState(pos).isAir() && event.level.getBlockState(pos.below()).isSolidRender(event.level, pos.below())) {
+                                            event.level.setBlockAndUpdate(pos, BaseFireBlock.getState(event.level, pos));
+                                        }
+                                    }
                                     if (HelperMethods.RANDOM.nextInt(10) == 0) {
                                         ((ServerLevel) event.level).sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0,
                                                 0.0D, 0.0D, 0.0D, 0.0D);
@@ -106,8 +112,8 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, instigator, source));
+    public static void spawn(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, instigator, source, fire));
     }
 
     private static class ExplosionData {
@@ -118,14 +124,16 @@ public class ExplosionHandler {
         private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
+        private boolean fire;
 
-        public ExplosionData(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source) {
+        public ExplosionData(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
             this.duration = duration;
             this.instigator = instigator;
             this.source = source;
+            this.fire = fire;
         }
     }
 }

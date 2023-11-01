@@ -87,6 +87,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CLEAVE = ABILITIES.register("cleave", Cleave::new);
     public static RegistryObject<Ability> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
     public static RegistryObject<Ability> DISMANTLE_BARRAGE = ABILITIES.register("dismantle_barrage", DismantleBarrage::new);
+    public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static RegistryObject<Ability> WORLD_SLASH = ABILITIES.register("world_slash", WorldSlash::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
@@ -201,11 +202,9 @@ public class JJKAbilities {
     }
 
     public static boolean hasToggled(LivingEntity owner, Ability ability) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasToggled(ability)));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasToggled(ability);
     }
 
     public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
@@ -267,11 +266,9 @@ public class JJKAbilities {
     }
 
     public static SorcererGrade getGrade(LivingEntity owner) {
-        AtomicReference<SorcererGrade> result = new AtomicReference<>();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getGrade()));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getGrade();
     }
 
     public static List<Ability> getToggled(LivingEntity owner) {

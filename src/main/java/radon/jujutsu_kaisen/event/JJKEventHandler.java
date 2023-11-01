@@ -48,6 +48,7 @@ import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
@@ -354,18 +355,28 @@ public class JJKEventHandler {
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());
 
-            ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            LivingEntity owner = event.getEntity();
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
             }
 
-            if (!event.getEntity().level().isClientSide && event.getEntity().hasEffect(JJKEffects.CURSED_BUD.get())) {
-                event.getEntity().hurt(JJKDamageSources.jujutsuAttack(event.getEntity(), JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(event.getEntity()) * 0.1F);
+            if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
+                owner.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(owner) * 0.1F);
             }
 
-            if (event.getEntity() instanceof HeianSukunaEntity entity && event.getAbility() == JJKAbilities.BARRAGE.get()) {
+            if (owner instanceof HeianSukunaEntity entity && event.getAbility() == JJKAbilities.BARRAGE.get()) {
                 entity.setBarrage(Barrage.DURATION * 2);
+            }
+
+            float cost = event.getAbility().getRealCost(owner);
+
+            if (cost >= ConfigHolder.SERVER.sparkSoundTreshold.get().floatValue()) {
+                float volume = cost / ConfigHolder.SERVER.sparkSoundTreshold.get().floatValue();
+                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(),
+                        JJKSounds.SPARK.get(), SoundSource.MASTER, volume, 1.0F);
             }
         }
     }

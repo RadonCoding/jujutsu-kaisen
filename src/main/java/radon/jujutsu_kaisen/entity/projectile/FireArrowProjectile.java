@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -10,23 +11,22 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class FireArrowProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 25.0F;
     private static final float SPEED = 5.0F;
     private static final float EXPLOSIVE_POWER = 1.5F;
+    private static final float MAX_EXPLOSION = 15.0F;
     public static final int DELAY = 20;
     public static final int STILL_FRAMES = 2;
     public static final int STARTUP_FRAMES = 4;
@@ -81,9 +81,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
-            this.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.FIRE_ARROW.get()), null,
-                    location.x(), location.y(), location.z(), EXPLOSIVE_POWER * this.getPower(), false,
-                    this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(location.x(), location.y(), location.z()), Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()),
+                    20, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), true);
         }
         this.discard();
     }
@@ -137,8 +136,6 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                     this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                    this.discard();
                 }
             }
         }

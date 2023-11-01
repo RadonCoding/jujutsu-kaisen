@@ -18,7 +18,7 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

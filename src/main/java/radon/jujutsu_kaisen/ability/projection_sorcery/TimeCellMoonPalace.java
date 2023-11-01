@@ -12,17 +12,17 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
 public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansion.IClosedDomain {
+    private static final float DAMAGE = 15.0F;
+
     @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
@@ -32,9 +32,7 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        if (entity.hasEffect(JJKEffects.TWENTY_FOUR_FRAME_RULE.get())) return;
-
-        if (instant || owner.level().getGameTime() % 20 == 0) {
+        if (instant || owner.level().getGameTime() % 40 == 0) {
             DomainExpansionCenterEntity center = domain.getDomainCenter();
 
             if (center == null) return;

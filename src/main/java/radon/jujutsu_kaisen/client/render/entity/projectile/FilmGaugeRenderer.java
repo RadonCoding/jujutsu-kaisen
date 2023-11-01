@@ -10,8 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
@@ -31,9 +29,7 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
-        LivingEntity target = pEntity.getTarget();
-        Vec3 pos = target != null && pEntity.isAttached() ? target.position().add(0.0D, target.getBbHeight() * 0.5F, 0.0D) :
-                pEntity.position().add(0.0D, pEntity.getBbHeight() * 0.5F, 0.0D);
+        Vec3 pos = pEntity.position().add(0.0D, pEntity.getBbHeight() * 0.5F, 0.0D);
 
         Vec3 relative = pEntity.getStart().subtract(pos);
         float f0 = (float) relative.length();

@@ -132,7 +132,7 @@ public class Die extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

@@ -18,7 +18,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

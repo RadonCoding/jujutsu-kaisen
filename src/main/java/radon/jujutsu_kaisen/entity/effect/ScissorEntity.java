@@ -8,7 +8,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -92,10 +91,6 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
 
         if (this.getTime() == DELAY) {
             this.setDeltaMovement(this.target.position().subtract(this.position()).normalize().scale(SPEED));
-        } else if (this.getTime() > DELAY) {
-            if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                this.discard();
-            }
         }
     }
 

@@ -25,7 +25,7 @@ public class ForestSpikes extends Ability {
     private static final float SPREAD = 5.0F;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

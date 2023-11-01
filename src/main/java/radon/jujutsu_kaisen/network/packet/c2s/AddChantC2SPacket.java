@@ -42,7 +42,7 @@ public class AddChantC2SPacket {
 
             Ability ability = JJKAbilities.getValue(this.key);
 
-            if (ability == null || !ability.isChantable()) return;
+            if (ability == null || !ability.isScalable() || !ability.isTechnique()) return;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

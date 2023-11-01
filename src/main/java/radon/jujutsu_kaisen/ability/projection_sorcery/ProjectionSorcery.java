@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ProjectionSorcery extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -29,12 +29,6 @@ public class ProjectionSorcery extends Ability {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.addSpeedStack();
-    }
-
-    @Override
-    public boolean isValid(LivingEntity owner) {
-
-        return super.isValid(owner);
     }
 
     @Override

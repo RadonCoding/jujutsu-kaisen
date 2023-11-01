@@ -12,7 +12,7 @@ public enum CursedTechnique {
             JJKAbilities.MINI_UZUMAKI.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE_STILL.get(),
             JJKAbilities.BLUE_MOTION.get(), JJKAbilities.BLUE_FISTS.get(), JJKAbilities.HOLLOW_PURPLE.get(), JJKAbilities.TELEPORT.get(), JJKAbilities.FLY.get()),
-    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.SPIDERWEB.get(),
+    DISMANTLE_AND_CLEAVE(JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DISMANTLE.get(), JJKAbilities.DISMANTLE_BARRAGE.get(), JJKAbilities.DISMANTLE_NET.get(), JJKAbilities.CLEAVE.get(), JJKAbilities.SPIDERWEB.get(),
             /*JJKAbilities.WORLD_SLASH.get(),*/ JJKAbilities.FIRE_ARROW.get()),
     CURSED_SPEECH(null, JJKAbilities.DONT_MOVE.get(), JJKAbilities.GET_CRUSHED.get(), JJKAbilities.BLAST_AWAY.get(), JJKAbilities.EXPLODE.get(), JJKAbilities.DIE.get()),
     MIMICRY(null, JJKAbilities.RIKA.get(), JJKAbilities.MIMICRY.get(), JJKAbilities.COMMAND_PURE_LOVE.get()),

@@ -18,7 +18,7 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

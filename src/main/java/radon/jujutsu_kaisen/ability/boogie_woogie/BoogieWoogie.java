@@ -18,7 +18,7 @@ public class BoogieWoogie extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -74,5 +74,10 @@ public class BoogieWoogie extends Ability {
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
+    }
+
+    @Override
+    public boolean isTechnique() {
+        return true;
     }
 }

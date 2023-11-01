@@ -38,7 +38,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     private static final Map<UUID, Long> invulnerable = new HashMap<>();
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 
@@ -110,7 +110,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 LivingEntity owner = frame.getOwner();
 
                 if (owner != null) {
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.PROJECTION_SORCERY.get()), DAMAGE * frame.getPower());
                     invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }

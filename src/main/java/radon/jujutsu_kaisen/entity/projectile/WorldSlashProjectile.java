@@ -141,8 +141,6 @@ public class WorldSlashProjectile extends JujutsuProjectile {
 
         if (this.getTime() >= DURATION) {
             this.discard();
-        } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-            this.discard();
         }
     }
 }

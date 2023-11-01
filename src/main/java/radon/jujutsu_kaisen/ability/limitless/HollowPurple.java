@@ -57,7 +57,7 @@ public class HollowPurple extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

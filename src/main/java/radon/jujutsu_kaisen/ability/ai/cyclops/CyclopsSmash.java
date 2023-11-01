@@ -20,7 +20,7 @@ public class CyclopsSmash extends Ability {
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

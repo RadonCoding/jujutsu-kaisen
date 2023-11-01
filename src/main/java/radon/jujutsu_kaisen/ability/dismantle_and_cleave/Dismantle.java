@@ -50,7 +50,7 @@ public class Dismantle extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

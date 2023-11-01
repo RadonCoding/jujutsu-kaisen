@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
@@ -43,7 +44,7 @@ import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -245,8 +246,12 @@ public class Infinity extends Ability implements Ability.IToggled {
 
                 if (!Infinity.canBlock(target, projectile)) return;
 
-                data.add(target, projectile);
-                event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                if (projectile instanceof JujutsuProjectile) {
+                    projectile.discard();
+                } else {
+                    data.add(target, projectile);
+                    event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                }
             }
         }
 
@@ -265,7 +270,12 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
                     if (!Infinity.canBlock(target, projectile)) continue;
-                    data.add(target, projectile);
+
+                    if (projectile instanceof JujutsuProjectile) {
+                        projectile.discard();
+                    } else {
+                        data.add(target, projectile);
+                    }
                 }
             }
         }

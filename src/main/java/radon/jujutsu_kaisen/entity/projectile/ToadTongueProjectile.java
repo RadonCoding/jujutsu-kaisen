@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 
@@ -114,8 +113,6 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
                 this.setDeltaMovement(Vec3.ZERO);
             } else {
                 if (this.distanceTo(owner) >= this.range) {
-                    this.discard();
-                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                     this.discard();
                 }
             }

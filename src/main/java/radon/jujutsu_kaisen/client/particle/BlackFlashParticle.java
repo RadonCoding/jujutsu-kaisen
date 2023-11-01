@@ -6,11 +6,12 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class BlackFlashParticle extends TextureSheetParticle {
-    protected BlackFlashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+    private final SpriteSet sprites;
+
+    protected BlackFlashParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
         this.friction = 0.7F;
@@ -24,19 +25,24 @@ public class BlackFlashParticle extends TextureSheetParticle {
         this.rCol = ParticleColors.BLACK_FLASH.x();
         this.gCol = ParticleColors.BLACK_FLASH.y();
         this.bCol = ParticleColors.BLACK_FLASH.z();
-        this.quadSize *= 0.75F;
-        this.lifetime = Math.max((int) (6.0D / (Math.random() * 0.8D + 0.6D)), 1);
+        this.quadSize *= 2.0F;
+        this.lifetime = Math.max((int) (12.0D / (Math.random() * 0.8D + 0.6D)), 1);
         this.hasPhysics = false;
+
+        this.sprites = pSprites;
+        this.setSprite(this.sprites.get(this.random));
     }
 
     @Override
-    public float getQuadSize(float pScaleFactor) {
-        return this.quadSize * Mth.clamp(((float) this.age + pScaleFactor) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
+    public void tick() {
+        super.tick();
+
+        this.setSprite(this.sprites.get(this.random));
     }
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return JJKParticleRenderTypes.BLACK_FLASH;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
@@ -49,7 +55,7 @@ public class BlackFlashParticle extends TextureSheetParticle {
         @Override
         public BlackFlashParticle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z,
                                                  double xSpeed, double ySpeed, double zSpeed) {
-            BlackFlashParticle particle = new BlackFlashParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
+            BlackFlashParticle particle = new BlackFlashParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites);
             particle.pickSprite(this.sprites);
             return particle;
         }

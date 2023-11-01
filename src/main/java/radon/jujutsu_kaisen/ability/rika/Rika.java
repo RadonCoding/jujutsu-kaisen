@@ -26,7 +26,7 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
