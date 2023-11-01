@@ -48,13 +48,17 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            CursedTechnique technique = cap.getTechnique();
 
-        if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return Status.FAILURE;
+            if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return Status.FAILURE;
 
-        return cap.isCooldownDone(ability) && ability.getStatus(owner, false, false, false, false) == Status.SUCCESS ?
-                super.checkTriggerable(owner) : Status.FAILURE;
+            if (cap.isCooldownDone(ability) && ability.getStatus(owner, false, false, false, false) != Status.SUCCESS ) {
+                return Status.FAILURE;
+            }
+        }
+        return super.checkTriggerable(owner);
     }
 
     @Override
