@@ -123,8 +123,8 @@ public class SorcererData implements ISorcererData {
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
-    private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
-    private static final int PROJECTION_SORCERY_STACK_DURATION = 5 * 20;
+    private static final int MAX_PROJECTION_SORCERY_STACKS = 5;
+    private static final int PROJECTION_SORCERY_STACK_DURATION = 10 * 20;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -447,14 +447,20 @@ public class SorcererData implements ISorcererData {
             }
         }
 
-        if (this.speedStacks > 0) {
-            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-        } else {
-            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-            this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-            this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID);
+        if (!owner.level().isClientSide) {
+            if (this.speedStacks > 0) {
+                this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+
+                if (owner.walkDist - owner.walkDistO <= 0.0D) {
+                    this.resetSpeedStacks();
+                }
+            } else {
+                this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+                this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+                this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID);
+            }
         }
 
         if (owner.level() instanceof ServerLevel level) {
@@ -1375,6 +1381,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void resetSpeedStacks() {
         this.speedStacks = 0;
+        this.speedTimer = 0;
     }
 
     @Override

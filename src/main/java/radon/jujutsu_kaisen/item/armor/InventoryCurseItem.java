@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,11 +22,13 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider {
@@ -92,9 +95,20 @@ public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvid
     public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
         CompoundTag nbt = pPlayer.getItemBySlot(EquipmentSlot.CHEST).getOrCreateTag();
 
+        AtomicInteger previous = new AtomicInteger(nbt.getList("items", Tag.TAG_COMPOUND).size());
+
         SimpleContainer container = new SimpleContainer(9);
         container.fromTag(nbt.getList("items", Tag.TAG_COMPOUND));
-        container.addListener(pContainer -> nbt.put("items", ((SimpleContainer) pContainer).createTag()));
+        container.addListener(pContainer -> {
+            nbt.put("items", ((SimpleContainer) pContainer).createTag());
+
+            int current = nbt.getList("items", Tag.TAG_COMPOUND).size();
+
+            if (current > previous.get()) {
+                pPlayer.level().playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), JJKSounds.SWALLOW.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            }
+            previous.set(current);
+        });
         return new ChestMenu(MenuType.GENERIC_9x1, pContainerId, pPlayerInventory, container, container.getContainerSize() / 9);
     }
 }

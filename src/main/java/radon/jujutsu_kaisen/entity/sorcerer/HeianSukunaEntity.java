@@ -102,7 +102,7 @@ public class HeianSukunaEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
-        this.entityData.set(DATA_IDLE, this.getTarget() == null);
+        this.entityData.set(DATA_IDLE, this.getTarget() == null && this.getDeltaMovement().lengthSqr() < 9.01D);
 
         int barrage = this.entityData.get(DATA_BARRAGE);
 

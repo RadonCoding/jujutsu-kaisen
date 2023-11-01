@@ -30,4 +30,6 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "cleave")));
     public static RegistryObject<SoundEvent> SPARK = SOUNDS.register("spark", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "spark")));
+    public static RegistryObject<SoundEvent> SWALLOW = SOUNDS.register("swallow", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "swallow")));
 }

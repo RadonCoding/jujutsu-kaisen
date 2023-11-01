@@ -48,5 +48,10 @@
     "sounds": [
       "jujutsu_kaisen:spark"
     ]
+  },
+  "swallow": {
+    "sounds": [
+      "jujutsu_kaisen:swallow"
+    ]
   }
 }
