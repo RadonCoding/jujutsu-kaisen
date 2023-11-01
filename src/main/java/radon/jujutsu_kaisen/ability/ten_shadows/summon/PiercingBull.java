@@ -18,7 +18,7 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

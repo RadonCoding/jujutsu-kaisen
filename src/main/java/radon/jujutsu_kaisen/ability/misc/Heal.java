@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public class Heal extends Ability implements Ability.IChannelened {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

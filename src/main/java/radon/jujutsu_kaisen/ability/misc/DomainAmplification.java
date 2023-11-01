@@ -4,8 +4,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -40,15 +40,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        /*if (owner.level() instanceof ServerLevel level) {
-            for (int i = 0; i < 8; i++) {
-                level.sendParticles(new VaporParticle.VaporParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 2.0F, 0.5F, false, 1),
-                        owner.getX() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).x(),
-                        owner.getY() + HelperMethods.RANDOM.nextDouble(owner.getBbHeight()),
-                        owner.getZ() + (HelperMethods.RANDOM.nextGaussian() * 0.1D) - owner.getLookAngle().scale(0.3D).z(),
-                        0, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D, 1.5D);
-            }
-        }*/
+
     }
 
     @Override
@@ -92,7 +84,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -104,15 +96,14 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+        public static void onLivingHurt(LivingHurtEvent event) {
+            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             LivingEntity victim = event.getEntity();
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.INFINITY.get())) {
-                if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    AbilityHandler.trigger(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                }
+            // If not enabled, then enable
+            if (victim instanceof Mob && !JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
             }
         }
 
@@ -133,5 +124,4 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             }
         }
     }
-
 }

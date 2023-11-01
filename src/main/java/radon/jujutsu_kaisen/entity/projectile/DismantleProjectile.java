@@ -34,6 +34,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final float SPEED = 5.0F;
 
     private boolean vertical;
+    private int length;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -49,6 +50,17 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
 
         this.vertical = vertical;
+    }
+
+    public DismantleProjectile(LivingEntity owner, float power, boolean vertical, Vec3 pos, int length) {
+        super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
+
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+
+        this.vertical = vertical;
+        this.length = length;
     }
 
     @Override
@@ -102,7 +114,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         List<HitResult> hits = new ArrayList<>();
 
-        int size = Mth.floor(LINE_LENGTH * this.getPower());
+        int size = this.length > 0.0D ? this.length : Mth.floor(LINE_LENGTH * this.getPower());
         BlockPos start = center.relative(perpendicular.getOpposite(), size / 2);
         BlockPos end = center.relative(direction, Math.round(SPEED)).relative(perpendicular, size / 2);
 
@@ -141,8 +153,6 @@ public class DismantleProjectile extends JujutsuProjectile {
         }
 
         if (this.getTime() >= DURATION) {
-            this.discard();
-        } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
             this.discard();
         }
     }

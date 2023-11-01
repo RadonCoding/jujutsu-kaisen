@@ -7,7 +7,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 
 public class IdleTransfiguration extends Ability implements Ability.IToggled {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

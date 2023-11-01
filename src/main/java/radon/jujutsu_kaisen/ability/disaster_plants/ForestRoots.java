@@ -14,7 +14,7 @@ public class ForestRoots extends Ability {
     public static final double RANGE = 10.0D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

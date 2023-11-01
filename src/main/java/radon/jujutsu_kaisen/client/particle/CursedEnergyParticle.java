@@ -47,7 +47,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return JJKParticleRenderTypes.GLOW;
+        return JJKParticleRenderTypes.TRANSLUCENT;
     }
 
     public record CursedEnergyParticleOptions(Vector3f color, float scalar, float opacity, int lifetime) implements ParticleOptions {

@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class Feint extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

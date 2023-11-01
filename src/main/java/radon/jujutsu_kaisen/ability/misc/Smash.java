@@ -27,7 +27,7 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

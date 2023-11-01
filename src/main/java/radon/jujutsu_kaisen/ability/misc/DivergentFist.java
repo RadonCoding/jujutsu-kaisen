@@ -1,35 +1,32 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.util.Mth;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.ProtectionEnchantment;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.List;
-
 public class DivergentFist extends Ability {
-    private static final float EXPLOSIVE_POWER = 1.0F;
-    private static final double LAUNCH_POWER = 2.5D;
+    private static final float DAMAGE = 10.0F;
     private static final double RANGE = 3.0D;
 
     @Override
@@ -62,8 +59,8 @@ public class DivergentFist extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
-        return false;
+    public boolean isScalable() {
+        return true;
     }
 
     @Override
@@ -89,6 +86,10 @@ public class DivergentFist extends Ability {
             }
             target.invulnerableTime = 0;
 
+            Vec3 look = owner.getLookAngle();
+
+            float power = this.getPower(owner);
+
             cap.delayTickEvent(() -> {
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
@@ -99,55 +100,23 @@ public class DivergentFist extends Ability {
                 }
                 target.invulnerableTime = 0;
 
-                float radius = EXPLOSIVE_POWER * this.getPower(owner);
+                Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                target.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                Vec3 explosionPos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-
-                float f2 = radius * 2.0F;
-                int k1 = Mth.floor(explosionPos.x() - (double) f2 - 1.0D);
-                int l1 = Mth.floor(explosionPos.x() + (double) f2 + 1.0D);
-                int i2 = Mth.floor(explosionPos.y() - (double) f2 - 1.0D);
-                int i1 = Mth.floor(explosionPos.y() + (double) f2 + 1.0D);
-                int j2 = Mth.floor(explosionPos.z() - (double) f2 - 1.0D);
-                int j1 = Mth.floor(explosionPos.z() + (double) f2 + 1.0D);
-                List<Entity> entities = owner.level().getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
-
-                for (Entity entity : entities) {
-                    if (!entity.ignoreExplosion()) {
-                        double d12 = Math.sqrt(entity.distanceToSqr(explosionPos)) / (double) f2;
-
-                        if (d12 <= 1.0D) {
-                            double d5 = entity.getX() - explosionPos.x();
-                            double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosionPos.y();
-                            double d9 = entity.getZ() - explosionPos.z();
-                            double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
-
-                            if (d13 != 0.0D) {
-                                d5 /= d13;
-                                d7 /= d13;
-                                d9 /= d13;
-                                double d14 = Explosion.getSeenPercent(explosionPos, entity);
-                                double d10 = (1.0D - d12) * d14;
-                                double d11;
-
-                                if (entity instanceof LivingEntity living) {
-                                    d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
-                                } else {
-                                    d11 = d10;
-                                }
-
-                                d5 *= d11;
-                                d7 *= d11;
-                                d9 *= d11;
-                                Vec3 vec31 = new Vec3(d5, d7, d9);
-                                entity.setDeltaMovement(entity.getDeltaMovement().add(vec31.scale(LAUNCH_POWER)));
-                                entity.hurtMarked = true;
-                            }
-                        }
-                    }
+                for (int i = 0; i < 96; i++) {
+                    double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+                    double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+                    double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+                    double x = r * Math.sin(phi) * Math.cos(theta);
+                    double y = r * Math.sin(phi) * Math.sin(theta);
+                    double z = r * Math.cos(phi);
+                    Vec3 speed = look.add(x, y, z);
+                    Vec3 offset = pos.add(owner.getLookAngle());
+                    ((ServerLevel) target.level()).sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth(),
+                            0.2F, 8), offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
                 }
-                owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, this), null, explosionPos, radius, false,
-                        Level.ExplosionInteraction.NONE);
+                target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * power);
             }, 5);
         }
     }

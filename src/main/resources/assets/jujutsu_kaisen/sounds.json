@@ -43,5 +43,10 @@
     "sounds": [
       "jujutsu_kaisen:cleave"
     ]
+  },
+  "spark": {
+    "sounds": [
+      "jujutsu_kaisen:spark"
+    ]
   }
 }

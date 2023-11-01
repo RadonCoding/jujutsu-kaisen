@@ -17,7 +17,7 @@ import java.util.List;
 
 public class RCT extends Ability implements Ability.IChannelened {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

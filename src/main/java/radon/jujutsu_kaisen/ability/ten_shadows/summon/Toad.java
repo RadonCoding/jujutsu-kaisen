@@ -18,7 +18,7 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

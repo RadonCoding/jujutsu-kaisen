@@ -20,7 +20,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     private static final double RANGE = 5.0D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

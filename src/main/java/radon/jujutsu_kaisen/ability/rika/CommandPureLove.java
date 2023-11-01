@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 public class CommandPureLove extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

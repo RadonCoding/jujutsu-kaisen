@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -166,11 +165,9 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
             DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower())) {
-                this.discard();
-            }
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
+            this.discard();
         }
-        this.discard();
     }
 
     @Override

@@ -18,7 +18,7 @@ public class TranquilDeer extends Summon<TranquilDeerEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

@@ -24,7 +24,7 @@ public class ReleaseCurse extends Ability {
     private static final double RANGE = 100.0D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

@@ -85,7 +85,7 @@ public class Barrage extends Ability {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

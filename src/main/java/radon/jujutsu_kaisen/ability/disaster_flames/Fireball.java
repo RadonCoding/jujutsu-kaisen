@@ -9,7 +9,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Fireball extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

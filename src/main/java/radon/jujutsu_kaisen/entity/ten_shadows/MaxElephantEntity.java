@@ -123,7 +123,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         boolean result = super.causeFallDamage(pFallDistance, pMultiplier, pSource);
 
         if (result && pFallDistance >= EXPLOSION_FALL_DISTANCE) {
-            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this, null);
+            ExplosionHandler.spawn(this.level().dimension(), this.blockPosition(), EXPLOSION_POWER, EXPLOSION_DURATION, this, null, false);
         }
         return result;
     }

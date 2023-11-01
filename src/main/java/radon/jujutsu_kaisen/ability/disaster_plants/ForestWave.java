@@ -14,7 +14,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     private static final int DELAY = 3;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

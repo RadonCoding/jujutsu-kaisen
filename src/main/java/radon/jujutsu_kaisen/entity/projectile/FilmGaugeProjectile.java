@@ -18,6 +18,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
@@ -28,9 +29,9 @@ import java.util.UUID;
 
 public class FilmGaugeProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(FilmGaugeProjectile.class, EntityDataSerializers.VECTOR3);
-    private static final EntityDataAccessor<Boolean> DATA_ATTACHED = SynchedEntityData.defineId(FilmGaugeProjectile.class, EntityDataSerializers.BOOLEAN);
 
-    private static final float SPEED = 1.0F;
+    private static final float SPEED = 3.0F;
+    private static final float DAMAGE = 10.0F;
 
     @Nullable
     private UUID targetUUID;
@@ -81,16 +82,11 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         return new Vec3(this.entityData.get(DATA_START));
     }
 
-    public boolean isAttached() {
-        return this.entityData.get(DATA_ATTACHED);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 
         this.entityData.define(DATA_START, Vec3.ZERO.toVector3f());
-        this.entityData.define(DATA_ATTACHED, false);
     }
 
     @Override
@@ -102,8 +98,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         pCompound.putFloat("start_y", start.y());
         pCompound.putFloat("start_z", start.z());
 
-        pCompound.putBoolean("attached", this.entityData.get(DATA_ATTACHED));
-
         if (this.targetUUID != null) {
             pCompound.putUUID("target", this.targetUUID);
         }
@@ -114,7 +108,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_START, new Vector3f(pCompound.getFloat("start_x"), pCompound.getFloat("start_y"), pCompound.getFloat("start_z")));
-        this.entityData.set(DATA_ATTACHED, pCompound.getBoolean("attached"));
 
         if (pCompound.hasUUID("target")) {
             this.targetUUID = pCompound.getUUID("target");
@@ -125,15 +118,26 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
-        if (pResult.getEntity() instanceof LivingEntity entity && entity == this.getTarget()) {
-            this.entityData.set(DATA_ATTACHED, true);
+        if (this.level().isClientSide) return;
+
+        if (!(pResult.getEntity() instanceof LivingEntity entity)) return;
+
+        if (this.getOwner() instanceof LivingEntity owner) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+
+            if (domain == null) return;
+
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, null), DAMAGE * this.getPower())) {
+                entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 1, false, false, false));
+            }
+            this.discard();
         }
     }
 
     @Override
     public void tick() {
-        super.tick();
-
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -148,9 +152,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
             LivingEntity target = this.getTarget();
 
             if (target != null && !target.isDeadOrDying() && !target.isRemoved()) {
-                if (this.entityData.get(DATA_ATTACHED)) {
-                    target.addEffect(new MobEffectInstance(JJKEffects.TWENTY_FOUR_FRAME_RULE.get(), 20, 0));
-                }
                 Vec3 src = this.position();
                 Vec3 dst = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 this.setDeltaMovement(dst.subtract(src).normalize().scale(SPEED));
@@ -158,5 +159,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
                 this.discard();
             }
         }
+        super.tick();
     }
 }

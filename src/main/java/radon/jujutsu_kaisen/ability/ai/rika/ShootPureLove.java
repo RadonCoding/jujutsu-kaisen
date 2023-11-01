@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ShootPureLove extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

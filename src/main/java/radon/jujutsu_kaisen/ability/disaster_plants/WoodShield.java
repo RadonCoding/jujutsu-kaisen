@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability.disaster_plants;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,14 +21,13 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !owner.level().getEntities(owner, owner.getBoundingBox().inflate(3.0D),
-                entity -> entity instanceof Projectile projectile && projectile.getOwner() != owner && projectile.getDeltaMovement().lengthSqr() >= 1.0E-7D).isEmpty();
+        return target != null && owner.getHealth() / owner.getMaxHealth() < 0.25F;
     }
 
     @Override

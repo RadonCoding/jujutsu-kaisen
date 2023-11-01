@@ -196,7 +196,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return true;
     }
 

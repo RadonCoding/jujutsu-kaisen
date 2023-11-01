@@ -22,7 +22,7 @@ public class Dash extends Ability {
     private static final double SPEED = 2.5D;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

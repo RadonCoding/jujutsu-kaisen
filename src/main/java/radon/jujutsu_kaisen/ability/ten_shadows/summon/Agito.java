@@ -18,7 +18,7 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

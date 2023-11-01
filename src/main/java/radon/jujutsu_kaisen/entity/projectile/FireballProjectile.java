@@ -21,7 +21,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -88,7 +87,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
             ExplosionHandler.spawn(this.level().dimension(), BlockPos.containing(location.x(), location.y(), location.z()), Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()),
-                    20, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()));
+                    20, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), true);
         }
         this.discard();
     }
@@ -129,8 +128,6 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 if (this.getTime() == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                     this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                } else if (this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                    this.discard();
                 }
             }
         }

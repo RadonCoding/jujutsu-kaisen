@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class InstantSpiritBodyOfDistortedKilling extends Ability implements Ability.IToggled {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

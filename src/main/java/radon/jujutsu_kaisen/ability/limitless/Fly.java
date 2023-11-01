@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class Fly extends Ability implements Ability.IChannelened {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 

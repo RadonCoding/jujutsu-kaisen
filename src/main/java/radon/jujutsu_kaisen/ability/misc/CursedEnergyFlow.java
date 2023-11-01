@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +37,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -121,19 +120,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-            if (!source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
-                if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                    AbilityHandler.trigger(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get());
-                }
-            }
-        }
-
-        @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             // Damage
             DamageSource source = event.getSource();
@@ -142,6 +128,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             if (attacker.level().isClientSide) return;
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+
+            // If not enabled, then enable
+            if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                AbilityHandler.trigger(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get());
+            }
 
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

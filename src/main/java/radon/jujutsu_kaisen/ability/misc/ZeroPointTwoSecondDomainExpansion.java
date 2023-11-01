@@ -20,7 +20,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
-    public boolean isChantable() {
+    public boolean isScalable() {
         return false;
     }
 
@@ -102,7 +102,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 0;
     }
-
 }
