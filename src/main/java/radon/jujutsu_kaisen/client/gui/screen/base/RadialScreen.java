@@ -75,16 +75,15 @@ public abstract class RadialScreen extends Screen {
             int index = count * 12;
             this.pages.add(items.subList(index, index + remainder));
         }
-
+        if (page >= this.pages.size()) {
+            page = 0;
+        }
         if (this.pages.isEmpty()) {
             this.onClose();
         }
     }
 
     public List<DisplayItem> getCurrent() {
-        if (page > this.pages.size()) {
-            page = 0;
-        }
         return this.pages.get(page);
     }
 
@@ -131,11 +130,13 @@ public abstract class RadialScreen extends Screen {
             if (this.minecraft != null && this.minecraft.player != null) {
                 ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                DisplayItem item = this.getCurrent().get(this.hovered);
+                if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
+                    DisplayItem item = this.getCurrent().get(this.hovered);
 
-                if (item.type == DisplayItem.Type.COPIED) {
-                    PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
-                    cap.uncopy(item.copied);
+                    if (item.type == DisplayItem.Type.COPIED) {
+                        PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
+                        cap.uncopy(item.copied);
+                    }
                 }
             }
         }
