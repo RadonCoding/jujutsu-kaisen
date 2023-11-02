@@ -31,8 +31,3 @@ jobs:
         tag_name: v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish Release
-      run: |
-        echo "Release ID: ${{ steps.create_release.outputs.id }}"
-        echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_release.outputs.id }}"
