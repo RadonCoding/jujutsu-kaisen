@@ -1,0 +1,38 @@
+name: Build and Publish Release
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+        server-id: ${{ secrets.MAVEN_SETTINGS_SERVER_ID }}
+        
+    - name: Build JAR
+      run: |
+        ./gradlew build
+        
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/libs/*.jar
+        tag_name: v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish Release
+      run: |
+        echo "Release ID: ${{ steps.create_release.outputs.id }}"
+        echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_release.outputs.id }}"
