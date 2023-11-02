@@ -16,6 +16,8 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
+        distribution: 'adopt'
+        server-id: ${{ secrets.MAVEN_SETTINGS_SERVER_ID }}
         
     - name: Build JAR
       run: |
