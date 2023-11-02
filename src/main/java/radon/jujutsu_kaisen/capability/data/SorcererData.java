@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -111,6 +112,8 @@ public class SorcererData implements ISorcererData {
     // Projection Sorcery
     private int speedStacks;
     private int speedTimer;
+
+    private int noMotionTime;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
@@ -443,7 +446,7 @@ public class SorcererData implements ISorcererData {
 
         if (this.speedTimer > 0) {
             if (--this.speedTimer == 0) {
-                this.speedStacks = 0;
+                this.resetSpeedStacks();
             }
         }
 
@@ -453,7 +456,13 @@ public class SorcererData implements ISorcererData {
                 this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
-                if (owner.walkDist - owner.walkDistO <= 0.0D) {
+                if (owner.walkDist == owner.walkDistO) {
+                    this.noMotionTime++;
+                } else if (this.noMotionTime == 1) {
+                    this.noMotionTime = 0;
+                }
+
+                if (this.noMotionTime > 1) {
                     this.resetSpeedStacks();
                 }
             } else {
@@ -1382,6 +1391,7 @@ public class SorcererData implements ISorcererData {
     public void resetSpeedStacks() {
         this.speedStacks = 0;
         this.speedTimer = 0;
+        this.noMotionTime = 0;
     }
 
     @Override

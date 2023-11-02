@@ -358,10 +358,11 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
-            event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLACK_FLASH.get(), BlackFlashParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.VAPOR.get(), VaporParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.MIRAGE.get(), MirageParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLOOD.get(), BloodParticle.Provider::new);

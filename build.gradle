@@ -57,7 +57,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', mod_id
-            
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main

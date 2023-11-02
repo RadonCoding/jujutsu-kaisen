@@ -43,6 +43,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<MirageParticle.MirageParticleOptions>> MIRAGE = PARTICLES.register("mirage", () ->
+            new ParticleType<>(false, MirageParticle.MirageParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<MirageParticle.MirageParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->

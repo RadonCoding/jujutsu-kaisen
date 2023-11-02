@@ -53,5 +53,10 @@
     "sounds": [
       "jujutsu_kaisen:swallow"
     ]
+  },
+  "dash": {
+    "sounds": [
+      "jujutsu_kaisen:dash"
+    ]
   }
 }

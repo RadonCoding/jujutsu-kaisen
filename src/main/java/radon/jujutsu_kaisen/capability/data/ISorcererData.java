@@ -292,6 +292,5 @@ public interface ISorcererData {
     void resetSpeedStacks();
 
     CompoundTag serializeNBT();
-
     void deserializeNBT(CompoundTag nbt);
 }

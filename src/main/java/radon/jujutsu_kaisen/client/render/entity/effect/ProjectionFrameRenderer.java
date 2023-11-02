@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.ability.ClientProjectionHandler;
+import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
 public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntity> {
@@ -43,7 +43,7 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
-        ClientProjectionHandler.frame = true;
+        MixinData.isFrame = true;
 
         pPoseStack.pushPose();
         pPoseStack.scale(1.0F, 1.0F, 0.02F);
@@ -53,7 +53,7 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
         renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
 
-        ClientProjectionHandler.frame = false;
+        MixinData.isFrame = false;
 
         pPoseStack.popPose();
 
