@@ -117,7 +117,7 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
 
         public void add(LivingEntity source, Projectile target) {
-            if (target.getOwner() != source && !this.frozen.containsKey(target.getUUID())) {
+            if (!this.frozen.containsKey(target.getUUID())) {
                 this.frozen.put(target.getUUID(), new FrozenProjectileNBT(source, target));
                 this.setDirty();
             }
@@ -246,6 +246,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
                 if (!Infinity.canBlock(target, projectile)) return;
 
+                if (projectile.getOwner() == target) {
+                    event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                    return;
+                }
+
                 if (projectile instanceof JujutsuProjectile) {
                     projectile.discard();
                 } else {
@@ -270,6 +275,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
                 for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
                     if (!Infinity.canBlock(target, projectile)) continue;
+                    if (projectile.getOwner() == target) continue;
 
                     if (projectile instanceof JujutsuProjectile) {
                         projectile.discard();

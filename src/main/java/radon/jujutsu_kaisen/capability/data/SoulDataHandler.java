@@ -15,23 +15,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
-public class SorcererDataHandler {
-    public static Capability<ISorcererData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
+public class SoulDataHandler {
+    public static Capability<ISoulData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static void attach(AttachCapabilitiesEvent<Entity> event) {
-        SorcererDataProvider provider = new SorcererDataProvider();
-        event.addCapability(SorcererDataProvider.IDENTIFIER, provider);
+        SoulDataProvider provider = new SoulDataProvider();
+        event.addCapability(SoulDataProvider.IDENTIFIER, provider);
     }
 
-    private static class SorcererDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-        public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_data");
+    private static class SoulDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+        public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "soul_data");
 
-        private ISorcererData cap = null;
-        private final LazyOptional<ISorcererData> optional = LazyOptional.of(this::create);
+        private ISoulData cap = null;
+        private final LazyOptional<ISoulData> optional = LazyOptional.of(this::create);
 
-        private ISorcererData create() {
+        private ISoulData create() {
             if (this.cap == null) {
-                this.cap = new SorcererData();
+                this.cap = new SoulData();
             }
             return this.cap;
         }

@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +18,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ProjectionSorcery extends Ability {
@@ -65,6 +67,24 @@ public class ProjectionSorcery extends Ability {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+            LivingEntity owner = event.getEntity();
+
+            if (owner.level().isClientSide) return;
+
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.getSpeedStacks() == 0) return;
+
+            ((ServerLevel) owner.level()).sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
+                    0, 0.0D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX() + (owner.getX() - owner.xOld), owner.getY() + (owner.getY() - owner.yOld), owner.getZ() + (owner.getZ() - owner.zOld),
+                    0, 0.0D, 0.0D, 0.0D, 1.0D);
+        }
+
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();

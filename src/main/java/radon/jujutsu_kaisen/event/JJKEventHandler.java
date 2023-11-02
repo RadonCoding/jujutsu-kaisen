@@ -32,7 +32,9 @@ import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.ISoulData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.SoulDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -126,6 +128,7 @@ public class JJKEventHandler {
                 if (entity instanceof Player || entity instanceof ISorcerer) {
                     SorcererDataHandler.attach(event);
                 }
+                SoulDataHandler.attach(event);
             }
         }
 
@@ -250,9 +253,16 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide()) return;
+            if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
+
+            System.out.println(source);
+
+            if (source.is(JJKDamageSources.SOUL)) {
+                ISoulData cap = victim.getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.hurt(event.getAmount());
+            }
 
             if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
                 if (source.getEntity() instanceof LivingEntity attacker) {

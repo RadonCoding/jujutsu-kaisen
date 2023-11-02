@@ -21,6 +21,7 @@
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.LiquidBlockMixin",
+    "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
     "common.MobMixin",
     "common.PathNavigationMixin",

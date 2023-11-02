@@ -55,9 +55,7 @@ public class BlackFlashParticle extends TextureSheetParticle {
         @Override
         public BlackFlashParticle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level, double x, double y, double z,
                                                  double xSpeed, double ySpeed, double zSpeed) {
-            BlackFlashParticle particle = new BlackFlashParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites);
-            particle.pickSprite(this.sprites);
-            return particle;
+            return new BlackFlashParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites);
         }
     }
 }

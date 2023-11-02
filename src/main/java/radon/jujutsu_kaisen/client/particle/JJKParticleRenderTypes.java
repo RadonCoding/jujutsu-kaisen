@@ -6,7 +6,9 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +79,24 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
+        }
+    };
+
+    public static ParticleRenderType BLUR = new ParticleRenderType() {
+        @Override
+        public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
+            RenderSystem.depthMask(true);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            //manager.getTexture(TextureAtlas.LOCATION_PARTICLES).setBlurMipmap(true, false);
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        @Override
+        public void end(Tesselator tesselator) {
+            tesselator.end();
+            //Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
         }
     };
 }
