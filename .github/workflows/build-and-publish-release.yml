@@ -1,14 +1,11 @@
 name: Build and Publish Release
-
 on:
   push:
     branches:
-      - main # Change this to your main branch name
-
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -17,12 +14,9 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
-
     - name: Build JAR
       run: |
         ./gradlew build
-      # Change the build command as needed
-
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
