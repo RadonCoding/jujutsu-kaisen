@@ -1,19 +1,37 @@
-name: Build and upload jar
-on: [push]
+name: Build and Publish Release
+
+on:
+  push:
+    branches:
+      - main # Change this to your main branch name
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Upload jar file
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-jar-file
-          path: build/libs/*.jar
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Build JAR
+      run: |
+        ./gradlew build
+      # Change the build command as needed
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/libs/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish Release
+      run: |
+        echo "Release ID: ${{ steps.create_release.outputs.id }}"
+        echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_release.outputs.id }}"
