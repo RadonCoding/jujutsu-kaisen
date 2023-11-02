@@ -104,11 +104,6 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly fg.deobf('curse.maven:spark-361579:4505309')
-
-    runtimeOnly fg.deobf("curse.maven:better-combat-by-daedelus-639842:4819285")
-    runtimeOnly fg.deobf("curse.maven:cloth-config-348521:4633444")
-    runtimeOnly fg.deobf("curse.maven:playeranimator-658587:4587214")
 }
 
 tasks.named('processResources', ProcessResources).configure {
