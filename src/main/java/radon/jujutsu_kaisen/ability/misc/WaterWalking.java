@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,7 +31,11 @@ public class WaterWalking extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-
+        if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()
+                && owner.level().getBlockState(owner.blockPosition().above()).getFluidState().isEmpty()) {
+            owner.setDeltaMovement(owner.getDeltaMovement().x(), 0.01D, owner.getDeltaMovement().z());
+            owner.setOnGround(true);
+        }
     }
 
     @Override

@@ -12,17 +12,6 @@ public class ServerConfig {
 
     static {
         CURSED_ENERGY_AMOUNTS.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.MAHORAGA.getId(), 6000.0F);
-
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.JOGO.getId(), 1000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.DAGON.getId(), 1000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.HANAMI.getId(), 1000.0F);
-
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.SUKUNA.getId(), 6000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.MEGUNA.getId(), 6000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.HEIAN_SUKUNA.getId(), 6000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.SATORU_GOJO.getId(), 2000.0F);
-        CURSED_ENERGY_AMOUNTS.put(JJKEntities.YUTA_OKKOTSU.getId(), 4000.0F);
     }
 
     private static final Map<SorcererGrade, Float> REQUIRED_EXPERIENCE = new LinkedHashMap<>();
