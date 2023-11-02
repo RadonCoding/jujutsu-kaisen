@@ -6,33 +6,28 @@ on:
       - main
 jobs:
   build:
+    permissions: write-all
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Java
+    - name: set up Java
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'adopt'
         server-id: ${{ secrets.MAVEN_SETTINGS_SERVER_ID }}
         
-    - name: Build JAR
+    - name: build jar
       run: |
         ./gradlew build
         
-    - name: Create Release
-      id: create_release
+    - name: create release
       uses: softprops/action-gh-release@v1
       with:
         files: build/libs/*.jar
         tag_name: v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish Release
-      run: |
-        echo "Release ID: ${{ steps.create_release.outputs.id }}"
-        echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_release.outputs.id }}"
