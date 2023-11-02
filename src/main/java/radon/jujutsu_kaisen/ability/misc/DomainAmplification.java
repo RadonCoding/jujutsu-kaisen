@@ -30,7 +30,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && !JJKAbilities.hasToggled(owner, domain) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) <= 3.0D && owner.hasLineOfSight(target) && !JJKAbilities.hasToggled(owner, domain) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
