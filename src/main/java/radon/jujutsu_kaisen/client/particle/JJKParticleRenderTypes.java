@@ -81,22 +81,4 @@ public class JJKParticleRenderTypes {
             tesselator.end();
         }
     };
-
-    public static ParticleRenderType BLUR = new ParticleRenderType() {
-        @Override
-        public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
-            RenderSystem.depthMask(true);
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            //manager.getTexture(TextureAtlas.LOCATION_PARTICLES).setBlurMipmap(true, false);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
-
-        @Override
-        public void end(Tesselator tesselator) {
-            tesselator.end();
-            //Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_PARTICLES).restoreLastBlurMipmap();
-        }
-    };
 }

@@ -50,6 +50,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<ProjectionParticle.ProjectionParticleOptions>> PROJECTION = PARTICLES.register("projection", () ->
+            new ParticleType<>(false, ProjectionParticle.ProjectionParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<ProjectionParticle.ProjectionParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->
