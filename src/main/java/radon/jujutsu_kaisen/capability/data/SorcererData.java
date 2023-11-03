@@ -110,7 +110,9 @@ public class SorcererData implements ISorcererData {
     private final Map<ResourceLocation, Integer> curses;
 
     // Projection Sorcery
-    private final List<Vec3> frames;
+    private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
+    private int speedStacks;
+    private int noMotionTime;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
@@ -124,7 +126,6 @@ public class SorcererData implements ISorcererData {
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 5;
-    private static final int PROJECTION_SORCERY_STACK_DURATION = 10 * 20;
 
     public SorcererData() {
         this.domainSize = 1.0F;
@@ -442,6 +443,28 @@ public class SorcererData implements ISorcererData {
 
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
+
+        if (!owner.level().isClientSide) {
+            if (this.speedStacks > 0) {
+                this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 3.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+
+                if (owner.walkDist == owner.walkDistO) {
+                    this.noMotionTime++;
+                } else if (this.noMotionTime == 1) {
+                    this.noMotionTime = 0;
+                }
+
+                if (this.noMotionTime > 1) {
+                    this.resetSpeedStacks();
+                }
+            } else {
+                this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+                this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+                this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_ADDITION_UUID);
+            }
+        }
 
         if (owner.level() instanceof ServerLevel level) {
             this.updateAdaptation(level);
@@ -1348,17 +1371,17 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public List<Vec3> getFrames() {
+    public List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames() {
         return this.frames;
     }
 
     @Override
-    public void addFrame(Vec3 frame) {
-        this.frames.add(frame);
+    public void addFrame(Vec3 frame, float yaw) {
+        this.frames.add(new AbstractMap.SimpleEntry<>(frame, yaw));
     }
 
     @Override
-    public void removeFrame(Vec3 frame) {
+    public void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame) {
         this.frames.remove(frame);
     }
 
@@ -1404,6 +1427,22 @@ public class SorcererData implements ISorcererData {
         this.energy = this.getMaxEnergy(player);
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+    }
+
+    @Override
+    public int getSpeedStacks() {
+        return this.speedStacks;
+    }
+
+    @Override
+    public void addSpeedStack() {
+        this.speedStacks = Math.min(MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
+    }
+
+    @Override
+    public void resetSpeedStacks() {
+        this.speedStacks = 0;
+        this.noMotionTime = 0;
     }
 
     @Override
@@ -1469,6 +1508,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
+        nbt.putInt("speed_stacks", this.speedStacks);
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1712,6 +1752,7 @@ public class SorcererData implements ISorcererData {
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
+        this.speedStacks = nbt.getInt("speed_stacks");
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");

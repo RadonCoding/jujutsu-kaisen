@@ -35,6 +35,8 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
     private float yRot0;
     private float yHeadRot;
     private float yHeadRot0;
+    private float yBodyRot;
+    private float yBodyRotO;
 
     private float position;
 
@@ -68,6 +70,9 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
                 this.yHeadRot = living.yHeadRot;
                 this.yHeadRot0 = living.yHeadRotO;
 
+                this.yBodyRot = living.yBodyRot;
+                this.yBodyRotO = living.yBodyRotO;
+
                 this.position = living.walkAnimation.position();
             }
         }
@@ -90,6 +95,8 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
             float yHeadRot = 0.0F;
             float yHeadRotO = 0.0F;
+            float yBodyRot = 0.0F;
+            float yBodyRotO = 0.0F;
 
             boolean invisible = this.entity.isInvisible();
 
@@ -100,8 +107,15 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
             if (this.entity instanceof LivingEntity living) {
                 yHeadRot = living.yHeadRot;
                 yHeadRotO = living.yHeadRotO;
+
                 living.yHeadRot = this.yHeadRot;
                 living.yHeadRotO = this.yHeadRot0;
+
+                yBodyRot = living.yHeadRot;
+                yBodyRotO = living.yHeadRotO;
+
+                living.yBodyRot = this.yBodyRot;
+                living.yBodyRotO = this.yBodyRotO;
 
                 MixinData.walkAnimationPosition = this.position;
             }
@@ -118,7 +132,7 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
             Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
             stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
 
-            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, 15728880);
+            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -126,6 +140,9 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
             this.entity.setYRot(yRot);
 
             if (this.entity instanceof LivingEntity living) {
+                living.yBodyRotO = yBodyRotO;
+                living.yBodyRot = yBodyRot;
+
                 living.yHeadRotO = yHeadRotO;
                 living.yHeadRot = yHeadRot;
             }
