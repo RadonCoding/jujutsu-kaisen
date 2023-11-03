@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.capability.data.SoulDataHandler;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-    @Inject(method = "getMaxHealth", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "getMaxHealth", at = @At("RETURN"), cancellable = true)
     public void getMaxHealth(CallbackInfoReturnable<Float> cir) {
         ISoulData cap = ((Entity) (Object) this).getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
         cir.setReturnValue(cir.getReturnValueF() - cap.getDamage());

@@ -72,7 +72,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType(), cap.getSpeedStacks());
+                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
                 return synced.put(mc.player.getUUID(), data);
             }
         } else {
@@ -133,8 +133,7 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type,
-                             int speedStacks) {
+    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
@@ -161,8 +160,6 @@ public class ClientVisualHandler {
 
             nbt.putInt("type", this.type.ordinal());
 
-            nbt.putInt("speed_stacks", this.speedStacks);
-
             return nbt;
         }
 
@@ -188,7 +185,7 @@ public class ClientVisualHandler {
                     techniques.add(CursedTechnique.values()[tag.getAsInt()]);
                 }
             }
-            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")], nbt.getInt("speed_stacks"));
+            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")]);
         }
     }
 }

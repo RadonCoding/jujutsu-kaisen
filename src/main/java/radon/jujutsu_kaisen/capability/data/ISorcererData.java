@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -285,11 +286,10 @@ public interface ISorcererData {
 
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 
-    int getSpeedStacks();
-
-    void addSpeedStack();
-
-    void resetSpeedStacks();
+    List<Vec3> getFrames();
+    void addFrame(Vec3 frame);
+    void removeFrame(Vec3 frame);
+    void resetFrames();
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);

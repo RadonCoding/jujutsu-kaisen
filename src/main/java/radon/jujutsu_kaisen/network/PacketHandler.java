@@ -192,6 +192,11 @@ public class PacketHandler {
                 .encoder(UncopyAbilityC2SPacket::encode)
                 .consumerMainThread(UncopyAbilityC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SyncSoulDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncSoulDataS2CPacket::new)
+                .encoder(SyncSoulDataS2CPacket::encode)
+                .consumerMainThread(SyncSoulDataS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

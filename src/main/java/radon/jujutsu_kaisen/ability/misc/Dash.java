@@ -72,33 +72,6 @@ public class Dash extends Ability {
         owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 10, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                 0, 0.0D, 0.0D, 0.0D, 1.0D);
-
-        if (!owner.level().isClientSide) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (cap.getSpeedStacks() == 0) return;
-
-            List<Entity> hit = new ArrayList<>();
-
-            cap.scheduleTickEvent(() -> {
-                // Assert owner is moving at least 50% of SPEED
-                if (owner.getDeltaMovement().length() / SPEED >= 0.5D) {
-                    for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), owner.getBoundingBox().inflate(1.0D))) {
-                        if (entity == owner || hit.contains(entity)) continue;
-
-                        owner.swing(InteractionHand.MAIN_HAND, true);
-
-                        if (owner instanceof Player player) {
-                            player.attack(entity);
-                        } else {
-                            owner.doHurtTarget(entity);
-                        }
-                        hit.add(entity);
-                    }
-                }
-                return false;
-            }, 10);
-        }
     }
 
     @Override

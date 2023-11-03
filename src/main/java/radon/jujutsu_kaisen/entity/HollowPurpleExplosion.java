@@ -42,8 +42,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()),
-                    (DAMAGE * this.getPower()) * (entity == owner ? 0.5F : 1.0F));
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), DAMAGE * this.getPower());
         }
     }
 

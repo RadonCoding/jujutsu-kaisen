@@ -50,6 +50,7 @@ import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSoulDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -116,7 +117,6 @@ public class JJKEventHandler {
                 newCap.clearToggled();
                 newCap.revive(false);
                 newCap.resetBlackFlash();
-                newCap.resetSpeedStacks();
                 newCap.resetExtraEnergy();
             }
             original.invalidateCaps();
@@ -152,12 +152,6 @@ public class JJKEventHandler {
                     event.setDistance(distance * 0.5F);
                 }
             });
-        }
-
-        @SubscribeEvent
-        public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-            ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            event.setNewSpeed((float) (event.getNewSpeed() * (1.0D + (cap.getSpeedStacks() * 3.0D))));
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -250,41 +244,26 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
+        public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
 
-            System.out.println(source);
-
             if (source.is(JJKDamageSources.SOUL)) {
                 ISoulData cap = victim.getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
                 cap.hurt(event.getAmount());
+
+                if (victim instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSoulDataS2CPacket(cap.serializeNBT()), player);
+                }
             }
 
-            if (source.getEntity() == source.getDirectEntity() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
-                if (source.getEntity() instanceof LivingEntity attacker) {
-                    if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.PLAYFUL_CLOUD.get())) {
-                        Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                        attacker.level().addParticle(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 1.0D, 0.0D, 0.0D);
-                        attacker.level().playLocalSound(pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F,
-                                (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F, false);
-                    } else if (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            Set<Ability> toggled = new HashSet<>(cap.getToggled());
-
-                            for (Ability ability : toggled) {
-                                if (!ability.isTechnique()) continue;
-                                cap.toggle(victim, ability);
-                            }
-
-                            if (victim instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                            }
-                        });
-                    }
+            // Your own cursed energy doesn't do as much damage
+            if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                if (source.getEntity() == victim) {
+                    event.setAmount(event.getAmount() * 0.25F);
                 }
             }
 
