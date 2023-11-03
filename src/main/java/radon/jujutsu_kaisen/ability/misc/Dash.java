@@ -49,15 +49,22 @@ public class Dash extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        if (!(HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult) && !owner.isInWater() && !owner.onGround() && owner.getFeetBlockState().getFluidState().isEmpty()) {
+        if (!canDash(owner)) {
             return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
     }
 
+    private static boolean canDash(LivingEntity owner) {
+        return HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
+                owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty();
+    }
+
     @Override
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
+
+        if (!canDash(owner)) return;
 
         Vec3 look = owner.getLookAngle();
 
@@ -78,8 +85,6 @@ public class Dash extends Ability {
         } else if (owner.isInWater() || owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
             owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED)));
             owner.hurtMarked = true;
-        } else {
-            return;
         }
 
         Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
