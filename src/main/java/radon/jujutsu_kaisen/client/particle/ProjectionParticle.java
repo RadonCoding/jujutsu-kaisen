@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
@@ -37,6 +38,8 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
 
     protected ProjectionParticle(ClientLevel pLevel, double pX, double pY, double pZ, T options) {
         super(pLevel, pX, pY, pZ);
+
+        this.alpha = 0.5F;
 
         this.entityId = options.entityId();
         this.yaw = options.yaw();
@@ -94,13 +97,14 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             this.entity.yBodyRot = this.yaw;
             this.entity.yBodyRotO = this.yaw;
 
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-            EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
+            manager.render(this.entity, this.x - pRenderInfo.getPosition().x(), this.y - pRenderInfo.getPosition().y(), this.z - pRenderInfo.getPosition().z(), 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
 
-            Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
-            stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
-
-            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.entity.yBodyRotO = yBodyRotO;
             this.entity.yBodyRot = yBodyRot;
