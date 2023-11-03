@@ -363,6 +363,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.TRAVEL.get(), TravelParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_ENERGY.get(), CursedEnergyParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.MIRAGE.get(), MirageParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.PROJECTION.get(), ProjectionParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLOOD.get(), BloodParticle.Provider::new);

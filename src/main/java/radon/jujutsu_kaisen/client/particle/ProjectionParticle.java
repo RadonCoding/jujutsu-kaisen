@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,7 +26,7 @@ import radon.jujutsu_kaisen.client.MixinData;
 
 import java.util.Locale;
 
-public class MirageParticle<T extends MirageParticle.MirageParticleOptions> extends TextureSheetParticle {
+public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleOptions> extends TextureSheetParticle {
     private final int entityId;
 
     @Nullable
@@ -38,7 +39,7 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
     private float position;
 
-    protected MirageParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options) {
+    protected ProjectionParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options) {
         super(pLevel, pX, pY, pZ);
 
         this.lifetime = 10;
@@ -138,20 +139,20 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
         }
     }
 
-    public record MirageParticleOptions(int entityId) implements ParticleOptions {
-        public static Deserializer<MirageParticleOptions> DESERIALIZER = new Deserializer<>() {
-            public @NotNull MirageParticle.MirageParticleOptions fromCommand(@NotNull ParticleType<MirageParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                return new MirageParticleOptions(reader.readInt());
+    public record ProjectionParticleOptions(int entityId) implements ParticleOptions {
+        public static Deserializer<ProjectionParticleOptions> DESERIALIZER = new Deserializer<>() {
+            public @NotNull ProjectionParticle.ProjectionParticleOptions fromCommand(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
+                return new ProjectionParticleOptions(reader.readInt());
             }
 
-            public @NotNull MirageParticle.MirageParticleOptions fromNetwork(@NotNull ParticleType<MirageParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new MirageParticleOptions(buf.readInt());
+            public @NotNull ProjectionParticle.ProjectionParticleOptions fromNetwork(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull FriendlyByteBuf buf) {
+                return new ProjectionParticleOptions(buf.readInt());
             }
         };
 
         @Override
         public @NotNull ParticleType<?> getType() {
-            return JJKParticles.MIRAGE.get();
+            return JJKParticles.PROJECTION.get();
         }
 
         @Override
@@ -165,12 +166,12 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
         }
     }
 
-    public static class Provider implements ParticleProvider<MirageParticleOptions> {
+    public static class Provider implements ParticleProvider<ProjectionParticleOptions> {
         public Provider(SpriteSet ignored) {}
 
-        public Particle createParticle(@NotNull MirageParticle.MirageParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
+        public Particle createParticle(@NotNull ProjectionParticle.ProjectionParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new MirageParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType);
+            return new ProjectionParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType);
         }
     }
 }
