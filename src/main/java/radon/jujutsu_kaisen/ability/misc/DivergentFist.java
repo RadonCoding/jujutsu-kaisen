@@ -116,7 +116,7 @@ public class DivergentFist extends Ability {
                     double y = r * Math.sin(phi) * Math.sin(theta);
                     double z = r * Math.cos(phi);
                     Vec3 speed = look.add(x, y, z);
-                    Vec3 offset = pos.add(owner.getLookAngle());
+                    Vec3 offset = pos.add(look);
                     ((ServerLevel) target.level()).sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth(),
                             0.2F, 8), offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
                 }
