@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
@@ -39,6 +38,7 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
     private float yBodyRotO;
 
     private float position;
+    private float speed;
 
     protected MirageParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options) {
         super(pLevel, pX, pY, pZ);
@@ -74,6 +74,7 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
                 this.yBodyRotO = living.yBodyRotO;
 
                 this.position = living.walkAnimation.position();
+                this.speed = living.walkAnimation.speed();
             }
         }
     }
@@ -100,7 +101,9 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
             boolean invisible = this.entity.isInvisible();
 
-            MixinData.isCustomWalkAnimationPosition = true;
+            MixinData.isCustomWalkAnimation = true;
+            MixinData.walkAnimationPosition = this.position;
+            MixinData.walkAnimationSpeed = this.speed;
 
             this.entity.setInvisible(false);
 
@@ -116,15 +119,10 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
                 living.yBodyRot = this.yBodyRot;
                 living.yBodyRotO = this.yBodyRotO;
-
-                MixinData.walkAnimationPosition = this.position;
             }
 
             this.entity.setYRot(this.yRot);
             this.entity.yRotO = this.yRot0;
-
-            RenderSystem.depthMask(false);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
             EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
@@ -133,8 +131,6 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
             stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
 
             renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
-
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.entity.yRotO = yRotO;
             this.entity.setYRot(yRot);
@@ -149,7 +145,7 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
 
             this.entity.setInvisible(invisible);
 
-            MixinData.isCustomWalkAnimationPosition = false;
+            MixinData.isCustomWalkAnimation = false;
 
             buffer.endBatch();
         }
