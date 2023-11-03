@@ -5,22 +5,39 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.MixinData;
 
@@ -69,8 +86,6 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
         if (this.entity != null) {
             PoseStack stack = new PoseStack();
 
-            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-
             float yRot = this.entity.getYRot();
             float yRotO = this.entity.yRotO;
 
@@ -97,12 +112,18 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             this.entity.yBodyRot = this.yaw;
             this.entity.yBodyRotO = this.yaw;
 
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-            manager.render(this.entity, this.x - pRenderInfo.getPosition().x(), this.y - pRenderInfo.getPosition().y(), this.z - pRenderInfo.getPosition().z(), 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+            EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
+
+            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+
+            Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
+            stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
+            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+
+            buffer.getBuffer(RenderType.translucent());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 

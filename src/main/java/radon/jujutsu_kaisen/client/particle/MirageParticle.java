@@ -10,13 +10,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.MixinData;
@@ -88,8 +91,6 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
         if (this.entity != null) {
             PoseStack stack = new PoseStack();
 
-            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-
             float yRot = this.entity.getYRot();
             float yRotO = this.entity.yRotO;
 
@@ -123,12 +124,18 @@ public class MirageParticle<T extends MirageParticle.MirageParticleOptions> exte
             this.entity.setYRot(this.yRot);
             this.entity.yRotO = this.yRot0;
 
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-            manager.render(this.entity, this.x - pRenderInfo.getPosition().x(), this.y - pRenderInfo.getPosition().y(), this.z - pRenderInfo.getPosition().z(), 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+            EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
+
+            MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+
+            Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
+            stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
+            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
+
+            buffer.getBuffer(RenderType.translucent());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 

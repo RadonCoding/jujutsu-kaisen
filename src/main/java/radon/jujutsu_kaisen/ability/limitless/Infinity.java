@@ -247,7 +247,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (!Infinity.canBlock(target, projectile)) return;
 
                 if (projectile.getOwner() == target) {
-                    event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                    event.setCanceled(true);
                     return;
                 }
 
@@ -255,7 +255,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     projectile.discard();
                 } else {
                     data.add(target, projectile);
-                    event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                    event.setCanceled(true);
                 }
             }
         }
