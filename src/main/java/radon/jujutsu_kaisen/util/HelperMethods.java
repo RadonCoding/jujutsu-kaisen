@@ -27,6 +27,19 @@ import java.util.Random;
 public class HelperMethods {
     public static final Random RANDOM = new Random();
 
+    public static int strcmp(String str1, String str2) {
+        int minLength = Math.min(str1.length(), str2.length());
+        int difference = 0;
+
+        for (int i = 0; i < minLength; i++) {
+            if (str1.charAt(i) != str2.charAt(i)) {
+                difference = minLength - i;
+                break;
+            }
+        }
+        return difference;
+    }
+
     static class Position {
         double x;
         double z;

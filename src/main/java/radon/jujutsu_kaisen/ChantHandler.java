@@ -86,7 +86,7 @@ public class ChantHandler {
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
             ServerPlayer owner = event.getPlayer();
-            String msg = event.getRawText();
+            String msg = event.getRawText().toLowerCase();
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             Ability ability = cap.getAbility(msg);

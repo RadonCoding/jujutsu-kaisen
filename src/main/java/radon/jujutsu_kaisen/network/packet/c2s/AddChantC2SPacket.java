@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.function.Supplier;
 
@@ -46,10 +47,20 @@ public class AddChantC2SPacket {
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || this.chant.isEmpty() || this.chant.isBlank() || cap.hasChant(ability, this.chant))
+            String text = this.chant.toLowerCase();
+
+            if (!text.isEmpty() && !text.isBlank()) {
+                for (String chant : cap.getChants(ability)) {
+                    if (HelperMethods.strcmp(chant, text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
+                        return;
+                    }
+                }
+            }
+
+            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || text.isEmpty() || text.isBlank() || cap.hasChant(ability, text))
                 return;
 
-            cap.addChant(ability, this.chant);
+            cap.addChant(ability, text);
         });
         ctx.setPacketHandled(true);
     }
