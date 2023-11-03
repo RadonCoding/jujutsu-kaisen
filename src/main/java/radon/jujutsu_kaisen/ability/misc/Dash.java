@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,13 +11,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -47,6 +51,21 @@ public class Dash extends Ability {
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
+        Vec3 look = owner.getLookAngle();
+        Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
+
+        for (int i = 0; i < 32; i++) {
+            double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+            double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+            double x = r * Math.sin(phi) * Math.cos(theta);
+            double y = r * Math.sin(phi) * Math.sin(theta);
+            double z = r * Math.cos(phi);
+            Vec3 speed = look.add(x, y, z).reverse();
+            Vec3 offset = pos.add(look);
+            level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
+        }
+
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
@@ -62,14 +81,14 @@ public class Dash extends Ability {
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.isInWater() || owner.onGround()) {
-            owner.setDeltaMovement(owner.getDeltaMovement().add(owner.getLookAngle().normalize().scale(SPEED)));
+            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED)));
             owner.hurtMarked = true;
         } else {
             return;
         }
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 10, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                 0, 0.0D, 0.0D, 0.0D, 1.0D);
     }

@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ProjectionParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
@@ -47,7 +48,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+        return target != null && (JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(10) == 0);
     }
 
     @Override
@@ -167,9 +168,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                     cap.resetFrames();
                     return;
                 }
+                if (owner.level() instanceof ServerLevel level) {
+                    level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
+                            0, 0.0D, 0.0D, 0.0D, 1.0D);
+                }
                 owner.moveTo(frame.x(), frame.y(), frame.z(), yaw, 0.0F);
                 cap.removeFrame(entry);
-
                 previous.set(frame);
             }, delay++);
         }
