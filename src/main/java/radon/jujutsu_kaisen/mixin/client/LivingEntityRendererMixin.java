@@ -11,8 +11,13 @@ import radon.jujutsu_kaisen.client.MixinData;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+    @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;speed(F)F"))
+    public float speed(WalkAnimationState instance, float pPartialTick) {
+        return MixinData.isCustomWalkAnimation ? MixinData.walkAnimationSpeed : instance.speed(pPartialTick);
+    }
+
     @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;position(F)F"))
     public float position(WalkAnimationState instance, float pPartialTick) {
-        return MixinData.isCustomWalkAnimationPosition ? MixinData.walkAnimationPosition : instance.position(pPartialTick);
+        return MixinData.isCustomWalkAnimation ? MixinData.walkAnimationPosition : instance.position(pPartialTick);
     }
 }

@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.StringReader;
@@ -34,6 +33,7 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
     private LivingEntity entity;
 
     private float position;
+    private float speed;
 
     protected ProjectionParticle(ClientLevel pLevel, double pX, double pY, double pZ, T options) {
         super(pLevel, pX, pY, pZ);
@@ -50,6 +50,7 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             this.entity = living;
 
             this.position = living.walkAnimation.position();
+            this.speed = living.walkAnimation.speed();
         } else if (!JJKAbilities.isChanneling(this.entity, JJKAbilities.PROJECTION_SORCERY.get())) {
             this.remove();
         }
@@ -80,8 +81,9 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
 
             this.entity.setInvisible(false);
 
-            MixinData.isCustomWalkAnimationPosition = true;
+            MixinData.isCustomWalkAnimation = true;
             MixinData.walkAnimationPosition = this.position;
+            MixinData.walkAnimationSpeed = this.speed;
 
             this.entity.setYRot(this.yaw);
             this.entity.yRotO = this.yaw;
@@ -111,7 +113,7 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
 
             this.entity.setInvisible(invisible);
 
-            MixinData.isCustomWalkAnimationPosition = false;
+            MixinData.isCustomWalkAnimation = false;
 
             buffer.endBatch();
         }

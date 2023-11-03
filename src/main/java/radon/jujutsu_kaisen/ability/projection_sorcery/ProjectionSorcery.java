@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ProjectionSorcery extends Ability implements Ability.IChannelened {
+public class ProjectionSorcery extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final double LAUNCH_POWER = 3.0D;
 
     @Override
@@ -61,6 +61,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened {
             return Status.FAILURE;
         }
         return super.checkStatus(owner);
+    }
+
+    @Override
+    public int getRealDuration(LivingEntity owner) {
+        return 24;
     }
 
     @Override
@@ -125,6 +130,8 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened {
         BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(8).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
         return hit.getType() == HitResult.Type.BLOCK;
     }
+
+
 
     @Override
     public void onRelease(LivingEntity owner) {
