@@ -131,8 +131,6 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         return hit.getType() == HitResult.Type.BLOCK;
     }
 
-
-
     @Override
     public void onRelease(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
