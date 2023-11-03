@@ -125,7 +125,7 @@ public class SorcererData implements ISorcererData {
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
-    private static final int MAX_PROJECTION_SORCERY_STACKS = 5;
+    private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
 
     public SorcererData() {
         this.domainSize = 1.0F;
