@@ -48,6 +48,14 @@ public class Dash extends Ability {
     }
 
     @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        if (!(HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult) && !owner.isInWater() && !owner.onGround() && owner.getFeetBlockState().getFluidState().isEmpty()) {
+            return Status.FAILURE;
+        }
+        return super.checkTriggerable(owner);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
@@ -67,7 +75,7 @@ public class Dash extends Ability {
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
-        } else if (owner.isInWater() || owner.onGround()) {
+        } else if (owner.isInWater() || owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
             owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED)));
             owner.hurtMarked = true;
         } else {
