@@ -84,7 +84,8 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         Vec3 end = start.add(look.scale(charge * 4));
         HitResult result = HelperMethods.getHitResult(owner, start, end);
 
-        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ? block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
+        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
+                block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
 
         int index = this.getCharge(owner) - 1;
 
@@ -136,7 +137,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onRelease(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getFrames().size() < 24 / cap.getSpeedStacks()) {
+        if (cap.getFrames().size() < 24 / (1 + cap.getSpeedStacks())) {
             cap.resetFrames();
             return;
         }
