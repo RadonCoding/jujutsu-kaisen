@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.client.particle;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -22,55 +21,37 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.MixinData;
 
 import java.util.Locale;
 
 public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleOptions> extends TextureSheetParticle {
     private final int entityId;
+    private final float yaw;
 
     @Nullable
-    private Entity entity;
-
-    private float yRot;
-    private float yRot0;
-    private float yHeadRot;
-    private float yHeadRot0;
+    private LivingEntity entity;
 
     private float position;
 
-    protected ProjectionParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options) {
+    protected ProjectionParticle(ClientLevel pLevel, double pX, double pY, double pZ, T options) {
         super(pLevel, pX, pY, pZ);
 
-        this.lifetime = 10;
-
-        this.xd = pXSpeed;
-        this.yd = pYSpeed;
-        this.zd = pZSpeed;
-
         this.entityId = options.entityId();
+        this.yaw = options.yaw();
     }
 
     @Override
     public void tick() {
-        super.tick();
-
-        this.alpha = 1.0F - ((float) this.age / this.lifetime);
-
         if (this.entity == null) {
-            this.entity = this.level.getEntity(this.entityId);
+            if (!(this.level.getEntity(this.entityId) instanceof LivingEntity living)) return;
 
-            if (this.entity == null) return;
+            this.entity = living;
 
-            this.yRot = this.entity.getYRot();
-            this.yRot0 = this.entity.yRotO;
-
-            if (this.entity instanceof LivingEntity living) {
-                this.yHeadRot = living.yHeadRot;
-                this.yHeadRot0 = living.yHeadRotO;
-
-                this.position = living.walkAnimation.position();
-            }
+            this.position = living.walkAnimation.position();
+        } else if (!JJKAbilities.isChanneling(this.entity, JJKAbilities.PROJECTION_SORCERY.get())) {
+            this.remove();
         }
     }
 
@@ -89,29 +70,27 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             float yRot = this.entity.getYRot();
             float yRotO = this.entity.yRotO;
 
-            float yHeadRot = 0.0F;
-            float yHeadRotO = 0.0F;
+            float yHeadRot = this.entity.yHeadRot;
+            float yHeadRotO = this.entity.yHeadRotO;
+
+            float yBodyRot = this.entity.yBodyRot;
+            float yBodyRotO = this.entity.yBodyRotO;
 
             boolean invisible = this.entity.isInvisible();
 
-            MixinData.isCustomWalkAnimationPosition = true;
-
             this.entity.setInvisible(false);
 
-            if (this.entity instanceof LivingEntity living) {
-                yHeadRot = living.yHeadRot;
-                yHeadRotO = living.yHeadRotO;
-                living.yHeadRot = this.yHeadRot;
-                living.yHeadRotO = this.yHeadRot0;
+            MixinData.isCustomWalkAnimationPosition = true;
+            MixinData.walkAnimationPosition = this.position;
 
-                MixinData.walkAnimationPosition = this.position;
-            }
+            this.entity.setYRot(this.yaw);
+            this.entity.yRotO = this.yaw;
 
-            this.entity.setYRot(this.yRot);
-            this.entity.yRotO = this.yRot0;
+            this.entity.yHeadRot = this.yaw;
+            this.entity.yHeadRotO = this.yaw;
 
-            RenderSystem.depthMask(false);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+            this.entity.yBodyRot = this.yaw;
+            this.entity.yBodyRotO = this.yaw;
 
             EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
             EntityRenderer<? super Entity> renderer = manager.getRenderer(this.entity);
@@ -119,17 +98,16 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             Vec3 offset = renderer.getRenderOffset(this.entity, pPartialTicks);
             stack.translate((this.x - pRenderInfo.getPosition().x()) + offset.x(), (this.y - pRenderInfo.getPosition().y()) + offset.y(), (this.z - pRenderInfo.getPosition().z()) + offset.z());
 
-            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, 15728880);
+            renderer.render(this.entity, 0.0F, pPartialTicks, stack, buffer, manager.getPackedLightCoords(this.entity, pPartialTicks));
 
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            this.entity.yBodyRotO = yBodyRotO;
+            this.entity.yBodyRot = yBodyRot;
+
+            this.entity.yHeadRotO = yHeadRotO;
+            this.entity.yHeadRot = yHeadRot;
 
             this.entity.yRotO = yRotO;
             this.entity.setYRot(yRot);
-
-            if (this.entity instanceof LivingEntity living) {
-                living.yHeadRotO = yHeadRotO;
-                living.yHeadRot = yHeadRot;
-            }
 
             this.entity.setInvisible(invisible);
 
@@ -139,14 +117,14 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
         }
     }
 
-    public record ProjectionParticleOptions(int entityId) implements ParticleOptions {
+    public record ProjectionParticleOptions(int entityId, float yaw) implements ParticleOptions {
         public static Deserializer<ProjectionParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull ProjectionParticle.ProjectionParticleOptions fromCommand(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                return new ProjectionParticleOptions(reader.readInt());
+                return new ProjectionParticleOptions(reader.readInt(), reader.readFloat());
             }
 
             public @NotNull ProjectionParticle.ProjectionParticleOptions fromNetwork(@NotNull ParticleType<ProjectionParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new ProjectionParticleOptions(buf.readInt());
+                return new ProjectionParticleOptions(buf.readInt(), buf.readFloat());
             }
         };
 
@@ -158,11 +136,12 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
             buf.writeInt(this.entityId);
+            buf.writeFloat(this.yaw);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.entityId);
+            return String.format(Locale.ROOT, "%s %d %f %f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.entityId, this.yaw);
         }
     }
 
@@ -171,7 +150,7 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
 
         public Particle createParticle(@NotNull ProjectionParticle.ProjectionParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new ProjectionParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType);
+            return new ProjectionParticle<>(pLevel, pX, pY, pZ, pType);
         }
     }
 }

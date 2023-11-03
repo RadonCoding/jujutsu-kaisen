@@ -16,10 +16,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 @AutoRegisterCapability
@@ -286,10 +283,14 @@ public interface ISorcererData {
 
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 
-    List<Vec3> getFrames();
-    void addFrame(Vec3 frame);
-    void removeFrame(Vec3 frame);
+    List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
+    void addFrame(Vec3 frame, float yaw);
+    void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame);
     void resetFrames();
+
+    int getSpeedStacks();
+    void addSpeedStack();
+    void resetSpeedStacks();
 
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);
