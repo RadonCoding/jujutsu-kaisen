@@ -14,7 +14,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DismantleNet extends Ability {
     private static final int SIZE = 8;
-    private static final int MAX_SIZE = 24;
+    private static final int MAX_SIZE = 16;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

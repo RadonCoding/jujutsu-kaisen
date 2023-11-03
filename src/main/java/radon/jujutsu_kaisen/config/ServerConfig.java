@@ -55,6 +55,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue maximumVeilSize;
     public final ForgeConfigSpec.IntValue maximumChantCount;
     public final ForgeConfigSpec.IntValue maximumChantLength;
+    public final ForgeConfigSpec.IntValue chantSimilarityThreshold;
     public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
     public final ForgeConfigSpec.DoubleValue sparkSoundThreshold;
 
@@ -108,6 +109,8 @@ public class ServerConfig {
                 .defineInRange("maximumChantCount", 5, 1, 16);
         this.maximumChantLength = builder.comment("Maximum length for a chant")
                 .defineInRange("maximumChantLength", 24, 1, 256);
+        this.chantSimilarityThreshold = builder.comment("How difference two chants have to be for them to be valid")
+                .defineInRange("chantSimilarityThreshold", 1, 1, 256);
         this.realisticWorldSlash = builder.comment("Whether or not world slash can destroy unbreakable blocks")
                 .define("realisticWorldSlash", true);
         this.sparkSoundThreshold = builder.comment("The maximum amount of cursed energy a ability has to use to create a \"spark\"")

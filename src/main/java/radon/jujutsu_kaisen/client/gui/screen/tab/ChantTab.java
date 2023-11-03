@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.AddChantC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveChantC2SPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -99,8 +100,19 @@ public class ChantTab extends JJKTab {
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        String text = this.text.getValue();
-        this.add.active = this.chants.children().size() < ConfigHolder.SERVER.maximumChantCount.get() && !text.isEmpty() && !text.isBlank() &&
+        String text = this.text.getValue().toLowerCase();
+
+        boolean unique = true;
+
+        if (!text.isEmpty() && !text.isBlank()) {
+            for (ChantListWidget.Entry chant : this.chants.children()) {
+                if (HelperMethods.strcmp(chant.get(), text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
+                    unique = false;
+                    break;
+                }
+            }
+        }
+        this.add.active = unique && this.chants.children().size() < ConfigHolder.SERVER.maximumChantCount.get() && !text.isEmpty() && !text.isBlank() &&
                 this.ability != null && !cap.hasChant(this.ability.get(), text);
         this.remove.active = this.ability != null && this.chant != null;
     }
@@ -155,6 +167,8 @@ public class ChantTab extends JJKTab {
     public void keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == InputConstants.KEY_RETURN) {
             this.add.onPress();
+        } else if (pKeyCode == InputConstants.KEY_DELETE) {
+            this.remove.onPress();
         }
     }
 }
