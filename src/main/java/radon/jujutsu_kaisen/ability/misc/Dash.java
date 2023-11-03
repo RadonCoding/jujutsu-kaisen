@@ -52,19 +52,6 @@ public class Dash extends Ability {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         Vec3 look = owner.getLookAngle();
-        Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
-
-        for (int i = 0; i < 32; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
-            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-            double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
-            double x = r * Math.sin(phi) * Math.cos(theta);
-            double y = r * Math.sin(phi) * Math.sin(theta);
-            double z = r * Math.cos(phi);
-            Vec3 speed = look.add(x, y, z).reverse();
-            Vec3 offset = pos.add(look);
-            level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
-        }
 
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
@@ -87,6 +74,19 @@ public class Dash extends Ability {
             return;
         }
 
+        Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
+
+        for (int i = 0; i < 32; i++) {
+            double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+            double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+            double x = r * Math.sin(phi) * Math.cos(theta);
+            double y = r * Math.sin(phi) * Math.sin(theta);
+            double z = r * Math.cos(phi);
+            Vec3 speed = look.add(x, y, z).reverse();
+            Vec3 offset = pos.add(look);
+            level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
+        }
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
         owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),

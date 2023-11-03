@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,6 +38,17 @@ public class WaterWalking extends Ability implements Ability.IToggled {
             owner.setDeltaMovement(owner.getDeltaMovement().x(), 0.01D, owner.getDeltaMovement().z());
             owner.setOnGround(true);
         }
+
+        if (owner instanceof Player player) {
+            float f;
+
+            if (owner.onGround() && !owner.isDeadOrDying() && !owner.isSwimming()) {
+                f = Math.min(0.1F, (float) owner.getDeltaMovement().horizontalDistance());
+            } else {
+                f = 0.0F;
+            }
+            player.bob += (f - player.bob) * 0.4F;
+        }
     }
 
     @Override
@@ -56,20 +69,5 @@ public class WaterWalking extends Ability implements Ability.IToggled {
     @Override
     public MenuType getMenuType() {
         return MenuType.NONE;
-    }
-
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
-        @SubscribeEvent
-        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity owner = event.getEntity();
-
-            if (JJKAbilities.hasToggled(owner, JJKAbilities.WATER_WALKING.get())) {
-                if (owner.isInFluidType()) {
-                    Vec3 movement = owner.getDeltaMovement();
-                    owner.setDeltaMovement(movement.x(), 0.1D, movement.z());
-                }
-            }
-        }
     }
 }
