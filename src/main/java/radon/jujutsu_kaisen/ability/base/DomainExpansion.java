@@ -62,14 +62,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 }
             }
 
-            if (this instanceof DomainExpansion.IOpenDomain open) {
-                BlockPos relative = target.blockPosition().subtract(owner.blockPosition());
-
-                if (relative.getY() > open.getHeight() || relative.distSqr(Vec3i.ZERO) >= open.getWidth() * open.getWidth()) {
-                    return false;
-                }
-            }
-
             boolean result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
                     owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
@@ -129,7 +121,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 2.5F;
+        return 2.0F;
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {

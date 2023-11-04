@@ -70,17 +70,19 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
-            if (melee && JJKAbilities.hasToggled(attacker, JJKAbilities.BLUE_FISTS.get())) {
-                victim.setDeltaMovement(attacker.position().subtract(victim.position()).normalize());
-                victim.hurtMarked = true;
+            if (!melee) return;
 
-                victim.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
+            if (!JJKAbilities.hasToggled(attacker, JJKAbilities.BLUE_FISTS.get())) return;
 
-                ((ServerLevel) attacker.level()).getChunkSource().broadcastAndSend(attacker, new ClientboundAnimatePacket(victim, ClientboundAnimatePacket.CRITICAL_HIT));
+            victim.setDeltaMovement(attacker.position().subtract(victim.position()).normalize());
+            victim.hurtMarked = true;
 
-                victim.invulnerableTime = 0;
-                victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.BLUE_FISTS.get()), event.getAmount() * 0.5F);
-            }
+            victim.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
+
+            ((ServerLevel) attacker.level()).getChunkSource().broadcastAndSend(attacker, new ClientboundAnimatePacket(victim, ClientboundAnimatePacket.CRITICAL_HIT));
+
+            victim.invulnerableTime = 0;
+            victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.BLUE_FISTS.get()), event.getAmount() * 0.5F);
         }
     }
 }

@@ -63,12 +63,12 @@ public interface ISorcerer {
         if (energy.containsKey(key)) {
             data.setMaxEnergy(energy.get(key));
         }
-        data.setEnergy(data.getMaxEnergy((LivingEntity) this));
 
         if (experience.containsKey(key)) {
             data.setExperience(data.getExperience() * experience.get(key));
         } else if (this.getExperienceMultiplier() > 0.0F) {
             data.setExperience(data.getExperience() * this.getExperienceMultiplier());
         }
+        data.setEnergy(data.getMaxEnergy((LivingEntity) this));
     }
 }
