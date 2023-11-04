@@ -48,6 +48,7 @@ import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.NaoyaZeninEntity;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
@@ -262,6 +263,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SuguruGetoModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SuguruGetoModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
+            event.registerLayerDefinition(NaoyaZeninModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(NaoyaZeninModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(NaoyaZeninModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
             event.registerLayerDefinition(InstantSpiritBodyOfDistortedKillingModel.LAYER_LOCATION, InstantSpiritBodyOfDistortedKillingModel::createBodyLayer);
         }
 
@@ -354,6 +359,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CLONE.get(), CloneRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
             event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
         }
 
         @SubscribeEvent

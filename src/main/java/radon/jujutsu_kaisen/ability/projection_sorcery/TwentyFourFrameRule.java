@@ -5,9 +5,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -17,10 +19,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 
@@ -31,7 +37,7 @@ import java.util.UUID;
 
 public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     private static final float DAMAGE = 15.0F;
-    private static final int INVULNERABLE_TIME = 5 * 20;
+    private static final int INVULNERABLE_TIME = 20;
     private static final double LAUNCH_POWER = 10.0D;
 
     private static final Map<UUID, Long> invulnerable = new HashMap<>();
@@ -43,7 +49,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) <= 10.0D;
+        return false;
     }
 
     @Override
@@ -118,6 +124,10 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
 
             if (!melee) return;
+
+            if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())) {
+                AbilityHandler.trigger(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get());
+            }
 
             Iterator<Map.Entry<UUID, Long>> iter = invulnerable.entrySet().iterator();
 
