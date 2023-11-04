@@ -102,14 +102,6 @@ public class ProjectionFrameEntity extends Entity {
 
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
-                    victim.setXRot(this.getXRot());
-                    victim.setYRot(this.getYRot());
-
-                    victim.yBodyRot = victim.getYRot();
-                    victim.yBodyRotO = victim.yBodyRot;
-
-                    victim.yHeadRot = victim.getYRot();
-                    victim.yHeadRotO = victim.yHeadRot;
                 }
             }
         }
