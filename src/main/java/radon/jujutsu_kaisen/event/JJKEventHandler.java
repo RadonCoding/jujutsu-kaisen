@@ -262,6 +262,8 @@ public class JJKEventHandler {
                 ISoulData cap = victim.getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
                 cap.hurt(event.getAmount());
 
+                System.out.println(victim);
+
                 if (victim instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSoulDataS2CPacket(cap.serializeNBT()), player);
                 }

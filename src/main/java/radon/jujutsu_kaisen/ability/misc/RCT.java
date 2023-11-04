@@ -25,7 +25,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) && cap.getBurnout() > 0);
+        return owner.getHealth() < HelperMethods.getSoulAdjustedMaxHealth(owner) || ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) && cap.getBurnout() > 0);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner));
+        owner.setHealth(Math.min(HelperMethods.getSoulAdjustedMaxHealth(owner), owner.getHealth() + ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner)));
 
         if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) {
             int burnout = cap.getBurnout();
@@ -52,7 +52,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     public float getCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.getHealth() < owner.getMaxHealth()) {
+        if (owner.getHealth() < HelperMethods.getSoulAdjustedMaxHealth(owner)) {
             return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner) * 8.0F;
         } else if ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) && cap.getBurnout() > 0) {
             return 1.0F / 20;
