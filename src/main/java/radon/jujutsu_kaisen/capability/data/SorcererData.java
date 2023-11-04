@@ -898,7 +898,7 @@ public class SorcererData implements ISorcererData {
         long time = owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
         return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
-                ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower()) + this.extraEnergy;
+                ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) * this.getRealPower() * 2.0F) + this.extraEnergy;
     }
 
     @Override

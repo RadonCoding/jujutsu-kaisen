@@ -54,6 +54,10 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.SUGURU_LEGGINGS.get());
                         pOutput.accept(JJKItems.SUGURU_BOOTS.get());
 
+                        pOutput.accept(JJKItems.NAOYA_CHESTPLATE.get());
+                        pOutput.accept(JJKItems.NAOYA_LEGGINGS.get());
+                        pOutput.accept(JJKItems.NAOYA_BOOTS.get());
+
                         pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SUKUNA_SPAWN_EGG.get());
@@ -64,6 +68,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SUGURU_GETO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.HEIAN_SUKUNA_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.NAOYA_ZENIN_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());

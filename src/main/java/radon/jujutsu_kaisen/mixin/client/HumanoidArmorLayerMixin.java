@@ -54,7 +54,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.MEGUMI_OUTFIT ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.TOGE_OUTFIT ||
                     armor.getMaterial() == JJKItems.JJKArmorMaterials.YUTA_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.SUGURU_OUTFIT;
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.SUGURU_OUTFIT ||
+                    armor.getMaterial() == JJKItems.JJKArmorMaterials.NAOYA_OUTFIT;
         }
         return false;
     }

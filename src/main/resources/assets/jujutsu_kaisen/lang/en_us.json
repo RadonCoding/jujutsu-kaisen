@@ -117,6 +117,10 @@
   "item.jujutsu_kaisen.suguru_leggings": "Suguru Leggings",
   "item.jujutsu_kaisen.suguru_boots": "Suguru Boots",
 
+  "item.jujutsu_kaisen.naoya_chestplate": "Naoya Chestplate",
+  "item.jujutsu_kaisen.naoya_leggings": "Naoya Leggings",
+  "item.jujutsu_kaisen.naoya_boots": "Naoya Boots",
+
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
   "item.jujutsu_kaisen.sukuna_spawn_egg": "Spawn Sukuna",
@@ -127,6 +131,7 @@
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
   "item.jujutsu_kaisen.heian_sukuna_spawn_egg": "Spawn The King of Curses",
+  "item.jujutsu_kaisen.naoya_zenin_spawn_egg": "Spawn Naoya Zenin",
 
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
   "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
@@ -478,6 +483,7 @@
   "entity.jujutsu_kaisen.feline_curse": "Feline Curse",
   "entity.jujutsu_kaisen.rainbow_dragon": "Rainbow Dragon",
   "entity.jujutsu_kaisen.clone": "Clone",
+  "entity.jujutsu_kaisen.naoya_zenin": "Naoya Zenin",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
 

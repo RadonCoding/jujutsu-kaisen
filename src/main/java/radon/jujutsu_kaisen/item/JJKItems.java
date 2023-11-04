@@ -90,6 +90,12 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.SUGURU_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> SUGURU_BOOTS = ITEMS.register("suguru_boots",
             () -> new ArmorItem(JJKArmorMaterials.SUGURU_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> NAOYA_CHESTPLATE = ITEMS.register("naoya_chestplate",
+            () -> new ArmorItem(JJKArmorMaterials.NAOYA_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> NAOYA_LEGGINGS = ITEMS.register("naoya_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.NAOYA_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static RegistryObject<ArmorItem> NAOYA_BOOTS = ITEMS.register("naoya_boots",
+            () -> new ArmorItem(JJKArmorMaterials.NAOYA_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
 
     public static RegistryObject<Item> DISPLAY_CASE = ITEMS.register("display_case",
             () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
@@ -136,6 +142,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.SUGURU_GETO, 0x1F2A30, 0x3B2511, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> HEIAN_SUKUNA_SPAWN_EGG = ITEMS.register("heian_sukuna_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.HEIAN_SUKUNA, 0xCC8E8C, 0xBF3030, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> NAOYA_ZENIN_SPAWN_EGG = ITEMS.register("naoya_zenin_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.NAOYA_ZENIN, 0x1A2936, 0xDAC994, new Item.Properties()));
 
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xC1BA50, 0x3B0F04, new Item.Properties()));
@@ -178,6 +186,8 @@ public class JJKItems {
         public static JJKArmorMaterial YUTA_OUTFIT = new JJKArmorMaterial("yuta_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial SUGURU_OUTFIT = new JJKArmorMaterial("suguru_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+                4.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial NAOYA_OUTFIT = new JJKArmorMaterial("naoya_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
     }
 }
