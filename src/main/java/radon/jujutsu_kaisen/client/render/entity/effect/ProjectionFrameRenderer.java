@@ -49,9 +49,36 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         pPoseStack.scale(1.0F, 1.0F, 0.02F);
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
+        float yRot = victim.getYRot();
+        float yRotO = victim.yRotO;
+
+        float yHeadRot = victim.yHeadRot;
+        float yHeadRotO = victim.yHeadRotO;
+
+        float yBodyRot = victim.yBodyRot;
+        float yBodyRotO = victim.yBodyRotO;
+
+        victim.setYRot(yaw);
+        victim.yRotO = yaw;
+
+        victim.yHeadRot = yaw;
+        victim.yHeadRotO = yaw;
+
+        victim.yBodyRot = yaw;
+        victim.yBodyRotO = yaw;
+
         EntityRenderDispatcher manager = mc.getEntityRenderDispatcher();
         EntityRenderer<? super LivingEntity> renderer = manager.getRenderer(victim);
         renderer.render(victim, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
+
+        victim.yBodyRotO = yBodyRotO;
+        victim.yBodyRot = yBodyRot;
+
+        victim.yHeadRotO = yHeadRotO;
+        victim.yHeadRot = yHeadRot;
+
+        victim.yRotO = yRotO;
+        victim.setYRot(yRot);
 
         MixinData.isFrame = false;
 
