@@ -120,7 +120,11 @@ public class SorcererData implements ISorcererData {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
     private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
-    private static final UUID STEP_HEIGHT_ADDITION_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
+    private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
+
+    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID = UUID.fromString("84341016-e56a-4b95-9fd5-42b36154c885");
+    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID = UUID.fromString("486fd273-fdbc-4876-b0b8-af5a64bfb08a");
+    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID = UUID.fromString("0be71dde-8aeb-4c5d-955f-d37325c31a94");
 
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
@@ -448,7 +452,7 @@ public class SorcererData implements ISorcererData {
             if (this.speedStacks > 0) {
                 this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(owner, ForgeMod.STEP_HEIGHT.get(), STEP_HEIGHT_ADDITION_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(owner, ForgeMod.STEP_HEIGHT.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
                 if (owner.walkDist == owner.walkDistO) {
                     this.noMotionTime++;
@@ -462,7 +466,16 @@ public class SorcererData implements ISorcererData {
             } else {
                 this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
                 this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                this.removeModifier(owner, ForgeMod.STEP_HEIGHT.get(), STEP_HEIGHT_ADDITION_UUID);
+                this.removeModifier(owner, ForgeMod.STEP_HEIGHT.get(), PROJECTION_STEP_HEIGHT_UUID);
+            }
+
+            if (this.toggled.contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
+                this.applyModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 10.0D, AttributeModifier.Operation.ADDITION);
+            } else {
+                this.removeModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID);
+                this.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID);
             }
         }
 

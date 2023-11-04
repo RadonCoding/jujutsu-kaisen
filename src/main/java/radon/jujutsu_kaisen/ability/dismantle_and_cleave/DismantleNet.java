@@ -13,8 +13,9 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DismantleNet extends Ability {
-    private static final int SIZE = 8;
-    private static final int MAX_SIZE = 16;
+    private static final int MIN_SIZE = 4;
+    private static final int MAX_SIZE = 8;
+    private static final int SIZE = 4;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -30,7 +31,7 @@ public class DismantleNet extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        int size = Math.min(MAX_SIZE, (int) (SIZE * this.getPower(owner)));
+        int size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, (int) (SIZE * this.getPower(owner))));
         int count = size / 4;
 
         Vec3 look = owner.getLookAngle();
