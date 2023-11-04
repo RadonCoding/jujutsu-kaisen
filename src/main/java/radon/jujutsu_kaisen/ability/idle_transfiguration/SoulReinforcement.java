@@ -76,7 +76,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                 if (domain.getOwner() == source.getEntity()) return;
             }
 
-            int count = (int) (victim.getBbWidth() * victim.getBbHeight()) * 8;
+            int count = (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
             for (int i = 0; i < count; i++) {
                 double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - victim.getLookAngle().scale(0.35D).x();

@@ -122,7 +122,9 @@ public class SorcererData implements ISorcererData {
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
+    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID = UUID.fromString("81461f5f-89d5-4cc9-8b25-17e7caac9255");
     private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID = UUID.fromString("84341016-e56a-4b95-9fd5-42b36154c885");
+    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID = UUID.fromString("654c65b5-dc0f-4092-8423-59cbe3d19682");
     private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID = UUID.fromString("486fd273-fdbc-4876-b0b8-af5a64bfb08a");
     private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID = UUID.fromString("0be71dde-8aeb-4c5d-955f-d37325c31a94");
 
@@ -470,10 +472,15 @@ public class SorcererData implements ISorcererData {
             }
 
             if (this.toggled.contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
+                this.applyModifier(owner, Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 this.applyModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(owner, ForgeMod.STEP_HEIGHT.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
                 this.applyModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
                 this.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 10.0D, AttributeModifier.Operation.ADDITION);
             } else {
+                this.removeModifier(owner, Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID);
+                this.removeModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID);
+                this.removeModifier(owner, ForgeMod.STEP_HEIGHT.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID);
                 this.removeModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID);
                 this.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID);
             }
