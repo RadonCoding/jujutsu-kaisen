@@ -225,7 +225,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     }
                 }
 
-                int duration = (this.getSize() / 2) * 20;
+                int duration = (this.getSize() / 4) * 20;
                 int maximum = duration / 4;
 
                 if (this.onGround()) {
@@ -240,15 +240,6 @@ public class MeteorEntity extends JujutsuProjectile {
                     if (this.explosionTime >= maximum) {
                         this.discard();
                     } else {
-                        if (this.explosionTime < maximum / 4) {
-                            BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
-                                BlockState state = this.level().getBlockState(pos);
-
-                                if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                    this.level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                                }
-                            });
-                        }
                         this.explosionTime++;
                     }
                 }
