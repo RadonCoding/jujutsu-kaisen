@@ -79,7 +79,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (!super.isValid(owner)) return false;
 
         if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.getMode() != TenShadowsMode.SUMMON) return false;
@@ -113,7 +112,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return cap.isDead(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
     }
 
-
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
@@ -136,7 +134,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
@@ -149,7 +146,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status checkStatus(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
@@ -204,5 +200,4 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public float getRealCost(LivingEntity owner) {
         return this.isTenShadows() && this.isTamed(owner) && JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
     }
-
 }

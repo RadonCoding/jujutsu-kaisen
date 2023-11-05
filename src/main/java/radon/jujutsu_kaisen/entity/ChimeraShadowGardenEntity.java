@@ -57,7 +57,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
         int height = this.getHeight();
         BlockPos center = this.blockPosition().below();
         BlockPos relative = pos.subtract(center);
-        return relative.getY() >= 0 && relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
+        return relative.getY() > -height && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
     private void createBarrier(Entity owner) {
@@ -69,16 +69,17 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 int horizontal = i;
+                int vertical = j;
 
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 cap.delayTickEvent(() -> {
                     for (int x = -horizontal; x <= horizontal; x++) {
                         for (int z = -horizontal; z <= horizontal; z++) {
-                            double distance = Math.sqrt(x * x + z * z);
+                            double distance = Math.sqrt(x * x + vertical * vertical + z * z);
 
                             if (distance <= horizontal && distance >= horizontal - 1) {
-                                BlockPos pos = center.offset(x, 0, z);
+                                BlockPos pos = center.offset(x, -vertical, z);
 
                                 BlockState state = this.level().getBlockState(pos);
 

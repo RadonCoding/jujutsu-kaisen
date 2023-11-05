@@ -50,7 +50,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         int height = this.getHeight();
         BlockPos center = this.blockPosition();
         BlockPos relative = pos.subtract(center);
-        return relative.getY() <= height && relative.distSqr(Vec3i.ZERO) < width * width;
+        return relative.getY() > -height / 2 && relative.distSqr(Vec3i.ZERO) < width * width;
     }
 
     @Override

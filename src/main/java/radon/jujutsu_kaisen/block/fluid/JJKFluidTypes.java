@@ -14,8 +14,7 @@ public class JJKFluidTypes {
 
     public static final RegistryObject<FluidType> CHIMERA_SHADOW_GARDEN = FLUID_TYPES.register("chimera_shadow_garden",
             () -> new JJKFluidType(0x141414, FluidType.Properties.create()
-                    .canSwim(false)
-                    .motionScale(1.0D)));
+                    .canSwim(false)));
     public static final RegistryObject<FluidType> FAKE_WATER = FLUID_TYPES.register("fake_water",
             () -> new JJKFluidType(0xFF3F76E4, FluidType.Properties.create()
                     .fallDistanceModifier(0.0F)
