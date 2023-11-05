@@ -16,6 +16,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.ClientWrapper;
@@ -50,7 +51,7 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.getCharge(owner) >= 20 ? 0.0F : 0.5F;
+        return JJKAbilities.isChanneling(owner, this) && this.getCharge(owner) >= 20 ? 0.0F : 1.0F;
     }
 
     @Override

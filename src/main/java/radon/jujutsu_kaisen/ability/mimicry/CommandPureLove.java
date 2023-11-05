@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.rika;
+package radon.jujutsu_kaisen.ability.mimicry;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
