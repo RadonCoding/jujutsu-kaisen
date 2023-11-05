@@ -46,7 +46,7 @@ public class ExplosionHandler {
             if (event.level.dimension() != explosion.dimension) return;
 
             float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-            int minX = Mth.floor(explosion.position.y() - radius - 1.0F);
+            int minX = Mth.floor(explosion.position.x() - radius - 1.0F);
             int maxX = Mth.floor(explosion.position.x() + radius + 1.0F);
             int minY = Mth.floor(explosion.position.y() - radius - 1.0F);
             int maxY = Mth.floor(explosion.position.y() + radius + 1.0F);
@@ -55,7 +55,7 @@ public class ExplosionHandler {
 
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x(), explosion.position.y(), explosion.position.z(),
-                        SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 10.0F, 1.0F);
+                        SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 10.0F, 1.0F);
                 AABB bounds = new AABB(explosion.position.x() - (explosion.radius * 2.0F), explosion.position.y() - (explosion.radius * 2.0F),
                         explosion.position.z() - (explosion.radius * 2.0F),
                         explosion.position.x() + (explosion.radius * 2.0F), explosion.position.y() + (explosion.radius * 2.0F),
@@ -80,6 +80,9 @@ public class ExplosionHandler {
                             BlockState state = event.level.getBlockState(pos);
 
                             for (Entity entity : event.level.getEntities(null, new AABB(pos).inflate(1.0D))) {
+                                entity.setDeltaMovement(explosion.position.subtract(entity.position()).normalize().reverse());
+                                entity.hurtMarked = true;
+
                                 entity.hurt(explosion.source, explosion.radius * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
                                         entity == explosion.instigator ? 0.5F : 1.0F));
                             }
