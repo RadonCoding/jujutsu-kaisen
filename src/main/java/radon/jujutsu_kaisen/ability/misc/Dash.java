@@ -84,7 +84,7 @@ public class Dash extends Ability {
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
-        } else if (owner.isInWater() || owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
+        } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
             owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED)));
             owner.hurtMarked = true;
         }

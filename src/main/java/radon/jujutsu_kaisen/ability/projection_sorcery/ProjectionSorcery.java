@@ -66,7 +66,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public int getRealDuration(LivingEntity owner) {
-        return 24;
+        return 12;
+    }
+
+    private static float getYaw(Vec3 from, Vec3 to) {
+        Vec3 delta = to.subtract(from);
+        double dx = delta.x();
+        double dz = delta.z();
+        return -(float) Math.toDegrees(Math.atan2(dx, dz));
     }
 
     @Override
@@ -84,33 +91,40 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         Vec3 end = start.add(look.scale(charge * 4));
         HitResult result = HelperMethods.getHitResult(owner, start, end);
 
-        Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
+        Vec3 next = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
                 block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
 
         int index = this.getCharge(owner) - 1;
 
-        float yaw;
+        float nextYaw;
 
         if (index >= 0 && index < frames.size()) {
-            AbstractMap.SimpleEntry<Vec3, Float> previous = frames.get(index);
+            AbstractMap.SimpleEntry<Vec3, Float> entry = frames.get(index);
 
-            Vec3 delta = pos.subtract(previous.getKey());
-            double dx = delta.x();
-            double dz = delta.z();
-            yaw = -(float) Math.toDegrees(Math.atan2(dx, dz));
+            Vec3 current = entry.getKey();
+
+            nextYaw = getYaw(current, next);
+
+            if (frames.size() + 1 < 24) {
+                Vec3 middle = current.add(next.subtract(current).scale(0.5D));
+                float middleYaw = getYaw(middle, next);
+                cap.addFrame(middle, middleYaw);
+
+                owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), true, middle.x(), middle.y(), middle.z(),
+                        0.0D, 0.0D, 0.0D);
+            }
         } else {
-            yaw = owner.getYRot();
+            nextYaw = owner.getYRot();
         }
-        cap.addFrame(pos, yaw);
+        cap.addFrame(next, nextYaw);
 
-        owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), yaw), true, pos.x(), pos.y(), pos.z(),
+        owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), true, next.x(), next.y(), next.z(),
                 0.0D, 0.0D, 0.0D);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getFrames().size() == 24 ? 0.0F : 1.0F;
+        return 1.0F;
     }
 
     @Override
