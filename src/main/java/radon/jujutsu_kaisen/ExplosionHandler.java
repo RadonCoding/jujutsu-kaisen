@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -45,20 +46,20 @@ public class ExplosionHandler {
             if (event.level.dimension() != explosion.dimension) return;
 
             float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-            int minX = Mth.floor(explosion.position.getX() - radius - 1.0F);
-            int maxX = Mth.floor(explosion.position.getX() + radius + 1.0F);
-            int minY = Mth.floor(explosion.position.getY() - radius - 1.0F);
-            int maxY = Mth.floor(explosion.position.getY() + radius + 1.0F);
-            int minZ = Mth.floor(explosion.position.getZ() - radius - 1.0F);
-            int maxZ = Mth.floor(explosion.position.getZ() + radius + 1.0F);
+            int minX = Mth.floor(explosion.position.y() - radius - 1.0F);
+            int maxX = Mth.floor(explosion.position.x() + radius + 1.0F);
+            int minY = Mth.floor(explosion.position.y() - radius - 1.0F);
+            int maxY = Mth.floor(explosion.position.y() + radius + 1.0F);
+            int minZ = Mth.floor(explosion.position.z() - radius - 1.0F);
+            int maxZ = Mth.floor(explosion.position.z() + radius + 1.0F);
 
             if (explosion.age == 0) {
-                event.level.playSound(null, explosion.position.getX(), explosion.position.getY(), explosion.position.getZ(),
+                event.level.playSound(null, explosion.position.x(), explosion.position.y(), explosion.position.z(),
                         SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 10.0F, 1.0F);
-                AABB bounds = new AABB(explosion.position.getX() - (explosion.radius * 2.0F), explosion.position.getY() - (explosion.radius * 2.0F),
-                        explosion.position.getZ() - (explosion.radius * 2.0F),
-                        explosion.position.getX() + (explosion.radius * 2.0F), explosion.position.getY() + (explosion.radius * 2.0F),
-                        explosion.position.getZ() + (explosion.radius * 2.0F));
+                AABB bounds = new AABB(explosion.position.x() - (explosion.radius * 2.0F), explosion.position.y() - (explosion.radius * 2.0F),
+                        explosion.position.z() - (explosion.radius * 2.0F),
+                        explosion.position.x() + (explosion.radius * 2.0F), explosion.position.y() + (explosion.radius * 2.0F),
+                        explosion.position.z() + (explosion.radius * 2.0F));
 
                 for (ServerPlayer player : event.level.getEntitiesOfClass(ServerPlayer.class, bounds)) {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
@@ -68,9 +69,9 @@ public class ExplosionHandler {
             for (int x = minX; x <= maxX; x++) {
                 for (int y = minY; y <= maxY; y++) {
                     for (int z = minZ; z <= maxZ; z++) {
-                        double distance = (x - explosion.position.getX()) * (x - explosion.position.getX()) +
-                                (y - explosion.position.getY()) * (y - explosion.position.getY()) +
-                                (z - explosion.position.getZ()) * (z - explosion.position.getZ());
+                        double distance = (x - explosion.position.x()) * (x - explosion.position.x()) +
+                                (y - explosion.position.y()) * (y - explosion.position.y()) +
+                                (z - explosion.position.z()) * (z - explosion.position.z());
 
                         double adjusted = radius * ((double) explosion.age / explosion.duration);
 
@@ -112,13 +113,13 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
         explosions.add(new ExplosionData(dimension, position, radius, duration, instigator, source, fire));
     }
 
     private static class ExplosionData {
         private final ResourceKey<Level> dimension;
-        private final BlockPos position;
+        private final Vec3 position;
         private final float radius;
         private final int duration;
         private int age;
@@ -126,7 +127,7 @@ public class ExplosionHandler {
         private final DamageSource source;
         private boolean fire;
 
-        public ExplosionData(ResourceKey<Level> dimension, BlockPos position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
