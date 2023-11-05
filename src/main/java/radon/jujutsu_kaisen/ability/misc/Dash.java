@@ -102,6 +102,11 @@ public class Dash extends Ability {
             Vec3 offset = pos.add(look);
             level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
         }
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getSpeedStacks() == 0 && !cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
+
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
         owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
