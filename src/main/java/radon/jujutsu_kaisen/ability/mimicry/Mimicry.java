@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.rika;
+package radon.jujutsu_kaisen.ability.mimicry;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
