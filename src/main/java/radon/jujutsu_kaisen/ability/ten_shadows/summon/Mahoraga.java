@@ -46,7 +46,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                 }
             }
         }
-        return owner.getHealth() / owner.getMaxHealth() <= 0.1F;
+        return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
     }
 
     @Override

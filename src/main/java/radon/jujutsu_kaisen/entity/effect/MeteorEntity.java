@@ -28,8 +28,6 @@ public class MeteorEntity extends JujutsuProjectile {
     private static final int MAX_SIZE = 20;
 
     private static final float DAMAGE = 40.0F;
-    private static final int EXPLOSION_DURATION = (SIZE / 2) * 20;
-    private static final int MAXIMUM_TIME = EXPLOSION_DURATION / 4;
 
     private int explosionTime;
 
@@ -227,19 +225,22 @@ public class MeteorEntity extends JujutsuProjectile {
                     }
                 }
 
+                int duration = (this.getSize() / 2) * 20;
+                int maximum = duration / 4;
+
                 if (this.onGround()) {
                     if (this.explosionTime == 0) {
                         ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F,
-                                EXPLOSION_DURATION, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
+                                duration, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
                         this.explosionTime++;
                     }
                 }
 
                 if (this.explosionTime > 0) {
-                    if (this.explosionTime >= MAXIMUM_TIME) {
+                    if (this.explosionTime >= maximum) {
                         this.discard();
                     } else {
-                        if (this.explosionTime < MAXIMUM_TIME / 4) {
+                        if (this.explosionTime < maximum / 4) {
                             BlockPos.betweenClosedStream(this.getBoundingBox().inflate(1.0D)).forEach(pos -> {
                                 BlockState state = this.level().getBlockState(pos);
 

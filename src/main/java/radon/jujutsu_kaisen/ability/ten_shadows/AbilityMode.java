@@ -28,21 +28,23 @@ public class AbilityMode extends Ability implements Ability.IToggled {
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
-                if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                    return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
-                }
+            if (JJKAbilities.WHEEL.get().isValid(owner)) {
+                if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
+                    if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                        return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
+                    }
 
-                if (targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                    return true;
-                }
-            } else {
-                if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                    return ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
-                }
+                    if (targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique())) {
+                        return true;
+                    }
+                } else {
+                    if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                        return ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
+                    }
 
-                if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                    return false;
+                    if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
+                        return false;
+                    }
                 }
             }
         }
@@ -58,7 +60,6 @@ public class AbilityMode extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
 
     }
-
 
     @Override
     public float getCost(LivingEntity owner) {
