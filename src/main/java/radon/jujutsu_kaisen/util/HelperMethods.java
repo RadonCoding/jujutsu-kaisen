@@ -18,8 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import radon.jujutsu_kaisen.capability.data.ISoulData;
-import radon.jujutsu_kaisen.capability.data.SoulDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.ArrayList;
@@ -28,11 +26,6 @@ import java.util.Random;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
-
-    public static float getSoulAdjustedMaxHealth(LivingEntity entity) {
-        ISoulData cap = entity.getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
-        return entity.getMaxHealth() - cap.getDamage();
-    }
 
     public static int strcmp(String str1, String str2) {
         int minLength = Math.min(str1.length(), str2.length());

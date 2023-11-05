@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.event;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,9 +31,7 @@ import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.ISoulData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.SoulDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -50,7 +47,6 @@ import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSoulDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -129,7 +125,6 @@ public class JJKEventHandler {
                 if (entity instanceof Player || entity instanceof ISorcerer) {
                     SorcererDataHandler.attach(event);
                 }
-                SoulDataHandler.attach(event);
             }
         }
 
@@ -257,17 +252,6 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
-
-            if (source.is(JJKDamageSources.SOUL)) {
-                ISoulData cap = victim.getCapability(SoulDataHandler.INSTANCE).resolve().orElseThrow();
-                cap.hurt(event.getAmount());
-
-                System.out.println(victim);
-
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSoulDataS2CPacket(cap.serializeNBT()), player);
-                }
-            }
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
