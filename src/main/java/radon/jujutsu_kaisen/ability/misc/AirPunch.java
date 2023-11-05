@@ -55,7 +55,7 @@ public class AirPunch extends Ability {
 
                     if (!owner.level().isClientSide) {
                         cap.scheduleTickEvent(() -> {
-                            if (owner.distanceTo(target) < 3.0D) {
+                            if (owner.onGround()) {
                                 owner.swing(InteractionHand.MAIN_HAND);
 
                                 owner.level().explode(owner, owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner),

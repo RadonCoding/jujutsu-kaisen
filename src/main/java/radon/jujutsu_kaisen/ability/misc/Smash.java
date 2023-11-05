@@ -51,7 +51,7 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public float getCost(LivingEntity owner) {
-        return JJKAbilities.isChanneling(owner, this) && this.getCharge(owner) >= 20 ? 0.0F : 0.5F;
+        return JJKAbilities.isChanneling(owner, this) && this.getCharge(owner) >= 20 ? 0.0F : 1.0F;
     }
 
     @Override
