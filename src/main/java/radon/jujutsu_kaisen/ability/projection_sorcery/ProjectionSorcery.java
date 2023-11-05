@@ -151,7 +151,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onRelease(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getFrames().size() < 24 / (1 + cap.getSpeedStacks())) {
+        if (cap.getFrames().size() < 24) {
             cap.resetFrames();
             return;
         }
