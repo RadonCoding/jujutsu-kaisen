@@ -29,7 +29,7 @@ public class Nue extends Summon<NueEntity> {
         if (JJKAbilities.hasToggled(owner, this)) {
             return target != null;
         }
-        return target != null && HelperMethods.RANDOM.nextInt(10 / (JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 2 : 1)) == 0;
+        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
