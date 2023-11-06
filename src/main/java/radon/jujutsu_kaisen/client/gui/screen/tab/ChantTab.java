@@ -165,9 +165,9 @@ public class ChantTab extends JJKTab {
 
     @Override
     public void keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == InputConstants.KEY_RETURN) {
+        if (this.add.active && pKeyCode == InputConstants.KEY_RETURN) {
             this.add.onPress();
-        } else if (pKeyCode == InputConstants.KEY_DELETE) {
+        } else if (this.remove.active && pKeyCode == InputConstants.KEY_DELETE) {
             this.remove.onPress();
         }
     }

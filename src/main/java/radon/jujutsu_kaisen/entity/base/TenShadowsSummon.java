@@ -290,11 +290,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     @Override
-    public float getExperienceMultiplier() {
-        return 0.75F;
-    }
-
-    @Override
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
