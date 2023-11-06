@@ -326,8 +326,6 @@ public class JJKEntities {
                     .sized(3.0F, 5.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "disaster_plant")
                             .toString()));
-
-
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
