@@ -12,6 +12,7 @@ public class ServerConfig {
 
     static {
         CURSED_ENERGY_AMOUNTS.put(JJKEntities.RIKA.getId(), Float.POSITIVE_INFINITY);
+        CURSED_ENERGY_AMOUNTS.put(JJKEntities.MAHORAGA.getId(), 2000.0F);
     }
 
     private static final Map<SorcererGrade, Float> REQUIRED_EXPERIENCE = new LinkedHashMap<>();
