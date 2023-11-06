@@ -18,6 +18,7 @@
     "client.PostChainAccessor"
   ],
   "mixins": [
+    "client.EntityMixin",
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.MeleeAttackGoalMixin",
