@@ -15,10 +15,10 @@
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
-    "client.PostChainAccessor"
+    "client.PostChainAccessor",
+    "client.EntityMixin"
   ],
   "mixins": [
-    "client.EntityMixin",
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.MeleeAttackGoalMixin",
