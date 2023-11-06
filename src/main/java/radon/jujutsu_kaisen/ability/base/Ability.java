@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 
 
 public abstract class Ability {
@@ -276,7 +277,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Float.parseFloat(String.format("%.2f", cost * (this.isScalable() ? cap.getOutput(owner) : 1.0F)));
+        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable() ? cap.getOutput(owner) : 1.0F)));
     }
 
     public interface IDomainAttack {
