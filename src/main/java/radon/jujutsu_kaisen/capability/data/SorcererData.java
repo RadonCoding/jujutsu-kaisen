@@ -27,7 +27,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
@@ -927,13 +929,9 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void useEnergy(float amount) {
+    public void useEnergy(LivingEntity owner, float amount) {
+        MinecraftForge.EVENT_BUS.post(new CursedEnergyCostEvent(owner, amount));
         this.energy -= amount;
-    }
-
-    @Override
-    public void addEnergy(float amount) {
-        this.energy += amount;
     }
 
     @Override

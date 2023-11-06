@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -219,35 +220,35 @@ public class JJKAbilities {
 
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!cap.hasCurse(registry, type)) return;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (type.create(owner.level()) instanceof CursedSpirit curse && curse.getGrade() != null) {
-                float cost = getCurseCost(owner, curse.getGrade());
+        if (!cap.hasCurse(registry, type)) return;
 
-                if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                    if (cap.getEnergy() < cost) {
-                        return;
-                    }
-                    cap.useEnergy(cost);
+        if (type.create(owner.level()) instanceof CursedSpirit curse && curse.getGrade() != null) {
+            float cost = getCurseCost(owner, curse.getGrade());
+
+            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                if (cap.getEnergy() < cost) {
+                    return;
                 }
-
-                Vec3 pos = owner.position().subtract(owner.getLookAngle()
-                        .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
-                curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-                curse.setTame(true);
-                curse.setOwner(owner);
-                owner.level().addFreshEntity(curse);
-
-                cap.addSummon(curse);
-
-                cap.removeCurse(registry, type);
-
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
+                cap.useEnergy(owner, cost);
             }
-        });
+
+            Vec3 pos = owner.position().subtract(owner.getLookAngle()
+                    .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
+            curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+            curse.setTame(true);
+            curse.setOwner(owner);
+            owner.level().addFreshEntity(curse);
+
+            cap.addSummon(curse);
+
+            cap.removeCurse(registry, type);
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
+        }
     }
 
     @Nullable

@@ -17,9 +17,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -135,7 +137,8 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
         if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
             if (cap.getEnergy() < cost) return;
-            cap.useEnergy(cost);
+
+            cap.useEnergy(entity, cost);
         }
 
         BlockHitResult hit = this.getBlockHit(entity);

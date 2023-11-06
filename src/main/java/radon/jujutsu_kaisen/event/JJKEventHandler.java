@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
+import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -334,6 +335,15 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onCursedEnergyCost(CursedEnergyCostEvent event) {
+            LivingEntity owner = event.getEntity();
+
+            if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
+                owner.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_BUD.get()), event.getCost() * 0.1F);
+            }
+        }
+
+        @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());
 
@@ -343,10 +353,6 @@ public class JJKEventHandler {
 
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
-            }
-
-            if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
-                owner.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_BUD.get()), event.getAbility().getRealCost(owner) * 0.1F);
             }
 
             if (owner instanceof HeianSukunaEntity entity && event.getAbility() == JJKAbilities.BARRAGE.get()) {

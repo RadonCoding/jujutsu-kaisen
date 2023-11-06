@@ -7,7 +7,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.ChantHandler;
+import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -249,7 +251,7 @@ public abstract class Ability {
             }
 
             if (use) {
-                cap.useEnergy(cost);
+                cap.useEnergy(owner, cost);
             }
         }
         return true;
