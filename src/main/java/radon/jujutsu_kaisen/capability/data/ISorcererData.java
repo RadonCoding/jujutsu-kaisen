@@ -161,9 +161,7 @@ public interface ISorcererData {
 
     float getEnergy();
 
-    void useEnergy(float amount);
-
-    void addEnergy(float amount);
+    void useEnergy(LivingEntity owner, float amount);
 
     void setEnergy(float energy);
 
