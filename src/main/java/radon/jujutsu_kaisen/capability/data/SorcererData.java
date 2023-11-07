@@ -252,7 +252,7 @@ public class SorcererData implements ISorcererData {
     private void updateToggled(LivingEntity owner) {
         List<Ability> remove = new ArrayList<>();
 
-        for (Ability ability : this.toggled) {
+        for (Ability ability : new ArrayList<>(this.toggled)) {
             Ability.Status status = ability.checkStatus(owner);
 
             if (status == Ability.Status.SUCCESS) {
