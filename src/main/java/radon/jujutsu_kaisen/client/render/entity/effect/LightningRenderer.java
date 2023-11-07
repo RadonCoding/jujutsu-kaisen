@@ -39,12 +39,12 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
         RandomSource random1 = RandomSource.create(pEntity.seed);
 
-        for (int i = 7; i >= 0; --i) {
+        /*for (int i = 7; i >= 0; --i) {
             offsetX[i] = totalOffsetX;
             offsetZ[i] = totalOffsetZ;
             totalOffsetX += (float) (random1.nextInt(11) - 5);
             totalOffsetZ += (float) (random1.nextInt(11) - 5);
-        }
+        }*/
 
         for (int j = 0; j < 4; ++j) {
             RandomSource random2 = RandomSource.create(pEntity.seed);
@@ -68,13 +68,16 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
                     float previousOffsetX = currentOffsetX;
                     float previousOffsetZ = currentOffsetZ;
 
-                    if (k == 0) {
+                    currentOffsetX += (float) (random2.nextInt(11) - 5);
+                    currentOffsetZ += (float) (random2.nextInt(11) - 5);
+
+                    /*if (k == 0) {
                         currentOffsetX += (float) (random2.nextInt(11) - 5);
                         currentOffsetZ += (float) (random2.nextInt(11) - 5);
                     } else {
                         currentOffsetX += (float) (random2.nextInt(31) - 15);
                         currentOffsetZ += (float) (random2.nextInt(31) - 15);
-                    }
+                    }*/
 
                     float scale1 = 0.1F + (float) j * 0.2F;
 
