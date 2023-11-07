@@ -53,7 +53,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0;
+        return 1.0F;
     }
 
     @Override
