@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AbilityMode extends Ability implements Ability.IToggled {
@@ -28,7 +29,7 @@ public class AbilityMode extends Ability implements Ability.IToggled {
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (JJKAbilities.WHEEL.get().isValid(owner)) {
+            if (JJKAbilities.hasTamed(owner, JJKEntities.MAHORAGA.get())) {
                 if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
                     if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                         return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());

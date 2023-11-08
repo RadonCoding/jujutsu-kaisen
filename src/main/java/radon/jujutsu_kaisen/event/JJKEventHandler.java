@@ -264,15 +264,13 @@ public class JJKEventHandler {
             if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) ||
                     !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.isAdaptedTo(event.getSource())) {
-                    cap.tryAdapt(event.getSource());
-                }
-            });
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.isAdaptedTo(event.getSource())) {
+                cap.tryAdapt(event.getSource());
+            }
 
             if (!(victim instanceof MahoragaEntity)) return;
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.isAdaptedTo(event.getSource())) {
                 victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
