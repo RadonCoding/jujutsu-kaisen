@@ -40,7 +40,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
         Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(this.getRadius()));
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(look.scale(this.getRadius() * 0.5F));
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
     }
 
@@ -237,7 +238,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
             double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_PURPLE_COLOR, radius * 0.1F, 0.2F, true, 5), true,
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_PURPLE_COLOR, radius * 0.2F, 0.2F, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -279,7 +280,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         }
                         Vec3 look = owner.getLookAngle();
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                                .add(look.scale(this.getRadius()));
+                                .add(look.scale(this.getRadius() * 0.5F));
                         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
                     }
                 } else {
