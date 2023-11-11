@@ -3,9 +3,10 @@ package radon.jujutsu_kaisen.ability.idle_transfiguration;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 
-public class IdleTransfiguration extends Ability implements Ability.IToggled {
+public class IdleTransfiguration extends Ability {
     @Override
     public boolean isScalable() {
         return false;
@@ -18,7 +19,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+        return ActivationType.INSTANT;
     }
 
     @Override
@@ -32,12 +33,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onDisabled(LivingEntity owner) {
-
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }
