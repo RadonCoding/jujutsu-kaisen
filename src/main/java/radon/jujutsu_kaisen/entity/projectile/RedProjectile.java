@@ -34,7 +34,7 @@ public class RedProjectile extends JujutsuProjectile {
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 20.0F;
 
     private boolean chanted;
 

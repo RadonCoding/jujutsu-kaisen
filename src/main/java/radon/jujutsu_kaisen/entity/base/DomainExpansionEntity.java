@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -168,7 +169,7 @@ public abstract class DomainExpansionEntity extends Mob {
             if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData victimCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
+                if (!(this instanceof MalevolentShrineEntity) && victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
 
                 if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                     SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
