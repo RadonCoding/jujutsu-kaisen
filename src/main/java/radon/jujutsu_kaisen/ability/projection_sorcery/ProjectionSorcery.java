@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -192,6 +193,8 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
                     for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()).inflate(1.0D))) {
                         for (int i = 0; i < cap.getSpeedStacks() + 1; i++) {
+                            owner.swing(InteractionHand.MAIN_HAND, true);
+
                             if (owner instanceof Player player) {
                                 player.attack(entity);
                             } else {
