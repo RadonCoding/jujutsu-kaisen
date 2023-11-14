@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity;
+package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.*;
@@ -10,14 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
     public static final int DURATION = 3 * 20;
-    private static final float DAMAGE = 10.0F;
     private static final float RADIUS = 5.0F;
     private static final float MAX_EXPLOSION = 25.0F;
+    private static final float DAMAGE = 1.0F;
 
     public HollowPurpleExplosion(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -33,17 +34,6 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         float radius = RADIUS * this.getPower();
         this.setPos(pos.subtract(0.0D, radius / 2.0F, 0.0D));
-    }
-
-    private void hurtEntities() {
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        AABB bounds = this.getBoundingBox();
-
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living))) continue;
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), DAMAGE * this.getPower());
-        }
     }
 
     @Override
@@ -66,9 +56,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             float radius = Math.min(MAX_EXPLOSION, RADIUS * this.getPower());
             int duration = (int) (radius / 5.0F * 20);
             ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D),
-                    radius, duration, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
-        } else {
-            this.hurtEntities();
+                    radius, duration, DAMAGE * this.getPower(), owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
         }
         super.tick();
     }

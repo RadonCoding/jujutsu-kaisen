@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
+import radon.jujutsu_kaisen.entity.effect.HollowPurpleExplosion;
 
 public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleExplosion> {
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);

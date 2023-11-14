@@ -7,15 +7,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectionSorcery extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    private static final double LAUNCH_POWER = 3.0D;
+    private static final double LAUNCH_POWER = 2.0D;
 
     @Override
     public boolean isScalable() {
@@ -186,6 +186,20 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 if (owner.level() instanceof ServerLevel level) {
                     level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                             0, 0.0D, 0.0D, 0.0D, 1.0D);
+                }
+                if (Math.sqrt(owner.distanceToSqr(frame.x(), frame.y(), frame.z())) > 1.0D) {
+                    AABB bounds = owner.getBoundingBox();
+
+                    for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()).inflate(1.0D))) {
+                        for (int i = 0; i < cap.getSpeedStacks() + 1; i++) {
+                            if (owner instanceof Player player) {
+                                player.attack(entity);
+                            } else {
+                                owner.doHurtTarget(entity);
+                            }
+                            entity.invulnerableTime = 0;
+                        }
+                    }
                 }
                 owner.moveTo(frame.x(), frame.y(), frame.z(), yaw, 0.0F);
                 cap.removeFrame(entry);

@@ -34,7 +34,7 @@ import java.util.Map;
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
-    private static final float DAMAGE = 15.0F;
+    private static final float DAMAGE = 1.0F;
     private static final float MAX_POWER = 7.5F;
 
     private float power;
@@ -90,46 +90,9 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         this.power = pCompound.getFloat("power");
     }
 
-    private void hurtEntities() {
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-
-        float radius = this.power * 2.0F;
-
-        AABB bounds = this.getBoundingBox().inflate(radius);
-
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()), DAMAGE * this.power);
-        }
-    }
-
-    private void spawnParticles() {
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-
-        float radius = 10.0F;
-        int count = (int) (radius * 2);
-
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * Math.cos(phi);
-
-            double x = center.x() + xOffset * (radius * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.1F);
-
-            Vector3f offset = new Vec3(x, y, z).toVector3f();
-        }
-    }
-
     @Override
     public void tick() {
         super.tick();
-
-        this.spawnParticles();
 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
@@ -155,10 +118,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level().dimension(), offset, this.power * 2.0F, 3 * 20, owner,
+                ExplosionHandler.spawn(this.level().dimension(), offset, this.power * 2.0F, 3 * 20, DAMAGE * this.getPower(), owner,
                         JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()), false);
-
-                this.hurtEntities();
             }
         }
     }
