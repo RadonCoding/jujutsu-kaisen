@@ -49,8 +49,8 @@ public class SatoruGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SatoruGojoEntity extends SorcererEntity {
         if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
                 if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                     this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                 }

@@ -19,6 +19,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -62,6 +63,15 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    public SorcererGrade getGrade() {
+        if (!this.isAddedToWorld()) {
+            return HelperMethods.getGrade(this.getExperience());
+        }
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return HelperMethods.getGrade(cap.getExperience());
+    }
+
+    @Override
     public AnimatableInstanceCache animatableCacheOverride() {
         return null;
     }
@@ -91,15 +101,17 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience()))) != 0)
+            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()))) != 0)
                 return false;
             if (!this.isInVillage()) return false;
-            if (pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).size() > 0)
+            if (!pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).isEmpty())
                 return false;
         }
-        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-            if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0)
+        if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).isEmpty())
                 return false;
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);

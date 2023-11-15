@@ -150,8 +150,8 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override

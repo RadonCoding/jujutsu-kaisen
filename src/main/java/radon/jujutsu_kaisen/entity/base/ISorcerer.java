@@ -20,6 +20,8 @@ import java.util.Map;
 public interface ISorcerer {
     boolean canPerformSorcery();
 
+    float getExperience();
+
     SorcererGrade getGrade();
 
     @Nullable CursedTechnique getTechnique();
@@ -42,14 +44,10 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
-    default float getExperienceMultiplier() {
-        return 0.0F;
-    }
-
     @Nullable Ability getDomain();
 
     default void init(ISorcererData data) {
-        data.setGrade(this.getGrade());
+        data.setExperience(this.getExperience());
         data.setTechnique(this.getTechnique());
         data.setAdditional(this.getAdditional());
         data.addTraits(this.getTraits());
@@ -66,8 +64,6 @@ public interface ISorcerer {
 
         if (experience.containsKey(key)) {
             data.setExperience(data.getExperience() * experience.get(key));
-        } else if (this.getExperienceMultiplier() > 0.0F) {
-            data.setExperience(data.getExperience() * this.getExperienceMultiplier());
         }
         data.setEnergy(data.getMaxEnergy((LivingEntity) this));
     }

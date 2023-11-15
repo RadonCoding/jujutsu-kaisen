@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.ArrayList;
@@ -26,6 +27,17 @@ import java.util.Random;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
+
+    public static SorcererGrade getGrade(float experience) {
+        SorcererGrade result = SorcererGrade.GRADE_4;
+
+        for (SorcererGrade grade : SorcererGrade.values()) {
+            if (experience < grade.getRequiredExperience()) break;
+
+            result = grade;
+        }
+        return result;
+    }
 
     public static int strcmp(String str1, String str2) {
         int minLength = Math.min(str1.length(), str2.length());

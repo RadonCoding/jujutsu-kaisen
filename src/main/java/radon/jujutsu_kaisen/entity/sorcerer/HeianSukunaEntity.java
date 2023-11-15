@@ -71,8 +71,8 @@ public class HeianSukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override

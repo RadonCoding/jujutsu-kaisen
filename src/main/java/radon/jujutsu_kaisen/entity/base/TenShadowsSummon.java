@@ -39,6 +39,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -280,13 +281,22 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     }
 
     @Override
-    public SorcererGrade getGrade() {
+    public float getExperience() {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null) return SorcererGrade.GRADE_4;
+        if (owner == null) return 0.0F;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getGrade();
+        return cap.getExperience();
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        if (!this.isAddedToWorld()) {
+            return HelperMethods.getGrade(this.getExperience());
+        }
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return HelperMethods.getGrade(cap.getExperience());
     }
 
     @Override

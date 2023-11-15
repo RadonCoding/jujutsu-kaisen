@@ -69,8 +69,8 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_1;
+    public float getExperience() {
+        return SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
     @Override

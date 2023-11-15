@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -55,8 +57,9 @@ public class AbsorbCurse extends Ability {
     }
 
     public static boolean canAbsorb(LivingEntity owner, Entity entity) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
-                (JJKAbilities.getGrade(owner).ordinal() - curse.getGrade().ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
+                (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
     }
 
     @Override

@@ -122,8 +122,8 @@ public class FelineCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_3;
+    public float getExperience() {
+        return SorcererGrade.GRADE_3.getRequiredExperience();
     }
 
     @Override

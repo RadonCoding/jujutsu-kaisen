@@ -13,7 +13,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -42,8 +41,8 @@ public class SuguruGetoEntity extends SorcererEntity {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override
@@ -70,8 +69,7 @@ public class SuguruGetoEntity extends SorcererEntity {
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
-            if (type.create(this.level()) instanceof ISorcerer sorcerer && sorcerer.getJujutsuType() == JujutsuType.CURSE && sorcerer.getGrade() != null &&
-                    sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
+            if (type.create(this.level()) instanceof ISorcerer sorcerer && sorcerer.getJujutsuType() == JujutsuType.CURSE && sorcerer.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 for (int i = 0; i < SorcererGrade.values().length - sorcerer.getGrade().ordinal(); i++) {
                     data.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
                 }

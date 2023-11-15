@@ -111,8 +111,6 @@ public interface ISorcererData {
 
     void setNature(CursedEnergyNature nature);
 
-    SorcererGrade getGrade();
-
     void setGrade(SorcererGrade grade);
 
     boolean hasTrait(Trait trait);

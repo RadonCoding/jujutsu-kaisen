@@ -84,8 +84,8 @@ public class CyclopsCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_2;
+    public float getExperience() {
+        return SorcererGrade.GRADE_2.getRequiredExperience();
     }
 
     @Override

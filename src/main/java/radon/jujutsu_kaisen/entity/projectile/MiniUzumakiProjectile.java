@@ -103,7 +103,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             }
 
             if (current != null) {
-                this.power = HelperMethods.getPower(current.getGrade().getRequiredExperience());
+                this.power = HelperMethods.getPower(current.getExperience());
                 cap.removeCurse(registry, current.getType());
             }
         });

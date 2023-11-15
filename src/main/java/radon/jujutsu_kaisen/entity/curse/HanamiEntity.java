@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.DisasterCurse;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -65,8 +66,8 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class HanamiEntity extends DisasterCurse {
         if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
                 this.entityData.set(DATA_CAST, false);
             }
         }

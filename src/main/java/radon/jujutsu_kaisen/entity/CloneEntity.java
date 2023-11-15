@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -203,8 +204,17 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     }
 
     @Override
+    public float getExperience() {
+        return 0;
+    }
+
+    @Override
     public SorcererGrade getGrade() {
-        return null;
+        if (!this.isAddedToWorld()) {
+            return HelperMethods.getGrade(this.getExperience());
+        }
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return HelperMethods.getGrade(cap.getExperience());
     }
 
     @Override
