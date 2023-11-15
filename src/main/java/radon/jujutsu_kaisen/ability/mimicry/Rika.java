@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class Rika extends Summon<RikaEntity> {
             if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
             if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return targetCap.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
+            return HelperMethods.getGrade(targetCap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
         }
         return false;
     }

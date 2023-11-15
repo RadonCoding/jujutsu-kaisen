@@ -80,11 +80,11 @@ public class ShootRCT extends Ability {
                 ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 if (targetCap.getType() == JujutsuType.CURSE) {
-                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount * ((float) (Math.max(1, ownerCap.getGrade().ordinal())) / SorcererGrade.values().length) * 2.0F);
+                    target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount * ((float) (Math.max(1, HelperMethods.getGrade(ownerCap.getExperience()).ordinal())) / SorcererGrade.values().length) * 2.0F);
                     return;
                 }
             }
-            target.heal(amount * ((float) (Math.max(1, ownerCap.getGrade().ordinal())) / SorcererGrade.values().length));
+            target.heal(amount * ((float) (Math.max(1, HelperMethods.getGrade(ownerCap.getExperience()).ordinal())) / SorcererGrade.values().length));
         }
     }
 

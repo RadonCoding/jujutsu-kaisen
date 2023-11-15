@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -70,7 +69,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 if (this.power == MAX_POWER) break;
                 if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null)
                     cap.absorb(curse.getTechnique());
-                this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getGrade().getRequiredExperience()));
+                this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getExperience()));
                 cap.removeCurse(registry, entity.getType());
             }
         }

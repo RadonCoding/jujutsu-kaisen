@@ -87,8 +87,8 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_4;
+    public float getExperience() {
+        return SorcererGrade.GRADE_4.getRequiredExperience();
     }
 
     @Override

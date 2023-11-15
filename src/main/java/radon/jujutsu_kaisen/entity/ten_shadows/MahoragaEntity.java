@@ -294,13 +294,13 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.WHEEL.get());
+    public float getExperience() {
+        return Math.max(SorcererGrade.SPECIAL_GRADE.getRequiredExperience(), super.getExperience());
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SPECIAL_GRADE;
+    public @NotNull List<Ability> getCustom() {
+        return List.of(JJKAbilities.WHEEL.get());
     }
 
     @Override

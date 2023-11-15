@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetCostS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
@@ -41,7 +42,7 @@ public class RequestCostC2SPacket {
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    int cost = (Mth.floor(64 * ((float) (cap.getGrade().ordinal() + 1) / SorcererGrade.values().length)));
+                    int cost = (Mth.floor(64 * ((float) (HelperMethods.getGrade(cap.getExperience()).ordinal() + 1) / SorcererGrade.values().length)));
 
                     if (sender.containerMenu instanceof BountyMenu menu) {
                         menu.setCost(cost);

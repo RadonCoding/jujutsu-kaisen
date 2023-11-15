@@ -229,14 +229,22 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public SorcererGrade getGrade() {
+    public float getExperience() {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-            return SorcererGrade.SPECIAL_GRADE;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner == null || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return 0.0F;
 
-        return cap.getGrade();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getExperience();
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        if (!this.isAddedToWorld()) {
+            return HelperMethods.getGrade(this.getExperience());
+        }
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return HelperMethods.getGrade(cap.getExperience());
     }
 
     @Override

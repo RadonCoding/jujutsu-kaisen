@@ -32,6 +32,7 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -97,11 +98,11 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
             }
         }
 
-        if (pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).size() > 0)
+        if (!pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).isEmpty())
             return false;
 
         if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-            if (pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).size() > 0)
+            if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).isEmpty())
                 return false;
         }
         return super.checkSpawnRules(pLevel, pSpawnReason);
@@ -110,6 +111,15 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public boolean isPersistenceRequired() {
         return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
+    }
+
+    @Override
+    public SorcererGrade getGrade() {
+        if (!this.isAddedToWorld()) {
+            return HelperMethods.getGrade(this.getExperience());
+        }
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return HelperMethods.getGrade(cap.getExperience());
     }
 
     protected abstract boolean isCustom();

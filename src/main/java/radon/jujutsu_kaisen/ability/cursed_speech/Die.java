@@ -104,7 +104,7 @@ public class Die extends Ability {
             living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
 
             living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                if (ownerCap.getGrade().ordinal() - targetCap.getGrade().ordinal() >= 2) {
+                if (HelperMethods.getGrade(ownerCap.getExperience()).ordinal() - HelperMethods.getGrade(targetCap.getExperience()).ordinal() >= 2) {
                     DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
                     entity.hurt(source, calculateDamage(source, owner, living));
                 }

@@ -720,11 +720,11 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean addExperience(LivingEntity owner, float amount) {
-        SorcererGrade previous = this.getGrade();
+        SorcererGrade previous = HelperMethods.getGrade(this.experience);
 
         this.experience += amount;
 
-        SorcererGrade current = this.getGrade();
+        SorcererGrade current = HelperMethods.getGrade(this.experience);
 
         if (!owner.level().isClientSide && owner instanceof Player) {
             if (previous != current) {
@@ -771,18 +771,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setNature(CursedEnergyNature nature) {
         this.nature = nature;
-    }
-
-    @Override
-    public SorcererGrade getGrade() {
-        SorcererGrade result = SorcererGrade.GRADE_4;
-
-        for (SorcererGrade grade : SorcererGrade.values()) {
-            if (this.experience < grade.getRequiredExperience()) break;
-
-            result = grade;
-        }
-        return result;
     }
 
     @Override

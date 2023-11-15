@@ -47,8 +47,8 @@ public class ZombaCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.GRADE_1;
+    public float getExperience() {
+        return SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
     @Override

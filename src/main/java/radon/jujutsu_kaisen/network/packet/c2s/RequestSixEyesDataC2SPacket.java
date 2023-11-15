@@ -8,6 +8,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.overlay.SixEyesOverlay;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ReceiveSixEyesDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ public class RequestSixEyesDataC2SPacket {
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    SixEyesOverlay.SixEyesData data = new SixEyesOverlay.SixEyesData(cap.getTechnique(), cap.getGrade(), cap.getEnergy(), cap.getMaxEnergy(target));
+                    SixEyesOverlay.SixEyesData data = new SixEyesOverlay.SixEyesData(cap.getTechnique(), HelperMethods.getGrade(cap.getExperience()), cap.getEnergy(), cap.getMaxEnergy(target));
                     PacketHandler.sendToClient(new ReceiveSixEyesDataS2CPacket(this.src, data.serializeNBT()), sender);
                 });
             }

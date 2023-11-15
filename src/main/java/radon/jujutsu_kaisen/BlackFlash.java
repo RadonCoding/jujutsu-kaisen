@@ -46,7 +46,7 @@ public class BlackFlash {
                 int seconds = (int) (owner.level().getGameTime() - lastBlackFlashTime) / 20;
 
                 if (lastBlackFlashTime == 0 || seconds > 1) {
-                    int rng = 150 - (cap.getGrade().ordinal() * 5);
+                    int rng = 150 - (HelperMethods.getGrade(cap.getExperience()).ordinal() * 5);
 
                     if (HelperMethods.RANDOM.nextInt(rng / (cap.isInZone(owner) ? 2 : 1)) != 0) {
                         return;

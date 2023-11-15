@@ -8,7 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -224,7 +223,7 @@ public class JJKAbilities {
 
         if (!cap.hasCurse(registry, type)) return;
 
-        if (type.create(owner.level()) instanceof CursedSpirit curse && curse.getGrade() != null) {
+        if (type.create(owner.level()) instanceof CursedSpirit curse) {
             float cost = getCurseCost(owner, curse.getGrade());
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
@@ -266,12 +265,6 @@ public class JJKAbilities {
             if (List.of(technique.getAbilities()).contains(ability)) return technique;
         }
         return null;
-    }
-
-    public static SorcererGrade getGrade(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getGrade();
     }
 
     public static List<Ability> getToggled(LivingEntity owner) {

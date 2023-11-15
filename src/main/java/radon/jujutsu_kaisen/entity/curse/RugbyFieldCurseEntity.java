@@ -81,8 +81,8 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        return SorcererGrade.SEMI_GRADE_2;
+    public float getExperience() {
+        return SorcererGrade.SEMI_GRADE_2.getRequiredExperience();
     }
 
     @Override
