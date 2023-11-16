@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -219,7 +220,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
     private void pickWeapon(LivingEntity target) {
         AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
 
-        if (target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+        if (JJKAbilities.hasToggled(target, JJKAbilities.SOUL_REINFORCEMENT.get()) || target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
             result.set(SPLIT_SOUL_KATANA);
         }
 
