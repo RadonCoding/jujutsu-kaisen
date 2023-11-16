@@ -214,7 +214,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                 continue;
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
-    }
+     }
 
     @Override
     public void onAddedToWorld() {
