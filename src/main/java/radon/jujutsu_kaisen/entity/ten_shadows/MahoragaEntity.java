@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -159,22 +160,20 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public double getAttributeValue(@NotNull Holder<Attribute> pAttribute) {
-        double d0 = super.getAttributeValue(pAttribute);
+    public boolean doHurtTarget(@NotNull Entity pEntity) {
+        boolean result = super.doHurtTarget(pEntity);
 
-        LivingEntity target = this.getTarget();
+        if (result) {
+            if (!(pEntity instanceof LivingEntity living)) return true;
 
-        if (target != null) {
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return d0;
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!pEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return true;
+            ISorcererData cap = pEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.getType() == JujutsuType.CURSE && this.entityData.get(DATA_POSITIVE_SWORD)) {
-                d0 *= 3.0D;
-            } else if (cap.getType() != JujutsuType.CURSE && !this.entityData.get(DATA_POSITIVE_SWORD)) {
-                d0 *= 1.5D;
+                pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth());
             }
         }
-        return d0;
+        return result;
     }
 
     @Override
