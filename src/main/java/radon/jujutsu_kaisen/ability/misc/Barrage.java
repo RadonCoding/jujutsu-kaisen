@@ -52,6 +52,16 @@ public class Barrage extends Ability {
                                     offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
                                     0, speed.x(), speed.y(), speed.z(), 1.0D);
                         }
+                        for (int j = 0; j < 4; j++) {
+                            Vec3 speed = look.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
+                                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
+                                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D);
+                            Vec3 offset = owner.getEyePosition().add(owner.getLookAngle());
+                            level.sendParticles(ParticleTypes.CRIT, offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
+                                    offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
+                                    offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D,
+                                    0, speed.x(), speed.y(), speed.z(), 1.0D);
+                        }
                         owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
                         Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
