@@ -61,6 +61,11 @@ public class SimpleDomainEntity extends Mob {
     }
 
     @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
     public boolean isSilent() {
         return true;
     }
@@ -112,11 +117,6 @@ public class SimpleDomainEntity extends Mob {
     @Override
     public boolean isPushable() {
         return false;
-    }
-
-    @Override
-    public @NotNull Vec3 getDeltaMovement() {
-        return Vec3.ZERO;
     }
 
     @Override
