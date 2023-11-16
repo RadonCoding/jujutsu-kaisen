@@ -27,11 +27,6 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     }
 
     @Override
-    public @NotNull Vec3 getDeltaMovement() {
-        return Vec3.ZERO;
-    }
-
-    @Override
     public void tick() {
         if (this.getTime() >= DURATION) {
             this.discard();

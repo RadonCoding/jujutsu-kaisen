@@ -67,11 +67,6 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     @Override
-    public @NotNull Vec3 getDeltaMovement() {
-        return Vec3.ZERO;
-    }
-
-    @Override
     protected boolean updateInWaterStateAndDoFluidPushing() {
         return false;
     }

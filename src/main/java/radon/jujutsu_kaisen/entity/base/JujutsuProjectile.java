@@ -47,11 +47,6 @@ public class JujutsuProjectile extends Projectile {
     }
 
     @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
-
-    @Override
     public void tick() {
         Entity owner = this.getOwner();
 
@@ -77,6 +72,11 @@ public class JujutsuProjectile extends Projectile {
             double d2 = this.getZ() + movement.z();
             this.setPos(d0, d1, d2);
         }
+    }
+
+    @Override
+    public boolean ignoreExplosion() {
+        return true;
     }
 
     @Override
