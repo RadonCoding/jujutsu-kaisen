@@ -133,7 +133,7 @@ public class ExplosionHandler {
         private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
-        private boolean fire;
+        private final boolean fire;
 
         public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.dimension = dimension;
