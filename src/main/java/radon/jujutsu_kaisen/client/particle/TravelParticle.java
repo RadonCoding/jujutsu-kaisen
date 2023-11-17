@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
-    private final Vec3 center;
+    private final Vec3 target;
     private final boolean glow;
 
     protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
@@ -28,7 +28,7 @@ public class TravelParticle extends TextureSheetParticle {
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
-        this.center = new Vec3(options.target());
+        this.target = new Vec3(options.target());
 
         Vector3f color = options.color();
         this.rCol = color.x();
@@ -48,12 +48,14 @@ public class TravelParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
+        this.alpha = 1.0F - ((float) this.age / this.lifetime);
+
         this.setSprite(this.sprites.get(this.level.random));
 
         Vec3 pos = new Vec3(this.x, this.y, this.z);
-        Vec3 direction = this.center.subtract(pos).normalize();
+        Vec3 direction = this.target.subtract(pos).normalize();
 
-        double remaining = this.center.distanceTo(pos);
+        double remaining = this.target.distanceTo(pos);
         double distance = remaining / this.lifetime;
 
         Vec3 newPos = pos.add(direction.scale(distance));

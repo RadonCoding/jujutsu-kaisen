@@ -51,6 +51,11 @@ public abstract class DomainExpansionEntity extends Mob {
         this.ability = ability;
     }
 
+    @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
     public List<Entity> getAffected() {
         AABB bounds = this.getBounds();
         return this.level().getEntities(this, bounds, this::isAffected);

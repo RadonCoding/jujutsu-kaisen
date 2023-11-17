@@ -44,7 +44,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public boolean isScalable() {
-        return true;
+        return false;
     }
 
     @Override
