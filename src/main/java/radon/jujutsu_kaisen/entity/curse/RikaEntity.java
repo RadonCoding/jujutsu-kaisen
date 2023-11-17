@@ -254,7 +254,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public JujutsuType getJujutsuType() {
-        return JujutsuType.CURSE;
+        return JujutsuType.SHIKIGAMI;
     }
 
     @Override
