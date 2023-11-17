@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -16,9 +17,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -224,6 +228,25 @@ public class MeteorEntity extends JujutsuProjectile {
                     if (this.explosionTime == 0) {
                         ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
                         this.explosionTime++;
+
+                        float radius = this.getSize() * 0.5F;
+                        int shockwaveCount = (int) (radius * Math.PI * 2) * 32;
+
+                        for (int i = 0; i < shockwaveCount; i++) {
+                            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+                            double phi = this.random.nextDouble() * Math.PI;
+
+                            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+                            double zOffset = radius * Math.cos(phi);
+
+                            double x = this.getX() + xOffset * radius;
+                            double z = this.getZ() + zOffset * radius;
+
+                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, radius * 0.3F, 1.0F, true, 20),
+                                    true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
+                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.SMOKE_COLOR, radius * 0.3F, 1.0F, false, 20),
+                                    true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
+                        }
                     }
                 }
 

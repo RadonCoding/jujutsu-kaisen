@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class FireArrowProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 25.0F;
@@ -65,27 +66,6 @@ public class FireArrowProjectile extends JujutsuProjectile {
         }
     }
 
-    private void sendParticles(ServerPlayer pPlayer, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, Packet<?> pPacket) {
-        if (pPlayer.level() == this.level()) {
-            BlockPos pos = pPlayer.blockPosition();
-
-            if (pos.closerToCenterThan(new Vec3(pPosX, pPosY, pPosZ), pLongDistance ? 512.0D : 32.0D)) {
-                pPlayer.connection.send(pPacket);
-            }
-        }
-    }
-
-    private <T extends ParticleOptions> void sendParticles(T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ) {
-        ServerLevel level = (ServerLevel) this.level();
-
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, pLongDistance, pPosX, pPosY, pPosZ, 0.0F, 0.0F, 0.0F, 0.0F, 0);
-
-        for (int i = 0; i < level.players().size(); i++) {
-            ServerPlayer player = level.players().get(i);
-            sendParticles(player, pLongDistance, pPosX, pPosY, pPosZ,  packet);
-        }
-    }
-
     @Override
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
@@ -108,9 +88,9 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
             double z = center.z() + zOffset * this.getFlamePillarRadius();
 
-            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
-            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
         }
 
@@ -129,7 +109,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
             double z = center.z() + zOffset * this.getFlamePillarRadius();
 
-            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
                     true, startX, center.y(), startZ);
         }
 
@@ -145,9 +125,9 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
             double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
 
-            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
-            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 
