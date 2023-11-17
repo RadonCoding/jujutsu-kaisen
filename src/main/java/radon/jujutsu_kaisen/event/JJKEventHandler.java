@@ -211,7 +211,6 @@ public class JJKEventHandler {
                         }
                         if (((LivingEntity) attacker).canAttack(victim)) {
                             victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
-                            event.setCanceled(true);
                         }
                     } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());
