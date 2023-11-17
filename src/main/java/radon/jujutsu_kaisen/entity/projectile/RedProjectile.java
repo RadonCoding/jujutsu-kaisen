@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +33,7 @@ public class RedProjectile extends JujutsuProjectile {
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float SPEED = 5.0F;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 20.0F;
 
     private boolean chanted;
 

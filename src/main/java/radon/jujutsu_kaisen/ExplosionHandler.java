@@ -84,7 +84,7 @@ public class ExplosionHandler {
                                 entity.hurtMarked = true;
 
                                 entity.hurt(explosion.source, explosion.radius * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
-                                        entity == explosion.instigator ? 0.5F : 1.0F));
+                                        entity == explosion.instigator ? 0.5F : 1.0F) * explosion.damage);
                             }
 
                             if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
@@ -117,7 +117,11 @@ public class ExplosionHandler {
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, instigator, source, fire));
+        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, fire));
+    }
+
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, fire));
     }
 
     private static class ExplosionData {
@@ -125,16 +129,18 @@ public class ExplosionHandler {
         private final Vec3 position;
         private final float radius;
         private final int duration;
+        private final float damage;
         private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
         private boolean fire;
 
-        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
             this.duration = duration;
+            this.damage = damage;
             this.instigator = instigator;
             this.source = source;
             this.fire = fire;

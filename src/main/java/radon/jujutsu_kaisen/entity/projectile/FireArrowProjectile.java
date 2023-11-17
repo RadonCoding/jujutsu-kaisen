@@ -1,7 +1,9 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,12 +67,24 @@ public class FireArrowProjectile extends JujutsuProjectile {
         }
     }
 
-    private <T extends ParticleOptions> void sendParticles(T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, int pParticleCount, double pXOffset, double pYOffset, double pZOffset, double pSpeed) {
+    private void sendParticles(ServerPlayer pPlayer, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, Packet<?> pPacket) {
+        if (pPlayer.level() == this.level()) {
+            BlockPos pos = pPlayer.blockPosition();
+
+            if (pos.closerToCenterThan(new Vec3(pPosX, pPosY, pPosZ), pLongDistance ? 512.0D : 32.0D)) {
+                pPlayer.connection.send(pPacket);
+            }
+        }
+    }
+
+    private <T extends ParticleOptions> void sendParticles(T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ) {
         ServerLevel level = (ServerLevel) this.level();
 
-        for(int j = 0; j < level.players().size(); ++j) {
-            ServerPlayer player = level.players().get(j);
-            level.sendParticles(player, pType, pLongDistance, pPosX, pPosY, pPosZ, pParticleCount, pXOffset, pYOffset, pZOffset, pSpeed);
+        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, false, pPosX, pPosY, pPosZ, 0.0F, 0.0F, 0.0F, 0.0F, 0);
+
+        for (int i = 0; i < level.players().size(); i++) {
+            ServerPlayer player = level.players().get(i);
+            sendParticles(player, pLongDistance, pPosX, pPosY, pPosZ,  packet);
         }
     }
 
@@ -100,7 +114,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double z = center.z() + zOffset * PILLAR_RADIUS;
 
             sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
-                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    true, startX, center.y(), startZ);
         }
 
         for (int i = 0; i < count / 2; i++) {
@@ -119,7 +133,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double z = center.z() + zOffset * PILLAR_RADIUS;
 
             sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
-                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    true, startX, center.y(), startZ);
         }
 
         for (int i = 0; i < count / 2; i++) {
@@ -138,7 +152,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double z = center.z() + zOffset * PILLAR_RADIUS;
 
             sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, false, 3 * 20),
-                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    true, startX, center.y(), startZ);
         }
 
         for (int i = 0; i < (int) (SHOCKWAVE_RADIUS * Math.PI * 2) * 32; i++) {
@@ -152,9 +166,9 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double z = center.z() + zOffset * SHOCKWAVE_RADIUS;
 
             sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
-                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
             sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, false, 3 * 20),
-                    false, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
