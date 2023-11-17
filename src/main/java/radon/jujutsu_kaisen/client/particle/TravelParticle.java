@@ -67,7 +67,8 @@ public class TravelParticle extends TextureSheetParticle {
         return this.glow ? JJKParticleRenderTypes.GLOW : JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow, int lifetime) implements ParticleOptions {
+    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow,
+                                        int lifetime) implements ParticleOptions {
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f target = TravelParticleOptions.readTargetVector3f(reader);
@@ -81,11 +82,6 @@ public class TravelParticle extends TextureSheetParticle {
                 return new TravelParticleOptions(readTargetFromNetwork(buf), readColorFromNetwork(buf), buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readInt());
             }
         };
-
-        @Override
-        public @NotNull ParticleType<?> getType() {
-            return JJKParticles.TRAVEL.get();
-        }
 
         public static Vector3f readTargetVector3f(StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
@@ -113,6 +109,11 @@ public class TravelParticle extends TextureSheetParticle {
 
         public static Vector3f readColorFromNetwork(FriendlyByteBuf buf) {
             return new Vector3f(buf.readFloat(), buf.readFloat(), buf.readFloat());
+        }
+
+        @Override
+        public @NotNull ParticleType<?> getType() {
+            return JJKParticles.TRAVEL.get();
         }
 
         @Override
