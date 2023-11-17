@@ -67,7 +67,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         Vec3 dir = this.getDeltaMovement();
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 64; i++) {
             Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
             Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
 
@@ -76,6 +76,18 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
 
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
+                    dx, dy, dz, 1.0D);
+        }
+
+        for (int i = 0; i < 64; i++) {
+            Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
+            Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
+
+            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
+
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
                     dx, dy, dz, 1.0D);
         }
 
