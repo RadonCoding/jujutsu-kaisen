@@ -80,7 +80,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
     private <T extends ParticleOptions> void sendParticles(T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ) {
         ServerLevel level = (ServerLevel) this.level();
 
-        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, false, pPosX, pPosY, pPosZ, 0.0F, 0.0F, 0.0F, 0.0F, 0);
+        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, pLongDistance, pPosX, pPosY, pPosZ, 0.0F, 0.0F, 0.0F, 0.0F, 0);
 
         for (int i = 0; i < level.players().size(); i++) {
             ServerPlayer player = level.players().get(i);
