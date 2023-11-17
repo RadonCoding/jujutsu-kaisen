@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -18,6 +20,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -31,6 +35,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public static final int STILL_FRAMES = 2;
     public static final int STARTUP_FRAMES = 4;
     private static final double OFFSET = 2.0D;
+    private static final float PILLAR_RADIUS = 3.0F;
+    private static final float SHOCKWAVE_RADIUS = 6.0F;
 
     public int animation;
 
@@ -59,36 +65,96 @@ public class FireArrowProjectile extends JujutsuProjectile {
         }
     }
 
+    private <T extends ParticleOptions> void sendParticles(T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, int pParticleCount, double pXOffset, double pYOffset, double pZOffset, double pSpeed) {
+        ServerLevel level = (ServerLevel) this.level();
+
+        for(int j = 0; j < level.players().size(); ++j) {
+            ServerPlayer player = level.players().get(j);
+            level.sendParticles(player, pType, pLongDistance, pPosX, pPosY, pPosZ, pParticleCount, pXOffset, pYOffset, pZOffset, pSpeed);
+        }
+    }
+
     @Override
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
         if (this.level().isClientSide) return;
 
-        Vec3 dir = this.getDeltaMovement();
+        int count = (int) (PILLAR_RADIUS * Math.PI * 2) * 32;
 
-        for (int i = 0; i < 64; i++) {
-            Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
-            Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
+        for (int i = 0; i < count; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
 
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
-                    dx, dy, dz, 1.0D);
+            double xOffset = PILLAR_RADIUS * Math.sin(phi) * Math.cos(theta);
+            double yOffset = PILLAR_RADIUS * Math.sin(phi) * Math.sin(theta);
+            double zOffset = PILLAR_RADIUS * Math.cos(phi);
+
+            double startX = center.x() + xOffset * (PILLAR_RADIUS * 0.1F);
+            double startZ = center.z() + zOffset * (PILLAR_RADIUS * 0.1F);
+
+            double x = center.x() + xOffset * PILLAR_RADIUS;
+            double y = center.y() + yOffset * (PILLAR_RADIUS * 10.0F);
+            double z = center.z() + zOffset * PILLAR_RADIUS;
+
+            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
+                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
 
-        for (int i = 0; i < 64; i++) {
-            Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
-            Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
+        for (int i = 0; i < count / 2; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
 
-            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double xOffset = PILLAR_RADIUS * Math.sin(phi) * Math.cos(theta);
+            double yOffset = PILLAR_RADIUS * Math.sin(phi) * Math.sin(theta);
+            double zOffset = PILLAR_RADIUS * Math.cos(phi);
 
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
-                    dx, dy, dz, 1.0D);
+            double startX = center.x() + xOffset * (PILLAR_RADIUS * 0.1F);
+            double startZ = center.z() + zOffset * (PILLAR_RADIUS * 0.1F);
+
+            double x = center.x() + xOffset * PILLAR_RADIUS;
+            double y = center.y() + yOffset * (PILLAR_RADIUS * 10.0F);
+            double z = center.z() + zOffset * PILLAR_RADIUS;
+
+            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
+                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
+
+        for (int i = 0; i < count / 2; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = PILLAR_RADIUS * Math.sin(phi) * Math.cos(theta);
+            double yOffset = PILLAR_RADIUS * Math.sin(phi) * Math.sin(theta);
+            double zOffset = PILLAR_RADIUS * Math.cos(phi);
+
+            double startX = center.x() + xOffset * (PILLAR_RADIUS * 0.1F);
+            double startZ = center.z() + zOffset * (PILLAR_RADIUS * 0.1F);
+
+            double x = center.x() + xOffset * PILLAR_RADIUS;
+            double y = center.y() + yOffset * (PILLAR_RADIUS * 10.0F);
+            double z = center.z() + zOffset * PILLAR_RADIUS;
+
+            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, false, 3 * 20),
+                    true, startX, center.y(), startZ, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
+
+        for (int i = 0; i < (int) (SHOCKWAVE_RADIUS * Math.PI * 2) * 32; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = SHOCKWAVE_RADIUS * Math.sin(phi) * Math.cos(theta);
+            double zOffset = SHOCKWAVE_RADIUS * Math.cos(phi);
+
+            double x = center.x() + xOffset * SHOCKWAVE_RADIUS;
+            double z = center.z() + zOffset * SHOCKWAVE_RADIUS;
+
+            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, true, 2 * 20),
+                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            sendParticles(new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, PILLAR_RADIUS * 0.3F, 1.0F, false, 3 * 20),
+                    false, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D), 0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
