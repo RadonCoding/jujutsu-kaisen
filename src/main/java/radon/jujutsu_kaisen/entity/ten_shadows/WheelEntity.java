@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class WheelEntity extends Entity implements GeoEntity {
-    private static final double OFFSET = 0.1D;
     private static final int SPIN_TIME = 20;
     private static final float STEP = -45.0F;
 
@@ -46,8 +45,12 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         this.setOwner(owner);
 
-        this.moveTo(owner.getX(), owner.getY() + owner.getBbHeight() + OFFSET, owner.getZ(),
-                owner.getYRot(), 0.0F);
+        this.startRiding(owner);
+    }
+
+    @Override
+    public double getMyRidingOffset() {
+        return 0.5D;
     }
 
     public void spin() {
@@ -91,7 +94,8 @@ public class WheelEntity extends Entity implements GeoEntity {
                     yRot += STEP / SPIN_TIME * (SPIN_TIME - spin);
                     this.entityData.set(DATA_SPIN, --spin);
                 }
-                this.moveTo(owner.getX(), owner.getY() + owner.getBbHeight() + OFFSET, owner.getZ(), yRot, 0.0F);
+                this.setYRot(yRot);
+                this.yRotO = yRot;
             }
         }
     }
