@@ -96,7 +96,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
         if (target == null) return;
 
-        this.perform(owner, null, target);
+        this.performEntity(owner, null, target);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
+    public void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target == null) return;
 
         if (!(owner.level() instanceof ServerLevel level)) return;

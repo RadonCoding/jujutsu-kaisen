@@ -22,19 +22,8 @@ import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
 public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/toad_tongue.png");
 
-    private static final float SIZE = 1.0F;
-
     public ToadTongueRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
-    }
-
-    private Vec3 calculateViewVector(float pYRot) {
-        float f1 = -pYRot * ((float) Math.PI / 180.0F);
-        float f2 = Mth.cos(f1);
-        float f3 = Mth.sin(f1);
-        float f4 = Mth.cos(0.0F);
-        float f5 = Mth.sin(0.0F);
-        return new Vec3(f3 * f4, -f5, f2 * f4);
     }
 
     @Override

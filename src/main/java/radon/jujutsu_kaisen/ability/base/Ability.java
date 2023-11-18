@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.base;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -7,9 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.ChantHandler;
-import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -283,7 +282,8 @@ public abstract class Ability {
     }
 
     public interface IDomainAttack {
-        void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target);
+        default void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {}
+        default void performBlock(LivingEntity owner, @Nullable DomainExpansionEntity domain, BlockPos pos) {}
     }
 
     public interface ITenShadowsAttack {
@@ -298,8 +298,10 @@ public abstract class Ability {
         default int getRealDuration(LivingEntity owner) {
             int duration = this.getDuration();
 
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             if (duration > 0) {
-                duration = (int) (duration * ((Ability) this).getPower(owner));
+                duration = (int) (duration * cap.getRealPower());
             }
             return duration;
         }

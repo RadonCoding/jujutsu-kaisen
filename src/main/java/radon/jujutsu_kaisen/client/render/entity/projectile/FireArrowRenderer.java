@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 
 public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
-    private static final float SIZE = 1.5F;
     private static final int TEXTURE_WIDTH = 32;
     private static final int STARTUP_TEXTURE_HEIGHT = 256;
     private static final int STILL_TEXTURE_HEIGHT = 128;
@@ -44,6 +43,8 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
 
+        pPoseStack.scale(1.5F, 1.5F, 1.5F);
+
         boolean still = pEntity.getTime() >= FireArrowProjectile.DELAY;
         RenderType type = RenderType.entityCutoutNoCull(still ? STILL : STARTUP);
 
@@ -66,28 +67,28 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
             float maxU = minU + 32.0F / TEXTURE_WIDTH;
             float maxV = minV + 32.0F / (still ? STILL_TEXTURE_HEIGHT : STARTUP_TEXTURE_HEIGHT);
 
-            consumer.vertex(pose, -SIZE, 0.0F, -SIZE)
+            consumer.vertex(pose, -1.0F, 0.0F, -1.0F)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(minU, minV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, -SIZE, 0.0F, SIZE)
+            consumer.vertex(pose, -1.0F, 0.0F, 1.0F)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(minU, maxV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, SIZE, 0.0F, SIZE)
+            consumer.vertex(pose, 1.0F, 0.0F, 1.0F)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(maxU, maxV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
                     .uv2(LightTexture.FULL_SKY)
                     .normal(0.0F, 1.0F, 0.0F)
                     .endVertex();
-            consumer.vertex(pose, SIZE, 0.0F, -SIZE)
+            consumer.vertex(pose, 1.0F, 0.0F, -1.0F)
                     .color(1.0F, 1.0F, 1.0F, 1.0F)
                     .uv(maxU, minV)
                     .overlayCoords(OverlayTexture.NO_OVERLAY)
