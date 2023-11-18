@@ -20,6 +20,11 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "mixins.${mod_id}.json"
+}
+
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
 
