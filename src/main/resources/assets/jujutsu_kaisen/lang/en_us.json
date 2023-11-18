@@ -309,9 +309,9 @@
   "ability.jujutsu_kaisen.toad.enable": "Summoned Toad",
   "ability.jujutsu_kaisen.toad.disable": "Released Toad",
 
-  "ability.jujutsu_kaisen.toad_totality": "Toad Totality",
-  "ability.jujutsu_kaisen.toad_totality.enable": "Summoned Toad Totality",
-  "ability.jujutsu_kaisen.toad_totality.disable": "Released Toad Totality",
+  "ability.jujutsu_kaisen.toad_fusion": "Toad Fusion",
+  "ability.jujutsu_kaisen.toad_fusion.enable": "Summoned Toad Fusion",
+  "ability.jujutsu_kaisen.toad_fusion.disable": "Released Toad Fusion",
 
   "ability.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
 
@@ -462,7 +462,7 @@
   "entity.jujutsu_kaisen.divine_dog_black": "Divine Dog Black",
   "entity.jujutsu_kaisen.divine_dog_totality": "Divine Dog Totality",
   "entity.jujutsu_kaisen.toad": "Toad",
-  "entity.jujutsu_kaisen.toad_totality": "Toad Totality",
+  "entity.jujutsu_kaisen.toad_fusion": "Toad Totality",
   "entity.jujutsu_kaisen.rabbit_escape": "Rabbit Escape",
   "entity.jujutsu_kaisen.nue": "Nue",
   "entity.jujutsu_kaisen.nue_totality": "Nue Totality",

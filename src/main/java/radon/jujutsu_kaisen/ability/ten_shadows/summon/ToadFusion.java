@@ -7,14 +7,14 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ten_shadows.ToadTotalityEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.ToadFusionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class ToadTotality extends Summon<ToadTotalityEntity> {
-    public ToadTotality() {
-        super(ToadTotalityEntity.class);
+public class ToadFusion extends Summon<ToadFusionEntity> {
+    public ToadFusion() {
+        super(ToadFusionEntity.class);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ToadTotality extends Summon<ToadTotalityEntity> {
 
     @Override
     public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.TOAD_TOTALITY.get());
+        return List.of(JJKEntities.TOAD_FUSION.get());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ToadTotality extends Summon<ToadTotalityEntity> {
     }
 
     @Override
-    protected ToadTotalityEntity summon(int index, LivingEntity owner) {
-        return new ToadTotalityEntity(owner, false);
+    protected ToadFusionEntity summon(int index, LivingEntity owner) {
+        return new ToadFusionEntity(owner, false);
     }
 }

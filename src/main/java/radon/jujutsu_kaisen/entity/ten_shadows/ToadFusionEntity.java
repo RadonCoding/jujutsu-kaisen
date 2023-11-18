@@ -6,13 +6,13 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
-public class ToadTotalityEntity extends ToadEntity {
-    public ToadTotalityEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+public class ToadFusionEntity extends ToadEntity {
+    public ToadFusionEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public ToadTotalityEntity(LivingEntity owner, boolean ritual) {
-        super(JJKEntities.TOAD_TOTALITY.get(), owner, ritual);
+    public ToadFusionEntity(LivingEntity owner, boolean ritual) {
+        super(JJKEntities.TOAD_FUSION.get(), owner, ritual);
     }
 
     @Override

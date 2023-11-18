@@ -48,7 +48,6 @@ import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.NaoyaZeninEntity;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
@@ -304,7 +303,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_BLACK.get(), DivineDogRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
-            event.registerEntityRenderer(JJKEntities.TOAD_TOTALITY.get(), ToadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TOAD_FUSION.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
