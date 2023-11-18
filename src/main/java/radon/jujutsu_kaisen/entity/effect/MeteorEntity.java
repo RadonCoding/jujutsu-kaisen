@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
+import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;

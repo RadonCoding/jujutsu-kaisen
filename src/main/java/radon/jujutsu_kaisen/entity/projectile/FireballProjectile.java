@@ -18,9 +18,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -70,26 +73,79 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         if (this.level().isClientSide) return;
 
-        Vec3 dir = this.getDeltaMovement();
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        for (int i = 0; i < 50; i++) {
-            Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
-            Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
+        int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 32;
 
-            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
+        for (int i = 0; i < pillarCount; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
 
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0,
-                    dx, dy, dz, 1.0D);
+            double xOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.cos(theta);
+            double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
+            double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
+
+            double x = center.x() + xOffset * this.getFlamePillarRadius();
+            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
+            double z = center.z() + zOffset * this.getFlamePillarRadius();
+
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+                    true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+                    true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+        }
+
+        for (int i = 0; i < pillarCount / 2; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.cos(theta);
+            double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
+            double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
+
+            double startX = center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F);
+            double startZ = center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F);
+
+            double x = center.x() + xOffset * this.getFlamePillarRadius();
+            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
+            double z = center.z() + zOffset * this.getFlamePillarRadius();
+
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+                    true, startX, center.y(), startZ);
+        }
+
+        int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 32;
+
+        for (int i = 0; i < shockwaveCount; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
+            double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
+
+            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
+            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
+
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
-            ExplosionHandler.spawn(this.level().dimension(), location, Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower()),
+            ExplosionHandler.spawn(this.level().dimension(), location, this.getExplosionRadius(),
                     20, this.getPower(), owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), true);
         }
         this.discard();
+    }
+
+    private float getFlamePillarRadius() {
+        return this.getExplosionRadius() * 0.25F;
+    }
+
+    private float getExplosionRadius() {
+        return Math.min(MAX_EXPLOSION, EXPLOSIVE_POWER * this.getPower());
     }
 
     @Override
