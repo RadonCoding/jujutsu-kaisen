@@ -144,7 +144,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
     public static RegistryObject<Summon<?>> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static RegistryObject<Summon<?>> TOAD = ABILITIES.register("toad", Toad::new);
-    public static RegistryObject<Summon<?>> TOAD_TOTALITY = ABILITIES.register("toad_totality", ToadTotality::new);
+    public static RegistryObject<Summon<?>> TOAD_FUSION = ABILITIES.register("toad_fusion", ToadFusion::new);
     public static RegistryObject<Summon<?>> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
     public static RegistryObject<Summon<?>> NUE = ABILITIES.register("nue", Nue::new);
     public static RegistryObject<Summon<?>> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);

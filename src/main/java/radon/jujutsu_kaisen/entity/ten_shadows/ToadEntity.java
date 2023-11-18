@@ -18,7 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -182,7 +181,7 @@ public class ToadEntity extends TenShadowsSummon implements RangedAttackMob {
 
     @Override
     public Summon<?> getAbility() {
-        return this.hasWings() ? JJKAbilities.TOAD_TOTALITY.get() : JJKAbilities.TOAD.get();
+        return this.hasWings() ? JJKAbilities.TOAD_FUSION.get() : JJKAbilities.TOAD.get();
     }
 
     public void setCanShoot(boolean canShoot) {

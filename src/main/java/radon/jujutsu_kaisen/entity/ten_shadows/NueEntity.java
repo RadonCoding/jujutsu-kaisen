@@ -29,6 +29,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.List;
+
 public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJumpInputListener {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
@@ -74,6 +76,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
+    @Override
+    public @NotNull List<Ability> getCustom() {
+        return List.of(JJKAbilities.NUE_LIGHTNING.get());
     }
 
     @Override
