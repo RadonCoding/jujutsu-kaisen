@@ -67,11 +67,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         return super.isAffected(pos);
     }
 
-    protected int getWidth() {
+    public int getWidth() {
         return this.entityData.get(DATA_WIDTH);
     }
 
-    protected int getHeight() {
+    public int getHeight() {
         return this.entityData.get(DATA_HEIGHT);
     }
 

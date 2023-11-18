@@ -52,7 +52,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
         if (target == null) return;
 
-        this.perform(owner, null, target);
+        this.performEntity(owner, null, target);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public void perform(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
+    public void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target == null) return;
 
         owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
@@ -94,10 +94,12 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
                 float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
                 float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
 
+                float power = domain == null ? this.getPower(owner) : cap.getRealPower();
+
                 FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                        new EelShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
-                        new SharkShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
-                        new PiranhaShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset)
+                        new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                        new SharkShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                        new PiranhaShikigamiProjectile(owner, power, target, xOffset, yOffset)
                 };
 
                 int delay = i * 2;

@@ -36,6 +36,7 @@ public class ServerConfig {
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.HEIAN_SUKUNA.getId(), 4.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.SATORU_GOJO.getId(), 3.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.YUTA_OKKOTSU.getId(), 2.0F);
+        EXPERIENCE_MULTIPLIERS.put(JJKEntities.TOJI_FUSHIGURO.getId(), 2.0F);
 
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.JOGO.getId(), 2.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.HANAMI.getId(), 2.0F);

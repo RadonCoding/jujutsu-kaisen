@@ -42,14 +42,18 @@ public class DismantleNet extends Ability {
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
                 for (int k = 0; k < count; k++) {
-                    double xOffset = (i - count / 2.0D) * size / count;
-                    double yOffset = (j - count / 2.0D) * size / count;
-                    double zOffset = (k - count / 2.0D) * size / count;
+                    double xOffset = (i - (count - 1) / 2.0D) * (double) size / count;
+                    double yOffset = (j - (count - 1) / 2.0D) * (double) size / count;
+                    double zOffset = (k - (count - 1) / 2.0D) * (double) size / count;
 
                     Vec3 position = center.add(xOffset, yOffset, zOffset);
 
-                    DismantleProjectile horizontal = new DismantleProjectile(owner, power, false, position, size);
-                    DismantleProjectile vertical = new DismantleProjectile(owner, power, true, position, size);
+                    DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
+                    DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
+
+                    horizontal.setDeltaMovement(horizontal.getLookAngle().scale(Dismantle.SPEED));
+                    vertical.setDeltaMovement(vertical.getLookAngle().scale(Dismantle.SPEED));
+
                     owner.level().addFreshEntity(horizontal);
                     owner.level().addFreshEntity(vertical);
                 }

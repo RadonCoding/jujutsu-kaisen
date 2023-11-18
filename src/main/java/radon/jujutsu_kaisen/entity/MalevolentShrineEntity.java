@@ -2,9 +2,11 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -12,14 +14,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -72,26 +80,51 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                     int horizontal = i;
                     int vertical = j;
 
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        cap.delayTickEvent(() -> {
-                            if (this.isRemoved()) return;
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                            for (int x = -horizontal; x <= horizontal; x++) {
-                                for (int z = -horizontal; z <= horizontal; z++) {
-                                    double distance = Math.sqrt(x * x + vertical * vertical + z * z);
+                    cap.delayTickEvent(() -> {
+                        if (this.isRemoved()) return;
 
-                                    if (distance < horizontal && distance >= horizontal - 1) {
-                                        BlockPos pos = center.offset(x, vertical, z);
-                                        if (!this.isAffected(pos) || this.level().getBlockState(pos).isAir()) continue;
-                                        this.ability.onHitBlock(this, owner, pos);
+                        for (int x = -horizontal; x <= horizontal; x++) {
+                            for (int z = -horizontal; z <= horizontal; z++) {
+                                double distance = Math.sqrt(x * x + vertical * vertical + z * z);
+
+                                if (distance < horizontal && distance >= horizontal - 1) {
+                                    BlockPos pos = center.offset(x, vertical, z);
+
+                                    if (!this.isAffected(pos) || this.level().getBlockState(pos).isAir()) continue;
+
+                                    BlockState state = owner.level().getBlockState(pos);
+
+                                    owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
+                                            1.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.5F);
+
+                                    if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                                            owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                            if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                                                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
+                                                        0.0D, 0.0D, 0.0D, 0.0D);
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }, delay);
-                    });
+                        }
+                    }, delay);
                 }
             }
             this.first = false;
+        }
+
+        int size = width * height / 4;
+        AABB bounds = this.getBounds();
+
+        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY,
+                (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+            this.ability.onHitBlock(this, owner, pos);
         }
     }
 
