@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.menu.JJKMenus;
@@ -45,6 +46,7 @@ public class JujutsuKaisen {
         JJKAbilities.ABILITIES.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
+        JJKEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
 
         JJKParticles.PARTICLES.register(bus);
 

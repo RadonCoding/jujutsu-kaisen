@@ -45,7 +45,7 @@ public class Switch extends Ability {
             cap.removeSummon(sukuna);
             sukuna.discard();
         } else {
-            sukuna = new SukunaEntity(owner, cap.getFingers());
+            sukuna = new SukunaEntity(owner, cap.getFingers(), true);
             HelperMethods.convertTo(owner, sukuna, true, false);
 
             cap.addSummon(sukuna);
