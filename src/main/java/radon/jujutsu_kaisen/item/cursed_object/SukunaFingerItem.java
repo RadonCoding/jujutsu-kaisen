@@ -32,7 +32,7 @@ public class SukunaFingerItem extends CursedObjectItem {
                 return pStack;
             }
         }
-        HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount()), true, false);
+        HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }
 }

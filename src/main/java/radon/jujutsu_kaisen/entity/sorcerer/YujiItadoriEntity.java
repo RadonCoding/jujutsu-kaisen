@@ -50,7 +50,7 @@ public class YujiItadoriEntity extends SorcererEntity {
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
             if (!this.level().isClientSide) {
-                HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount()), true, true);
+                HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount(), false), true, true);
             }
             if (!pPlayer.getAbilities().instabuild) {
                 stack.shrink(stack.getCount());
