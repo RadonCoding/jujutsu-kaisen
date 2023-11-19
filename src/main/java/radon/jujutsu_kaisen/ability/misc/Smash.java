@@ -84,36 +84,34 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
         List<Entity> entities = owner.level().getEntities(owner, new AABB(k1, i2, j2, l1, i1, j1));
 
         for (Entity entity : entities) {
-            if (!entity.ignoreExplosion()) {
-                double d12 = Math.sqrt(entity.distanceToSqr(explosionPos)) / (double) f2;
+            double d12 = Math.sqrt(entity.distanceToSqr(explosionPos)) / (double) f2;
 
-                if (d12 <= 1.0D) {
-                    double d5 = entity.getX() - explosionPos.x();
-                    double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosionPos.y();
-                    double d9 = entity.getZ() - explosionPos.z();
-                    double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+            if (d12 <= 1.0D) {
+                double d5 = entity.getX() - explosionPos.x();
+                double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosionPos.y();
+                double d9 = entity.getZ() - explosionPos.z();
+                double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
 
-                    if (d13 != 0.0D) {
-                        d5 /= d13;
-                        d7 /= d13;
-                        d9 /= d13;
-                        double d14 = Explosion.getSeenPercent(explosionPos, entity);
-                        double d10 = (1.0D - d12) * d14;
-                        double d11;
+                if (d13 != 0.0D) {
+                    d5 /= d13;
+                    d7 /= d13;
+                    d9 /= d13;
+                    double d14 = Explosion.getSeenPercent(explosionPos, entity);
+                    double d10 = (1.0D - d12) * d14;
+                    double d11;
 
-                        if (entity instanceof LivingEntity living) {
-                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
-                        } else {
-                            d11 = d10;
-                        }
-
-                        d5 *= d11;
-                        d7 *= d11;
-                        d9 *= d11;
-                        Vec3 movement = new Vec3(d5, d7, d9);
-                        entity.setDeltaMovement(entity.getDeltaMovement().add(movement.scale(LAUNCH_POWER)));
-                        entity.hurtMarked = true;
+                    if (entity instanceof LivingEntity living) {
+                        d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
+                    } else {
+                        d11 = d10;
                     }
+
+                    d5 *= d11;
+                    d7 *= d11;
+                    d9 *= d11;
+                    Vec3 movement = new Vec3(d5, d7, d9);
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(movement.scale(LAUNCH_POWER)));
+                    entity.hurtMarked = true;
                 }
             }
         }

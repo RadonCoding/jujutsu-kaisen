@@ -75,11 +75,6 @@ public class JujutsuProjectile extends Projectile {
     }
 
     @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
-
-    @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
