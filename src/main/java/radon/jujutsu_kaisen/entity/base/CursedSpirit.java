@@ -160,15 +160,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         return (!this.isTame() || pTarget != this.getOwner()) && super.canAttack(pTarget);
     }
 
-    @Override
-    public int getMaxHeadXRot() {
-        return 180;
-    }
 
-    @Override
-    public int getMaxHeadYRot() {
-        return 90;
-    }
 
     @Override
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {

@@ -66,8 +66,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
             for (int i = 0; i < entry.getValue(); i++) {
                 if (this.power == MAX_POWER) break;
-                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null)
-                    cap.absorb(curse.getTechnique());
+                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
                 this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getExperience()));
                 cap.removeCurse(registry, entity.getType());
             }

@@ -436,6 +436,7 @@ public class SorcererData implements ISorcererData {
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) this.giveAdvancement(player, "six_eyes");
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) this.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.VESSEL)) this.giveAdvancement(player, "vessel");
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE))
             this.giveAdvancement(player, "reverse_cursed_technique");
     }
