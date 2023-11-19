@@ -4,6 +4,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +36,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SukunaEntity extends SorcererEntity {
@@ -188,7 +193,9 @@ public class SukunaEntity extends SorcererEntity {
         super.onRemovedFromWorld();
 
         if (this.getOwner() instanceof ServerPlayer player) {
-            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
+            if (player.isDeadOrDying() || player.isRemoved()) {
+                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
+            }
         }
     }
 

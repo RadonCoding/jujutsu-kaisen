@@ -52,7 +52,7 @@ public class HelperMethods {
                     ItemStack stack = src.getItemBySlot(slot);
 
                     if (!stack.isEmpty()) {
-                        dst.setItemSlot(slot, stack.copyAndClear());
+                        dst.setItemSlot(slot, stack.copy());
                     }
                 }
             }
