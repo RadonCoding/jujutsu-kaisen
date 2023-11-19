@@ -54,7 +54,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 50.0F;
+        return 30.0F;
     }
 
     @Override
@@ -64,10 +64,8 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public int getDuration() {
-        return 10;
+        return 5;
     }
-
-
 
     @Override
     public boolean isScalable() {

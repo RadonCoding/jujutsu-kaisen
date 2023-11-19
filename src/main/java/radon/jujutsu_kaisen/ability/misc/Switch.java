@@ -62,4 +62,9 @@ public class Switch extends Ability {
     public float getCost(LivingEntity owner) {
         return 0;
     }
+
+    @Override
+    public int getCooldown() {
+        return 30 * 20;
+    }
 }
