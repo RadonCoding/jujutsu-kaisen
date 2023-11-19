@@ -41,7 +41,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final int DURATION = 5;
     private static final int LINE_LENGTH = 3;
 
-    private boolean domain;
+    private boolean instant;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -66,12 +66,12 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.entityData.set(DATA_LENGTH, length);
     }
 
-    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean domain) {
+    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant) {
         this(owner, power, roll, pos, length);
 
         this.moveTo(pos.x(), pos.y(), pos.z(), (this.random.nextFloat() - 0.5F) * 360.0F, 0.0F);
 
-        this.domain = domain;
+        this.instant = instant;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         pCompound.putFloat("roll", this.getRoll());
         pCompound.putInt("length", this.getLength());
-        pCompound.putBoolean("domain", this.domain);
+        pCompound.putBoolean("instant", this.instant);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATE_ROLL, pCompound.getFloat("roll"));
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
-        this.domain = pCompound.getBoolean("domain");
+        this.instant = pCompound.getBoolean("instant");
     }
 
     @Override
@@ -164,7 +164,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 hits.add(new EntityHitResult(entity));
             }
 
-            if (this.domain) return;
+            if (this.instant) return;
 
             BlockState state = this.level().getBlockState(pos);
 
@@ -191,7 +191,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.domain || this.getTime() >= DURATION) {
+        if (this.instant || this.getTime() >= DURATION) {
             this.discard();
         }
     }

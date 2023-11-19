@@ -75,6 +75,4 @@ public class BoogieWoogie extends Ability {
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
-
-
 }

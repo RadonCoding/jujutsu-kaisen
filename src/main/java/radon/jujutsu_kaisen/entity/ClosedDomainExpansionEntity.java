@@ -215,11 +215,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isPickable() {
-        return false;
-    }
-
-    @Override
     public void aiStep() {
     }
 

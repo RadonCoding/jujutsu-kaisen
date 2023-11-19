@@ -45,6 +45,7 @@ import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
+import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -140,6 +141,11 @@ public class JJKClientEventHandler {
             assert mc.player != null;
 
             LivingEntity target = event.getEntity();
+
+            if (target.hasEffect(JJKEffects.INVISIBILITY.get())) {
+                event.setCanceled(true);
+                return;
+            }
 
             if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
                 Entity viewer = Minecraft.getInstance().getCameraEntity();

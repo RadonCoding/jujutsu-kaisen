@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -113,7 +114,7 @@ public class Dash extends Ability {
         if (cap.getSpeedStacks() == 0 && !cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
         level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                 0, 0.0D, 0.0D, 0.0D, 1.0D);
     }

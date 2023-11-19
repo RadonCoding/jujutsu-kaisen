@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class SukunaEntity extends SorcererEntity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    private int fingers;
+    protected int fingers;
 
     @Nullable
     private GameType original;
@@ -60,6 +61,11 @@ public class SukunaEntity extends SorcererEntity {
         this.setOwner(owner);
 
         this.fingers = fingers;
+    }
+
+    @Override
+    public boolean is(@NotNull Entity pEntity) {
+        return pEntity == this.getOwner() || super.is(pEntity);
     }
 
     @Override
@@ -193,7 +199,7 @@ public class SukunaEntity extends SorcererEntity {
         super.onRemovedFromWorld();
 
         if (this.getOwner() instanceof ServerPlayer player) {
-            if (player.isDeadOrDying() || player.isRemoved()) {
+            if (!player.isDeadOrDying() && !player.isRemoved()) {
                 player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
         }
@@ -209,7 +215,7 @@ public class SukunaEntity extends SorcererEntity {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (!cap.hasTrait(Trait.VESSEL)) {
-                this.convertTo(JJKEntities.HEIAN_SUKUNA.get(), true);
+                HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
             }
             owner.kill();
         }
