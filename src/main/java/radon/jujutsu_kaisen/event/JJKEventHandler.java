@@ -201,9 +201,17 @@ public class JJKEventHandler {
                 }
 
                 if (stack != null) {
-                    if (stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    if (!source.is(JJKDamageSources.SOUL) && stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
                         if (((LivingEntity) attacker).canAttack(victim)) {
-                            victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
+                            if (victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount())) {
+                                if (attacker instanceof Player player) {
+                                    stack.hurtEnemy(victim, player);
+
+                                    if (stack.isEmpty()) {
+                                        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                                    }
+                                }
+                            }
                         }
                     } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
                         Vec3 pos = living.getEyePosition().add(living.getLookAngle());

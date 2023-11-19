@@ -698,7 +698,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getOutput(LivingEntity owner) {
-        return this.output;
+        return Math.min(this.getMaximumOutput(owner), this.output);
     }
 
     @Override

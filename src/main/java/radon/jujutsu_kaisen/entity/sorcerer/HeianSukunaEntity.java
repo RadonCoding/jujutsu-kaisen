@@ -7,6 +7,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -24,6 +26,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -37,7 +40,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 
-public class HeianSukunaEntity extends SorcererEntity {
+public class HeianSukunaEntity extends SukunaEntity {
     private static final EntityDataAccessor<Boolean> DATA_IDLE = SynchedEntityData.defineId(HeianSukunaEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_BARRAGE = SynchedEntityData.defineId(HeianSukunaEntity.class, EntityDataSerializers.INT);
 
@@ -48,6 +51,12 @@ public class HeianSukunaEntity extends SorcererEntity {
 
     public HeianSukunaEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    public HeianSukunaEntity(Level pLevel, int fingers) {
+        super(JJKEntities.HEIAN_SUKUNA.get(), pLevel);
+
+        this.fingers = fingers;
     }
 
     public void setBarrage(int barrage) {
@@ -68,36 +77,6 @@ public class HeianSukunaEntity extends SorcererEntity {
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.HITEN_STAFF.get()));
         this.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(JJKItems.KAMUTOKE_DAGGER.get()));
-    }
-
-    @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
-    }
-
-    @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.DISMANTLE_AND_CLEAVE;
-    }
-
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
-    }
-
-    @Override
-    public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.MALEVOLENT_SHRINE.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
-    }
-
-    @Override
-    public JujutsuType getJujutsuType() {
-        return JujutsuType.SORCERER;
-    }
-
-    @Override
-    public @Nullable Ability getDomain() {
-        return JJKAbilities.MALEVOLENT_SHRINE.get();
     }
 
     @Override

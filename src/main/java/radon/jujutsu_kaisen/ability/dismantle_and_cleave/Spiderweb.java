@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -73,8 +74,8 @@ public class Spiderweb extends Ability {
 
                         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
                             if (HelperMethods.RANDOM.nextInt(Math.round(power) * 2) == 0) {
-                                level.sendParticles(ParticleTypes.SWEEP_ATTACK, pos.getX(), pos.getY(), pos.getZ(),
-                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
+                                owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
+                                        (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), 3, true));
                             }
                         });
                     }, i * 2);
@@ -100,15 +101,13 @@ public class Spiderweb extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 50.0F;
+        return 100.0F;
     }
 
     @Override
     public int getCooldown() {
         return 5 * 20;
     }
-
-
 
     @Override
     public boolean isScalable() {

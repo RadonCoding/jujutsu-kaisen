@@ -113,11 +113,6 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
     }
 
     @Override
-    public boolean isPickable() {
-        return false;
-    }
-
-    @Override
     public boolean canBeHitByProjectile() {
         return this.isAlive();
     }
