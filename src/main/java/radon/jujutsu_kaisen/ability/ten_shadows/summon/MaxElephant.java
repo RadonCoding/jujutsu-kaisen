@@ -71,8 +71,5 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
         return true;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

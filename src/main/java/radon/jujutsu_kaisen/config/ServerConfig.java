@@ -31,9 +31,6 @@ public class ServerConfig {
     private static final Map<ResourceLocation, Float> EXPERIENCE_MULTIPLIERS = new LinkedHashMap<>();
 
     static {
-        EXPERIENCE_MULTIPLIERS.put(JJKEntities.SUKUNA.getId(), 3.5F);
-        EXPERIENCE_MULTIPLIERS.put(JJKEntities.MEGUNA.getId(), 3.5F);
-        EXPERIENCE_MULTIPLIERS.put(JJKEntities.HEIAN_SUKUNA.getId(), 4.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.SATORU_GOJO.getId(), 3.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.YUTA_OKKOTSU.getId(), 2.0F);
         EXPERIENCE_MULTIPLIERS.put(JJKEntities.TOJI_FUSHIGURO.getId(), 2.0F);

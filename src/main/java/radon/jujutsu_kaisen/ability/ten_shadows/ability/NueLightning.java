@@ -117,10 +117,7 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
         return MenuType.SCROLL;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean isScalable() {

@@ -42,6 +42,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }
@@ -127,7 +132,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             if (attacker.level().isClientSide) return;
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
             // If not enabled, then enable
             if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {

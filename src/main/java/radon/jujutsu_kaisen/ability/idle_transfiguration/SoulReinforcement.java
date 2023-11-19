@@ -26,6 +26,8 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
         return false;
     }
 
+
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null;

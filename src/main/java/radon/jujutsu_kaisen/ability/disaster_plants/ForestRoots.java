@@ -48,8 +48,5 @@ public class ForestRoots extends Ability {
         return 5 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

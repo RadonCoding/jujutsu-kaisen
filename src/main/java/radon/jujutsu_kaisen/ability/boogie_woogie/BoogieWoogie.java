@@ -76,8 +76,5 @@ public class BoogieWoogie extends Ability {
         return MenuType.SCROLL;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

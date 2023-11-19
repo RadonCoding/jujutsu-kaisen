@@ -64,8 +64,5 @@ public class MaximumMeteor extends Ability {
         return super.checkTriggerable(owner);
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

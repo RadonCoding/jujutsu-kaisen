@@ -84,8 +84,5 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         return MenuType.SCROLL;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

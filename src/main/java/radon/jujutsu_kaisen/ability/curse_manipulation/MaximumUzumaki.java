@@ -59,8 +59,5 @@ public class MaximumUzumaki extends Ability {
         return 60 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

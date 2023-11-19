@@ -119,10 +119,7 @@ public class GetCrushed extends Ability {
         return 15 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean isScalable() {

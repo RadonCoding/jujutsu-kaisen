@@ -65,8 +65,5 @@ public class NueTotality extends Summon<NueTotalityEntity> {
         return 25 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

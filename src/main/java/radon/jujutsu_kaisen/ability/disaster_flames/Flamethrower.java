@@ -79,10 +79,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
         return 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public void onStart(LivingEntity owner) {

@@ -132,10 +132,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     protected abstract void createBarrier(LivingEntity owner);
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public final int getCooldown() {

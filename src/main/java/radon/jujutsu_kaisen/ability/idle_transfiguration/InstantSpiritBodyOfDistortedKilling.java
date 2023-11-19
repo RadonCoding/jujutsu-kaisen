@@ -27,6 +27,8 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
         return false;
     }
 
+
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;

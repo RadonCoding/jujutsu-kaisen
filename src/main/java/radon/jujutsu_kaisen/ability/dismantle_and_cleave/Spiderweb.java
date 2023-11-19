@@ -108,10 +108,7 @@ public class Spiderweb extends Ability {
         return 5 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean isScalable() {

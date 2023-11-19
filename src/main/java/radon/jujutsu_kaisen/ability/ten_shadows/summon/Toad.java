@@ -40,10 +40,7 @@ public class Toad extends Summon<ToadEntity> {
         return 30 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public List<EntityType<?>> getTypes() {

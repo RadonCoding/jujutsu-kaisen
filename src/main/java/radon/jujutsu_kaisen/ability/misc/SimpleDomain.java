@@ -42,6 +42,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> implements IDuratio
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public List<EntityType<?>> getTypes() {
         return List.of(JJKEntities.SIMPLE_DOMAIN.get());
     }

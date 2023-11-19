@@ -25,6 +25,11 @@ public class CyclopsSmash extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) <= 3.0D;
     }

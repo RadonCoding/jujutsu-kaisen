@@ -2,9 +2,7 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -25,6 +23,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -50,12 +49,11 @@ public class YujiItadoriEntity extends SorcererEntity {
         ItemStack stack = pPlayer.getItemInHand(pHand);
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            if (!pPlayer.getAbilities().instabuild) {
-                stack.shrink(1);
-            }
-
             if (!this.level().isClientSide) {
-                this.convertTo(JJKEntities.SUKUNA.get(), true);
+                HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount()), true, true);
+            }
+            if (!pPlayer.getAbilities().instabuild) {
+                stack.shrink(stack.getCount());
             }
             return InteractionResult.SUCCESS;
         } else {

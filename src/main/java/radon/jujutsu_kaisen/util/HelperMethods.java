@@ -11,8 +11,12 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -31,6 +35,48 @@ import java.util.Random;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
+
+    public static void convertTo(LivingEntity src, LivingEntity dst, boolean transferInventory, boolean kill) {
+        if (!src.isRemoved()) {
+            dst.copyPosition(src);
+
+            if (src.hasCustomName()) {
+                dst.setCustomName(src.getCustomName());
+                dst.setCustomNameVisible(src.isCustomNameVisible());
+            }
+
+            dst.setInvulnerable(src.isInvulnerable());
+
+            if (transferInventory) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    ItemStack stack = src.getItemBySlot(slot);
+
+                    if (!stack.isEmpty()) {
+                        dst.setItemSlot(slot, stack.copyAndClear());
+                    }
+                }
+            }
+
+            src.level().addFreshEntity(dst);
+
+            if (src.isPassenger()) {
+                Entity vehicle = src.getVehicle();
+                src.stopRiding();
+
+                if (vehicle != null) {
+                    vehicle.startRiding(vehicle, true);
+                }
+            }
+
+            if (kill) {
+                if (src instanceof Player) {
+                    src.kill();
+                } else {
+                    src.discard();
+                }
+            }
+        }
+    }
 
     private static void sendParticles(ServerLevel pLevel, ServerPlayer pPlayer, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, Packet<?> pPacket) {
         if (pPlayer.level() == pLevel) {

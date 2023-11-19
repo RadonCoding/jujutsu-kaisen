@@ -82,10 +82,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
@@ -121,7 +118,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 return;
             }
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
             if (!melee) return;
 

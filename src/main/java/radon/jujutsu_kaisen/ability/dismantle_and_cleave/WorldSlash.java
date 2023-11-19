@@ -44,10 +44,7 @@ public class WorldSlash extends Ability {
         return 30 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean isScalable() {

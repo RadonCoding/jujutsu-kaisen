@@ -78,10 +78,7 @@ public class FishShikigami extends Ability {
         return 5 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public MenuType getMenuType() {

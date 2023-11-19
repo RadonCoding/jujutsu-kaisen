@@ -116,6 +116,8 @@ public class SorcererData implements ISorcererData {
     private int speedStacks;
     private int noMotionTime;
 
+    private int fingers;
+
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
@@ -1319,7 +1321,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void tryAdapt(DamageSource source) {
-        boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+        boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
         Ability ability;
 
@@ -1406,6 +1408,8 @@ public class SorcererData implements ISorcererData {
         if (HelperMethods.RANDOM.nextInt(10) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
+            if (HelperMethods.RANDOM.nextInt(10) == 0) this.addTrait(Trait.VESSEL);
+
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
 
             if (HelperMethods.RANDOM.nextInt(5) == 0) {
@@ -1450,6 +1454,18 @@ public class SorcererData implements ISorcererData {
     public void resetSpeedStacks() {
         this.speedStacks = 0;
         this.noMotionTime = 0;
+    }
+
+    @Override
+    public int getFingers() {
+        return this.fingers;
+    }
+
+    @Override
+    public int addFingers(int count) {
+        int real = Math.min(count, 20 - this.fingers);
+        this.fingers += real;
+        return real;
     }
 
     @Override
@@ -1516,6 +1532,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
+        nbt.putInt("fingers", this.fingers);
 
         if (this.domain != null) {
             nbt.putUUID("domain", this.domain);
@@ -1760,6 +1777,7 @@ public class SorcererData implements ISorcererData {
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
+        this.fingers = nbt.getInt("fingers");
 
         if (nbt.hasUUID("domain")) {
             this.domain = nbt.getUUID("domain");

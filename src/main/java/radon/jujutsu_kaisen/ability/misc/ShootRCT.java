@@ -32,6 +32,11 @@ public class ShootRCT extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
