@@ -109,10 +109,9 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
                 frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
                 frame.discard();
 
-                if (victim.ignoreExplosion()) {
-                    victim.setDeltaMovement(attacker.getLookAngle().scale(LAUNCH_POWER));
-                    victim.hurtMarked = true;
-                }
+                victim.setDeltaMovement(attacker.getLookAngle().scale(LAUNCH_POWER));
+                victim.hurtMarked = true;
+
                 LivingEntity owner = frame.getOwner();
 
                 if (owner != null) {

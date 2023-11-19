@@ -52,8 +52,8 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     @Override
-    public boolean ignoreExplosion() {
-        return true;
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
     }
 
     public List<Entity> getAffected() {
