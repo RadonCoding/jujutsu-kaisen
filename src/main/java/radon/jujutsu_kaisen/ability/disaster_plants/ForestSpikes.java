@@ -111,10 +111,7 @@ public class ForestSpikes extends Ability {
         return 10 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public MenuType getMenuType() {

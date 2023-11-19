@@ -26,6 +26,11 @@ public class AirPunch extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }

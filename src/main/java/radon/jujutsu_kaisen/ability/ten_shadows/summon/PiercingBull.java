@@ -71,8 +71,5 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
         return true;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

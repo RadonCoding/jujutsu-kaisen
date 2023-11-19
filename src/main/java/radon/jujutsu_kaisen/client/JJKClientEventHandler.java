@@ -246,10 +246,6 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
-            event.registerLayerDefinition(MegunaRyomenModel.LAYER, SkinModel::createBodyLayer);
-            event.registerLayerDefinition(MegunaRyomenModel.INNER_LAYER, SkinModel::createInnerLayer);
-            event.registerLayerDefinition(MegunaRyomenModel.OUTER_LAYER, SkinModel::createOuterLayer);
-
             event.registerLayerDefinition(YujiItadoriModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(YujiItadoriModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(YujiItadoriModel.OUTER_LAYER, SkinModel::createOuterLayer);
@@ -282,7 +278,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
-            event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRyomenRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
             event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
@@ -310,7 +306,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MEGUNA.get(), MegunaRyomenRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOGE_INUMAKI.get(), TogeInumakiRenderer::new);

@@ -123,10 +123,8 @@
 
   "item.jujutsu_kaisen.toji_fushiguro_spawn_egg": "Spawn Toji Fushiguro",
   "item.jujutsu_kaisen.satoru_gojo_spawn_egg": "Spawn Satoru Gojo",
-  "item.jujutsu_kaisen.sukuna_spawn_egg": "Spawn Sukuna",
   "item.jujutsu_kaisen.yuta_okkotsu_spawn_egg": "Spawn Yuta Okkotsu",
   "item.jujutsu_kaisen.megumi_fushiguro_spawn_egg": "Spawn Megumi Fushiguro",
-  "item.jujutsu_kaisen.meguna_spawn_egg": "Spawn Meguna",
   "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
@@ -214,6 +212,7 @@
   "ability.jujutsu_kaisen.cursed_energy_blast": "CE Blast",
   "ability.jujutsu_kaisen.lightning": "Lightning",
   "ability.jujutsu_kaisen.zero_point_two_second_domain_expansion": "0.2s Domain Expansion",
+  "ability.jujutsu_kaisen.switch": "Switch",
 
   "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
   "ability.jujutsu_kaisen.shoot_rct": "Shoot: Reverse Cursed Technique",
@@ -471,7 +470,6 @@
   "entity.jujutsu_kaisen.tranquil_deer": "Tranquil Deer",
   "entity.jujutsu_kaisen.piercing_bull": "Piercing Bull",
   "entity.jujutsu_kaisen.agito": "Agito",
-  "entity.jujutsu_kaisen.meguna": "Meguna",
   "entity.jujutsu_kaisen.yuji_itadori": "Yuji Itadori",
   "entity.jujutsu_kaisen.toge_inumaki": "Toge Inumaki",
   "entity.jujutsu_kaisen.suguru_geto": "Suguru Geto",

@@ -73,8 +73,5 @@ public class ReleaseCurses extends Ability {
         return 0;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

@@ -138,7 +138,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
     public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
-
+    public static RegistryObject<Ability> SWITCH = ABILITIES.register("switch", Switch::new);
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);
@@ -340,6 +340,10 @@ public class JJKAbilities {
 
             abilities.add(SIMPLE_DOMAIN.get());
             abilities.add(DOMAIN_AMPLIFICATION.get());
+
+            for (Trait trait : cap.getTraits()) {
+                abilities.addAll(Arrays.asList(trait.getAbilities()));
+            }
 
             CursedTechnique technique = cap.getTechnique();
 

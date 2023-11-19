@@ -71,8 +71,5 @@ public class TranquilDeer extends Summon<TranquilDeerEntity> {
         return true;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

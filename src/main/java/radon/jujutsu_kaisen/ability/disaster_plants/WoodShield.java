@@ -60,10 +60,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
         return 5 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean display() {

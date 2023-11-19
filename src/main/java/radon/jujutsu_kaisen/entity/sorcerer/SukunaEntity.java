@@ -1,5 +1,13 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -7,31 +15,71 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SukunaEntity extends SorcererEntity {
+    @Nullable
+    private UUID ownerUUID;
+    @Nullable
+    private LivingEntity cachedOwner;
+
+    private int fingers;
+
+    @Nullable
+    private GameType original;
+
     public SukunaEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
+    public SukunaEntity(LivingEntity owner, int fingers) {
+        super(JJKEntities.SUKUNA.get(), owner.level());
+
+        this.setOwner(owner);
+
+        this.fingers = fingers;
+    }
+
+    @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        return pTarget != this.getOwner() && super.canAttack(pTarget);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner instanceof ServerPlayer player) {
+            if (this.original == null) {
+                this.original = player.gameMode.getGameModeForPlayer();
+            }
+            player.setGameMode(GameType.SPECTATOR);
+            player.setCamera(this);
+        }
+    }
+
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        return this.fingers * (ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue() / 20);
     }
 
     @Override
@@ -75,50 +123,105 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
 
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.YUJI_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.YUJI_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.YUJI_BOOTS.get()));
-    }
+        if (this.ownerUUID != null) {
+            pCompound.putUUID("owner", this.ownerUUID);
+        }
 
-    public void convertTo() {
-        HeianSukunaEntity entity = JJKEntities.HEIAN_SUKUNA.get().create(this.level());
+        pCompound.putInt("fingers", this.fingers);
 
-        if (entity != null) {
-            entity.copyPosition(this);
-            entity.setBaby(this.isBaby());
-            entity.setNoAi(this.isNoAi());
-            if (this.hasCustomName()) {
-                entity.setCustomName(this.getCustomName());
-                entity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-
-            if (this.isPersistenceRequired()) {
-                entity.setPersistenceRequired();
-            }
-
-            entity.setInvulnerable(this.isInvulnerable());
-
-            this.level().addFreshEntity(entity);
-
-            Entity vehicle = this.getVehicle();
-
-            if (vehicle != null) {
-                this.stopRiding();
-                entity.startRiding(vehicle, true);
-            }
-            this.discard();
+        if (this.original != null) {
+            pCompound.putInt("original", this.original.ordinal());
         }
     }
 
     @Override
-    public void remove(@NotNull RemovalReason pReason) {
-        super.remove(pReason);
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
 
-        if (pReason == RemovalReason.KILLED) {
-            this.convertTo();
+        if (pCompound.hasUUID("owner")) {
+            this.ownerUUID = pCompound.getUUID("owner");
+        }
+
+        this.fingers = pCompound.getInt("fingers");
+
+        if (pCompound.contains("original")) {
+            this.original = GameType.values()[pCompound.getInt("original")];
+        }
+    }
+
+    public void setOwner(@Nullable LivingEntity pOwner) {
+        if (pOwner != null) {
+            this.ownerUUID = pOwner.getUUID();
+            this.cachedOwner = pOwner;
+        }
+    }
+
+    @Nullable
+    public LivingEntity getOwner() {
+        if (this.cachedOwner != null && !this.cachedOwner.isRemoved()) {
+            return this.cachedOwner;
+        } else if (this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            this.cachedOwner = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.ownerUUID);
+            return this.cachedOwner;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src ->
+                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> dst.setAdditional(src.getTechnique())));
+        }
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        if (this.getOwner() instanceof ServerPlayer player) {
+            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
+        }
+    }
+
+    @Override
+    public void die(@NotNull DamageSource pDamageSource) {
+        super.die(pDamageSource);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.hasTrait(Trait.VESSEL)) {
+                this.convertTo(JJKEntities.HEIAN_SUKUNA.get(), true);
+            }
+            owner.kill();
+        }
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        Entity entity = this.getOwner();
+        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
+
+        if (owner != null) {
+            this.setOwner(owner);
         }
     }
 }

@@ -63,10 +63,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public float getCost(LivingEntity owner) {

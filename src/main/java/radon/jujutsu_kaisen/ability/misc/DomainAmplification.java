@@ -34,6 +34,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
     }

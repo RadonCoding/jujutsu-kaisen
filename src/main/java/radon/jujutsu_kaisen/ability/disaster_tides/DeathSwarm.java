@@ -75,10 +75,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
         return 10 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public MenuType getMenuType() {

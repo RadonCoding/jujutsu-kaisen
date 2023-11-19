@@ -89,8 +89,5 @@ public class Mahoraga extends Summon<MahoragaEntity> {
         return new MahoragaEntity(owner, this.isTamed(owner));
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

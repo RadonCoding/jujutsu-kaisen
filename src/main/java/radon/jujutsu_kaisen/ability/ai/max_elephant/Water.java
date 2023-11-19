@@ -35,6 +35,11 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) <= RANGE;
     }

@@ -45,10 +45,7 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
         return 15 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     protected boolean isBottomlessWell() {

@@ -9,4 +9,9 @@ public class HealRCT extends ShootRCT {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return false;
+    }
 }

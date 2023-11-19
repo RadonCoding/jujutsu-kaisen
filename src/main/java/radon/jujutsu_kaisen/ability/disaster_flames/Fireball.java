@@ -39,8 +39,5 @@ public class Fireball extends Ability {
         return 30 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

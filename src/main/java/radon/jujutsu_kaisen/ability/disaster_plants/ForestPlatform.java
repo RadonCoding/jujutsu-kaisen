@@ -59,10 +59,7 @@ public class ForestPlatform extends Ability implements Ability.IToggled {
         return 1.0F;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public void onEnabled(LivingEntity owner) {

@@ -47,24 +47,6 @@ public class TogeInumakiEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-
-        if (itemstack.is(JJKItems.SUKUNA_FINGER.get())) {
-            if (!pPlayer.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-
-            if (!this.level().isClientSide) {
-                this.convertTo(JJKEntities.MEGUNA.get(), true);
-            }
-            return InteractionResult.SUCCESS;
-        } else {
-            return super.mobInteract(pPlayer, pHand);
-        }
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.SEMI_GRADE_1.getRequiredExperience();
     }

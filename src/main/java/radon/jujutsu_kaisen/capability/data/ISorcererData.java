@@ -288,6 +288,9 @@ public interface ISorcererData {
     void addSpeedStack();
     void resetSpeedStacks();
 
+    int getFingers();
+    int addFingers(int count);
+
     CompoundTag serializeNBT();
     void deserializeNBT(CompoundTag nbt);
 }

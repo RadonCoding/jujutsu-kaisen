@@ -43,8 +43,5 @@ public class WaterTorrent extends Ability {
         return 50.0F;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

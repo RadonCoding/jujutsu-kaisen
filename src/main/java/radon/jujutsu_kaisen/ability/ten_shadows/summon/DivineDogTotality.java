@@ -65,8 +65,5 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
         return 15 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

@@ -38,6 +38,11 @@ public class Smash extends Ability implements Ability.IChannelened, Ability.IDur
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.CHANNELED;
     }

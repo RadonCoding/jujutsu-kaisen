@@ -18,6 +18,11 @@ public class SkyStrike extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
     }

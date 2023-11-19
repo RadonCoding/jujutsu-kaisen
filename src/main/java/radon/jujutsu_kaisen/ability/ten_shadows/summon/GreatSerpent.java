@@ -71,8 +71,5 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
         return true;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

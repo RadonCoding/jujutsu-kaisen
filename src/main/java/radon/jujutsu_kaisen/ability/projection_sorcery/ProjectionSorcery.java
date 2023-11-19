@@ -128,10 +128,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         return 1.0F;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public MenuType getMenuType() {

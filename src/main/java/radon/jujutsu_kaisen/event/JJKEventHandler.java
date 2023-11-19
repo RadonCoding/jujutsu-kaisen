@@ -165,7 +165,7 @@ public class JJKEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK));
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
             // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
             if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
@@ -202,13 +202,6 @@ public class JJKEventHandler {
 
                 if (stack != null) {
                     if (stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                        if (attacker instanceof Player player) {
-                            stack.hurtEnemy(victim, player);
-
-                            if (stack.isEmpty()) {
-                                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                            }
-                        }
                         if (((LivingEntity) attacker).canAttack(victim)) {
                             victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount());
                         }

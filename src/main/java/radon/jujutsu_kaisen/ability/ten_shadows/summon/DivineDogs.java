@@ -112,8 +112,5 @@ public class DivineDogs extends Summon<DivineDogEntity> {
         return true;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

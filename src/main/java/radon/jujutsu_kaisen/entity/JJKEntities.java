@@ -132,10 +132,6 @@ public class JJKEntities {
             EntityType.Builder.<MegumiFushiguroEntity>of(MegumiFushiguroEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "megumi_fushiguro")
                             .toString()));
-    public static RegistryObject<EntityType<MegunaEntity>> MEGUNA = ENTITIES.register("meguna", () ->
-            EntityType.Builder.<MegunaEntity>of(MegunaEntity::new, MobCategory.AMBIENT)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "meguna")
-                            .toString()));
     public static RegistryObject<EntityType<YujiItadoriEntity>> YUJI_ITADORI = ENTITIES.register("yuji_itadori", () ->
             EntityType.Builder.<YujiItadoriEntity>of(YujiItadoriEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "yuji_itadori")
@@ -419,7 +415,6 @@ public class JJKEntities {
         event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());
         event.put(MEGUMI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(YUTA_OKKOTSU.get(), SorcererEntity.createAttributes().build());
-        event.put(MEGUNA.get(), SorcererEntity.createAttributes().build());
         event.put(YUJI_ITADORI.get(), SorcererEntity.createAttributes().build());
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());

@@ -35,6 +35,8 @@ public class DisasterFlames extends Ability {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
+
+
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;

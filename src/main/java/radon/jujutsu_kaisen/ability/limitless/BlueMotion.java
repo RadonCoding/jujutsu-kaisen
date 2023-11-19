@@ -46,10 +46,7 @@ public class BlueMotion extends Ability {
         return 10 * 20;
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 
     @Override
     public boolean isScalable() {

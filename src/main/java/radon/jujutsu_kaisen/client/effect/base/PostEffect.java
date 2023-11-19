@@ -31,9 +31,7 @@ public abstract class PostEffect implements ResourceManagerReloadListener {
                 this.postChain = new PostChain(mc.getTextureManager(), pResourceManager, mc.getMainRenderTarget(), this.getEffect());
                 ((PostChain) this.postChain).resize(mc.getWindow().getWidth(), mc.getWindow().getHeight());
             }
-        } catch (JsonSyntaxException | IOException e) {
-            e.printStackTrace();
-        }
+        } catch (JsonSyntaxException | IOException ignored) {}
     }
 
     public void resize(int width, int heigtht) {

@@ -65,8 +65,5 @@ public class Agito extends Summon<AgitoEntity> {
         return new AgitoEntity(owner);
     }
 
-    @Override
-    public boolean isTechnique() {
-        return true;
-    }
+
 }

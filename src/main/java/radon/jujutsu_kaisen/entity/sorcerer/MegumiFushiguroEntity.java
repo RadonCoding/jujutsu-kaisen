@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableCurseGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -52,15 +53,14 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
     @Override
     public @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemStack stack = pPlayer.getItemInHand(pHand);
 
-        if (itemstack.is(JJKItems.SUKUNA_FINGER.get())) {
-            if (!pPlayer.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-
+        if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
             if (!this.level().isClientSide) {
-                this.convertTo(JJKEntities.MEGUNA.get(), true);
+                HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount()), true, true);
+            }
+            if (!pPlayer.getAbilities().instabuild) {
+                stack.shrink(stack.getCount());
             }
             return InteractionResult.SUCCESS;
         } else {

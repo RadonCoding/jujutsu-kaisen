@@ -24,6 +24,11 @@ public class Heal extends Ability implements Ability.IChannelened {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.CHANNELED;
     }
