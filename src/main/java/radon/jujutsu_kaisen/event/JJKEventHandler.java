@@ -396,9 +396,9 @@ public class JJKEventHandler {
             // Making mobs use chants
             if (owner.level() instanceof ServerLevel level) {
                 if (owner instanceof Mob) {
-                    if (ability.isTechnique() && ability.isScalable() && HelperMethods.RANDOM.nextInt(5) == 0) {
-                        List<String> chants = new ArrayList<>(cap.getChants(ability));
+                    List<String> chants = new ArrayList<>(cap.getChants(ability));
 
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(5) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ChantHandler.onChant(owner, chants.get(i));
 
