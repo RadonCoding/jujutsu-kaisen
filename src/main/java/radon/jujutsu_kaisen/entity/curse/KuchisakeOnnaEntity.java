@@ -235,12 +235,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
                     if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, false, false) == Ability.Status.SUCCESS) {
                         target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 3 * 20, 0, false, false, false));
-                        ResourceLocation key = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(this.getType());
-
-                        if (key != null) {
-                            target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID),
-                                    Component.translatable(String.format("entity.%s.%s", key.getNamespace(), key.getPath()))));
-                        }
+                        target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID), this.getName().getString()));
                         this.entityData.set(DATA_OPEN, true);
                     } else {
                         this.entityData.set(DATA_TARGET, Optional.empty());

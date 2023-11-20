@@ -1,7 +1,9 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -399,7 +401,16 @@ public class JJKEventHandler {
 
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ChantHandler.onChant(owner, chants.get(i));
-                            level.getServer().sendSystemMessage(Component.literal(chants.get(i)));
+
+                            for (ServerPlayer player : level.players()) {
+                                if (player.distanceTo(owner) > 32.0D) continue;
+
+                                ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
+
+                                if (key != null) {
+                                    player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
+                                }
+                            }
                         }
                     }
                 }
