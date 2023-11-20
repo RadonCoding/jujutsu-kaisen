@@ -523,8 +523,8 @@ public class SorcererData implements ISorcererData {
             double damage = this.getRealPower() * 2.0D;
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
-            double speed = this.getRealPower() * 0.5D;
-            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", speed, AttributeModifier.Operation.ADDITION);
+            double attack = this.getRealPower() * 0.5D;
+            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.05D;
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
@@ -545,6 +545,9 @@ public class SorcererData implements ISorcererData {
 
             double damage = this.getRealPower();
             this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+
+            double movement = this.getRealPower() * 0.025D;
+            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));

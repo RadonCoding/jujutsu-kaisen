@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
-    private static final double SPEED = 2.5D;
+    private static final double SPEED = 1.5D;
 
     @Override
     public boolean isScalable() {
@@ -74,6 +74,8 @@ public class Dash extends Ability {
 
         if (!canDash(owner)) return;
 
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
         Vec3 look = owner.getLookAngle();
 
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
@@ -91,7 +93,7 @@ public class Dash extends Ability {
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
-            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED)));
+            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F))));
             owner.hurtMarked = true;
         }
 
@@ -108,8 +110,6 @@ public class Dash extends Ability {
             Vec3 offset = pos.add(look);
             level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
         }
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getSpeedStacks() == 0 && !cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
