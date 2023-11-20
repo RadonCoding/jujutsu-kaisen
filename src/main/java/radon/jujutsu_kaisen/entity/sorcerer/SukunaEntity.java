@@ -83,6 +83,11 @@ public class SukunaEntity extends SorcererEntity {
         return this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).get(this.entityData.get(DATA_ENTITY).orElseThrow());
     }
 
+
+    public GameType getOriginal(ServerPlayer player) {
+        return this.original == null ? player.server.getDefaultGameType() : this.original;
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
