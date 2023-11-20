@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -13,9 +14,11 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ISorcerer {
     boolean canPerformSorcery();
@@ -66,5 +69,15 @@ public interface ISorcerer {
             data.setExperience(data.getExperience() * experience.get(key));
         }
         data.setEnergy(data.getMaxEnergy((LivingEntity) this));
+
+        /*for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
+            if (!ability.isTechnique() || !ability.isScalable()) continue;
+
+            Set<String> chants = HelperMethods.getRandomWordCombo(5);
+
+            while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
+
+            data.addChants(ability, chants);
+        }*/
     }
 }

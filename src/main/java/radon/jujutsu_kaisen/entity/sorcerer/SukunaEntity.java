@@ -101,11 +101,6 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public boolean canAttack(@NotNull LivingEntity pTarget) {
-        return pTarget != this.getOwner() && super.canAttack(pTarget);
-    }
-
-    @Override
     public void tick() {
         LivingEntity owner = this.getOwner();
 
