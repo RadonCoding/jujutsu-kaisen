@@ -8,6 +8,7 @@
   },
   "refmap": "jujutsu_kaisen.refmap.json",
   "client": [
+    "client.EntityMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
@@ -15,8 +16,7 @@
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.MinecraftMixin",
-    "client.PostChainAccessor",
-    "client.EntityMixin"
+    "client.PostChainAccessor"
   ],
   "mixins": [
     "common.EntityMixin",
