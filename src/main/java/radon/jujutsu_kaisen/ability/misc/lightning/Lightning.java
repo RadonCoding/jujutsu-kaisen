@@ -33,7 +33,7 @@ public class Lightning extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LightningEntity lightning = new LightningEntity(owner, getPower(owner), (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F), (float) (-owner.getXRot() * Math.PI / 180.0F));
+        LightningEntity lightning = new LightningEntity(owner, this.getPower(owner));
         owner.level().addFreshEntity(lightning);
     }
 

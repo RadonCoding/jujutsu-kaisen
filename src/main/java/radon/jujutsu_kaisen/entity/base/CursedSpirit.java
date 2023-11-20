@@ -160,8 +160,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         return (!this.isTame() || pTarget != this.getOwner()) && super.canAttack(pTarget);
     }
 
-
-
     @Override
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);

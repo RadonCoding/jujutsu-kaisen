@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,13 +22,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -37,15 +37,12 @@ import java.util.Optional;
 public class LightningEntity extends JujutsuProjectile {
     public static final float SCALE = 1.0F;
     private static final double RADIUS = 20;
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 20.0F;
 
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
-    public double prevCollidePosX, prevCollidePosY, prevCollidePosZ;
-    public float renderYaw, renderPitch;
 
-    public long seed;
-    private int life;
+    public int life;
     private int flashes;
 
     public @Nullable Direction side = null;
@@ -53,58 +50,37 @@ public class LightningEntity extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
 
-    public float prevYaw;
-    public float prevPitch;
+
+    public int animation;
 
     public LightningEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.noCulling = true;
-        this.seed = this.random.nextLong();
         this.life = 2;
-        this.flashes = this.random.nextInt(3) + 1;
+        this.flashes = 1;
     }
 
-    public LightningEntity(LivingEntity owner, float power, float yaw, float pitch) {
+    public LightningEntity(LivingEntity owner, float power) {
         this(JJKEntities.LIGHTNING.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
 
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.setPos(spawn.x(), spawn.y(), spawn.z());
-
+        this.update();
         this.calculateEndPos();
-    }
-
-    public float getScale() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return SCALE;
-        return SCALE * (rika.isOpen() ? 1.0F : 0.5F);
-    }
-
-    public double getRadius() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return RADIUS;
-        return RADIUS * (rika.isOpen() ? 1.0D : 0.5D);
-    }
-
-    public float getDamage() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return DAMAGE;
-        return DAMAGE * (rika.isOpen() ? 1.0F : 0.5F);
+        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.prevCollidePosX = this.collidePosX;
-        this.prevCollidePosY = this.collidePosY;
-        this.prevCollidePosZ = this.collidePosZ;
-        this.prevYaw = this.renderYaw;
-        this.prevPitch = this.renderPitch;
         this.xo = this.getX();
         this.yo = this.getY();
         this.zo = this.getZ();
@@ -115,25 +91,22 @@ public class LightningEntity extends JujutsuProjectile {
 
         if (this.life == 2) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
-                this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
-
                 this.calculateEndPos();
 
-                if (!this.level().isClientSide) {
-                    List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                            new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
+                if (!this.level().isClientSide) {
                     for (Entity entity : entities) {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
                             continue;
 
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                this.getDamage() * this.getPower());
+                                DAMAGE * this.getPower());
                     }
 
                     if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                        double radius = this.getScale() * 2.0F;
+                        double radius = SCALE * 2.0F;
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
@@ -163,10 +136,8 @@ public class LightningEntity extends JujutsuProjectile {
         }
 
         if (this.life == 2) {
-            if (this.level().isClientSide) {
-                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 10000.0F, 0.8F + this.random.nextFloat() * 0.2F, false);
-                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 2.0F, 0.5F + this.random.nextFloat() * 0.2F, false);
-            }
+            this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10.0F, 0.8F + this.random.nextFloat() * 0.2F);
+            this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
         }
 
         --this.life;
@@ -177,7 +148,6 @@ public class LightningEntity extends JujutsuProjectile {
             } else if (this.life < -this.random.nextInt(10)) {
                 --this.flashes;
                 this.life = 1;
-                this.seed = this.random.nextLong();
             }
         }
 
@@ -213,15 +183,9 @@ public class LightningEntity extends JujutsuProjectile {
     }
 
     private void calculateEndPos() {
-        if (this.level().isClientSide) {
-            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.renderPitch);
-        } else {
-            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.getPitch());
-        }
+        this.endPosX = this.getX() + RADIUS * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
+        this.endPosZ = this.getZ() + RADIUS * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+        this.endPosY = this.getY() + RADIUS * Math.sin(this.getPitch());
     }
 
     public List<Entity> checkCollisions(Vec3 from, Vec3 to) {
@@ -244,7 +208,7 @@ public class LightningEntity extends JujutsuProjectile {
         AABB bounds = new AABB(Math.min(this.getX(), this.collidePosX), Math.min(this.getY(), this.collidePosY),
                 Math.min(this.getZ(), this.collidePosZ), Math.max(this.getX(), this.collidePosX),
                 Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
-                .inflate(this.getScale());
+                .inflate(SCALE);
 
         for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
             float pad = entity.getPickRadius() + 0.5F;

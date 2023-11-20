@@ -70,14 +70,14 @@ public interface ISorcerer {
         }
         data.setEnergy(data.getMaxEnergy((LivingEntity) this));
 
-        /*for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
+        for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
             if (!ability.isTechnique() || !ability.isScalable()) continue;
 
             Set<String> chants = HelperMethods.getRandomWordCombo(5);
 
-            while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
+            //while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
 
             data.addChants(ability, chants);
-        }*/
+        }
     }
 }

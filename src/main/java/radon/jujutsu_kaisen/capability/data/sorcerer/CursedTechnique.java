@@ -26,6 +26,7 @@ public enum CursedTechnique {
             JJKAbilities.ABILITY_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),
             JJKAbilities.SHADOW_STORAGE.get(),
+            JJKAbilities.SHADOW_TRAVEL.get(),
 
             JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.PIERCING_WATER.get(), JJKAbilities.WHEEL.get(),
 

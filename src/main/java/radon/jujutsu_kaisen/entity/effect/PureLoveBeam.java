@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -48,7 +49,6 @@ public class PureLoveBeam extends JujutsuProjectile {
     public @Nullable Direction side = null;
 
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(PureLoveBeam.class, EntityDataSerializers.FLOAT);
-
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(PureLoveBeam.class, EntityDataSerializers.FLOAT);
 
     public float prevYaw;
@@ -56,26 +56,26 @@ public class PureLoveBeam extends JujutsuProjectile {
 
     public int animation;
 
-    public PureLoveBeam(EntityType<? extends PureLoveBeam> pType, Level pLevel) {
+    public PureLoveBeam(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.noCulling = true;
     }
 
-    public PureLoveBeam(LivingEntity owner, float power, float yaw, float pitch) {
+    public PureLoveBeam(LivingEntity owner, float power) {
         this(JJKEntities.PURE_LOVE.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
 
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.setPos(spawn.x(), spawn.y(), spawn.z());
-
+        this.update();
         this.calculateEndPos();
+        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
     public float getScale() {
@@ -136,20 +136,19 @@ public class PureLoveBeam extends JujutsuProjectile {
             if (this.getTime() > CHARGE) {
                 this.calculateEndPos();
 
-                if (!this.level().isClientSide) {
-                    List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                            new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
+                if (!this.level().isClientSide) {
                     for (Entity entity : entities) {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
                             continue;
 
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                this.getDamage() * this.getPower());
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.PIERCING_WATER.get()), DAMAGE * this.getPower());
                     }
 
                     if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                        double radius = this.getScale() * 2.0F;
+                        double radius = SCALE * 2.0F;
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);

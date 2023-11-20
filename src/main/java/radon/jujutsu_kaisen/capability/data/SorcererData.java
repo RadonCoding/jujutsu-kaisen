@@ -1394,6 +1394,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getCurseCount(Registry<EntityType<?>> registry, EntityType<?> type) {
+        return this.curses.get(registry.getKey(type));
+    }
+
+    @Override
     public List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames() {
         return this.frames;
     }

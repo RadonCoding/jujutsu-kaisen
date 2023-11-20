@@ -55,7 +55,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
+        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.transparent(this.getTextureLocation(pEntity)));
 
         if (isStriking) {
             this.drawStrike(pEntity, maxY, pPartialTick, pPoseStack, consumer, pPackedLight);

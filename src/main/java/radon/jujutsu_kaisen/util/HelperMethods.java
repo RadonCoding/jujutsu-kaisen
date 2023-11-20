@@ -29,12 +29,22 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
+    private static final String[] WORDS = { "Nah, I'd win", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da." };
+
+    public static Set<String> getRandomWordCombo(int count) {
+        if (count > WORDS.length) throw new IllegalArgumentException("Number of words requested exceeds the available word list.");
+
+        Set<String> combo = new HashSet<>();
+
+        while (combo.size() < count) {
+            combo.add(WORDS[RANDOM.nextInt(WORDS.length)]);
+        }
+        return combo;
+    }
 
     public static void convertTo(LivingEntity src, LivingEntity dst, boolean transferInventory, boolean kill) {
         if (!src.isRemoved()) {

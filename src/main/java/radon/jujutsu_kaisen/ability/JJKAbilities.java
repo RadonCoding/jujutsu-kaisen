@@ -46,6 +46,7 @@ import radon.jujutsu_kaisen.ability.mimicry.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.ShadowStorage;
 import radon.jujutsu_kaisen.ability.ten_shadows.AbilityMode;
+import radon.jujutsu_kaisen.ability.ten_shadows.ShadowTravel;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
@@ -156,6 +157,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> ABILITY_MODE = ABILITIES.register("ability_mode", AbilityMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
+    public static RegistryObject<Ability> SHADOW_TRAVEL = ABILITIES.register("shadow_travel", ShadowTravel::new);
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
 
     public static RegistryObject<Ability> NUE_LIGHTNING = ABILITIES.register("nue_lightning", NueLightning::new);
@@ -213,38 +215,44 @@ public class JJKAbilities {
         return 50.0F * HelperMethods.getPower(grade.getRequiredExperience()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
-    public static void summonCurse(LivingEntity owner, EntityType<?> type) {
+    public static void summonCurse(LivingEntity owner, EntityType<?> type, int count) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
 
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasCurse(registry, type)) return;
+        if (!ownerCap.hasCurse(registry, type)) return;
 
-        if (type.create(owner.level()) instanceof CursedSpirit curse) {
-            float cost = getCurseCost(owner, curse.getGrade());
+        for (int i = 0; i < count; i++) {
+            if (type.create(owner.level()) instanceof CursedSpirit curse) {
+                float cost = getCurseCost(owner, curse.getGrade());
 
-            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                if (cap.getEnergy() < cost) {
-                    return;
+                if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                    if (ownerCap.getEnergy() < cost) {
+                        return;
+                    }
+                    ownerCap.useEnergy(owner, cost);
                 }
-                cap.useEnergy(owner, cost);
-            }
 
-            Vec3 pos = owner.position().subtract(owner.getLookAngle()
-                    .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
-            curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-            curse.setTame(true);
-            curse.setOwner(owner);
-            owner.level().addFreshEntity(curse);
+                Vec3 pos = owner.position().subtract(owner.getLookAngle()
+                        .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
+                curse.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+                curse.setTame(true);
+                curse.setOwner(owner);
 
-            cap.addSummon(curse);
+                ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                curseCap.setExperience(curse.getExperience() * 2);
 
-            cap.removeCurse(registry, type);
+                owner.level().addFreshEntity(curse);
 
-            if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                ownerCap.addSummon(curse);
+
+                ownerCap.removeCurse(registry, type);
+
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                }
             }
         }
     }

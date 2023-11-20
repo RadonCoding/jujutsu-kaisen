@@ -1,6 +1,8 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,6 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
@@ -55,7 +58,9 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class JJKEventHandler {
@@ -359,26 +364,45 @@ public class JJKEventHandler {
 
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
-            CursedTechnique technique = JJKAbilities.getTechnique(event.getAbility());
+            Ability ability = event.getAbility();
+
+            CursedTechnique technique = JJKAbilities.getTechnique(ability);
 
             LivingEntity owner = event.getEntity();
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+            // Handling removal of absorbed techniques from curse manipulation
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
             }
 
-            if (owner instanceof HeianSukunaEntity entity && event.getAbility() == JJKAbilities.BARRAGE.get()) {
+            // Sukuna has multiple arms
+            if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
                 entity.setBarrage(Barrage.DURATION * 2);
             }
 
-            float cost = event.getAbility().getRealCost(owner);
+            // Playing "spark" sound
+            float cost = ability.getRealCost(owner);
 
             if (cost >= ConfigHolder.SERVER.sparkSoundThreshold.get().floatValue()) {
                 float volume = cost / ConfigHolder.SERVER.sparkSoundThreshold.get().floatValue();
                 owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(),
                         JJKSounds.SPARK.get(), SoundSource.MASTER, volume, 1.0F);
+            }
+
+            // Making mobs use chants
+            if (owner.level() instanceof ServerLevel level) {
+                if (owner instanceof Mob) {
+                    if (ability.isTechnique() && ability.isScalable() && HelperMethods.RANDOM.nextInt(5) == 0) {
+                        List<String> chants = new ArrayList<>(cap.getChants(ability));
+
+                        for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
+                            ChantHandler.onChant(owner, chants.get(i));
+                            level.getServer().sendSystemMessage(Component.literal(chants.get(i)));
+                        }
+                    }
+                }
             }
         }
     }

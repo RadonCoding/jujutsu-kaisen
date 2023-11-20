@@ -234,7 +234,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         if (this.jump) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
         } else if (!this.onGround()) {
-            this.setDeltaMovement(0.0D, -0.01D, 0.0D);
+            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, -0.01D, 0.0D));
         }
     }
 

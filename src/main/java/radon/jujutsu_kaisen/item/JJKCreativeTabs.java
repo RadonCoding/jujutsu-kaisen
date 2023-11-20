@@ -65,7 +65,6 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.YUJI_IDATORI_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.TOGE_INUMAKI_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SUGURU_GETO_SPAWN_EGG.get());
-                        pOutput.accept(JJKItems.HEIAN_SUKUNA_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.NAOYA_ZENIN_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());

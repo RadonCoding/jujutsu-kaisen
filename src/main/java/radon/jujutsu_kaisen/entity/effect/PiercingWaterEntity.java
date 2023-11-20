@@ -33,7 +33,7 @@ import java.util.Optional;
 
 public class PiercingWaterEntity extends JujutsuProjectile {
     public static final int FRAMES = 16;
-    public static final float SCALE = 1.0F;
+    public static final float SCALE = 0.5F;
     private static final double RANGE = 30.0D;
     private static final float DAMAGE = 10.0F;
     public static final int DURATION = 4;
@@ -62,20 +62,20 @@ public class PiercingWaterEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public PiercingWaterEntity(LivingEntity owner, float power, float yaw, float pitch) {
+    public PiercingWaterEntity(LivingEntity owner, float power) {
         this(JJKEntities.PIERCING_WATER.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
 
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.setPos(spawn.x(), spawn.y(), spawn.z());
-
+        this.update();
         this.calculateEndPos();
+        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
     @Override
@@ -118,10 +118,10 @@ public class PiercingWaterEntity extends JujutsuProjectile {
 
             this.calculateEndPos();
 
-            if (!this.level().isClientSide) {
-                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+            List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                    new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
+            if (!this.level().isClientSide) {
                 for (Entity entity : entities) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
                         continue;

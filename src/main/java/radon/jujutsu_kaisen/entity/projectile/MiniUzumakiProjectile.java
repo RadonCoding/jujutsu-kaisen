@@ -126,28 +126,23 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
     public void tick() {
         super.tick();
 
-        if (!(this.getOwner() instanceof LivingEntity owner)) return;
-        if (this.getTime() % 5 == 0) owner.swing(InteractionHand.MAIN_HAND);
+        this.prevCollidePosX = this.collidePosX;
+        this.prevCollidePosY = this.collidePosY;
+        this.prevCollidePosZ = this.collidePosZ;
+        this.prevYaw = this.renderYaw;
+        this.prevPitch = this.renderPitch;
+        this.xo = this.getX();
+        this.yo = this.getY();
+        this.zo = this.getZ();
 
-        if (this.getTime() == DELAY) {
-            this.setYaw((float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F));
-            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0F));
+        if (!this.level().isClientSide) {
+            this.update();
+        }
 
-            this.calculateEndPos();
-        } else if (this.getTime() > DELAY) {
-            this.prevCollidePosX = this.collidePosX;
-            this.prevCollidePosY = this.collidePosY;
-            this.prevCollidePosZ = this.collidePosZ;
-            this.prevYaw = this.renderYaw;
-            this.prevPitch = this.renderPitch;
-            this.xo = this.getX();
-            this.yo = this.getY();
-            this.zo = this.getZ();
-
-            if (!this.level().isClientSide) {
-                this.update();
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
             }
-
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
             this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
 
@@ -167,14 +162,15 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
             this.calculateEndPos();
 
-            if (!this.level().isClientSide) {
-                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+            List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                    new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
+            if (!this.level().isClientSide) {
                 for (Entity entity : entities) {
                     if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
                         continue;
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MINI_UZUMAKI.get()), DAMAGE * this.power);
+
+                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.PIERCING_WATER.get()), DAMAGE * this.getPower());
                 }
 
                 if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
@@ -203,15 +199,10 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                         }
                     }
                 }
-
-                if (this.getTime() - DELAY >= DURATION) {
-                    this.on = false;
-                }
             }
-        } else {
-            Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-            this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            if (this.getTime() - DURATION / 2 > DURATION) {
+                this.on = false;
+            }
         }
     }
 
