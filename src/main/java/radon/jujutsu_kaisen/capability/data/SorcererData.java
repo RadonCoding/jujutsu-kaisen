@@ -673,6 +673,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void addChants(Ability ability, Set<String> chants) {
+        this.chants.put(ability, chants);
+    }
+
+    @Override
     public void removeChant(Ability ability, String chant) {
         if (this.chants.containsKey(ability)) {
             this.chants.get(ability).remove(chant);
@@ -682,6 +687,14 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean hasChant(Ability ability, String chant) {
         return this.chants.getOrDefault(ability, Set.of()).contains(chant);
+    }
+
+    @Override
+    public boolean isChantsAvailable(Set<String> chants) {
+        for (Set<String> entry : this.chants.values()) {
+            if (entry.containsAll(chants)) return false;
+        }
+        return true;
     }
 
     @Override

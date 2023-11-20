@@ -67,9 +67,13 @@ public interface ISorcererData {
 
     void addChant(Ability ability, String chant);
 
+    void addChants(Ability ability, Set<String> chants);
+
     void removeChant(Ability ability, String chant);
 
     boolean hasChant(Ability ability, String chant);
+
+    boolean isChantsAvailable(Set<String> chants);
 
     @Nullable Ability getAbility(String chant);
 

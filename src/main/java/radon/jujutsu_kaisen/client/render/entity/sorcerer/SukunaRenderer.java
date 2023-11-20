@@ -42,9 +42,11 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
             var renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
             this.model = (PlayerModel<SukunaEntity>) renderer.getModel();
+            this.model.setAllVisible(true);
         } else {
             var renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(owner);
             this.model = (PlayerModel<SukunaEntity>) renderer.getModel();
+            this.model.setAllVisible(true);
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
