@@ -398,7 +398,7 @@ public class JJKEventHandler {
                 if (owner instanceof Mob) {
                     List<String> chants = new ArrayList<>(cap.getChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(10) == 0) {
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt((int) (50 * (cap.getEnergy() / cap.getMaxEnergy(owner)))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ChantHandler.onChant(owner, chants.get(i));
 
