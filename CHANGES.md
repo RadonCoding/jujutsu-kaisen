@@ -13,4 +13,4 @@
 
 ## NPC
     - Made NPCs use chants
-    - Made NPCs rarely use chants when low on energy
+    - Made NPCs use chants when low on energy
