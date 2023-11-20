@@ -244,9 +244,7 @@ public class SukunaEntity extends SorcererEntity {
         super.onRemovedFromWorld();
 
         if (this.getOwner() instanceof ServerPlayer player) {
-            if (!player.isDeadOrDying() && !player.isRemoved()) {
-                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
-            }
+            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
         }
     }
 
