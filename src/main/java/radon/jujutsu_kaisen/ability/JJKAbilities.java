@@ -126,7 +126,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
-    public static RegistryObject<Ability> SMASH = ABILITIES.register("smash", Smash::new);
+    public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
@@ -332,11 +332,11 @@ public class JJKAbilities {
 
         abilities.add(DASH.get());
 
+        abilities.add(PUNCH.get());
         abilities.add(AIR_PUNCH.get());
         abilities.add(BARRAGE.get());
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            abilities.add(SMASH.get());
             abilities.add(DIVERGENT_FIST.get());
             abilities.add(WATER_WALKING.get());
             abilities.add(CURSED_ENERGY_FLOW.get());

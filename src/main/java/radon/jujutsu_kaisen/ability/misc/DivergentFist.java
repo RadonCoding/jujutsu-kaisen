@@ -83,7 +83,7 @@ public class DivergentFist extends Ability {
         if (target != null) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            owner.swing(InteractionHand.MAIN_HAND, true);
+            owner.swing(InteractionHand.MAIN_HAND);
 
             if (owner instanceof Player player) {
                 player.attack(target);
