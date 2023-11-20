@@ -14,7 +14,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DismantleNet extends Ability {
     private static final int MIN_SIZE = 4;
-    private static final int MAX_SIZE = 8;
+    private static final int MAX_SIZE = 16;
     private static final int SIZE = 4;
 
     @Override

@@ -62,20 +62,20 @@ public class WaterTorrentEntity extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public WaterTorrentEntity(LivingEntity owner, float power, float yaw, float pitch) {
+    public WaterTorrentEntity(LivingEntity owner, float power) {
         this(JJKEntities.WATER_TORRENT.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
 
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.setPos(spawn.x(), spawn.y(), spawn.z());
-
+        this.update();
         this.calculateEndPos();
+        this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
 
     @Override

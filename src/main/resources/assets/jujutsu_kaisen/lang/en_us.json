@@ -7,6 +7,7 @@
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
+  "gui.jujutsu_kaisen.ability_overlay.total": "Total: %1$d",
   "gui.jujutsu_kaisen.ability_overlay.count": "Count: %1$d",
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
@@ -128,7 +129,6 @@
   "item.jujutsu_kaisen.yuji_itadori_spawn_egg": "Spawn Yuji Itadori",
   "item.jujutsu_kaisen.toge_inumaki_spawn_egg": "Spawn Toge Inumaki",
   "item.jujutsu_kaisen.suguru_geto_spawn_egg": "Spawn Suguru Geto",
-  "item.jujutsu_kaisen.heian_sukuna_spawn_egg": "Spawn The King of Curses",
   "item.jujutsu_kaisen.naoya_zenin_spawn_egg": "Spawn Naoya Zenin",
 
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
@@ -350,6 +350,7 @@
 
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
+  "ability.jujutsu_kaisen.shadow_travel": "Shadow Travel",
 
   "ability.jujutsu_kaisen.nue_lightning": "Nue Lighting",
   "ability.jujutsu_kaisen.piercing_water": "Piercing Water",

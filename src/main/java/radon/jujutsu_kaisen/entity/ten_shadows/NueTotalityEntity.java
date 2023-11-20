@@ -267,6 +267,8 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
         if (this.jump) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
+        } else if (!this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, -0.01D, 0.0D));
         }
     }
 

@@ -35,13 +35,16 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class RadialScreen extends Screen {
     private static final float RADIUS_IN = 50.0F;
     private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
 
     private final List<List<DisplayItem>> pages = new ArrayList<>();
+    private final Map<EntityType<?>, Integer> curses = new HashMap<>();
 
     private int hovered = -1;
     private int hover;
@@ -126,13 +129,17 @@ public abstract class RadialScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
-            if (this.minecraft != null && this.minecraft.player != null) {
-                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (this.minecraft != null && this.minecraft.player != null) {
+            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
-                    DisplayItem item = this.getCurrent().get(this.hovered);
+            if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
+                DisplayItem item = this.getCurrent().get(this.hovered);
 
+                if (pButton == InputConstants.MOUSE_BUTTON_LEFT) {
+                    if (item.type == DisplayItem.Type.CURSE) {
+                        this.curses.put(item.curse.getKey(), Math.min(item.curse.getValue(), this.curses.getOrDefault(item.curse.getKey(), 0) + 1));
+                    }
+                } else if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
                     if (item.type == DisplayItem.Type.COPIED) {
                         PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
                         cap.uncopy(item.copied);
@@ -161,7 +168,7 @@ public abstract class RadialScreen extends Screen {
                 case CURSE -> {
                     EntityType<?> type = item.curse.getKey();
                     Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type)));
+                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type), this.curses.getOrDefault(type, 1)));
                 }
                 case COPIED -> {
                     PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
@@ -319,13 +326,17 @@ public abstract class RadialScreen extends Screen {
                         }
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
-                    Component countText = Component.translatable(String.format("gui.%s.ability_overlay.count", JujutsuKaisen.MOD_ID), item.curse.getValue());
-                    lines.add(countText);
+                    Component totalText = Component.translatable(String.format("gui.%s.ability_overlay.total", JujutsuKaisen.MOD_ID), item.curse.getValue());
+                    lines.add(totalText);
 
                     if (item.curse.getKey().create(this.minecraft.level) instanceof ISorcerer curse) {
                         Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                                JJKAbilities.getCurseCost(this.minecraft.player, curse.getGrade()));
+                                JJKAbilities.getCurseCost(this.minecraft.player, curse.getGrade()) * this.curses.getOrDefault(item.curse.getKey(), 1));
                         lines.add(costText);
+
+                        Component countText = Component.translatable(String.format("gui.%s.ability_overlay.count", JujutsuKaisen.MOD_ID),
+                                this.curses.getOrDefault(item.curse.getKey(), 1));
+                        lines.add(countText);
                     }
                 }
 

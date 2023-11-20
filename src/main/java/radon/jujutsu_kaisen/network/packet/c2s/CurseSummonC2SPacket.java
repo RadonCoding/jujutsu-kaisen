@@ -8,22 +8,27 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 import java.util.function.Supplier;
 
 public class CurseSummonC2SPacket {
     private final ResourceLocation key;
+    private final int count;
 
-    public CurseSummonC2SPacket(ResourceLocation key) {
+    public CurseSummonC2SPacket(ResourceLocation key, int count) {
         this.key = key;
+        this.count = count;
     }
 
     public CurseSummonC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readResourceLocation());
+        this(buf.readResourceLocation(), buf.readInt());
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeResourceLocation(this.key);
+        buf.writeInt(this.count);
     }
 
     public void handle(Supplier<NetworkEvent.Context> supplier) {
@@ -37,8 +42,10 @@ public class CurseSummonC2SPacket {
             Registry<EntityType<?>> registry = sender.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             EntityType<?> type = registry.get(this.key);
 
+            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             if (type != null) {
-                JJKAbilities.summonCurse(sender, type);
+                JJKAbilities.summonCurse(sender, type, Math.min(cap.getCurseCount(registry, type), this.count));
             }
         });
         ctx.setPacketHandled(true);

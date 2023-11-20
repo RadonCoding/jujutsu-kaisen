@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,7 +103,8 @@ public class SuguruGetoEntity extends SorcererEntity {
             List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
 
             if (!curses.isEmpty()) {
-                JJKAbilities.summonCurse(this, curses.get(this.random.nextInt(curses.size())));
+                EntityType<?> curse = curses.get(this.random.nextInt(curses.size()));
+                JJKAbilities.summonCurse(this, curse, this.random.nextInt(1, cap.getCurseCount(registry, curse)));
             }
         }
     }

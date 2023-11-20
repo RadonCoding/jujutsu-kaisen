@@ -53,6 +53,47 @@ public class ChantHandler {
         return 1.0F + 0.75F * (0.6F * countFactor + 0.4F * lengthFactor);
     }
 
+    public static void onChant(LivingEntity owner, String word) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Ability ability = cap.getAbility(word);
+
+        if (ability != null) {
+            if (!messages.containsKey(owner.getUUID())) {
+                messages.put(owner.getUUID(), new ArrayList<>());
+            }
+
+            List<String> chants = new ArrayList<>(cap.getChants(ability));
+
+            List<String> latest = messages.get(owner.getUUID());
+
+            int index = 0;
+
+            Iterator<String> iter = chants.iterator();
+
+            for (String chant : latest) {
+                if (!iter.hasNext() || !chant.equals(iter.next())) break;
+
+                index++;
+            }
+
+            if (index >= chants.size() || !chants.get(index).equals(word)) return;
+
+            messages.get(owner.getUUID()).add(word);
+            timers.put(owner.getUUID(), CLEAR_INTERVAL);
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
+                        Math.round(getChant(owner, ability) * 100)), false), player);
+            }
+
+            int delta = messages.get(owner.getUUID()).size() - 5;
+
+            if (delta > 0) {
+                messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
+            }
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
@@ -85,45 +126,7 @@ public class ChantHandler {
 
         @SubscribeEvent
         public static void onServerChat(ServerChatEvent event) {
-            ServerPlayer owner = event.getPlayer();
-            String msg = event.getRawText().toLowerCase();
-
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            Ability ability = cap.getAbility(msg);
-
-            if (ability != null) {
-                if (!messages.containsKey(owner.getUUID())) {
-                    messages.put(owner.getUUID(), new ArrayList<>());
-                }
-
-                List<String> chants = new ArrayList<>(cap.getChants(ability));
-
-                List<String> latest = messages.get(owner.getUUID());
-
-                int index = 0;
-
-                Iterator<String> iter = chants.iterator();
-
-                for (String chant : latest) {
-                    if (!iter.hasNext() || !chant.equals(iter.next())) break;
-
-                    index++;
-                }
-
-                if (index >= chants.size() || !chants.get(index).equals(msg)) return;
-
-                messages.get(owner.getUUID()).add(msg);
-                timers.put(owner.getUUID(), CLEAR_INTERVAL);
-
-                PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        Math.round(getChant(owner, ability) * 100)), false), owner);
-
-                int delta = messages.get(owner.getUUID()).size() - 5;
-
-                if (delta > 0) {
-                    messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
-                }
-            }
+            onChant(event.getPlayer(), event.getRawText().toLowerCase());
         }
     }
 }

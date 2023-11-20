@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.limitless;
 
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -45,12 +46,14 @@ public class Teleport extends Ability {
         HitResult target = this.getTarget(owner);
 
         if (target != null) {
-            owner.playSound(SoundEvents.ENDERMAN_TELEPORT);
-
             owner.swing(InteractionHand.MAIN_HAND);
+
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 pos = target.getLocation();
             owner.setPos(pos.x(), pos.y(), pos.z());
+
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
         }
     }
 
@@ -69,11 +72,8 @@ public class Teleport extends Ability {
         return super.checkTriggerable(owner);
     }
 
-
-
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
-
 }

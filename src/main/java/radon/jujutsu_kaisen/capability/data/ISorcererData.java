@@ -283,6 +283,8 @@ public interface ISorcererData {
 
     boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
 
+    int getCurseCount(Registry<EntityType<?>> registry, EntityType<?> type);
+
     List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
     void addFrame(Vec3 frame, float yaw);
     void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame);
