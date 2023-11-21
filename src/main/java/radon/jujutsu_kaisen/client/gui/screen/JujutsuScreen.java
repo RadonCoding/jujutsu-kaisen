@@ -28,8 +28,6 @@ public class JujutsuScreen extends Screen {
     public static final int WINDOW_INSIDE_HEIGHT = 113;
     public static final int BACKGROUND_TILE_WIDTH = 16;
     public static final int BACKGROUND_TILE_HEIGHT = 16;
-    public static final int BACKGROUND_TILE_COUNT_X = 14;
-    public static final int BACKGROUND_TILE_COUNT_Y = 7;
 
     private final List<JJKTab> tabs = new ArrayList<>();
 
@@ -159,7 +157,6 @@ public class JujutsuScreen extends Screen {
     }
 
     public void renderWindow(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY) {
-        RenderSystem.enableBlend();
         pGuiGraphics.blit(WINDOW_LOCATION, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         for (JJKTab tab : this.tabs) {

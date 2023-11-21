@@ -8,6 +8,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -83,11 +85,11 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                             if (distance <= horizontal && distance >= horizontal - 1) {
                                 BlockPos pos = center.offset(x, j, z);
 
+                                if (pos == center) continue;
+
                                 BlockState state = owner.level().getBlockState(pos);
 
                                 if (!state.isAir() || state.canOcclude()) continue;
-
-                                if (this.level().getBlockEntity(pos) != null) throw new RuntimeException();
 
                                 owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
 
