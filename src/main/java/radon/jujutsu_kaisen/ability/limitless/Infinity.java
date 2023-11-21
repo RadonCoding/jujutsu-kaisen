@@ -319,7 +319,11 @@ public class Infinity extends Ability implements Ability.IToggled {
                             }
                         }
                     }
-                    target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+
+                    // We don't want to play the sound in-case it's a stopped projectile
+                    if (!(source.getDirectEntity() instanceof Projectile)) {
+                        target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+                    }
                     event.setCanceled(true);
                 }
             });
