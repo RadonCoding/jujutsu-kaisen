@@ -70,11 +70,6 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    protected boolean targetsCurses() {
-        return true;
-    }
-
-    @Override
     protected boolean targetsSorcerers() {
         return true;
     }
@@ -256,6 +251,8 @@ public class SukunaEntity extends SorcererEntity {
                 HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
             }
             owner.kill();
+        } else {
+            HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
         }
     }
 

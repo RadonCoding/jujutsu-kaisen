@@ -220,9 +220,8 @@ public abstract class DomainExpansionEntity extends Mob {
         this.entityData.define(DATA_TIME, 0);
     }
 
-    // If strength is more than 75% larger than this
     public boolean shouldCollapse(float strength) {
-        return ((strength - this.getStrength()) / this.getStrength()) >= 0.75F;
+        return (strength / this.getStrength()) > 1.75F;
     }
 
     public float getStrength() {

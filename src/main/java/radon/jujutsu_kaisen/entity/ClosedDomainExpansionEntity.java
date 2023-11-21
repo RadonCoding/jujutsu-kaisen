@@ -66,7 +66,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean shouldCollapse(float strength) {
         int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius * 2;
+        boolean completed = this.getTime() >= radius;
         return completed && super.shouldCollapse(strength);
     }
 
