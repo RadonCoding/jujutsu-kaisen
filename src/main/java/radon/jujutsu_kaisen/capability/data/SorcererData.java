@@ -1425,7 +1425,9 @@ public class SorcererData implements ISorcererData {
     public void generate(ServerPlayer player) {
         this.initialized = true;
 
-        this.traits.clear();
+        this.traits.remove(Trait.SIX_EYES);
+        this.traits.remove(Trait.HEAVENLY_RESTRICTION);
+        this.traits.remove(Trait.VESSEL);
 
         if (HelperMethods.RANDOM.nextInt(10) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);

@@ -23,6 +23,7 @@
     - Fixed cursed energy being refilled even when not fully sleeping
     - Fixed domains not collapsing
     - Fixed meteor looking weird
+    - Fixed volcanoes not working horizontally
 
 ## Animation Rework
     - Gave all disaster curses runnning animations
