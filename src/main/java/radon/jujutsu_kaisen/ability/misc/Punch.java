@@ -72,13 +72,13 @@ public class Punch extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+        if (owner.level().isClientSide) return;
+
+        owner.swing(InteractionHand.MAIN_HAND, true);
 
         LivingEntity target = this.getTarget(owner);
 
         if (target != null) {
-            if (owner.level().isClientSide) return;
-
             Vec3 look = owner.getLookAngle();
 
             Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
