@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
+import radon.jujutsu_kaisen.client.gui.screen.PlayerCardScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
@@ -118,6 +119,9 @@ public class JJKClientEventHandler {
                 }
                 if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
                     mc.setScreen(new DomainScreen());
+                }
+                if (JJKKeys.SHOW_PLAYER_CARD.isDown()) {
+                    mc.setScreen(new PlayerCardScreen());
                 }
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {
                     ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -215,6 +219,7 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ACTIVATE_WATER_WALKING);
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
+            event.register(JJKKeys.SHOW_PLAYER_CARD);
             event.register(JJKKeys.DASH);
             event.register(JJKKeys.OPEN_JUJUTSU_MENU);
             event.register(JJKKeys.INCREASE_OUTPUT);
