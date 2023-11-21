@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.render.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -59,7 +60,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
                             renderer.renderSingleBlock(state,
                                     poseStack,
                                     bufferSource,
-                                    (mc.level.getMaxLocalRawBrightness(pos) << 20) | (state.getLightEmission(mc.level, pos) << 4),
+                                    LightTexture.FULL_BRIGHT,
                                     OverlayTexture.NO_OVERLAY,
                                     ModelData.EMPTY,
                                     type);
