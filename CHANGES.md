@@ -14,3 +14,7 @@
 ## NPC
     - Made NPCs use chants
     - Made NPCs use chants when low on energy
+
+## Bugs
+    - Fixed dogs being able to eat cursed objects
+    - Fixed domains replacing bedrock with domain blocks

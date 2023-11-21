@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -82,6 +83,8 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                 BlockPos pos = center.offset(x, -vertical, z);
 
                                 BlockState state = this.level().getBlockState(pos);
+
+                                if (state.is(Blocks.BEDROCK)) continue;
 
                                 if (!this.isRemoved()) {
                                     BlockEntity existing = this.level().getBlockEntity(pos);
