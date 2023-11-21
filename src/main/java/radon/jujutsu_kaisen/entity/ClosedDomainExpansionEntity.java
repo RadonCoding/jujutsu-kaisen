@@ -145,6 +145,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                             if (!this.isRemoved()) {
                                 BlockState state = this.level().getBlockState(pos);
 
+                                if (state.is(Blocks.BEDROCK)) return;
+
                                 BlockEntity existing = this.level().getBlockEntity(pos);
 
                                 if (existing instanceof VeilBlockEntity be) {
