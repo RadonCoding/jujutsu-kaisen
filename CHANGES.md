@@ -18,3 +18,4 @@
 ## Bugs
     - Fixed dogs being able to eat cursed objects
     - Fixed domains replacing bedrock with domain blocks
+    - Fixed cursed energy being refilled even when not fully sleeping
