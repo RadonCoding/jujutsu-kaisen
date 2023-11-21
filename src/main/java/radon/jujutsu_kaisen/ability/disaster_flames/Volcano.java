@@ -83,8 +83,6 @@ public class Volcano extends Ability {
         return 5 * 20;
     }
 
-
-
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
