@@ -44,6 +44,7 @@ public class RerollCommand {
         player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             removeAdvancement(player, "six_eyes");
             removeAdvancement(player, "heavenly_restriction");
+            removeAdvancement(player, "vessel");
 
             cap.generate(player);
         });

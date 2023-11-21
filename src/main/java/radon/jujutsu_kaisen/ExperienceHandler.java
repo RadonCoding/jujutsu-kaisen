@@ -99,6 +99,8 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
+            if (owner.isRemoved() || this.target.isRemoved()) return;
+
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float amount = this.damage * 2.0F;
