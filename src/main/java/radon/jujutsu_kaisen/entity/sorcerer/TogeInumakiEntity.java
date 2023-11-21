@@ -34,16 +34,13 @@ public class TogeInumakiEntity extends SorcererEntity {
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new SorcererGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+    protected boolean isCustom() {
+        return false;
+    }
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableCurseGoal(this, false));
+    @Override
+    protected boolean targetsCurses() {
+        return true;
     }
 
     @Override

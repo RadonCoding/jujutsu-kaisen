@@ -14,8 +14,12 @@
 ## NPC
     - Made NPCs use chants
     - Made NPCs use chants when low on energy
+    - Increased the speed of all NPCs
 
 ## Bugs
     - Fixed dogs being able to eat cursed objects
     - Fixed domains replacing bedrock with domain blocks
     - Fixed cursed energy being refilled even when not fully sleeping
+
+## Animation Rework
+    - Gave all disaster curses runnning animations

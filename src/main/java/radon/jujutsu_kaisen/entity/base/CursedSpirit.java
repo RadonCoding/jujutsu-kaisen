@@ -124,9 +124,12 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     protected abstract boolean isCustom();
 
-    protected abstract boolean canFly();
+    protected boolean canFly() { return false; }
 
-    protected abstract boolean hasMeleeAttack();
+    protected boolean hasMeleeAttack() { return true; }
+
+    protected boolean targetsCurses() { return false; }
+    protected boolean targetsSorcerers() { return true; }
 
     private void createGoals() {
         int target = 1;
@@ -135,24 +138,22 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.0D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
 
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-            this.targetSelector.addGoal(target, new NearestAttackableSorcererGoal(this, true));
+        if (this.targetsSorcerers()) {
+            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
         }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+        if (this.targetsCurses()) {
+            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+        }
     }
 
     @Override
@@ -193,6 +194,13 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         this.updateSwingTime();
 
         super.aiStep();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
     }
 
     @Override

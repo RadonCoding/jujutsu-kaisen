@@ -28,6 +28,7 @@ public class HanamiEntity extends DisasterCurse {
     private static final EntityDataAccessor<Boolean> DATA_CAST = SynchedEntityData.defineId(HanamiEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public HanamiEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -51,17 +52,7 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    protected boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean canPerformSorcery() {
-        return true;
-    }
-
-    @Override
-    protected boolean hasMeleeAttack() {
         return true;
     }
 
@@ -100,9 +91,9 @@ public class HanamiEntity extends DisasterCurse {
         }
     }
 
-    private PlayState walkPredicate(AnimationState<HanamiEntity> animationState) {
+    private PlayState walkRunPredicate(AnimationState<HanamiEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(WALK);
+            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         }
         return PlayState.STOP;
     }
@@ -117,7 +108,7 @@ public class HanamiEntity extends DisasterCurse {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk", this::walkPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 }

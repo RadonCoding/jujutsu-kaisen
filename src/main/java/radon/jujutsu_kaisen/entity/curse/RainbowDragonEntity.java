@@ -66,6 +66,7 @@ public class RainbowDragonEntity extends CursedSpirit {
         return navigation;
     }
 
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -79,11 +80,6 @@ public class RainbowDragonEntity extends CursedSpirit {
     @Override
     public boolean canPerformSorcery() {
         return false;
-    }
-
-    @Override
-    protected boolean hasMeleeAttack() {
-        return true;
     }
 
     private void breakBlocks() {
