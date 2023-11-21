@@ -114,8 +114,11 @@ public class JJKEventHandler {
         @SubscribeEvent
         public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
             Player player = event.getEntity();
-            ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.setEnergy(cap.getMaxEnergy(player));
+
+            if (player.isSleepingLongEnough()) {
+                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.setEnergy(cap.getMaxEnergy(player));
+            }
         }
 
         @SubscribeEvent
