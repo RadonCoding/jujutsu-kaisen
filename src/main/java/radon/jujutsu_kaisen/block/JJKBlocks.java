@@ -105,6 +105,13 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
+    public static RegistryObject<DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_embodiment_of_perfection", () ->
+            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
     public static RegistryObject<DomainBlock> TIME_CELL_MOON_PALACE = BLOCKS.register("time_cell_moon_palace", () ->
             new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(-1.0F, 8.0F)

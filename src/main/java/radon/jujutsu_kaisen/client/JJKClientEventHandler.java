@@ -19,6 +19,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.SelfEmbodimentOfPerfection;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
@@ -36,10 +37,7 @@ import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
 import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
-import radon.jujutsu_kaisen.client.render.entity.ChimeraShadowGardenRenderer;
-import radon.jujutsu_kaisen.client.render.entity.CloneRenderer;
-import radon.jujutsu_kaisen.client.render.entity.MalevolentShrineRenderer;
-import radon.jujutsu_kaisen.client.render.entity.TimeCellMoonPalaceRenderer;
+import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
 import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
@@ -360,6 +358,7 @@ public class JJKClientEventHandler {
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
             event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
+            event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
         }
 
         @SubscribeEvent

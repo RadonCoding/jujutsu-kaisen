@@ -21,8 +21,6 @@ import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
 import java.util.List;
 
 public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    private static final float DAMAGE = 15.0F;
-
     @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;

@@ -75,7 +75,7 @@ public interface ISorcerer {
 
             Set<String> chants = HelperMethods.getRandomWordCombo(5);
 
-            //while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
+            while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
 
             data.addChants(ability, chants);
         }
