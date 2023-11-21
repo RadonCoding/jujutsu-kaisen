@@ -317,6 +317,11 @@ public class JJKEntities {
                     .sized(1.9F, 2.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "time_cell_moon_palace")
                             .toString()));
+    public static RegistryObject<EntityType<SelfEmbodimentOfPerfectionEntity>> SELF_EMBODIMENT_OF_PERFECTION = ENTITIES.register("self_embodiment_of_perfection", () ->
+            EntityType.Builder.<SelfEmbodimentOfPerfectionEntity>of(SelfEmbodimentOfPerfectionEntity::new, MobCategory.MISC)
+                    .sized(1.9F, 2.4F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "self_embodiment_of_perfection")
+                            .toString()));
     public static RegistryObject<EntityType<DisasterPlantEntity>> DISASTER_PLANT = ENTITIES.register("disaster_plant", () ->
             EntityType.Builder.<DisasterPlantEntity>of(DisasterPlantEntity::new, MobCategory.MISC)
                     .sized(3.0F, 5.0F)
