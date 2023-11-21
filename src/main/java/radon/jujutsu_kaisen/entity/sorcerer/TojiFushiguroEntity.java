@@ -200,6 +200,11 @@ public class TojiFushiguroEntity extends SorcererEntity {
         return false;
     }
 
+    @Override
+    protected boolean targetsCurses() {
+        return false;
+    }
+
     private int getSlot(ItemStack stack) {
         if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
             return PLAYFUL_CLOUD;
