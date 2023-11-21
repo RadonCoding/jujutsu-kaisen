@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.DisasterCurse;
+import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class JogoEntity extends DisasterCurse {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public JogoEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
@@ -31,17 +33,7 @@ public class JogoEntity extends DisasterCurse {
     }
 
     @Override
-    protected boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean canPerformSorcery() {
-        return true;
-    }
-
-    @Override
-    protected boolean hasMeleeAttack() {
         return true;
     }
 
@@ -65,9 +57,9 @@ public class JogoEntity extends DisasterCurse {
         return JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get();
     }
 
-    private PlayState walkPredicate(AnimationState<JogoEntity> animationState) {
+    private PlayState walkRunPredicate(AnimationState<JogoEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(WALK);
+            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         }
         return PlayState.STOP;
     }
@@ -82,7 +74,7 @@ public class JogoEntity extends DisasterCurse {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk", this::walkPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 }

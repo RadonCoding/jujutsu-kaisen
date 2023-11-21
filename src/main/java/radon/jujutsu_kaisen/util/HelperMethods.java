@@ -289,7 +289,7 @@ public class HelperMethods {
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
         List<Entity> collisions = new ArrayList<>();
 
-        for (Entity entity : level.getEntities(null, AABB.ofSize(bounds.getCenter(), 64.0D, 64.0D, 64.0D))) {
+        for (Entity entity : level.getEntities(null, AABB.ofSize(bounds.getCenter(), 16.0D, 16.0D, 16.0D))) {
             if (bounds.intersects(entity.getBoundingBox())) {
                 collisions.add(entity);
             }

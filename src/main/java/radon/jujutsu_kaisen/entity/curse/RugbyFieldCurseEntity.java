@@ -33,51 +33,13 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     }
 
     @Override
-    protected void registerGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
-
-        if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
-        }
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-            this.targetSelector.addGoal(target, new NearestAttackableSorcererGoal(this, true));
-        }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-    }
-
-    @Override
     protected boolean isCustom() {
-        return false;
-    }
-
-    @Override
-    protected boolean canFly() {
         return false;
     }
 
     @Override
     public boolean canPerformSorcery() {
         return false;
-    }
-
-    @Override
-    protected boolean hasMeleeAttack() {
-        return true;
     }
 
     @Override

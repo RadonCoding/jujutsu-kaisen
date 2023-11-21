@@ -31,6 +31,21 @@ public class TojiZeninEntity extends SorcererEntity {
     }
 
     @Override
+    protected boolean isCustom() {
+        return true;
+    }
+
+    @Override
+    protected boolean canFly() {
+        return false;
+    }
+
+    @Override
+    protected boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }

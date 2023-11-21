@@ -196,14 +196,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new SorcererGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+    protected boolean isCustom() {
+        return false;
     }
 
     private int getSlot(ItemStack stack) {

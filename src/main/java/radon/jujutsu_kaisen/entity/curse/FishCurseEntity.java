@@ -67,11 +67,6 @@ public class FishCurseEntity extends PackCursedSpirit {
         return false;
     }
 
-    @Override
-    protected boolean hasMeleeAttack() {
-        return true;
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.FLYING_SPEED);

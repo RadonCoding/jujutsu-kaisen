@@ -64,6 +64,21 @@ public class SukunaEntity extends SorcererEntity {
         super(pEntityType, pLevel);
     }
 
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean targetsCurses() {
+        return true;
+    }
+
+    @Override
+    protected boolean targetsSorcerers() {
+        return true;
+    }
+
     public SukunaEntity(LivingEntity owner, int fingers, boolean vessel) {
         super(JJKEntities.SUKUNA.get(), owner.level());
 
@@ -147,21 +162,6 @@ public class SukunaEntity extends SorcererEntity {
     @Override
     public @Nullable Ability getDomain() {
         return JJKAbilities.MALEVOLENT_SHRINE.get();
-    }
-
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new BetterFloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal(3, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(4, new SorcererGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(4, new NearestAttackableSorcererGoal(this, false));
-        this.targetSelector.addGoal(4, new NearestAttackableCurseGoal(this, false));
     }
 
     @Override

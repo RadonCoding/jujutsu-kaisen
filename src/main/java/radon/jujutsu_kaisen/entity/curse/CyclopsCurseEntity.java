@@ -36,18 +36,8 @@ public class CyclopsCurseEntity extends CursedSpirit {
     }
 
     @Override
-    protected boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean canPerformSorcery() {
         return false;
-    }
-
-    @Override
-    protected boolean hasMeleeAttack() {
-        return true;
     }
 
     @Override

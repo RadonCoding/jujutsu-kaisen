@@ -66,11 +66,6 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     }
 
     @Override
-    protected boolean canFly() {
-        return false;
-    }
-
-    @Override
     public boolean canPerformSorcery() {
         return false;
     }
@@ -202,7 +197,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         if (this.cooldown > 0) this.cooldown--;
 
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getDomains(((ServerLevel) this.level())).size() > 0) {
+            if (!cap.getDomains(((ServerLevel) this.level())).isEmpty()) {
                 this.reset();
                 return;
             }

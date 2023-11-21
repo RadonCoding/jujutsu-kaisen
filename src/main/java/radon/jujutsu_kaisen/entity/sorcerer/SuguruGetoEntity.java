@@ -104,9 +104,14 @@ public class SuguruGetoEntity extends SorcererEntity {
 
             if (!curses.isEmpty()) {
                 EntityType<?> curse = curses.get(this.random.nextInt(curses.size()));
-                JJKAbilities.summonCurse(this, curse, this.random.nextInt(1, cap.getCurseCount(registry, curse)));
+                JJKAbilities.summonCurse(this, curse, Math.min(1, this.random.nextInt(cap.getCurseCount(registry, curse))));
             }
         }
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return true;
     }
 
     @Override
