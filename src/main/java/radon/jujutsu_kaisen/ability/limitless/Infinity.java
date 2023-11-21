@@ -63,8 +63,6 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     }
 
-
-
     @Override
     public float getCost(LivingEntity owner) {
         return 0.4F;
@@ -244,16 +242,9 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (!Infinity.canBlock(target, projectile)) return;
 
                 if (projectile.getOwner() == target) {
-                    event.setCanceled(true);
                     return;
                 }
-
-                if (projectile instanceof JujutsuProjectile) {
-                    projectile.discard();
-                } else {
-                    data.add(target, projectile);
-                    event.setCanceled(true);
-                }
+                data.add(target, projectile);
             }
         }
 
@@ -274,11 +265,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     if (!Infinity.canBlock(target, projectile)) continue;
                     if (projectile.getOwner() == target) continue;
 
-                    if (projectile instanceof JujutsuProjectile) {
-                        projectile.discard();
-                    } else {
-                        data.add(target, projectile);
-                    }
+                    data.add(target, projectile);
                 }
             }
         }

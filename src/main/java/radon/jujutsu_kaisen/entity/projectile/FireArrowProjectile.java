@@ -127,6 +127,18 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
             HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
+        }
+
+        for (int i = 0; i < shockwaveCount / 2; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
+            double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
+
+            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
+            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
+
             HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
@@ -175,14 +187,14 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
 
-            Vec3 look = owner.getLookAngle();
-            double d0 = look.horizontalDistance();
-            this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
-            this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
-            this.yRotO = this.getYRot();
-            this.xRotO = this.getXRot();
-
             if (this.getTime() < DELAY) {
+                Vec3 look = owner.getLookAngle();
+                double d0 = look.horizontalDistance();
+                this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
+                this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
+
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {

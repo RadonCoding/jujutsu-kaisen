@@ -67,8 +67,7 @@ public class TravelParticle extends TextureSheetParticle {
         return this.glow ? JJKParticleRenderTypes.GLOW : JJKParticleRenderTypes.TRANSLUCENT;
     }
 
-    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow,
-                                        int lifetime) implements ParticleOptions {
+    public record TravelParticleOptions(Vector3f target, Vector3f color, float scalar, float opacity, boolean glow, int lifetime) implements ParticleOptions {
         public static Deserializer<TravelParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull TravelParticleOptions fromCommand(@NotNull ParticleType<TravelParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
                 Vector3f target = TravelParticleOptions.readTargetVector3f(reader);
