@@ -24,6 +24,7 @@
     - Fixed domains not collapsing
     - Fixed meteor looking weird
     - Fixed volcanoes not working horizontally
+    - Fixed toad stunning indefinitely
 
 ## Animation Rework
     - Gave all disaster curses runnning animations
