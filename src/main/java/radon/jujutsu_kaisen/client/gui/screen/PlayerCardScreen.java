@@ -5,9 +5,18 @@ import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.stream.Collectors;
 
 public class PlayerCardScreen extends Screen {
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/card.png");
@@ -60,7 +69,6 @@ public class PlayerCardScreen extends Screen {
         int j = 12 / 2;
         pGuiGraphics.blit(pAtlasLocation, pX, pY, i * pSize, j * pSize, 36.0F, 52.0F, i, j, 64, 64);
     }
-
     public void renderWindow(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY) {
         pGuiGraphics.blit(WINDOW_LOCATION, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -72,5 +80,29 @@ public class PlayerCardScreen extends Screen {
         drawUpperBody(pGuiGraphics, mc.player.getSkinTextureLocation(), pOffsetX + 23, pOffsetY + 73, 6);
         drawRightArm(pGuiGraphics, mc.player.getSkinTextureLocation(), pOffsetX + 11, pOffsetY + 73, 6);
         drawLeftArm(pGuiGraphics, mc.player.getSkinTextureLocation(), pOffsetX + 71, pOffsetY + 73, 6);
+
+        pGuiGraphics.drawString(this.font, mc.player.getName(), pOffsetX + 96, pOffsetY + 16, 16777215);
+
+        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        SorcererGrade grade = HelperMethods.getGrade(cap.getExperience());
+        SorcererGrade next = SorcererGrade.values()[Math.min(SorcererGrade.values().length - 1, grade.ordinal() + 1)];
+
+        int yOffset = 0;
+        pGuiGraphics.drawString(this.font, Component.translatable(String.format("gui.%s.player_card.grade", JujutsuKaisen.MOD_ID), grade.getName()), pOffsetX + 92, pOffsetY + 38 + yOffset, 16777215);
+        yOffset += this.font.lineHeight;
+        pGuiGraphics.drawString(this.font, Component.translatable(String.format("gui.%s.player_card.experience", JujutsuKaisen.MOD_ID), cap.getExperience(), next.getRequiredExperience()),
+                pOffsetX + 92, pOffsetY + 38 + yOffset, 16777215);
+        yOffset += this.font.lineHeight;
+
+        CursedTechnique technique = cap.getTechnique();
+
+        if (technique != null) {
+            pGuiGraphics.drawString(this.font, Component.translatable(String.format("gui.%s.player_card.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()),
+                    pOffsetX + 92, pOffsetY + 38 + yOffset, 16777215);
+            yOffset += this.font.lineHeight;
+        }
+        pGuiGraphics.drawString(this.font, Component.translatable(String.format("gui.%s.player_card.cursed_energy_nature", JujutsuKaisen.MOD_ID), cap.getNature().getName()),
+                pOffsetX + 92, pOffsetY + 38 + yOffset, 16777215);
     }
 }

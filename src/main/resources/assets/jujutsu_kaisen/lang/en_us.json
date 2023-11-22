@@ -41,6 +41,11 @@
   "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
   "gui.jujutsu_kaisen.ability.points": "Points: %1$d",
 
+  "gui.jujutsu_kaisen.player_card.grade": "Grade: %1$s",
+  "gui.jujutsu_kaisen.player_card.experience": "Experience: %1$f/%1$f",
+  "gui.jujutsu_kaisen.player_card.cursed_technique": "Cursed Technique: %1$s",
+  "gui.jujutsu_kaisen.player_card.cursed_energy_nature": "Cursed Energy Nature: %1$s",
+
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
   "key.jujutsu_kaisen.ability_up": "Switch Ability Up",
@@ -404,7 +409,12 @@
 
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",
-  "cursed_energy_nature.jujutsu_kaisen.lightning": "lightning",
+  "cursed_energy_nature.jujutsu_kaisen.lightning": "Lightning",
+
+  "trait.jujutsu_kaisen.six_eyes": "Six Eyes",
+  "trait.jujutsu_kaisen.heavenly_restriction": "Heavenly Restriction",
+  "trait.jujutsu_kaisen.reverse_cursed_technique": "Reverse Cursed Technique",
+  "trait.jujutsu_kaisen.vessel": "Vessel",
 
   "pact.jujutsu_kaisen.invulnerability": "Invulnerability",
   "pact.jujutsu_kaisen.invulnerability.description": "A pact in which both parties promise not to cause harm to each other.",

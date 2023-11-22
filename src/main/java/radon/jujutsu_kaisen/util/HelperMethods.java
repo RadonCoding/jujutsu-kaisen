@@ -107,7 +107,6 @@ public class HelperMethods {
         }
     }
 
-
     public static SorcererGrade getGrade(float experience) {
         SorcererGrade result = SorcererGrade.GRADE_4;
 
