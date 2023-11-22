@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -163,6 +164,8 @@ public class DismantleProjectile extends JujutsuProjectile {
             for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
                 hits.add(new EntityHitResult(entity));
             }
+
+            if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
 
             if (this.instant) return;
 

@@ -78,7 +78,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 0.0F);
+        return new Vec2(4.0F, 0.5F);
     }
 
     @Override
