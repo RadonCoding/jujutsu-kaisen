@@ -104,7 +104,7 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
 
             if (this.grabbed) {
                 if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
-                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || living.isDeadOrDying() || living.isRemoved())
+                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || !owner.isAlive() || owner.isRemoved())
                         this.discard();
 
                     living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
