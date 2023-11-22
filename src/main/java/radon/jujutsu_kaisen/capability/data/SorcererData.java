@@ -529,8 +529,6 @@ public class SorcererData implements ISorcererData {
             double movement = this.getRealPower() * 0.05D;
             this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", movement, AttributeModifier.Operation.ADDITION);
 
-            owner.addEffect(new MobEffectInstance(JJKEffects.UNDETECTABLE.get(), 2, 0, false, false, false));
-
             int resistance = Math.round(3 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
 

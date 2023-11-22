@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,10 +24,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestSixEyesDataC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SixEyesOverlay {
     private static @Nullable AbstractMap.SimpleEntry<UUID, SixEyesData> current;
@@ -45,7 +45,7 @@ public class SixEyesOverlay {
         if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                 if (hit.getEntity() instanceof LivingEntity target) {
-                    if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent() || target.hasEffect(JJKEffects.UNDETECTABLE.get()))
+                    if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent())
                         return;
 
                     if (current == null) {
@@ -59,6 +59,8 @@ public class SixEyesOverlay {
 
                     if (target.getUUID().equals(identifier)) {
                         SixEyesData data = current.getValue();
+
+                        if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
 
                         List<Component> lines = new ArrayList<>();
 
@@ -99,13 +101,21 @@ public class SixEyesOverlay {
         }
     };
 
-    public record SixEyesData(@Nullable CursedTechnique technique, SorcererGrade grade, float energy, float maxEnergy) {
+    public record SixEyesData(@Nullable CursedTechnique technique, Set<Trait> traits, SorcererGrade grade, float energy, float maxEnergy) {
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
             if (this.technique != null) {
                 nbt.putInt("technique", this.technique.ordinal());
             }
+
+            ListTag traitsTag = new ListTag();
+
+            for (Trait trait : this.traits) {
+                traitsTag.add(IntTag.valueOf(trait.ordinal()));
+            }
+            nbt.put("traits", traitsTag);
+
             nbt.putInt("grade", this.grade.ordinal());
             nbt.putFloat("energy", this.energy);
             nbt.putFloat("max_energy", this.maxEnergy);
@@ -113,7 +123,12 @@ public class SixEyesOverlay {
         }
 
         public static SixEyesData deserializeNBT(CompoundTag nbt) {
-            return new SixEyesData(nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null,
+            Set<Trait> traits = new HashSet<>();
+            
+            for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
+                traits.add(Trait.values()[((IntTag) key).getAsInt()]);
+            }
+            return new SixEyesData(nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null, traits,
                     SorcererGrade.values()[nbt.getInt("grade")], nbt.getFloat("energy"), nbt.getFloat("max_energy"));
         }
     }

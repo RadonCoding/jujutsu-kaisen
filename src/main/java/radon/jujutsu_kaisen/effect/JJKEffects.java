@@ -12,7 +12,6 @@ public class JJKEffects {
 
     public static RegistryObject<MobEffect> STUN = EFFECTS.register("stun", () -> new JJKEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
     public static RegistryObject<MobEffect> UNLIMITED_VOID = EFFECTS.register("unlimited_void", () -> new JJKEffect(MobEffectCategory.HARMFUL, 0x000000));
-    public static RegistryObject<MobEffect> UNDETECTABLE = EFFECTS.register("undetectable", () -> new JJKEffect(MobEffectCategory.BENEFICIAL, 0x000000));
     public static RegistryObject<MobEffect> CURSED_BUD = EFFECTS.register("cursed_bud", () -> new JJKEffect(MobEffectCategory.HARMFUL, 0x00FF00));
     public static RegistryObject<MobEffect> INVISIBILITY = EFFECTS.register("invisibility", () -> new JJKEffect(MobEffectCategory.BENEFICIAL, 0x00FF00));
 }
