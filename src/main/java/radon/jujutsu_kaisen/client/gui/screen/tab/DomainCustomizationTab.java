@@ -61,9 +61,4 @@ public class DomainCustomizationTab extends JJKTab {
                 0.5F, 1.5F, cap.getDomainSize(), 0.1D, 0, true);
         this.addRenderableWidget(this.sizeSlider);
     }
-
-    @Override
-    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
-
-    }
 }

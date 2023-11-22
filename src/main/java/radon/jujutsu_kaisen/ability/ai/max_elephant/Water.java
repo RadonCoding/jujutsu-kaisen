@@ -15,6 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -41,7 +42,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) <= RANGE;
+        return JJKAbilities.isChanneling(owner, this) || target != null && owner.distanceTo(target) <= RANGE;
     }
 
     @Override
@@ -163,7 +164,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 5.0F;
     }
 
     @Override

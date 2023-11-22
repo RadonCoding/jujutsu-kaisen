@@ -85,7 +85,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         float speed = super.getFlyingSpeed();
 
         if (this.getTarget() != null) {
-            speed *= 10.0F;
+            speed *= 25.0F;
         } else {
             speed *= 5.0F;
         }
@@ -119,8 +119,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        //this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
-        //this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
     }
 
     @Override
