@@ -89,6 +89,8 @@ public class ExperienceHandler {
     }
 
     private static class BattleData {
+        private static final int MAX_DURATION = 5 * 60 * 20;
+
         private final LivingEntity target;
         private int duration;
         private int idle;
@@ -99,7 +101,7 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
-            if (owner.isRemoved() || this.target.isRemoved()) return;
+            if (this.duration >= MAX_DURATION || owner.isRemoved() || this.target.isRemoved()) return;
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -156,7 +158,7 @@ public class ExperienceHandler {
         public boolean tick(LivingEntity owner) {
             this.idle++;
             this.duration++;
-            return this.idle < 10 * 60 * 20 && owner.isAlive() && this.target.isAlive();
+            return this.idle < MAX_DURATION && owner.isAlive() && this.target.isAlive();
         }
     }
 }
