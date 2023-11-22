@@ -85,12 +85,19 @@ public class Punch extends Ability {
             ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
             target.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
+            if (owner instanceof Player player) {
+                player.attack(target);
+            } else {
+                owner.doHurtTarget(target);
+            }
+            target.invulnerableTime = 0;
+
+            target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
+
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F: 1.0F)));
             target.hurtMarked = true;
-
-            target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F: 1.0F));
         }
     }
 
