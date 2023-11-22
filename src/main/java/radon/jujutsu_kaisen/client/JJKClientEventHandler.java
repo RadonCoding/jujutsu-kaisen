@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.gui.overlay.*;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
@@ -44,6 +45,7 @@ import radon.jujutsu_kaisen.client.render.entity.effect.*;
 import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -149,7 +151,11 @@ public class JJKClientEventHandler {
                 return;
             }
 
-            if (target.hasEffect(JJKEffects.UNDETECTABLE.get())) {
+            ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(target);
+
+            if (data == null) return;
+
+            if (data.traits().contains(Trait.HEAVENLY_RESTRICTION)) {
                 Entity viewer = Minecraft.getInstance().getCameraEntity();
 
                 if (viewer != null && target != viewer) {
