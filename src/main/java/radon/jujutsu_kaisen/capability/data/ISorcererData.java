@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.capability.data;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -230,6 +231,10 @@ public interface ISorcererData {
     boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);
 
     void tame(Registry<EntityType<?>> registry, EntityType<?> entity);
+
+    void tameAll(Set<ResourceLocation> tamed);
+
+    Set<ResourceLocation> getTamed();
 
     boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
 

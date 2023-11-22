@@ -44,11 +44,6 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    protected boolean targetsCurses() {
-        return true;
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
     }
