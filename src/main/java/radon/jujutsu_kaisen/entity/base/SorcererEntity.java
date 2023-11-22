@@ -80,8 +80,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
 
         if (this.targetsSorcerers()) {
             this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
