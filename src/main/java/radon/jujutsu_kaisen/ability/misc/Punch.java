@@ -37,7 +37,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class Punch extends Ability {
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 10.0F;
     private static final double RANGE = 3.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
@@ -90,7 +90,7 @@ public class Punch extends Ability {
             target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F: 1.0F)));
             target.hurtMarked = true;
 
-            target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
+            target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F: 1.0F));
         }
     }
 
