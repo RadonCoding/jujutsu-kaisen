@@ -101,12 +101,14 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return JJKAbilities.DOMAIN_AMPLIFICATION.get();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        CursedTechnique technique = cap.getTechnique();
+        return technique == null || technique.getDomain() == null ? JJKAbilities.SIMPLE_DOMAIN.get() : technique.getDomain();
     }
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(6.0F, 0.0F);
+        return new Vec2(4.0F, -0.5F);
     }
 
     @Override
