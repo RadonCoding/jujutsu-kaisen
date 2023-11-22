@@ -107,7 +107,7 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public boolean is(@NotNull Entity pEntity) {
-        return pEntity == this.getOwner() || super.is(pEntity);
+        return this == pEntity || pEntity == this.getOwner();
     }
 
     @Override
@@ -247,11 +247,13 @@ public class SukunaEntity extends SorcererEntity {
         if (owner != null) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasTrait(Trait.VESSEL)) {
-                HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+            if (!(this instanceof HeianSukunaEntity)) {
+                if (!cap.hasTrait(Trait.VESSEL)) {
+                    HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+                }
             }
             owner.kill();
-        } else {
+        } else if (!(this instanceof HeianSukunaEntity)) {
             HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
         }
     }
