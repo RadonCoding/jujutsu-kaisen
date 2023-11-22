@@ -146,8 +146,8 @@ public class JujutsuScreen extends Screen {
         }
         this.renderInside(pGuiGraphics, pMouseX, pMouseY, i, j);
         this.renderWindow(pGuiGraphics, i, j);
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltips(pGuiGraphics, pMouseX, pMouseY, i, j);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     private void renderInside(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
@@ -157,6 +157,7 @@ public class JujutsuScreen extends Screen {
     }
 
     public void renderWindow(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY) {
+        RenderSystem.enableBlend();
         pGuiGraphics.blit(WINDOW_LOCATION, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         for (JJKTab tab : this.tabs) {
