@@ -94,7 +94,8 @@ public class ExperienceHandler {
         private final LivingEntity target;
         private int duration;
         private int idle;
-        private float damage;
+        private float damageDealt;
+        private float damageTaken;
 
         public BattleData(LivingEntity target) {
             this.target = target;
@@ -103,12 +104,17 @@ public class ExperienceHandler {
         public void end(LivingEntity owner) {
             if (this.duration >= MAX_DURATION || owner.isRemoved() || this.target.isRemoved()) return;
 
+            if (this.damageDealt == 0.0F || this.damageTaken == 0.0F) return;
+
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float amount = this.damage * 2.0F;
+            float amount = (this.damageDealt + this.damageTaken) * 2.0F;
 
             // Multiply by duration / 30 seconds
             amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
+
+            // Decrease amount to a minimum of 25% depending on the relatbility of the damage taken and dealtt
+            amount *= Math.max(0.25F, Math.abs(this.damageTaken - this.damageDealt) / this.damageDealt);
 
             // If owner has less health than target increase experience, if target has less health than owner decrease experience
             amount *= this.target.getMaxHealth() / owner.getMaxHealth();
@@ -147,12 +153,12 @@ public class ExperienceHandler {
 
         public void attack(float damage) {
             this.idle = 0;
-            this.damage += damage;
+            this.damageDealt += damage;
         }
 
         public void hurt(float damage) {
             this.idle = 0;
-            this.damage += damage;
+            this.damageTaken += damage;
         }
 
         public boolean tick(LivingEntity owner) {
