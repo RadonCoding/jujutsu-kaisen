@@ -113,15 +113,14 @@ public abstract class JJKTab {
     }
 
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
-        pGuiGraphics.enableScissor(pX, pY, pX + JujutsuScreen.WINDOW_INSIDE_WIDTH, pY + JujutsuScreen.WINDOW_INSIDE_HEIGHT);
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate((float) pX, (float) pY, 0.0F);
-
         if (!this.centered) {
             this.scrollX = 117 - (double) (this.maxX + this.minX) / 2;
             this.scrollY = 56 - (double) (this.maxY + this.minY) / 2;
             this.centered = true;
         }
+        pGuiGraphics.enableScissor(pX, pY, pX + JujutsuScreen.WINDOW_INSIDE_WIDTH, pY + JujutsuScreen.WINDOW_INSIDE_HEIGHT);
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate((float) pX, (float) pY, 0.0F);
 
         int i = Mth.floor(this.scrollX);
         int j = Mth.floor(this.scrollY);
