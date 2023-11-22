@@ -224,8 +224,12 @@ public class SukunaEntity extends SorcererEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src ->
-                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> dst.setAdditional(src.getTechnique())));
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src -> {
+                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> {
+                    dst.setAdditional(src.getTechnique());
+                    dst.tameAll(src.getTamed());
+                });
+            });
         }
     }
 
