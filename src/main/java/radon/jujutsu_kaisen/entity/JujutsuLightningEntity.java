@@ -36,6 +36,8 @@ public class JujutsuLightningEntity extends LightningBolt {
         this.life = 2;
         this.seed = this.random.nextLong();
         this.flashes = this.random.nextInt(3) + 1;
+
+        this.setVisualOnly(true);
     }
 
     public JujutsuLightningEntity(LivingEntity owner, float damage) {

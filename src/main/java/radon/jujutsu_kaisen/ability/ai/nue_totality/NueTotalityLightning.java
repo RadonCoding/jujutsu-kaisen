@@ -38,7 +38,7 @@ public class NueTotalityLightning extends Ability {
         JujutsuLightningEntity lightning = new JujutsuLightningEntity(owner, DAMAGE);
         BlockPos target = owner.blockPosition();
 
-        for (int i = 0; i < owner.getY(); i++) {
+        for (int i = 0; i < owner.level().getMaxBuildHeight() - owner.getY(); i++) {
             BlockState state = owner.level().getBlockState(target.below(i));
 
             if (state.canOcclude()) {
