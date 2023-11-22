@@ -11,6 +11,7 @@
 
 ## General
     - Made normal sorcerers gain movement speed from experience as well
+    - HR no longer gets saturation, instead gets passive regen
 
 ## NPC
     - Made NPCs use chants
