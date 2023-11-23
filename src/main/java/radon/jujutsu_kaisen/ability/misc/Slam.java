@@ -43,6 +43,7 @@ public class Slam extends Ability implements Ability.IChannelened {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
+        if (!owner.hasLineOfSight(target)) return false;
 
         Vec3 look = owner.getLookAngle();
         Vec3 start = owner.getEyePosition();
