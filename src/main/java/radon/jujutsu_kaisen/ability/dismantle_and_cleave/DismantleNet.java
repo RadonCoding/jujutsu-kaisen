@@ -67,7 +67,7 @@ public class DismantleNet extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 500.0F;
+        return 150.0F;
     }
 
     @Override
