@@ -125,7 +125,6 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-
         float padding = 0.5F;
         int count = Math.round(target.getBbHeight() / padding);
 
