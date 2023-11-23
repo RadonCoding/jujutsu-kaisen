@@ -33,7 +33,7 @@ public class RerollCommand {
             AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
 
             if (progress.isDone()) {
-                for (String criterion : progress.getRemainingCriteria()) {
+                for (String criterion : progress.getCompletedCriteria()) {
                     player.getAdvancements().revoke(advancement, criterion);
                 }
             }
