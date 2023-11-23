@@ -26,6 +26,9 @@
     - Fixed meteor looking weird
     - Fixed volcanoes not working horizontally
     - Fixed toad stunning indefinitely
+    - Fixed fish shikigami hurting caster
+    - Fixed volcano not working
+    - Fixed stun not stopping dashing
 
 ## Animation Rework
     - Gave all disaster curses runnning animations

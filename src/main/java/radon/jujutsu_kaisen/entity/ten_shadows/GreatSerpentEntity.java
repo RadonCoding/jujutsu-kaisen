@@ -109,13 +109,6 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return 2.0F;
     }
 
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-
-        JJKPartEntity.assignPartIDs(this);
-    }
-
     private void init() {
         this.segments = new GreatSerpentSegmentEntity[MAX_SEGMENTS];
 

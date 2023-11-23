@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -9,6 +12,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.network.packet.s2c.UpdateMultipartS2CPacket;
 
@@ -38,6 +42,13 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     protected void setSize(EntityDimensions size) {
         this.size = size;
         this.refreshDimensions();
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket packet) {
+        super.recreateFromPacket(packet);
+
+        JJKPartEntity.assignPartIDs(this);
     }
 
     @Override
