@@ -80,30 +80,28 @@ public class FelineCurseEntity extends PackCursedSpirit {
         this.goalSelector.addGoal(goal++, new BetterFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.4D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         }
-        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(goal++, this.canPerformSorcery() ? new SorcererGoal(this) : new HealingGoal(this));
+        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
+        this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+        this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
 
-        if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
-
-            this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-        } else {
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-            this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-            this.targetSelector.addGoal(target, new NearestAttackableSorcererGoal(this, true));
+        if (this.targetsSorcerers()) {
+            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
         }
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+        if (this.targetsCurses()) {
+            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+        }
     }
 
     @Override
     protected boolean isCustom() {
-        return false;
+        return true;
     }
 
     @Override

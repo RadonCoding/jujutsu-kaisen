@@ -36,12 +36,29 @@ public class RainbowDragonEntity extends CursedSpirit {
 
     private static final int MAX_SEGMENTS = 12;
 
-    private RainbowDragonSegmentEntity[] segments;
+    private final RainbowDragonSegmentEntity[] segments;
 
     public RainbowDragonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+
+        this.segments = new RainbowDragonSegmentEntity[MAX_SEGMENTS];
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i] = new RainbowDragonSegmentEntity(this, i);
+            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
+        }
+        this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+    }
+
+    @Override
+    public void setId(int id) {
+        super.setId(id);
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i].setId(id + i + 1);
+        }
     }
 
     private PlayState bitePredicate(AnimationState<RainbowDragonEntity> animationState) {
@@ -101,15 +118,6 @@ public class RainbowDragonEntity extends CursedSpirit {
         return 2.0F;
     }
 
-    private void init() {
-        this.segments = new RainbowDragonSegmentEntity[MAX_SEGMENTS];
-
-        for (int i = 0; i < this.segments.length; i++) {
-            this.segments[i] = new RainbowDragonSegmentEntity(this, i);
-            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
-        }
-    }
-
     @Override
     public @Nullable PartEntity<?>[] getParts() {
         return this.segments;
@@ -165,20 +173,16 @@ public class RainbowDragonEntity extends CursedSpirit {
 
     @Override
     public void tick() {
-        if (this.segments == null) {
-            this.init();
-        } else {
-            super.tick();
+        super.tick();
 
-            this.yHeadRot = this.getYRot();
+        this.yHeadRot = this.getYRot();
 
-            if (!this.level().isClientSide) {
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    this.breakBlocks();
-                }
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                this.breakBlocks();
             }
-            this.moveSegments();
         }
+        this.moveSegments();
     }
 
     @Override

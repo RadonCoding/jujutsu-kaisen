@@ -91,7 +91,7 @@ public class ServerConfig {
         this.sorcererHealingAmount = builder.comment("The maximum amount of health sorcerers can heal per tick (scales with experience)")
                 .defineInRange("sorcererHealingAmount", 0.9F, 0.0F, 100.0F);
         this.curseHealingAmount = builder.comment("The maximum amount of health curses can heal per tick (scales with experience)")
-                .defineInRange("curseHealingAmount", 0.1F, 0.0F, 100.0F);
+                .defineInRange("curseHealingAmount", 1.0F, 0.0F, 100.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
                 .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 100000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")

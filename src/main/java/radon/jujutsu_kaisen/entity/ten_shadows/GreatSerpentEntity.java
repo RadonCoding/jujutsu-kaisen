@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +22,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.curse.RainbowDragonSegmentEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -33,10 +35,43 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
     private static final int MAX_SEGMENTS = 24;
 
-    private GreatSerpentSegmentEntity[] segments;
+    private final GreatSerpentSegmentEntity[] segments;
 
     public GreatSerpentEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        this.segments = new GreatSerpentSegmentEntity[MAX_SEGMENTS];
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i] = new GreatSerpentSegmentEntity(this);
+            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
+        }
+        this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+    }
+
+    public GreatSerpentEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.GREAT_SERPENT.get(), owner.level());
+
+        this.setTame(tame);
+        this.setOwner(owner);
+
+        Vec3 pos = owner.position()
+                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
+    @Override
+    public void setId(int id) {
+        super.setId(id);
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i].setId(id + i + 1);
+        }
     }
 
     @Override
@@ -57,24 +92,6 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     @Override
     protected boolean hasMeleeAttack() {
         return true;
-    }
-
-    public GreatSerpentEntity(LivingEntity owner, boolean tame) {
-        super(JJKEntities.GREAT_SERPENT.get(), owner.level());
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
-
-        this.init();
     }
 
     private PlayState bitePredicate(AnimationState<GreatSerpentEntity> animationState) {
@@ -107,15 +124,6 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     @Override
     public float getStepHeight() {
         return 2.0F;
-    }
-
-    private void init() {
-        this.segments = new GreatSerpentSegmentEntity[MAX_SEGMENTS];
-
-        for (int i = 0; i < this.segments.length; i++) {
-            this.segments[i] = new GreatSerpentSegmentEntity(this);
-            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
-        }
     }
 
     @Override
@@ -173,20 +181,16 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
     @Override
     public void tick() {
-        if (this.segments == null) {
-            this.init();
-        } else {
-            super.tick();
+        super.tick();
 
-            this.yHeadRot = this.getYRot();
+        this.yHeadRot = this.getYRot();
 
-            if (!this.level().isClientSide) {
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    this.breakBlocks();
-                }
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                this.breakBlocks();
             }
-            this.moveSegments();
         }
+        this.moveSegments();
     }
 
     @Override
