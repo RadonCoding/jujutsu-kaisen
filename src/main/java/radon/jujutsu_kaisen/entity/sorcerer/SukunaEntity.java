@@ -136,6 +136,8 @@ public class SukunaEntity extends SorcererEntity {
         } else {
             super.tick();
 
+            if (this.level().isClientSide) return;
+
             if (owner instanceof ServerPlayer player) {
                 if (this.original == null) {
                     this.original = player.gameMode.getGameModeForPlayer();
