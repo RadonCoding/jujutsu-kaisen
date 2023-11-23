@@ -13,6 +13,7 @@ public class JJKBlockEntities {
     public static RegistryObject<BlockEntityType<DomainBlockEntity>> DOMAIN = BLOCK_ENTITIES.register("domain", () ->
             BlockEntityType.Builder.of(DomainBlockEntity::new,
                             JJKBlocks.DOMAIN.get(),
+                            JJKBlocks.DOMAIN_AIR.get(),
 
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_ONE.get(),
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),

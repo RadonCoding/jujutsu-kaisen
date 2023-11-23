@@ -175,7 +175,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         block = floor.get(this.random.nextInt(floor.size()));
                                     }
                                 } else if (!state.getFluidState().isEmpty()) {
-                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : Blocks.AIR;
+                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
                                 } else {
                                     block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
                                 }

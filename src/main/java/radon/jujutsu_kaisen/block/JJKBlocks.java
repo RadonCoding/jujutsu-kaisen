@@ -16,10 +16,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.block.domain.ChimeraShadowGardenBlock;
-import radon.jujutsu_kaisen.block.domain.DomainBlock;
-import radon.jujutsu_kaisen.block.domain.FakeWaterDomainBlock;
-import radon.jujutsu_kaisen.block.domain.UnlimitedVoidBlock;
+import radon.jujutsu_kaisen.block.domain.*;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 
 import javax.annotation.Nullable;
@@ -41,64 +38,69 @@ public class JJKBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JujutsuKaisen.MOD_ID);
 
     public static RegistryObject<DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
+    public static RegistryObject<DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
+            new DomainAirBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .noLootTable()
+                    .air()));
 
     public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
-            new UnlimitedVoidBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
                     .lightLevel((pState) -> 3)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_the_iron_mountain_two", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_THREE = BLOCKS.register("coffin_of_the_iron_mountain_three", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FILL = BLOCKS.register("shining_sea_of_flowers_fill", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FLOOR = BLOCKS.register("shining_sea_of_flowers_floor", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .noCollission()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
@@ -106,14 +108,14 @@ public class JJKBlocks {
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_embodiment_of_perfection", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
     public static RegistryObject<DomainBlock> TIME_CELL_MOON_PALACE = BLOCKS.register("time_cell_moon_palace", () ->
-            new DomainBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
