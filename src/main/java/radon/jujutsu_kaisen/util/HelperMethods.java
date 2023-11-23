@@ -10,10 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -33,10 +30,11 @@ import java.util.*;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
-    private static final String[] WORDS = { "Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you for as long as I live.", "With this treasure i summon..." };
+    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you for as long as I live.", "With this treasure i summon..."};
 
     public static Set<String> getRandomWordCombo(int count) {
-        if (count > WORDS.length) throw new IllegalArgumentException("Number of words requested exceeds the available word list.");
+        if (count > WORDS.length)
+            throw new IllegalArgumentException("Number of words requested exceeds the available word list.");
 
         Set<String> combo = new HashSet<>();
 
@@ -98,12 +96,12 @@ public class HelperMethods {
         }
     }
 
-    public static  <T extends ParticleOptions> void sendParticles(ServerLevel pLevel,T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ) {
+    public static <T extends ParticleOptions> void sendParticles(ServerLevel pLevel, T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ) {
         ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, pLongDistance, pPosX, pPosY, pPosZ, 0.0F, 0.0F, 0.0F, 0.0F, 0);
 
         for (int i = 0; i < pLevel.players().size(); i++) {
             ServerPlayer player = pLevel.players().get(i);
-            sendParticles(pLevel, player, pLongDistance, pPosX, pPosY, pPosZ,  packet);
+            sendParticles(pLevel, player, pLongDistance, pPosX, pPosY, pPosZ, packet);
         }
     }
 
@@ -286,31 +284,13 @@ public class HelperMethods {
     }
 
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
-        List<Entity> collisions = new ArrayList<>();
-
-        for (Entity entity : level.getEntities(null, AABB.ofSize(bounds.getCenter(), 16.0D, 16.0D, 16.0D))) {
-            if (bounds.intersects(entity.getBoundingBox())) {
-                collisions.add(entity);
-            }
-        }
-        return collisions;
+        return getEntityCollisionsOfClass(Entity.class, level, bounds);
     }
 
     public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level level, AABB bounds) {
-        List<Entity> collisions = getEntityCollisions(level, bounds);
-
-        List<T> result = new ArrayList<>();
-
-        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
-
-        for (Entity collision : collisions) {
-            T casted = test.tryCast(collision);
-
-            if (casted != null) {
-                result.add(casted);
-            }
-        }
-        return result;
+        List<T> entities = new ArrayList<>();
+        level.getEntities(EntityTypeTest.forClass(clazz), bounds.inflate(1.0E-7D), entity -> entity.getBoundingBox().intersects(bounds), entities, 1);
+        return entities;
     }
 
     public static int toRGB24(int r, int g, int b, int a) {
@@ -318,11 +298,5 @@ public class HelperMethods {
                 ((r & 0xFF) << 16) |
                 ((g & 0xFF) << 8) |
                 ((b & 0xFF));
-    }
-
-    public static int toRGB24(Vector3f color) {
-        return (((int) (color.x() * 255.0F) & 0xFF) << 16) |
-                (((int) (color.y() * 255.0F) & 0xFF) << 8) |
-                (((int) (color.z() * 255.0F) & 0xFF));
     }
 }

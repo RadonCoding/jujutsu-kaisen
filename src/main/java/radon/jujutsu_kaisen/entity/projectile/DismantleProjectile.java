@@ -43,6 +43,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final int LINE_LENGTH = 3;
 
     private boolean instant;
+    private boolean destroy;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -67,12 +68,13 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.entityData.set(DATA_LENGTH, length);
     }
 
-    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant) {
+    public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant, boolean destroy) {
         this(owner, power, roll, pos, length);
 
         this.moveTo(pos.x(), pos.y(), pos.z(), (this.random.nextFloat() - 0.5F) * 360.0F, 0.0F);
 
         this.instant = instant;
+        this.destroy = destroy;
     }
 
     @Override
@@ -94,6 +96,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         pCompound.putFloat("roll", this.getRoll());
         pCompound.putInt("length", this.getLength());
         pCompound.putBoolean("instant", this.instant);
+        pCompound.putBoolean("destroy", this.destroy);
     }
 
     @Override
@@ -103,6 +106,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.entityData.set(DATE_ROLL, pCompound.getFloat("roll"));
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
         this.instant = pCompound.getBoolean("instant");
+        this.destroy = pCompound.getBoolean("destroy");
     }
 
     @Override
@@ -167,7 +171,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
 
-            if (this.instant) return;
+            if (!this.destroy) return;
 
             BlockState state = this.level().getBlockState(pos);
 
