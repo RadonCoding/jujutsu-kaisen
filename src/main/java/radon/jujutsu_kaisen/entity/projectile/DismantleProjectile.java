@@ -43,7 +43,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final int LINE_LENGTH = 3;
 
     private boolean instant;
-    private boolean destroy;
+    private boolean destroy = true;
 
     public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

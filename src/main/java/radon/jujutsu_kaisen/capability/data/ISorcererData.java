@@ -128,6 +128,8 @@ public interface ISorcererData {
 
     Set<Trait> getTraits();
 
+    void setTraits(Set<Trait> traits);
+
     void setType(JujutsuType type);
 
     JujutsuType getType();

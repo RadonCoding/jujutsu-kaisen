@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SukunaEntity extends SorcererEntity {
-    private static final EntityDataAccessor<Optional<ResourceLocation>> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.RESOURCE_LOCATION.get());
+    private static final EntityDataAccessor<Optional<ResourceLocation>> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_RESOURCE_LOCATION.get());
 
     @Nullable
     private UUID ownerUUID;
@@ -247,6 +247,7 @@ public class SukunaEntity extends SorcererEntity {
         if (owner != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src -> {
                 this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> {
+                    dst.setTraits(src.getTraits());
                     dst.setAdditional(src.getTechnique());
                     dst.setTamed(src.getTamed());
                     dst.setDead(src.getDead());

@@ -222,14 +222,15 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                int duration = (this.getSize() / 4) * 20;
+                int duration = (this.getSize() / 2) * 20;
                 int maximum = duration / 4;
 
                 if (this.onGround()) {
                     this.setNoGravity(true);
 
                     if (this.explosionTime == 0) {
-                        ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
+                        ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner,
+                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
                         this.explosionTime++;
 
                         float radius = this.getSize() * 0.5F;

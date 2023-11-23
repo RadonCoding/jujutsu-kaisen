@@ -48,7 +48,13 @@ public class Dash extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() == target);
+        if (target == null) return false;
+
+        Vec3 look = owner.getLookAngle();
+        Vec3 start = owner.getEyePosition();
+        Vec3 result = target.getEyePosition().subtract(start);
+        double angle = Math.acos(look.normalize().dot(result.normalize()));
+        return angle > 1.0D;
     }
 
     @Override
@@ -94,7 +100,8 @@ public class Dash extends Ability {
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
-            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F))));
+            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F))
+                    .multiply(1.0D, 0.5D, 1.0D)));
             owner.hurtMarked = true;
         }
 

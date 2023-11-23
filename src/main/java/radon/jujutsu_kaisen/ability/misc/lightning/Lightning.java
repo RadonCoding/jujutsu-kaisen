@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc.lightning;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -35,6 +37,8 @@ public class Lightning extends Ability {
 
         LightningEntity lightning = new LightningEntity(owner, this.getPower(owner));
         owner.level().addFreshEntity(lightning);
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override

@@ -207,7 +207,6 @@ public class BoltEffect {
     }
 
     public interface RandomFunction {
-
         RandomFunction UNIFORM = Random::nextFloat;
         RandomFunction GAUSSIAN = rand -> (float) rand.nextGaussian();
 
