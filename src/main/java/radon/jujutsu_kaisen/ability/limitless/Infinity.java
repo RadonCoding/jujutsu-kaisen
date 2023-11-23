@@ -296,26 +296,12 @@ public class Infinity extends Ability implements Ability.IToggled {
                     }
 
                     if (source.getEntity() instanceof LivingEntity living) {
-                        if (source.getDirectEntity() instanceof ScissorEntity) return;
+                        boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
+                                || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
-                        if (JJKAbilities.hasToggled(living, JJKAbilities.SIMPLE_DOMAIN.get()) && living.distanceTo(target) <= SimpleDomainEntity.RADIUS)
-                            return;
-
-                        if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                            ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                            if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null &&
-                                    src.getAbility().isMelee() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        if (melee) {
+                            if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                                 return;
-                            }
-
-                            boolean melee = !source.isIndirect() &&
-                                    (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-                            if (melee) {
-                                if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                                    return;
-                                }
                             }
                         }
                     }

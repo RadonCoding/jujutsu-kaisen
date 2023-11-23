@@ -21,8 +21,7 @@ import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.SelfEmbodimentOfPerfection;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.SoulReinforcement;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
 import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
 import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
@@ -32,8 +31,6 @@ import radon.jujutsu_kaisen.ability.disaster_flames.*;
 import radon.jujutsu_kaisen.ability.disaster_plants.*;
 import radon.jujutsu_kaisen.ability.disaster_tides.*;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.InstantSpiritBodyOfDistortedKilling;
 import radon.jujutsu_kaisen.ability.misc.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
@@ -124,6 +121,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
     public static RegistryObject<Ability> SOUL_REINFORCEMENT = ABILITIES.register("soul_reinforcement", SoulReinforcement::new);
+    public static RegistryObject<Ability> SOUL_RESTORATION = ABILITIES.register("soul_restoration", SoulRestoration::new);
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static RegistryObject<Ability> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
 
