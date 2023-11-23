@@ -10,6 +10,7 @@
     - Improved Infinity
     - Updated Spiderweb
     - Optimized Malevolent Shrine
+    - Simple Domain better fr
 
 ## General
     - Made normal sorcerers gain movement speed from experience as well
