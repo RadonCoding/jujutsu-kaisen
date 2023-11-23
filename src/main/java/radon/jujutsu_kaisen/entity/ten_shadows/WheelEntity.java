@@ -45,6 +45,8 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         this.setOwner(owner);
 
+        this.setPos(owner.position());
+
         this.startRiding(owner);
     }
 

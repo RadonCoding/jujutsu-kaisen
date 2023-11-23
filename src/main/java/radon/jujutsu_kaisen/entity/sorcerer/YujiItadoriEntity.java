@@ -13,9 +13,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
@@ -35,11 +37,6 @@ public class YujiItadoriEntity extends SorcererEntity {
     @Override
     protected boolean isCustom() {
         return false;
-    }
-
-    @Override
-    protected boolean targetsCurses() {
-        return true;
     }
 
     @Override
@@ -80,6 +77,11 @@ public class YujiItadoriEntity extends SorcererEntity {
     }
 
     @Override
+    public @NotNull List<Trait> getTraits() {
+        return List.of(Trait.VESSEL);
+    }
+
+    @Override
     public @Nullable Ability getDomain() {
         return null;
     }
@@ -91,5 +93,12 @@ public class YujiItadoriEntity extends SorcererEntity {
         this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.YUJI_CHESTPLATE.get()));
         this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.YUJI_LEGGINGS.get()));
         this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.YUJI_BOOTS.get()));
+    }
+
+    @Override
+    public void init(ISorcererData data) {
+        super.init(data);
+
+        data.setFingers(15);
     }
 }

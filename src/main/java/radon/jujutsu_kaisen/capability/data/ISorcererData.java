@@ -300,6 +300,7 @@ public interface ISorcererData {
     void resetSpeedStacks();
 
     int getFingers();
+    void setFingers(int count);
     int addFingers(int count);
 
     CompoundTag serializeNBT();

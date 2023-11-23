@@ -9,12 +9,18 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.network.packet.s2c.UpdateMultipartS2CPacket;
+
+import javax.annotation.Nullable;
 
 public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     private EntityDimensions size;
@@ -39,6 +45,30 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
         return true;
     }
 
+    @Nullable
+    public ItemStack getPickResult() {
+        return this.getParent().getPickResult();
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        return !this.isInvulnerableTo(pSource) && this.getParent().hurt(pSource, pAmount);
+    }
+
+    @Override
+    public boolean is(@NotNull Entity pEntity) {
+        return this == pEntity || this.getParent() == pEntity;
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return this.size;
+    }
+
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
     protected void setSize(EntityDimensions size) {
         this.size = size;
         this.refreshDimensions();
@@ -49,11 +79,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
         super.recreateFromPacket(packet);
 
         JJKPartEntity.assignPartIDs(this);
-    }
-
-    @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        return this.size;
     }
 
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements) {
@@ -127,16 +152,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     public abstract ResourceLocation getRenderer();
 
     @Override
-    public boolean is(@NotNull Entity pEntity) {
-        return this == pEntity || this.getParent() == pEntity;
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return !this.isInvisible() && this.getParent().hurt(pSource, pAmount);
-    }
-
-    @Override
     public void setId(int pId) {
         super.setId(pId + 1);
     }
@@ -156,7 +171,7 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
 
         if (parts == null) return;
 
-        for (int i = 0, partsLength = parts.length; i < partsLength; i++) {
+        for (int i = 0, length = parts.length; i < length; i++) {
             PartEntity<?> part = parts[i];
             part.setId(parent.getId() + i);
         }

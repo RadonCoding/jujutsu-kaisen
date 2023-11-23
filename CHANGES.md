@@ -17,6 +17,7 @@
     - Made NPCs use chants
     - Made NPCs use chants when low on energy
     - Increased the speed of all NPCs
+    - Sukuna will now start taming the Ten Shadows starting with Mahoraga
 
 ## Bugs
     - Fixed dogs being able to eat cursed objects
@@ -36,3 +37,4 @@
 
 ## Nerfs
     - Decreased Dismantle damage by 33%
+    - Mahoraga's base health was decreased from 100 to 80

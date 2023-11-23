@@ -39,6 +39,8 @@ public class VaporParticle<T extends VaporParticle.VaporParticleOptions> extends
 
         this.sprites = pSprites;
         this.setSprite(this.sprites.get(this.random));
+
+        this.hasPhysics = false;
     }
 
     @Override

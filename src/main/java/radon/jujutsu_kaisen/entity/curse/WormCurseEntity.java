@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,10 +34,27 @@ public class WormCurseEntity extends CursedSpirit {
 
     private static final int MAX_SEGMENTS = 24;
 
-    private WormCurseSegmentEntity[] segments;
+    private final WormCurseSegmentEntity[] segments;
 
     public WormCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        this.segments = new WormCurseSegmentEntity[MAX_SEGMENTS];
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i] = new WormCurseSegmentEntity(this);
+            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
+        }
+        this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+    }
+
+    @Override
+    public void setId(int id) {
+        super.setId(id);
+
+        for (int i = 0; i < this.segments.length; i++) {
+            this.segments[i].setId(id + i + 1);
+        }
     }
 
     @Override
@@ -79,15 +97,6 @@ public class WormCurseEntity extends CursedSpirit {
     @Override
     public float getStepHeight() {
         return 2.0F;
-    }
-
-    private void init() {
-        this.segments = new WormCurseSegmentEntity[MAX_SEGMENTS];
-
-        for (int i = 0; i < this.segments.length; i++) {
-            this.segments[i] = new WormCurseSegmentEntity(this);
-            this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
-        }
     }
 
     @Override
@@ -145,20 +154,16 @@ public class WormCurseEntity extends CursedSpirit {
 
     @Override
     public void tick() {
-        if (this.segments == null) {
-            this.init();
-        } else {
-            super.tick();
+        super.tick();
 
-            this.yHeadRot = this.getYRot();
+        this.yHeadRot = this.getYRot();
 
-            if (!this.level().isClientSide) {
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    this.breakBlocks();
-                }
+        if (!this.level().isClientSide) {
+            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                this.breakBlocks();
             }
-            this.moveSegments();
         }
+        this.moveSegments();
     }
 
     @Override

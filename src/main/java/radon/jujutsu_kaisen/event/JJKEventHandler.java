@@ -69,6 +69,15 @@ public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
+        public static void onAttackEntity(AttackEntityEvent event) {
+            if (event.getTarget() instanceof JJKPartEntity<?>) {
+                Entity parent = ((JJKPartEntity<?>) event.getTarget()).getParent();
+                if (parent != null) event.getEntity().attack(parent);
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
         public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
             if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
                 event.setSpawnCancelled(true);

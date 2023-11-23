@@ -27,8 +27,10 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -39,6 +41,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
@@ -89,6 +92,32 @@ public class SukunaEntity extends SorcererEntity {
         }
     }
 
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
+            for (Entity entity : cap.getSummons(((ServerLevel) this.level()))) {
+                if (entity instanceof TenShadowsSummon) return;
+            }
+
+            Summon<?> mahoraga = JJKAbilities.MAHORAGA.get();
+
+            if (!mahoraga.isTamed(this)) {
+                AbilityHandler.trigger(this, mahoraga);
+                return;
+            }
+
+            for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
+                if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
+
+                AbilityHandler.trigger(this, ability);
+            }
+        }
+    }
+
     public EntityType<?> getKey() {
         return this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).get(this.entityData.get(DATA_ENTITY).orElseThrow());
     }
@@ -114,7 +143,7 @@ public class SukunaEntity extends SorcererEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && this.vessel && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && this.vessel && owner instanceof Player && (owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -125,6 +154,8 @@ public class SukunaEntity extends SorcererEntity {
                 }
                 player.setGameMode(GameType.SPECTATOR);
                 player.setCamera(this);
+            } else if (owner != null) {
+                owner.discard();
             }
         }
     }
