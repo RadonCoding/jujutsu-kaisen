@@ -46,8 +46,6 @@ public class WheelEntity extends Entity implements GeoEntity {
         this.setOwner(owner);
 
         this.setPos(owner.position());
-
-        this.startRiding(owner);
     }
 
     @Override
@@ -88,6 +86,8 @@ public class WheelEntity extends Entity implements GeoEntity {
             this.discard();
         } else {
             if (!this.level().isClientSide && owner != null) {
+                this.startRiding(owner);
+
                 int spin = this.entityData.get(DATA_SPIN);
 
                 float yRot = owner.getYRot();
