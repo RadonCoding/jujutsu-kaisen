@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -64,7 +65,7 @@ public class Dash extends Ability {
     }
 
     private static boolean canDash(LivingEntity owner) {
-        return HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
+        return !owner.hasEffect(JJKEffects.STUN.get()) && HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
                 owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty();
     }
 

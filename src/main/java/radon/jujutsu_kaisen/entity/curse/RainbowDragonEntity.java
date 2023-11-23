@@ -101,13 +101,6 @@ public class RainbowDragonEntity extends CursedSpirit {
         return 2.0F;
     }
 
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-
-        JJKPartEntity.assignPartIDs(this);
-    }
-
     private void init() {
         this.segments = new RainbowDragonSegmentEntity[MAX_SEGMENTS];
 
