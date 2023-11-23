@@ -67,6 +67,11 @@ public class PacketHandler {
                 .encoder(SetOverlayMessageS2CPacket::encode)
                 .consumerMainThread(SetOverlayMessageS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UpdateMultipartS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UpdateMultipartS2CPacket::new)
+                .encoder(UpdateMultipartS2CPacket::encode)
+                .consumerMainThread(UpdateMultipartS2CPacket.Handler::onMessage)
+                .add();
         INSTANCE.messageBuilder(JumpInputListenerC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(JumpInputListenerC2SPacket::new)
                 .encoder(JumpInputListenerC2SPacket::encode)
