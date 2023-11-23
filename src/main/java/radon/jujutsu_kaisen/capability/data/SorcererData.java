@@ -825,6 +825,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void setTraits(Set<Trait> traits) {
+        this.traits.clear();
+        this.traits.addAll(traits);
+    }
+
+    @Override
     public void setType(JujutsuType type) {
         this.type = type;
     }

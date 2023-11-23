@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class BoltRenderer {
     private final Map<Object, BoltOwnerData> boltOwners = new Object2ObjectOpenHashMap<>();
 
     public void render(float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn) {
-        VertexConsumer buffer = bufferIn.getBuffer(RenderType.lightning());
+        VertexConsumer buffer = bufferIn.getBuffer(JJKRenderTypes.lightning());
         Matrix4f matrix = matrixStackIn.last().pose();
         Timestamp timestamp = new Timestamp(minecraft.level.getGameTime(), partialTicks);
         boolean refresh = timestamp.isPassed(refreshTimestamp, (1 / REFRESH_TIME));

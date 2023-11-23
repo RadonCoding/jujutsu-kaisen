@@ -95,7 +95,6 @@ public class SimpleDomainEntity extends Mob {
 
                         if (target != null) {
                             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                            System.out.println(DAMAGE * Math.max(1.0F, targetCap.getAbilityPower(target) - ownerCap.getAbilityPower(owner)));
                             this.hurt(JJKDamageSources.jujutsuAttack(domain, domain.getAbility()), DAMAGE * (1.0F + Math.max(0.0F, targetCap.getAbilityPower(target) - ownerCap.getAbilityPower(owner))));
                         }
                     }

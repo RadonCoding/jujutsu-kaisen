@@ -2,13 +2,11 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +20,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -37,19 +34,16 @@ import java.util.Optional;
 public class LightningEntity extends JujutsuProjectile {
     public static final float SCALE = 1.0F;
     private static final double RADIUS = 20;
-    private static final float DAMAGE = 20.0F;
 
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
 
     public int life;
-    private int flashes;
 
     public @Nullable Direction side = null;
 
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(LightningEntity.class, EntityDataSerializers.FLOAT);
-
 
     public int animation;
 
@@ -57,22 +51,47 @@ public class LightningEntity extends JujutsuProjectile {
         super(pType, pLevel);
 
         this.noCulling = true;
-        this.life = 2;
-        this.flashes = 1;
+        this.life = 4;
     }
 
-    public LightningEntity(LivingEntity owner, float power) {
-        this(JJKEntities.LIGHTNING.get(), owner.level());
+
+    public LightningEntity(EntityType<? extends Projectile> pType, LivingEntity owner, float power) {
+        this(pType, owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
+
+    public LightningEntity(LivingEntity owner, float power) {
+        this(JJKEntities.LIGHTNING.get(), owner, power);
+
+        this.setOwner(owner);
+        this.setPower(power);
+    }
+
+    protected boolean isEmitting() {
+        return false;
+    }
+
+    protected float getDamage() {
+        return 20.0F;
     }
 
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.update();
+        if (this.getOwner() instanceof LivingEntity owner) {
+            float yaw = this.isEmitting() ? (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F : owner.getYRot();
+            float pitch = this.isEmitting() ? (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F : owner.getXRot();
+
+            this.setYaw((float) ((yaw + 90.0F) * Math.PI / 180.0D));
+            this.setPitch((float) (-pitch * Math.PI / 180.0D));
+
+            Vec3 look = owner.getLookAngle();
+            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+            this.setPos(spawn.x(), spawn.y(), spawn.z());
+        }
         this.calculateEndPos();
         this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
     }
@@ -84,10 +103,6 @@ public class LightningEntity extends JujutsuProjectile {
         this.xo = this.getX();
         this.yo = this.getY();
         this.zo = this.getZ();
-
-        if (!this.level().isClientSide) {
-            this.update();
-        }
 
         if (this.life == 2) {
             if (this.getOwner() instanceof LivingEntity owner) {
@@ -101,11 +116,13 @@ public class LightningEntity extends JujutsuProjectile {
                         if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
                             continue;
 
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.SHOOT_PURE_LOVE.get()),
-                                DAMAGE * this.getPower());
+                        this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
+
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()),
+                                this.getDamage() * this.getPower());
                     }
 
-                    if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                    if (!this.isEmitting() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                         double radius = SCALE * 2.0F;
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
@@ -135,26 +152,8 @@ public class LightningEntity extends JujutsuProjectile {
             }
         }
 
-        if (this.life == 2) {
-            this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10.0F, 0.8F + this.random.nextFloat() * 0.2F);
-            this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
-        }
-
-        --this.life;
-
-        if (this.life < 0) {
-            if (this.flashes == 0) {
-                this.discard();
-            } else if (this.life < -this.random.nextInt(10)) {
-                --this.flashes;
-                this.life = 1;
-            }
-        }
-
-        if (this.life >= 0) {
-            if (!(this.level() instanceof ServerLevel)) {
-                this.level().setSkyFlashTime(2);
-            }
+        if (--this.life == 0) {
+            this.discard();
         }
     }
 
@@ -182,7 +181,7 @@ public class LightningEntity extends JujutsuProjectile {
         this.entityData.set(DATA_PITCH, pitch);
     }
 
-    private void calculateEndPos() {
+    protected void calculateEndPos() {
         this.endPosX = this.getX() + RADIUS * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
         this.endPosZ = this.getZ() + RADIUS * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
         this.endPosY = this.getY() + RADIUS * Math.sin(this.getPitch());
@@ -227,15 +226,5 @@ public class LightningEntity extends JujutsuProjectile {
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
         return distance < 1024;
-    }
-
-    private void update() {
-        if (this.getOwner() instanceof LivingEntity owner) {
-            this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
-            Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-            this.setPos(spawn.x(), spawn.y(), spawn.z());
-        }
     }
 }

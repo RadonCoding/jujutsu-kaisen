@@ -15,6 +15,8 @@ import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -60,29 +62,29 @@ public class Spiderweb extends Ability {
         BlockHitResult hit = this.getBlockHit(owner);
 
         if (hit != null) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                float radius = EXPLOSIVE_POWER * this.getPower(owner);
-                float real = (radius % 2 == 0) ? radius + 1 : radius;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                Vec3 center = hit.getBlockPos().getCenter().add(owner.getLookAngle().scale(real * 0.5F));
+            float radius = EXPLOSIVE_POWER * this.getPower(owner);
+            float real = (radius % 2 == 0) ? radius + 1 : radius;
 
-                AABB bounds = AABB.ofSize(center, real, real, real);
+            Vec3 center = hit.getBlockPos().getCenter().add(owner.getLookAngle().scale(real * 0.5F));
 
-                for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
-                    cap.delayTickEvent(() -> {
-                        owner.level().playSound(null, center.x(), center.y(), center.z(),
-                                JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            AABB bounds = AABB.ofSize(center, real, real, real);
 
-                        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                            if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
-                                Vec3 current = pos.getCenter();
-                                owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
-                                        (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, 3, true, true));
-                            }
-                        });
-                    }, i * 2);
-                }
-            });
+            for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
+                cap.delayTickEvent(() -> {
+                    owner.level().playSound(null, center.x(), center.y(), center.z(),
+                            JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+                    BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+                        if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
+                            Vec3 current = pos.getCenter();
+                            owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
+                                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, 3, true, true));
+                        }
+                    });
+                }, i * 2);
+            }
         }
     }
 

@@ -201,7 +201,7 @@
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.punch": "Punch",
   "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
-  "ability.jujutsu_kaisen.air_punch": "Air Punch",
+  "ability.jujutsu_kaisen.slam": "Slam",
   "ability.jujutsu_kaisen.barrage": "Barrage",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
   "ability.jujutsu_kaisen.domain_amplification.enable": "Activated domain amplification",
@@ -217,6 +217,7 @@
   "ability.jujutsu_kaisen.cursed_energy_flow.disable": "Deactivated CE flow",
   "ability.jujutsu_kaisen.cursed_energy_blast": "CE Blast",
   "ability.jujutsu_kaisen.lightning": "Lightning",
+  "ability.jujutsu_kaisen.discharge": "Discharge",
   "ability.jujutsu_kaisen.zero_point_two_second_domain_expansion": "0.2s Domain Expansion",
   "ability.jujutsu_kaisen.switch": "Switch",
 
@@ -360,7 +361,7 @@
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
   "ability.jujutsu_kaisen.shadow_travel": "Shadow Travel",
 
-  "ability.jujutsu_kaisen.nue_lightning": "Nue Lighting",
+  "ability.jujutsu_kaisen.nue_lightning": "Nue Lightning",
   "ability.jujutsu_kaisen.piercing_water": "Piercing Water",
   "ability.jujutsu_kaisen.wheel": "Wheel",
 

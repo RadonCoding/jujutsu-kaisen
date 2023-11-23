@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.ability.dismantle_and_cleave.*;
 import radon.jujutsu_kaisen.ability.misc.DivergentFist;
 import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
+import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
 import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
@@ -127,7 +128,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
-    public static RegistryObject<Ability> AIR_PUNCH = ABILITIES.register("air_punch", AirPunch::new);
+    public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
     public static RegistryObject<Ability> SHOOT_RCT = ABILITIES.register("shoot_rct", ShootRCT::new);
@@ -138,6 +139,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
+    public static RegistryObject<Ability> DISCHARGE = ABILITIES.register("discharge", Discharge::new);
     public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
     public static RegistryObject<Ability> SWITCH = ABILITIES.register("switch", Switch::new);
 
@@ -336,7 +338,7 @@ public class JJKAbilities {
 
         abilities.add(DASH.get());
         abilities.add(PUNCH.get());
-        abilities.add(AIR_PUNCH.get());
+        abilities.add(SLAM.get());
         abilities.add(BARRAGE.get());
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
@@ -344,6 +346,7 @@ public class JJKAbilities {
             abilities.add(WATER_WALKING.get());
             abilities.add(CURSED_ENERGY_FLOW.get());
             abilities.add(LIGHTNING.get());
+            abilities.add(DISCHARGE.get());
             abilities.add(ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get());
 
             abilities.add(SIMPLE_DOMAIN.get());

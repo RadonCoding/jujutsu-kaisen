@@ -52,6 +52,12 @@ public class JJKRenderTypes extends RenderType {
                     .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
                             .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
                     .createCompositeState(false));
+    private static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
+            false, true, RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
+                    .createCompositeState(false)
+    );
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
@@ -71,5 +77,9 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType unlimitedVoid() {
         return UNLIMITED_VOID;
+    }
+
+    public static @NotNull RenderType lightning() {
+        return LIGHTNING;
     }
 }

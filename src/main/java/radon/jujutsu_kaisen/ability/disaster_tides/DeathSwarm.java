@@ -7,6 +7,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
@@ -86,27 +88,27 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     public void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
         if (target == null) return;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (int i = 0; i < 6; i++) {
-                float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
-                float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                float power = domain == null ? this.getPower(owner) : cap.getRealPower();
+        for (int i = 0; i < 6; i++) {
+            float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+            float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
 
-                FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                        new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
-                        new SharkShikigamiProjectile(owner, power, target, xOffset, yOffset),
-                        new PiranhaShikigamiProjectile(owner, power, target, xOffset, yOffset)
-                };
+            float power = domain == null ? this.getPower(owner) : cap.getRealPower();
 
-                int delay = i * 2;
+            FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
+                    new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                    new SharkShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                    new PiranhaShikigamiProjectile(owner, power, target, xOffset, yOffset)
+            };
 
-                cap.delayTickEvent(() -> {
-                    if (target.isAlive() && !target.isRemoved()) {
-                        owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
-                    }
-                }, delay);
-            }
-        });
+            int delay = i * 2;
+
+            cap.delayTickEvent(() -> {
+                if (target.isAlive() && !target.isRemoved()) {
+                    owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
+                }
+            }, delay);
+        }
     }
 }

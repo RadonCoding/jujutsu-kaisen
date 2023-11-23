@@ -38,6 +38,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
+import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -177,13 +178,14 @@ public class JJKEventHandler {
         public static void onLivingFall(LivingFallEvent event) {
             event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    float distance = event.getDistance();
-                    event.setDistance(distance * 0.25F);
-                } else {
-                    float distance = event.getDistance();
-                    event.setDistance(distance * 0.5F);
+                    event.setDamageMultiplier(0.25F);
                 }
             });
+
+            if (Slam.TARGETS.containsKey(event.getEntity().getUUID())) {
+                Slam.onHitGround(event.getEntity(), event.getDistance());
+                event.setDamageMultiplier(0.25F);
+            }
         }
 
         @SubscribeEvent

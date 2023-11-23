@@ -357,6 +357,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.LAVA_ROCK.get(), LavaRockRenderer::new);
             event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
+            event.registerEntityRenderer(JJKEntities.EMITTING_LIGHTNING.get(), EmittingLightningRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.PROJECTION_FRAME.get(), ProjectionFrameRenderer::new);
