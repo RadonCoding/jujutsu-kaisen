@@ -36,7 +36,7 @@ import java.util.*;
 public class Slam extends Ability implements Ability.IChannelened {
     private static final double RANGE = 30.0D;
     private static final double LAUNCH_POWER = 2.0D;
-    private static final float MAX_EXPLOSION = 10.0F;
+    private static final float MAX_EXPLOSION = 5.0F;
 
     public static Map<UUID, Float> TARGETS = new HashMap<>();
 
@@ -83,7 +83,7 @@ public class Slam extends Ability implements Ability.IChannelened {
     }
 
     public int getCooldown() {
-        return 3 * 20;
+        return 10 * 20;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Slam extends Ability implements Ability.IChannelened {
     }
 
     public static void onHitGround(LivingEntity owner, float distance) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel)) return;
 
         float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
 
