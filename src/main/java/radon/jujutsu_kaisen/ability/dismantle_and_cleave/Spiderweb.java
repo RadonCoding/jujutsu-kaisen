@@ -53,7 +53,7 @@ public class Spiderweb extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (owner.level().isClientSide) return;
 
         owner.swing(InteractionHand.MAIN_HAND, true);
 
@@ -61,11 +61,12 @@ public class Spiderweb extends Ability {
 
         if (hit != null) {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                Vec3 center = hit.getBlockPos().getCenter();
+                float radius = EXPLOSIVE_POWER * this.getPower(owner);
+                float real = (radius % 2 == 0) ? radius + 1 : radius;
 
-                float power = EXPLOSIVE_POWER * this.getPower(owner);
+                Vec3 center = hit.getBlockPos().getCenter().add(owner.getLookAngle().scale(real * 0.5F));
 
-                AABB bounds = AABB.ofSize(center, power, 1.0D, power);
+                AABB bounds = AABB.ofSize(center, real, real, real);
 
                 for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
                     cap.delayTickEvent(() -> {
@@ -73,17 +74,14 @@ public class Spiderweb extends Ability {
                                 JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                         BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                            if (HelperMethods.RANDOM.nextInt(Math.round(power) * 2) == 0) {
+                            if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
+                                Vec3 current = pos.getCenter();
                                 owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
-                                        (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), 3, true));
+                                        (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, 3, true, true));
                             }
                         });
                     }, i * 2);
                 }
-                cap.delayTickEvent(() ->
-                        owner.level().explode(owner, center.x(), center.y(), center.z(), power,
-                                owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
-                                        Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE), DELAY);
             });
         }
     }

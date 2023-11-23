@@ -44,7 +44,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public void performBlock(LivingEntity owner, @Nullable DomainExpansionEntity domain, BlockPos pos) {
-        DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), 5, true);
+        DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), 5, true, false);
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {

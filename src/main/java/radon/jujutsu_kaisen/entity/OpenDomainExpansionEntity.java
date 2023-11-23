@@ -6,13 +6,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +22,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
@@ -120,10 +119,12 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
-        for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
-            if (entity instanceof LivingEntity living) {
-                this.ability.onHitEntity(this, owner, living, false);
-            }
+        List<LivingEntity> entities = new ArrayList<>();
+
+        this.level().getEntities(EntityTypeTest.forClass(LivingEntity.class), bounds, entity -> entity != this && this.isAffected(entity), entities, 1);
+
+        for (LivingEntity entity : entities) {
+            this.ability.onHitEntity(this, owner, entity, false);
         }
     }
 
