@@ -30,9 +30,9 @@ import java.util.UUID;
 
 public class SimpleDomainEntity extends Mob {
     private static final float STRENGTH = 500.0F;
-
     private static final double X_STEP = 0.05D;
     public static final float RADIUS = 3.0F;
+    private static final float DAMAGE = 10.0F;
 
     @Nullable
     private UUID ownerUUID;
@@ -72,12 +72,7 @@ public class SimpleDomainEntity extends Mob {
 
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (pSource instanceof JJKDamageSources.JujutsuDamageSource source) {
-            if (source.getDirectEntity() instanceof DomainExpansionEntity domain && domain.getOwner() != this.getOwner()) {
-                return super.hurt(pSource, pAmount);
-            }
-        }
-        return false;
+        return pSource.getDirectEntity() instanceof DomainExpansionEntity && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -90,6 +85,22 @@ public class SimpleDomainEntity extends Mob {
             this.discard();
         } else if (owner != null) {
             this.setPos(owner.position());
+
+            if (this.level() instanceof ServerLevel level) {
+                ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                for (DomainExpansionEntity domain : ownerCap.getDomains(level)) {
+                    if (domain.checkSureHitEffect()) {
+                        LivingEntity target = domain.getOwner();
+
+                        if (target != null) {
+                            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                            System.out.println(DAMAGE * Math.max(1.0F, targetCap.getAbilityPower(target) - ownerCap.getAbilityPower(owner)));
+                            this.hurt(JJKDamageSources.jujutsuAttack(domain, domain.getAbility()), DAMAGE * (1.0F + Math.max(0.0F, targetCap.getAbilityPower(target) - ownerCap.getAbilityPower(owner))));
+                        }
+                    }
+                }
+            }
 
             float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
 
