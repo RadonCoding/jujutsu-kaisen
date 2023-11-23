@@ -65,6 +65,11 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean isInvulnerable() {
+        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerable();
+    }
+
+    @Override
     protected boolean isCustom() {
         return false;
     }
