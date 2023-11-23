@@ -98,6 +98,11 @@ public class Slam extends Ability implements Ability.IChannelened {
 
     }
 
+    @Override
+    public Status checkTriggerable(LivingEntity owner) {
+        return owner.onGround() ? super.checkTriggerable(owner) : Status.FAILURE;
+    }
+
     public static void onHitGround(LivingEntity owner, float distance) {
         owner.swing(InteractionHand.MAIN_HAND);
         ExplosionHandler.spawn(owner.level().dimension(), owner.position(), Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID())), 5, owner,
