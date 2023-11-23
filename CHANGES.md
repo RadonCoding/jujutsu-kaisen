@@ -33,3 +33,6 @@
 
 ## Animation Rework
     - Gave all disaster curses runnning animations
+
+## Nerfs
+    - Decreased Dismantle damage by 33%
