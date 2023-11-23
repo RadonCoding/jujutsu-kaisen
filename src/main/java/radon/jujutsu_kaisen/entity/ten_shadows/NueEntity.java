@@ -42,6 +42,22 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         super(pEntityType, pLevel);
     }
 
+    public NueEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.NUE.get(), owner.level());
+
+        this.setTame(tame);
+        this.setOwner(owner);
+
+        Vec3 pos = owner.position()
+                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -60,22 +76,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     @Override
     protected boolean hasMeleeAttack() {
         return true;
-    }
-
-    public NueEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.NUE.get(), owner.level());
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.moveControl = new FlyingMoveControl(this, 20, true);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.32D)
+        return SorcererEntity.createAttributes()
                 .add(Attributes.FLYING_SPEED)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);

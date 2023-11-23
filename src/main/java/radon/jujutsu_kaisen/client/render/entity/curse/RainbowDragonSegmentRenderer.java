@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.entity.curse.RainbowDragonEntity;
 import radon.jujutsu_kaisen.entity.curse.RainbowDragonSegmentEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -19,9 +20,9 @@ public class RainbowDragonSegmentRenderer extends EntityRenderer<RainbowDragonSe
     public RainbowDragonSegmentRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
 
-        this.renderers.put(1, new RainbowDragonArmsRenderer(pContext));
-        this.renderers.put(7, new RainbowDragonLegsRenderer(pContext));
-        this.renderers.put(12, new RainbowDragonTailRenderer(pContext));
+        this.renderers.put(RainbowDragonEntity.ARMS, new RainbowDragonArmsRenderer(pContext));
+        this.renderers.put(RainbowDragonEntity.LEGS, new RainbowDragonLegsRenderer(pContext));
+        this.renderers.put(RainbowDragonEntity.TAIL, new RainbowDragonTailRenderer(pContext));
 
         this.body = new RainbowDragonBodyRenderer(pContext);
     }

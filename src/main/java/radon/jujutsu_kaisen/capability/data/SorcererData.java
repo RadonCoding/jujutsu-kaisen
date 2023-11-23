@@ -533,7 +533,7 @@ public class SorcererData implements ISorcererData {
             owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
 
             if (owner.getHealth() < owner.getMaxHealth()) {
-                owner.heal(2.0F / 20);
+                owner.heal(1.0F / 20);
             }
         } else {
             this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
