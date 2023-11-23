@@ -29,6 +29,7 @@
     - Fixed fish shikigami hurting caster
     - Fixed volcano not working
     - Fixed stun not stopping dashing
+    - Fix toad tongue stun thing
 
 ## Animation Rework
     - Gave all disaster curses runnning animations

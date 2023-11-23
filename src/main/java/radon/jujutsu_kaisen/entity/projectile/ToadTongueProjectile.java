@@ -20,10 +20,12 @@ import java.util.UUID;
 
 public class ToadTongueProjectile extends AbstractHurtingProjectile {
     public static final float SPEED = 2.0F;
+    private static final double PULL_STRENGTH = 0.5D;
 
     private int range;
     private UUID target;
     private boolean grabbed;
+    private Vec3 pos;
 
     public ToadTongueProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -73,8 +75,8 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
         if (!target.getUUID().equals(this.target)) return;
 
         this.grabbed = true;
+        this.pos = target.position();
     }
-
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         this.discard();
@@ -104,11 +106,13 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
 
             if (this.grabbed) {
                 if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
-                    if ((owner instanceof ToadEntity toad && toad.getTarget() != living) || !owner.isAlive() || owner.isRemoved())
+                    if (!(owner instanceof ToadEntity toad) || toad.getTarget() != living || living.isDeadOrDying() || living.isRemoved() || !owner.isAlive() || owner.isRemoved())
                         this.discard();
 
-                    living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
+                    living.setDeltaMovement(living.getDeltaMovement().add(this.pos.subtract(living.position()).normalize().scale(PULL_STRENGTH)));
                     this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
+                } else {
+                    this.discard();
                 }
                 this.setDeltaMovement(Vec3.ZERO);
             } else {
