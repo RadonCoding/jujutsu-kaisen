@@ -323,17 +323,20 @@ public class JJKAbilities {
     public static List<Ability> getAbilities(LivingEntity owner) {
         Set<Ability> abilities = new LinkedHashSet<>();
 
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            abilities.add(HEAL.get());
+            abilities.add(RCT.get());
+        }
+
         if (owner instanceof ISorcerer sorcerer) {
             abilities.addAll(sorcerer.getCustom());
 
             if (!sorcerer.canPerformSorcery()) return new ArrayList<>(abilities);
         }
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         abilities.add(DASH.get());
-
         abilities.add(PUNCH.get());
         abilities.add(AIR_PUNCH.get());
         abilities.add(BARRAGE.get());
@@ -344,9 +347,6 @@ public class JJKAbilities {
             abilities.add(CURSED_ENERGY_FLOW.get());
             abilities.add(LIGHTNING.get());
             abilities.add(ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get());
-
-            abilities.add(HEAL.get());
-            abilities.add(RCT.get());
 
             abilities.add(SIMPLE_DOMAIN.get());
             abilities.add(DOMAIN_AMPLIFICATION.get());
