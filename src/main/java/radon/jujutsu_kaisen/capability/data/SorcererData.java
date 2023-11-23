@@ -1205,7 +1205,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void tameAll(Set<ResourceLocation> tamed) {
+    public void setTamed(Set<ResourceLocation> tamed) {
+        this.tamed.clear();
         this.tamed.addAll(tamed);
     }
 
@@ -1217,6 +1218,17 @@ public class SorcererData implements ISorcererData {
     @Override
     public boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity) {
         return this.dead.contains(registry.getKey(entity));
+    }
+
+    @Override
+    public Set<ResourceLocation> getDead() {
+        return this.dead;
+    }
+
+    @Override
+    public void setDead(Set<ResourceLocation> dead) {
+        this.dead.clear();
+        this.dead.addAll(dead);
     }
 
     @Override

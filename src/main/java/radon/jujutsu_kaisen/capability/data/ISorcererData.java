@@ -229,14 +229,12 @@ public interface ISorcererData {
     <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz);
 
     boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);
-
     void tame(Registry<EntityType<?>> registry, EntityType<?> entity);
-
-    void tameAll(Set<ResourceLocation> tamed);
-
+    void setTamed(Set<ResourceLocation> tamed);
     Set<ResourceLocation> getTamed();
-
     boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
+    Set<ResourceLocation> getDead();
+    void setDead(Set<ResourceLocation> dead);
 
     void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
 
