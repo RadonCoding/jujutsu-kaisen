@@ -61,9 +61,12 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
+    public boolean isSpecificFusion() {
+        return false;
+    }
+
+    @Override
     public int getCooldown() {
         return 15 * 20;
     }
-
-
 }
