@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
     public void render(SukunaEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         LivingEntity owner = pEntity.getOwner();
 
-        if (owner == null) {
+        if (!(owner instanceof AbstractClientPlayer client)) {
             Minecraft mc = Minecraft.getInstance();
             assert mc.level != null;
             EntityType<?> type = pEntity.getKey();
@@ -63,7 +64,6 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             var renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
             this.model = (PlayerModel<SukunaEntity>) renderer.getModel();
         } else {
-            AbstractClientPlayer client = (AbstractClientPlayer) owner;
             this.model = client.getModelName().equals("default") ? this.normal : this.slim;
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
