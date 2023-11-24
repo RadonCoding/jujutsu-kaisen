@@ -1,11 +1,14 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -39,6 +42,7 @@ import java.util.UUID;
 
 public class SukunaEntity extends SorcererEntity {
     private static final EntityDataAccessor<Optional<ResourceLocation>> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_RESOURCE_LOCATION.get());
+    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
 
     @Nullable
     private UUID ownerUUID;
@@ -78,6 +82,12 @@ public class SukunaEntity extends SorcererEntity {
         if (key != null) {
             this.entityData.set(DATA_ENTITY, Optional.of(key));
         }
+
+        if (owner instanceof Player player) {
+            CompoundTag nbt = new CompoundTag();
+            NbtUtils.writeGameProfile(nbt, player.getGameProfile());
+            this.entityData.set(DATA_PLAYER, Optional.of(nbt));
+        }
     }
 
     @Override
@@ -110,6 +120,9 @@ public class SukunaEntity extends SorcererEntity {
         return this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).get(this.entityData.get(DATA_ENTITY).orElseThrow());
     }
 
+    public GameProfile getPlayer() {
+        return NbtUtils.readGameProfile(this.entityData.get(DATA_PLAYER).orElseThrow());
+    }
 
     public GameType getOriginal(ServerPlayer player) {
         return this.original == null ? player.server.getDefaultGameType() : this.original;
@@ -120,6 +133,7 @@ public class SukunaEntity extends SorcererEntity {
         super.defineSynchedData();
 
         this.entityData.define(DATA_ENTITY, Optional.empty());
+        this.entityData.define(DATA_PLAYER, Optional.empty());
     }
 
     @Override
@@ -195,8 +209,10 @@ public class SukunaEntity extends SorcererEntity {
             pCompound.putInt("original", this.original.ordinal());
         }
 
-        this.entityData.get(DATA_ENTITY).ifPresent(key ->
-                pCompound.putString("entity", key.toString()));
+        this.entityData.get(DATA_ENTITY).ifPresent(entity ->
+                pCompound.putString("entity", entity.toString()));
+        this.entityData.get(DATA_PLAYER).ifPresent(player ->
+                pCompound.put("player", player));
     }
 
     @Override
@@ -216,6 +232,9 @@ public class SukunaEntity extends SorcererEntity {
 
         if (pCompound.contains("entity")) {
             this.entityData.set(DATA_ENTITY, Optional.of(new ResourceLocation(pCompound.getString("entity"))));
+        }
+        if (pCompound.contains("player")) {
+            this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
         }
     }
 
@@ -278,6 +297,9 @@ public class SukunaEntity extends SorcererEntity {
                 if (!cap.hasTrait(Trait.VESSEL)) {
                     HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
                 }
+            }
+            if (owner instanceof ServerPlayer player) {
+                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
             owner.kill();
         } else if (!(this instanceof HeianSukunaEntity)) {

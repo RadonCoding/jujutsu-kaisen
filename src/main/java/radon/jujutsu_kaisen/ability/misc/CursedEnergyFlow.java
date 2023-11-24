@@ -88,7 +88,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     if (!entity.isInWater()) continue;
 
                     if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), LIGHTNING_DAMAGE * this.getPower(owner))) {
-                        for (int i = 0; i < 4; i++) {
+                        for (int i = 0; i < 16; i++) {
                             double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
                             double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * (entity.getBbHeight() * 1.25F);
                             double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);

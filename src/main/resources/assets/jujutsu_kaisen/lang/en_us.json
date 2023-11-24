@@ -505,6 +505,7 @@
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",
   "effect.jujutsu_kaisen.undetectable": "Undetectable",
+  "effect.jujutsu_kaisen.invisibility": "Invisibility",
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
   "death.attack.jujutsu_bypass": "%1$s was killed by %2$s using jujutsu",
