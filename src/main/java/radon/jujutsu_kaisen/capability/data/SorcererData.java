@@ -931,6 +931,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void addEnergy(LivingEntity owner, float amount) {
+        this.energy = Math.min(this.getMaxEnergy(owner), this.energy + amount);
+    }
+
+    @Override
     public float getMaxEnergy(LivingEntity owner) {
         long time = owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
