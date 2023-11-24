@@ -175,7 +175,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - this.getDuration() / 2 > this.getDuration()) {
+            if (this.getTime() - CHARGE - this.getDuration() / 2 > this.getDuration()) {
                 this.on = false;
             }
         }
