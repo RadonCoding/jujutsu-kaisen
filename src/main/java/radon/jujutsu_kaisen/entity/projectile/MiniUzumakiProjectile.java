@@ -25,6 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -87,25 +88,25 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
+        Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
-            CursedSpirit current = null;
+        Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
 
-            for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
-                Entity entity = entry.getKey().create(this.level());
-                if (!(entity instanceof CursedSpirit curse)) continue;
-                if (current == null || curse.getGrade().ordinal() < current.getGrade().ordinal()) current = curse;
-            }
+        CursedSpirit current = null;
 
-            if (current != null) {
-                this.power = HelperMethods.getPower(current.getExperience());
-                if (current.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && current.getTechnique() != null) cap.absorb(current.getTechnique());
-                cap.removeCurse(registry, current.getType());
-            }
-        });
+        for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
+            Entity entity = entry.getKey().create(this.level());
+            if (!(entity instanceof CursedSpirit curse)) continue;
+            if (current == null || curse.getGrade().ordinal() < current.getGrade().ordinal()) current = curse;
+        }
+
+        if (current != null) {
+            this.power = HelperMethods.getPower(current.getExperience());
+            if (current.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && current.getTechnique() != null) cap.absorb(current.getTechnique());
+            cap.removeCurse(registry, current.getType());
+        }
     }
 
     @Override
@@ -160,48 +161,51 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 }
             }
 
-            this.calculateEndPos();
+            if (this.getTime() > DELAY) {
+                this.calculateEndPos();
 
-            List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
-                    new Vec3(this.endPosX, this.endPosY, this.endPosZ));
+                List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
+                        new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
-            if (!this.level().isClientSide) {
-                for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
-                        continue;
+                if (!this.level().isClientSide) {
+                    for (Entity entity : entities) {
+                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
+                            continue;
 
-                    entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.PIERCING_WATER.get()), DAMAGE * this.getPower());
-                }
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.PIERCING_WATER.get()), DAMAGE * this.getPower());
+                    }
 
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    double radius = SCALE * 2.0F;
+                    if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                        double radius = SCALE * 2.0F;
 
-                    AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
-                            this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                    double centerX = bounds.getCenter().x();
-                    double centerY = bounds.getCenter().y();
-                    double centerZ = bounds.getCenter().z();
+                        AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
+                                this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
+                        double centerX = bounds.getCenter().x();
+                        double centerY = bounds.getCenter().y();
+                        double centerZ = bounds.getCenter().z();
 
-                    for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                        for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                            for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                                BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = this.level().getBlockState(pos);
+                        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                                    BlockPos pos = new BlockPos(x, y, z);
+                                    BlockState state = this.level().getBlockState(pos);
 
-                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                                if (distance <= radius) {
-                                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                        this.level().destroyBlock(pos, false);
+                                    if (distance <= radius) {
+                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                                            this.level().destroyBlock(pos, false);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            if (this.getTime() - DURATION / 2 > DURATION) {
-                this.on = false;
+
+                if (this.getTime() - DELAY >= DURATION) {
+                    this.on = false;
+                }
             }
         }
     }

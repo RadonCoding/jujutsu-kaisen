@@ -65,7 +65,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
             pPoseStack.scale(MiniUzumakiProjectile.SCALE, MiniUzumakiProjectile.SCALE, MiniUzumakiProjectile.SCALE);
             pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
-            VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.transparent(BEAM));
+            VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(BEAM));
 
             this.renderStart(frame, pPoseStack, consumer, pPackedLight);
 
