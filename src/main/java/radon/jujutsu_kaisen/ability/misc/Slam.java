@@ -117,7 +117,7 @@ public class Slam extends Ability implements Ability.IChannelened {
         float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
 
         owner.swing(InteractionHand.MAIN_HAND, true);
-        ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, owner,
+        ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner), owner,
                 owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
         TARGETS.remove(owner.getUUID());
     }

@@ -40,8 +40,6 @@ public class CursedBud extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 300.0F;
+        return 50.0F;
     }
-
-
 }

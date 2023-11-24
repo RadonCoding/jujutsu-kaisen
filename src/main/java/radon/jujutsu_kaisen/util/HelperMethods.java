@@ -117,15 +117,16 @@ public class HelperMethods {
     }
 
     public static int strcmp(String str1, String str2) {
-        int minLength = Math.min(str1.length(), str2.length());
         int difference = 0;
+        int minLength = Math.min(str1.length(), str2.length());
+        int maxLength = Math.max(str1.length(), str2.length());
 
         for (int i = 0; i < minLength; i++) {
             if (str1.charAt(i) != str2.charAt(i)) {
-                difference = minLength - i;
-                break;
+                difference++;
             }
         }
+        difference += maxLength - minLength;
         return difference;
     }
 
