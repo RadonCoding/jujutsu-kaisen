@@ -294,22 +294,14 @@ public class JJKAbilities {
     }
 
     public static boolean isDead(LivingEntity owner, EntityType<?> type) {
-        for (RegistryObject<Ability> ability : ABILITIES.getEntries()) {
-            if (!(ability.get() instanceof Summon<?> summon)) continue;
-            if (!summon.getTypes().contains(type)) continue;
-            return summon.isDead(owner);
-        }
-        return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        return cap.isDead(registry, type);
     }
 
-
     public static boolean isChanneling(LivingEntity owner, Ability ability) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            result.set(cap.isChanneling(ability));
-        });
-        return result.get();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isChanneling(ability);
     }
 
     public static boolean hasTrait(LivingEntity owner, Trait trait) {
