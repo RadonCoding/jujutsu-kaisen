@@ -1,26 +1,27 @@
 package radon.jujutsu_kaisen.mixin.common;
 
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
-import java.util.UUID;
+import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow
-    public abstract UUID getUUID();
+    @Shadow private Level level;
+
+    @Shadow public abstract AABB getBoundingBox();
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {

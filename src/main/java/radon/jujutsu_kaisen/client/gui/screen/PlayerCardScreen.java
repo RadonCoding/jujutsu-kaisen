@@ -133,8 +133,10 @@ public class PlayerCardScreen extends Screen {
             component.append(Component.translatable(String.format("gui.%s.player_card.cursed_technique", JujutsuKaisen.MOD_ID), technique.getName()));
             component.append("\n");
         }
-        component.append(Component.translatable(String.format("gui.%s.player_card.cursed_energy_nature", JujutsuKaisen.MOD_ID), cap.getNature().getName()));
-        component.append("\n");
+        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            component.append(Component.translatable(String.format("gui.%s.player_card.cursed_energy_nature", JujutsuKaisen.MOD_ID), cap.getNature().getName()));
+            component.append("\n");
+        }
         component.append(Component.translatable(String.format("gui.%s.player_card.traits", JujutsuKaisen.MOD_ID),
                 cap.getTraits().stream().map(Trait::getName).map(Component::getString).collect(Collectors.joining(", "))));
         component.append("\n");
