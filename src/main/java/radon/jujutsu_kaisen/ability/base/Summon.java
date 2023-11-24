@@ -103,16 +103,28 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             List<EntityType<?>> fusions = this.getFusions();
 
+            boolean dead = false;
+
             for (int i = 0; i < fusions.size(); i++) {
                 if (this.isBottomlessWell()) {
-                    if (!JJKAbilities.hasTamed(owner, fusions.get(i))) return false;
+                    if (!JJKAbilities.hasTamed(owner, fusions.get(i))) {
+                        return false;
+                    }
                 } else {
                     if (this.isSpecificFusion()) {
-                        if ((i == 0) == JJKAbilities.isDead(owner, fusions.get(i))) return false;
+                        if ((i == 0) == JJKAbilities.isDead(owner, fusions.get(i))) {
+                            return false;
+                        }
                     } else {
-                        if (JJKAbilities.isDead(owner, fusions.get(i))) return false;
+                        if (JJKAbilities.isDead(owner, fusions.get(i))) {
+                            dead = true;
+                        }
                     }
                 }
+            }
+
+            if (!this.isSpecificFusion() && !dead) {
+                return false;
             }
         }
         return !this.isDead(owner);

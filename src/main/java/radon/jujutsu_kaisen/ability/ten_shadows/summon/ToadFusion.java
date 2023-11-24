@@ -45,8 +45,6 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
         return 15 * 20;
     }
 
-
-
     @Override
     protected boolean isBottomlessWell() {
         return true;
