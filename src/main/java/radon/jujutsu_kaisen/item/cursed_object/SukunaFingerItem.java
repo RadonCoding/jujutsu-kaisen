@@ -31,8 +31,13 @@ public class SukunaFingerItem extends CursedObjectItem {
                 pStack.shrink(cap.addFingers(pStack.getCount()));
                 return pStack;
             }
+
+            pEntityLiving.setItemInHand(pEntityLiving.getUsedItemHand(), ItemStack.EMPTY);
+
+            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                return ItemStack.EMPTY;
+            }
         }
-        pEntityLiving.setItemInHand(pEntityLiving.getUsedItemHand(), ItemStack.EMPTY);
         HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }

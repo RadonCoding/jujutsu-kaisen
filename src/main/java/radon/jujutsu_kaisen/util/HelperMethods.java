@@ -285,13 +285,31 @@ public class HelperMethods {
     }
 
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {
-        return getEntityCollisionsOfClass(Entity.class, level, bounds);
+        List<Entity> collisions = new ArrayList<>();
+
+        for (Entity entity : level.getEntities(null, AABB.ofSize(bounds.getCenter(), 32.0D, 32.0D, 32.0D))) {
+            if (bounds.intersects(entity.getBoundingBox())) {
+                collisions.add(entity);
+            }
+        }
+        return collisions;
     }
 
     public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level level, AABB bounds) {
-        List<T> entities = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(clazz), bounds.inflate(1.0E-7D), entity -> bounds.intersects(entity.getBoundingBox()), entities, 1);
-        return entities;
+        List<Entity> collisions = getEntityCollisions(level, bounds);
+
+        List<T> result = new ArrayList<>();
+
+        EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
+
+        for (Entity collision : collisions) {
+            T casted = test.tryCast(collision);
+
+            if (casted != null) {
+                result.add(casted);
+            }
+        }
+        return result;
     }
 
     public static int toRGB24(int r, int g, int b, int a) {

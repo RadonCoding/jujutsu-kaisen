@@ -511,7 +511,8 @@
 
   "death.attack.jujutsu": "%1$s was killed by %2$s using jujutsu",
   "death.attack.jujutsu_bypass": "%1$s was killed by %2$s using jujutsu",
-  "death.attack.soul": "%1$s had their soul destroyed by %2$s",
+  "death.attack.soul": "%1$s had their soul killed by %2$s",
+  "death.attack.self": "%1$s killed themselves because of %2$s",
 
   "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
   "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",
