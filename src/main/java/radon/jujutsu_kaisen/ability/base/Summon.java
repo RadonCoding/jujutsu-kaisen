@@ -47,6 +47,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     public abstract boolean isTenShadows();
 
+    public boolean isSpecificFusion() {
+        return true;
+    }
+
     protected boolean shouldRemove() {
         return true;
     }
@@ -100,8 +104,15 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             List<EntityType<?>> fusions = this.getFusions();
 
             for (int i = 0; i < fusions.size(); i++) {
-                if (this.isBottomlessWell() ? !JJKAbilities.hasTamed(owner, fusions.get(i)) : (i == 0) == JJKAbilities.isDead(owner, fusions.get(i)))
-                    return false;
+                if (this.isBottomlessWell()) {
+                    if (!JJKAbilities.hasTamed(owner, fusions.get(i))) return false;
+                } else {
+                    if (this.isSpecificFusion()) {
+                        if ((i == 0) == JJKAbilities.isDead(owner, fusions.get(i))) return false;
+                    } else {
+                        if (JJKAbilities.isDead(owner, fusions.get(i))) return false;
+                    }
+                }
             }
         }
         return !this.isDead(owner);
