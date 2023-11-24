@@ -78,6 +78,8 @@ public class HanamiEntity extends DisasterCurse {
 
     @Override
     protected void customServerAiStep() {
+        super.customServerAiStep();
+
         this.entityData.set(DATA_CAST, true);
 
         LivingEntity target = this.getTarget();
