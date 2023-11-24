@@ -82,9 +82,12 @@ public class BlueProjectile extends JujutsuProjectile {
         }
     }
 
+    private float getRadius() {
+        return Math.min(MAX_RADIUS, RADIUS * this.getPower());
+    }
+
     private void breakBlocks() {
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
-        AABB bounds = this.getBoundingBox().inflate(radius);
+        AABB bounds = this.getBoundingBox();
         double centerX = bounds.getCenter().x();
         double centerY = bounds.getCenter().y();
         double centerZ = bounds.getCenter().z();
@@ -97,7 +100,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= radius) {
+                    if (distance <= this.getRadius()) {
                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                             this.level().destroyBlock(pos, false);
                         }
@@ -200,7 +203,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        float radius = this.getRadius();
         return EntityDimensions.fixed(radius, radius);
     }
 
