@@ -290,7 +290,7 @@ public class HelperMethods {
 
     public static <T extends Entity> List<T> getEntityCollisionsOfClass(Class<T> clazz, Level level, AABB bounds) {
         List<T> entities = new ArrayList<>();
-        level.getEntities(EntityTypeTest.forClass(clazz), bounds.inflate(1.0E-7D), entity -> entity.getBoundingBox().intersects(bounds), entities, 1);
+        level.getEntities(EntityTypeTest.forClass(clazz), bounds.inflate(1.0E-7D), entity -> bounds.intersects(entity.getBoundingBox()), entities, 1);
         return entities;
     }
 
