@@ -43,7 +43,7 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
-        MixinData.isFrame = true;
+        MixinData.isFakeRender = true;
 
         pPoseStack.pushPose();
         pPoseStack.scale(1.0F, 1.0F, 0.02F);
@@ -80,7 +80,7 @@ public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntit
         victim.yRotO = yRotO;
         victim.setYRot(yRot);
 
-        MixinData.isFrame = false;
+        MixinData.isFakeRender = false;
 
         pPoseStack.popPose();
 
