@@ -188,12 +188,6 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent
-        public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-            ISorcererData cap = event.getEntity().getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            event.setNewSpeed((float) (event.getNewSpeed() * (1.0D + (cap.getSpeedStacks() * 3.0D))));
-        }
-
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
