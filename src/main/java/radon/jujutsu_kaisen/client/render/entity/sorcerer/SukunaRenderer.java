@@ -26,6 +26,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.CloneEntity;
@@ -35,6 +36,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerModel<SukunaEntity>> {
+    private static final ResourceLocation STEVE = new ResourceLocation("textures/entity/player/wide/steve.png");
+
     private final PlayerModel<SukunaEntity> normal;
     private final PlayerModel<SukunaEntity> slim;
 
@@ -53,18 +56,30 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
     public void render(SukunaEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         LivingEntity owner = pEntity.getOwner();
 
-        if (!(owner instanceof AbstractClientPlayer client)) {
+        LivingEntityRenderer<?, ?> renderer;
+
+        if (!(owner instanceof Player)) {
             Minecraft mc = Minecraft.getInstance();
             assert mc.level != null;
             EntityType<?> type = pEntity.getKey();
+
+            if (type == EntityType.PLAYER) return;
+
             LivingEntity entity = (LivingEntity) type.create(mc.level);
 
             if (entity == null) return;
 
-            var renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
-            this.model = (PlayerModel<SukunaEntity>) renderer.getModel();
+            renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
         } else {
-            this.model = client.getModelName().equals("default") ? this.normal : this.slim;
+            renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(owner);
+        }
+
+        if (renderer.getModel() instanceof PlayerModel<?> player) {
+            try {
+                this.model = (boolean) FieldUtils.readField(player, "slim", true) ? this.normal : this.slim;
+            } catch (IllegalAccessException ignored) {
+                return;
+            }
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
@@ -75,7 +90,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
         if (type == EntityType.PLAYER) {
             GameProfile profile = pEntity.getPlayer();
-            AtomicReference<ResourceLocation> result = new AtomicReference<>();
+            AtomicReference<ResourceLocation> result = new AtomicReference<>(STEVE);
             SkullBlockEntity.updateGameprofile(profile, updated -> {
                 Minecraft mc = Minecraft.getInstance();
                 Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = mc.getSkinManager().getInsecureSkinInformation(updated);

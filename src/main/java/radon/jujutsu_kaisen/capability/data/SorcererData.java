@@ -377,6 +377,8 @@ public class SorcererData implements ISorcererData {
                     if (wheel != null) {
                         wheel.spin();
                     }
+                } else {
+                    entry.setValue(timer);
                 }
             }
         }

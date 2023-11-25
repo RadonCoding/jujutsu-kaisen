@@ -1,11 +1,8 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -14,7 +11,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class AbilityMode extends Ability implements Ability.IToggled {
+public class SwitchMode extends Ability {
     @Override
     public boolean isScalable() {
         return false;
@@ -49,33 +46,22 @@ public class AbilityMode extends Ability implements Ability.IToggled {
                 }
             }
         }
-        return JJKAbilities.hasToggled(owner, this) == (HelperMethods.RANDOM.nextInt(5) != 0);
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.TOGGLED;
+        return ActivationType.INSTANT;
     }
 
     @Override
     public void run(LivingEntity owner) {
-
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setMode(cap.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
         return 0;
-    }
-
-    @Override
-    public void onEnabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setMode(TenShadowsMode.ABILITY);
-    }
-
-    @Override
-    public void onDisabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setMode(TenShadowsMode.SUMMON);
     }
 }

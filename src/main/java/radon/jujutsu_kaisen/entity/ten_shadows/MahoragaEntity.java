@@ -6,6 +6,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -185,6 +187,10 @@ public class MahoragaEntity extends TenShadowsSummon {
     protected void customServerAiStep() {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
 
+        if (this.getHealth() < this.getMaxHealth()) {
+            this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2));
+        }
+
         LivingEntity target = this.getTarget();
 
         if (target != null) {
@@ -310,10 +316,5 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public Summon<?> getAbility() {
         return JJKAbilities.MAHORAGA.get();
-    }
-
-    @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 }
