@@ -106,7 +106,7 @@ public class ChantTab extends JJKTab {
 
         if (!text.isEmpty() && !text.isBlank()) {
             for (ChantListWidget.Entry chant : this.chants.children()) {
-                if (HelperMethods.strcmp(chant.get(), text) <= ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
+                if (HelperMethods.strcmp(chant.get(), text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
                     unique = false;
                     break;
                 }
