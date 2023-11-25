@@ -1,4 +1,0 @@
-- Add bilitzinfinity's sound effects
-- Make ISOH disrupt regen
-- Custom cursed energy colors
-- Remove curse hunger
