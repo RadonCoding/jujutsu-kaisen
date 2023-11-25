@@ -354,9 +354,9 @@
 
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
-  "ability.jujutsu_kaisen.ability_mode": "Ability Mode",
-  "ability.jujutsu_kaisen.ability_mode.enable": "Switched to ability mode",
-  "ability.jujutsu_kaisen.ability_mode.disable": "Switched to summon mode",
+  "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
+  "ability.jujutsu_kaisen.switch_mode.enable": "Switched mode",
+  "ability.jujutsu_kaisen.switch_mode.disable": "Switched mode",
 
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",

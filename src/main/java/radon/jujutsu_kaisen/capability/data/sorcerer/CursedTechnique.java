@@ -23,7 +23,7 @@ public enum CursedTechnique {
             JJKAbilities.FOREST_WAVE.get(), JJKAbilities.FOREST_ROOTS.get(), JJKAbilities.DISASTER_PLANT.get()),
     IDLE_TRANSFIGURATION(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get(), JJKAbilities.IDLE_TRANSFIGURATION.get(), JJKAbilities.SOUL_REINFORCEMENT.get(), JJKAbilities.SOUL_RESTORATION.get(), JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get()),
     TEN_SHADOWS(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(),
-            JJKAbilities.ABILITY_MODE.get(),
+            JJKAbilities.SWITCH_MODE.get(),
             JJKAbilities.RELEASE_SHIKIGAMI.get(),
             JJKAbilities.SHADOW_STORAGE.get(),
             JJKAbilities.SHADOW_TRAVEL.get(),

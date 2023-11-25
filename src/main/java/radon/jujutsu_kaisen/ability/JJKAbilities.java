@@ -44,7 +44,7 @@ import radon.jujutsu_kaisen.ability.mimicry.Mimicry;
 import radon.jujutsu_kaisen.ability.mimicry.Rika;
 import radon.jujutsu_kaisen.ability.ten_shadows.ChimeraShadowGarden;
 import radon.jujutsu_kaisen.ability.ten_shadows.ShadowStorage;
-import radon.jujutsu_kaisen.ability.ten_shadows.AbilityMode;
+import radon.jujutsu_kaisen.ability.ten_shadows.SwitchMode;
 import radon.jujutsu_kaisen.ability.ten_shadows.ShadowTravel;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
@@ -156,7 +156,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> TRANQUIL_DEER = ABILITIES.register("tranquil_deer", TranquilDeer::new);
     public static RegistryObject<Summon<?>> PIERCING_BULL = ABILITIES.register("piercing_bull", PiercingBull::new);
     public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
-    public static RegistryObject<Ability> ABILITY_MODE = ABILITIES.register("ability_mode", AbilityMode::new);
+    public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
     public static RegistryObject<Ability> SHADOW_TRAVEL = ABILITIES.register("shadow_travel", ShadowTravel::new);
