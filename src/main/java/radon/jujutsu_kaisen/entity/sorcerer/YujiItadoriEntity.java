@@ -44,13 +44,8 @@ public class YujiItadoriEntity extends SorcererEntity {
         ItemStack stack = pPlayer.getItemInHand(pHand);
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            if (!this.level().isClientSide) {
-                HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount(), false), true, true);
-            }
-            if (!pPlayer.getAbilities().instabuild) {
-                stack.shrink(stack.getCount());
-            }
-            return InteractionResult.SUCCESS;
+            this.eat(this.level(), stack);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
