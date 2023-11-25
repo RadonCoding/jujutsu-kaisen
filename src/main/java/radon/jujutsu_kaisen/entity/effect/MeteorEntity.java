@@ -56,6 +56,11 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
     public boolean shouldRiderSit() {
         return false;
     }
@@ -227,6 +232,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
                 if (this.onGround()) {
                     this.setNoGravity(true);
+                    this.setDeltaMovement(Vec3.ZERO);
 
                     if (this.explosionTime == 0) {
                         ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner,

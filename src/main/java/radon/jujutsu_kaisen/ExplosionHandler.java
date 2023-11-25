@@ -80,7 +80,7 @@ public class ExplosionHandler {
                             BlockState state = event.level.getBlockState(pos);
 
                             for (Entity entity : event.level.getEntities(null, new AABB(pos).inflate(1.0D))) {
-                                entity.setDeltaMovement(explosion.position.subtract(entity.position()).normalize().reverse());
+                                entity.setDeltaMovement(explosion.position.subtract(entity.position()).reverse());
                                 entity.hurtMarked = true;
 
                                 entity.hurt(explosion.source, explosion.radius * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&

@@ -49,7 +49,7 @@ public class Slam extends Ability implements Ability.IChannelened {
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
-        return angle > 1.0D;
+        return angle < 1.0D;
     }
 
     @Override
