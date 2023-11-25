@@ -59,16 +59,6 @@ public class SukunaEntity extends SorcererEntity {
         super(pEntityType, pLevel);
     }
 
-    @Override
-    protected boolean isCustom() {
-        return false;
-    }
-
-    @Override
-    protected boolean targetsSorcerers() {
-        return true;
-    }
-
     public SukunaEntity(LivingEntity owner, int fingers, boolean vessel) {
         super(JJKEntities.SUKUNA.get(), owner.level());
 
@@ -88,6 +78,16 @@ public class SukunaEntity extends SorcererEntity {
             NbtUtils.writeGameProfile(nbt, player.getGameProfile());
             this.entityData.set(DATA_PLAYER, Optional.of(nbt));
         }
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return false;
+    }
+
+    @Override
+    protected boolean targetsSorcerers() {
+        return true;
     }
 
     @Override
