@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.sorcerer;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.CloneEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -37,10 +39,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerModel<SukunaEntity>> {
-    private static final ResourceLocation STEVE = new ResourceLocation("textures/entity/player/wide/steve.png");
-
     private final PlayerModel<SukunaEntity> normal;
     private final PlayerModel<SukunaEntity> slim;
+
+    @Nullable
+    private ResourceLocation texture;
 
     public SukunaRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
@@ -84,23 +87,39 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
         EntityType<?> type = pEntity.getKey();
 
         if (type == EntityType.PLAYER) {
-            GameProfile profile = pEntity.getPlayer();
-            AtomicReference<ResourceLocation> result = new AtomicReference<>();
-            SkullBlockEntity.updateGameprofile(profile, updated -> {
-                Minecraft mc = Minecraft.getInstance();
-                Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = mc.getSkinManager().getInsecureSkinInformation(updated);
+            if (this.texture == null) {
+                GameProfile profile = pEntity.getPlayer();
 
-                if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                    ((ISkinManagerAccessor) mc.getSkinManager()).invokeRegisterTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, (pTextureType, pLocation, pProfileTexture) -> {
-                        result.set(pLocation);
-                        String metadata = pProfileTexture.getMetadata("model");
-                        this.model = metadata == null || metadata.equals("default") ? this.normal : this.slim;
+                AtomicReference<ResourceLocation> result = new AtomicReference<>(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
+                AtomicReference<String> model = new AtomicReference<>(DefaultPlayerSkin.getSkinModelName(profile.getId()));
+
+                try {
+                    SkullBlockEntity.updateGameprofile(profile, updated -> {
+                        if (!updated.isComplete()) return;
+
+                        Minecraft mc = Minecraft.getInstance();
+                        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = mc.getSkinManager().getInsecureSkinInformation(updated);
+
+                        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                            ((ISkinManagerAccessor) mc.getSkinManager()).invokeRegisterTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, (pTextureType, pLocation, pProfileTexture) -> {
+                                result.set(pLocation);
+
+                                String metadata = pProfileTexture.getMetadata("model");
+
+                                if (metadata == null) return;
+
+                                model.set(metadata);
+                            });
+                        }
                     });
-                } else {
-                    result.set(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
-                }
-            });
-            return result.get();
+                } catch (Exception ignored) {}
+
+                this.texture = result.get();
+                this.model = model.get().equals("default") ? this.normal : this.slim;
+                return result.get();
+            } else {
+                return this.texture;
+            }
         } else {
             Minecraft mc = Minecraft.getInstance();
             assert mc.level != null;
