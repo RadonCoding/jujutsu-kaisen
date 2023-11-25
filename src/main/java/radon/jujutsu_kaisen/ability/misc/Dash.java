@@ -2,39 +2,32 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
-    private static final double SPEED = 1.5D;
+    private static final float DASH = 1.5F;
+    private static final float MAX_DASH = 5.0F;
 
     @Override
     public boolean isScalable() {
@@ -94,15 +87,26 @@ public class Dash extends Ability {
             double distanceZ = target.getZ() - owner.getZ();
 
             double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
-            double motionX = distanceX / distance * SPEED;
-            double motionY = distanceY / distance * SPEED;
-            double motionZ = distanceZ / distance * SPEED;
+            double motionX = distanceX / distance * DASH;
+            double motionY = distanceY / distance * DASH;
+            double motionZ = distanceZ / distance * DASH;
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
-            owner.setDeltaMovement(owner.getDeltaMovement().add(look.normalize().scale(SPEED * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F))
-                    .multiply(1.0D, 0.5D, 1.0D)));
+            float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F));
+
+            float f7 = owner.getYRot();
+            float f = owner.getXRot();
+            float f1 = -Mth.sin(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
+            float f2 = -Mth.sin(f * ((float) Math.PI / 180F));
+            float f3 = Mth.cos(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
+            float f4 = Mth.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
+            f1 *= power / f4;
+            f2 *= power / f4;
+            f3 *= power / f4;
+            owner.push(f1, f2, f3);
+            owner.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
             owner.hurtMarked = true;
         }
 
@@ -116,8 +120,7 @@ public class Dash extends Ability {
             double y = r * Math.sin(phi) * Math.sin(theta);
             double z = r * Math.cos(phi);
             Vec3 speed = look.add(x, y, z).reverse();
-            Vec3 offset = pos.add(look);
-            level.sendParticles(ParticleTypes.CLOUD, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
+            level.sendParticles(ParticleTypes.CLOUD, pos.x(), pos.y(), pos.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
         }
 
         if (cap.getSpeedStacks() == 0 && !cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
