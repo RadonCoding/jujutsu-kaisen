@@ -116,18 +116,39 @@ public class HelperMethods {
         return result;
     }
 
-    public static int strcmp(String str1, String str2) {
-        int difference = 0;
-        int minLength = Math.min(str1.length(), str2.length());
-        int maxLength = Math.max(str1.length(), str2.length());
+    public static int getLevenshteinDistance(String x, String y) {
+        int m = x.length();
+        int n = y.length();
 
-        for (int i = 0; i < minLength; i++) {
-            if (str1.charAt(i) != str2.charAt(i)) {
-                difference++;
+        int[][] T = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            T[i][0] = i;
+        }
+
+        for (int j = 1; j <= n; j++) {
+            T[0][j] = j;
+        }
+
+        int cost;
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                cost = x.charAt(i - 1) == y.charAt(j - 1) ? 0: 1;
+                T[i][j] = Integer.min(Integer.min(T[i - 1][j] + 1, T[i][j - 1] + 1),
+                        T[i - 1][j - 1] + cost);
             }
         }
-        difference += maxLength - minLength;
-        return difference;
+        return T[m][n];
+    }
+
+    public static float strcmp(String x, String y) {
+        float max = Float.max(x.length(), y.length());
+
+        if (max > 0) {
+            return 1.0F - ((max - getLevenshteinDistance(x, y)) / max);
+        }
+        return 0.0F;
     }
 
     static class Position {

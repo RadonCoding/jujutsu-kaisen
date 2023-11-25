@@ -113,8 +113,8 @@ public class ExperienceHandler {
             // Multiply by duration / 30 seconds
             amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
 
-            // Decrease amount to a minimum of 25% depending on the relatbility of the damage taken and dealtt
-            amount *= Math.max(0.25F, Math.abs(this.damageTaken - this.damageDealt) / this.damageDealt);
+            // Decrease amount to a minimum of 25% depending on the relativity of the damage taken and dealt
+            amount *= Math.max(0.25F, (float) Math.abs((this.damageDealt - this.damageTaken) / ((double) (this.damageDealt + this.damageTaken) / 2)));
 
             // If owner has less health than target increase experience, if target has less health than owner decrease experience
             amount *= this.target.getMaxHealth() / owner.getMaxHealth();

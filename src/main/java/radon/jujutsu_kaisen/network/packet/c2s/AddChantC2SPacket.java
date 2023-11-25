@@ -51,7 +51,7 @@ public class AddChantC2SPacket {
 
             if (!text.isEmpty() && !text.isBlank()) {
                 for (String chant : cap.getChants(ability)) {
-                    if (HelperMethods.strcmp(chant, text) <= ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
+                    if (HelperMethods.strcmp(chant, text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
                         return;
                     }
                 }
