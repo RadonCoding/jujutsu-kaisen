@@ -110,6 +110,8 @@ public class ToadTongueProjectile extends AbstractHurtingProjectile {
                         this.discard();
 
                     living.setDeltaMovement(living.getDeltaMovement().add(this.pos.subtract(living.position()).normalize().scale(PULL_STRENGTH)));
+                    living.hurtMarked = true;
+
                     this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
                 } else {
                     this.discard();
