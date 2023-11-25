@@ -115,7 +115,6 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.FOLLOW_RANGE, MAX_DISTANCE)
                 .add(Attributes.MAX_HEALTH, 4 * 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE, 5 * 2.0D);
@@ -188,7 +187,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
 
         if (this.getHealth() < this.getMaxHealth()) {
-            this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2));
+            this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2, 2));
         }
 
         LivingEntity target = this.getTarget();

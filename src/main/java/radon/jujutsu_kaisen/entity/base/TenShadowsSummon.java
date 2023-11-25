@@ -14,6 +14,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -48,7 +51,8 @@ import java.util.UUID;
 
 
 public abstract class TenShadowsSummon extends SummonEntity implements ICommandable, ISorcerer {
-    protected static final int MAX_DISTANCE = 64;
+    private static final int MAX_DISTANCE = 128;
+    private static final double RITUAL_RANGE = 32.0D;
 
     private static final EntityDataAccessor<Boolean> DATA_CLONE = SynchedEntityData.defineId(TenShadowsSummon.class, EntityDataSerializers.BOOLEAN);
 
@@ -56,6 +60,12 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        AttributeInstance attribute = this.getAttribute(Attributes.FOLLOW_RANGE);
+
+        if (attribute != null) {
+            attribute.setBaseValue(MAX_DISTANCE);
+        }
     }
 
     protected abstract boolean isCustom();
@@ -147,8 +157,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (!this.isTame()) {
             Vec3 center = this.position();
-            AABB area = new AABB(center.x() - 16.0D, center.y() - 16.0D, center.z() - 16.0D,
-                    center.x() + 16.0D, center.y() + 16.0D, center.z() + 16.0D);
+            AABB area = new AABB(center.x() - RITUAL_RANGE, center.y() - RITUAL_RANGE, center.z() - RITUAL_RANGE,
+                    center.x() + RITUAL_RANGE, center.y() + RITUAL_RANGE, center.z() + RITUAL_RANGE);
 
             for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
                 if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)

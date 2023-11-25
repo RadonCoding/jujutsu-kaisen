@@ -483,7 +483,7 @@ public class SorcererData implements ISorcererData {
                 this.applyModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
                 this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
                 this.applyModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
-                this.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 10.0D, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
             } else {
                 this.removeModifier(owner, Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID);
                 this.removeModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID);
@@ -513,6 +513,12 @@ public class SorcererData implements ISorcererData {
 
         if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
             owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+        }
+
+        if (this.type == JujutsuType.CURSE) {
+            if (owner instanceof Player player) {
+                player.getFoodData().setFoodLevel(20);
+            }
         }
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {

@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -40,45 +41,45 @@ public class Barrage extends Ability {
     @Override
     public void run(LivingEntity owner) {
         if (owner.level() instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (int i = 0; i < DURATION; i++) {
-                    cap.delayTickEvent(() -> {
-                        owner.swing(InteractionHand.MAIN_HAND, true);
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        Vec3 look = owner.getLookAngle();
-                        Vec3 pos = owner.getEyePosition().add(look);
+            for (int i = 0; i < DURATION; i++) {
+                cap.delayTickEvent(() -> {
+                    owner.swing(InteractionHand.MAIN_HAND, true);
 
-                        for (int j = 0; j < 4; j++) {
-                            Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
-                            level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
-                                    offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    0, 0.0D, 0.0D, 0.0D, 1.0D);
+                    Vec3 look = owner.getLookAngle();
+                    Vec3 pos = owner.getEyePosition().add(look);
+
+                    for (int j = 0; j < 4; j++) {
+                        Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
+                        level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                                offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                0, 0.0D, 0.0D, 0.0D, 1.0D);
+                    }
+                    for (int j = 0; j < 4; j++) {
+                        Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
+                        level.sendParticles(ParticleTypes.CRIT,
+                                offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                0, 0.0D, 0.0D, 0.0D, 1.0D);
+                    }
+                    owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+
+                    Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
+
+                    for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
+                        if (owner instanceof Player player) {
+                            player.attack(entity);
+                        } else {
+                            owner.doHurtTarget(entity);
                         }
-                        for (int j = 0; j < 4; j++) {
-                            Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
-                            level.sendParticles(ParticleTypes.CRIT,
-                                    offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                    0, 0.0D, 0.0D, 0.0D, 1.0D);
-                        }
-                        owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
-
-                        Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
-
-                        for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
-                            if (owner instanceof Player player) {
-                                player.attack(entity);
-                            } else {
-                                owner.doHurtTarget(entity);
-                            }
-                            entity.invulnerableTime = 0;
-                        }
-                    }, i * 2);
-                }
-            });
+                        entity.invulnerableTime = 0;
+                    }
+                }, i * 2);
+            }
         }
     }
 
