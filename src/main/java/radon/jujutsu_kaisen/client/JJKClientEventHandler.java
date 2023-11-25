@@ -146,11 +146,6 @@ public class JJKClientEventHandler {
 
             LivingEntity target = event.getEntity();
 
-            if (target.hasEffect(JJKEffects.INVISIBILITY.get())) {
-                event.setCanceled(true);
-                return;
-            }
-
             ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(target);
 
             if (data == null) return;

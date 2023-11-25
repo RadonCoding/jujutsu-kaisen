@@ -22,10 +22,6 @@ public class EntityMixin {
 
         if (!(entity instanceof LivingEntity living)) return;
 
-        if (living.hasEffect(JJKEffects.INVISIBILITY.get())) {
-            cir.setReturnValue(true);
-        }
-
         if (entity instanceof Player && Minecraft.getInstance().player == entity &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return;
 
