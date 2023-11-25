@@ -173,7 +173,7 @@ public abstract class DomainExpansionEntity extends Mob {
             if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData victimCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
+                if (victimCap.isAdaptedTo(this.ability) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
 
                 if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                     SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
