@@ -12,6 +12,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.ISkinManagerAccessor",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",

@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.CloneEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.mixin.client.ISkinManagerAccessor;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,47 +55,50 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
     @Override
     public void render(SukunaEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        LivingEntity owner = pEntity.getOwner();
+        EntityType<?> type = pEntity.getKey();
 
-        LivingEntityRenderer<?, ?> renderer;
-
-        if (!(owner instanceof Player)) {
+        if (this.model == null) {
             Minecraft mc = Minecraft.getInstance();
-            assert mc.level != null;
-            EntityType<?> type = pEntity.getKey();
 
-            if (type == EntityType.PLAYER) return;
+            assert mc.level != null;
 
             LivingEntity entity = (LivingEntity) type.create(mc.level);
 
             if (entity == null) return;
 
-            renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
-        } else {
-            renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(owner);
-        }
+            LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
 
-        if (renderer.getModel() instanceof PlayerModel<?> player) {
-            try {
-                this.model = (boolean) FieldUtils.readField(player, "slim", true) ? this.normal : this.slim;
-            } catch (IllegalAccessException ignored) {
-                return;
+            if (renderer.getModel() instanceof PlayerModel<?> player) {
+                try {
+                    this.model = (boolean) FieldUtils.readField(player, "slim", true) ? this.slim : this.normal;
+                } catch (IllegalAccessException ignored) {
+                    return;
+                }
             }
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(SukunaEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaEntity pEntity) {
         EntityType<?> type = pEntity.getKey();
 
         if (type == EntityType.PLAYER) {
             GameProfile profile = pEntity.getPlayer();
-            AtomicReference<ResourceLocation> result = new AtomicReference<>(STEVE);
+            AtomicReference<ResourceLocation> result = new AtomicReference<>();
             SkullBlockEntity.updateGameprofile(profile, updated -> {
                 Minecraft mc = Minecraft.getInstance();
                 Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = mc.getSkinManager().getInsecureSkinInformation(updated);
-                result.set(map.containsKey(MinecraftProfileTexture.Type.SKIN) ? mc.getSkinManager().registerTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN) : DefaultPlayerSkin.getDefaultSkin(UUIDUtil.getOrCreatePlayerUUID(updated)));
+
+                if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                    ((ISkinManagerAccessor) mc.getSkinManager()).invokeRegisterTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, (pTextureType, pLocation, pProfileTexture) -> {
+                        result.set(pLocation);
+                        String metadata = pProfileTexture.getMetadata("model");
+                        this.model = metadata == null || metadata.equals("default") ? this.normal : this.slim;
+                    });
+                } else {
+                    result.set(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
+                }
             });
             return result.get();
         } else {
