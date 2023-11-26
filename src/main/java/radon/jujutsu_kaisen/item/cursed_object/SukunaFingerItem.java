@@ -37,7 +37,7 @@ public class SukunaFingerItem extends CursedObjectItem {
                 return pStack;
             }
         }
-        pEntityLiving.setItemInHand(pEntityLiving.getUsedItemHand(), ItemStack.EMPTY);
+        pStack.shrink(pStack.getCount());
         HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }

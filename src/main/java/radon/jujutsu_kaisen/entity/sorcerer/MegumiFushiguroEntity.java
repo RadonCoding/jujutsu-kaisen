@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -19,9 +20,11 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
@@ -54,12 +57,26 @@ public class MegumiFushiguroEntity extends SorcererEntity {
         ItemStack stack = pPlayer.getItemInHand(pHand);
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            this.eat(this.level(), stack);
+            ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                return InteractionResult.FAIL;
+            }
+
+            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+            if (cap.hasTrait(Trait.VESSEL)) {
+                stack.shrink(cap.addFingers(stack.getCount()));
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
+            }
+            stack.shrink(stack.getCount());
+            HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount(), false), true, false);
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
     }
+
 
     @Override
     public float getExperience() {
