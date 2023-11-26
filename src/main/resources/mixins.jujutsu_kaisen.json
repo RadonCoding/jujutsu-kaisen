@@ -12,7 +12,6 @@
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
-    "client.IAgeableListModelAccessor",
     "client.IPostChainAccessor",
     "client.ISkinManagerAccessor",
     "client.ItemRendererMixin",
