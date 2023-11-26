@@ -366,6 +366,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.WORLD_SLASH.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
+            event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
         }
 
         @SubscribeEvent

@@ -307,6 +307,11 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "projection_frame")
                             .toString()));
+    public static RegistryObject<EntityType<BlackFlashEntity>> BLACk_FLASH = ENTITIES.register("black_flash", () ->
+            EntityType.Builder.<BlackFlashEntity>of(BlackFlashEntity::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "black_flash")
+                            .toString()));
     public static RegistryObject<EntityType<ForestRootsEntity>> FOREST_ROOTS = ENTITIES.register("forest_roots", () ->
             EntityType.Builder.<ForestRootsEntity>of(ForestRootsEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
