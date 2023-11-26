@@ -79,7 +79,7 @@ public class ExplosionHandler {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
 
-                            for (Entity entity : event.level.getEntities(null, new AABB(pos).inflate(1.0D))) {
+                            for (Entity entity : HelperMethods.getEntityCollisions(event.level, new AABB(pos).inflate(1.0D))) {
                                 entity.setDeltaMovement(explosion.position.subtract(entity.position()).reverse());
                                 entity.hurtMarked = true;
 

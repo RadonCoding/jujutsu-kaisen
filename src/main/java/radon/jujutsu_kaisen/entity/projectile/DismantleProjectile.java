@@ -165,7 +165,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
             AABB bounds = AABB.ofSize(current, 1.0D, 1.0D, 1.0D);
 
-            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
+            for (Entity entity : this.level().getEntities(this, bounds)) {
                 hits.add(new EntityHitResult(entity));
             }
 

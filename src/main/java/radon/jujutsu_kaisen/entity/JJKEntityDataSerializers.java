@@ -4,12 +4,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class JJKEntityDataSerializers {

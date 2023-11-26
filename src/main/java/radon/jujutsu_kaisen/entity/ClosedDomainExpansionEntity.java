@@ -38,7 +38,7 @@ import java.util.List;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-    private static final float STRENGTH = 100.0F;
+    private static final float STRENGTH = 10.0F;
 
     public ClosedDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

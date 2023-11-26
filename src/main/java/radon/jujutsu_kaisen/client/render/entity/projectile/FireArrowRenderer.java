@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 
 public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
@@ -46,7 +47,7 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         pPoseStack.scale(1.5F, 1.5F, 1.5F);
 
         boolean still = pEntity.getTime() >= FireArrowProjectile.DELAY;
-        RenderType type = RenderType.entityCutoutNoCull(still ? STILL : STARTUP);
+        RenderType type = JJKRenderTypes.glow(still ? STILL : STARTUP);
 
         for (int i = 0; i < 2; i++) {
             pPoseStack.pushPose();
