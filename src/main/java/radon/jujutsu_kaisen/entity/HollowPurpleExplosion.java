@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HollowPurpleExplosion extends JujutsuProjectile {
@@ -55,6 +56,8 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             this.discard();
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+            this.playSound(JJKSounds.HOLLOW_PURPLE_EXPLOSION.get(), 5.0F, 1.0F);
 
             float radius = Math.min(MAX_EXPLOSION, RADIUS * this.getPower());
             int duration = (int) (radius / 5.0F * 20);

@@ -55,6 +55,7 @@ import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -390,6 +391,11 @@ public class JJKEventHandler {
             // Sukuna has multiple arms
             if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
                 entity.setBarrage(Barrage.DURATION * 2);
+            }
+
+            // Nue sound effect
+            if (owner instanceof NueEntity && ability == JJKAbilities.NUE_LIGHTNING.get()) {
+                owner.playSound(JJKSounds.NUE_LIGHTNING.get());
             }
 
             // Playing "spark" sound

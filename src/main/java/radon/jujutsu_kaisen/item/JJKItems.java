@@ -49,7 +49,7 @@ public class JJKItems {
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ITEMS.register("instant_body_of_distorted_killing",
-            () -> new InstantSpiritBodyOfDistortedKillingItem(JJKArmorMaterials.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+            () -> new InstantSpiritBodyOfDistortedKillingItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_BLINDFOLD = ITEMS.register("satoru_blindfold",
             () -> new ArmorItem(JJKArmorMaterials.SATORU_BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_CHESTPLATE = ITEMS.register("satoru_chestplate",
@@ -163,25 +163,24 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.RAINBOW_DRAGON, 0xFFFFFF, 0xFFEA59, new Item.Properties()));
 
     public static class JJKArmorMaterials {
-        public static JJKArmorMaterial INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = new JJKArmorMaterial("instant_spirit_body_of_distorted_killing", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ARMOR_EQUIP_LEATHER,
-                0.0F, 0.0F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[]{0, 0, 8, 0}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] {0, 0, 0, 0}, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] {0, 0, 8, 0}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial SATORU_BLINDFOLD = new JJKArmorMaterial("satoru_blindfold", 100, new int[]{0, 0, 0, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial SATORU_BLINDFOLD = new JJKArmorMaterial("satoru_blindfold", 100, new int[] {0, 0, 0, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial SATORU_OUTFIT = new JJKArmorMaterial("satoru_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial SATORU_OUTFIT = new JJKArmorMaterial("satoru_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial YUJI_OUTFIT = new JJKArmorMaterial("yuji_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial YUJI_OUTFIT = new JJKArmorMaterial("yuji_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial MEGUMI_OUTFIT = new JJKArmorMaterial("megumi_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial MEGUMI_OUTFIT = new JJKArmorMaterial("megumi_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial TOGE_OUTFIT = new JJKArmorMaterial("toge_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial TOGE_OUTFIT = new JJKArmorMaterial("toge_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial YUTA_OUTFIT = new JJKArmorMaterial("yuta_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial YUTA_OUTFIT = new JJKArmorMaterial("yuta_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial SUGURU_OUTFIT = new JJKArmorMaterial("suguru_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial SUGURU_OUTFIT = new JJKArmorMaterial("suguru_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial NAOYA_OUTFIT = new JJKArmorMaterial("naoya_outfit", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKArmorMaterial NAOYA_OUTFIT = new JJKArmorMaterial("naoya_outfit", 100, new int[] {3, 6, 8, 3}, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
     }
 }

@@ -34,4 +34,18 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "swallow")));
     public static RegistryObject<SoundEvent> DASH = SOUNDS.register("dash", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "dash")));
+    public static RegistryObject<SoundEvent> HOLLOW_PURPLE_EXPLOSION = SOUNDS.register("hollow_purple_explosion", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")));
+    public static RegistryObject<SoundEvent> NUE_LIGHTNING = SOUNDS.register("nue_lightning", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue_lightning")));
+    public static RegistryObject<SoundEvent> BLUE = SOUNDS.register("blue", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")));
+    public static RegistryObject<SoundEvent> RED = SOUNDS.register("red", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")));
+    public static RegistryObject<SoundEvent> SLAM = SOUNDS.register("slam", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slam")));
+    public static RegistryObject<SoundEvent> PURE_LOVE = SOUNDS.register("pure_love", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")));
+    public static RegistryObject<SoundEvent> FIRE_ARROW = SOUNDS.register("fire_arrow", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")));
 }

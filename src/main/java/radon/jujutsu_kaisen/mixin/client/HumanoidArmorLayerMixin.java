@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -64,20 +66,24 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
         ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(pLivingEntity);
 
-        if (data != null && data.toggled().contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
-            for (int i = 0; i < 4; i++) {
-                EquipmentSlot slot = EquipmentSlot.values()[EquipmentSlot.values().length - i - 1];
+        if (data != null) {
+            for (Ability ability : data.toggled()) {
+                if (!(ability instanceof ITransformation transformation)) return;
 
-                A model = this.getArmorModel(slot);
-                ((RenderLayer<T, M>) (Object) this).getParentModel().copyPropertiesTo(model);
+                for (int i = 0; i < 4; i++) {
+                    EquipmentSlot slot = EquipmentSlot.values()[EquipmentSlot.values().length - i - 1];
 
-                this.setPartVisibility(model, slot);
+                    A model = this.getArmorModel(slot);
+                    ((RenderLayer<T, M>) (Object) this).getParentModel().copyPropertiesTo(model);
 
-                Model armor = this.getArmorModelHook(pLivingEntity, JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get().getDefaultInstance(), slot, model);
-                this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get().asItem(), armor, this.usesInnerModel(slot),
-                        1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get().getDefaultInstance(), slot, null));
+                    this.setPartVisibility(model, slot);
+
+                    Model armor = this.getArmorModelHook(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, model);
+                    this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) transformation.getItem().asItem(), armor, this.usesInnerModel(slot),
+                            1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
+                }
+                ci.cancel();
             }
-            ci.cancel();
         }
     }
 

@@ -6,10 +6,12 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -19,10 +21,11 @@ import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
+import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
 
-public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain, ITransformation {
     @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
@@ -76,5 +79,10 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
+    }
+
+    @Override
+    public Item getItem() {
+        return JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get();
     }
 }

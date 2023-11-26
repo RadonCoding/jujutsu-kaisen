@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.limitless;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -9,6 +10,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueStill extends Ability {
@@ -28,6 +30,8 @@ public class BlueStill extends Ability {
 
         BlueProjectile blue = new BlueProjectile(owner, getPower(owner), false);
         owner.level().addFreshEntity(blue);
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.BLUE.get(), SoundSource.MASTER, 1.0F, 1.0F);
     }
 
     @Override

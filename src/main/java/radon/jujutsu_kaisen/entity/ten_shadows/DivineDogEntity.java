@@ -69,11 +69,6 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return this.getBbHeight();
-    }
-
-    @Override
     protected boolean isCustom() {
         return true;
     }
@@ -277,7 +272,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            this.setSprinting(passenger.getDeltaMovement().lengthSqr() > 0.0D);
+            this.setSprinting(passenger.getDeltaMovement().lengthSqr() > 0.01D);
         } else {
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
         }

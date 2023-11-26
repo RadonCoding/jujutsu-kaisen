@@ -181,18 +181,6 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity pEntity) {
-        if (super.doHurtTarget(pEntity)) {
-            if (pEntity instanceof LivingEntity living) {
-                Ability lightning = JJKAbilities.NUE_LIGHTNING.get();
-                ((Ability.ITenShadowsAttack) lightning).perform(this, living);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public Summon<?> getAbility() {
         return JJKAbilities.AGITO.get();
     }

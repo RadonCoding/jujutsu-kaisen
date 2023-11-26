@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -72,6 +73,8 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         super.onHit(result);
 
         if (this.level().isClientSide) return;
+
+        this.playSound(JJKSounds.FIRE_ARROW.get(), 5.0F, 1.0F);
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
