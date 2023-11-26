@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -197,6 +198,8 @@ public class JJKClientEventHandler {
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
             event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMapColor().col,
                     JJKBlocks.VEIL.get());
+            event.register((pState, pLevel, pPos, pTintIndex) -> GrassColor.getDefaultColor(),
+                    JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
         }
 
         @SubscribeEvent
