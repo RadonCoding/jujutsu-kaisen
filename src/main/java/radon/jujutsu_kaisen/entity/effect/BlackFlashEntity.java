@@ -76,26 +76,30 @@ public class BlackFlashEntity extends Entity {
 
     @Override
     public void tick() {
-        super.tick();
+        LivingEntity victim = this.getVictim();
 
-        int time = this.getTime();
-        this.setTime(++time);
-
-        for (int i = 0; i < 32; i++) {
-            double offsetX = this.random.nextGaussian() * 1.5D;
-            double offsetY = this.random.nextGaussian() * 1.5D;
-            double offsetZ = this.random.nextGaussian() * 1.5D;
-            this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
-        }
-
-        if (this.getTime() >= DURATION) {
+        if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
             this.discard();
         } else {
-            LivingEntity victim = this.getVictim();
+            super.tick();
 
-            if (victim == null) return;
+            int time = this.getTime();
+            this.setTime(++time);
 
-            this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+            for (int i = 0; i < 32; i++) {
+                double offsetX = this.random.nextGaussian() * 1.5D;
+                double offsetY = this.random.nextGaussian() * 1.5D;
+                double offsetZ = this.random.nextGaussian() * 1.5D;
+                this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
+            }
+
+            if (this.getTime() >= DURATION) {
+                this.discard();
+            } else {
+                if (victim != null) {
+                    this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
+                }
+            }
         }
     }
 

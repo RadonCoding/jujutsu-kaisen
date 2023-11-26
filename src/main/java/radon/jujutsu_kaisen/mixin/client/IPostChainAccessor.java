@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(PostChain.class)
-public interface PostChainAccessor {
+public interface IPostChainAccessor {
     @Accessor
     List<PostPass> getPasses();
 }

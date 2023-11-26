@@ -12,12 +12,13 @@
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.IAgeableListModelAccessor",
+    "client.IPostChainAccessor",
     "client.ISkinManagerAccessor",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
-    "client.MinecraftMixin",
-    "client.PostChainAccessor"
+    "client.MinecraftMixin"
   ],
   "mixins": [
     "common.EntityMixin",
