@@ -20,7 +20,7 @@ public abstract class CursedToolItem extends SwordItem {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
-    protected abstract SorcererGrade getGrade();
+    public abstract SorcererGrade getGrade();
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {

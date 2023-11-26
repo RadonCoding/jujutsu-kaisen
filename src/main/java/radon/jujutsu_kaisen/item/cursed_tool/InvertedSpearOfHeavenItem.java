@@ -10,7 +10,7 @@ public class InvertedSpearOfHeavenItem extends CursedToolItem {
     }
 
     @Override
-    protected SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
     }
 }

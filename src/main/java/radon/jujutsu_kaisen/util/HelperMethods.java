@@ -44,6 +44,22 @@ public class HelperMethods {
         return combo;
     }
 
+    public static <E> E getWeightedRandom(Map<E, Double> weights, Random random) {
+        E result = null;
+        double bestValue = Double.MAX_VALUE;
+
+        for (E element : weights.keySet()) {
+            double value = -Math.log(random.nextDouble()) / weights.get(element);
+
+            if (value < bestValue) {
+                bestValue = value;
+                result = element;
+            }
+        }
+
+        return result;
+    }
+
     public static void convertTo(LivingEntity src, LivingEntity dst, boolean transferInventory, boolean kill) {
         if (!src.isRemoved()) {
             dst.copyPosition(src);

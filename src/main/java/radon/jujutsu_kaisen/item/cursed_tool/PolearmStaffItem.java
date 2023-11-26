@@ -20,7 +20,7 @@ public class PolearmStaffItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    protected SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_4;
     }
 
