@@ -1477,8 +1477,6 @@ public class SorcererData implements ISorcererData {
             this.nature = CursedEnergyNature.BASIC;
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
-            if (HelperMethods.RANDOM.nextInt(10) == 0) this.addTrait(Trait.VESSEL);
-
             this.technique = HelperMethods.randomEnum(CursedTechnique.class);
 
             if (HelperMethods.RANDOM.nextInt(5) == 0) {
@@ -1489,6 +1487,12 @@ public class SorcererData implements ISorcererData {
                 }
             }
             this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
+
+            if (this.type == JujutsuType.SORCERER) {
+                if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                    this.addTrait(Trait.VESSEL);
+                }
+            }
 
             if (HelperMethods.RANDOM.nextInt(10) == 0) {
                 this.addTrait(Trait.SIX_EYES);

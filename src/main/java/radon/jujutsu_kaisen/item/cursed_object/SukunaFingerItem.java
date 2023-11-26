@@ -6,6 +6,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -27,17 +28,16 @@ public class SukunaFingerItem extends CursedObjectItem {
         if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+            if (cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                return super.finishUsingItem(pStack, pLevel, pEntityLiving);
+            }
+
             if (cap.hasTrait(Trait.VESSEL)) {
                 pStack.shrink(cap.addFingers(pStack.getCount()));
                 return pStack;
             }
-
-            pEntityLiving.setItemInHand(pEntityLiving.getUsedItemHand(), ItemStack.EMPTY);
-
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                return ItemStack.EMPTY;
-            }
         }
+        pEntityLiving.setItemInHand(pEntityLiving.getUsedItemHand(), ItemStack.EMPTY);
         HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }
