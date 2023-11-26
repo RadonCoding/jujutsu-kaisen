@@ -15,17 +15,18 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
     private static ItemStack getRandomCursedTool(ServerLevel level) {
-        List<ItemStack> pool = new ArrayList<>();
+        Map<ItemStack, Double> pool = new HashMap<>();
 
         Registry<Item> registry = level.registryAccess().registryOrThrow(Registries.ITEM);
 
@@ -33,10 +34,12 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
             ItemStack stack = new ItemStack(item);
 
             if (stack.is(JJKItemTags.CURSED_TOOL)) {
-                pool.add(stack);
+                CursedToolItem tool = (CursedToolItem) stack.getItem();
+                SorcererGrade grade = tool.getGrade();
+                pool.put(stack, (double) SorcererGrade.values().length - grade.ordinal());
             }
         }
-        return pool.get(HelperMethods.RANDOM.nextInt(pool.size()));
+        return HelperMethods.getWeightedRandom(pool, HelperMethods.RANDOM);
     }
 
     @Override

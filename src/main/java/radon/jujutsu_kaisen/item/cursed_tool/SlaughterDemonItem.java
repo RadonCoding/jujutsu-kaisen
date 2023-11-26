@@ -10,7 +10,7 @@ public class SlaughterDemonItem extends CursedToolItem {
     }
 
     @Override
-    protected SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.GRADE_4;
     }
 }

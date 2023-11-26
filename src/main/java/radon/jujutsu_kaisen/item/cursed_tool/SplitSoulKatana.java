@@ -20,7 +20,7 @@ public class SplitSoulKatana extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    protected SorcererGrade getGrade() {
+    public SorcererGrade getGrade() {
         return SorcererGrade.SPECIAL_GRADE;
     }
 

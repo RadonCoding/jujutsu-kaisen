@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
@@ -37,8 +38,7 @@ import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TojiFushiguroEntity extends SorcererEntity {
@@ -63,6 +63,16 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        Arrays.fill(this.armorDropChances, 0.0F);
+        Arrays.fill(this.handDropChances, 0.0F);
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+
+        this.spawnAtLocation(JJKItems.INVENTORY_CURSE.get());
     }
 
     public void setCurrentCustomer(@Nullable Player pPlayer) {
