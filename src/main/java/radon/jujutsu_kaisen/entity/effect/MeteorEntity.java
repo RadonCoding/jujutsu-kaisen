@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
-import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -262,6 +261,25 @@ public class MeteorEntity extends JujutsuProjectile {
 
                 if (this.explosionTime > 0) {
                     if (this.explosionTime >= maximum) {
+                        int size = this.getSize();
+                        BlockPos center = this.blockPosition();
+
+                        for (int x = -size; x <= size; x++) {
+                            for (int y = -size; y <= size; y++) {
+                                for (int z = -size; z <= size; z++) {
+                                    double distance = Math.sqrt(x * x + y * y + z * z);
+
+                                    if (distance < size && distance >= size - 1) {
+                                        BlockPos pos = center.offset(x, y, z);
+                                        BlockState state = this.level().getBlockState(pos);
+
+                                        if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                                            this.level().setBlockAndUpdate(pos, Blocks.BLACKSTONE.defaultBlockState());
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         this.discard();
                     } else {
                         this.explosionTime++;

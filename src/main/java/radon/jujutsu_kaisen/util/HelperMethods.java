@@ -167,7 +167,7 @@ public class HelperMethods {
         return 0.0F;
     }
 
-    static class Position {
+    private static class Position {
         double x;
         double z;
 

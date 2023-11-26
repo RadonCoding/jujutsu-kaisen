@@ -14,11 +14,14 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
+
+import java.util.List;
 
 public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
     public MeteorRenderer(EntityRendererProvider.Context pContext) {
@@ -26,17 +29,18 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
     }
 
     @Override
-    public void render(@NotNull MeteorEntity entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
+    public void render(@NotNull MeteorEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         Minecraft mc = Minecraft.getInstance();
 
         assert mc.level != null;
 
-        int size = entity.getSize();
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int size = pEntity.getSize();
+        BlockPos center = pEntity.blockPosition();
+
         BlockRenderDispatcher renderer = mc.getBlockRenderer();
 
-        poseStack.pushPose();
-        poseStack.translate(-0.5D, (entity.getBbHeight() / 2.0) - 0.5D, -0.5D);
+        pPoseStack.pushPose();
+        pPoseStack.translate(-0.5D, (pEntity.getBbHeight() / 2.0) - 0.5D, -0.5D);
 
         ModelBlockRenderer.enableCaching();
 
@@ -46,26 +50,26 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
                     if (distance < size && distance >= size - 1) {
-                        pos.set(entity.blockPosition().offset(x, y, z));
+                        BlockPos pos = center.offset(x, y, z);
 
                         BlockState state = Blocks.MAGMA_BLOCK.defaultBlockState();
                         BakedModel model = renderer.getBlockModel(state);
                         RandomSource rand = RandomSource.create();
                         rand.setSeed(state.getSeed(pos));
 
-                        poseStack.pushPose();
-                        poseStack.translate(x, y, z);
+                        pPoseStack.pushPose();
+                        pPoseStack.translate(x, y, z);
 
                         for (RenderType type : model.getRenderTypes(state, rand, ModelData.EMPTY)) {
                             renderer.renderSingleBlock(state,
-                                    poseStack,
+                                    pPoseStack,
                                     bufferSource,
                                     LightTexture.FULL_BRIGHT,
                                     OverlayTexture.NO_OVERLAY,
                                     ModelData.EMPTY,
                                     type);
                         }
-                        poseStack.popPose();
+                        pPoseStack.popPose();
                     }
                 }
             }
@@ -73,7 +77,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
 
         ModelBlockRenderer.clearCache();
 
-        poseStack.popPose();
+        pPoseStack.popPose();
     }
 
     @Override
