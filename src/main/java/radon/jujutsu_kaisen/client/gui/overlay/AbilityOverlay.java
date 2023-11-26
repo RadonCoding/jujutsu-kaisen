@@ -69,6 +69,8 @@ public class AbilityOverlay {
 
         assert player != null;
 
+        if (!player.isAlive()) return;
+
         abilities = JJKAbilities.getAbilities(player);
         abilities.removeIf(ability -> ability.getMenuType() != MenuType.SCROLL);
 

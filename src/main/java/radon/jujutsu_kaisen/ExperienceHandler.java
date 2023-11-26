@@ -13,6 +13,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -92,7 +94,6 @@ public class ExperienceHandler {
         private static final int MAX_DURATION = 5 * 60 * 20;
 
         private final LivingEntity target;
-        private int duration;
         private int idle;
         private float damageDealt;
         private float damageTaken;
@@ -102,7 +103,7 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
-            if (this.duration >= MAX_DURATION || owner.isRemoved() || this.target.isRemoved()) return;
+            if (owner.isRemoved() || this.target.isRemoved()) return;
 
             if (this.damageDealt == 0.0F || this.damageTaken == 0.0F) return;
 
@@ -110,14 +111,11 @@ public class ExperienceHandler {
 
             float amount = (this.damageDealt + this.damageTaken) * 2.0F;
 
-            // Multiply by duration / 30 seconds
-            amount *= Math.min(1.0F, (float) this.duration / (30 * 20));
-
             // Decrease amount to a minimum of 25% depending on the relativity of the damage taken and dealt
             amount *= Math.max(0.25F, (float) Math.abs((this.damageDealt - this.damageTaken) / ((double) (this.damageDealt + this.damageTaken) / 2)));
 
             // If owner has less health than target increase experience, if target has less health than owner decrease experience
-            amount *= this.target.getMaxHealth() / owner.getMaxHealth();
+            amount *= (this.target.getMaxHealth() + this.target.getArmorValue()) / (owner.getMaxHealth() + owner.getArmorValue());
 
             // If owner is dead they get 10% of the experience
             amount *= owner.isDeadOrDying() ? 0.1F : 1.0F;
@@ -130,7 +128,7 @@ public class ExperienceHandler {
 
             if (this.target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData targetCap = this.target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                amount *= targetCap.getExperience() / ownerCap.getExperience();
+                amount *= (targetCap.getExperience() / ownerCap.getExperience()) * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F);
             } else {
                 amount *= 0.1F;
             }
@@ -170,7 +168,6 @@ public class ExperienceHandler {
 
         public boolean tick(LivingEntity owner) {
             this.idle++;
-            this.duration++;
             return this.idle < MAX_DURATION && owner.isAlive() && this.target.isAlive();
         }
     }
