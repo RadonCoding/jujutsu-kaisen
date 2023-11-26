@@ -84,18 +84,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity pEntity) {
-        if (super.doHurtTarget(pEntity)) {
-            if (pEntity instanceof LivingEntity living) {
-                Ability lightning = JJKAbilities.NUE_LIGHTNING.get();
-                ((Ability.ITenShadowsAttack) lightning).perform(this, living);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     protected float getFlyingSpeed() {
         return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
     }

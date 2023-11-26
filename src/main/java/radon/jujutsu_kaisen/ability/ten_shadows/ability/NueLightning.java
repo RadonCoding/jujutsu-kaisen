@@ -24,14 +24,13 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-
-public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
+public class NueLightning extends Ability {
     private static final double RANGE = 3.0D;
     private static final float DAMAGE = 1.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        return target != null && this.getTarget(owner) == target;
     }
 
     @Override
@@ -58,11 +57,28 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
+        if (owner.level().isClientSide) return;
+
         LivingEntity target = this.getTarget(owner);
 
         if (target != null) {
-            owner.swing(InteractionHand.MAIN_HAND);
-            this.perform(owner, target);
+            if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
+                target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
+
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                        SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+                for (int i = 0; i < 32; i++) {
+                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 1),
+                            target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
+                            0, 0.0D, 0.0D, 0.0D, 0.0D);
+                }
+            }
         }
     }
 
@@ -89,27 +105,6 @@ public class NueLightning extends Ability implements Ability.ITenShadowsAttack {
     @Override
     public float getCost(LivingEntity owner) {
         return 50.0F;
-    }
-
-    @Override
-    public void perform(LivingEntity owner, @Nullable LivingEntity target) {
-        if (target == null || owner.level().isClientSide) return;
-
-        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-            target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
-
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-            for (int i = 0; i < 32; i++) {
-                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 1),
-                        target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
-                        0, 0.0D, 0.0D, 0.0D, 0.0D);
-            }
-        }
     }
 
     @Override

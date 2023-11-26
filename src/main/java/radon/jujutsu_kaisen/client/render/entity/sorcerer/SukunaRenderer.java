@@ -74,7 +74,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             if (renderer.getModel() instanceof PlayerModel<?> player) {
                 try {
                     this.model = (boolean) FieldUtils.readField(player, "slim", true) ? this.slim : this.normal;
-                } catch (IllegalAccessException ignored) {
+                } catch (IllegalArgumentException | IllegalAccessException ignored) {
                     return;
                 }
             }

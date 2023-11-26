@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class PureLoveBeam extends JujutsuProjectile {
     public static final float SCALE = 2.0F;
     private static final double RADIUS = 20;
     private static final float DAMAGE = 10.0F;
-    public static final int CHARGE = 20;
+    public static final int CHARGE = (int) (2.5F * 20);
     public static final int DURATION = 3 * 20;
 
     public double endPosX, endPosY, endPosZ;

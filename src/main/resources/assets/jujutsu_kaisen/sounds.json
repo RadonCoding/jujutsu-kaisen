@@ -58,5 +58,40 @@
     "sounds": [
       "jujutsu_kaisen:dash"
     ]
+  },
+  "hollow_purple_explosion": {
+    "sounds": [
+      "jujutsu_kaisen:hollow_purple_explosion"
+    ]
+  },
+  "nue_lightning": {
+    "sounds": [
+      "jujutsu_kaisen:nue_lightning"
+    ]
+  },
+  "blue": {
+    "sounds": [
+      "jujutsu_kaisen:blue"
+    ]
+  },
+  "red": {
+    "sounds": [
+      "jujutsu_kaisen:red"
+    ]
+  },
+  "slam": {
+    "sounds": [
+      "jujutsu_kaisen:slam"
+    ]
+  },
+  "pure_love": {
+    "sounds": [
+      "jujutsu_kaisen:pure_love"
+    ]
+  },
+  "fire_arrow": {
+    "sounds": [
+      "jujutsu_kaisen:fire_arrow"
+    ]
   }
 }

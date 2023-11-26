@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,6 +25,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class RedProjectile extends JujutsuProjectile {
@@ -87,6 +89,8 @@ public class RedProjectile extends JujutsuProjectile {
         super.onHit(pResult);
 
         if (this.level().isClientSide) return;
+
+        this.playSound(JJKSounds.RED.get(), 3.0F, 1.0F);
 
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());

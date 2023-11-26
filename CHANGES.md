@@ -11,6 +11,7 @@
     - Updated Spiderweb
     - Optimized Malevolent Shrine
     - Simple Domain better fr
+    - Added sound effects
 
 ## General
     - Made normal sorcerers gain movement speed from experience as well
