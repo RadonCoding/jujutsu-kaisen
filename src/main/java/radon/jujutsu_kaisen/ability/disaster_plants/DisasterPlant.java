@@ -23,8 +23,6 @@ public class DisasterPlant extends Ability {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
     }
 
-
-
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,12 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         this.plant = true;
     }
 
+    @Override
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+
+        this.discard();
+    }
 
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
