@@ -106,7 +106,7 @@ public class ExperienceHandler {
 
             if (this.damageDealt == 0.0F || this.damageTaken == 0.0F) return;
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float amount = (this.damageDealt + this.damageTaken) * 2.0F;
 
@@ -128,9 +128,16 @@ public class ExperienceHandler {
             // Limit the experience to the max health of the target
             amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);
 
+            if (this.target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData targetCap = this.target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                amount *= targetCap.getExperience() / ownerCap.getExperience();
+            } else {
+                amount *= 0.1F;
+            }
+
             if (amount < 0.1F) return;
 
-            if (cap.addExperience(owner, amount)) {
+            if (ownerCap.addExperience(owner, amount)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), amount));
                 }
@@ -139,7 +146,7 @@ public class ExperienceHandler {
             int points = (int) Math.floor(amount * 0.1F);
 
             if (points > 0) {
-                cap.addPoints(points);
+                ownerCap.addPoints(points);
 
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points", JujutsuKaisen.MOD_ID), points));
@@ -147,7 +154,7 @@ public class ExperienceHandler {
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
             }
         }
 

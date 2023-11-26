@@ -33,8 +33,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.CloneEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
 import radon.jujutsu_kaisen.mixin.client.ISkinManagerAccessor;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -71,13 +73,9 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
             LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
 
-            if (renderer.getModel() instanceof PlayerModel<?> player) {
-                try {
-                    this.model = (boolean) FieldUtils.readField(player, "slim", true) ? this.slim : this.normal;
-                } catch (IllegalArgumentException | IllegalAccessException ignored) {
-                    return;
-                }
-            }
+            if (!(renderer.getModel() instanceof PlayerModel<?> player)) return;
+
+            this.model = ((IPlayerModelAccessor) player).getSlim() ? this.slim : this.normal;
         }
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

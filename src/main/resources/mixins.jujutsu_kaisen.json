@@ -12,6 +12,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.IPlayerModelAccessor",
     "client.IPostChainAccessor",
     "client.ISkinManagerAccessor",
     "client.ItemRendererMixin",
