@@ -85,7 +85,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 1.0F;
+        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 2.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

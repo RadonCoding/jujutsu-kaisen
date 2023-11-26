@@ -393,11 +393,6 @@ public class JJKEventHandler {
                 entity.setBarrage(Barrage.DURATION * 2);
             }
 
-            // Nue sound effect
-            if (owner instanceof NueEntity && ability == JJKAbilities.NUE_LIGHTNING.get()) {
-                owner.playSound(JJKSounds.NUE_LIGHTNING.get());
-            }
-
             // Playing "spark" sound
             float cost = ability.getRealCost(owner);
 
