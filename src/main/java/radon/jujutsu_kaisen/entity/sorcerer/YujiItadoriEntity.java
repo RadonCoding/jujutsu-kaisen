@@ -53,12 +53,14 @@ public class YujiItadoriEntity extends SorcererEntity {
 
             this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
 
+            int count = stack.getCount();
+
             if (cap.hasTrait(Trait.VESSEL)) {
-                stack.shrink(cap.addFingers(stack.getCount()));
+                stack.shrink(cap.addFingers(count));
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
-            stack.shrink(stack.getCount());
-            HelperMethods.convertTo(this, new SukunaEntity(this, stack.getCount(), false), true, false);
+            stack.shrink(count);
+            HelperMethods.convertTo(this, new SukunaEntity(this, count, false), true, false);
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
