@@ -355,14 +355,14 @@
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
   "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
-  "ability.jujutsu_kaisen.switch_mode.enable": "Switched mode",
-  "ability.jujutsu_kaisen.switch_mode.disable": "Switched mode",
 
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
   "ability.jujutsu_kaisen.shadow_storage": "Shadow Storage",
   "ability.jujutsu_kaisen.shadow_travel": "Shadow Travel",
 
   "ability.jujutsu_kaisen.nue_lightning": "Nue Lightning",
+  "ability.jujutsu_kaisen.nue_lightning.enable": "Activated nue lightning",
+  "ability.jujutsu_kaisen.nue_lightning.disable": "Deactivated nue lightning",
   "ability.jujutsu_kaisen.piercing_water": "Piercing Water",
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
@@ -428,6 +428,9 @@
   "binding_vow.jujutsu_kaisen.recoil": "Recoil",
   "binding_vow.jujutsu_kaisen.recoil.description": "Your own abilities cause damage to you for significantly increased power.",
 
+  "ten_shadows_mode.jujutsu_kaisen.summon": "Summon",
+  "ten_shadows_mode.jujutsu_kaisen.ability": "Ability",
+
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
@@ -462,6 +465,8 @@
   "chat.jujutsu_kaisen.pact_failure": "%1$s hasn't requested a %2$s pact with you",
 
   "chat.jujutsu_kaisen.chant": "Total chant boost: %1$d%%",
+
+  "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s%% mode",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna": "Sukuna",
