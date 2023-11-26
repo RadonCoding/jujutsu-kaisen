@@ -12,6 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.item.armor.InstantSpiritBodyOfDistortedKillingItem;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.item.armor.JJKArmorMaterial;
 import radon.jujutsu_kaisen.item.cursed_object.*;
