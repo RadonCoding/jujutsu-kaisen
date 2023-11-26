@@ -101,6 +101,12 @@ public class JJKBlocks {
                     .noLootTable()));
     public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FLOOR = BLOCKS.register("shining_sea_of_flowers_floor", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION = BLOCKS.register("shining_sea_of_flowers_decoration", () ->
+            new DomainBlock(BlockBehaviour.Properties.of()
                     .noCollission()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)

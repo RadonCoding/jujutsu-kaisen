@@ -26,6 +26,7 @@ public class JJKBlockEntities {
                             JJKBlocks.SHINING_SEA_OF_FLOWERS.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION.get(),
 
                             JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get(),
 

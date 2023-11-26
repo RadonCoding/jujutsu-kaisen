@@ -163,21 +163,28 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                 List<Block> blocks = domain.getBlocks();
                                 List<Block> filler = domain.getFillBlocks();
                                 List<Block> floor = domain.getFloorBlocks();
+                                List<Block> decroation = domain.getDecorationBlocks();
 
                                 Block block = null;
 
                                 if (distance >= radius - 1) {
                                     block = JJKBlocks.DOMAIN.get();
-                                } else if (state.isAir()) {
-                                    if (distance >= radius - 2) {
-                                        block = blocks.get(this.random.nextInt(blocks.size()));
-                                    } else if (pos.getY() <= floorY && !floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
-                                        block = floor.get(this.random.nextInt(floor.size()));
-                                    }
                                 } else if (!state.getFluidState().isEmpty()) {
                                     block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
                                 } else {
-                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : filler.get(this.random.nextInt(filler.size()));
+                                    if (distance >= radius - 2) {
+                                        block = blocks.get(this.random.nextInt(blocks.size()));
+                                    } else if (state.canOcclude()) {
+                                        if (!floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
+                                            block = floor.get(this.random.nextInt(floor.size()));
+                                        } else {
+                                            block = filler.get(this.random.nextInt(filler.size()));
+                                        }
+                                    } else if (state.isAir()) {
+                                        if (!decroation.isEmpty() && domain.canPlaceDecoration(this.level(), pos)) {
+                                            block = decroation.get(this.random.nextInt(decroation.size()));
+                                        }
+                                    }
                                 }
 
                                 if (block == null) return;
