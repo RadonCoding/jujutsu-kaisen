@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.mixin.client.PostChainAccessor;
+import radon.jujutsu_kaisen.mixin.client.IPostChainAccessor;
 
 import java.io.IOException;
 
@@ -52,7 +52,7 @@ public abstract class PostEffect implements ResourceManagerReloadListener {
             this.onResourceManagerReload(mc.getResourceManager());
         }
 
-        for (PostPass pass : ((PostChainAccessor) this.postChain).getPasses()) {
+        for (PostPass pass : ((IPostChainAccessor) this.postChain).getPasses()) {
             this.applyUniforms(pass);
         }
         ((PostChain) this.postChain).process(partialTicks);
