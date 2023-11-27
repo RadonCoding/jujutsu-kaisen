@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -62,37 +64,38 @@ public class Mimicry extends Ability implements Ability.IToggled {
         return 30 * 20;
     }
 
-
-
-
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                    if (attackerCap.hasToggled(JJKAbilities.MIMICRY.get())) {
-                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
-                            CursedTechnique current = attackerCap.getTechnique();
-                            CursedTechnique copied = victimCap.getTechnique();
+            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
 
-                            if (copied == null || current == null || attackerCap.hasTechnique(copied)) return;
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-                            if (current != copied) {
-                                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
+            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                                attackerCap.copy(copied);
-                                attackerCap.toggle(attacker, JJKAbilities.MIMICRY.get());
+            if (!attackerCap.hasToggled(JJKAbilities.MIMICRY.get())) return;
 
-                                if (attacker instanceof ServerPlayer player) {
-                                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-                                }
-                            }
-                        });
-                    }
-                });
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            CursedTechnique current = attackerCap.getTechnique();
+            CursedTechnique copied = victimCap.getTechnique();
+
+            if (copied == null || current == null || attackerCap.hasTechnique(copied)) return;
+
+            if (current != copied) {
+                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
+
+                attackerCap.copy(copied);
+                attackerCap.toggle(attacker, JJKAbilities.MIMICRY.get());
+
+                if (attacker instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                }
             }
         }
     }

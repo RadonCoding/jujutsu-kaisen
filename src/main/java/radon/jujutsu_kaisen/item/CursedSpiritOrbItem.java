@@ -29,11 +29,11 @@ public class CursedSpiritOrbItem extends Item {
         super(pProperties);
     }
 
-    public EntityType<?> getCurse(Registry<EntityType<?>> registry, ItemStack stack) {
-        return registry.get(this.getKey(stack));
+    public static EntityType<?> getCurse(Registry<EntityType<?>> registry, ItemStack stack) {
+        return registry.get(getKey(stack));
     }
 
-    public ResourceLocation getKey(ItemStack stack) {
+    public static ResourceLocation getKey(ItemStack stack) {
         CompoundTag nbt = stack.getOrCreateTag();
         return new ResourceLocation(nbt.getString("key"));
     }
@@ -51,7 +51,7 @@ public class CursedSpiritOrbItem extends Item {
 
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        ResourceLocation key = this.getKey(pStack);
+        ResourceLocation key = getKey(pStack);
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID),
                 Component.translatable(String.format("entity.%s.%s", key.getNamespace(), key.getPath()))).withStyle(ChatFormatting.DARK_RED));
     }
@@ -67,7 +67,7 @@ public class CursedSpiritOrbItem extends Item {
                 return stack;
             }
             Registry<EntityType<?>> registry = pLevel.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            cap.addCurse(pEntityLiving.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getCurse(registry, pStack));
+            cap.addCurse(pEntityLiving.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), getCurse(registry, pStack));
             pEntityLiving.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 1));
         }
         return stack;
