@@ -40,9 +40,15 @@ public class ClientVisualHandler {
     private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
     private static final Map<UUID, VisualData> synced = new HashMap<>();
+    private static final Map<UUID, Long> times = new HashMap<>();
 
     public static void receive(UUID identifier, VisualData data) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.level == null) return;
+
         synced.put(identifier, data);
+        times.put(identifier, mc.level.getGameTime());
     }
 
     @Nullable
@@ -59,7 +65,9 @@ public class ClientVisualHandler {
         if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
-            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(synced.get(entity.getUUID()).serializeNBT(), entity.getUUID()));
+            if (mc.level.getGameTime() - times.get(entity.getUUID()) >= 20) {
+                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(synced.get(entity.getUUID()).serializeNBT(), entity.getUUID()));
+            }
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -72,8 +80,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                VisualData data = new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
-                return synced.put(mc.player.getUUID(), data);
+                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
             }
         } else {
             if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -107,6 +114,7 @@ public class ClientVisualHandler {
     @SubscribeEvent
     public static void onEntityRemoved(EntityLeaveLevelEvent event) {
         synced.remove(event.getEntity().getUUID());
+        times.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
