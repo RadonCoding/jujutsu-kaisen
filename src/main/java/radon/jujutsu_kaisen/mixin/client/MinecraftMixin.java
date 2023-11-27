@@ -24,13 +24,6 @@ public class MinecraftMixin {
 
         ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(instance);
 
-        if (data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-            return true;
-        }
-
-        if (!(instance instanceof LivingEntity entity)) return false;
-
-        return AbilityOverlay.getSelected() == JJKAbilities.ABSORB_CURSE.get() &&
-                AbsorbCurse.canAbsorb(player, entity);
+        return data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 }

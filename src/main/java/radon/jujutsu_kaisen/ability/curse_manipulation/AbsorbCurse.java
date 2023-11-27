@@ -3,27 +3,36 @@ package radon.jujutsu_kaisen.ability.curse_manipulation;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class AbsorbCurse extends Ability {
-    private static final double RANGE = 5.0D;
-
+public class AbsorbCurse extends Ability implements Ability.IToggled {
     @Override
     public boolean isScalable() {
         return false;
@@ -31,19 +40,15 @@ public class AbsorbCurse extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        if (target == null) return false;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType() == JujutsuType.CURSE;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
-    }
-
-    private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
-            return hit.getEntity();
-        }
-        return null;
+        return ActivationType.TOGGLED;
     }
 
     private static void makePoofParticles(Entity entity) {
@@ -65,50 +70,67 @@ public class AbsorbCurse extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner.level().isClientSide) return;
 
-        if (this.getTarget(owner) instanceof CursedSpirit curse && !curse.isTame()) {
-            owner.swing(InteractionHand.MAIN_HAND, true);
-
-            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            ResourceLocation key = registry.getKey(curse.getType());
-
-            if (key == null) return;
-
-            if (!canAbsorb(owner, curse)) return;
-
-            ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
-            CursedSpiritOrbItem.setKey(stack, key);
-
-            if (owner instanceof Player player) {
-                player.addItem(stack);
-            } else {
-                owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
-            }
-            makePoofParticles(curse);
-            curse.discard();
-        }
-    }
-
-    @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        Entity target = this.getTarget(owner);
-
-        if (!canAbsorb(owner, target)) {
-            return Status.FAILURE;
-        }
-        return super.checkTriggerable(owner);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 100.0F;
+        return 0;
     }
 
+    @Override
+    public void onEnabled(LivingEntity owner) {
 
+    }
 
     @Override
-    public MenuType getMenuType() {
-        return MenuType.SCROLL;
+    public void onDisabled(LivingEntity owner) {
+
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ForgeEvents {
+        @SubscribeEvent
+        public static void onLivingDeath(LivingDeathEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!attackerCap.hasToggled(JJKAbilities.ABSORB_CURSE.get())) return;
+
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (victimCap.getType() != JujutsuType.CURSE) return;
+
+            attacker.swing(InteractionHand.MAIN_HAND, true);
+
+            Registry<EntityType<?>> registry = attacker.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            ResourceLocation key = registry.getKey(victim.getType());
+
+            if (key == null) return;
+
+            if (!canAbsorb(attacker, victim)) return;
+
+            ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
+            CursedSpiritOrbItem.setKey(stack, key);
+
+            if (attacker instanceof Player player) {
+                player.addItem(stack);
+            } else {
+                attacker.setItemSlot(EquipmentSlot.MAINHAND, stack);
+            }
+            makePoofParticles(victim);
+            victim.discard();
+
+            if (attacker instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+            }
+        }
     }
 }

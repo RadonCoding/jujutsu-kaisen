@@ -3,6 +3,9 @@ package radon.jujutsu_kaisen.entity.sorcerer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
@@ -28,6 +32,7 @@ import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableHumanGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -94,11 +99,11 @@ public class SuguruGetoEntity extends SorcererEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
+        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
         LivingEntity target = this.getTarget();
 
         if (target != null && this.random.nextInt(20) == 0) {
-            ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
 
@@ -106,6 +111,16 @@ public class SuguruGetoEntity extends SorcererEntity {
                 EntityType<?> curse = curses.get(this.random.nextInt(curses.size()));
                 JJKAbilities.summonCurse(this, curse, Math.min(1, this.random.nextInt(cap.getCurseCount(registry, curse))));
             }
+        }
+
+        ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
+
+        if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
+            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            cap.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), CursedSpiritOrbItem.getCurse(registry, stack));
+            this.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 1));
         }
     }
 

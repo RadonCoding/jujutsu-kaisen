@@ -47,20 +47,10 @@ public class YujiItadoriEntity extends SorcererEntity {
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
             ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                return InteractionResult.FAIL;
-            }
-
             this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
 
             int count = stack.getCount();
-
-            if (cap.hasTrait(Trait.VESSEL)) {
-                stack.shrink(cap.addFingers(count));
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
-            }
-            stack.shrink(count);
-            HelperMethods.convertTo(this, new SukunaEntity(this, count, false), true, false);
+            stack.shrink(cap.addFingers(count));
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
