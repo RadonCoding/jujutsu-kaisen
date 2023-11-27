@@ -276,15 +276,15 @@ public class JJKAbilities {
         return null;
     }
 
-    public static List<Ability> getToggled(LivingEntity owner) {
-        List<Ability> toggled = new ArrayList<>();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                toggled.addAll(cap.getToggled()));
-        return toggled;
+    public static Set<Ability> getToggled(LivingEntity owner) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Set.of();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getToggled();
     }
 
     public static boolean hasTamed(LivingEntity owner, EntityType<?> type) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+
         for (RegistryObject<Ability> ability : ABILITIES.getEntries()) {
             if (!(ability.get() instanceof Summon<?> summon)) continue;
             if (!summon.getTypes().contains(type)) continue;
@@ -294,26 +294,28 @@ public class JJKAbilities {
     }
 
     public static boolean isDead(LivingEntity owner, EntityType<?> type) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         return cap.isDead(registry, type);
     }
 
     public static boolean isChanneling(LivingEntity owner, Ability ability) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.isChanneling(ability);
     }
 
     public static boolean hasTrait(LivingEntity owner, Trait trait) {
-        AtomicBoolean result = new AtomicBoolean();
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.hasTrait(trait)));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasTrait(trait);
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
         Set<Ability> abilities = new LinkedHashSet<>();
+
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
