@@ -1,12 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -73,7 +68,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.level().isClientSide) return;
 
-        this.playSound(JJKSounds.FIRE_ARROW.get(), 5.0F, 1.0F);
+        this.playSound(JJKSounds.FLAME_EXPLOSION.get(), 5.0F, 1.0F);
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
