@@ -30,7 +30,7 @@ import java.util.*;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
-    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you for as long as I live.", "With this treasure i summon..."};
+    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon..."};
 
     public static Set<String> getRandomWordCombo(int count) {
         if (count > WORDS.length)
