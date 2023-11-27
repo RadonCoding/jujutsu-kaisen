@@ -40,8 +40,7 @@ public abstract class Ability {
         ENERGY,
         COOLDOWN,
         BURNOUT,
-        DOMAIN_AMPLIFICATION,
-        SIMPLE_DOMAIN
+        DOMAIN_AMPLIFICATION
     }
 
     public enum Classification {
