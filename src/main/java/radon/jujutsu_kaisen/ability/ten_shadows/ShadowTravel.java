@@ -42,7 +42,7 @@ public class ShadowTravel extends Ability {
         if (hit.getType() == HitResult.Type.BLOCK && (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
                 ((BlockHitResult) hit).getDirection() != Direction.UP)) return null;
 
-        if (owner.level().getMaxLocalRawBrightness(BlockPos.containing(hit.getLocation()), 0) > 7) return null;
+        if (owner.level().getMaxLocalRawBrightness(BlockPos.containing(hit.getLocation()), 0) == 15) return null;
 
         return hit;
     }
