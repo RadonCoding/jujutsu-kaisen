@@ -86,6 +86,7 @@ public class ExperienceHandler {
                     for (BattleData battle : battles.get(victim.getUUID())) {
                         if (battle.target != attacker) continue;
                         battle.hurt(event.getAmount());
+                        existing = true;
                     }
                 }
                 if (!existing) {
