@@ -137,7 +137,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (this.isTame() && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && this.isTame() && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
