@@ -42,6 +42,23 @@ public class PiercingBullEntity extends TenShadowsSummon {
         super(pEntityType, pLevel);
     }
 
+    public PiercingBullEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.PIERCING_BULL.get(), owner.level());
+
+        this.setTame(tame);
+        this.setOwner(owner);
+
+        Vec3 pos = owner.position()
+                .subtract(owner.getLookAngle()
+                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -60,23 +77,6 @@ public class PiercingBullEntity extends TenShadowsSummon {
     @Override
     protected boolean hasMeleeAttack() {
         return false;
-    }
-
-    public PiercingBullEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.PIERCING_BULL.get(), owner.level());
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
-                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
     private void breakBlocks() {
@@ -98,9 +98,9 @@ public class PiercingBullEntity extends TenShadowsSummon {
         if (target != null) {
             this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
 
-            if (this.isSprinting() || (this.onGround() && this.tickCount % INTERVAL == 0)) {
+            if (this.onGround() && (this.isSprinting() || this.tickCount % INTERVAL == 0)) {
                 this.setSprinting(true);
-                this.setDeltaMovement(target.position().subtract(this.position()).normalize());
+                this.setDeltaMovement(target.position().subtract(this.position()));
                 float distance = this.distanceTo(target);
 
                 for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox())) {
