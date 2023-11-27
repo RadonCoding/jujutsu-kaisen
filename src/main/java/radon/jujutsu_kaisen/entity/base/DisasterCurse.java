@@ -22,8 +22,6 @@ public abstract class DisasterCurse extends CursedSpirit {
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience())) / (this.level().isNight() ? 2 : 1)) != 0)
                 return false;
@@ -32,7 +30,7 @@ public abstract class DisasterCurse extends CursedSpirit {
         if (!pLevel.getEntitiesOfClass(CursedSpirit.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).isEmpty())
             return false;
 
-        if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+        if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
             if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 32.0D, 128.0D)).isEmpty())
                 return false;
         }
