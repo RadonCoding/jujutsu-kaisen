@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class SatoruGojoEntity extends SorcererEntity {
         if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+            if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
                 if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                     this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                 }
