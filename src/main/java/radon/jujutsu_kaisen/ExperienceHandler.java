@@ -117,9 +117,6 @@ public class ExperienceHandler {
             // If owner has less health than target increase experience, if target has less health than owner decrease experience
             amount *= (this.target.getMaxHealth() + this.target.getArmorValue()) / (owner.getMaxHealth() + owner.getArmorValue());
 
-            // If owner is dead they get 10% of the experience
-            amount *= owner.isDeadOrDying() ? 0.1F : 1.0F;
-
             // Decrease amount to a minimum of 25% depending on the health of owner and target, if both are relatively on the same health amount owner gets the full amount
             amount *= Math.min(1.0F, 0.25F + 1.0F - Math.abs((owner.getHealth() / owner.getMaxHealth()) - (this.target.getHealth() / this.target.getMaxHealth())));
 
@@ -137,6 +134,9 @@ public class ExperienceHandler {
                 // Limit the experience to the max health of the target
                 amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth());
             }
+
+            // If owner is dead they get 25% of the experience
+            amount *= owner.isDeadOrDying() ? 0.25F : 1.0F;
 
             if (amount < 0.1F) return;
 
