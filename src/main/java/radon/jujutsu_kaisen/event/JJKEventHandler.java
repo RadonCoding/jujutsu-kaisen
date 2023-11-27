@@ -153,6 +153,10 @@ public class JJKEventHandler {
                 newCap.resetBlackFlash();
                 newCap.resetExtraEnergy();
                 newCap.resetSpeedStacks();
+
+                if (!player.level().isClientSide) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
+                }
             }
             original.invalidateCaps();
         }
