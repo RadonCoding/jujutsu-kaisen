@@ -123,14 +123,19 @@ public class ExperienceHandler {
             // Decrease amount to a minimum of 25% depending on the health of owner and target, if both are relatively on the same health amount owner gets the full amount
             amount *= Math.min(1.0F, 0.25F + 1.0F - Math.abs((owner.getHealth() / owner.getMaxHealth()) - (this.target.getHealth() / this.target.getMaxHealth())));
 
-            // Limit the experience to the max health of the target
-            amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);
-
             if (this.target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData targetCap = this.target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                amount *= ((Math.max(1, targetCap.getExperience()) / Math.max(1, ownerCap.getExperience())) * 0.1F) * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F);
+
+                // If owner has less experience than target increase experience, if target has less experience than owner decrease experience
+                amount *= (Math.max(1, targetCap.getExperience()) / Math.max(1, ownerCap.getExperience()));
+
+                // Limit the experience to the max health of the target multiplied by whether the target can heal
+                amount = Mth.clamp(this.target.getMaxHealth() * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F), 0.0F, amount);
             } else {
                 amount *= 0.1F;
+
+                // Limit the experience to the max health of the target
+                amount = Mth.clamp(this.target.getMaxHealth(), 0.0F, amount);
             }
 
             if (amount < 0.1F) return;
