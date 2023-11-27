@@ -49,8 +49,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         return (!this.isTame() || pTarget != this.getOwner()) && super.canAttack(pTarget);
     }
 
-
-
     @Override
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
@@ -137,10 +135,16 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     public void tick() {
-        super.tick();
+        LivingEntity owner = this.getOwner();
 
-        int time = this.getTime();
-        this.setTime(++time);
+        if (this.isTame() && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+            this.discard();
+        } else {
+            super.tick();
+
+            int time = this.getTime();
+            this.setTime(++time);
+        }
     }
 
     @Nullable
