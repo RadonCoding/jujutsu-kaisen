@@ -73,7 +73,9 @@ public class ExperienceHandler {
                     }
                 }
                 if (!existing) {
-                    addBattle(attacker.getUUID(), new BattleData(victim));
+                    if (attacker.getLastHurtByMob() == victim) {
+                        addBattle(attacker.getUUID(), new BattleData(victim));
+                    }
                 }
             }
 
@@ -87,7 +89,9 @@ public class ExperienceHandler {
                     }
                 }
                 if (!existing) {
-                    addBattle(victim.getUUID(), new BattleData(attacker));
+                    if (victim.getLastHurtMob() == attacker) {
+                        addBattle(victim.getUUID(), new BattleData(attacker));
+                    }
                 }
             }
         }
