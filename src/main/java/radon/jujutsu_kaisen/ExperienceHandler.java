@@ -104,7 +104,7 @@ public class ExperienceHandler {
     }
 
     private static class BattleData {
-        private static final int MAX_DURATION = 5 * 60 * 20;
+        private static final int MAX_DURATION = 60 * 20;
 
         private final LivingEntity target;
         private int idle;
@@ -116,7 +116,7 @@ public class ExperienceHandler {
         }
 
         public void end(LivingEntity owner) {
-            if (owner.isRemoved() || this.target.isRemoved()) return;
+            if (this.idle >= MAX_DURATION || owner.isRemoved() || this.target.isRemoved()) return;
 
             if (this.damageDealt == 0.0F || this.damageTaken == 0.0F) return;
 
