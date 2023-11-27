@@ -363,7 +363,7 @@ public class JJKEventHandler {
             LivingEntity owner = event.getEntity();
 
             if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
-                owner.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CURSED_BUD.get()), event.getCost() * 0.1F);
+                owner.hurt(owner.level().damageSources().generic(), event.getCost() * 0.1F);
             }
         }
 
