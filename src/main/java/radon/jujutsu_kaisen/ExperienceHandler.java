@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -19,14 +20,15 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExperienceHandler {
-    private static final Map<UUID, Set<BattleData>> battles = new HashMap<>();
+    private static final Map<UUID, CopyOnWriteArraySet<BattleData>> battles = new HashMap<>();
 
     private static void addBattle(UUID owner, BattleData data) {
         if (!battles.containsKey(owner)) {
-            battles.put(owner, new HashSet<>());
+            battles.put(owner, new CopyOnWriteArraySet<>());
         }
         battles.get(owner).add(data);
     }
@@ -38,13 +40,13 @@ public class ExperienceHandler {
         if (owner.level().isClientSide) return;
         if (!battles.containsKey(owner.getUUID())) return;
 
-        for (BattleData battle : battles.get(owner.getUUID())) {
-            boolean fighting = battle.tick(owner);
+        for (BattleData data : battles.get(owner.getUUID())) {
+            boolean fighting = data.tick(owner);
 
             if (!fighting) {
-                battle.end(owner);
+                data.end(owner);
 
-                battles.get(owner.getUUID()).remove(battle);
+                battles.get(owner.getUUID()).remove(data);
 
                 if (battles.get(owner.getUUID()).isEmpty()) {
                     battles.remove(owner.getUUID());
@@ -61,23 +63,30 @@ public class ExperienceHandler {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                boolean existing = false;
+
                 if (battles.containsKey(attacker.getUUID())) {
                     for (BattleData battle : battles.get(attacker.getUUID())) {
                         if (battle.target != victim) continue;
                         battle.attack(event.getAmount());
+                        existing = true;
                     }
-                } else if (attacker.getLastHurtByMob() == victim) {
+                }
+                if (!existing) {
                     addBattle(attacker.getUUID(), new BattleData(victim));
                 }
             }
 
             if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                boolean existing = false;
+
                 if (battles.containsKey(victim.getUUID())) {
                     for (BattleData battle : battles.get(victim.getUUID())) {
                         if (battle.target != attacker) continue;
                         battle.hurt(event.getAmount());
                     }
-                } else {
+                }
+                if (!existing) {
                     addBattle(victim.getUUID(), new BattleData(attacker));
                 }
             }
