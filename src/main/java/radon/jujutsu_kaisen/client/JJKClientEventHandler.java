@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.SelfEmbodimentOfPerfection;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
@@ -152,9 +153,11 @@ public class JJKClientEventHandler {
             if (data == null) return;
 
             if (data.traits().contains(Trait.HEAVENLY_RESTRICTION)) {
-                Entity viewer = Minecraft.getInstance().getCameraEntity();
+                if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity viewer)) return;
 
-                if (viewer != null && target != viewer) {
+                if (JJKAbilities.hasTrait(viewer, Trait.HEAVENLY_RESTRICTION)) return;
+
+                if (target != viewer) {
                     Vec3 look = viewer.getLookAngle();
                     Vec3 start = viewer.getEyePosition();
                     Vec3 result = target.getEyePosition().subtract(start);

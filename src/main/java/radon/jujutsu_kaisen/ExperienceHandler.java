@@ -128,7 +128,7 @@ public class ExperienceHandler {
 
             if (this.target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData targetCap = this.target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                amount *= (targetCap.getExperience() / ownerCap.getExperience()) * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F);
+                amount *= ((Math.max(1, targetCap.getExperience()) / Math.max(1, ownerCap.getExperience())) * 0.1F) * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F);
             } else {
                 amount *= 0.1F;
             }
