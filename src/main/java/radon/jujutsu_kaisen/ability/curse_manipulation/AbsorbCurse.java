@@ -57,6 +57,7 @@ public class AbsorbCurse extends Ability {
     }
 
     public static boolean canAbsorb(LivingEntity owner, Entity entity) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
                 (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
