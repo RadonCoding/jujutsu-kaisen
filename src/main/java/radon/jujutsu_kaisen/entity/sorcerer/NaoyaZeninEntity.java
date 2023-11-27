@@ -43,12 +43,6 @@ public class NaoyaZeninEntity extends SorcererEntity {
     }
 
     @Override
-    protected boolean targetsCurses() {
-        return true;
-    }
-
-
-    @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE_1.getRequiredExperience();
     }
