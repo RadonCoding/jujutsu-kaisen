@@ -6,16 +6,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 
 @Mixin(Entity.class)
-public class EntityMixin {
+public abstract class EntityMixin {
+    @Shadow public abstract void remove(Entity.RemovalReason pReason);
+
     @Inject(method = "isInvisible", at = @At("HEAD"), cancellable = true)
     public void isInvisible(CallbackInfoReturnable<Boolean> cir) {
         Entity entity = ((Entity) (Object) this);
@@ -27,8 +32,13 @@ public class EntityMixin {
 
         ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(living);
 
-        if (data != null && data.toggled().contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
-            cir.setReturnValue(true);
+        if (data != null) {
+            for (Ability ability : data.toggled()) {
+                if (ability instanceof ITransformation) {
+                    cir.setReturnValue(true);
+                    return;
+                }
+            }
         }
     }
 }

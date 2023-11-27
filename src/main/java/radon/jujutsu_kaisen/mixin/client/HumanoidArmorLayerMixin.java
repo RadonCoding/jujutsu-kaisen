@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -68,7 +69,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
         if (data != null) {
             for (Ability ability : data.toggled()) {
-                if (!(ability instanceof ITransformation transformation)) return;
+                if (!(ability instanceof ITransformation transformation)) continue;
 
                 for (int i = 0; i < 4; i++) {
                     EquipmentSlot slot = EquipmentSlot.values()[EquipmentSlot.values().length - i - 1];
