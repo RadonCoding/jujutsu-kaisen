@@ -78,7 +78,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 30.0F;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 30 * 20;
     }
 
     @Override
