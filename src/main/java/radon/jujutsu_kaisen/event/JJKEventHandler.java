@@ -173,7 +173,7 @@ public class JJKEventHandler {
         public static void onLivingFall(LivingFallEvent event) {
             event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    event.setDamageMultiplier(0.25F);
+                    event.setDistance(event.getDistance() * 0.25F);
                 }
             });
 
