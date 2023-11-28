@@ -73,7 +73,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         if (this.level().isClientSide) return;
 
-        this.playSound(JJKSounds.FLAME_EXPLOSION.get(), 5.0F, 1.0F);
+        this.playSound(JJKSounds.FLAME_EXPLOSION.get(), 3.0F, 1.0F);
 
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 

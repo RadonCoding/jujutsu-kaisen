@@ -57,7 +57,7 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
         } else if (this.getTime() == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-            this.playSound(JJKSounds.HOLLOW_PURPLE_EXPLOSION.get(), 5.0F, 1.0F);
+            this.playSound(JJKSounds.HOLLOW_PURPLE_EXPLOSION.get(), 3.0F, 1.0F);
 
             float radius = Math.min(MAX_EXPLOSION, RADIUS * this.getPower());
             int duration = (int) (radius / 5.0F * 20);
