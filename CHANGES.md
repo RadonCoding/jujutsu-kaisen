@@ -12,6 +12,7 @@
     - Optimized Malevolent Shrine
     - Simple Domain better fr
     - Added sound effects
+    - Improved Shining Sea of Flowers and Horizon of The Captivating Skandha
 
 ## General
     - Made normal sorcerers gain movement speed from experience as well

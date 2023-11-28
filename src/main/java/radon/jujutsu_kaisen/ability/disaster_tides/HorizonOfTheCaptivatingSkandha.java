@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.disaster_tides;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -20,7 +21,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
+        return List.of(JJKBlocks.SKY.get());
     }
 
     @Override
@@ -29,7 +30,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
     }
 
     @Override
-    public List<Block> getFloorBlocks() {
+    public List<Block> getDecorationBlocks() {
         return List.of(JJKBlocks.FAKE_WATER_DOMAIN.get());
     }
 
@@ -63,5 +64,11 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
             cap.setDomain(domain);
         });
+    }
+
+    @Override
+    public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
+        LivingEntity owner = domain.getOwner();
+        return owner != null && pos.getY() < owner.getBlockY();
     }
 }

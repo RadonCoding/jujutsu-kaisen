@@ -26,10 +26,6 @@ public class JJKBlocks {
         return false;
     }
 
-    private static boolean always(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return true;
-    }
-
     @Nullable
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
         return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
@@ -56,12 +52,19 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
+    public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
+            new SkyBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_ONE = BLOCKS.register("coffin_of_the_iron_mountain_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()
-                    .lightLevel((pState) -> 3)
+                    .lightLevel((pState) -> 14)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
     public static RegistryObject<DomainBlock> COFFIN_OF_THE_IRON_MOUNTAIN_TWO = BLOCKS.register("coffin_of_the_iron_mountain_two", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
@@ -74,12 +77,6 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA = BLOCKS.register("horizon_of_the_captivating_skandha", () ->
-            new DomainBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
     public static RegistryObject<DomainBlock> HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL = BLOCKS.register("horizon_of_the_captivating_skandha_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -87,12 +84,6 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS = BLOCKS.register("shining_sea_of_flowers", () ->
-            new DomainBlock(BlockBehaviour.Properties.of()
-                    .strength(-1.0F, 8.0F)
-                    .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
-                    .noLootTable()));
     public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_FILL = BLOCKS.register("shining_sea_of_flowers_fill", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
@@ -105,13 +96,38 @@ public class JJKBlocks {
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION = BLOCKS.register("shining_sea_of_flowers_decoration", () ->
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION_ONE = BLOCKS.register("shining_sea_of_flowers_decoration_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .noCollission()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
+                    .noLootTable()
                     .lightLevel((pState) -> 14)
-                    .noLootTable()));
+                    .emissiveRendering((pState, pLevel, pPos) -> true)));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION_TWO = BLOCKS.register("shining_sea_of_flowers_decoration_two", () ->
+            new DomainBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()
+                    .lightLevel((pState) -> 14)
+                    .emissiveRendering((pState, pLevel, pPos) -> true)));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION_THREE = BLOCKS.register("shining_sea_of_flowers_decoration_three", () ->
+            new DomainBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()
+                    .lightLevel((pState) -> 14)
+                    .emissiveRendering((pState, pLevel, pPos) -> true)));
+    public static RegistryObject<DomainBlock> SHINING_SEA_OF_FLOWERS_DECORATION_FOUR = BLOCKS.register("shining_sea_of_flowers_decoration_four", () ->
+            new DomainBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .noLootTable()
+                    .lightLevel((pState) -> 14)
+                    .emissiveRendering((pState, pLevel, pPos) -> true)));
 
     public static RegistryObject<DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_embodiment_of_perfection", () ->
             new DomainBlock(BlockBehaviour.Properties.of()

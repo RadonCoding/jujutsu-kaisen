@@ -45,7 +45,7 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS.get());
+        return List.of(JJKBlocks.SKY.get());
     }
 
     @Override
@@ -60,16 +60,19 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
 
     @Override
     public List<Block> getDecorationBlocks() {
-        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION.get());
+        return List.of(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_ONE.get(),
+                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(),
+                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
+                JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get());
     }
 
     @Override
-    public boolean canPlaceFloor(BlockGetter getter, BlockPos pos) {
-        return getter.getBlockState(pos).canOcclude() && getter.getBlockState(pos.above()).isAir();
+    public boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
+        return !domain.level().getBlockState(pos).isAir() && domain.level().getBlockState(pos.above()).isAir();
     }
 
     @Override
-    public boolean canPlaceDecoration(BlockGetter getter, BlockPos pos) {
-        return getter.getBlockState(pos.below()).is(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
+    public boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
+        return domain.level().getBlockState(pos.below()).is(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get());
     }
 }

@@ -85,6 +85,9 @@ public class JujutsuKaisen {
 
         ItemBlockRenderTypes.setRenderLayer(JJKFluids.FAKE_WATER_SOURCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_ONE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get(), RenderType.cutout());
     }
 }

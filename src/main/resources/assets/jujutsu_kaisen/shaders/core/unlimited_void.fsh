@@ -29,7 +29,6 @@ const vec3[] COLORS = vec3[](
     vec3(0.0404775, 0.1574105, 0.661491)
 );
 
-
 const mat4 SCALE_TRANSLATE = mat4(
     0.5, 0.0, 0.0, 0.25,
     0.0, 0.5, 0.0, 0.25,

@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GrassColor;
@@ -21,7 +20,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.SelfEmbodimentOfPerfection;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
@@ -40,6 +38,7 @@ import radon.jujutsu_kaisen.client.model.item.armor.InstantSpiritBodyOfDistorted
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
+import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
 import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
@@ -48,7 +47,6 @@ import radon.jujutsu_kaisen.client.render.entity.projectile.*;
 import radon.jujutsu_kaisen.client.render.entity.sorcerer.*;
 import radon.jujutsu_kaisen.client.render.entity.ten_shadows.*;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -97,6 +95,13 @@ public class JJKClientEventHandler {
                         }
                     }
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onRenderLevelStage(RenderLevelStageEvent event) {
+            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+                SkyHandler.renderSky(event.getPoseStack(), event.getPartialTick(), event.getProjectionMatrix());
             }
         }
 
@@ -373,6 +378,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
         }
 
         @SubscribeEvent
