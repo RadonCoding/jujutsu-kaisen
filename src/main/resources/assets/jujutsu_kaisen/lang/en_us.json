@@ -365,7 +365,10 @@
   "ability.jujutsu_kaisen.piercing_water": "Piercing Water",
   "ability.jujutsu_kaisen.wheel": "Wheel",
 
-  "ability.jujutsu_kaisen.absorb_curse": "Absorb Curse",
+  "ability.jujutsu_kaisen.curse_absorption": "Absorb Curses",
+  "ability.jujutsu_kaisen.curse_absorption.enable": "Activated curse absorption",
+  "ability.jujutsu_kaisen.curse_absorption.disable": "Disabled curse absorption",
+
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
   "ability.jujutsu_kaisen.release_curses": "Release Curses",
   "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
