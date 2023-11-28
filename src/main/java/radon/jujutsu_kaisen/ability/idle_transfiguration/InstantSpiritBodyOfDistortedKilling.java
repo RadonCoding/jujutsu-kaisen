@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,11 +18,13 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class InstantSpiritBodyOfDistortedKilling extends Ability implements Ability.IToggled {
+public class InstantSpiritBodyOfDistortedKilling extends Ability implements Ability.IToggled, ITransformation {
     @Override
     public boolean isScalable() {
         return false;
@@ -64,5 +67,10 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public Item getItem() {
+        return JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get();
     }
 }

@@ -83,7 +83,6 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
                     this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) transformation.getItem().asItem(), armor, this.usesInnerModel(slot),
                             1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
                 }
-                ci.cancel();
             }
         }
     }
