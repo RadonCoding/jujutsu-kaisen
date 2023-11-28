@@ -7,7 +7,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public enum CursedTechnique {
-    CURSE_MANIPULATION(null, JJKAbilities.ABSORB_CURSE.get(), JJKAbilities.RELEASE_CURSE.get(), JJKAbilities.RELEASE_CURSES.get(),
+    CURSE_MANIPULATION(null, JJKAbilities.CURSE_ABSORPTION.get(), JJKAbilities.RELEASE_CURSE.get(), JJKAbilities.RELEASE_CURSES.get(),
             JJKAbilities.MAXIMUM_UZUMAKI.get(),
             JJKAbilities.MINI_UZUMAKI.get()),
     LIMITLESS(JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.INFINITY.get(), JJKAbilities.RED.get(), JJKAbilities.BLUE_STILL.get(),

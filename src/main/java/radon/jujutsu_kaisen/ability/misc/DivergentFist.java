@@ -41,6 +41,11 @@ public class DivergentFist extends Ability {
     }
 
     @Override
+    public boolean isMelee() {
+        return true;
+    }
+
+    @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
     }
