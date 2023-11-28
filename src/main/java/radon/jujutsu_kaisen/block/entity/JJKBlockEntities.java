@@ -19,14 +19,15 @@ public class JJKBlockEntities {
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_TWO.get(),
                             JJKBlocks.COFFIN_OF_THE_IRON_MOUNTAIN_THREE.get(),
 
-                            JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get(),
                             JJKBlocks.HORIZON_OF_THE_CAPTIVATING_SKANDHA_FILL.get(),
                             JJKBlocks.FAKE_WATER_DOMAIN.get(),
 
-                            JJKBlocks.SHINING_SEA_OF_FLOWERS.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FILL.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_FLOOR.get(),
-                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_ONE.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
+                            JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get(),
 
                             JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get(),
 
@@ -38,6 +39,10 @@ public class JJKBlockEntities {
     public static RegistryObject<BlockEntityType<UnlimitedVoidBlockEntity>> UNLIMITED_VOID = BLOCK_ENTITIES.register("unlimited_void", () ->
             BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
                             JJKBlocks.UNLIMITED_VOID.get())
+                    .build(null));
+    public static RegistryObject<BlockEntityType<SkyBlockEntity>> SKY = BLOCK_ENTITIES.register("sky", () ->
+            BlockEntityType.Builder.of(SkyBlockEntity::new,
+                            JJKBlocks.SKY.get())
                     .build(null));
 
     public static RegistryObject<BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->

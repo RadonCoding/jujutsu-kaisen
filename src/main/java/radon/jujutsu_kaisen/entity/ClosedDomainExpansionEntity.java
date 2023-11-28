@@ -161,9 +161,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                                 DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
                                 List<Block> blocks = domain.getBlocks();
-                                List<Block> filler = domain.getFillBlocks();
+                                List<Block> fill = domain.getFillBlocks();
                                 List<Block> floor = domain.getFloorBlocks();
-                                List<Block> decroation = domain.getDecorationBlocks();
+                                List<Block> decoration = domain.getDecorationBlocks();
 
                                 Block block = null;
 
@@ -174,15 +174,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                 } else {
                                     if (distance >= radius - 2) {
                                         block = blocks.get(this.random.nextInt(blocks.size()));
-                                    } else if (state.canOcclude()) {
-                                        if (!floor.isEmpty() && domain.canPlaceFloor(this.level(), pos)) {
+                                    } else if (!state.isAir()) {
+                                        if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
                                             block = floor.get(this.random.nextInt(floor.size()));
                                         } else {
-                                            block = filler.get(this.random.nextInt(filler.size()));
+                                            block = fill.get(this.random.nextInt(fill.size()));
                                         }
-                                    } else if (state.isAir()) {
-                                        if (!decroation.isEmpty() && domain.canPlaceDecoration(this.level(), pos)) {
-                                            block = decroation.get(this.random.nextInt(decroation.size()));
+                                    } else {
+                                        if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos)) {
+                                            block = decoration.get(this.random.nextInt(decoration.size()));
                                         }
                                     }
                                 }

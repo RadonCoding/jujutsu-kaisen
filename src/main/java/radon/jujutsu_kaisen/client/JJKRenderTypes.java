@@ -1,13 +1,17 @@
 package radon.jujutsu_kaisen.client;
 
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
 
 import java.util.function.Function;
 
@@ -52,6 +56,19 @@ public class JJKRenderTypes extends RenderType {
                     .setTextureState(RenderStateShard.MultiTextureStateShard.builder().add(TheEndPortalRenderer.END_SKY_LOCATION, false, false)
                             .add(TheEndPortalRenderer.END_PORTAL_LOCATION, false, false).build())
                     .createCompositeState(false));
+    private static final RenderType SKY = create("sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256,
+            false, false, RenderType.CompositeState.builder()
+                    .setShaderState(new ShaderStateShard(JJKShaders::getSkyShader))
+                    .setTextureState(new EmptyTextureStateShard(() -> {
+                        TextureTarget target = SkyHandler.getTarget();
+
+                        if (target != null) {
+                            RenderSystem.setShaderTexture(0, target.getColorTextureId());
+                        } else {
+                            RenderSystem.setShaderTexture(0, 0);
+                        }
+                    }, () -> {}))
+                    .createCompositeState(false));
     private static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
             false, true, RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
@@ -77,6 +94,10 @@ public class JJKRenderTypes extends RenderType {
 
     public static RenderType unlimitedVoid() {
         return UNLIMITED_VOID;
+    }
+
+    public static RenderType sky() {
+        return SKY;
     }
 
     public static @NotNull RenderType lightning() {

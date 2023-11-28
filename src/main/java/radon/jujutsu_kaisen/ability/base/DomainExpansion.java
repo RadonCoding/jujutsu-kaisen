@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -203,11 +204,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             return List.of();
         }
 
-        default boolean canPlaceFloor(BlockGetter getter, BlockPos pos) {
+        default boolean canPlaceFloor(ClosedDomainExpansionEntity domain, BlockPos pos) {
             return true;
         }
 
-        default boolean canPlaceDecoration(BlockGetter getter, BlockPos pos) {
+        default boolean canPlaceDecoration(ClosedDomainExpansionEntity domain, BlockPos pos) {
             return true;
         }
 
