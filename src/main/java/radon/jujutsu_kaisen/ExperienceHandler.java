@@ -143,10 +143,8 @@ public class ExperienceHandler {
                 // Limit the experience to the max health of the target multiplied by whether the target can heal
                 amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth() * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F));
             } else {
-                amount *= 0.1F;
-
-                // Limit the experience to the max health of the target
-                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth());
+                // Limit the experience to 10% of the max health of the target
+                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth()) * 0.1F;
             }
 
             // If owner is dead they get 25% of the experience
