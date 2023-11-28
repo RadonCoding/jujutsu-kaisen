@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -51,8 +52,12 @@ public class BoogieWoogie extends Ability {
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 pos = target.position();
-            target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
-            owner.teleportTo(pos.x(), pos.y(), pos.z());
+
+            Vec2 ownerRot = target.getRotationVector();
+            Vec2 targetRot = owner.getRotationVector();
+
+            target.moveTo(owner.getX(), owner.getY(), owner.getZ(), ownerRot.y, ownerRot.x);
+            owner.moveTo(pos.x(), pos.y(), pos.z(), targetRot.y, targetRot.x);
         }
     }
 

@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.item.cursed_object;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +28,29 @@ public class SukunaFingerItem extends CursedObjectItem {
     }
 
     @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+
+        if (pPlayer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData cap = pPlayer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                return InteractionResultHolder.fail(stack);
+            }
+
+            if (cap.hasTrait(Trait.VESSEL) && cap.getFingers() == 20) {
+                return InteractionResultHolder.fail(stack);
+            }
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+    @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (cap.getType() == JujutsuType.CURSE) {
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             }
 
