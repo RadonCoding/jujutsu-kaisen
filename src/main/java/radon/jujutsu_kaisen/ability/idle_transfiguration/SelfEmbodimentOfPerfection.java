@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 
 import java.util.List;
 
-public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain, ITransformation {
+public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
@@ -34,14 +34,6 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
-
-        if (instant || owner.level().getGameTime() % 40 == 0) {
-            DomainExpansionCenterEntity center = domain.getDomainCenter();
-
-            if (center == null) return;
-
-            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, this.getPower(owner), entity, center));
-        }
     }
 
     @Override
@@ -79,10 +71,5 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     @Override
     public List<Block> getBlocks() {
         return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
-    }
-
-    @Override
-    public Item getItem() {
-        return JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get();
     }
 }
