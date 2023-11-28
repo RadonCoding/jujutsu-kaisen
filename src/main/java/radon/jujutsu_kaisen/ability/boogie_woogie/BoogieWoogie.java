@@ -53,8 +53,8 @@ public class BoogieWoogie extends Ability {
 
             Vec3 pos = target.position();
 
-            Vec2 ownerRot = target.getRotationVector();
-            Vec2 targetRot = owner.getRotationVector();
+            Vec2 ownerRot = owner.getRotationVector();
+            Vec2 targetRot = target.getRotationVector();
 
             target.moveTo(owner.getX(), owner.getY(), owner.getZ(), ownerRot.y, ownerRot.x);
             owner.moveTo(pos.x(), pos.y(), pos.z(), targetRot.y, targetRot.x);
