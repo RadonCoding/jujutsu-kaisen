@@ -77,6 +77,13 @@ public class Dash extends Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+        if (cap.getSpeedStacks() > 0 || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+            owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
+            level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
+                    0, 0.0D, 0.0D, 0.0D, 1.0D);
+        }
+
         Vec3 look = owner.getLookAngle();
 
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
@@ -94,13 +101,13 @@ public class Dash extends Ability {
             owner.setDeltaMovement(motionX, motionY, motionZ);
             owner.hurtMarked = true;
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
-            float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F: 1.0F));
+            float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
             float f7 = owner.getYRot();
             float f = owner.getXRot();
-            float f1 = -Mth.sin(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
-            float f2 = -Mth.sin(f * ((float) Math.PI / 180F));
-            float f3 = Mth.cos(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
+            float f1 = -Mth.sin(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));
+            float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F));
+            float f3 = Mth.cos(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));
             float f4 = Mth.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
             f1 *= power / f4;
             f2 *= power / f4;
@@ -122,13 +129,6 @@ public class Dash extends Ability {
             Vec3 speed = look.add(x, y, z).reverse();
             level.sendParticles(ParticleTypes.CLOUD, pos.x(), pos.y(), pos.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
         }
-
-        if (cap.getSpeedStacks() == 0 && !cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
-
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
-        owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
-        level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
-                0, 0.0D, 0.0D, 0.0D, 1.0D);
     }
 
     @Override
