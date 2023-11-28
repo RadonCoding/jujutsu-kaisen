@@ -50,7 +50,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     public void run(LivingEntity owner) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 5.0F, 1.0F);
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 3.0F, 1.0F);
 
         for (int i = 0; i < 4; i++) {
             owner.level().addFreshEntity(new EmittingLightningEntity(owner, this.getPower(owner)));

@@ -242,7 +242,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                 });
             }
         } else {
-            this.playSound(JJKSounds.WOLF_HOWLING.get(), 5.0F, 1.0F);
+            this.playSound(JJKSounds.WOLF_HOWLING.get(), 3.0F, 1.0F);
 
             for (int i = 0; i < 6; i++) {
                 DivineDogBlackEntity dog = new DivineDogBlackEntity(this, true);

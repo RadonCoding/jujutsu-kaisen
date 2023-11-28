@@ -70,7 +70,7 @@ public class WheelEntity extends Entity implements GeoEntity {
 
     public void spin() {
         this.entityData.set(DATA_SPIN, SPIN_TIME);
-        this.playSound(JJKSounds.WHEEL.get(), 5.0F, 1.0F);
+        this.playSound(JJKSounds.WHEEL.get(), 3.0F, 1.0F);
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
