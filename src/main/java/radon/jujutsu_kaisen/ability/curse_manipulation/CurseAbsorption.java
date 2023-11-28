@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -63,7 +64,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
-                (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.getHealth() / owner.getMaxHealth() <= 0.1F);
+                (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.isDeadOrDying());
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
-        public static void onLivingDeath(LivingDeathEvent event) {
+        public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
 
             boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
@@ -100,6 +101,8 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
             LivingEntity victim = event.getEntity();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            if (!canAbsorb(attacker, victim)) return;
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
@@ -119,8 +122,6 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
             ResourceLocation key = registry.getKey(victim.getType());
 
             if (key == null) return;
-
-            if (!canAbsorb(attacker, victim)) return;
 
             ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
             CursedSpiritOrbItem.setKey(stack, key);
