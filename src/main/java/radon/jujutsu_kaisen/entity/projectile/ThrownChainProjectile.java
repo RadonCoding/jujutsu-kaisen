@@ -113,7 +113,7 @@ public class ThrownChainProjectile extends AbstractArrow {
     public void tick() {
         if (this.inGroundTime > 20) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                if (!owner.isRemoved() && owner.isDeadOrDying()) {
+                if (!owner.isRemoved() && !owner.isDeadOrDying()) {
                     if (owner.getOffhandItem().isEmpty()) {
                         owner.setItemInHand(InteractionHand.OFF_HAND, this.getStack());
                     } else {
