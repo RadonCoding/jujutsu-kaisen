@@ -46,7 +46,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        return 0;
     }
 
     @Override
@@ -89,6 +89,10 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) victim.level()))) {
                 if (domain.getOwner() == source.getEntity()) return;
             }
+
+            if (cap.getEnergy() < event.getAmount()) return;
+
+            cap.useEnergy(victim, event.getAmount());
 
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
