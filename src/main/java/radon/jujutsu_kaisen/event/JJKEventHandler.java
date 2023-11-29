@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -44,6 +45,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.LightningParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -97,7 +100,7 @@ public class JJKEventHandler {
                 }
             }
         }
-        
+
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
@@ -186,7 +189,9 @@ public class JJKEventHandler {
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
-            Entity attacker = source.getEntity();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
@@ -217,40 +222,38 @@ public class JJKEventHandler {
                 return;
             }
 
-            if (attacker instanceof LivingEntity living) {
-                ItemStack stack = null;
+            ItemStack stack = null;
 
-                if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
-                    stack = chain.getStack();
-                } else if (melee) {
-                    stack = living.getItemInHand(InteractionHand.MAIN_HAND);
-                }
+            if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
+                stack = chain.getStack();
+            } else if (melee) {
+                stack = attacker.getItemInHand(InteractionHand.MAIN_HAND);
+            }
 
-                if (stack != null) {
-                    if (!source.is(JJKDamageSources.SOUL) && stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                        if (((LivingEntity) attacker).canAttack(victim)) {
-                            if (victim.hurt(JJKDamageSources.soulAttack(living), event.getAmount())) {
-                                if (attacker instanceof Player player) {
-                                    stack.hurtEnemy(victim, player);
+            if (stack != null) {
+                if (!source.is(JJKDamageSources.SOUL) && stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    if (attacker.canAttack(victim)) {
+                        if (victim.hurt(JJKDamageSources.soulAttack(attacker), event.getAmount())) {
+                            if (attacker instanceof Player player) {
+                                stack.hurtEnemy(victim, player);
 
-                                    if (stack.isEmpty()) {
-                                        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                                    }
+                                if (stack.isEmpty()) {
+                                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                                 }
                             }
                         }
-                    } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
-                        Vec3 pos = living.getEyePosition().add(living.getLookAngle());
-                        living.level().explode(living, living.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
-                    } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                        victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                            cap.clearToggled();
-
-                            if (victim instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                            }
-                        });
                     }
+                } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
+                    Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
+                    attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        cap.clearToggled();
+
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        }
+                    });
                 }
             }
 
