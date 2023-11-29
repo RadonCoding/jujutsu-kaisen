@@ -154,6 +154,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         }
     }
 
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
 

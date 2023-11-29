@@ -254,6 +254,34 @@ public class JJKEventHandler {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                         }
                     });
+                } else if (stack.is(JJKItems.KAMUTOKE_DAGGER.get())) {
+                    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
+                        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+                            float cost = attackerCap.getRealPower();
+                            if (attackerCap.getEnergy() < cost) return;
+                            attackerCap.useEnergy(attacker, cost);
+                        }
+
+                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), attackerCap.getRealPower())) {
+                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
+
+                            attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+                                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+                            for (int i = 0; i < 32; i++) {
+                                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                                ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(attacker), 0.5F, 1),
+                                        victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
+                            }
+                        }
+
+                        if (attacker instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                        }
+                    });
                 }
             }
 
