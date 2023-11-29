@@ -73,4 +73,9 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
     public Item getItem() {
         return JJKItems.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get();
     }
+
+    @Override
+    public boolean isFullBody() {
+        return true;
+    }
 }

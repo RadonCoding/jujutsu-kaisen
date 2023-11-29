@@ -34,8 +34,10 @@ public abstract class EntityMixin {
 
         if (data != null) {
             for (Ability ability : data.toggled()) {
-                if (ability instanceof ITransformation) {
-                    cir.setReturnValue(true);
+                if (ability instanceof ITransformation transformation) {
+                    if (transformation.isFullBody()) {
+                        cir.setReturnValue(true);
+                    }
                     return;
                 }
             }
