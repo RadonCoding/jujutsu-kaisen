@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -17,6 +19,7 @@ import radon.jujutsu_kaisen.entity.projectile.*;
 import radon.jujutsu_kaisen.entity.sorcerer.*;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
 
+@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class JJKEntities {
     public static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JujutsuKaisen.MOD_ID);
 
@@ -424,7 +427,8 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
                             .toString()));
 
-    public static void createAttributes(EntityAttributeCreationEvent event) {
+    @SubscribeEvent
+    public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
         event.put(SUKUNA.get(), SorcererEntity.createAttributes().build());
         event.put(SATORU_GOJO.get(), SorcererEntity.createAttributes().build());

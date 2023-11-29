@@ -92,7 +92,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> implements IDuratio
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static class SimpleDomainForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             if (!(event.getSource().getDirectEntity() instanceof DomainExpansionEntity)) return;

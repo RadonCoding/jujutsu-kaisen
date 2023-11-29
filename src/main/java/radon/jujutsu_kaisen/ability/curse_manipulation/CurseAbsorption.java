@@ -133,7 +133,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static class CurseAbsorptionForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             check(event.getEntity(), event.getSource());

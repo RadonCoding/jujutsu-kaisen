@@ -19,6 +19,8 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
     protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
+        this.hasPhysics = false;
+
         this.lifetime = options.lifetime();
 
         this.xd = pXSpeed;

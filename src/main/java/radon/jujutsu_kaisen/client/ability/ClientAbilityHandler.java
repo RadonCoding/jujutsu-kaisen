@@ -41,7 +41,7 @@ public class ClientAbilityHandler {
     private static boolean isRightDown;
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-    public static class ForgeEvents {
+    public static class ClientAbilityHandlerForgeEvents {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             Minecraft mc = Minecraft.getInstance();

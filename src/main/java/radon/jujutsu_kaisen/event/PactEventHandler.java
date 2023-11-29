@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -14,6 +15,8 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.CloneEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -25,12 +28,12 @@ import java.util.Set;
 
 public class PactEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static class PactEventHandlerForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide()) return;
+            if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
 

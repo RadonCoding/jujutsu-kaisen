@@ -5,7 +5,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public enum BindingVow {
     OVERTIME,
-    RECOIL;
+    RECOIL,
+    DEATH;
 
     public Component getName() {
         return Component.translatable(String.format("binding_vow.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));

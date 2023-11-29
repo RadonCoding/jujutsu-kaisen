@@ -208,7 +208,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static class ProjectionSorceryForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
