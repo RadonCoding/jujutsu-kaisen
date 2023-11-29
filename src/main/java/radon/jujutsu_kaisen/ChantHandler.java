@@ -95,7 +95,7 @@ public class ChantHandler {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ForgeEvents {
+    public static class ChantHandlerForgeEvents {
         @SubscribeEvent
         public static void onServerTick(TickEvent.ServerTickEvent event) {
             Iterator<Map.Entry<UUID, Integer>> iter = timers.entrySet().iterator();

@@ -63,7 +63,7 @@ import java.io.IOException;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-    public static class ForgeEvents {
+    public static class JJKClientEventHandlerForgeEvents {
         @SubscribeEvent
         public static void onMovementInput(MovementInputUpdateEvent event) {
             Minecraft mc = Minecraft.getInstance();
@@ -201,7 +201,7 @@ public class JJKClientEventHandler {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ModEvents {
+    public static class JJKClientEventHandlerModEvents {
         @SubscribeEvent
         public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
             event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(VeilBlock.COLOR).getMapColor().col,
