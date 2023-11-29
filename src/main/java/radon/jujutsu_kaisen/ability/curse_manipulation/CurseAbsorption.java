@@ -87,56 +87,61 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
     }
 
+    private static void check(LivingEntity victim, DamageSource source) {
+        boolean melee = (source instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
+                || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
+
+        if (!melee) return;
+
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        if (!canAbsorb(attacker, victim)) return;
+
+        if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!attackerCap.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
+
+        if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (victimCap.getType() != JujutsuType.CURSE) return;
+
+        attacker.swing(InteractionHand.MAIN_HAND, true);
+
+        Registry<EntityType<?>> registry = attacker.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        ResourceLocation key = registry.getKey(victim.getType());
+
+        if (key == null) return;
+
+        ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
+        CursedSpiritOrbItem.setKey(stack, key);
+
+        if (attacker instanceof Player player) {
+            player.addItem(stack);
+        } else {
+            attacker.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        }
+        makePoofParticles(victim);
+        victim.discard();
+
+        if (attacker instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+        }
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
+            check(event.getEntity(), event.getSource());
+        }
 
-            boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                    || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            if (!melee) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-            if (!canAbsorb(attacker, victim)) return;
-
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (!attackerCap.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
-
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (victimCap.getType() != JujutsuType.CURSE) return;
-
-            attacker.swing(InteractionHand.MAIN_HAND, true);
-
-            Registry<EntityType<?>> registry = attacker.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            ResourceLocation key = registry.getKey(victim.getType());
-
-            if (key == null) return;
-
-            ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
-            CursedSpiritOrbItem.setKey(stack, key);
-
-            if (attacker instanceof Player player) {
-                player.addItem(stack);
-            } else {
-                attacker.setItemSlot(EquipmentSlot.MAINHAND, stack);
-            }
-            makePoofParticles(victim);
-            victim.discard();
-
-            if (attacker instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-            }
+        @SubscribeEvent
+        public static void onLivingDeath(LivingDeathEvent event) {
+            check(event.getEntity(), event.getSource());
         }
     }
 }
