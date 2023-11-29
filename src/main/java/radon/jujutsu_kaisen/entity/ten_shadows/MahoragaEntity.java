@@ -187,7 +187,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
 
         if (this.getHealth() < this.getMaxHealth()) {
-            this.heal(2.0F / 20);
+            this.heal(4.0F / 20);
         }
 
         LivingEntity target = this.getTarget();
