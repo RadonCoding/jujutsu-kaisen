@@ -157,6 +157,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.32D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
