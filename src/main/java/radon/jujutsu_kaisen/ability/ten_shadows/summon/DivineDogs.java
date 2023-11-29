@@ -111,6 +111,4 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     public boolean isTenShadows() {
         return true;
     }
-
-
 }
