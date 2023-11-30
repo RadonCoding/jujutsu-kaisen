@@ -31,7 +31,8 @@ import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class NueLightning extends Ability implements Ability.IToggled {
-    private static final float DAMAGE = 1.0F;
+    private static final float DAMAGE = 10.0F;
+    private static final int STUN = 20;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -103,7 +104,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
             victim.invulnerableTime = 0;
 
             if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker))) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
+                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
 
                 attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
                         SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);

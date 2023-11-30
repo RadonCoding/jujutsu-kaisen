@@ -17,11 +17,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -41,8 +39,11 @@ import java.util.function.Consumer;
 public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public static final double RANGE = 30.0D;
     private static final int COUNT = 16;
-    private static final float COST = 500.0F;
-    private static final float DAMAGE = 15.0F;
+    public static final float MELEE_COST = 10.0F;
+    private static final float RANGE_COST = 500.0F;
+    public static final float MELEE_DAMAGE = 5.0F;
+    private static final float RANGE_DAMAGE = 15.0F;
+    public static final int STUN = 10;
     private static final int DURATION = 3 * 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -119,7 +120,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         float f = this.getPowerForTime(i);
 
         if (pLivingEntity instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), COST * f, COST), false), player);
+            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.cost", JujutsuKaisen.MOD_ID), RANGE_COST * f, RANGE_COST), false), player);
         }
     }
 
@@ -131,7 +132,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
         int i = this.getUseDuration(stack) - count;
         float f = this.getPowerForTime(i);
-        float cost = COST * f;
+        float cost = RANGE_COST * f;
 
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -147,7 +148,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
             Vec3 pos = hit.getBlockPos().getCenter();
 
             for (int j = 0; j < COUNT * f; j++) {
-                JujutsuLightningEntity lightning = new JujutsuLightningEntity(entity, DAMAGE * f);
+                JujutsuLightningEntity lightning = new JujutsuLightningEntity(entity, RANGE_DAMAGE * f);
                 lightning.setPos(pos.add((HelperMethods.RANDOM.nextDouble() - 0.5F) * 5.0D, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5F) * 5.0D));
                 entity.level().addFreshEntity(lightning);
             }
