@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.CloneEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -53,6 +54,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
                 new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), pContext.getModelManager()));
         this.addLayer(new SukunaMarkingsLayer<>(this));
+        this.addLayer(new JJKOverlayLayer<>(this));
 
         this.normal = new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), false);
         this.slim = new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), true);

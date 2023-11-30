@@ -95,7 +95,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             float cost = event.getAmount();
             if (cap.getEnergy() < cost) return;
-            cap.useEnergy(victim, cost);
+            cap.useEnergy(cost);
 
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 

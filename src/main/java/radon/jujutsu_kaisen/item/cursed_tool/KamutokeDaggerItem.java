@@ -138,7 +138,7 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
         if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
             if (cap.getEnergy() < cost) return;
 
-            cap.useEnergy(entity, cost);
+            cap.useEnergy(cost);
         }
 
         BlockHitResult hit = this.getBlockHit(entity);

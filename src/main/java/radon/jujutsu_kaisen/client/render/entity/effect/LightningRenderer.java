@@ -1,19 +1,16 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.effect.LightningEntity;
@@ -35,7 +32,7 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
         if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
 
-        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(owner);
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner);
 
         if (data == null) return;
 

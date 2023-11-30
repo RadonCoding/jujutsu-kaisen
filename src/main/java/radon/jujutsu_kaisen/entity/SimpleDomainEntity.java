@@ -55,7 +55,7 @@ public class SimpleDomainEntity extends Mob {
         AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
 
         if (attribute != null) {
-            attribute.setBaseValue(STRENGTH * cap.getAbilityPower(owner));
+            attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
             this.setHealth(this.getMaxHealth());
         }
     }
@@ -95,7 +95,7 @@ public class SimpleDomainEntity extends Mob {
 
                         if (target != null) {
                             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                            this.hurt(JJKDamageSources.jujutsuAttack(domain, domain.getAbility()), DAMAGE * (1.0F + Math.max(0.0F, targetCap.getAbilityPower(target) - ownerCap.getAbilityPower(owner))));
+                            this.hurt(JJKDamageSources.jujutsuAttack(domain, domain.getAbility()), DAMAGE * (1.0F + Math.max(0.0F, targetCap.getAbilityPower() - ownerCap.getAbilityPower())));
                         }
                     }
                 }

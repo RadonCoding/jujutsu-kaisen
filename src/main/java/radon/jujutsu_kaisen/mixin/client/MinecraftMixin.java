@@ -19,7 +19,7 @@ public class MinecraftMixin {
 
         if (player == null || !player.hasLineOfSight(instance)) return false;
 
-        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(instance);
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(instance);
 
         return data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }

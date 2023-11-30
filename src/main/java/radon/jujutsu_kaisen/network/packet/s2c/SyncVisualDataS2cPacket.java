@@ -11,48 +11,35 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Supplier;
 
-public class SyncSorcererDataS2CPacket {
+public class SyncVisualDataS2cPacket {
+    private final UUID src;
     private final CompoundTag nbt;
 
-    public SyncSorcererDataS2CPacket(CompoundTag nbt) {
+    public SyncVisualDataS2cPacket(UUID src, CompoundTag nbt) {
+        this.src = src;
         this.nbt = nbt;
     }
 
-    public SyncSorcererDataS2CPacket(FriendlyByteBuf buf) {
-        this(buf.readNbt());
+    public SyncVisualDataS2cPacket(FriendlyByteBuf buf) {
+        this(buf.readUUID(), buf.readNbt());
     }
 
     public void encode(FriendlyByteBuf buf) {
+        buf.writeUUID(this.src);
         buf.writeNbt(this.nbt);
     }
 
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
 
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Player player = ClientWrapper.getPlayer();
-
-            assert player != null;
-
-            ISorcererData oldCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            ISorcererData newCap = new SorcererData();
-            newCap.deserializeNBT(this.nbt);
-
-            Set<Ability> oldToggled = oldCap.getToggled();
-            Set<Ability> newToggled = newCap.getToggled();
-
-            oldToggled.removeAll(newToggled);
-
-            for (Ability ability : oldToggled) {
-                oldCap.toggle(ability);
-            }
-            oldCap.deserializeNBT(this.nbt);
-        }));
+        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                ClientVisualHandler.receive(this.src, ClientVisualHandler.VisualData.deserializeNBT(this.nbt))));
         ctx.setPacketHandled(true);
     }
 }

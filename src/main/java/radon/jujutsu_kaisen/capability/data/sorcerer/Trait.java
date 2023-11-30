@@ -10,7 +10,8 @@ public enum Trait {
     SIX_EYES,
     HEAVENLY_RESTRICTION,
     REVERSE_CURSED_TECHNIQUE,
-    VESSEL(JJKAbilities.SWITCH.get());
+    VESSEL(JJKAbilities.SWITCH.get()),
+    PERFECT_BODY;
 
     private final Ability[] abilities;
 

@@ -68,7 +68,7 @@ public interface ISorcerer {
         if (experience.containsKey(key)) {
             data.setExperience(data.getExperience() * experience.get(key));
         }
-        data.setEnergy(data.getMaxEnergy((LivingEntity) this));
+        data.setEnergy(data.getMaxEnergy());
 
         if (this.canPerformSorcery()) {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {

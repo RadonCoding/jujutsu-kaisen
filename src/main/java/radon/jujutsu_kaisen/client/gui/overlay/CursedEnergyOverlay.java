@@ -28,13 +28,13 @@ public class CursedEnergyOverlay {
             RenderSystem.depthMask(false);
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            Vector3f color = cap.isInZone(mc.player) ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
+            Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
                     ParticleColors.CURSED_ENERGY_SORCERER_COLOR : ParticleColors.CURSED_ENERGY_CURSE_COLOR;
             RenderSystem.setShaderColor(color.x(), color.y(), color.z(), 1.0F);
 
             graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
 
-            float maxEnergy = cap.getMaxEnergy(mc.player);
+            float maxEnergy = cap.getMaxEnergy();
             float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
             graphics.blit(TEXTURE, 20, 33, 0, 9, (int) energyWidth, 7, 93, 16);
 
@@ -45,7 +45,7 @@ public class CursedEnergyOverlay {
             graphics.pose().pushPose();
             graphics.pose().scale(scale, scale, scale);
 
-            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput(mc.player) * 100)),
+            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)),
                     Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
 
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),

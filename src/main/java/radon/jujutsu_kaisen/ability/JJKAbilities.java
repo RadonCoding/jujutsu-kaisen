@@ -233,7 +233,7 @@ public class JJKAbilities {
                     if (ownerCap.getEnergy() < cost) {
                         return;
                     }
-                    ownerCap.useEnergy(owner, cost);
+                    ownerCap.useEnergy(cost);
                 }
 
                 Vec3 pos = owner.position().subtract(owner.getLookAngle()
