@@ -57,6 +57,7 @@ import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -259,13 +260,12 @@ public class JJKEventHandler {
                 } else if (stack.is(JJKItems.KAMUTOKE_DAGGER.get())) {
                     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = attackerCap.getRealPower();
-                            if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(cost);
+                            if (attackerCap.getEnergy() < KamutokeDaggerItem.MELEE_COST) return;
+                            attackerCap.useEnergy(KamutokeDaggerItem.MELEE_COST);
                         }
 
-                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), attackerCap.getRealPower())) {
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2 * 20, 0, false, false, false));
+                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
 
                             attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
                                     SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);

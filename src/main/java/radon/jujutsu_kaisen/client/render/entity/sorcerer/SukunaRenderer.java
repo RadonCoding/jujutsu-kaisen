@@ -90,7 +90,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             if (this.texture == null) {
                 GameProfile profile = pEntity.getPlayer();
 
-                AtomicReference<ResourceLocation> result = new AtomicReference<>(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
+                AtomicReference<ResourceLocation> texture = new AtomicReference<>(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
                 AtomicReference<String> model = new AtomicReference<>(DefaultPlayerSkin.getSkinModelName(profile.getId()));
 
                 try {
@@ -102,7 +102,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
 
                         if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                             ((ISkinManagerAccessor) mc.getSkinManager()).invokeRegisterTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, (pTextureType, pLocation, pProfileTexture) -> {
-                                result.set(pLocation);
+                                texture.set(pLocation);
 
                                 String metadata = pProfileTexture.getMetadata("model");
 
@@ -114,9 +114,9 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
                     });
                 } catch (Exception ignored) {}
 
-                this.texture = result.get();
+                this.texture = texture.get();
                 this.model = model.get().equals("default") ? this.normal : this.slim;
-                return result.get();
+                return texture.get();
             } else {
                 return this.texture;
             }
