@@ -128,6 +128,8 @@ public class Slam extends Ability implements Ability.IChannelened {
 
     @Override
     public void onRelease(LivingEntity owner) {
+        if (!owner.onGround()) return;
+
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (owner.level().isClientSide) return;
