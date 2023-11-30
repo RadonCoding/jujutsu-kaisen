@@ -59,8 +59,8 @@ public class Rika extends Summon<RikaEntity> {
 
                 rika.getCapability(SorcererDataHandler.INSTANCE).ifPresent(summonCap -> {
                     if (summonCap.getEnergy() > AMOUNT) {
-                        ownerCap.addEnergy(owner, AMOUNT);
-                        summonCap.useEnergy(rika, AMOUNT);
+                        ownerCap.addEnergy(AMOUNT);
+                        summonCap.useEnergy(AMOUNT);
 
                         if (owner instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);

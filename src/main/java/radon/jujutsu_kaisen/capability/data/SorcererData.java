@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -33,6 +34,7 @@ import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -41,6 +43,7 @@ import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2cPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -88,7 +91,6 @@ public class SorcererData implements ISorcererData {
 
     private final Set<Trait> traits;
     private final List<DelayedTickEvent> delayedTickEvents;
-    private final List<ScheduledTickEvent> scheduledTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
     private final Set<UUID> domains;
@@ -137,6 +139,8 @@ public class SorcererData implements ISorcererData {
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
 
+    private LivingEntity owner;
+
     public SorcererData() {
         this.domainSize = 1.0F;
 
@@ -158,7 +162,6 @@ public class SorcererData implements ISorcererData {
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
         this.delayedTickEvents = new ArrayList<>();
-        this.scheduledTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
         this.durations = new HashMap<>();
         this.domains = new HashSet<>();
@@ -183,6 +186,13 @@ public class SorcererData implements ISorcererData {
         this.shadowInventory = new ArrayList<>();
     }
 
+    private void sync() {
+        if (!this.owner.level().isClientSide) {
+            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getType());
+            PacketHandler.broadcast(new SyncVisualDataS2cPacket(this.owner.getUUID(), data.serializeNBT()));
+        }
+    }
+
     private void updateCooldowns() {
         Iterator<Map.Entry<Ability, Integer>> iter = this.cooldowns.entrySet().iterator();
 
@@ -199,7 +209,7 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateDurations(LivingEntity owner) {
+    private void updateDurations() {
         Iterator<Map.Entry<Ability, Integer>> iter = this.durations.entrySet().iterator();
 
         while (iter.hasNext()) {
@@ -213,11 +223,11 @@ public class SorcererData implements ISorcererData {
             } else {
                 if (ability instanceof Ability.IToggled) {
                     if (this.hasToggled(ability)) {
-                        this.toggle(owner, ability);
+                        this.toggle(ability);
                     }
                 } else if (ability instanceof Ability.IChannelened) {
                     if (this.isChanneling(ability)) {
-                        this.channel(owner, null);
+                        this.channel(null);
                     }
                 }
                 iter.remove();
@@ -237,46 +247,34 @@ public class SorcererData implements ISorcererData {
                 delayed.remove();
             }
         }
-
-        Iterator<ScheduledTickEvent> scheduled = this.scheduledTickEvents.iterator();
-
-        while (scheduled.hasNext()) {
-            ScheduledTickEvent current = scheduled.next();
-
-            current.tick();
-
-            if (current.run()) {
-                scheduled.remove();
-            }
-        }
     }
 
-    private void updateToggled(LivingEntity owner) {
+    private void updateToggled() {
         List<Ability> remove = new ArrayList<>();
 
         for (Ability ability : new ArrayList<>(this.toggled)) {
-            Ability.Status status = ability.checkStatus(owner);
+            Ability.Status status = ability.checkStatus(this.owner);
 
             if (status == Ability.Status.SUCCESS) {
-                ability.run(owner);
+                ability.run(this.owner);
             } else if (status == Ability.Status.UNUSUABLE || !((Ability.IToggled) ability).isPassive()) {
                 remove.add(ability);
             }
         }
 
         for (Ability ability : remove) {
-            this.toggle(owner, ability);
+            this.toggle(ability);
         }
     }
 
-    private void updateChanneled(LivingEntity owner) {
+    private void updateChanneled() {
         if (this.channeled != null) {
-            Ability.Status status = this.channeled.checkStatus(owner);
+            Ability.Status status = this.channeled.checkStatus(this.owner);
 
             if (status == Ability.Status.SUCCESS) {
-                this.channeled.run(owner);
+                this.channeled.run(this.owner);
             } else {
-                this.channel(owner, this.channeled);
+                this.channel(this.channeled);
             }
             this.charge++;
         } else {
@@ -285,8 +283,8 @@ public class SorcererData implements ISorcererData {
     }
 
 
-    private boolean applyModifier(LivingEntity owner, Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
-        AttributeInstance instance = owner.getAttribute(attribute);
+    private boolean applyModifier(Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
+        AttributeInstance instance = this.owner.getAttribute(attribute);
         AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
 
         if (instance != null) {
@@ -306,16 +304,16 @@ public class SorcererData implements ISorcererData {
         return false;
     }
 
-    private void removeModifier(LivingEntity owner, Attribute attribute, UUID identifier) {
-        AttributeInstance instance = owner.getAttribute(attribute);
+    private void removeModifier(Attribute attribute, UUID identifier) {
+        AttributeInstance instance = this.owner.getAttribute(attribute);
 
         if (instance != null) {
             instance.removeModifier(identifier);
         }
     }
 
-    private void updateDomains(LivingEntity owner) {
-        if (owner.level() instanceof ServerLevel level) {
+    private void updateDomains() {
+        if (this.owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.domains.iterator();
 
             while (iter.hasNext()) {
@@ -323,15 +321,15 @@ public class SorcererData implements ISorcererData {
                 Entity entity = level.getEntity(identifier);
 
                 if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
-                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(owner.blockPosition())) {
+                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(this.owner.blockPosition())) {
                     iter.remove();
                 }
             }
         }
     }
 
-    private void updateSummons(LivingEntity owner) {
-        if (owner.level() instanceof ServerLevel level) {
+    private void updateSummons() {
+        if (this.owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.summons.iterator();
 
             while (iter.hasNext()) {
@@ -346,10 +344,10 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateDomain(LivingEntity owner) {
+    private void updateDomain() {
         if (this.domain == null) return;
 
-        if (owner.level() instanceof ServerLevel level) {
+        if (this.owner.level() instanceof ServerLevel level) {
             Entity entity = level.getEntity(this.domain);
 
             if (entity == null || !entity.isAlive() || entity.isRemoved()) {
@@ -444,26 +442,28 @@ public class SorcererData implements ISorcererData {
     }
 
     public void tick(LivingEntity owner) {
-        this.updateDomain(owner);
-        this.updateDomains(owner);
-        this.updateSummons(owner);
+        this.owner = owner;
+        
+        this.updateDomain();
+        this.updateDomains();
+        this.updateSummons();
 
         this.updateCooldowns();
-        this.updateDurations(owner);
+        this.updateDurations();
         this.updateTickEvents();
-        this.updateToggled(owner);
-        this.updateChanneled(owner);
+        this.updateToggled();
+        this.updateChanneled();
 
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
 
-        if (!owner.level().isClientSide) {
+        if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                this.applyModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
-                if (owner.walkDist == owner.walkDistO) {
+                if (this.owner.walkDist == this.owner.walkDistO) {
                     this.noMotionTime++;
                 } else if (this.noMotionTime == 1) {
                     this.noMotionTime = 0;
@@ -473,31 +473,31 @@ public class SorcererData implements ISorcererData {
                     this.resetSpeedStacks();
                 }
             } else {
-                this.removeModifier(owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-                this.removeModifier(owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
+                this.removeModifier(Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+                this.removeModifier(Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+                this.removeModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
             }
 
             if (this.toggled.contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
-                this.applyModifier(owner, Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-                this.applyModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
-                this.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                this.applyModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
+                this.applyModifier(Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
             } else {
-                this.removeModifier(owner, Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID);
-                this.removeModifier(owner, Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID);
-                this.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID);
-                this.removeModifier(owner, Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID);
-                this.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID);
+                this.removeModifier(Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID);
+                this.removeModifier(Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID);
+                this.removeModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID);
+                this.removeModifier(Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID);
+                this.removeModifier(Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID);
             }
         }
 
-        if (owner.level() instanceof ServerLevel level) {
+        if (this.owner.level() instanceof ServerLevel level) {
             this.updateAdaptation(level);
         }
 
-        if (owner instanceof ServerPlayer player) {
+        if (this.owner instanceof ServerPlayer player) {
             if (!this.initialized) {
                 this.initialized = true;
                 this.generate(player);
@@ -509,14 +509,14 @@ public class SorcererData implements ISorcererData {
             this.burnout--;
         }
 
-        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy(owner));
+        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
-        if (this.traits.contains(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-            owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+        if (this.traits.contains(Trait.SIX_EYES) && !this.owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
+            this.owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
         }
 
         if (this.type == JujutsuType.CURSE) {
-            if (owner instanceof Player player) {
+            if (this.owner instanceof Player player) {
                 player.getFoodData().setFoodLevel(20);
             }
         }
@@ -524,53 +524,58 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
 
-            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                owner.setHealth(owner.getMaxHealth());
+            if (this.applyModifier(Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+                this.owner.setHealth(this.owner.getMaxHealth());
             }
 
             double damage = this.getRealPower() * 2.0D;
-            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            this.applyModifier(Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double attack = this.getRealPower() * 0.5D;
-            this.applyModifier(owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
+            this.applyModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.05D;
-            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            this.applyModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(3 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
+            this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
 
-            if (owner.getHealth() < owner.getMaxHealth()) {
-                owner.heal(1.0F / 20);
+            if (this.owner.getHealth() < this.owner.getMaxHealth()) {
+                this.owner.heal(1.0F / 20);
             }
         } else {
-            this.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+            this.removeModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
 
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
-            if (this.applyModifier(owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
-                owner.setHealth(owner.getMaxHealth());
+            if (this.applyModifier(Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+                this.owner.setHealth(this.owner.getMaxHealth());
             }
 
             double damage = this.getRealPower();
-            this.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            this.applyModifier(Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.025D;
-            this.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            this.applyModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
-            owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
+            this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
     }
 
     @Override
-    public float getMaximumOutput(LivingEntity owner) {
-        return this.isInZone(owner) ? 1.2F : 1.0F;
+    public void init(LivingEntity owner) {
+        this.owner = owner;
     }
 
     @Override
-    public void increaseOutput(LivingEntity owner) {
-        this.output = Math.min(this.getMaximumOutput(owner), this.output + 0.1F);
+    public float getMaximumOutput() {
+        return this.isInZone() ? 1.2F : 1.0F;
+    }
+
+    @Override
+    public void increaseOutput() {
+        this.output = Math.min(this.getMaximumOutput(), this.output + 0.1F);
     }
 
     @Override
@@ -723,13 +728,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public float getOutput(LivingEntity owner) {
-        return Math.min(this.getMaximumOutput(owner), this.output);
+    public float getOutput() {
+        return Math.min(this.getMaximumOutput(), this.output);
     }
 
     @Override
-    public float getAbilityPower(LivingEntity owner) {
-        return HelperMethods.getPower(this.experience) * this.getOutput(owner);
+    public float getAbilityPower() {
+        return HelperMethods.getPower(this.experience) * this.getOutput();
     }
 
     @Override
@@ -748,16 +753,16 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean addExperience(LivingEntity owner, float amount) {
+    public boolean addExperience(float amount) {
         SorcererGrade previous = HelperMethods.getGrade(this.experience);
 
         this.experience += amount;
 
         SorcererGrade current = HelperMethods.getGrade(this.experience);
 
-        if (!owner.level().isClientSide && owner instanceof Player) {
+        if (!this.owner.level().isClientSide && this.owner instanceof Player) {
             if (previous != current) {
-                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
+                this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
             }
         }
 
@@ -783,6 +788,18 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public Set<CursedTechnique> getTechniques() {
+        Set<CursedTechnique> techniques = new HashSet<>();
+
+        if (this.getTechnique() != null) techniques.add(this.getTechnique());
+        if (this.getCurrentCopied() != null) techniques.add(this.getCurrentCopied());
+        if (this.getCurrentAbsorbed() != null) techniques.add(this.getCurrentAbsorbed());
+        if (this.getAdditional() != null) techniques.add(this.getAdditional());
+
+        return techniques;
+    }
+
+    @Override
     public boolean hasTechnique(CursedTechnique technique) {
         return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique;
     }
@@ -790,6 +807,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setTechnique(@Nullable CursedTechnique technique) {
         this.technique = technique;
+        this.sync();
     }
 
     @Override
@@ -815,16 +833,19 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addTrait(Trait trait) {
         this.traits.add(trait);
+        this.sync();
     }
 
     @Override
     public void addTraits(List<Trait> traits) {
         this.traits.addAll(traits);
+        this.sync();
     }
 
     @Override
     public void removeTrait(Trait trait) {
         this.traits.remove(trait);
+        this.sync();
     }
 
     @Override
@@ -836,11 +857,13 @@ public class SorcererData implements ISorcererData {
     public void setTraits(Set<Trait> traits) {
         this.traits.clear();
         this.traits.addAll(traits);
+        this.sync();
     }
 
     @Override
     public void setType(JujutsuType type) {
         this.type = type;
+        this.sync();
     }
 
     @Override
@@ -848,23 +871,24 @@ public class SorcererData implements ISorcererData {
         return this.type;
     }
 
-    public void toggle(LivingEntity owner, Ability ability) {
-        if (!owner.level().isClientSide && owner instanceof Player) {
+    public void toggle(Ability ability) {
+        if (!this.owner.level().isClientSide && this.owner instanceof Player) {
             if (((Ability.IToggled) ability).shouldLog()) {
                 if (this.hasToggled(ability)) {
-                    owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
+                    this.owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
                 } else {
-                    owner.sendSystemMessage(((Ability.IToggled) ability).getEnableMessage());
+                    this.owner.sendSystemMessage(((Ability.IToggled) ability).getEnableMessage());
                 }
             }
         }
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
-            ((Ability.IToggled) ability).onDisabled(owner);
+            ((Ability.IToggled) ability).onDisabled(this.owner);
         } else {
             this.toggled.add(ability);
-            ((Ability.IToggled) ability).onEnabled(owner);
+            ((Ability.IToggled) ability).onEnabled(this.owner);
         }
+        this.sync();
     }
 
     @Override
@@ -878,8 +902,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addCooldown(LivingEntity owner, Ability ability) {
-        this.cooldowns.put(ability, ability.getRealCooldown(owner));
+    public void addCooldown(Ability ability) {
+        this.cooldowns.put(ability, ability.getRealCooldown(this.owner));
     }
 
     @Override
@@ -893,18 +917,10 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addDuration(LivingEntity owner, Ability ability) {
-        this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(owner));
+    public void addDuration(Ability ability) {
+        this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(this.owner));
     }
-
-    @Override
-    public int getRemaining(Ability ability) {
-        if (!this.durations.containsKey(ability)) {
-            return 0;
-        }
-        return this.durations.get(ability);
-    }
-
+    
     @Override
     public void setBurnout(int duration) {
         this.burnout = duration;
@@ -939,13 +955,13 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addEnergy(LivingEntity owner, float amount) {
-        this.energy = Math.min(this.getMaxEnergy(owner), this.energy + amount);
+    public void addEnergy(float amount) {
+        this.energy = Math.min(this.getMaxEnergy(), this.energy + amount);
     }
 
     @Override
-    public float getMaxEnergy(LivingEntity owner) {
-        long time = owner.level().getLevelData().getDayTime();
+    public float getMaxEnergy() {
+        long time = this.owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
         return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
                 ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
@@ -958,8 +974,8 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void useEnergy(LivingEntity owner, float amount) {
-        MinecraftForge.EVENT_BUS.post(new CursedEnergyCostEvent(owner, amount));
+    public void useEnergy(float amount) {
+        MinecraftForge.EVENT_BUS.post(new CursedEnergyCostEvent(this.owner, amount));
         this.energy -= amount;
     }
 
@@ -979,12 +995,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void onBlackFlash(LivingEntity owner) {
-        this.lastBlackFlashTime = owner.level().getGameTime();
+    public void onBlackFlash() {
+        this.lastBlackFlashTime = this.owner.level().getGameTime();
 
-        this.output = this.getMaximumOutput(owner);
+        this.output = this.getMaximumOutput();
 
-        if (owner instanceof ServerPlayer player) {
+        if (this.owner instanceof ServerPlayer player) {
             this.giveAdvancement(player, "black_flash");
         }
     }
@@ -1000,19 +1016,14 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean isInZone(LivingEntity owner) {
-        return owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.HITEN_STAFF.get()) || owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.HITEN_STAFF.get()) ||
-                this.lastBlackFlashTime != -1 && ((owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
+    public boolean isInZone() {
+        return this.owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.HITEN_STAFF.get()) || this.owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.HITEN_STAFF.get()) ||
+                this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override
     public void delayTickEvent(Runnable task, int delay) {
         this.delayedTickEvents.add(new DelayedTickEvent(task, delay));
-    }
-
-    @Override
-    public void scheduleTickEvent(Callable<Boolean> task, int duration) {
-        this.scheduledTickEvents.add(new ScheduledTickEvent(task, duration));
     }
 
     @Override
@@ -1036,6 +1047,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setCurrentCopied(@Nullable CursedTechnique technique) {
         this.currentCopied = this.currentCopied == technique ? null : technique;
+        this.sync();
     }
 
     @Override
@@ -1068,6 +1080,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setCurrentAbsorbed(@Nullable CursedTechnique technique) {
         this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
+        this.sync();
     }
 
     @Override
@@ -1084,9 +1097,9 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void channel(LivingEntity owner, @Nullable Ability ability) {
+    public void channel(@Nullable Ability ability) {
         if (this.channeled != null) {
-            ((Ability.IChannelened) this.channeled).onRelease(owner);
+            ((Ability.IChannelened) this.channeled).onRelease(this.owner);
         }
 
         if (this.channeled == ability) {
@@ -1095,7 +1108,7 @@ public class SorcererData implements ISorcererData {
             this.channeled = ability;
 
             if (this.channeled != null) {
-                ((Ability.IChannelened) this.channeled).onStart(owner);
+                ((Ability.IChannelened) this.channeled).onStart(this.owner);
             }
         }
     }
@@ -1508,7 +1521,7 @@ public class SorcererData implements ISorcererData {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
             }
         }
-        this.energy = this.getMaxEnergy(player);
+        this.energy = this.getMaxEnergy();
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
     }
@@ -1577,6 +1590,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setAdditional(@Nullable CursedTechnique technique) {
         this.additional = technique;
+        this.sync();
     }
 
     @Override

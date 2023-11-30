@@ -19,10 +19,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
-import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -65,7 +63,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"), cancellable = true)
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
-        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(pLivingEntity);
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
 
         if (data != null) {
             for (Ability ability : data.toggled()) {

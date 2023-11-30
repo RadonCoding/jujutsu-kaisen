@@ -181,7 +181,7 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
                 if (ability != null && JJKAbilities.hasToggled(owner, ability)) {
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    cap.toggle(owner, ability);
+                    cap.toggle(ability);
                 }
             }
         }

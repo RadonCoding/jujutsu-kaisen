@@ -192,6 +192,15 @@ public class PacketHandler {
                 .encoder(UncopyAbilityC2SPacket::encode)
                 .consumerMainThread(UncopyAbilityC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SyncVisualDataS2cPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncVisualDataS2cPacket::new)
+                .encoder(SyncVisualDataS2cPacket::encode)
+                .consumerMainThread(SyncVisualDataS2cPacket::handle)
+                .add();
+    }
+
+    public static <MSG> void broadcast(MSG message) {
+        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 
     public static <MSG> void sendToServer(MSG message) {

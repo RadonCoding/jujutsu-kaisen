@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.HeianSukunaEyesLayer;
+import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.DefaultedTurnHeadEntityGeoModel;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;

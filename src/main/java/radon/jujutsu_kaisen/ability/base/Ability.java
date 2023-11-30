@@ -56,7 +56,7 @@ public abstract class Ability {
 
     public static float getPower(Ability ability, LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower(owner) * (ChantHandler.getChant(owner, ability));
+        return cap.getAbilityPower() * (ChantHandler.getChant(owner, ability));
     }
 
     public float getPower(LivingEntity owner) {
@@ -207,14 +207,14 @@ public abstract class Ability {
 
             if (cooldown) {
                 if (this.getRealCooldown(owner) > 0) {
-                    cap.addCooldown(owner, this);
+                    cap.addCooldown(this);
                 }
             }
         }
 
         if (duration) {
             if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
-                cap.addDuration(owner, this);
+                cap.addDuration(this);
             }
         }
         return Status.SUCCESS;
@@ -252,7 +252,7 @@ public abstract class Ability {
             }
 
             if (use) {
-                cap.useEnergy(owner, cost);
+                cap.useEnergy(cost);
             }
         }
         return true;
@@ -280,7 +280,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable() ? cap.getOutput(owner) : 1.0F)));
+        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable() ? cap.getOutput() : 1.0F)));
     }
 
     public interface IDomainAttack {

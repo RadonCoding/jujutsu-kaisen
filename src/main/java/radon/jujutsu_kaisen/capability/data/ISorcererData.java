@@ -24,9 +24,11 @@ import java.util.concurrent.Callable;
 public interface ISorcererData {
     void tick(LivingEntity owner);
 
-    float getMaximumOutput(LivingEntity owner);
+    void init(LivingEntity owner);
 
-    void increaseOutput(LivingEntity owner);
+    float getMaximumOutput();
+
+    void increaseOutput();
 
     void decreaseOutput();
 
@@ -80,9 +82,9 @@ public interface ISorcererData {
 
     Set<String> getChants(Ability ability);
 
-    float getOutput(LivingEntity owner);
+    float getOutput();
 
-    float getAbilityPower(LivingEntity owner);
+    float getAbilityPower();
 
     float getRealPower();
 
@@ -90,7 +92,7 @@ public interface ISorcererData {
 
     void setExperience(float experience);
 
-    boolean addExperience(LivingEntity owner, float amount);
+    boolean addExperience(float amount);
 
     float getDomainSize();
 
@@ -107,6 +109,7 @@ public interface ISorcererData {
     void setAdditional(CursedTechnique technique);
 
     @Nullable CursedTechnique getTechnique();
+    Set<CursedTechnique> getTechniques();
 
     boolean hasTechnique(CursedTechnique technique);
 
@@ -134,22 +137,20 @@ public interface ISorcererData {
 
     JujutsuType getType();
 
-    void toggle(LivingEntity owner, Ability ability);
+    void toggle(Ability ability);
 
     void clearToggled();
 
     Set<Ability> getToggled();
 
-    void addCooldown(LivingEntity owner, Ability ability);
+    void addCooldown(Ability ability);
 
     int getRemainingCooldown(Ability ability);
 
     boolean isCooldownDone(Ability ability);
 
-    void addDuration(LivingEntity owner, Ability ability);
-
-    int getRemaining(Ability ability);
-
+    void addDuration(Ability ability);
+    
     void setBurnout(int duration);
 
     int getBurnout();
@@ -160,15 +161,15 @@ public interface ISorcererData {
 
     void resetBurnout();
 
-    float getMaxEnergy(LivingEntity owner);
+    float getMaxEnergy();
 
     void setMaxEnergy(float maxEnergy);
 
     float getEnergy();
 
-    void addEnergy(LivingEntity owner, float amount);
+    void addEnergy(float amount);
 
-    void useEnergy(LivingEntity owner, float amount);
+    void useEnergy(float amount);
 
     void setEnergy(float energy);
 
@@ -176,18 +177,16 @@ public interface ISorcererData {
 
     void resetExtraEnergy();
 
-    void onBlackFlash(LivingEntity owner);
+    void onBlackFlash();
 
     long getLastBlackFlashTime();
 
     void resetBlackFlash();
 
-    boolean isInZone(LivingEntity owner);
+    boolean isInZone();
 
     void delayTickEvent(Runnable task, int delay);
-
-    void scheduleTickEvent(Callable<Boolean> task, int duration);
-
+    
     void uncopy(CursedTechnique technique);
 
     void copy(@Nullable CursedTechnique technique);
@@ -210,7 +209,7 @@ public interface ISorcererData {
 
     @Nullable Ability getChanneled();
 
-    void channel(LivingEntity owner, @Nullable Ability ability);
+    void channel(@Nullable Ability ability);
 
     boolean isChanneling(Ability ability);
 

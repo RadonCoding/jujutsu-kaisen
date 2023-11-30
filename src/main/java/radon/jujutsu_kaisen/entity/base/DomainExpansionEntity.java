@@ -180,7 +180,7 @@ public abstract class DomainExpansionEntity extends Mob {
 
                     if (simple != null) {
                         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower(owner) * 10.0F);
+                        simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower() * 10.0F);
                     }
                     return false;
                 }
@@ -228,7 +228,7 @@ public abstract class DomainExpansionEntity extends Mob {
         LivingEntity owner = this.getOwner();
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower(owner) * (owner.getHealth() / owner.getMaxHealth());
+        return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
     }
 
     public int getTime() {

@@ -90,7 +90,7 @@ public class Mimicry extends Ability implements Ability.IToggled {
                 attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
                 attackerCap.copy(copied);
-                attackerCap.toggle(attacker, JJKAbilities.MIMICRY.get());
+                attackerCap.toggle(JJKAbilities.MIMICRY.get());
 
                 if (attacker instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);

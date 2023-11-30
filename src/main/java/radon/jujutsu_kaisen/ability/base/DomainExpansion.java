@@ -75,7 +75,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
             if (result && (status == Status.DOMAIN_AMPLIFICATION)) {
                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    cap.toggle(owner, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                    cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }
             return result;

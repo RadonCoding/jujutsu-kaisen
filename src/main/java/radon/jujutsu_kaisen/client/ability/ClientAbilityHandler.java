@@ -196,10 +196,10 @@ public class ClientAbilityHandler {
             if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
                 if (!cap.hasToggled(ability)) {
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                    cap.toggle(owner, ability);
+                    cap.toggle(ability);
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
                 } else {
-                    cap.toggle(owner, ability);
+                    cap.toggle(ability);
                 }
             }
             return status;
@@ -207,7 +207,7 @@ public class ClientAbilityHandler {
             Ability.Status status;
 
             if (isSuccess(ability, status = ability.checkChannelable(owner)) || cap.isChanneling(ability)) {
-                cap.channel(owner, ability);
+                cap.channel(ability);
             }
             return status;
         }

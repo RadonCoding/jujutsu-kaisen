@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,7 +43,6 @@ public class ClientVisualHandler {
     private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
     private static final Map<UUID, VisualData> synced = new HashMap<>();
-    private static final Map<UUID, Long> times = new HashMap<>();
 
     public static void receive(UUID identifier, VisualData data) {
         Minecraft mc = Minecraft.getInstance();
@@ -48,7 +50,6 @@ public class ClientVisualHandler {
         if (mc.level == null) return;
 
         synced.put(identifier, data);
-        times.put(identifier, mc.level.getGameTime());
     }
 
     @Nullable
@@ -57,7 +58,7 @@ public class ClientVisualHandler {
     }
 
     @Nullable
-    public static VisualData getOrRequest(Entity entity) {
+    public static VisualData get(Entity entity) {
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 
         Minecraft mc = Minecraft.getInstance();
@@ -65,9 +66,6 @@ public class ClientVisualHandler {
         if (mc.level == null || mc.player == null) return null;
 
         if (synced.containsKey(entity.getUUID())) {
-            if (mc.level.getGameTime() - times.get(entity.getUUID()) >= 20) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(synced.get(entity.getUUID()).serializeNBT(), entity.getUUID()));
-            }
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -82,46 +80,70 @@ public class ClientVisualHandler {
 
                 return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
             }
-        } else {
-            if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(new CompoundTag(), entity.getUUID()));
-            }
         }
         return null;
     }
 
-    public static void render(EntityModel<?> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight, LivingEntity entity) {
-        if (synced.containsKey(entity.getUUID())) {
-            VisualData data = synced.get(entity.getUUID());
+    public static <T extends LivingEntity> void renderOverlay(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        VisualData data = get(entity);
 
-            if (data.traits.contains(Trait.SIX_EYES)) {
-                VertexConsumer consumer = buffer.getBuffer(SIX_EYES);
-                model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-                        1.0F, 1.0F, 1.0F, 1.0F);
+        if (data == null) return;
+
+        if (data.traits().contains(Trait.SIX_EYES)) {
+            VertexConsumer consumer = buffer.getBuffer(SIX_EYES);
+            model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+                    1.0F, 1.0F, 1.0F, 1.0F);
+        }
+        if (data.traits.contains(Trait.PERFECT_BODY)) {
+            if (model instanceof PlayerModel<T> humanoid) {
+                VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
+
+                poseStack.pushPose();
+                poseStack.translate(0.0F, 0.2F, 0.0F);
+
+                humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
+                humanoid.rightArm.zRot += humanoid.rightArm.xRot * 0.5F - ((float) Math.PI / 20.0F);
+                humanoid.rightArm.copyFrom(humanoid.rightArm);
+                humanoid.rightArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+
+                humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
+                humanoid.leftArm.zRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI / 20.0F);
+                humanoid.leftSleeve.copyFrom(humanoid.leftArm);
+                humanoid.leftArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+
+                poseStack.popPose();
             }
-            if (data.techniques.contains(CursedTechnique.CURSED_SPEECH)) {
-                VertexConsumer consumer = buffer.getBuffer(INUMAKI);
-                model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
-                        1.0F, 1.0F, 1.0F, 1.0F);
-            }
-        } else {
-            if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                PacketHandler.sendToServer(new RequestVisualDataC2SPacket(new CompoundTag(), entity.getUUID()));
-            }
+        }
+        if (data.techniques().contains(CursedTechnique.CURSED_SPEECH)) {
+            VertexConsumer consumer = buffer.getBuffer(INUMAKI);
+            model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
+                    1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 
     @SubscribeEvent
-    public static void onEntityRemoved(EntityLeaveLevelEvent event) {
+    public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
         synced.remove(event.getEntity().getUUID());
-        times.remove(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.getConnection() == null) return;
+
+        Entity entity = event.getEntity();
+
+        if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
+        }
     }
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
 
-        VisualData data = getOrRequest(entity);
+        VisualData data = get(entity);
 
         if (data == null) return;
 
@@ -134,7 +156,7 @@ public class ClientVisualHandler {
 
         if (player == null) return;
 
-        VisualData data = getOrRequest(player);
+        VisualData data = get(player);
 
         if (data == null) return;
 

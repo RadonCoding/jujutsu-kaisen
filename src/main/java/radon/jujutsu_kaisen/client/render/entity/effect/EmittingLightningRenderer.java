@@ -32,7 +32,7 @@ public class EmittingLightningRenderer extends EntityRenderer<LightningEntity> {
 
         if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
 
-        ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(owner);
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner);
 
         if (data == null) return;
 

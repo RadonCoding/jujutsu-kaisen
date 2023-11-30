@@ -147,7 +147,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         if (owner != null) {
             if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                cap.toggle(owner, JJKAbilities.WHEEL.get());
+                cap.toggle(JJKAbilities.WHEEL.get());
             }
         }
     }

@@ -4,6 +4,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -14,16 +15,12 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 
 public class SorcererDataHandler {
     public static Capability<ISorcererData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
 
-    public static void attach(AttachCapabilitiesEvent<Entity> event) {
-        SorcererDataProvider provider = new SorcererDataProvider();
-        event.addCapability(SorcererDataProvider.IDENTIFIER, provider);
-    }
-
-    private static class SorcererDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    public static class SorcererDataProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
         public static ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "sorcerer_data");
 
         private ISorcererData cap = null;

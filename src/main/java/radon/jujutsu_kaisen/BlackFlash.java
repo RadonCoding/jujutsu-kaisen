@@ -49,13 +49,13 @@ public class BlackFlash {
                 if (lastBlackFlashTime == 0 || seconds > 1) {
                     int rng = 150 - (HelperMethods.getGrade(cap.getExperience()).ordinal() * 5);
 
-                    if (HelperMethods.RANDOM.nextInt(rng / (cap.isInZone(owner) ? 2 : 1)) != 0) {
+                    if (HelperMethods.RANDOM.nextInt(rng / (cap.isInZone() ? 2 : 1)) != 0) {
                         return;
                     }
                 } else {
                     return;
                 }
-                cap.onBlackFlash(owner);
+                cap.onBlackFlash();
 
                 if (owner instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

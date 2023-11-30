@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.entity.YujiItadoriModel;
 import radon.jujutsu_kaisen.entity.sorcerer.YujiItadoriEntity;
 
@@ -18,6 +19,7 @@ public class YujiItadoriRenderer extends HumanoidMobRenderer<YujiItadoriEntity, 
 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(YujiItadoriModel.INNER_LAYER)),
                 new HumanoidModel<>(pContext.bakeLayer(YujiItadoriModel.OUTER_LAYER)), pContext.getModelManager()));
+        this.addLayer(new JJKOverlayLayer<>(this));
     }
 
     @Override

@@ -152,7 +152,7 @@ public class ExperienceHandler {
 
             if (amount < 0.1F) return;
 
-            if (ownerCap.addExperience(owner, amount)) {
+            if (ownerCap.addExperience(amount)) {
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), amount));
                 }

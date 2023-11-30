@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -134,7 +135,7 @@ public class JJKEventHandler {
             newCap.deserializeNBT(oldCap.serializeNBT());
 
             if (event.isWasDeath()) {
-                newCap.setEnergy(newCap.getMaxEnergy(player));
+                newCap.setEnergy(newCap.getMaxEnergy());
                 newCap.resetCooldowns();
                 newCap.resetBurnout();
                 newCap.clearToggled();
@@ -154,7 +155,12 @@ public class JJKEventHandler {
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof LivingEntity entity) {
                 if (entity instanceof Player || entity instanceof ISorcerer) {
-                    SorcererDataHandler.attach(event);
+                    SorcererDataHandler.SorcererDataProvider provider = new SorcererDataHandler.SorcererDataProvider();
+
+                    ISorcererData cap = provider.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cap.init(entity);
+
+                    event.addCapability(SorcererDataHandler.SorcererDataProvider.IDENTIFIER, provider);
                 }
             }
         }
@@ -255,7 +261,7 @@ public class JJKEventHandler {
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
                             float cost = attackerCap.getRealPower();
                             if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(attacker, cost);
+                            attackerCap.useEnergy(cost);
                         }
 
                         if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), attackerCap.getRealPower())) {
@@ -288,7 +294,7 @@ public class JJKEventHandler {
 
                         for (Ability ability : toggled) {
                             if (!attackerCap.isAdaptedTo(ability)) continue;
-                            victimCap.toggle(victim, ability);
+                            victimCap.toggle(ability);
                         }
 
                         if (victim instanceof ServerPlayer player) {
@@ -428,7 +434,7 @@ public class JJKEventHandler {
                 if (owner instanceof Mob) {
                     List<String> chants = new ArrayList<>(cap.getChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy(owner))))) == 0) {
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy())))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ChantHandler.onChant(owner, chants.get(i));
 

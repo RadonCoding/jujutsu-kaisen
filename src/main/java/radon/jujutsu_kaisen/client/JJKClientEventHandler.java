@@ -135,7 +135,7 @@ public class JJKClientEventHandler {
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {
                     ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     PacketHandler.sendToServer(new ChangeOutputC2SPacket(ChangeOutputC2SPacket.INCREASE));
-                    cap.increaseOutput(mc.player);
+                    cap.increaseOutput();
                 }
                 if (JJKKeys.DECREASE_OUTPUT.isDown()) {
                     ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -153,7 +153,7 @@ public class JJKClientEventHandler {
 
             LivingEntity target = event.getEntity();
 
-            ClientVisualHandler.VisualData data = ClientVisualHandler.getOrRequest(target);
+            ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
 
             if (data == null) return;
 

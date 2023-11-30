@@ -72,7 +72,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
             if (cap.getEnergy() < cost) return;
 
-            cap.useEnergy(owner, cost);
+            cap.useEnergy(cost);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
@@ -113,7 +113,7 @@ public class VeilRodBlockEntity extends BlockEntity {
                             ISorcererData veilCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                             ISorcererData domainCap = opponent.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                            if (domainCap.getAbilityPower(opponent) < veilCap.getAbilityPower(owner)) continue;
+                            if (domainCap.getAbilityPower() < veilCap.getAbilityPower()) continue;
 
                             if (domain.isInsideBarrier(pos)) {
                                 if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {

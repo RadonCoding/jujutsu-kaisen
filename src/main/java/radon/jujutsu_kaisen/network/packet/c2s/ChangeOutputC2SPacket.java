@@ -37,7 +37,7 @@ public class ChangeOutputC2SPacket {
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (this.direction == INCREASE) {
-                cap.increaseOutput(sender);
+                cap.increaseOutput();
             } else {
                 cap.decreaseOutput();
             }
