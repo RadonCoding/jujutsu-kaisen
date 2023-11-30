@@ -13,7 +13,6 @@
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
-    "client.IHumanoidModelAccessor",
     "client.IPlayerModelAccessor",
     "client.IPostChainAccessor",
     "client.ISkinManagerAccessor",
