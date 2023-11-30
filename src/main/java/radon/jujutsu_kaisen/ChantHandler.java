@@ -1,12 +1,17 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.checkerframework.checker.units.qual.A;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -102,6 +107,20 @@ public class ChantHandler {
 
             while (iter.hasNext()) {
                 Map.Entry<UUID, Integer> entry = iter.next();
+
+                Entity owner = null;
+
+                for (ServerLevel level : event.getServer().getAllLevels()) {
+                    if ((owner = level.getEntity(entry.getKey())) == null) break;
+                }
+
+                if (owner == null) continue;
+
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                Ability ability = cap.getAbility(new LinkedHashSet<>(messages.get(entry.getKey())));
+
+                if (cap.isChanneling(ability)) continue;
 
                 int remaining = entry.getValue();
 

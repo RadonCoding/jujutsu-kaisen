@@ -22,8 +22,7 @@ import java.util.List;
 
 public class DisasterFlames extends Ability {
     private static final double AOE_RANGE = 5.0D;
-    private static final double DIRECT_RANGE = 1.0D;
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 10.0F;
 
     @Override
     public boolean isScalable() {
@@ -35,24 +34,9 @@ public class DisasterFlames extends Ability {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
     }
 
-
-
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
-    }
-
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        LivingEntity result = null;
-
-        if (owner instanceof Player) {
-            if (HelperMethods.getLookAtHit(owner, DIRECT_RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-                if (owner.canAttack(target)) {
-                    result = target;
-                }
-            }
-        }
-        return result;
     }
 
     private void spawnParticles(Entity entity, int count) {
@@ -74,14 +58,6 @@ public class DisasterFlames extends Ability {
         }
     }
 
-    @Override
-    public Status checkTriggerable(LivingEntity owner) {
-        if (this.getTarget(owner) == null && this.getTargets(owner).isEmpty()) {
-            return Status.FAILURE;
-        }
-        return super.checkTriggerable(owner);
-    }
-
     private List<Entity> getTargets(LivingEntity owner) {
         List<Entity> entities = owner.level().getEntities(owner, owner.getBoundingBox().inflate(AOE_RANGE));
         entities.removeIf(entity -> (entity instanceof LivingEntity living && !owner.canAttack(living)));
@@ -94,23 +70,12 @@ public class DisasterFlames extends Ability {
 
         if (owner.level().isClientSide) return;
 
-        LivingEntity target = this.getTarget(owner);
+        for (Entity entity : this.getTargets(owner)) {
+            entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
-        if (target == null) {
-            for (Entity entity : this.getTargets(owner)) {
-                entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner))) {
-                    entity.setSecondsOnFire(5);
-                    this.spawnParticles(entity, 32);
-                }
-            }
-        } else {
-            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-
-            if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), (DAMAGE * 2) * this.getPower(owner))) {
-                target.setSecondsOnFire(10);
-                this.spawnParticles(target, 64);
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner) * (float) (entity.distanceTo(owner) / AOE_RANGE))) {
+                entity.setSecondsOnFire(5);
+                this.spawnParticles(entity, 32);
             }
         }
     }

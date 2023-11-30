@@ -79,11 +79,6 @@ public class Volcano extends Ability {
     }
 
     @Override
-    public int getCooldown() {
-        return 5 * 20;
-    }
-
-    @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }

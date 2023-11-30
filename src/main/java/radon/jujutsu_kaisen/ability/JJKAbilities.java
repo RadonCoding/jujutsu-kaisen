@@ -213,7 +213,7 @@ public class JJKAbilities {
 
     public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return 50.0F * HelperMethods.getPower(grade.getRequiredExperience()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+        return 50.0F * HelperMethods.getPower(grade.getRequiredExperience());
     }
 
     public static void summonCurse(LivingEntity owner, EntityType<?> type, int count) {
@@ -227,7 +227,7 @@ public class JJKAbilities {
 
         for (int i = 0; i < count; i++) {
             if (type.create(owner.level()) instanceof CursedSpirit curse) {
-                float cost = getCurseCost(owner, curse.getGrade());
+                float cost = getCurseCost(owner, curse.getGrade()) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
 
                 if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                     if (ownerCap.getEnergy() < cost) {

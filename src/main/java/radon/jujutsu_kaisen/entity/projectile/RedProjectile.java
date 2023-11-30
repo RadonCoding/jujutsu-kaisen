@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -90,7 +89,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         if (this.level().isClientSide) return;
 
-        this.playSound(JJKSounds.RED.get(), 3.0F, 1.0F);
+        this.playSound(JJKSounds.RED_EXPLOSION.get(), 3.0F, 1.0F);
 
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());

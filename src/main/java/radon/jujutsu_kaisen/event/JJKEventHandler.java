@@ -260,8 +260,9 @@ public class JJKEventHandler {
                 } else if (stack.is(JJKItems.KAMUTOKE_DAGGER.get())) {
                     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            if (attackerCap.getEnergy() < KamutokeDaggerItem.MELEE_COST) return;
-                            attackerCap.useEnergy(KamutokeDaggerItem.MELEE_COST);
+                            float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                            if (attackerCap.getEnergy() < cost) return;
+                            attackerCap.useEnergy(cost);
                         }
 
                         if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {

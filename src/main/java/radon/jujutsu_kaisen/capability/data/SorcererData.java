@@ -723,6 +723,14 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public @Nullable Ability getAbility(Set<String> chants) {
+        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+            if (entry.getValue().equals(chants)) return entry.getKey();
+        }
+        return null;
+    }
+
+    @Override
     public Set<String> getChants(Ability ability) {
         return this.chants.getOrDefault(ability, Set.of());
     }
