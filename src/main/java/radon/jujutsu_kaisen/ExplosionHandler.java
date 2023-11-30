@@ -11,6 +11,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -80,11 +84,39 @@ public class ExplosionHandler {
                             BlockState state = event.level.getBlockState(pos);
 
                             for (Entity entity : HelperMethods.getEntityCollisions(event.level, new AABB(pos).inflate(1.0D))) {
-                                entity.setDeltaMovement(explosion.position.subtract(entity.position()).reverse());
-                                entity.hurtMarked = true;
+                                if (!entity.ignoreExplosion()) {
+                                    double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / explosion.radius;
 
-                                entity.hurt(explosion.source, explosion.radius * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
-                                        entity == explosion.instigator ? 0.5F : 1.0F) * explosion.damage);
+                                    if (d12 <= 1.0D) {
+                                        double d5 = entity.getX() - explosion.position.x();
+                                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y();
+                                        double d9 = entity.getZ() - explosion.position.z();
+                                        double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+
+                                        if (d13 != 0.0D) {
+                                            d5 /= d13;
+                                            d7 /= d13;
+                                            d9 /= d13;
+                                            double d14 = Explosion.getSeenPercent(explosion.position, entity);
+                                            double d10 = (1.0D - d12) * d14;
+                                            entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)explosion.radius + 1.0D)) * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
+                                                    entity == explosion.instigator ? 0.5F : 1.0F) * explosion.damage);
+
+                                            double d11;
+
+                                            if (entity instanceof LivingEntity living) {
+                                                d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
+                                            } else {
+                                                d11 = d10;
+                                            }
+                                            d5 *= d11;
+                                            d7 *= d11;
+                                            d9 *= d11;
+                                            Vec3 vec31 = new Vec3(d5, d7, d9);
+                                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
+                                        }
+                                    }
+                                }
                             }
 
                             if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {

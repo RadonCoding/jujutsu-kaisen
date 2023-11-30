@@ -32,6 +32,16 @@ public class HelperMethods {
     public static final Random RANDOM = new Random();
     private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
 
+    public static Vec3 calculateViewVector(float yaw, float pitch) {
+        float f = pitch * ((float) Math.PI / 180.0F);
+        float f1 = -yaw * ((float) Math.PI / 180.0F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
+    }
+
     public static Set<String> getRandomWordCombo(int count) {
         if (count > WORDS.length)
             throw new IllegalArgumentException("Number of words requested exceeds the available word list.");

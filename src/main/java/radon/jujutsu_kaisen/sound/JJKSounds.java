@@ -38,8 +38,8 @@ public class JJKSounds {
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")));
     public static RegistryObject<SoundEvent> BLUE = SOUNDS.register("blue", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")));
-    public static RegistryObject<SoundEvent> RED = SOUNDS.register("red", () ->
-            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")));
+    public static RegistryObject<SoundEvent> RED_EXPLOSION = SOUNDS.register("red_explosion", () ->
+            SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "red_explosion")));
     public static RegistryObject<SoundEvent> SLAM = SOUNDS.register("slam", () ->
             SoundEvent.createVariableRangeEvent(new ResourceLocation(JujutsuKaisen.MOD_ID, "slam")));
     public static RegistryObject<SoundEvent> PURE_LOVE = SOUNDS.register("pure_love", () ->

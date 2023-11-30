@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -126,12 +127,10 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
             Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(),
-                    owner.getEyeY() - (this.getBbHeight() / 2.0F),
-                    owner.getZ())
-                    .add(look)
-                    .add(look.yRot(-90.0F).scale(xOffset))
-                    .add(new Vec3(0.0F, yOffset, 0.0F));
+            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                    .add(HelperMethods.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
+                    .add(HelperMethods.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
+                    .add(look);
             this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
         }
     }

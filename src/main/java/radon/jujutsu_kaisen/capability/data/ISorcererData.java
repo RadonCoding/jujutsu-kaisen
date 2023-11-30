@@ -80,6 +80,8 @@ public interface ISorcererData {
 
     @Nullable Ability getAbility(String chant);
 
+    @Nullable Ability getAbility(Set<String> chants);
+
     Set<String> getChants(Ability ability);
 
     float getOutput();

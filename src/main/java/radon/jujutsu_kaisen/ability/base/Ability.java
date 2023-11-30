@@ -276,7 +276,6 @@ public abstract class Ability {
         if (copied != null && List.of(copied.getAbilities()).contains(this)) {
             cost *= 1.5F;
         }
-
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
