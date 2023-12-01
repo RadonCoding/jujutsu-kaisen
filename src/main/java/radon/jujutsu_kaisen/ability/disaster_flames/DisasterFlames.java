@@ -85,7 +85,7 @@ public class DisasterFlames extends Ability {
 
     @Override
     public int getCooldown() {
-        return 15 * 20;
+        return 10 * 20;
     }
 
     @Override
