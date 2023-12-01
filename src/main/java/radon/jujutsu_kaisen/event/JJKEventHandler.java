@@ -375,13 +375,13 @@ public class JJKEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (event.getSource().getEntity() instanceof LivingEntity attacker) {
+                if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     attackerCap.increaseKills();
                 }
-
-                if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
 

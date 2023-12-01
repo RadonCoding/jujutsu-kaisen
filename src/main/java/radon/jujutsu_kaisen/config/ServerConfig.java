@@ -118,7 +118,7 @@ public class ServerConfig {
                 .defineInRange("sparkSoundThreshold", 200.0F, 1.0F, 10000.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", false);
-        this.perfectBodyKillRequirement = builder.comment("Amount of kills required to achieve the \"Perfect Body\" trait")
+        this.perfectBodyKillRequirement = builder.comment("Amount of sorcerer to kill in order to achieve the \"Perfect Body\" trait")
                 .defineInRange("perfectBodyKillRequirement", 1000, 0, 100000);
 
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
