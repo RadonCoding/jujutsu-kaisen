@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.BurntEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -59,18 +58,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || entity == owner) return;
 
-            if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower())) return;
-
-            if (!entity.isAlive()) {
-                BurntEntity burnt = BurntEntity.create(living);
-                burnt.absMoveTo(living.getX(), living.getY(), living.getZ(), living.getYRot(), living.getXRot());
-                burnt.setYRot(living.getYRot());
-                burnt.setYRot(living.getYRot());
-                burnt.yHeadRot = living.getYRot();
-                burnt.yBodyRot = living.getYRot();
-                burnt.yBodyRotO = living.getYRot();
-                this.level().addFreshEntity(burnt);
-            }
+            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
         }
     }
 
