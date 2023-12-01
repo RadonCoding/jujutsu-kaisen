@@ -46,6 +46,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -378,9 +379,11 @@ public class JJKEventHandler {
                 if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
                 ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    attackerCap.increaseKills();
+                if (HelperMethods.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
+                    if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        attackerCap.increaseKills();
+                    }
                 }
 
                 if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
