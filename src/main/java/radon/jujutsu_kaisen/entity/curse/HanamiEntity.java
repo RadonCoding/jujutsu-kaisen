@@ -78,20 +78,22 @@ public class HanamiEntity extends DisasterCurse {
 
     @Override
     protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        this.entityData.set(DATA_CAST, true);
-
         LivingEntity target = this.getTarget();
 
-        if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+        boolean remove = false;
+
+        if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            remove = true;
+        } else {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                this.entityData.set(DATA_CAST, false);
+            if (HelperMethods.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
+                remove = true;
             }
         }
+        this.entityData.set(DATA_CAST, !remove);
     }
+
 
     private PlayState walkRunPredicate(AnimationState<HanamiEntity> animationState) {
         if (animationState.isMoving()) {
