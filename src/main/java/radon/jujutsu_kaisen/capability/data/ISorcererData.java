@@ -26,6 +26,8 @@ public interface ISorcererData {
 
     void init(LivingEntity owner);
 
+    void increaseKills();
+
     float getMaximumOutput();
 
     void increaseOutput();

@@ -121,6 +121,8 @@ public class SorcererData implements ISorcererData {
     private int speedStacks;
     private int noMotionTime;
 
+    private int kills;
+
     private int fingers;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
@@ -462,7 +464,7 @@ public class SorcererData implements ISorcererData {
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
 
-        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) && !this.traits.contains(Trait.PERFECT_BODY)) {
+        if (this.kills >= ConfigHolder.SERVER.perfectBodyKillRequirement.get() && this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) && !this.traits.contains(Trait.PERFECT_BODY)) {
             this.addTrait(Trait.PERFECT_BODY);
         }
 
@@ -575,6 +577,11 @@ public class SorcererData implements ISorcererData {
     @Override
     public void init(LivingEntity owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public void increaseKills() {
+        this.kills++;
     }
 
     @Override
@@ -1664,6 +1671,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
+        nbt.putInt("kills", this.kills);
         nbt.putInt("fingers", this.fingers);
 
         if (this.domain != null) {
@@ -1909,6 +1917,7 @@ public class SorcererData implements ISorcererData {
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
+        this.kills = nbt.getInt("kills");
         this.fingers = nbt.getInt("fingers");
 
         if (nbt.hasUUID("domain")) {
