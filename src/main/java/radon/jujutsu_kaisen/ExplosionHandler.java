@@ -99,8 +99,7 @@ public class ExplosionHandler {
                                             d9 /= d13;
                                             double d14 = Explosion.getSeenPercent(explosion.position, entity);
                                             double d10 = (1.0D - d12) * d14;
-                                            entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)explosion.radius + 1.0D)) * (explosion.source instanceof JJKDamageSources.JujutsuDamageSource &&
-                                                    entity == explosion.instigator ? 0.5F : 1.0F) * explosion.damage);
+                                            entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)explosion.radius + 1.0D)) * explosion.damage);
 
                                             double d11;
 

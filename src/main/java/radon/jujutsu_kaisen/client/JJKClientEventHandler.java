@@ -379,6 +379,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.BURNT.get(), BurntRenderer::new);
         }
 
         @SubscribeEvent

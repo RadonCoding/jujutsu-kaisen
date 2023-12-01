@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.mixin.client;
 
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +19,10 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Shadow @Final public ModelPart rightArm;
 
+    @Shadow public HumanoidModel.ArmPose rightArmPose;
+
+    @Shadow public HumanoidModel.ArmPose leftArmPose;
+
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     public void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(pEntity);
@@ -25,11 +30,14 @@ public class HumanoidModelMixin<T extends LivingEntity> {
         if (data == null) return;
 
         if (data.traits().contains(Trait.PERFECT_BODY)) {
-            this.rightArm.xRot += this.rightArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
-            this.rightArm.zRot -= this.rightArm.zRot * 0.5F - ((float) Math.PI / 10.0F);
-
-            this.leftArm.xRot += this.leftArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
-            this.leftArm.zRot += this.leftArm.zRot * 0.5F - ((float) Math.PI / 10.0F);
+            if (this.rightArmPose == HumanoidModel.ArmPose.EMPTY || this.rightArmPose == HumanoidModel.ArmPose.ITEM) {
+                this.rightArm.xRot += this.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+                this.rightArm.zRot -= this.rightArm.zRot * 0.5F - ((float) Math.PI * 0.1F);
+            }
+            if (this.leftArmPose == HumanoidModel.ArmPose.EMPTY || this.leftArmPose == HumanoidModel.ArmPose.ITEM) {
+                this.leftArm.xRot += this.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+                this.leftArm.zRot += this.leftArm.zRot * 0.5F - ((float) Math.PI * 0.1F);
+            }
         }
     }
 }

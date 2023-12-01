@@ -82,6 +82,8 @@ public interface ISorcererData {
 
     @Nullable Ability getAbility(Set<String> chants);
 
+    Set<String> getChants();
+
     Set<String> getChants(Ability ability);
 
     float getOutput();
@@ -217,7 +219,7 @@ public interface ISorcererData {
 
     int getCharge();
 
-    void generate(ServerPlayer player);
+    void generate(ServerPlayer owner);
 
     void addSummon(Entity entity);
 

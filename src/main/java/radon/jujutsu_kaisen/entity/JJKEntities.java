@@ -426,7 +426,10 @@ public class JJKEntities {
                     .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
                             .toString()));
-
+    public static RegistryObject<EntityType<BurntEntity>> BURNT = ENTITIES.register("burnt", () ->
+            EntityType.Builder.<BurntEntity>of(BurntEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "burnt")
+                            .toString()));
     @SubscribeEvent
     public static void onCreateEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(TOJI_FUSHIGURO.get(), SorcererEntity.createAttributes().build());
@@ -476,5 +479,6 @@ public class JJKEntities {
         event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
 
         event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
+        event.put(BURNT.get(), BurntEntity.createAttributes().build());
     }
 }
