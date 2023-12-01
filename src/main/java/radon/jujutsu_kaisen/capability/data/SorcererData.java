@@ -462,8 +462,7 @@ public class SorcererData implements ISorcererData {
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
 
-        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) && (this.type != JujutsuType.CURSE || !traits.contains(Trait.PERFECT_BODY))) {
-            this.setType(JujutsuType.CURSE);
+        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) && !this.traits.contains(Trait.PERFECT_BODY)) {
             this.addTrait(Trait.PERFECT_BODY);
         }
 
