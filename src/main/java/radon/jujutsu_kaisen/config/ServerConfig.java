@@ -119,7 +119,7 @@ public class ServerConfig {
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", false);
         this.perfectBodyKillRequirement = builder.comment("Amount of sorcerer to kill in order to achieve the \"Perfect Body\" trait")
-                .defineInRange("perfectBodyKillRequirement", 1000, 0, 100000);
+                .defineInRange("perfectBodyKillRequirement", 100, 0, 100000);
 
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
