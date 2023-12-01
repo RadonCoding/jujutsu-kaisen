@@ -227,7 +227,6 @@ public class MeteorEntity extends JujutsuProjectile {
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
                 int duration = (this.getSize() / 2) * 20;
-                int maximum = duration / 4;
 
                 if (this.onGround()) {
                     this.setNoGravity(true);
@@ -260,7 +259,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 }
 
                 if (this.explosionTime > 0) {
-                    if (this.explosionTime >= maximum) {
+                    if (this.explosionTime >= duration) {
                         this.discard();
                     } else {
                         this.explosionTime++;
