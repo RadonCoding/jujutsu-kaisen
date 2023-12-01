@@ -50,6 +50,16 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         this.moveTo(pos.x(), pos.y(), pos.z(), owner.getXRot(), owner.getYRot());
     }
 
+    @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
+    }
+
     public int getBudCount() {
         return this.entityData.get(DATA_BUD_COUNT);
     }

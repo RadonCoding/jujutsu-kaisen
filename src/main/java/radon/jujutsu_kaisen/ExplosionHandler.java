@@ -112,7 +112,7 @@ public class ExplosionHandler {
                                             d7 *= d11;
                                             d9 *= d11;
                                             Vec3 vec31 = new Vec3(d5, d7, d9);
-                                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
+                                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31).normalize());
                                         }
                                     }
                                 }
