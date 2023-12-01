@@ -10,6 +10,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
@@ -19,6 +21,10 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class HeianSukunaEntity extends SukunaEntity {
     private static final EntityDataAccessor<Boolean> DATA_IDLE = SynchedEntityData.defineId(HeianSukunaEntity.class, EntityDataSerializers.BOOLEAN);
@@ -106,5 +112,12 @@ public class HeianSukunaEntity extends SukunaEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run/Sit", this::walkRunSitPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
+    }
+
+    @Override
+    public @NotNull List<Trait> getTraits() {
+        List<Trait> traits = new ArrayList<>(super.getTraits());
+        traits.add(Trait.PERFECT_BODY);
+        return traits;
     }
 }
