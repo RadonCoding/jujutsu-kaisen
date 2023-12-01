@@ -28,7 +28,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class DivergentFist extends Ability {
     private static final float DAMAGE = 10.0F;
     private static final double RANGE = 3.0D;
-    private static final double LAUNCH_POWER = 5.0D;
+    private static final double LAUNCH_POWER = 3.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
