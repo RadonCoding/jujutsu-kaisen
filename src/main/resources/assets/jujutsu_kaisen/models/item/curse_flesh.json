@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "jujutsu_kaisen:item/cursed_flesh"
+    "layer0": "jujutsu_kaisen:item/curse_flesh"
   }
 }

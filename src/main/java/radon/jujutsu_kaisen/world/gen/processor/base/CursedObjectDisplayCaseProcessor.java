@@ -52,7 +52,11 @@ public abstract class CursedObjectDisplayCaseProcessor extends StructureProcesso
 
         if (pBlockInfo.state().is(JJKBlocks.DISPLAY_CASE.get())) {
             if (pBlockInfo.nbt() != null) {
-                pBlockInfo.nbt().put("stack", getRandomCursedObject(level).save(new CompoundTag()));
+                ItemStack stack = getRandomCursedObject(level);
+                System.out.println(stack);
+                pBlockInfo.nbt().put("stack", stack.save(new CompoundTag()));
+            } else {
+                throw new RuntimeException();
             }
         }
         return super.process(pLevel, p_74417_, pPos, pBlockInfo, pRelativeBlockInfo, pSettings, template);

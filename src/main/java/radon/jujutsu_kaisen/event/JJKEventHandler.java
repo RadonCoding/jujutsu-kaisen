@@ -61,6 +61,7 @@ import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.item.CursedEnergyFleshItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -382,12 +383,16 @@ public class JJKEventHandler {
             switch (victimCap.getType()) {
                 case SORCERER -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sorcererFleshRarity.get()) == 0) {
-                        victim.spawnAtLocation(JJKItems.SORCERER_FLESH.get());
+                        ItemStack stack = new ItemStack(JJKItems.SORCERER_FLESH.get());
+                        CursedEnergyFleshItem.setGrade(stack, HelperMethods.getGrade(victimCap.getExperience()));
+                        victim.spawnAtLocation(stack);
                     }
                 }
                 case CURSE -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseFleshRarity.get()) == 0) {
-                        victim.spawnAtLocation(JJKItems.CURSE_FLESH.get());
+                        ItemStack stack = new ItemStack(JJKItems.CURSE_FLESH.get());
+                        CursedEnergyFleshItem.setGrade(stack, HelperMethods.getGrade(victimCap.getExperience()));
+                        victim.spawnAtLocation(stack);
                     }
                 }
             }
