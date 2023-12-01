@@ -33,6 +33,8 @@ import java.util.Optional;
 public class CuriosEventHandler {
     @SubscribeEvent
     public void onCuriosEquip(CurioEquipEvent event) {
+        if (!JJKAbilities.hasTrait(event.getEntity(), Trait.PERFECT_BODY)) return;
+
         if (event.getSlotContext().identifier().equals("right_hand") || event.getSlotContext().identifier().equals("left_hand")) {
             event.setResult(Event.Result.ALLOW);
         }
