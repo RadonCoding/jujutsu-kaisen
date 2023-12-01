@@ -58,13 +58,52 @@ public class ExplosionHandler {
             if (explosion.age == 0) {
                 event.level.playSound(null, explosion.position.x(), explosion.position.y(), explosion.position.z(),
                         SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 10.0F, 1.0F);
-                AABB bounds = new AABB(explosion.position.x() - (explosion.radius * 2.0F), explosion.position.y() - (explosion.radius * 2.0F),
-                        explosion.position.z() - (explosion.radius * 2.0F),
-                        explosion.position.x() + (explosion.radius * 2.0F), explosion.position.y() + (explosion.radius * 2.0F),
-                        explosion.position.z() + (explosion.radius * 2.0F));
+                AABB bounds = new AABB(explosion.position.x() - (radius * 2.0F), explosion.position.y() - (radius * 2.0F),
+                        explosion.position.z() - (radius * 2.0F),
+                        explosion.position.x() + (radius * 2.0F), explosion.position.y() + (radius * 2.0F),
+                        explosion.position.z() + (radius * 2.0F));
 
                 for (ServerPlayer player : event.level.getEntitiesOfClass(ServerPlayer.class, bounds)) {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
+                }
+            }
+
+
+            for (Entity entity : HelperMethods.getEntityCollisions(event.level, AABB.ofSize(explosion.position, radius * 2, radius * 2, radius * 2))) {
+                if (!explosion.hurtsInstigator && entity == explosion.instigator) continue;
+                if (Math.sqrt(entity.distanceToSqr(explosion.position)) > radius) continue;
+                
+                if (!entity.ignoreExplosion()) {
+                    double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / radius;
+
+                    if (d12 <= 1.0D) {
+                        double d5 = entity.getX() - explosion.position.x();
+                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y();
+                        double d9 = entity.getZ() - explosion.position.z();
+                        double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+
+                        if (d13 != 0.0D) {
+                            d5 /= d13;
+                            d7 /= d13;
+                            d9 /= d13;
+                            double d14 = Explosion.getSeenPercent(explosion.position, entity);
+                            double d10 = (1.0D - d12) * d14;
+                            entity.hurt(explosion.source, (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) radius + 1.0D)) * explosion.damage);
+
+                            double d11;
+
+                            if (entity instanceof LivingEntity living) {
+                                d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
+                            } else {
+                                d11 = d10;
+                            }
+                            d5 *= d11;
+                            d7 *= d11;
+                            d9 *= d11;
+                            Vec3 vec31 = new Vec3(d5, d7, d9);
+                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31).normalize());
+                        }
+                    }
                 }
             }
 
@@ -80,43 +119,6 @@ public class ExplosionHandler {
                         if (distance <= adjusted * adjusted) {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
-
-                            for (Entity entity : HelperMethods.getEntityCollisions(event.level, AABB.ofSize(pos.getCenter(), 1.0D, 1.0D, 1.0D))) {
-                                if (!explosion.hurtsInstigator && entity == explosion.instigator) continue;
-
-                                if (!entity.ignoreExplosion()) {
-                                    double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / explosion.radius;
-
-                                    if (d12 <= 1.0D) {
-                                        double d5 = entity.getX() - explosion.position.x();
-                                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y();
-                                        double d9 = entity.getZ() - explosion.position.z();
-                                        double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
-
-                                        if (d13 != 0.0D) {
-                                            d5 /= d13;
-                                            d7 /= d13;
-                                            d9 /= d13;
-                                            double d14 = Explosion.getSeenPercent(explosion.position, entity);
-                                            double d10 = (1.0D - d12) * d14;
-                                            entity.hurt(explosion.source, (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) explosion.radius + 1.0D)) * explosion.damage);
-
-                                            double d11;
-
-                                            if (entity instanceof LivingEntity living) {
-                                                d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
-                                            } else {
-                                                d11 = d10;
-                                            }
-                                            d5 *= d11;
-                                            d7 *= d11;
-                                            d9 *= d11;
-                                            Vec3 vec31 = new Vec3(d5, d7, d9);
-                                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31).normalize());
-                                        }
-                                    }
-                                }
-                            }
 
                             if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
                                 if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

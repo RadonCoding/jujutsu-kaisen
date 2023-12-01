@@ -73,27 +73,29 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
+        super.customServerAiStep();
+
         LivingEntity target = this.getTarget();
 
-        boolean remove = false;
+        boolean wear = false;
 
         if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            remove = true;
+            wear = true;
         } else {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (HelperMethods.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
-                remove = true;
+                wear = true;
             }
         }
 
-        if (remove) {
+        if (wear) {
             if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
             }
         } else {
             if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
+                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             }
         }
     }

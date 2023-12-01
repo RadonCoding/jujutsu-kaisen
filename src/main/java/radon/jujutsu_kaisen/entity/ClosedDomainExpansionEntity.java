@@ -123,8 +123,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
-        int floorY = owner.getBlockY();
-
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
