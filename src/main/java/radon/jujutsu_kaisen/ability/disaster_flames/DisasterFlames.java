@@ -9,8 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -39,12 +37,12 @@ public class DisasterFlames extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private void spawnParticles(Entity entity, int count) {
+    private void spawnParticles(Entity entity) {
         double x = entity.getX();
         double y = entity.getY() + (entity.getBbHeight() / 2.0F);
         double z = entity.getZ();
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 32; i++) {
             double scale = HelperMethods.RANDOM.nextDouble() * 0.5D + 0.5D;
             Vec3 speed = new Vec3(HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian())
                     .normalize().scale(scale);
@@ -75,7 +73,7 @@ public class DisasterFlames extends Ability {
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner) * (float) (entity.distanceTo(owner) / AOE_RANGE))) {
                 entity.setSecondsOnFire(5);
-                this.spawnParticles(entity, 32);
+                this.spawnParticles(entity);
             }
         }
     }
