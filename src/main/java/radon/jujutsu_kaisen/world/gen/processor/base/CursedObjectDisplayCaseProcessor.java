@@ -54,7 +54,6 @@ public abstract class CursedObjectDisplayCaseProcessor extends StructureProcesso
             if (pRelativeBlockInfo.nbt() != null) {
                 ItemStack stack = getRandomCursedObject(level);
                 pRelativeBlockInfo.nbt().put("stack", stack.save(new CompoundTag()));
-                return pRelativeBlockInfo;
             }
         }
         return super.process(pLevel, p_74417_, pPos, pBlockInfo, pRelativeBlockInfo, pSettings, template);
