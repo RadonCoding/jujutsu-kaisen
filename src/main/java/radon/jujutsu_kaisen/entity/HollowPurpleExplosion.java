@@ -36,6 +36,11 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     }
 
     @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }

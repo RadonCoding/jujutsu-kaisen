@@ -65,15 +65,15 @@ public class TogeInumakiEntity extends SorcererEntity {
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
-        boolean remove = target == null;
+        boolean wear = target == null;
 
-        if (remove) {
-            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-            }
-        } else {
+        if (wear) {
             if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                 this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.TOGE_HELMET.get()));
+            }
+        } else {
+            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             }
         }
     }
