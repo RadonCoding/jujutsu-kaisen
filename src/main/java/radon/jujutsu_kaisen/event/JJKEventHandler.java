@@ -374,7 +374,12 @@ public class JJKEventHandler {
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (event.getSource().getEntity() instanceof LivingEntity) {
+            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
+                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    attackerCap.increaseKills();
+                }
+
                 if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
                 ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
