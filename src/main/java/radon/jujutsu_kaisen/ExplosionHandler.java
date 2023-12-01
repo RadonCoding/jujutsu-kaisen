@@ -83,7 +83,7 @@ public class ExplosionHandler {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState state = event.level.getBlockState(pos);
 
-                            for (Entity entity : HelperMethods.getEntityCollisions(event.level, new AABB(pos).inflate(1.0D))) {
+                            for (Entity entity : HelperMethods.getEntityCollisions(event.level, AABB.ofSize(pos.getCenter(), 1.0D, 1.0D, 1.0D))) {
                                 if (!entity.ignoreExplosion()) {
                                     double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / explosion.radius;
 
