@@ -124,28 +124,29 @@ public class Infinity extends Ability implements Ability.IToggled {
             while (iter.hasNext()) {
                 FrozenProjectileNBT nbt = iter.next();
 
-                Entity source = level.getEntity(nbt.getSource());
                 Entity target = level.getEntity(nbt.getTarget());
+
+                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity source)) {
+                    if (target != null) {
+                        target.discard();
+                    }
+                    iter.remove();
+                    this.setDirty();
+                    continue;
+                }
 
                 if (target == null) {
                     iter.remove();
                     this.setDirty();
                 } else {
-                    boolean result = false;
-
-                    if (source != null && source.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData cap = source.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        result = !cap.hasToggled(JJKAbilities.INFINITY.get()) || source.distanceTo(target) >= 2.5F;
-                    }
-
-                    if (source == null || result) {
-                        target.setNoGravity(nbt.isNoGravity());
-                        iter.remove();
-                        this.setDirty();
-                    } else {
+                    if (JJKAbilities.hasToggled(source, JJKAbilities.INFINITY.get()) && source.distanceTo(target) < 2.5F) {
                         Vec3 original = nbt.getMovement();
                         target.setDeltaMovement(original.scale(Double.MIN_VALUE));
                         target.setNoGravity(true);
+                    } else {
+                        target.discard();
+                        iter.remove();
+                        this.setDirty();
                     }
                 }
             }
@@ -156,8 +157,6 @@ public class Infinity extends Ability implements Ability.IToggled {
                 this.putUUID("source", source.getUUID());
                 this.putUUID("target", target.getUUID());
 
-                this.putBoolean("no_gravity", target.isNoGravity());
-
                 Vec3 movement = target.getDeltaMovement();
                 this.putDouble("movement_x", movement.x());
                 this.putDouble("movement_y", movement.y());
@@ -167,8 +166,6 @@ public class Infinity extends Ability implements Ability.IToggled {
             public FrozenProjectileNBT(CompoundTag tag) {
                 this.putUUID("source", tag.getUUID("source"));
                 this.putUUID("target", tag.getUUID("target"));
-
-                this.putBoolean("no_gravity", tag.getBoolean("no_gravity"));
 
                 this.putDouble("movement_x", tag.getDouble("movement_x"));
                 this.putDouble("movement_y", tag.getDouble("movement_y"));
@@ -181,10 +178,6 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             public UUID getTarget() {
                 return this.getUUID("target");
-            }
-
-            public boolean isNoGravity() {
-                return this.getBoolean("no_gravity");
             }
 
             public Vec3 getMovement() {
@@ -227,25 +220,22 @@ public class Infinity extends Ability implements Ability.IToggled {
         @SubscribeEvent
         public static void onProjectileImpact(ProjectileImpactEvent event) {
             if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
-            if (!(hit.getEntity() instanceof LivingEntity target)) return;
-            if (!(target.level() instanceof ServerLevel level)) return;
+            if (!(hit.getEntity() instanceof LivingEntity owner)) return;
+            if (!(owner.level() instanceof ServerLevel level)) return;
+
+            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                     FrozenProjectileData.IDENTIFIER);
 
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            Projectile projectile = event.getProjectile();
 
-            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
-                Projectile projectile = event.getProjectile();
+            if (!Infinity.canBlock(owner, projectile)) return;
+            if (projectile.getOwner() == owner) return;
 
-                if (!Infinity.canBlock(target, projectile)) return;
+            data.add(owner, projectile);
 
-                if (projectile.getOwner() == target) {
-                    return;
-                }
-                data.add(target, projectile);
-            }
+            event.setCanceled(true);
         }
 
         @SubscribeEvent
