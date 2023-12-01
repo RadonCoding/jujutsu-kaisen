@@ -8,11 +8,13 @@
   },
   "refmap": "jujutsu_kaisen.refmap.json",
   "client": [
+    "client.ClientSuggestionProviderMixin",
     "client.EntityMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
+    "client.ILivingEntityRendererAccessor",
     "client.IPlayerModelAccessor",
     "client.IPostChainAccessor",
     "client.ISkinManagerAccessor",
@@ -22,6 +24,7 @@
     "client.MinecraftMixin"
   ],
   "mixins": [
+    "common.EnchantmentHelperMixin",
     "common.EntityMixin",
     "common.ItemEntityMixin",
     "common.MeleeAttackGoalMixin",

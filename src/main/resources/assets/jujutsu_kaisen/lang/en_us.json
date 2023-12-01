@@ -152,7 +152,6 @@
   "item.jujutsu_kaisen.rainbow_dragon_spawn_egg": "Spawn Rainbow Dragon",
 
   "block.jujutsu_kaisen.unlimited_void": "Unlimited Void",
-  "block.jujutsu_kaisen.unlimited_void_fill": "Unlimited Void",
 
   "block.jujutsu_kaisen.coffin_of_the_iron_mountain_one": "Coffin of the Iron Mountain",
   "block.jujutsu_kaisen.coffin_of_the_iron_mountain_two": "Coffin of the Iron Mountain",
@@ -540,6 +539,9 @@
   "advancements.jujutsu_kaisen.six_eyes.title": "Six Eyes",
   "advancements.jujutsu_kaisen.six_eyes.description": "You were chosen by fate to become the bearer of the six eyes.",
 
+  "advancements.jujutsu_kaisen.perfect_body.title": "Perfect Body",
+  "advancements.jujutsu_kaisen.perfect_body.description": "Your body has evolved and you've reached perfection.",
+
   "advancements.jujutsu_kaisen.disastrous.title": "Disastrous",
   "advancements.jujutsu_kaisen.disastrous.description": "Defeat all four disaster cursed spirits.",
 
@@ -552,5 +554,8 @@
   "container.jujutsu_kaisen.altar.cost": "Cost: %1$s",
 
   "container.jujutsu_kaisen.bounty.target": "Target",
-  "container.jujutsu_kaisen.bounty.accept": "Accept"
+  "container.jujutsu_kaisen.bounty.accept": "Accept",
+
+  "curios.identifier.right_hand": "Right Hand",
+  "curios.identifier.left_hand": "Left Hand"
 }

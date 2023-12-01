@@ -269,6 +269,19 @@ public class HelperMethods {
         return enumClass.getEnumConstants()[x];
     }
 
+    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass, Set<T> blacklist) {
+        int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
+        T random = enumClass.getEnumConstants()[x];
+
+        for (T blacklisted : blacklist) {
+            if (random == blacklisted) {
+                x = RANDOM.nextInt(enumClass.getEnumConstants().length);
+                random = enumClass.getEnumConstants()[x];
+            }
+        }
+        return random;
+    }
+
     public static boolean isStrongest(float experience) {
         return experience >= ConfigHolder.SERVER.requiredExperienceForStrongest.get().floatValue();
     }

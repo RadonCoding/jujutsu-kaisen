@@ -11,13 +11,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -26,10 +26,13 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ChantHandler;
+import radon.jujutsu_kaisen.CuriosWrapper;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
@@ -62,11 +65,13 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import top.theillusivec4.curios.api.event.CurioEquipEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -234,22 +239,24 @@ public class JJKEventHandler {
             }
 
             if (stack != null) {
-                if (!source.is(JJKDamageSources.SOUL) && stack.is(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                List<Item> stacks = new ArrayList<>();
+                stacks.add(stack.getItem());
+
+                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
+                    stacks.addAll(CuriosWrapper.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                            .stream().map(ItemStack::getItem).toList());
+                }
+
+                if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {
                         if (victim.hurt(JJKDamageSources.soulAttack(attacker), event.getAmount())) {
-                            if (attacker instanceof Player player) {
-                                stack.hurtEnemy(victim, player);
-
-                                if (stack.isEmpty()) {
-                                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                                }
-                            }
+                            victim.invulnerableTime = 0;
                         }
                     }
-                } else if (stack.is(JJKItems.PLAYFUL_CLOUD.get())) {
+                } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
                     attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
-                } else if (stack.is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                } else if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                     victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         cap.clearToggled();
 
@@ -257,7 +264,7 @@ public class JJKEventHandler {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                         }
                     });
-                } else if (stack.is(JJKItems.KAMUTOKE_DAGGER.get())) {
+                } else if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
                     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
                             float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
@@ -318,6 +325,17 @@ public class JJKEventHandler {
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
                 if (source.getEntity() == victim) {
                     event.setAmount(event.getAmount() * 0.25F);
+                }
+            }
+
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
+                    boolean melee = (source instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
+                            || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
+
+                    if (melee) {
+                        event.setAmount(event.getAmount() * 2.0F);
+                    }
                 }
             }
 

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.visual;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -10,17 +11,27 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -32,8 +43,12 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestVisualDataC2SPacket;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.*;
 
@@ -84,7 +99,50 @@ public class ClientVisualHandler {
         return null;
     }
 
-    public static <T extends LivingEntity> void renderOverlay(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    private static <T extends LivingEntity> void renderCuriosInventory(T entity, HumanoidModel<T> model, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(entity);
+
+        if (optional.isPresent()) {
+            ICuriosItemHandler inventory = optional.resolve().orElseThrow();
+
+            Optional<SlotResult> rightHand = inventory.findCurio("right_hand", 0);
+            Optional<SlotResult> leftHand = inventory.findCurio("left_hand", 0);
+
+            ItemStack right = rightHand.isPresent() ? rightHand.get().stack() : ItemStack.EMPTY;
+            ItemStack left = leftHand.isPresent() ? leftHand.get().stack() : ItemStack.EMPTY;
+
+            if (!right.isEmpty() || !left.isEmpty()) {
+                poseStack.pushPose();
+
+                if (model.young) {
+                    poseStack.translate(0.0F, 0.75F, 0.0F);
+                    poseStack.scale(0.5F, 0.5F, 0.5F);
+                }
+
+                if (!right.isEmpty()) {
+                    poseStack.pushPose();
+                    model.translateToHand(HumanoidArm.RIGHT, poseStack);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+                    poseStack.translate((float) 1 / 16.0F, 0.125F, -0.625F);
+                    Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(entity, right, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, poseStack, buffer, packedLight);
+                    poseStack.popPose();
+                }
+                if (!left.isEmpty()) {
+                    poseStack.pushPose();
+                    model.translateToHand(HumanoidArm.LEFT, poseStack);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+                    poseStack.translate((float) -1 / 16.0F, 0.125F, -0.625F);
+                    Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(entity, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, poseStack, buffer, packedLight);
+                    poseStack.popPose();
+                }
+                poseStack.popPose();
+            }
+        }
+    }
+
+    public static <T extends LivingEntity> void renderOverlay(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
         VisualData data = get(entity);
 
         if (data == null) return;
@@ -101,16 +159,79 @@ public class ClientVisualHandler {
                 poseStack.pushPose();
                 poseStack.translate(0.0F, 0.2F, 0.0F);
 
-                humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
-                humanoid.rightArm.zRot += humanoid.rightArm.xRot * 0.5F - ((float) Math.PI / 20.0F);
-                humanoid.rightArm.copyFrom(humanoid.rightArm);
+                humanoid.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+                humanoid.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+
+                boolean shouldSit = entity.isPassenger() && (entity.getVehicle() != null && entity.getVehicle().shouldRiderSit());
+
+                float f = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
+                float f1 = Mth.rotLerp(partialTicks, entity.yHeadRotO, entity.yHeadRot);
+                float f2 = f1 - f;
+
+                if (shouldSit && entity.getVehicle() instanceof LivingEntity living) {
+                    f = Mth.rotLerp(partialTicks, living.yBodyRotO, living.yBodyRot);
+                    f2 = f1 - f;
+                    float f3 = Mth.wrapDegrees(f2);
+
+                    if (f3 < -85.0F) {
+                        f3 = -85.0F;
+                    }
+
+                    if (f3 >= 85.0F) {
+                        f3 = 85.0F;
+                    }
+
+                    f = f1 - f3;
+
+                    if (f3 * f3 > 2500.0F) {
+                        f += f3 * 0.2F;
+                    }
+                    f2 = f1 - f;
+                }
+
+                float f6 = Mth.lerp(partialTicks, entity.xRotO, entity.getXRot());
+
+                if (LivingEntityRenderer.isEntityUpsideDown(entity)) {
+                    f6 *= -1.0F;
+                    f2 *= -1.0F;
+                }
+
+                if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) instanceof LivingEntityRenderer<?, ?> renderer)) return;
+
+                float f7 = ((ILivingEntityRendererAccessor) renderer).invokeGetBob(entity, partialTicks);
+                float f8 = 0.0F;
+                float f5 = 0.0F;
+
+                if (!shouldSit && entity.isAlive()) {
+                    f8 = entity.walkAnimation.speed(partialTicks);
+                    f5 = entity.walkAnimation.position(partialTicks);
+
+                    if (entity.isBaby()) {
+                        f5 *= 3.0F;
+                    }
+                    if (f8 > 1.0F) {
+                        f8 = 1.0F;
+                    }
+                }
+                humanoid.setupAnim(entity, f5, f8, f7, f2, f6);
+
+                if (model.attackTime <= 0) {
+                    humanoid.rightArm.xRot -= humanoid.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+                }
+                humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - ((float) Math.PI * 0.125F);
+                humanoid.rightSleeve.copyFrom(humanoid.rightArm);
                 humanoid.rightArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
 
-                humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI / 10.0F);
-                humanoid.leftArm.zRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI / 20.0F);
+                if (model.attackTime <= 0) {
+                    humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
+                }
+                humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - ((float) Math.PI * 0.025F);
                 humanoid.leftSleeve.copyFrom(humanoid.leftArm);
                 humanoid.leftArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
 
+                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
+                    renderCuriosInventory(entity, humanoid, poseStack, buffer, packedLight);
+                }
                 poseStack.popPose();
             }
         }

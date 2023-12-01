@@ -1,15 +1,19 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.core.util.Loader;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
@@ -23,6 +27,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
+import radon.jujutsu_kaisen.event.CuriosEventHandler;
 import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.menu.JJKMenus;
@@ -35,6 +40,7 @@ import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
     public static final String MOD_ID = "jujutsu_kaisen";
+    public static final String CURIOS_MOD_ID = "curios";
 
     public JujutsuKaisen() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -72,6 +78,10 @@ public class JujutsuKaisen {
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);
+
+        if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
+            MinecraftForge.EVENT_BUS.register(new CuriosEventHandler());
+        }
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {

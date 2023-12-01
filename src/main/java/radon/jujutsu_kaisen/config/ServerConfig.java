@@ -57,6 +57,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue chantSimilarityThreshold;
     public final ForgeConfigSpec.BooleanValue realisticWorldSlash;
     public final ForgeConfigSpec.DoubleValue sparkSoundThreshold;
+    public final ForgeConfigSpec.BooleanValue uniqueTechniques;
 
     public final ForgeConfigSpec.IntValue simpleDomainCost;
     public final ForgeConfigSpec.IntValue domainExpansionCost;
@@ -114,6 +115,8 @@ public class ServerConfig {
                 .define("realisticWorldSlash", true);
         this.sparkSoundThreshold = builder.comment("The maximum amount of cursed energy a ability has to use to create a \"spark\"")
                 .defineInRange("sparkSoundThreshold", 200.0F, 1.0F, 10000.0F);
+        this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
+                .define("uniqueTechniques", false);
 
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);

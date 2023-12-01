@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.capability.data;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Registry;
@@ -36,6 +37,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -49,6 +51,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
@@ -439,6 +442,8 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.VESSEL)) this.giveAdvancement(player, "vessel");
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE))
             this.giveAdvancement(player, "reverse_cursed_technique");
+        if (this.traits.contains(Trait.PERFECT_BODY))
+            this.giveAdvancement(player, "perfect_body");
     }
 
     public void tick(LivingEntity owner) {
@@ -456,6 +461,11 @@ public class SorcererData implements ISorcererData {
 
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
+
+        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && (this.type != JujutsuType.CURSE || !traits.contains(Trait.PERFECT_BODY))) {
+            this.setType(JujutsuType.CURSE);
+            this.addTrait(Trait.PERFECT_BODY);
+        }
 
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
@@ -728,6 +738,11 @@ public class SorcererData implements ISorcererData {
             if (entry.getValue().equals(chants)) return entry.getKey();
         }
         return null;
+    }
+
+    @Override
+    public Set<String> getChants() {
+        return this.chants.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     @Override
@@ -1486,7 +1501,7 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void generate(ServerPlayer player) {
+    public void generate(ServerPlayer owner) {
         this.initialized = true;
 
         this.traits.remove(Trait.SIX_EYES);
@@ -1498,13 +1513,31 @@ public class SorcererData implements ISorcererData {
             this.nature = CursedEnergyNature.BASIC;
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
-            this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+            if (ConfigHolder.SERVER.uniqueTechniques.get()) {
+                Set<CursedTechnique> taken = new HashSet<>();
+
+                for (String name : owner.server.getPlayerNames()) {
+                    ServerPlayer player;
+
+                    if ((player = owner.server.getPlayerList().getPlayerByName(name)) == null) {
+                        player = owner.server.getPlayerList().getPlayerForLogin(new GameProfile(null, name));
+                        owner.server.getPlayerList().load(player);
+                    }
+                    if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+
+                    ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    taken.add(cap.getTechnique());
+                }
+                this.technique = HelperMethods.randomEnum(CursedTechnique.class, taken);
+            } else {
+                this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+            }
 
             if (HelperMethods.RANDOM.nextInt(5) == 0) {
                 this.nature = HelperMethods.randomEnum(CursedEnergyNature.class);
 
                 if (this.nature != CursedEnergyNature.BASIC) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
+                    owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
                 }
             }
             this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
@@ -1521,17 +1554,17 @@ public class SorcererData implements ISorcererData {
 
             assert this.technique != null;
 
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
+            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.technique", JujutsuKaisen.MOD_ID), this.technique.getName()));
 
             if (this.type == JujutsuType.CURSE) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.curse", JujutsuKaisen.MOD_ID)));
             } else {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.sorcerer", JujutsuKaisen.MOD_ID)));
             }
         }
         this.energy = this.getMaxEnergy();
 
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), owner);
     }
 
     @Override
