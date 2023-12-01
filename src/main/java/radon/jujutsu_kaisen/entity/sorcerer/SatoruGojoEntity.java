@@ -75,19 +75,26 @@ public class SatoruGojoEntity extends SorcererEntity {
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
-        if (target != null && target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+        boolean remove = false;
+
+        if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            remove = true;
+        } else {
             ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (HelperMethods.getGrade(cap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                    this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-                }
-                return;
+            if (HelperMethods.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
+                remove = true;
             }
         }
 
-        if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-            this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
+        if (remove) {
+            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+            }
+        } else {
+            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
+            }
         }
     }
 }

@@ -8,11 +8,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class TogeInumakiEntity extends SorcererEntity {
     public TogeInumakiEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
@@ -60,16 +63,15 @@ public class TogeInumakiEntity extends SorcererEntity {
 
     @Override
     protected void customServerAiStep() {
-        if (!this.level().isClientSide) {
-            LivingEntity target = this.getTarget();
+        LivingEntity target = this.getTarget();
 
-            if (target != null) {
-                if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                    this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-                }
-                return;
+        boolean remove = target == null;
+
+        if (remove) {
+            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             }
-
+        } else {
             if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                 this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.TOGE_HELMET.get()));
             }
