@@ -120,7 +120,7 @@ public class Slam extends Ability implements Ability.IChannelened {
 
         owner.swing(InteractionHand.MAIN_HAND, true);
         ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner), owner,
-                owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
+                owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false, false);
         TARGETS.remove(owner.getUUID());
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);

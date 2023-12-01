@@ -12,7 +12,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameRules;
@@ -27,7 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -84,6 +82,8 @@ public class ExplosionHandler {
                             BlockState state = event.level.getBlockState(pos);
 
                             for (Entity entity : HelperMethods.getEntityCollisions(event.level, AABB.ofSize(pos.getCenter(), 1.0D, 1.0D, 1.0D))) {
+                                if (!explosion.hurtsInstigator && entity == explosion.instigator) continue;
+
                                 if (!entity.ignoreExplosion()) {
                                     double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / explosion.radius;
 
@@ -122,7 +122,7 @@ public class ExplosionHandler {
                                 if (event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                     event.level.destroyBlock(pos, false);
 
-                                    if (explosion.fire) {
+                                    if (explosion.causesFire) {
                                         if (HelperMethods.RANDOM.nextInt(3) == 0 && event.level.getBlockState(pos).isAir() && event.level.getBlockState(pos.below()).isSolidRender(event.level, pos.below())) {
                                             event.level.setBlockAndUpdate(pos, BaseFireBlock.getState(event.level, pos));
                                         }
@@ -147,12 +147,16 @@ public class ExplosionHandler {
         explosions.removeAll(remove);
     }
 
-    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, fire));
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire, true));
     }
 
-    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, fire));
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire, true));
+    }
+
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire, boolean hurtsInstigator) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire, hurtsInstigator));
     }
 
     private static class ExplosionData {
@@ -164,9 +168,10 @@ public class ExplosionHandler {
         private int age;
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
-        private final boolean fire;
+        private final boolean causesFire;
+        private final boolean hurtsInstigator;
 
-        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire, boolean hurts) {
             this.dimension = dimension;
             this.position = position;
             this.radius = radius;
@@ -174,7 +179,8 @@ public class ExplosionHandler {
             this.damage = damage;
             this.instigator = instigator;
             this.source = source;
-            this.fire = fire;
+            this.causesFire = fire;
+            this.hurtsInstigator = hurts;
         }
     }
 }
