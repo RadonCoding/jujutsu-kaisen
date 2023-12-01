@@ -51,6 +51,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -375,14 +376,26 @@ public class JJKEventHandler {
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
-                if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (HelperMethods.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-                    if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        attackerCap.increaseKills();
+            switch (victimCap.getType()) {
+                case SORCERER -> {
+                    if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sorcererFleshRarity.get()) == 0) {
+                        victim.spawnAtLocation(JJKItems.SORCERER_FLESH.get());
+                    }
+                }
+                case CURSE -> {
+                    if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseFleshRarity.get()) == 0) {
+                        victim.spawnAtLocation(JJKItems.CURSE_FLESH.get());
+                    }
+                }
+            }
+
+            if (event.getSource().getEntity() instanceof LivingEntity attacker) {
+                if (attacker instanceof ServerPlayer player) {
+                    if (victim instanceof HeianSukunaEntity && victimCap.getFingers() == 20) {
+                        HelperMethods.giveAdvancement(player, "the_strongest_of_all_time");
                     }
                 }
 

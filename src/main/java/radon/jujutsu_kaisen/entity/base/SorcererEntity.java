@@ -47,6 +47,13 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
+    protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+
+
+    }
+
+    @Override
     public boolean canPerformSorcery() {
         return true;
     }

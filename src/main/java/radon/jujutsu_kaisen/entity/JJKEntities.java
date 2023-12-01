@@ -172,11 +172,6 @@ public class JJKEntities {
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dismantle")
                             .toString()));
-    public static RegistryObject<EntityType<WorldSlashProjectile>> WORLD_SLASH = ENTITIES.register("world_slash", () ->
-            EntityType.Builder.<WorldSlashProjectile>of(WorldSlashProjectile::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "world_slash")
-                            .toString()));
     public static RegistryObject<EntityType<FireArrowProjectile>> FIRE_ARROW = ENTITIES.register("fire_arrow", () ->
             EntityType.Builder.<FireArrowProjectile>of(FireArrowProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
