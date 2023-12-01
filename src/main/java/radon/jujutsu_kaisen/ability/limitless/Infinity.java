@@ -144,7 +144,8 @@ public class Infinity extends Ability implements Ability.IToggled {
                         target.setDeltaMovement(original.scale(Double.MIN_VALUE));
                         target.setNoGravity(true);
                     } else {
-                        target.discard();
+                        target.setDeltaMovement(nbt.getMovement());
+                        target.setNoGravity(nbt.isNoGravity());
                         iter.remove();
                         this.setDirty();
                     }
@@ -157,6 +158,8 @@ public class Infinity extends Ability implements Ability.IToggled {
                 this.putUUID("source", source.getUUID());
                 this.putUUID("target", target.getUUID());
 
+                this.putBoolean("no_gravity", target.isNoGravity());
+
                 Vec3 movement = target.getDeltaMovement();
                 this.putDouble("movement_x", movement.x());
                 this.putDouble("movement_y", movement.y());
@@ -166,6 +169,8 @@ public class Infinity extends Ability implements Ability.IToggled {
             public FrozenProjectileNBT(CompoundTag tag) {
                 this.putUUID("source", tag.getUUID("source"));
                 this.putUUID("target", tag.getUUID("target"));
+
+                this.putBoolean("no_gravity", tag.getBoolean("no_gravity"));
 
                 this.putDouble("movement_x", tag.getDouble("movement_x"));
                 this.putDouble("movement_y", tag.getDouble("movement_y"));
@@ -178,6 +183,10 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             public UUID getTarget() {
                 return this.getUUID("target");
+            }
+
+            public boolean isNoGravity() {
+                return this.getBoolean("no_gravity");
             }
 
             public Vec3 getMovement() {
