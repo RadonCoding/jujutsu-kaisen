@@ -291,19 +291,16 @@ public class SukunaEntity extends SorcererEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (!(this instanceof HeianSukunaEntity)) {
-                if (!cap.hasTrait(Trait.VESSEL)) {
-                    HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
-                }
-            }
             if (owner instanceof ServerPlayer player) {
                 player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
             owner.kill();
-        } else if (!(this instanceof HeianSukunaEntity)) {
-            HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+        }
+
+        if (!(this instanceof HeianSukunaEntity)) {
+            if (!this.vessel) {
+                HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+            }
         }
     }
 
