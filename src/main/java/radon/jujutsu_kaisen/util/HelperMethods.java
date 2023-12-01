@@ -1,10 +1,14 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -23,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
@@ -31,6 +36,23 @@ import java.util.*;
 public class HelperMethods {
     public static final Random RANDOM = new Random();
     private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
+
+    public static void giveAdvancement(ServerPlayer player, String name) {
+        MinecraftServer server = player.getServer();
+        assert server != null;
+        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
+                String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
+
+        if (advancement != null) {
+            AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+
+            if (!progress.isDone()) {
+                for (String criterion : progress.getRemainingCriteria()) {
+                    player.getAdvancements().award(advancement, criterion);
+                }
+            }
+        }
+    }
 
     public static Vec3 calculateViewVector(float yaw, float pitch) {
         float f = pitch * ((float) Math.PI / 180.0F);

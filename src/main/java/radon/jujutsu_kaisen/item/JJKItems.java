@@ -114,6 +114,12 @@ public class JJKItems {
     public static RegistryObject<Item> CURSED_SPIRIT_ORB = ITEMS.register("cursed_spirit_orb",
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 
+    public static RegistryObject<Item> SORCERER_FLESH = ITEMS.register("sorcerer_flesh",
+            () -> new Item(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
+    public static RegistryObject<Item> CURSE_FLESH = ITEMS.register("curse_flesh",
+            () -> new Item(new Item.Properties().food(JJKFoods.CURSE_FLESH)));
+    public static RegistryObject<Item> MERGED_FLESH = ITEMS.register("merged_flesh",
+            () -> new MergedFleshItem(new Item.Properties().food(JJKFoods.MERGED_FLESH)));
 
     public static RegistryObject<Item> VEIL_ROD = ITEMS.register("veil_rod",
             () -> new VeilRodItem(JJKBlocks.VEIL_ROD.get(), new Item.Properties()));

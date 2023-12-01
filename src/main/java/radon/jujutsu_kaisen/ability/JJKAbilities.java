@@ -88,7 +88,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
     public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
-    public static RegistryObject<Ability> WORLD_SLASH = ABILITIES.register("world_slash", WorldSlash::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);

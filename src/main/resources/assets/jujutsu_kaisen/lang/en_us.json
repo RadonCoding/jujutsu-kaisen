@@ -94,6 +94,10 @@
   "item.jujutsu_kaisen.cursed_music_disc": "Cursed Music Disc",
   "item.jujutsu_kaisen.cursed_eye_of_ender": "Cursed Eye of Ender",
 
+  "item.jujutsu_kaisen.sorcerer_flesh": "Sorcerer Flesh",
+  "item.jujutsu_kaisen.curse_flesh": "Curse Flesh",
+  "item.jujutsu_kaisen.merged_flesh": "Merged Flesh",
+
   "item.jujutsu_kaisen.cursed_spirit_orb": "Cursed Spirit Orb",
 
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
@@ -247,7 +251,6 @@
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
   "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
   "ability.jujutsu_kaisen.fire_arrow": "Open ■",
-  "ability.jujutsu_kaisen.world_slash": "World Slash",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 
   "ability.jujutsu_kaisen.rika": "Rika",
@@ -468,6 +471,8 @@
   "chat.jujutsu_kaisen.chant": "Total chant boost: %1$d%%",
 
   "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s%% mode",
+
+  "chat.jujutsu_kaisen.not_strong_enough": "Seems your body isn't strong enough to handle that yet",
 
   "entity.jujutsu_kaisen.toji_fushiguro": "Toji Fushiguro",
   "entity.jujutsu_kaisen.sukuna": "Sukuna",

@@ -121,8 +121,6 @@ public class SorcererData implements ISorcererData {
     private int speedStacks;
     private int noMotionTime;
 
-    private int kills;
-
     private int fingers;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
@@ -421,31 +419,14 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void giveAdvancement(ServerPlayer player, String name) {
-        MinecraftServer server = player.getServer();
-        assert server != null;
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
-                String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
-
-        if (advancement != null) {
-            AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
-
-            if (!progress.isDone()) {
-                for (String criterion : progress.getRemainingCriteria()) {
-                    player.getAdvancements().award(advancement, criterion);
-                }
-            }
-        }
-    }
-
     private void checkAdvancements(ServerPlayer player) {
-        if (this.traits.contains(Trait.SIX_EYES)) this.giveAdvancement(player, "six_eyes");
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) this.giveAdvancement(player, "heavenly_restriction");
-        if (this.traits.contains(Trait.VESSEL)) this.giveAdvancement(player, "vessel");
+        if (this.traits.contains(Trait.SIX_EYES)) HelperMethods.giveAdvancement(player, "six_eyes");
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) HelperMethods.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.VESSEL)) HelperMethods.giveAdvancement(player, "vessel");
         if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE))
-            this.giveAdvancement(player, "reverse_cursed_technique");
+            HelperMethods.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.PERFECT_BODY))
-            this.giveAdvancement(player, "perfect_body");
+            HelperMethods.giveAdvancement(player, "perfect_body");
     }
 
     public void tick(LivingEntity owner) {
@@ -463,10 +444,6 @@ public class SorcererData implements ISorcererData {
 
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
-
-        if (this.kills >= ConfigHolder.SERVER.perfectBodyKillRequirement.get() && this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get() && !this.traits.contains(Trait.HEAVENLY_RESTRICTION) && !this.traits.contains(Trait.PERFECT_BODY)) {
-            this.addTrait(Trait.PERFECT_BODY);
-        }
 
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
@@ -577,11 +554,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void init(LivingEntity owner) {
         this.owner = owner;
-    }
-
-    @Override
-    public void increaseKills() {
-        this.kills++;
     }
 
     @Override
@@ -1030,7 +1002,7 @@ public class SorcererData implements ISorcererData {
         this.output = this.getMaximumOutput();
 
         if (this.owner instanceof ServerPlayer player) {
-            this.giveAdvancement(player, "black_flash");
+            HelperMethods.giveAdvancement(player, "black_flash");
         }
     }
 
@@ -1671,7 +1643,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
-        nbt.putInt("kills", this.kills);
         nbt.putInt("fingers", this.fingers);
 
         if (this.domain != null) {
@@ -1917,7 +1888,6 @@ public class SorcererData implements ISorcererData {
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
-        this.kills = nbt.getInt("kills");
         this.fingers = nbt.getInt("fingers");
 
         if (nbt.hasUUID("domain")) {
