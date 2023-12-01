@@ -1,17 +1,4 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "#": {
-      "item": "jujutsu_kaisen:sorcerer_flesh"
-    },
-    "X": {
-      "item": "jujutsu_kaisen:curse_flesh"
-    }
-  },
-  "pattern": [
-    "X",
-    "#"
-  ],
-  "result": "jujutsu_kaisen:merged_flesh"
+  "type": "jujutsu_kaisen:merged_flesh",
+  "category": "misc"
 }
