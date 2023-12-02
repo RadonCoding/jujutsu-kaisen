@@ -85,7 +85,7 @@ public class DivergentFist extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Entity target = this.getTarget(owner);
+        LivingEntity target = this.getTarget(owner);
 
         if (target != null) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
