@@ -90,6 +90,8 @@ public class JJKEventHandler {
 
                     ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                     cap.setEnergy(cap.getMaxEnergy());
+
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }
             }
         }
