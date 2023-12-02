@@ -89,6 +89,10 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.CURSED_COMPASS.get());
                         pOutput.accept(JJKItems.CURSED_MUSIC_DISC.get());
                         pOutput.accept(JJKItems.CURSED_EYE_OF_ENDER.get());
+
+                        pOutput.accept(JJKItems.SORCERER_FLESH.get());
+                        pOutput.accept(JJKItems.CURSE_FLESH.get());
+                        pOutput.accept(JJKItems.MERGED_FLESH.get());
                     }))
                     .build());
 }
