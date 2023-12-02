@@ -50,9 +50,11 @@ public class DivergentFist extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
-            return hit.getEntity();
+    private @Nullable LivingEntity getTarget(LivingEntity owner) {
+        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+            if (owner.canAttack(target)) {
+                return target;
+            }
         }
         return null;
     }
@@ -126,7 +128,7 @@ public class DivergentFist extends Ability {
                             0.2F, 8), offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
                 }
 
-                if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
+                if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * power)) {
                     ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     target.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
@@ -139,7 +141,9 @@ public class DivergentFist extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        Entity target = this.getTarget(owner);
+        if (owner.isUsingItem()) return Status.FAILURE;
+
+        LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;
