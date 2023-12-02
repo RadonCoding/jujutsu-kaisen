@@ -50,10 +50,13 @@ public class FishShikigami extends Ability {
 
         if (target == null) return;
 
+        float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+        float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                new EelShikigamiProjectile(owner, this.getPower(owner), target, 0.0F, 0.0F),
-                new SharkShikigamiProjectile(owner, this.getPower(owner), target, 0.0F, 0.0F),
-                new PiranhaShikigamiProjectile(owner, getPower(owner), target, 0.0F, 0.0F)
+                new EelShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
+                new SharkShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
+                new PiranhaShikigamiProjectile(owner, getPower(owner), target, xOffset, yOffset)
         };
         owner.level().addFreshEntity(projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)]);
     }
