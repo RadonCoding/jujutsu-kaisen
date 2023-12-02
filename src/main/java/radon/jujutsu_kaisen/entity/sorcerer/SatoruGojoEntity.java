@@ -90,11 +90,11 @@ public class SatoruGojoEntity extends SorcererEntity {
         }
 
         if (wear) {
-            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                 this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
             }
         } else {
-            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
                 this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             }
         }
