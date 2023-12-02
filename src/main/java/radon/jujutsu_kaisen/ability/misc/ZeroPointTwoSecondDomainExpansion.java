@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -17,6 +18,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
@@ -26,11 +29,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
-    }
-
-    @Override
-    public boolean isTechnique() {
         return false;
     }
 
@@ -90,6 +88,10 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
             cap.addCooldown(ability);
+        }
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         }
     }
 
