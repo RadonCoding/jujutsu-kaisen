@@ -225,8 +225,12 @@ public class MeteorEntity extends JujutsuProjectile {
         this.pushEntities();
     }
 
+    public static int getSize(float power) {
+        return Math.min(MAX_SIZE, Math.round(SIZE * power));
+    }
+
     public int getSize() {
-        return Math.min(MAX_SIZE, Math.round(SIZE * this.getPower()));
+        return getSize(this.getPower());
     }
 
     @Override

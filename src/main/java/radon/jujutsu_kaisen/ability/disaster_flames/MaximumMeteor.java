@@ -35,15 +35,15 @@ public class MaximumMeteor extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private boolean canSpawn(LivingEntity owner) {
-        Vec3 offset = owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.SIZE, 0.0D);
+    private static boolean canSpawn(LivingEntity owner, float power) {
+        Vec3 offset = owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D);
         BlockHitResult hit = owner.level().clip(new ClipContext(owner.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
         return hit.getType() != HitResult.Type.BLOCK;
     }
 
     @Override
     public void run(LivingEntity owner) {
-        if (this.canSpawn(owner)) {
+        if (canSpawn(owner, this.getPower(owner))) {
             owner.swing(InteractionHand.MAIN_HAND);
 
             MeteorEntity meteor = new MeteorEntity(owner, this.getPower(owner));
@@ -63,7 +63,7 @@ public class MaximumMeteor extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
-        if (!this.canSpawn(owner)) {
+        if (!canSpawn(owner, this.getPower(owner))) {
             return Status.FAILURE;
         }
         return super.checkTriggerable(owner);
