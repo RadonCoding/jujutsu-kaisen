@@ -48,8 +48,8 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox())) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity instanceof ForestWaveEntity)
+        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox())) {
+            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity instanceof ForestWaveEntity)
                 continue;
 
             entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());

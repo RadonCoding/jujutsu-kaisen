@@ -45,7 +45,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
                     .add(look.scale(charge + i));
             forest.moveTo(spawn.x(), spawn.y(), spawn.z(), yRot, xRot);
 
-            if (charge != 0 && HelperMethods.getEntityCollisionsOfClass(ForestWaveEntity.class, owner.level(), forest.getBoundingBox()).isEmpty())
+            if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
                 continue;
 
             forest.setDamage(charge >= DELAY);

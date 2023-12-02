@@ -35,8 +35,7 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
             if (this.level().isClientSide) return;
 
-            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
-                if (entity == this || entity == owner) continue;
+            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(this.getLookAngle().scale(3.0D)))) {
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower());
             }
         }
