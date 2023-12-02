@@ -193,7 +193,7 @@ public class ClientAbilityHandler {
         } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.checkToggleable(owner))) || cap.hasToggled(ability)) {
+            if (isSuccess(ability, (status = ability.checkTriggerable(owner))) || cap.hasToggled(ability)) {
                 if (!cap.hasToggled(ability)) {
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                     cap.toggle(ability);
@@ -206,7 +206,7 @@ public class ClientAbilityHandler {
         } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if (isSuccess(ability, status = ability.checkChannelable(owner)) || cap.isChanneling(ability)) {
+            if (isSuccess(ability, status = ability.checkTriggerable(owner)) || cap.isChanneling(ability)) {
                 cap.channel(ability);
             }
             return status;

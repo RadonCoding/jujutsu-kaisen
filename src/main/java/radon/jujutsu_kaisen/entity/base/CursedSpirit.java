@@ -68,7 +68,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
+            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
                 success = true;
                 break;
             }
@@ -79,14 +79,17 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     private boolean isInFortress() {
         Structure structure = this.level().registryAccess().registryOrThrow(Registries.STRUCTURE).get(BuiltinStructures.FORTRESS);
         if (structure == null) return false;
-        return ((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), structure) != StructureStart.INVALID_START;
+        return ((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), structure).isValid();
     }
 
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience())) / (this.level().isNight() ? 2 : 1)) != 0)
-                return false;
+            int chance = Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience()));
+
+            if (this.level().isNight() || this.isInFortress()) chance /= 2;
+
+            if (this.random.nextInt(chance) != 0) return false;
 
             if (this.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 if (!this.isInVillage() && !this.isInFortress()) return false;

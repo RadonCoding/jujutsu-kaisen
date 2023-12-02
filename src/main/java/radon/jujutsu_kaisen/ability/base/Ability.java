@@ -225,15 +225,7 @@ public abstract class Ability {
 
         if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
-        return this.getStatus(owner, true, true, true, false);
-    }
-
-    public Status checkToggleable(LivingEntity owner) {
-        return this.getStatus(owner, !((IToggled) this).isPassive(), false, true, true);
-    }
-
-    public Status checkChannelable(LivingEntity owner) {
-        return this.getStatus(owner, true, false, true, true);
+        return this.getStatus(owner, true, this.getActivationType(owner) == ActivationType.INSTANT, true, this.getActivationType(owner) != ActivationType.INSTANT);
     }
 
     public Status checkStatus(LivingEntity owner) {
@@ -326,10 +318,6 @@ public abstract class Ability {
 
         default boolean shouldLog() {
             return true;
-        }
-
-        default boolean isPassive() {
-            return false;
         }
 
         default Component getEnableMessage() {

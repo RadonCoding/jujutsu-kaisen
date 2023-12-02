@@ -71,25 +71,14 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
             if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
         }
-        return super.checkStatus(owner);
-    }
-
-    @Override
-    public Status checkToggleable(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (owner.level() instanceof ServerLevel level) {
-            if (cap.hasSummonOfClass(level, MahoragaEntity.class)) return Status.FAILURE;
-        }
-        return super.checkToggleable(owner);
+        return super.getStatus(owner, cost, charge, cooldown, duration);
     }
 
     @Override
