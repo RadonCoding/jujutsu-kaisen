@@ -117,7 +117,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureAt(this.blockPosition(), holder.get()) != StructureStart.INVALID_START) {
+            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
                 success = true;
                 break;
             }
@@ -128,8 +128,8 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()))) != 0)
-                return false;
+            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()))) != 0) return false;
+
             if (!this.isInVillage()) return false;
             if (!pLevel.getEntitiesOfClass(SorcererEntity.class, AABB.ofSize(this.position(), 64.0D, 16.0D, 64.0D)).isEmpty())
                 return false;
