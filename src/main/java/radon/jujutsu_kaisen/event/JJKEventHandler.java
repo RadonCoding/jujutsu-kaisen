@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -79,6 +80,20 @@ import java.util.stream.Collectors;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class JJKEventHandlerForgeEvents {
+        @SubscribeEvent
+        public static void onSleepFinished(SleepFinishedTimeEvent event) {
+            if (!(event.getLevel() instanceof ServerLevel level)) return;
+
+            for (ServerPlayer player : level.players()) {
+                if (player.isSleepingLongEnough()) {
+                    if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+
+                    ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cap.setEnergy(cap.getMaxEnergy());
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onAttackEntity(AttackEntityEvent event) {
             if (event.getTarget() instanceof JJKPartEntity<?>) {
