@@ -68,7 +68,6 @@ public class ExplosionHandler {
                 }
             }
 
-
             for (Entity entity : event.level.getEntities(null, AABB.ofSize(explosion.position, radius * 2, radius * 2, radius * 2))) {
                 if (!explosion.hurtsInstigator && entity == explosion.instigator) continue;
                 if (Math.sqrt(entity.distanceToSqr(explosion.position)) > radius) continue;
