@@ -2,10 +2,7 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.GameRules;
@@ -31,7 +28,7 @@ import software.bernie.geckolib.core.object.PlayState;
 
 public class PiercingBullEntity extends TenShadowsSummon {
     private static final float DAMAGE = 5.0F;
-    private static final int INTERVAL = 2 * 20;
+    private static final int INTERVAL = 20;
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
@@ -98,17 +95,16 @@ public class PiercingBullEntity extends TenShadowsSummon {
         if (target != null) {
             this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
 
-            if (this.onGround() && (this.isSprinting() || this.tickCount % INTERVAL == 0)) {
+            if ((this.onGround() || this.isInFluidType()) && (this.isSprinting() || this.tickCount % INTERVAL == 0)) {
                 this.setSprinting(true);
-                this.setDeltaMovement(target.position().subtract(this.position()));
+                this.move(MoverType.SELF, target.position().subtract(this.position()).normalize().scale(this.distanceTo(target)));
                 float distance = this.distanceTo(target);
 
-                for (Entity entity : HelperMethods.getEntityCollisions(this.level(), this.getBoundingBox())) {
-                    if (entity == this) continue;
+                ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
+                    if (!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getAbilityPower())) continue;
 
-                    entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getAbilityPower());
                     entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getAbilityPower()));
                     entity.hurtMarked = true;
 

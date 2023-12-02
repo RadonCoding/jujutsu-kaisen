@@ -114,8 +114,8 @@ public class BlueProjectile extends JujutsuProjectile {
         AABB bounds = this.getBoundingBox();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner || entity == this)
+            for (Entity entity : this.level().getEntities(owner, bounds)) {
+                if (entity instanceof RedProjectile || (entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == this)
                     continue;
 
                 if (entity instanceof LivingEntity) {

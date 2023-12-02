@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -66,19 +67,22 @@ public class RedProjectile extends JujutsuProjectile {
         this.chanted = pCompound.getBoolean("chanted");
     }
 
-    private void hurtEntities() {
-        AABB bounds = this.getBoundingBox().inflate(1.0D);
+    @Override
+    protected void onHitEntity(@NotNull EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+
+        if (this.level().isClientSide) return;
+
+        Entity entity = pResult.getEntity();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (Entity entity : HelperMethods.getEntityCollisions(this.level(), bounds)) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            if (entity == owner) return;
 
-                float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
+            float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
-                if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
-                    entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
-                    entity.hurtMarked = true;
-                }
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
+                entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+                entity.hurtMarked = true;
             }
         }
     }
@@ -119,12 +123,10 @@ public class RedProjectile extends JujutsuProjectile {
                 this.discard();
             } else if (this.getTime() >= DELAY) {
                 if (!this.level().isClientSide) {
-                    this.hurtEntities();
-
                     if (this.chanted) {
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        for (BlueProjectile blue : HelperMethods.getEntityCollisionsOfClass(BlueProjectile.class, this.level(), this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
+                        for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                                 if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false, false, false, false) != Ability.Status.SUCCESS) {
                                     continue;

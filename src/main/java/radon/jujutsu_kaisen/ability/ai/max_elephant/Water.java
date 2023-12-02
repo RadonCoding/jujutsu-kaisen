@@ -78,7 +78,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                 Math.max(from.y(), collision.y()), Math.max(from.z(), collision.z()))
                 .inflate(SCALE);
 
-        for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), bounds)) {
+        for (Entity entity : owner.level().getEntities(owner, bounds)) {
             float pad = entity.getPickRadius() + 0.5F;
             AABB padded = entity.getBoundingBox().inflate(pad, pad, pad);
             Optional<Vec3> hit = padded.clip(from, to);

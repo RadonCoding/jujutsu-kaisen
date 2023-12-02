@@ -188,9 +188,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 }
                 AABB bounds = owner.getBoundingBox();
 
-                for (Entity entity : HelperMethods.getEntityCollisions(owner.level(), AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()))) {
-                    if (entity == owner) continue;
-
+                for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()))) {
                     owner.swing(InteractionHand.MAIN_HAND, true);
 
                     if (owner instanceof Player player) {
