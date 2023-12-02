@@ -109,6 +109,8 @@ public class Punch extends Ability {
 
     @Override
     public Status checkTriggerable(LivingEntity owner) {
+        if (owner.isUsingItem()) return Status.FAILURE;
+
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
