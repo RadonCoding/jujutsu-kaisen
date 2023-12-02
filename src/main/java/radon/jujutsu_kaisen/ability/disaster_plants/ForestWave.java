@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
@@ -30,6 +31,10 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
+        if (!owner.level().isClientSide) return;
+
         int charge = this.getCharge(owner);
 
         float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
@@ -83,6 +88,4 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
-
-
 }

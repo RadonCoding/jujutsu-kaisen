@@ -35,30 +35,24 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
     public void render(@NotNull ForestWaveEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         BlockState state = Blocks.OAK_WOOD.defaultBlockState();
 
-        if (state.getRenderShape() == RenderShape.MODEL) {
-            Level level = pEntity.level();
+        Level level = pEntity.level();
 
-            if (state != level.getBlockState(pEntity.blockPosition()) && state.getRenderShape() != RenderShape.INVISIBLE) {
-                pPoseStack.pushPose();
-                BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
-                pPoseStack.translate(-0.5D, 0.0D, -0.5D);
+        pPoseStack.pushPose();
+        BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
+        pPoseStack.translate(-0.5D, 0.0D, -0.5D);
 
-                float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
-                float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-                pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
-                BakedModel model = this.dispatcher.getBlockModel(state);
+        BakedModel model = this.dispatcher.getBlockModel(state);
 
-                for (RenderType tyoe : model.getRenderTypes(state, RandomSource.create(state.getSeed(pEntity.blockPosition())), EMPTY)) {
-                    this.dispatcher.getModelRenderer().tesselateBlock(level, model, state, pos, pPoseStack, pBuffer.getBuffer(tyoe), false, RandomSource.create(), state.getSeed(pEntity.blockPosition()), OverlayTexture.NO_OVERLAY, EMPTY, tyoe);
-                }
-                pPoseStack.popPose();
-
-                super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-            }
+        for (RenderType tyoe : model.getRenderTypes(state, RandomSource.create(state.getSeed(pEntity.blockPosition())), EMPTY)) {
+            this.dispatcher.getModelRenderer().tesselateBlock(level, model, state, pos, pPoseStack, pBuffer.getBuffer(tyoe), false, RandomSource.create(), state.getSeed(pEntity.blockPosition()), OverlayTexture.NO_OVERLAY, EMPTY, tyoe);
         }
+        pPoseStack.popPose();
     }
 
     @Override

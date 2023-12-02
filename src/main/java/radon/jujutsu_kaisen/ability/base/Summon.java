@@ -185,17 +185,17 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     public void spawn(LivingEntity owner, boolean clone) {
         if (!owner.level().isClientSide) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (int i = 0; i < this.getCount(); i++) {
-                    T summon = this.summon(i, owner);
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (summon instanceof TenShadowsSummon) {
-                        ((TenShadowsSummon) summon).setClone(clone);
-                    }
-                    owner.level().addFreshEntity(summon);
-                    cap.addSummon(summon);
+            for (int i = 0; i < this.getCount(); i++) {
+                T summon = this.summon(i, owner);
+
+                if (summon instanceof TenShadowsSummon) {
+                    ((TenShadowsSummon) summon).setClone(clone);
                 }
-            });
+                owner.level().addFreshEntity(summon);
+                cap.addSummon(summon);
+            }
         }
     }
 
