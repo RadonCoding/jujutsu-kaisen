@@ -1,18 +1,29 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
@@ -93,17 +104,17 @@ public class MeteorEntity extends JujutsuProjectile {
         Vec3 vec3 = this.getDeltaMovement();
 
         if (this.horizontalCollision) {
-            vec3 = new Vec3(vec3.x, 0.2D, vec3.z);
+            vec3 = new Vec3(vec3.x(), 0.2D, vec3.z());
         }
         return vec3;
     }
 
     private void travel(Vec3 pTravelVector) {
-        if (!this.level().isClientSide) {
+        if (this.isControlledByLocalInstance()) {
             double d0 = 0.08D;
 
             BlockPos blockpos = this.getBlockPosBelowThatAffectsMyMovement();
-            float f2 = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getFriction(this.level(), this.getBlockPosBelowThatAffectsMyMovement(), this);
+            float f2 = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getFriction(level(), this.getBlockPosBelowThatAffectsMyMovement(), this);
             float f3 = this.onGround() ? f2 * 0.91F : 0.91F;
             Vec3 vec35 = this.handleRelativeFrictionAndCalculateMovement(pTravelVector, f2);
             double d2 = vec35.y;
@@ -117,7 +128,7 @@ public class MeteorEntity extends JujutsuProjectile {
             } else if (!this.isNoGravity()) {
                 d2 -= d0;
             }
-            this.setDeltaMovement(vec35.x * (double) f3, d2 * (double) 0.98F, vec35.z * (double) f3);
+            this.setDeltaMovement(vec35.x() * (double)f3, d2 * (double)0.98F, vec35.z() * (double)f3);
         }
     }
 
@@ -166,33 +177,39 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     public void aiStep() {
+        if (this.isControlledByLocalInstance()) {
+            this.lerpSteps = 0;
+            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+        }
+
         if (this.lerpSteps > 0) {
-            double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-            double d2 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-            double d4 = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-            double d6 = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            this.setYRot(this.getYRot() + (float) d6 / (float) this.lerpSteps);
-            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
+            double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
+            double d2 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
+            double d4 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
+            double d6 = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
+            this.setYRot(this.getYRot() + (float)d6 / (float)this.lerpSteps);
+            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
             --this.lerpSteps;
             this.setPos(d0, d2, d4);
             this.setRot(this.getYRot(), this.getXRot());
-        } else if (!this.level().isClientSide) {
+        } else if (!this.isEffectiveAi()) {
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
         }
 
-        Vec3 vec3 = this.getDeltaMovement();
-        double d1 = vec3.x;
-        double d3 = vec3.y;
-        double d5 = vec3.z;
-        if (Math.abs(vec3.x) < 0.003D) {
+        Vec3 vec31 = this.getDeltaMovement();
+        double d1 = vec31.x();
+        double d3 = vec31.y();
+        double d5 = vec31.z();
+
+        if (Math.abs(vec31.x()) < 0.003D) {
             d1 = 0.0D;
         }
 
-        if (Math.abs(vec3.y) < 0.003D) {
+        if (Math.abs(vec31.y()) < 0.003D) {
             d3 = 0.0D;
         }
 
-        if (Math.abs(vec3.z) < 0.003D) {
+        if (Math.abs(vec31.z()) < 0.003D) {
             d5 = 0.0D;
         }
 
@@ -200,7 +217,11 @@ public class MeteorEntity extends JujutsuProjectile {
 
         this.xxa *= 0.98F;
         this.zza *= 0.98F;
-        this.travel(new Vec3(this.xxa, 0.0D, this.zza));
+
+        Vec3 vec3 = new Vec3(this.xxa, 0.0D, this.zza);
+
+        this.travel(vec3);
+
         this.pushEntities();
     }
 
@@ -229,12 +250,9 @@ public class MeteorEntity extends JujutsuProjectile {
                 int duration = (this.getSize() / 2) * 20;
 
                 if (this.onGround()) {
-                    this.setNoGravity(true);
-                    this.setDeltaMovement(Vec3.ZERO);
-
                     if (this.explosionTime == 0) {
                         ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner,
-                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
+                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
                         this.explosionTime++;
 
                         float radius = this.getSize() * 0.5F;
@@ -259,6 +277,8 @@ public class MeteorEntity extends JujutsuProjectile {
                 }
 
                 if (this.explosionTime > 0) {
+                    this.setNoGravity(!this.getFeetBlockState().isAir());
+
                     if (this.explosionTime >= duration) {
                         this.discard();
                     } else {
