@@ -117,7 +117,7 @@ public class SuguruGetoEntity extends SorcererEntity {
 
             Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
             cap.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), CursedSpiritOrbItem.getCurse(registry, stack));
-            this.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 1));
+            this.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20));
         }
     }
 
