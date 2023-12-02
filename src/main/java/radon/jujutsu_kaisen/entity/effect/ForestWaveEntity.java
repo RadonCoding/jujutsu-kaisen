@@ -63,6 +63,8 @@ public class ForestWaveEntity extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
+        if (this.level().isClientSide) return;
+
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         if (!JJKAbilities.isChanneling(owner, JJKAbilities.FOREST_WAVE.get())) {
