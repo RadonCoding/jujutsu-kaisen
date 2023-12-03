@@ -25,7 +25,6 @@ public class DomainBlockEntity extends BlockEntity {
 
     private CompoundTag deferred;
 
-    @Nullable
     private CompoundTag saved;
 
     public DomainBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -106,6 +105,7 @@ public class DomainBlockEntity extends BlockEntity {
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
             this.deferred = pTag.getCompound("original");
+            this.saved = pTag.getCompound("saved");
         }
     }
 
@@ -123,6 +123,7 @@ public class DomainBlockEntity extends BlockEntity {
             } else {
                 pTag.put("original", this.deferred);
             }
+            pTag.put("saved", this.saved);
         }
     }
 }
