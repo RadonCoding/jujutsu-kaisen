@@ -145,7 +145,7 @@ public class ServerConfig {
         this.divergentFistCost = builder.comment("The amount of points divergent fist costs to unlock")
                 .defineInRange("divergentFistCost", 50, 1, 10000);
         this.outputRCT = builder.comment("The amount of points output RCT costs to unlock")
-                .defineInRange("divergentFistCost", 300, 1, 10000);
+                .defineInRange("outputRCT", 300, 1, 10000);
         builder.pop();
     }
 
