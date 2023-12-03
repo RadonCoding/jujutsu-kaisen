@@ -12,20 +12,20 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
+import radon.jujutsu_kaisen.CuriosWrapper;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -1011,8 +1011,15 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean isInZone() {
-        return this.owner.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.HITEN_STAFF.get()) || this.owner.getItemInHand(InteractionHand.OFF_HAND).is(JJKItems.HITEN_STAFF.get()) ||
-                this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
+        List<Item> stacks = new ArrayList<>();
+        stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem());
+        stacks.add(this.owner.getItemInHand(InteractionHand.OFF_HAND).getItem());
+
+        if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
+            stacks.addAll(CuriosWrapper.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+        }
+        return stacks.contains(JJKItems.HITEN_STAFF.get()) || this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 
     @Override
