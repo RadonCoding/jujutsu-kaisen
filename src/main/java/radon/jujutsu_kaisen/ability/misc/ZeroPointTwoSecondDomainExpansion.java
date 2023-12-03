@@ -28,6 +28,11 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     }
 
     @Override
+    public boolean isTechnique() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
     }
