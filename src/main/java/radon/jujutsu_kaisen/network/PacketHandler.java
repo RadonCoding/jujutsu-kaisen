@@ -192,10 +192,15 @@ public class PacketHandler {
                 .encoder(UncopyAbilityC2SPacket::encode)
                 .consumerMainThread(UncopyAbilityC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SyncVisualDataS2cPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SyncVisualDataS2cPacket::new)
-                .encoder(SyncVisualDataS2cPacket::encode)
-                .consumerMainThread(SyncVisualDataS2cPacket::handle)
+        INSTANCE.messageBuilder(SyncVisualDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncVisualDataS2CPacket::new)
+                .encoder(SyncVisualDataS2CPacket::encode)
+                .consumerMainThread(SyncVisualDataS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SyncMouthS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncMouthS2CPacket::new)
+                .encoder(SyncMouthS2CPacket::encode)
+                .consumerMainThread(SyncMouthS2CPacket::handle)
                 .add();
     }
 

@@ -61,12 +61,12 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
         return false;
     }
 
-    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"))
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
 
         if (data != null) {
-            for (Ability ability : data.toggled()) {
+            for (Ability ability : data.toggled) {
                 if (!(ability instanceof ITransformation transformation)) continue;
 
                 for (int i = 0; i < 4; i++) {

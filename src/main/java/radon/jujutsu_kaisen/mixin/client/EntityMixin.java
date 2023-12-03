@@ -30,7 +30,7 @@ public abstract class EntityMixin {
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(living);
 
         if (data != null) {
-            for (Ability ability : data.toggled()) {
+            for (Ability ability : data.toggled) {
                 if (ability instanceof ITransformation transformation) {
                     if (transformation.isFullBody()) {
                         cir.setReturnValue(true);

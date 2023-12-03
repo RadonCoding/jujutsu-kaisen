@@ -23,7 +23,6 @@ public class RikaOpenLayer extends GeoRenderLayer<RikaEntity> {
     public void render(PoseStack poseStack, RikaEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         if (animatable.isOpen()) {
             RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
-
             this.getRenderer().reRender(this.getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, type,
                     bufferSource.getBuffer(type), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 1.0F);

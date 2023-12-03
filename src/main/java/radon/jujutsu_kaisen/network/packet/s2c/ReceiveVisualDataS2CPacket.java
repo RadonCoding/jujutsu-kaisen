@@ -32,7 +32,7 @@ public class ReceiveVisualDataS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.VisualData.deserializeNBT(this.nbt);
+            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.nbt);
             ClientVisualHandler.receive(this.src, data);
         }));
         ctx.setPacketHandled(true);

@@ -21,6 +21,6 @@ public class MinecraftMixin {
 
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(instance);
 
-        return data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+        return data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 }
