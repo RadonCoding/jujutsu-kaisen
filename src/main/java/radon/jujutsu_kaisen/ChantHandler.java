@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
@@ -95,7 +96,10 @@ public class ChantHandler {
             if (delta > 0) {
                 messages.put(owner.getUUID(), messages.get(owner.getUUID()).subList(delta, 5));
             }
-            PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
+
+            if (cap.hasTrait(Trait.PERFECT_BODY)) {
+                PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
+            }
         }
     }
 
