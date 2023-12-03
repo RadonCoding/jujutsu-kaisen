@@ -44,9 +44,9 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
         LivingEntity owner = animatable.getOwner();
 
         if (owner != null) {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.getData(owner.getUUID());
+            ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner.getUUID());
 
-            if (data != null && data.toggled().contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, COLOR.x(), COLOR.y(), COLOR.z(), alpha);
                 return;
             }

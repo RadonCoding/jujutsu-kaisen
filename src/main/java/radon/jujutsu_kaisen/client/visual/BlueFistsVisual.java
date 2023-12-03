@@ -45,7 +45,7 @@ public class BlueFistsVisual {
     }
 
     public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
-        if (data.toggled().contains(JJKAbilities.BLUE_FISTS.get())) {
+        if (data.toggled.contains(JJKAbilities.BLUE_FISTS.get())) {
             run(entity);
         }
     }

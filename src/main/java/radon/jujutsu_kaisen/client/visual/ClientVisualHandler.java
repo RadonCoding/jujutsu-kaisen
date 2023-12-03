@@ -12,16 +12,13 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,6 +40,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestVisualDataC2SPacket;
@@ -57,6 +55,8 @@ public class ClientVisualHandler {
     private static final RenderType SIX_EYES = JJKRenderTypes.eyes(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/six_eyes.png"));
     private static final RenderType INUMAKI = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/inumaki.png"));
 
+    private static final int MAX_MOUTH_FRAMES = 4;
+
     private static final Map<UUID, VisualData> synced = new HashMap<>();
 
     public static void receive(UUID identifier, VisualData data) {
@@ -67,8 +67,16 @@ public class ClientVisualHandler {
         synced.put(identifier, data);
     }
 
+    public static void onChant(UUID identifier) {
+        VisualData data = get(identifier);
+
+        if (data == null) return;
+
+        data.mouth++;
+    }
+
     @Nullable
-    public static VisualData getData(UUID identifier) {
+    public static VisualData get(UUID identifier) {
         return synced.get(identifier);
     }
 
@@ -147,14 +155,19 @@ public class ClientVisualHandler {
 
         if (data == null) return;
 
-        if (data.traits().contains(Trait.SIX_EYES)) {
+        if (data.traits.contains(Trait.SIX_EYES)) {
             VertexConsumer consumer = buffer.getBuffer(SIX_EYES);
             model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 1.0F);
         }
         if (data.traits.contains(Trait.PERFECT_BODY)) {
+            VertexConsumer overlay = buffer.getBuffer(RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID,
+                    String.format("textures/overlay/mouth_%d.png", data.mouth + 1))));
+            model.renderToBuffer(poseStack, overlay, packedLight, OverlayTexture.NO_OVERLAY,
+                    1.0F, 1.0F, 1.0F, 1.0F);
+
             if (model instanceof PlayerModel<T> humanoid) {
-                VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
+                VertexConsumer skin = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
 
                 poseStack.pushPose();
                 poseStack.translate(0.0F, 0.2F, 0.0F);
@@ -220,14 +233,14 @@ public class ClientVisualHandler {
                 }
                 humanoid.rightArm.zRot += humanoid.rightArm.zRot * 0.5F - ((float) Math.PI * 0.125F);
                 humanoid.rightSleeve.copyFrom(humanoid.rightArm);
-                humanoid.rightArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+                humanoid.rightArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 
                 if (model.attackTime <= 0) {
                     humanoid.leftArm.xRot -= humanoid.leftArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
                 }
                 humanoid.leftArm.zRot -= humanoid.leftArm.zRot * 0.5F - ((float) Math.PI * 0.025F);
                 humanoid.leftSleeve.copyFrom(humanoid.leftArm);
-                humanoid.leftArm.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+                humanoid.leftArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 
                 if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
                     renderCuriosInventory(entity, humanoid, poseStack, buffer, packedLight);
@@ -235,7 +248,7 @@ public class ClientVisualHandler {
                 poseStack.popPose();
             }
         }
-        if (data.techniques().contains(CursedTechnique.CURSED_SPEECH)) {
+        if (data.techniques.contains(CursedTechnique.CURSED_SPEECH)) {
             VertexConsumer consumer = buffer.getBuffer(INUMAKI);
             model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 1.0F);
@@ -269,6 +282,14 @@ public class ClientVisualHandler {
         if (data == null) return;
 
         BlueFistsVisual.tick(data, entity);
+
+        if (entity.level().getGameTime() % 5 == 0) {
+            if (data.mouth > 0) {
+                if (++data.mouth >= MAX_MOUTH_FRAMES) {
+                    data.mouth = 0;
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -284,7 +305,45 @@ public class ClientVisualHandler {
         BlueFistsVisual.tick(data, player);
     }
 
-    public record VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
+    public static class VisualData {
+        public final Set<Ability> toggled;
+        public final Set<Trait> traits;
+        public final Set<CursedTechnique> techniques;
+        public final JujutsuType type;
+
+        public int mouth;
+
+        public VisualData(CompoundTag nbt) {
+            this.toggled = new HashSet<>();
+            this.traits = new HashSet<>();
+            this.techniques = new HashSet<>();
+
+            for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
+                this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
+            }
+
+            for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
+                if (key instanceof IntTag tag) {
+                    this.traits.add(Trait.values()[tag.getAsInt()]);
+                }
+            }
+
+            for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
+                if (key instanceof IntTag tag) {
+                    this.techniques.add(CursedTechnique.values()[tag.getAsInt()]);
+                }
+            }
+
+            this.type = JujutsuType.values()[nbt.getInt("type")];
+        }
+
+        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
+            this.toggled = toggled;
+            this.traits = traits;
+            this.techniques = techniques;
+            this.type = type;
+        }
+
         public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
 
@@ -312,31 +371,6 @@ public class ClientVisualHandler {
             nbt.putInt("type", this.type.ordinal());
 
             return nbt;
-        }
-
-        public static VisualData deserializeNBT(CompoundTag nbt) {
-            Set<Ability> toggled = new HashSet<>();
-
-            for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-                toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
-            }
-
-            Set<Trait> traits = new HashSet<>();
-
-            for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-                if (key instanceof IntTag tag) {
-                    traits.add(Trait.values()[tag.getAsInt()]);
-                }
-            }
-
-            Set<CursedTechnique> techniques = new HashSet<>();
-
-            for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
-                if (key instanceof IntTag tag) {
-                    techniques.add(CursedTechnique.values()[tag.getAsInt()]);
-                }
-            }
-            return new VisualData(toggled, traits, techniques, JujutsuType.values()[nbt.getInt("type")]);
         }
     }
 }

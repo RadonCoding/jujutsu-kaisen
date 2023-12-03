@@ -157,7 +157,7 @@ public class JJKClientEventHandler {
 
             if (data == null) return;
 
-            if (data.traits().contains(Trait.HEAVENLY_RESTRICTION)) {
+            if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
                 if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity viewer)) return;
 
                 if (JJKAbilities.hasTrait(viewer, Trait.HEAVENLY_RESTRICTION)) return;

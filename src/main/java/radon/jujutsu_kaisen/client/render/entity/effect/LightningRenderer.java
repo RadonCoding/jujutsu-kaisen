@@ -36,7 +36,7 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
         if (data == null) return;
 
-        Vector3f color = ParticleColors.getCursedEnergyColor(data.type());
+        Vector3f color = ParticleColors.getCursedEnergyColor(data.type);
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
