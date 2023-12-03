@@ -712,12 +712,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<String> getChants() {
-        return this.chants.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+    public Set<String> getFirstChants() {
+        return this.chants.values().stream().map(set -> set.stream().findFirst().orElseThrow()).collect(Collectors.toSet());
     }
 
     @Override
-    public Set<String> getChants(Ability ability) {
+    public Set<String> getFirstChants(Ability ability) {
         return this.chants.getOrDefault(ability, Set.of());
     }
 

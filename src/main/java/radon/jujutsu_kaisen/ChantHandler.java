@@ -9,6 +9,7 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -18,7 +19,6 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncMouthS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 
 import java.util.*;
 
@@ -34,7 +34,7 @@ public class ChantHandler {
     public static float getChant(LivingEntity owner, Ability ability) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        Set<String> chants = cap.getChants(ability);
+        Set<String> chants = cap.getFirstChants(ability);
 
         if (chants.isEmpty()) return 1.0F;
 
@@ -58,6 +58,34 @@ public class ChantHandler {
         return 1.0F + 0.75F * (0.6F * countFactor + 0.4F * lengthFactor);
     }
 
+    @Nullable
+    public static String next(LivingEntity owner) {
+        List<String> latest = messages.get(owner.getUUID());
+
+        if (latest == null) return null;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Ability ability = cap.getAbility(latest.get(latest.size() - 1));
+
+        if (ability != null) {
+            List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+
+            if (chants.size() == 1) return null;
+
+            int index = 0;
+
+            Iterator<String> iter = chants.iterator();
+
+            for (String chant : latest) {
+                if (!iter.hasNext() || !chant.equals(iter.next())) break;
+
+                index++;
+            }
+            return index < chants.size() ? chants.get(index) : null;
+        }
+        return null;
+    }
+
     public static void onChant(LivingEntity owner, String word) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Ability ability = cap.getAbility(word);
@@ -67,7 +95,7 @@ public class ChantHandler {
                 messages.put(owner.getUUID(), new ArrayList<>());
             }
 
-            List<String> chants = new ArrayList<>(cap.getChants(ability));
+            List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
 
             List<String> latest = messages.get(owner.getUUID());
 
