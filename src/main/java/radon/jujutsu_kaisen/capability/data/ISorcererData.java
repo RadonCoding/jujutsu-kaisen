@@ -18,7 +18,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 @AutoRegisterCapability
 public interface ISorcererData {
@@ -82,9 +81,9 @@ public interface ISorcererData {
 
     @Nullable Ability getAbility(Set<String> chants);
 
-    Set<String> getChants();
+    Set<String> getFirstChants();
 
-    Set<String> getChants(Ability ability);
+    Set<String> getFirstChants(Ability ability);
 
     float getOutput();
 

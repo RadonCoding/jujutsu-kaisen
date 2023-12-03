@@ -71,7 +71,7 @@ public class ChantTab extends JJKTab {
         if (this.ability == null || this.minecraft.player == null) return;
 
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.getChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
+        cap.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
     }
 
     @Override

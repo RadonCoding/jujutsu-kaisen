@@ -50,14 +50,14 @@ public class AddChantC2SPacket {
             String text = this.chant.toLowerCase();
 
             if (!text.isEmpty() && !text.isBlank()) {
-                for (String chant : cap.getChants(ability)) {
+                for (String chant : cap.getFirstChants(ability)) {
                     if (HelperMethods.strcmp(chant, text) < ConfigHolder.SERVER.chantSimilarityThreshold.get()) {
                         return;
                     }
                 }
             }
 
-            if (cap.getChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || text.isEmpty() || text.isBlank() || cap.hasChant(ability, text))
+            if (cap.getFirstChants(ability).size() == ConfigHolder.SERVER.maximumChantCount.get() || text.isEmpty() || text.isBlank() || cap.hasChant(ability, text))
                 return;
 
             cap.addChant(ability, text);
