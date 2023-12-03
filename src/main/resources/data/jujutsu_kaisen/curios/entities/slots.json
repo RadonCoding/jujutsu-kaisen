@@ -2,6 +2,7 @@
   "entities": ["player"],
   "slots": [
     "right_hand",
-    "left_hand"
+    "left_hand",
+    "body"
   ]
 }

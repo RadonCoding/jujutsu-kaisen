@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -89,6 +90,8 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                 if (!this.isRemoved()) {
                                     BlockEntity existing = this.level().getBlockEntity(pos);
 
+                                    CompoundTag saved = null;
+
                                     if (existing instanceof VeilBlockEntity be) {
                                         be.destroy();
 
@@ -96,7 +99,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                     } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
                                         continue;
                                     } else if (existing != null) {
-                                        continue;
+                                        saved = existing.saveWithFullMetadata();
                                     }
 
                                     Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
@@ -104,7 +107,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                     if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, state);
+                                        be.create(this.uuid, state, saved);
                                     }
                                 }
                             }

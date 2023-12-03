@@ -25,6 +25,9 @@ public class DomainBlockEntity extends BlockEntity {
 
     private CompoundTag deferred;
 
+    @Nullable
+    private CompoundTag saved;
+
     public DomainBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(JJKBlockEntities.DOMAIN.get(), pPos, pBlockState);
     }
@@ -53,6 +56,14 @@ public class DomainBlockEntity extends BlockEntity {
                 }
             } else {
                 this.level.setBlockAndUpdate(this.getBlockPos(), original);
+
+                if (this.saved != null) {
+                    BlockEntity be = this.level.getBlockEntity(this.getBlockPos());
+
+                    if (be != null) {
+                        be.load(this.saved);
+                    }
+                }
             }
         } else {
             if (!this.getBlockState().getFluidState().isEmpty()) {
@@ -78,10 +89,11 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
-    public void create(UUID identifier, BlockState state) {
+    public void create(UUID identifier, BlockState state, CompoundTag saved) {
         this.initialized = true;
         this.identifier = identifier;
         this.original = state;
+        this.saved = saved;
         this.setChanged();
     }
 

@@ -147,6 +147,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                                 BlockEntity existing = this.level().getBlockEntity(pos);
 
+                                CompoundTag saved = null;
+
                                 if (existing instanceof VeilBlockEntity be) {
                                     be.destroy();
 
@@ -154,7 +156,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                 } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
                                     return;
                                 } else if (existing != null) {
-                                    return;
+                                    saved = existing.saveWithFullMetadata();
                                 }
 
                                 DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
@@ -191,7 +193,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                         Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
                                 if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                    be.create(this.uuid, state);
+                                    be.create(this.uuid, state, saved);
                                 }
                             }
                         }, delay);
