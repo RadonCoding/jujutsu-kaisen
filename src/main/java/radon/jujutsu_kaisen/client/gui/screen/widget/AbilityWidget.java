@@ -222,8 +222,8 @@ public class AbilityWidget {
                 pGuiGraphics.blitNineSliced(WIDGETS_LOCATION, k, l, this.width, i1, 10, 200, 26, 0, 52);
             }
         }
-        pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, 26, i, 26);
-        pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, 26, j, 26);
+        pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, this.unlocked ? 0 : 26, i, 26);
+        pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, this.unlocked ? 0 : 26, j, 26);
         pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
 
         if (flag) {

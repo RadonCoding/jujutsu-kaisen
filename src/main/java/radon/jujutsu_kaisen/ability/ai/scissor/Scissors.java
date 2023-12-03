@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
+import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -19,6 +20,11 @@ public class Scissors extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return owner instanceof KuchisakeOnnaEntity;
     }
 
     @Override

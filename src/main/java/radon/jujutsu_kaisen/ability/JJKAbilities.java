@@ -53,6 +53,7 @@ import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -129,8 +130,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
     public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
-    public static RegistryObject<Ability> SHOOT_RCT = ABILITIES.register("shoot_rct", ShootRCT::new);
-    public static RegistryObject<Ability> HEAL_RCT = ABILITIES.register("heal_rct", HealRCT::new);
+    public static RegistryObject<Ability> OUTPUT_RCT = ABILITIES.register("output_rct", OutputRCT::new);
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
@@ -211,7 +211,6 @@ public class JJKAbilities {
     }
 
     public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return 50.0F * HelperMethods.getPower(grade.getRequiredExperience());
     }
 
@@ -259,11 +258,9 @@ public class JJKAbilities {
 
     @Nullable
     public static CursedTechnique getTechnique(LivingEntity owner) {
-        AtomicReference<CursedTechnique> result = new AtomicReference<>(null);
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                result.set(cap.getTechnique()));
-        return result.get();
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getTechnique();
     }
 
     @Nullable
@@ -272,6 +269,13 @@ public class JJKAbilities {
             if (List.of(technique.getAbilities()).contains(ability)) return technique;
         }
         return null;
+    }
+
+    @Nullable
+    public static JujutsuType getType(LivingEntity owner) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getType();
     }
 
     public static Set<Ability> getToggled(LivingEntity owner) {
@@ -317,33 +321,21 @@ public class JJKAbilities {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            abilities.add(HEAL.get());
-            abilities.add(RCT.get());
-        }
-
         if (owner instanceof ISorcerer sorcerer) {
             abilities.addAll(sorcerer.getCustom());
 
             if (!sorcerer.canPerformSorcery()) return new ArrayList<>(abilities);
         }
 
-        abilities.add(DASH.get());
-        abilities.add(PUNCH.get());
-        abilities.add(SLAM.get());
-        abilities.add(BARRAGE.get());
+        for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {
+            Ability ability = entry.get();
+
+            if (!ability.isTechnique() && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || (ability.isMelee() && ability.getCost(owner) == 0))) {
+                abilities.add(ability);
+            }
+        }
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            abilities.add(DIVERGENT_FIST.get());
-            abilities.add(WATER_WALKING.get());
-            abilities.add(CURSED_ENERGY_FLOW.get());
-            abilities.add(LIGHTNING.get());
-            abilities.add(DISCHARGE.get());
-            abilities.add(ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get());
-
-            abilities.add(SIMPLE_DOMAIN.get());
-            abilities.add(DOMAIN_AMPLIFICATION.get());
-
             for (Trait trait : cap.getTraits()) {
                 abilities.addAll(Arrays.asList(trait.getAbilities()));
             }

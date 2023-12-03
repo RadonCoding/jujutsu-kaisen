@@ -17,8 +17,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.ten_shadows.summon.MaxElephant;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -43,6 +46,11 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return JJKAbilities.isChanneling(owner, this) || target != null && owner.distanceTo(target) <= RANGE;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return owner instanceof MaxElephantEntity;
     }
 
     @Override
