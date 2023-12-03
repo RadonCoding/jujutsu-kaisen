@@ -469,7 +469,7 @@
   "chat.jujutsu_kaisen.pact_decline": "%1$s has declined a %2$s pact",
   "chat.jujutsu_kaisen.pact_failure": "%1$s hasn't requested a %2$s pact with you",
 
-  "chat.jujutsu_kaisen.chant": "Total chant boost: %1$d%%",
+  "chat.jujutsu_kaisen.chant": "%1s% chant boost: %2$d%%",
 
   "chat.jujutsu_kaisen.switch_mode": "Switched to %1$s%% mode",
 
