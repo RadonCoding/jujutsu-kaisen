@@ -68,6 +68,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue domainAmplificationCost;
     public final ForgeConfigSpec.IntValue zeroPointTwoSecondDomainExpansionCost;
     public final ForgeConfigSpec.IntValue divergentFistCost;
+    public final ForgeConfigSpec.IntValue outputRCT;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
@@ -143,6 +144,8 @@ public class ServerConfig {
                 .defineInRange("zeroPointTwoSecondDomainExpansionCost", 100, 1, 10000);
         this.divergentFistCost = builder.comment("The amount of points divergent fist costs to unlock")
                 .defineInRange("divergentFistCost", 50, 1, 10000);
+        this.outputRCT = builder.comment("The amount of points output RCT costs to unlock")
+                .defineInRange("divergentFistCost", 300, 1, 10000);
         builder.pop();
     }
 

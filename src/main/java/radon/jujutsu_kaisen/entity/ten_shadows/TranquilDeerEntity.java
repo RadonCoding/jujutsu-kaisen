@@ -113,7 +113,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
             this.setXRot(HelperMethods.getXRotD(this, pPlayer.getEyePosition()));
             this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
 
-            if (AbilityHandler.trigger(this, JJKAbilities.HEAL_RCT.get()) == Ability.Status.SUCCESS) {
+            if (AbilityHandler.trigger(this, JJKAbilities.OUTPUT_RCT.get()) == Ability.Status.SUCCESS) {
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
             return InteractionResult.FAIL;
@@ -152,8 +152,8 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.HEAL_RCT.get());
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.OUTPUT_RCT.get());
     }
 
     @Override

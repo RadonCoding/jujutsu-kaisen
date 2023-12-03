@@ -22,6 +22,11 @@ public class ShootPureLove extends Ability {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        return owner instanceof RikaEntity;
+    }
+
+    @Override
     public boolean isTechnique() {
         return false;
     }

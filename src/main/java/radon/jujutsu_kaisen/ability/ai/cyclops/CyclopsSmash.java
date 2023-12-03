@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.curse.CyclopsCurseEntity;
+import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CyclopsSmash extends Ability {
@@ -32,6 +34,11 @@ public class CyclopsSmash extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return target != null && owner.distanceTo(target) <= 3.0D;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return owner instanceof CyclopsCurseEntity;
     }
 
     @Override

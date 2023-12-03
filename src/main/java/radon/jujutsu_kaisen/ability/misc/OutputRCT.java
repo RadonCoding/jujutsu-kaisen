@@ -1,16 +1,18 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -18,12 +20,11 @@ import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class ShootRCT extends Ability {
+public class OutputRCT extends Ability {
     public static final float RANGE = 5.0F;
 
     @Override
@@ -42,6 +43,32 @@ public class ShootRCT extends Ability {
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() == JujutsuType.CURSE && this.getTarget(owner) == target;
+    }
+
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
+    }
+
+    @Override
+    public boolean isUnlockable(LivingEntity owner) {
+        return JJKAbilities.getType(owner) == JujutsuType.SORCERER && super.isUnlockable(owner);
+    }
+
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        return null;
+    }
+
+    @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(0.0F, 2.0F);
+    }
+
+    @Override
+    public int getPointsCost() {
+        return ConfigHolder.SERVER.outputRCT.get();
     }
 
     @Override
@@ -88,7 +115,7 @@ public class ShootRCT extends Ability {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (targetCap.getType() == JujutsuType.CURSE) {
-                target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount * ((float) (Math.max(1, HelperMethods.getGrade(ownerCap.getExperience()).ordinal())) / SorcererGrade.values().length) * 2.0F);
+                target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount * this.getPower(owner) * 2.0F);
                 return;
             }
         }
@@ -107,7 +134,7 @@ public class ShootRCT extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return JJKAbilities.RCT.get().getCost(owner) * 2;
+        return 100.0F;
     }
 
     @Override

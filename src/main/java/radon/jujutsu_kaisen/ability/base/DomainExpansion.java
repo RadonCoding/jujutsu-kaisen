@@ -133,8 +133,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     protected abstract void createBarrier(LivingEntity owner);
 
-
-
     @Override
     public final int getCooldown() {
         return 60 * 20;
@@ -178,7 +176,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public int getPointsCost() {
         return ConfigHolder.SERVER.domainExpansionCost.get();
     }
-
 
     public interface IClosedDomain {
         default int getSize() {
