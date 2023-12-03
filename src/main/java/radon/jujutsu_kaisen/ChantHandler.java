@@ -116,7 +116,7 @@ public class ChantHandler {
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        Math.round(getChant(owner, ability) * 100)), false), player);
+                        ability.getName(), Math.round(getChant(owner, ability) * 100)), false), player);
             }
 
             int delta = messages.get(owner.getUUID()).size() - 5;
