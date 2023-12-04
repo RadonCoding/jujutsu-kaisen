@@ -111,8 +111,14 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             LivingEntity victim = event.getEntity();
 
             // If not enabled, then enable
-            if (victim instanceof Mob && !JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            if (victim instanceof ISorcerer && !JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                Ability domain = ((ISorcerer) victim).getDomain();
+
+                if ((HelperMethods.isStrongest(cap.getExperience()) || !JJKAbilities.hasToggled(victim, domain))) {
+                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                }
             }
 
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
