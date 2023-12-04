@@ -152,7 +152,7 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
-    public List<Ability> getUnlocked() {
+    public List<Ability> getCustom() {
         return List.of(JJKAbilities.OUTPUT_RCT.get());
     }
 
