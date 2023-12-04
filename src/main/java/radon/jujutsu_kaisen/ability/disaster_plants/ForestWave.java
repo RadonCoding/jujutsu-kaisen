@@ -33,7 +33,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (!owner.level().isClientSide) return;
+        if (owner.level().isClientSide) return;
 
         int charge = this.getCharge(owner);
 
