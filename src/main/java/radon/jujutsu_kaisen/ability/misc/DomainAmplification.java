@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
@@ -29,8 +30,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         if (JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get())) return false;
         if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) return false;
 
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) <= 3.0D && owner.hasLineOfSight(target) && !JJKAbilities.hasToggled(owner, domain) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return target != null && owner.distanceTo(target) <= 3.0D && owner.hasLineOfSight(target) &&
+                (HelperMethods.isStrongest(cap.getExperience()) || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -106,6 +110,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
+            // If not enabled, then enable
+            if (victim instanceof Mob && !JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            }
+
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
             Ability ability = source.getAbility();
@@ -113,7 +122,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             if (ability == null) return;
 
             if (ability.isTechnique()) {
-                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.8F : 0.6F));
+                event.setAmount(event.getAmount() * (ability.getRequirements().contains(Trait.REVERSE_CURSED_TECHNIQUE) ? 0.75F : 0.5F));
             }
         }
     }
