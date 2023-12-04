@@ -109,17 +109,15 @@ public class OutputRCT extends Ability {
             }, i * 2);
         }
 
-        float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue();
-
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (targetCap.getType() == JujutsuType.CURSE) {
-                target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount * this.getPower(owner) * 2.0F);
+                target.hurt(JJKDamageSources.jujutsuAttack(owner, this), ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 2.0F);
                 return;
             }
         }
-        target.heal(amount * ((float) (Math.max(1, HelperMethods.getGrade(ownerCap.getExperience()).ordinal())) / SorcererGrade.values().length));
+        target.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner));
     }
 
     @Override

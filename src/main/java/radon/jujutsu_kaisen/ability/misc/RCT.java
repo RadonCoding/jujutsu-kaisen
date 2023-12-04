@@ -43,7 +43,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner));
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner));
 
         if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) {
             int burnout = cap.getBurnout();
@@ -59,7 +59,7 @@ public class RCT extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.getHealth() < owner.getMaxHealth()) {
-            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * getPower(owner) * 8.0F;
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 8.0F;
         } else if ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isStrongest(cap.getExperience())) && cap.getBurnout() > 0) {
             return 1.0F / 20;
         }
