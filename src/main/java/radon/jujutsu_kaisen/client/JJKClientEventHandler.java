@@ -9,7 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -17,7 +20,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.CuriosWrapper;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -50,6 +55,7 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
@@ -60,6 +66,8 @@ import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -112,7 +120,15 @@ public class JJKClientEventHandler {
             if (mc.player == null) return;
 
             if (event.getAction() == InputConstants.PRESS) {
-                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem) {
+                List<Item> stacks = new ArrayList<>();
+                stacks.add(mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem());
+
+                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
+                    stacks.addAll(CuriosWrapper.findSlots(mc.player, "body")
+                            .stream().map(ItemStack::getItem).toList());
+                }
+
+                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && stacks.contains(JJKItems.INVENTORY_CURSE.get())) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
                 }
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
