@@ -90,12 +90,10 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
                             });
                         }
                     });
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
 
                 this.texture = texture.get();
                 this.model = model.get().equals("default") ? this.normal : this.slim;
-                this.texture = texture.get();
             } else {
                 Minecraft mc = Minecraft.getInstance();
                 assert mc.level != null;
