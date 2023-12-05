@@ -72,7 +72,7 @@ public interface ISorcerer {
 
         if (this.canPerformSorcery()) {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
-                if (!ability.isTechnique() || !ability.isScalable()) continue;
+                if (!ability.isTechnique() || !ability.isScalable((LivingEntity) this)) continue;
 
                 Set<String> chants = HelperMethods.getRandomWordCombo(5);
 
