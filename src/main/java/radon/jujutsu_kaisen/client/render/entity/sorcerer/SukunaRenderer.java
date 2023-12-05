@@ -64,30 +64,8 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
     public void render(SukunaEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         EntityType<?> type = pEntity.getKey();
 
-        if (this.model == null) {
-            Minecraft mc = Minecraft.getInstance();
-
-            assert mc.level != null;
-
-            LivingEntity entity = (LivingEntity) type.create(mc.level);
-
-            if (entity == null) return;
-
-            LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
-
-            if (!(renderer.getModel() instanceof PlayerModel<?> player)) return;
-
-            this.model = ((IPlayerModelAccessor) player).getSlim() ? this.slim : this.normal;
-        }
-        super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaEntity pEntity) {
-        EntityType<?> type = pEntity.getKey();
-
-        if (type == EntityType.PLAYER) {
-            if (this.texture == null) {
+        if (this.texture == null) {
+            if (type == EntityType.PLAYER) {
                 GameProfile profile = pEntity.getPlayer();
 
                 AtomicReference<ResourceLocation> texture = new AtomicReference<>(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
@@ -112,20 +90,41 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
                             });
                         }
                     });
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 this.texture = texture.get();
                 this.model = model.get().equals("default") ? this.normal : this.slim;
-                return texture.get();
+                this.texture = texture.get();
             } else {
-                return this.texture;
+                Minecraft mc = Minecraft.getInstance();
+                assert mc.level != null;
+                Entity entity = type.create(mc.level);
+                assert entity != null;
+                this.texture = this.entityRenderDispatcher.getRenderer(entity).getTextureLocation(entity);
             }
-        } else {
-            Minecraft mc = Minecraft.getInstance();
-            assert mc.level != null;
-            Entity entity = type.create(mc.level);
-            assert entity != null;
-            return this.entityRenderDispatcher.getRenderer(entity).getTextureLocation(entity);
         }
+
+        if (this.model == null) {
+            Minecraft mc = Minecraft.getInstance();
+
+            assert mc.level != null;
+
+            LivingEntity entity = (LivingEntity) type.create(mc.level);
+
+            if (entity == null) return;
+
+            LivingEntityRenderer<?, ?> renderer = (LivingEntityRenderer<?, ?>) this.entityRenderDispatcher.getRenderer(entity);
+
+            if (!(renderer.getModel() instanceof PlayerModel<?> player)) return;
+
+            this.model = ((IPlayerModelAccessor) player).getSlim() ? this.slim : this.normal;
+        }
+        super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull SukunaEntity pEntity) {
+        return this.texture;
     }
 }
