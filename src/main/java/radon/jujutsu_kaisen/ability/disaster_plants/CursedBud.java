@@ -1,11 +1,29 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -41,5 +59,34 @@ public class CursedBud extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 50.0F;
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class CursedBudForgeEvents {
+        @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            DamageSource source = event.getSource();
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            if (attacker.level().isClientSide) return;
+
+            LivingEntity victim = event.getEntity();
+
+            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
+
+            if (!melee) return;
+
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.hasTechnique(CursedTechnique.DISASTER_PLANTS)) return;
+
+            for (CursedBudProjectile bud : victim.level().getEntitiesOfClass(CursedBudProjectile.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+                if (bud.getOwner() != attacker) continue;
+                bud.implant(victim);
+                return;
+            }
+        }
     }
 }

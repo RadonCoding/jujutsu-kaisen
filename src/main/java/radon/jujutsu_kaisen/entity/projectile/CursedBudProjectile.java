@@ -55,6 +55,17 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         this.plant = true;
     }
 
+    public void implant(LivingEntity victim) {
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if (victim == owner) return;
+
+            if (victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * this.getPower())) {
+                victim.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * this.getPower()), 0));
+            }
+        }
+        this.discard();
+    }
+
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
@@ -68,14 +79,9 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         if (this.level().isClientSide) return;
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if ((pResult.getEntity() instanceof LivingEntity living && owner.canAttack(living)) && living != owner) {
-                if (living.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * this.getPower())) {
-                    living.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * this.getPower()), 0));
-                }
-            }
+        if (pResult.getEntity() instanceof LivingEntity living) {
+            this.implant(living);
         }
-        this.discard();
     }
 
     @Override

@@ -24,9 +24,6 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import java.util.List;
 
 public class CursedEnergyFleshItem extends Item {
-    private static final int DURATION = 30 * 20;
-    private static final int AMPLIFIER = 5;
-
     public CursedEnergyFleshItem(Properties pProperties) {
         super(pProperties);
     }
@@ -45,21 +42,5 @@ public class CursedEnergyFleshItem extends Item {
     public static void setGrade(ItemStack stack, SorcererGrade grade) {
         CompoundTag nbt = stack.getOrCreateTag();
         nbt.putInt("grade", grade.ordinal());
-    }
-
-    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
-        ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
-
-        pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            SorcererGrade grade = getGrade(pStack);
-
-            if (cap.getType() == JujutsuType.CURSE) {
-                cap.addExtraEnergy((grade.ordinal() + 1) * ConfigHolder.SERVER.cursedObjectEnergyForGrade.get().floatValue());
-            } else if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) && !cap.hasTrait(Trait.PERFECT_BODY)) {
-                pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (grade.ordinal() + 1) / SorcererGrade.values().length)),
-                        Mth.floor(AMPLIFIER * ((float) (grade.ordinal() + 1) / SorcererGrade.values().length))));
-            }
-        });
-        return stack;
     }
 }

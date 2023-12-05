@@ -51,11 +51,6 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    public boolean canDie() {
-        return true;
-    }
-
-    @Override
     public boolean isTenShadows() {
         return true;
     }

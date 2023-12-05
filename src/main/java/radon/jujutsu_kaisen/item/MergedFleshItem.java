@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -24,6 +25,10 @@ public class MergedFleshItem extends CursedEnergyFleshItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pLivingEntity) {
         if (pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = pLivingEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.getType() == JujutsuType.CURSE) {
+                cap.addExtraEnergy((getGrade(pStack).ordinal() + 1) * ConfigHolder.SERVER.cursedObjectEnergyForGrade.get().floatValue() * 2.0F);
+            }
 
             if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 if (getGrade(pStack) == SorcererGrade.SPECIAL_GRADE && !cap.hasTrait(Trait.PERFECT_BODY)) {
