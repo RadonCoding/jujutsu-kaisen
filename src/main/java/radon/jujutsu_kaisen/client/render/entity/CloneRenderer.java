@@ -50,7 +50,7 @@ public class CloneRenderer extends HumanoidMobRenderer<CloneEntity, PlayerModel<
     }
 
     @Override
-    public void render(CloneEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull CloneEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         if (this.texture == null) {
             GameProfile profile = pEntity.getPlayer();
 
