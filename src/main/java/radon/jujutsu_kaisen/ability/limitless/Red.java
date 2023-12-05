@@ -45,10 +45,6 @@ public class Red extends Ability {
         return 10 * 20;
     }
 
-
-
-
-
     @Override
     public Classification getClassification() {
         return Classification.RED;

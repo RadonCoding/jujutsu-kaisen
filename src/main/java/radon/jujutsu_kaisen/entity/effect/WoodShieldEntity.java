@@ -1,25 +1,30 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class WoodShieldEntity extends WoodSegmentEntity {
-    private boolean isDying;
-    private int start;
-    private WoodShieldEntity prevSegment;
+public class WoodShieldEntity extends Mob {
+    private static final float STRENGTH = 50.0F;
+
+    @Nullable
     private Vec3 pos;
 
     @Nullable
@@ -27,7 +32,7 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public WoodShieldEntity(EntityType<?> pEntityType, Level pLevel) {
+    public WoodShieldEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -37,23 +42,79 @@ public class WoodShieldEntity extends WoodSegmentEntity {
         this.setOwner(owner);
         this.pos = owner.position();
 
-        this.setParent(this);
+        this.setPos(owner.position());
 
-        this.moveTo(owner.getX(), owner.getY(), owner.getZ(), owner.getXRot(), owner.getYRot());
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
+
+        if (attribute != null) {
+            attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
+            this.setHealth(this.getMaxHealth());
+        }
     }
 
-    public WoodShieldEntity(WoodShieldEntity segment, float yawOffset, float pitchOffset) {
-        super(segment, yawOffset, pitchOffset);
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
 
-        this.setOwner(segment.getOwner());
-        this.pos = segment.pos;
+        this.level().addFreshEntity(new WoodShieldSegmentEntity(this));
     }
 
-    public WoodShieldEntity(WoodShieldEntity segment, double offsetX, double offsetY, double offsetZ, float yawOffset, float pitchOffset) {
-        super(segment, offsetX, offsetY, offsetZ, yawOffset, pitchOffset);
+    @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
+    }
 
-        this.setOwner(segment.getOwner());
-        this.pos = segment.pos;
+    @Override
+    public boolean isSilent() {
+        return true;
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) {
+            return super.getDimensions(pPose);
+        }
+        return EntityDimensions.fixed(owner.getBbWidth(), owner.getBbHeight()).scale(1.25F);
+    }
+
+    @Override
+    public void tick() {
+        this.refreshDimensions();
+
+        LivingEntity owner = this.getOwner();
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.WOOD_SHIELD.get()))) {
+            this.discard();
+        } else {
+            super.tick();
+
+            if (owner != null && this.pos != null) {
+                owner.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
+            }
+        }
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
+    @Override
+    public void aiStep() {
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    protected boolean updateInWaterStateAndDoFluidPushing() {
+        return false;
     }
 
     public void setOwner(@Nullable LivingEntity pOwner) {
@@ -76,12 +137,24 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     }
 
     @Override
+    public boolean isInWall() {
+        return false;
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
+    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putDouble("pos_x", this.pos.x());
-        pCompound.putDouble("pos_y", this.pos.y());
-        pCompound.putDouble("pos_z", this.pos.z());
+        if (this.pos != null) {
+            pCompound.putDouble("pos_x", this.pos.x());
+            pCompound.putDouble("pos_y", this.pos.y());
+            pCompound.putDouble("pos_z", this.pos.z());
+        }
 
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
@@ -100,54 +173,19 @@ public class WoodShieldEntity extends WoodSegmentEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        Entity entity = this.getOwner();
+        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    }
 
-        LivingEntity owner = this.getOwner();
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
-            this.discard();
-        } else if (owner != null) {
-            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox())) {
-                entity.setDeltaMovement(entity.position().subtract(this.position()).normalize());
-                entity.hurtMarked = true;
-            }
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
 
-            if (!this.isDying && !JJKAbilities.hasToggled(owner, JJKAbilities.WOOD_SHIELD.get())) {
-                this.isDying = true;
-                this.start = this.tickCount;
-            }
-
-            int count = 30;
-
-            if ((!this.isDying || this.tickCount - this.start < count - this.getIndex())) {
-                if (!this.level().isClientSide && this.getIndex() == 0 && this.tickCount == 1) {
-                    for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
-                        Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
-                        float f = HelperMethods.getYaw(this.pos.subtract(this.position().add(pos)));
-                        WoodShieldEntity segment = new WoodShieldEntity(this, pos.x(), pos.y(), pos.z(), f + ((this.random.nextFloat() - 0.5F) * 160.0F), 80.0F);
-                        segment.prevSegment = segment;
-                        this.level().addFreshEntity(segment);
-                    }
-                }
-                if (!this.level().isClientSide && this.getIndex() == 1 && this.tickCount > 1 && this.tickCount <= count) {
-                    float yaw = (this.random.nextFloat() - 0.5F) * 30.0F;
-                    int i = this.prevSegment.getIndex();
-
-                    if (i > 1) {
-                        yaw = Mth.wrapDegrees(HelperMethods.getYaw(this.pos
-                                .subtract(this.prevSegment.position())) - this.prevSegment.getYRot());
-                        yaw /= owner.getBbWidth() + Math.max(4.4F - (float) i * 0.075F, 1.0F);
-                    }
-                    this.prevSegment = new WoodShieldEntity(this.prevSegment, yaw, -0.5F);
-                    this.level().addFreshEntity(this.prevSegment);
-                }
-                if (this.pos != null) {
-                    owner.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
-                }
-            } else if (!this.level().isClientSide) {
-                this.discard();
-            }
+        if (owner != null) {
+            this.setOwner(owner);
         }
     }
 }

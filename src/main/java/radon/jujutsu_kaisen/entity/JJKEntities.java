@@ -270,9 +270,13 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_segment")
                             .toString()));
+    public static RegistryObject<EntityType<WoodShieldSegmentEntity>> WOOD_SHIELD_SEGMENT = ENTITIES.register("wood_shield_segment", () ->
+            EntityType.Builder.<WoodShieldSegmentEntity>of(WoodShieldSegmentEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_shield_segment")
+                            .toString()));
     public static RegistryObject<EntityType<WoodShieldEntity>> WOOD_SHIELD = ENTITIES.register("wood_shield", () ->
             EntityType.Builder.<WoodShieldEntity>of(WoodShieldEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wood_shield")
                             .toString()));
     public static RegistryObject<EntityType<CursedBudProjectile>> CURSED_BUD = ENTITIES.register("cursed_bud", () ->
@@ -472,5 +476,6 @@ public class JJKEntities {
         event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
 
         event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
+        event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
     }
 }

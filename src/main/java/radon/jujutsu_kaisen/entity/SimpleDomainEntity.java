@@ -77,13 +77,13 @@ public class SimpleDomainEntity extends Mob {
 
     @Override
     public void tick() {
-        super.tick();
-
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
             this.discard();
         } else if (owner != null) {
+            super.tick();
+
             this.setPos(owner.position());
 
             if (this.level() instanceof ServerLevel level) {

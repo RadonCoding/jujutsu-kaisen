@@ -52,10 +52,10 @@ public class ForestWaveEntity extends JujutsuProjectile {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity instanceof ForestWaveEntity)
                 continue;
 
-            entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
-            entity.hurtMarked = true;
-
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * this.getPower());
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_WAVE.get()), DAMAGE * this.getPower())) {
+                entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse());
+                entity.hurtMarked = true;
+            }
         }
     }
 

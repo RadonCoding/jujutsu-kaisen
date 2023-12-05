@@ -1,17 +1,21 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.WoodShieldEntity;
+import radon.jujutsu_kaisen.entity.effect.WoodShieldSegmentEntity;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
 
     @Override
     public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.WOOD_SHIELD.get());
+        return List.of(JJKEntities.WOOD_SHIELD_SEGMENT.get());
     }
 
     @Override
@@ -60,8 +64,6 @@ public class WoodShield extends Summon<WoodShieldEntity> {
         return 5 * 20;
     }
 
-
-
     @Override
     public boolean display() {
         return false;
@@ -70,11 +72,21 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class WoodShieldForgeEvents {
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.WOOD_SHIELD.get())) {
-                event.setAmount(event.getAmount() * 0.5F);
+            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.WOOD_SHIELD.get()))
+                return;
+
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            WoodShieldEntity shield = cap.getSummonByClass((ServerLevel) victim.level(), WoodShieldEntity.class);
+
+            if (shield != null) {
+                shield.hurt(event.getSource(), event.getAmount());
+                event.setCanceled(true);
             }
         }
     }
