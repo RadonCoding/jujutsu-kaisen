@@ -492,16 +492,6 @@ public class SorcererData implements ISorcererData {
 
         this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
-        if (this.traits.contains(Trait.SIX_EYES) && !this.owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-            this.owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
-        }
-
-        if (this.type == JujutsuType.CURSE) {
-            if (this.owner instanceof Player player) {
-                player.getFoodData().setFoodLevel(20);
-            }
-        }
-
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
 
