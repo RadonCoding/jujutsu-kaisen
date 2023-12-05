@@ -21,7 +21,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

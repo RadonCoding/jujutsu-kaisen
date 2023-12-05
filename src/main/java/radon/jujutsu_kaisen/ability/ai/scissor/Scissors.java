@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Scissors extends Ability {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

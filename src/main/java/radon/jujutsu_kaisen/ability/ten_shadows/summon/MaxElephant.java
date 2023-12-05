@@ -18,7 +18,7 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

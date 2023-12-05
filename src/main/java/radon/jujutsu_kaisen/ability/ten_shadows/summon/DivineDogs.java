@@ -26,7 +26,7 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

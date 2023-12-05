@@ -19,7 +19,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class Mimicry extends Ability implements Ability.IToggled {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

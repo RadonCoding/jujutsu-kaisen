@@ -63,7 +63,9 @@ public abstract class Ability {
         return getPower(this, owner);
     }
 
-    public abstract boolean isScalable();
+    public boolean isScalable(LivingEntity owner) {
+        return this.getActivationType(owner) != ActivationType.TOGGLED;
+    }
 
     // Used for skill tree
     public boolean isDisplayed(LivingEntity owner) {
@@ -271,7 +273,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable() ? cap.getOutput() : 1.0F)));
+        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable(owner) ? cap.getOutput() : 1.0F)));
     }
 
     public interface IDomainAttack {

@@ -44,7 +44,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     private static final double LAUNCH_POWER = 2.0D;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

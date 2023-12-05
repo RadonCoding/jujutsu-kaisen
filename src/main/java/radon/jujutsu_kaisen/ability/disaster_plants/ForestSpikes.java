@@ -24,10 +24,7 @@ public class ForestSpikes extends Ability {
     private static final double RANGE = 30.0D;
     private static final float SPREAD = 5.0F;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

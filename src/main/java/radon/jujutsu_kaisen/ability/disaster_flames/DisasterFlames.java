@@ -22,10 +22,7 @@ public class DisasterFlames extends Ability {
     private static final double AOE_RANGE = 5.0D;
     private static final float DAMAGE = 25.0F;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

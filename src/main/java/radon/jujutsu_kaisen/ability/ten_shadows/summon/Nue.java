@@ -18,7 +18,7 @@ public class Nue extends Summon<NueEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

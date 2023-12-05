@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

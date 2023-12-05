@@ -43,7 +43,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     private static final Map<UUID, Long> invulnerable = new HashMap<>();
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class WaterWalking extends Ability implements Ability.IToggled {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

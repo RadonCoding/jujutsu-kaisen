@@ -27,7 +27,7 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

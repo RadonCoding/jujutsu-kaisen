@@ -25,7 +25,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

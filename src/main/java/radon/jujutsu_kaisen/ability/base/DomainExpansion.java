@@ -34,7 +34,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public static final int BURNOUT = 30 * 20;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

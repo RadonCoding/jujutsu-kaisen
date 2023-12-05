@@ -71,10 +71,7 @@ public class DivergentFist extends Ability {
         return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
     }
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public int getPointsCost() {

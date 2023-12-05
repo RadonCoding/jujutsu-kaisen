@@ -44,7 +44,7 @@ import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

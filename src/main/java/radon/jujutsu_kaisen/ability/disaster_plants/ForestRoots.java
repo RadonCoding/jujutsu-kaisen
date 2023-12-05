@@ -13,10 +13,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class ForestRoots extends Ability {
     public static final double RANGE = 15.0D;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

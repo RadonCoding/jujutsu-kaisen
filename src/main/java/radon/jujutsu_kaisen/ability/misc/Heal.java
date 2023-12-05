@@ -14,7 +14,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Heal extends Ability implements Ability.IChannelened {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

@@ -93,7 +93,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 
