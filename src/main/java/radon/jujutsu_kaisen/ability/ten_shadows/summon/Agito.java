@@ -51,11 +51,6 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
-    public boolean canDie() {
-        return true;
-    }
-
-    @Override
     public boolean isTenShadows() {
         return true;
     }
@@ -64,6 +59,4 @@ public class Agito extends Summon<AgitoEntity> {
     protected AgitoEntity summon(int index, LivingEntity owner) {
         return new AgitoEntity(owner);
     }
-
-
 }

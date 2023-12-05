@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.entity.effect.ForestRootsEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestRoots extends Ability {
-    public static final double RANGE = 10.0D;
+    public static final double RANGE = 15.0D;
 
     @Override
     public boolean isScalable() {

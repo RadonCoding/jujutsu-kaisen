@@ -146,8 +146,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     if (melee) {
                         switch (attackerCap.getNature()) {
                             case BASIC -> event.setAmount(event.getAmount() * 1.25F);
-                            case LIGHTNING ->
-                                    event.setAmount(event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
+                            case LIGHTNING -> event.setAmount(event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F));
                             case ROUGH -> event.setAmount(event.getAmount() * 1.5F);
                         }
                     }

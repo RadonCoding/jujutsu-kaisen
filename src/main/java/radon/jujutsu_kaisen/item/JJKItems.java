@@ -115,9 +115,9 @@ public class JJKItems {
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 
     public static RegistryObject<Item> SORCERER_FLESH = ITEMS.register("sorcerer_flesh",
-            () -> new CursedEnergyFleshItem(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
+            () -> new SorcererFleshItem(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
     public static RegistryObject<Item> CURSE_FLESH = ITEMS.register("curse_flesh",
-            () -> new CursedEnergyFleshItem(new Item.Properties().food(JJKFoods.CURSE_FLESH)));
+            () -> new CurseFleshItem(new Item.Properties().food(JJKFoods.CURSE_FLESH)));
     public static RegistryObject<Item> MERGED_FLESH = ITEMS.register("merged_flesh",
             () -> new MergedFleshItem(new Item.Properties().food(JJKFoods.MERGED_FLESH)));
 

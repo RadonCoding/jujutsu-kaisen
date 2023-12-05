@@ -51,11 +51,6 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    public boolean canDie() {
-        return true;
-    }
-
-    @Override
     public boolean isTenShadows() {
         return true;
     }
