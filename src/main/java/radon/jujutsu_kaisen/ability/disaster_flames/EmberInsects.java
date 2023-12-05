@@ -10,10 +10,7 @@ import radon.jujutsu_kaisen.entity.projectile.EmberInsectProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class EmberInsects extends Ability {
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

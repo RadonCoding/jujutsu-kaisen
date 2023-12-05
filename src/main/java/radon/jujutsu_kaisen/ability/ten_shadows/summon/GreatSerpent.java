@@ -18,7 +18,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

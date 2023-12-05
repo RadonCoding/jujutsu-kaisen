@@ -186,10 +186,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         return MenuType.SCROLL;
     }
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public Classification getClassification() {

@@ -30,7 +30,7 @@ public class Dash extends Ability {
     private static final float MAX_DASH = 5.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

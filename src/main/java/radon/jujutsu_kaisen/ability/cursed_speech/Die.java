@@ -126,10 +126,7 @@ public class Die extends Ability {
         return 30 * 20;
     }
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public Classification getClassification() {

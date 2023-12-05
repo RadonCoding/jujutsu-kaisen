@@ -14,10 +14,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class ForestWave extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final int DELAY = 3;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

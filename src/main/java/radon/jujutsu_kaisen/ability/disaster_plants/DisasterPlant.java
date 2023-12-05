@@ -13,10 +13,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class DisasterPlant extends Ability {
     public static final double RANGE = 30.0D;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

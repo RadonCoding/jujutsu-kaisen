@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 public class BlueFists extends Ability implements Ability.IToggled {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

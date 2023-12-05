@@ -67,10 +67,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         return 5;
     }
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public Classification getClassification() {

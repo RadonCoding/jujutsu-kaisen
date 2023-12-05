@@ -34,7 +34,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     private static final float DAMAGE = 1.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

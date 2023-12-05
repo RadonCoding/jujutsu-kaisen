@@ -18,10 +18,7 @@ import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MaximumMeteor extends Ability {
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

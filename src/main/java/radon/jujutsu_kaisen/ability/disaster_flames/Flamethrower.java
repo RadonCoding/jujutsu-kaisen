@@ -19,10 +19,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     private static final float DAMAGE = 7.5F;
     private static final double RANGE = 5.0D;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

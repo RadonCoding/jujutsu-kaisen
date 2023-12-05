@@ -22,10 +22,7 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     private static final double X_STEP = 0.05D;
     private static final float EXPLOSIVE_POWER = 2.0F;
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
 
 

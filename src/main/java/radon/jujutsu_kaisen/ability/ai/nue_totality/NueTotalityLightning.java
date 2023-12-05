@@ -16,7 +16,7 @@ public class NueTotalityLightning extends Ability {
     private static final float DAMAGE = 5.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

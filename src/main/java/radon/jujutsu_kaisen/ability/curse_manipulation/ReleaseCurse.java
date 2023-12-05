@@ -25,7 +25,7 @@ public class ReleaseCurse extends Ability {
     private static final double RANGE = 100.0D;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

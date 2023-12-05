@@ -15,7 +15,7 @@ public class SoulRestoration extends Ability {
     public static final float RANGE = 5.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

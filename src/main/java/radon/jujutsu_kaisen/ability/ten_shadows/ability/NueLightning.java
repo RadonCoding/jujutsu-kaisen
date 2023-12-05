@@ -64,10 +64,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
         return 1.0F;
     }
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public Classification getClassification() {

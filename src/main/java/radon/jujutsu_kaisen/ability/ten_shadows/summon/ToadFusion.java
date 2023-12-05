@@ -18,7 +18,7 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

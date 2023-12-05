@@ -18,7 +18,7 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

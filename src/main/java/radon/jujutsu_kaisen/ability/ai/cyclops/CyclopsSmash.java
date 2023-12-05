@@ -22,7 +22,7 @@ public class CyclopsSmash extends Ability {
     private static final float DAMAGE = 10.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

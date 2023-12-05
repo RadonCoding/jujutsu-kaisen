@@ -8,10 +8,7 @@ import radon.jujutsu_kaisen.entity.effect.WaterballEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DisasterTides extends Ability {
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {

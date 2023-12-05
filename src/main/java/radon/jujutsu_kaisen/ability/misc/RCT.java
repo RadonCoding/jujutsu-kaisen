@@ -18,7 +18,7 @@ import java.util.List;
 
 public class RCT extends Ability implements Ability.IChannelened {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

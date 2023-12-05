@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ShootPureLove extends Ability {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

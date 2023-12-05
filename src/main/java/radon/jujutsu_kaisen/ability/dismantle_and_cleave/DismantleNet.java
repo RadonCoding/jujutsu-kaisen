@@ -77,10 +77,7 @@ public class DismantleNet extends Ability {
 
 
 
-    @Override
-    public boolean isScalable() {
-        return true;
-    }
+
 
     @Override
     public Classification getClassification() {

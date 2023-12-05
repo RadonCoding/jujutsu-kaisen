@@ -38,7 +38,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

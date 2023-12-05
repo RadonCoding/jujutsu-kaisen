@@ -7,7 +7,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 
 public class IdleTransfiguration extends Ability implements Ability.IToggled {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ReleaseShikigami extends Ability {
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 

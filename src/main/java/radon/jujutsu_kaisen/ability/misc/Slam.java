@@ -89,7 +89,7 @@ public class Slam extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public boolean isScalable() {
+    public boolean isScalable(LivingEntity owner) {
         return false;
     }
 
