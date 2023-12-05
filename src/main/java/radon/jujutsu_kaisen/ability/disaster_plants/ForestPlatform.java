@@ -31,7 +31,7 @@ public class ForestPlatform extends Ability implements Ability.IToggled {
 
         BlockState replace = JJKBlocks.FAKE_WOOD.get().defaultBlockState();
 
-        BlockPos pos = owner.blockPosition();
+        BlockPos pos = owner.blockPosition().below(owner.isShiftKeyDown() ? 1 : 0);
 
         int i = 4;
 

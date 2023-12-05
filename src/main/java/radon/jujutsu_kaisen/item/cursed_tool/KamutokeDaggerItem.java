@@ -130,21 +130,21 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-        int i = this.getUseDuration(stack) - count;
-        float f = this.getPowerForTime(i);
-        float cost = RANGE_COST * f;
-
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
-            if (cap.getEnergy() < cost) return;
-
-            cap.useEnergy(cost);
-        }
-
         BlockHitResult hit = this.getBlockHit(entity);
 
         if (hit != null) {
+            int i = this.getUseDuration(stack) - count;
+            float f = this.getPowerForTime(i);
+            float cost = RANGE_COST * f;
+
+            ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!(entity instanceof Player player) || !player.getAbilities().instabuild) {
+                if (cap.getEnergy() < cost) return;
+
+                cap.useEnergy(cost);
+            }
+
             Vec3 pos = hit.getBlockPos().getCenter();
 
             for (int j = 0; j < COUNT * f; j++) {

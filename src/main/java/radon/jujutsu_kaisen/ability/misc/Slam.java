@@ -108,11 +108,6 @@ public class Slam extends Ability implements Ability.IChannelened {
 
     }
 
-    @Override
-    public Status checkStatus(LivingEntity owner) {
-        return owner.onGround() ? super.checkStatus(owner) : Status.FAILURE;
-    }
-
     public static void onHitGround(LivingEntity owner, float distance) {
         if (!(owner.level() instanceof ServerLevel)) return;
 

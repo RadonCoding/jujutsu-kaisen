@@ -178,6 +178,7 @@ public class JJKBlocks {
                     .instrument(NoteBlockInstrument.BASS)
                     .strength(2.0F)
                     .sound(SoundType.WOOD)
+                    .isSuffocating(JJKBlocks::never)
                     .ignitedByLava()));
 
     public static RegistryObject<Block> LIMBO = BLOCKS.register("limbo", () ->

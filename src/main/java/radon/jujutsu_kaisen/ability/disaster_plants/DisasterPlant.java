@@ -13,8 +13,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class DisasterPlant extends Ability {
     public static final double RANGE = 30.0D;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
@@ -27,9 +25,7 @@ public class DisasterPlant extends Ability {
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (owner.canAttack(target)) {
-                return target;
-            }
+            return target;
         }
         return null;
     }
@@ -37,6 +33,8 @@ public class DisasterPlant extends Ability {
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
+
+        if (owner.level().isClientSide) return;
 
         LivingEntity target = this.getTarget(owner);
 
