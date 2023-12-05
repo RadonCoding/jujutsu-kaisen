@@ -58,7 +58,7 @@ public class ChantTab extends JJKTab {
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
 
         for (Ability ability : abilities) {
-            if (!ability.isScalable() || !ability.isTechnique()) continue;
+            if (!ability.isScalable(this.minecraft.player) || !ability.isTechnique()) continue;
             consumer.accept(result.apply(ability));
         }
     }
