@@ -1,9 +1,13 @@
 package radon.jujutsu_kaisen.entity;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -31,13 +35,17 @@ import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public class CloneEntity extends PathfinderMob implements ISorcerer {
+    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(CloneEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
+
     private static final int TELEPORT_RADIUS = 32;
 
     @Nullable
@@ -62,6 +70,17 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
         this.setOwner(owner);
 
         this.original = original;
+    }
+
+    public GameProfile getPlayer() {
+        return NbtUtils.readGameProfile(this.entityData.get(DATA_PLAYER).orElseThrow());
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_PLAYER, Optional.empty());
     }
 
     @Override
@@ -145,6 +164,9 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putString("original", this.original.toString());
+
+        this.entityData.get(DATA_PLAYER).ifPresent(player ->
+                pCompound.put("player", player));
     }
 
     @Override
@@ -155,6 +177,10 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.original = new ResourceLocation(pCompound.getString("original"));
+
+        if (pCompound.contains("player")) {
+            this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
+        }
     }
 
     @Override
