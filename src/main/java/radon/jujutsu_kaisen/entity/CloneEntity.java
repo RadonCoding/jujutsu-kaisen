@@ -96,17 +96,6 @@ public class CloneEntity extends PathfinderMob implements ISorcerer {
     }
 
     @Override
-    public void tick() {
-        LivingEntity owner = this.getOwner();
-
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
-            this.discard();
-        } else {
-            super.tick();
-        }
-    }
-
-    @Override
     protected void customServerAiStep() {
         LivingEntity owner = this.getOwner();
 
