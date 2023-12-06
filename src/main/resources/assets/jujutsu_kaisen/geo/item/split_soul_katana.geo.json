@@ -4,8 +4,8 @@
 		{
 			"description": {
 				"identifier": "geometry.split_soul_katana",
-				"texture_width": 32,
-				"texture_height": 32,
+				"texture_width": 64,
+				"texture_height": 64,
 				"visible_bounds_width": 2,
 				"visible_bounds_height": 4,
 				"visible_bounds_offset": [0, 1, 0]
@@ -15,11 +15,13 @@
 					"name": "bb_main",
 					"pivot": [0, 0, 0],
 					"cubes": [
-						{"origin": [-1.5, 0.5, -0.6], "size": [3, 2, 4], "uv": [16, 0]},
-						{"origin": [-1.5, -1.5, -0.6], "size": [3, 2, 4], "uv": [15, 15]},
-						{"origin": [-0.5, -8.5, 0.4], "size": [1, 10, 2], "uv": [6, 0]},
-						{"origin": [-1, -10.5, 0.4], "size": [2, 2, 2], "uv": [15, 7]},
-						{"origin": [0.0625, 2.5, -0.5875], "size": [0, 24, 3], "uv": [0, 0]}
+						{"origin": [-1.53125, 2, -2.00625], "size": [3, 2, 4], "uv": [10, 6]},
+						{"origin": [-1.53125, 0, -2.00625], "size": [3, 2, 4], "uv": [10, 0]},
+						{"origin": [-0.53125, -7, -1.00625], "size": [1, 10, 2], "uv": [10, 12]},
+						{"origin": [-1.03125, -9, -1.00625], "size": [2, 2, 2], "uv": [0, 0]},
+						{"origin": [0.03125, 4, -2.49375], "size": [0, 8, 5], "uv": [0, 26]},
+						{"origin": [0.03125, 28, -2.49375], "size": [0, 10, 5], "uv": [0, 0]},
+						{"origin": [0.03125, 12, -2.49375], "size": [0, 16, 5], "uv": [0, 10]}
 					]
 				}
 			]

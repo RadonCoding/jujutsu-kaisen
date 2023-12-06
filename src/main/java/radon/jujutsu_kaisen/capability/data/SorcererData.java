@@ -669,6 +669,10 @@ public class SorcererData implements ISorcererData {
     public void removeChant(Ability ability, String chant) {
         if (this.chants.containsKey(ability)) {
             this.chants.get(ability).remove(chant);
+
+            if (this.chants.get(ability).isEmpty()) {
+                this.chants.remove(ability);
+            }
         }
     }
 
