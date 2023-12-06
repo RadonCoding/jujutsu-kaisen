@@ -22,8 +22,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
-    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PlayfulCloudItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
@@ -51,25 +49,16 @@ public class PlayfulCloudItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "swing_controller", state -> PlayState.STOP)
-                .triggerableAnim("swing", SWING));
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        if (entity.level() instanceof ServerLevel level) {
-            triggerAnim(entity, GeoItem.getOrAssignId(stack, level), "swing_controller", "swing");
-        }
-        return super.onEntitySwing(stack, entity);
-    }
-
-    @Override
     public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
         if (enchantment == Enchantments.KNOCKBACK) {
             return 10;
         }
         return super.getEnchantmentLevel(stack, enchantment);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
     }
 
     @Override

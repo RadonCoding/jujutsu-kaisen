@@ -1,18 +1,22 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
+  "parent": "builtin/entity",
+  "display": {
     "gui": {
-      "parent": "jujutsu_kaisen:item/playful_cloud_inventory"
-    },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/playful_cloud_inventory"
-    },
-    "fixed": {
-      "parent": "jujutsu_kaisen:item/playful_cloud_inventory"
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        1.5,
+        -5,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
     }
   }
 }
