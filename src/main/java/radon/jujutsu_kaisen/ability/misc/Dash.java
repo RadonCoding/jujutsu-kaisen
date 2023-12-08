@@ -117,7 +117,7 @@ public class Dash extends Ability {
             owner.hurtMarked = true;
         }
 
-        Vec3 pos = owner.position().add(0.0D, owner.getBbHeight() / 2.0F, 0.0D);
+        Vec3 pos = owner.position();
 
         for (int i = 0; i < 32; i++) {
             double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
@@ -143,16 +143,12 @@ public class Dash extends Ability {
 
     @Override
     public int getRealCooldown(LivingEntity owner) {
-        AtomicInteger cooldown = new AtomicInteger(this.getCooldown());
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                cooldown.set(0);
-            } else if (cap.hasTrait(Trait.SIX_EYES)) {
-                cooldown.set(cooldown.get() / 2);
-            }
-        });
-        return cooldown.get();
+        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            return 0;
+        }
+        return this.getCooldown() / (cap.hasTrait(Trait.SIX_EYES) ? 2 : 1);
     }
 
     @Override

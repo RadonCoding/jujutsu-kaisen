@@ -299,11 +299,6 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "lightning")
                             .toString()));
-    public static RegistryObject<EntityType<EmittingLightningEntity>> EMITTING_LIGHTNING = ENTITIES.register("emitting_lightning", () ->
-            EntityType.Builder.<EmittingLightningEntity>of(EmittingLightningEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "emitting_lightning")
-                            .toString()));
     public static RegistryObject<EntityType<ProjectionFrameEntity>> PROJECTION_FRAME = ENTITIES.register("projection_frame", () ->
             EntityType.Builder.<ProjectionFrameEntity>of(ProjectionFrameEntity::new, MobCategory.MISC)
                     .sized(0.1F, 0.1F)
@@ -348,7 +343,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 3.6F)
+                    .sized(1.4F, 5.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
     public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
             EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)

@@ -21,9 +21,10 @@ import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.boogie_woogie.SwapOthers;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
-import radon.jujutsu_kaisen.ability.boogie_woogie.BoogieWoogie;
+import radon.jujutsu_kaisen.ability.boogie_woogie.SwapSelf;
 import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
@@ -65,7 +66,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class JJKAbilities {
@@ -185,7 +185,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> EXPLODE = ABILITIES.register("explode", Explode::new);
     public static RegistryObject<Ability> DIE = ABILITIES.register("die", Die::new);
 
-    public static RegistryObject<Ability> BOOGIE_WOOGIE = ABILITIES.register("boogie_woogie", BoogieWoogie::new);
+    public static RegistryObject<Ability> SWAP_SELF = ABILITIES.register("swap_self", SwapSelf::new);
+    public static RegistryObject<Ability> SWAP_OTHERS = ABILITIES.register("swap_others", SwapOthers::new);
     public static RegistryObject<Ability> FEINT = ABILITIES.register("feint", Feint::new);
 
     public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
@@ -330,7 +331,7 @@ public class JJKAbilities {
         for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || (ability.isMelee() && ability.getCost(owner) == 0))) {
+            if (!ability.isTechnique() && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
                 abilities.add(ability);
             }
         }

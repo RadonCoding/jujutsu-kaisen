@@ -14,10 +14,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.client.particle.EmittingLightningParticle;
+import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.effect.EmittingLightningEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -53,7 +54,8 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 3.0F, 1.0F);
 
         for (int i = 0; i < 4; i++) {
-            owner.level().addFreshEntity(new EmittingLightningEntity(owner, this.getPower(owner)));
+            level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), 1),
+                    owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F), owner.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
         }
 
         for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(16.0D))) {
@@ -78,7 +80,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 30.0F;
+        return 50.0F;
     }
 
     @Override

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -19,16 +18,21 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class WheelEntity extends Entity implements GeoEntity {
-    private static final int SPIN_TIME = 20;
-    private static final float STEP = -45.0F;
-
     private static final EntityDataAccessor<Integer> DATA_SPIN = SynchedEntityData.defineId(WheelEntity.class, EntityDataSerializers.INT);
+
+    private static final RawAnimation SPIN = RawAnimation.begin().thenPlay("misc.spin");
+
+    private static final int SPIN_DURATION = 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -56,20 +60,8 @@ public class WheelEntity extends Entity implements GeoEntity {
         return 0.5D;
     }
 
-    @Override
-    public void rideTick() {
-        super.rideTick();
-
-        Entity vehicle = this.getVehicle();
-
-        if (vehicle == null) return;
-
-        this.setRot(vehicle.getYRot(), 0.0F);
-        this.yRotO = this.getYRot();
-    }
-
     public void spin() {
-        this.entityData.set(DATA_SPIN, SPIN_TIME);
+        this.entityData.set(DATA_SPIN, SPIN_DURATION);
         this.playSound(JJKSounds.WHEEL.get(), 3.0F, 1.0F);
     }
 
@@ -100,19 +92,14 @@ public class WheelEntity extends Entity implements GeoEntity {
                 !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
             this.discard();
         } else {
-            if (!this.level().isClientSide && owner != null) {
-                this.startRiding(owner);
+            super.tick();
 
+            if (!this.level().isClientSide) {
                 int spin = this.entityData.get(DATA_SPIN);
 
-                float yRot = owner.getYRot();
-
                 if (spin > 0) {
-                    yRot += STEP / SPIN_TIME * (SPIN_TIME - spin);
                     this.entityData.set(DATA_SPIN, --spin);
                 }
-                this.setYRot(yRot);
-                this.yRotO = yRot;
             }
         }
     }
@@ -152,9 +139,19 @@ public class WheelEntity extends Entity implements GeoEntity {
         }
     }
 
+    private PlayState spinPredicate(AnimationState<WheelEntity> animationState) {
+        int spin = this.entityData.get(DATA_SPIN);
+
+        if (spin > 0) {
+            return animationState.setAndContinue(SPIN);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
+        controllerRegistrar.add(new AnimationController<>(this, "Spin", this::spinPredicate));
     }
 
     @Override

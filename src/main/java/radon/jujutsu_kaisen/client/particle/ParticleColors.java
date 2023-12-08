@@ -13,7 +13,7 @@ public class ParticleColors {
     public static Vector3f LIGHT_BLUE_COLOR = Vec3.fromRGB24(6205439).toVector3f();
     public static Vector3f DARK_RED_COLOR = Vec3.fromRGB24(16721446).toVector3f();
     public static Vector3f LIGHT_RED_COLOR = Vec3.fromRGB24(16735838).toVector3f();
-    public static Vector3f DARK_PURPLE_COLOR = Vec3.fromRGB24(8201983).toVector3f();
+    public static Vector3f DARK_PURPLE_COLOR = Vec3.fromRGB24(7283199).toVector3f();
     public static Vector3f LIGHT_PURPLE_COLOR = Vec3.fromRGB24(10379007).toVector3f();
     public static Vector3f RCT_COLOR = Vec3.fromRGB24(16776670).toVector3f();
     public static Vector3f SIMPLE_DOMAIN = Vec3.fromRGB24(9756159).toVector3f();

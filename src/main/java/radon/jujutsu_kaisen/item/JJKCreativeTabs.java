@@ -58,6 +58,10 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.NAOYA_LEGGINGS.get());
                         pOutput.accept(JJKItems.NAOYA_BOOTS.get());
 
+                        pOutput.accept(JJKItems.TOJI_CHESTPLATE.get());
+                        pOutput.accept(JJKItems.TOJI_LEGGINGS.get());
+                        pOutput.accept(JJKItems.TOJI_BOOTS.get());
+
                         pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());

@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> {
@@ -49,14 +49,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
         ItemStack stack = entity.getItemBySlot(slot);
 
         if (stack.getItem() instanceof ArmorItem armor) {
-            return armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.SATORU_BLINDFOLD ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.YUJI_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.MEGUMI_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.TOGE_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.YUTA_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.SUGURU_OUTFIT ||
-                    armor.getMaterial() == JJKItems.JJKArmorMaterials.NAOYA_OUTFIT;
+            return armor.getMaterial() instanceof JJKDeflatedArmorMaterial;
         }
         return false;
     }
@@ -88,9 +81,13 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     @Inject(method = "renderArmorPiece", at = @At("HEAD"))
     public void renderArmorPieceHead(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
         if (jujutsu_kaisen$isScaled(pLivingEntity, pSlot)) {
+            JJKDeflatedArmorMaterial material = (JJKDeflatedArmorMaterial) ((ArmorItem) pLivingEntity.getItemBySlot(pSlot).getItem()).getMaterial();
+
             float scale = switch (pSlot) {
-                case CHEST, FEET -> 0.93F;
-                case HEAD -> 0.8F;
+                case HEAD -> material.headDeflate();
+                case CHEST -> material.chestDeflate();
+                case LEGS -> material.legsDeflate();
+                case FEET -> material.feetDeflate();
                 default -> 1.0F;
             };
 

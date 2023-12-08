@@ -24,8 +24,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModList;
-import radon.jujutsu_kaisen.CuriosWrapper;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -1008,11 +1007,8 @@ public class SorcererData implements ISorcererData {
         List<Item> stacks = new ArrayList<>();
         stacks.add(this.owner.getItemInHand(InteractionHand.MAIN_HAND).getItem());
         stacks.add(this.owner.getItemInHand(InteractionHand.OFF_HAND).getItem());
-
-        if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
-            stacks.addAll(CuriosWrapper.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                    .stream().map(ItemStack::getItem).toList());
-        }
+        stacks.addAll(CuriosUtil.findSlots(this.owner, this.owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                .stream().map(ItemStack::getItem).toList());
         return stacks.contains(JJKItems.HITEN_STAFF.get()) || this.lastBlackFlashTime != -1 && ((this.owner.level().getGameTime() - this.lastBlackFlashTime) / 20) < (5 * 60);
     }
 

@@ -17,6 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -195,7 +198,12 @@ public class TojiFushiguroEntity extends SorcererEntity {
         InventoryCurseItem.addItem(inventory, PLAYFUL_CLOUD, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
         InventoryCurseItem.addItem(inventory, INVERTED_SPEAR_OF_HEAVEN, new ItemStack(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get()));
         InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
-        this.setItemSlot(EquipmentSlot.CHEST, inventory);
+
+        CuriosUtil.setItemInSlot(this, "body", inventory);
+
+        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.TOJI_CHESTPLATE.get()));
+        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.TOJI_LEGGINGS.get()));
+        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.TOJI_BOOTS.get()));
     }
 
     @Override
@@ -219,25 +227,10 @@ public class TojiFushiguroEntity extends SorcererEntity {
         return -1;
     }
 
-    private void pickWeapon(LivingEntity target) {
-        AtomicInteger result = new AtomicInteger(PLAYFUL_CLOUD);
+    private void pickWeapon(@Nullable LivingEntity target) {
+        ItemStack inventory = CuriosUtil.findSlot(this, "body");
 
-        if (JJKAbilities.hasToggled(target, JJKAbilities.SOUL_REINFORCEMENT.get()) || target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-            result.set(SPLIT_SOUL_KATANA);
-        }
-
-        target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Ability toggled : cap.getToggled()) {
-                if (toggled.isTechnique()) {
-                    result.set(INVERTED_SPEAR_OF_HEAVEN);
-                    break;
-                }
-            }
-        });
-
-        ItemStack inventory = this.getItemBySlot(EquipmentSlot.CHEST);
-
-        if (this.getSlot(this.getMainHandItem()) != result.get()) {
+        if (target == null) {
             if (!this.getMainHandItem().isEmpty()) {
                 int slot = this.getSlot(this.getMainHandItem());
 
@@ -245,8 +238,38 @@ public class TojiFushiguroEntity extends SorcererEntity {
                     InventoryCurseItem.addItem(inventory, slot, this.getMainHandItem());
                 }
             }
-            ItemStack main = InventoryCurseItem.getItem(inventory, result.get());
-            InventoryCurseItem.removeItem(inventory, result.get());
+            this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            return;
+        }
+
+        int result = PLAYFUL_CLOUD;
+
+        if (JJKAbilities.hasToggled(target, JJKAbilities.SOUL_REINFORCEMENT.get()) || target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+            result = SPLIT_SOUL_KATANA;
+        }
+
+        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            for (Ability toggled : cap.getToggled()) {
+                if (toggled.isTechnique()) {
+                    result = INVERTED_SPEAR_OF_HEAVEN;
+                    break;
+                }
+            }
+        }
+
+        if (this.getSlot(this.getMainHandItem()) != result) {
+            if (!this.getMainHandItem().isEmpty()) {
+                int slot = this.getSlot(this.getMainHandItem());
+
+                if (slot != -1) {
+                    InventoryCurseItem.addItem(inventory, slot, this.getMainHandItem());
+                }
+            }
+
+            ItemStack main = InventoryCurseItem.getItem(inventory, result);
+            InventoryCurseItem.removeItem(inventory, result);
             this.setItemInHand(InteractionHand.MAIN_HAND, main);
         }
     }
@@ -261,10 +284,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
         super.customServerAiStep();
 
         LivingEntity target = this.getTarget();
-
-        if (target != null) {
-            this.pickWeapon(target);
-        }
+        this.pickWeapon(target);
 
         ServerPlayer bounty = this.getBounty();
 

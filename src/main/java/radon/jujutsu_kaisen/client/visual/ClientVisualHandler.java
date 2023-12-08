@@ -242,9 +242,8 @@ public class ClientVisualHandler {
                 humanoid.leftSleeve.copyFrom(humanoid.leftArm);
                 humanoid.leftArm.render(poseStack, skin, packedLight, OverlayTexture.NO_OVERLAY);
 
-                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
-                    renderCuriosInventory(entity, humanoid, poseStack, buffer, packedLight);
-                }
+                renderCuriosInventory(entity, humanoid, poseStack, buffer, packedLight);
+
                 poseStack.popPose();
             }
         }

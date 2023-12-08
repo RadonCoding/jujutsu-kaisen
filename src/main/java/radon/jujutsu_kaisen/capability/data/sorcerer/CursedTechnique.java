@@ -34,7 +34,7 @@ public enum CursedTechnique {
             JJKAbilities.GREAT_SERPENT.get(), JJKAbilities.NUE.get(), JJKAbilities.NUE_TOTALITY.get(),
             JJKAbilities.MAX_ELEPHANT.get(), JJKAbilities.RABBIT_ESCAPE.get(), JJKAbilities.TRANQUIL_DEER.get(),
             JJKAbilities.PIERCING_BULL.get(), JJKAbilities.AGITO.get(), JJKAbilities.MAHORAGA.get()),
-    BOOGIE_WOOGIE(null, JJKAbilities.BOOGIE_WOOGIE.get(), JJKAbilities.FEINT.get()),
+    BOOGIE_WOOGIE(null, JJKAbilities.SWAP_SELF.get(), JJKAbilities.SWAP_OTHERS.get(), JJKAbilities.FEINT.get()),
     PROJECTION_SORCERY(JJKAbilities.TIME_CELL_MOON_PALACE.get(), JJKAbilities.PROJECTION_SORCERY.get(), JJKAbilities.TWENTY_FOUR_FRAME_RULE.get());
 
     private final @Nullable Ability domain;

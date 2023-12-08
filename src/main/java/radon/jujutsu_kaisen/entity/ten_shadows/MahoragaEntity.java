@@ -1,20 +1,17 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,14 +27,12 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -48,9 +43,10 @@ import java.util.List;
 
 public class MahoragaEntity extends TenShadowsSummon {
     public static EntityDataAccessor<Integer> DATA_SLASH = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.INT);
-    public static EntityDataAccessor<Boolean> DATA_POSITIVE_SWORD = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
+    public static EntityDataAccessor<Boolean> DATA_BATTLE = SynchedEntityData.defineId(MahoragaEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    private static final RawAnimation IDLE_BATTLE = RawAnimation.begin().thenLoop("misc.idle.battle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
@@ -69,6 +65,11 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public boolean isInvulnerable() {
         return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerable();
+    }
+
+    @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight() - 0.35D;
     }
 
     @Override
@@ -125,18 +126,14 @@ public class MahoragaEntity extends TenShadowsSummon {
         super.defineSynchedData();
 
         this.entityData.define(DATA_SLASH, 0);
-        this.entityData.define(DATA_POSITIVE_SWORD, false);
-    }
-
-    public boolean isPositiveSword() {
-        return this.entityData.get(DATA_POSITIVE_SWORD);
+        this.entityData.define(DATA_BATTLE, false);
     }
 
     private PlayState walkRunIdlePredicate(AnimationState<MahoragaEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         } else {
-            return animationState.setAndContinue(IDLE);
+            return animationState.setAndContinue(this.entityData.get(DATA_BATTLE) ? IDLE_BATTLE : IDLE);
         }
     }
 
@@ -175,7 +172,7 @@ public class MahoragaEntity extends TenShadowsSummon {
             if (!pEntity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return true;
             ISorcererData cap = pEntity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getType() == JujutsuType.CURSE && this.entityData.get(DATA_POSITIVE_SWORD)) {
+            if (cap.getType() == JujutsuType.CURSE) {
                 pEntity.hurt(this.damageSources().mobAttack(this), living.getMaxHealth());
             }
         }
@@ -192,12 +189,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         LivingEntity target = this.getTarget();
 
-        if (target != null) {
-            if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                this.entityData.set(DATA_POSITIVE_SWORD, cap.getType() == JujutsuType.CURSE);
-            }
-        }
+        this.entityData.set(DATA_BATTLE, target != null && target.getMaxHealth() >= Player.MAX_HEALTH * 3);
 
         int slash = this.entityData.get(DATA_SLASH);
 

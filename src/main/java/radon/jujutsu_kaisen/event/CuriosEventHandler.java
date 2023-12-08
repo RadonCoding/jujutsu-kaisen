@@ -30,9 +30,10 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Optional;
 
+@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CuriosEventHandler {
     @SubscribeEvent
-    public void onCuriosEquip(CurioEquipEvent event) {
+    public static void onCuriosEquip(CurioEquipEvent event) {
         if (!JJKAbilities.hasTrait(event.getEntity(), Trait.PERFECT_BODY)) return;
 
         if (event.getSlotContext().identifier().equals("right_hand") || event.getSlotContext().identifier().equals("left_hand")) {
@@ -41,7 +42,7 @@ public class CuriosEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity victim = event.getEntity();
 
         if (victim.level().isClientSide) return;

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.layer.CuriosLayer;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.entity.TojiFushiguroModel;
 import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
@@ -20,6 +21,7 @@ public class TojiFushiguroRenderer extends HumanoidMobRenderer<TojiFushiguroEnti
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(TojiFushiguroModel.INNER_LAYER)),
                 new HumanoidModel<>(pContext.bakeLayer(TojiFushiguroModel.OUTER_LAYER)), pContext.getModelManager()));
         this.addLayer(new JJKOverlayLayer<>(this));
+        this.addLayer(new CuriosLayer<>(this));
     }
 
     @Override
