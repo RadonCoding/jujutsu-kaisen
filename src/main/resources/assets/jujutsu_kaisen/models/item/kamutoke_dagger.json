@@ -1,18 +1,31 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "jujutsu_kaisen:item/kamutoke_dagger_inventory"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    32,
+    32
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        -5,
+        1.5
+      ]
     },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/kamutoke_dagger_inventory"
+    "gui": {
+      "rotation": [
+        -25.76,
+        -23.18,
+        -50.54
+      ]
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/kamutoke_dagger_inventory"
+      "rotation": [
+        25.76,
+        -23.18,
+        50.54
+      ]
     }
   }
 }

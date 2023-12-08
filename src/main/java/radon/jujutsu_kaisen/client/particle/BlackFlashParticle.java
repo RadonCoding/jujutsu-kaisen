@@ -55,8 +55,8 @@ public class BlackFlashParticle extends TextureSheetParticle {
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
 
-        public Provider(SpriteSet sprites) {
-            this.sprites = sprites;
+        public Provider(SpriteSet pSpriteSet) {
+            this.sprites = pSpriteSet;
         }
 
         @Override

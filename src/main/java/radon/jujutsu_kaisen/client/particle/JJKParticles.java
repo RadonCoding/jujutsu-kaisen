@@ -57,6 +57,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<EmittingLightningParticle.EmittingLightningParticleOptions>> EMITTING_LIGHTNING = PARTICLES.register("emitting_lightning", () ->
+            new ParticleType<>(false, EmittingLightningParticle.EmittingLightningParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<EmittingLightningParticle.EmittingLightningParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->

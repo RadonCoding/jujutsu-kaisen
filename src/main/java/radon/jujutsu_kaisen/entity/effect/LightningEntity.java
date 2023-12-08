@@ -54,7 +54,6 @@ public class LightningEntity extends JujutsuProjectile {
         this.life = 4;
     }
 
-
     public LightningEntity(EntityType<? extends Projectile> pType, LivingEntity owner, float power) {
         this(pType, owner.level());
 

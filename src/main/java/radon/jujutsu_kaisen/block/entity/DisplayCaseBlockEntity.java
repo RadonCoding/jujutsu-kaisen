@@ -93,29 +93,29 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         int rng = Mth.floor((energy * RARITY)) / (pLevel.isNight() ? 2 : 1);
 
-        if (HelperMethods.RANDOM.nextInt(rng) == 0) {
-            double d0 = (double) pPos.getX() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
-            double d1 = pPos.getY() + HelperMethods.RANDOM.nextInt(10) - 1;
-            double d2 = (double) pPos.getZ() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
+        if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
-            EntityType<?> type = curse.getType();
+        double d0 = (double) pPos.getX() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
+        double d1 = pPos.getY() + HelperMethods.RANDOM.nextInt(10) - 1;
+        double d2 = (double) pPos.getZ() + (HelperMethods.RANDOM.nextDouble() - HelperMethods.RANDOM.nextDouble()) * SPAWN_RADIUS + 0.5D;
 
-            if (pLevel.noCollision(type.getAABB(d0, d1, d2))) {
-                if (!type.getCategory().isFriendly() && pLevel.getDifficulty() == Difficulty.PEACEFUL) {
+        EntityType<?> type = curse.getType();
+
+        if (pLevel.noCollision(type.getAABB(d0, d1, d2))) {
+            if (!type.getCategory().isFriendly() && pLevel.getDifficulty() == Difficulty.PEACEFUL) {
+                return;
+            }
+            curse.setPos(d0, d1, d2);
+            curse.moveTo(curse.getX(), curse.getY(), curse.getZ(), HelperMethods.RANDOM.nextFloat() * 360.0F, 0.0F);
+
+            if (curse instanceof Mob mob) {
+                if (!mob.checkSpawnRules(pLevel, MobSpawnType.SPAWNER) || !mob.checkSpawnObstruction(pLevel)) {
                     return;
                 }
-                curse.setPos(d0, d1, d2);
-                curse.moveTo(curse.getX(), curse.getY(), curse.getZ(), HelperMethods.RANDOM.nextFloat() * 360.0F, 0.0F);
-
-                if (curse instanceof Mob mob) {
-                    if (!mob.checkSpawnRules(pLevel, MobSpawnType.SPAWNER) || !mob.checkSpawnObstruction(pLevel)) {
-                        return;
-                    }
-                    ForgeEventFactory.onFinalizeSpawn(mob, (ServerLevel) pLevel, pLevel.getCurrentDifficultyAt(curse.blockPosition()), MobSpawnType.SPAWNER, null, null);
-                }
-                if (!pLevel.addFreshEntity(curse)) return;
-                if (curse instanceof Mob mob) mob.spawnAnim();
+                ForgeEventFactory.onFinalizeSpawn(mob, (ServerLevel) pLevel, pLevel.getCurrentDifficultyAt(curse.blockPosition()), MobSpawnType.SPAWNER, null, null);
             }
+            if (!pLevel.addFreshEntity(curse)) return;
+            if (curse instanceof Mob mob) mob.spawnAnim();
         }
     }
 

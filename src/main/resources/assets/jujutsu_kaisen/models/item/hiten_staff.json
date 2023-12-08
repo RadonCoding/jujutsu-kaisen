@@ -1,18 +1,51 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        18,
+        0
+      ]
     },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
+    "gui": {
+      "rotation": [
+        -90,
+        -45,
+        -90
+      ],
+      "translation": [
+        2.75,
+        2,
+        0
+      ],
+      "scale": [
+        0.48,
+        0.48,
+        0.48
+      ]
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/hiten_staff_inventory"
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "translation": [
+        -2,
+        2.75,
+        0
+      ],
+      "scale": [
+        0.48,
+        0.48,
+        0.48
+      ]
     }
   }
 }

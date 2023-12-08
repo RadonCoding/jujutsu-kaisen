@@ -1,18 +1,41 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "jujutsu_kaisen:item/polearm_staff_inventory"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        11,
+        2
+      ]
     },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/polearm_staff_inventory"
+    "gui": {
+      "rotation": [
+        90,
+        45,
+        -90
+      ],
+      "scale": [
+        0.3,
+        0.3,
+        0.3
+      ]
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/polearm_staff_inventory"
+      "rotation": [
+        -90,
+        45,
+        90
+      ],
+      "scale": [
+        0.3,
+        0.3,
+        0.3
+      ]
     }
   }
 }

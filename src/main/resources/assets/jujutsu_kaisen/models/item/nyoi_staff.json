@@ -1,18 +1,37 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "jujutsu_kaisen:item/nyoi_staff_inventory"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        6,
+        1.5
+      ]
     },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/nyoi_staff_inventory"
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/nyoi_staff_inventory"
+      "rotation": [
+        0,
+        0,
+        45
+      ],
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
     }
   }
 }

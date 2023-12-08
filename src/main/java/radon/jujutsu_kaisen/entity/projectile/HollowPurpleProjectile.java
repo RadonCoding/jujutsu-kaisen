@@ -16,9 +16,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.particle.LightningParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
+import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -243,21 +241,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
-        for (int i = 0; i < count / 2; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.5F * Math.cos(phi);
-
-            double x = center.x() + xOffset * (radius * 0.5F * 0.3F);
-            double y = center.y() + yOffset * (radius * 0.5F * 0.3F);
-            double z = center.z() + zOffset * (radius * 0.5F * 0.3F);
-
-            this.level().addParticle(new LightningParticle.LightningParticleOptions(ParticleColors.LIGHT_PURPLE_COLOR, radius * 0.05F, 1), true,
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
+        this.level().addParticle(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.LIGHT_PURPLE_COLOR, 1),
+                true, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), 0.0D, 0.0D, 0.0D);
     }
 
     @Override

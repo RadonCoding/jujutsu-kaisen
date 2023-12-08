@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -10,8 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -19,9 +19,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import radon.jujutsu_kaisen.CuriosWrapper;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -55,6 +54,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
@@ -64,8 +64,6 @@ import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -118,15 +116,8 @@ public class JJKClientEventHandler {
             if (mc.player == null) return;
 
             if (event.getAction() == InputConstants.PRESS) {
-                List<Item> stacks = new ArrayList<>();
-                stacks.add(mc.player.getItemBySlot(EquipmentSlot.CHEST).getItem());
-
-                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
-                    stacks.addAll(CuriosWrapper.findSlots(mc.player, "body")
-                            .stream().map(ItemStack::getItem).toList());
-                }
-
-                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && stacks.contains(JJKItems.INVENTORY_CURSE.get())) {
+                if (JJKKeys.OPEN_INVENTORY_CURSE.isDown() && (mc.player.getItemBySlot(EquipmentSlot.CHEST).is(JJKItems.INVENTORY_CURSE.get()) ||
+                        CuriosUtil.findSlot(mc.player, "body").is(JJKItems.INVENTORY_CURSE.get()))) {
                     PacketHandler.sendToServer(new OpenInventoryCurseC2SPacket());
                 }
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
@@ -166,6 +157,18 @@ public class JJKClientEventHandler {
             assert mc.player != null;
 
             LivingEntity target = event.getEntity();
+
+            if (event.getRenderer().getModel() instanceof PlayerModel<?> player) {
+                if (target.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorItem armor && armor.getMaterial() instanceof JJKDeflatedArmorMaterial) {
+                    player.jacket.visible = false;
+                    player.rightSleeve.visible = false;
+                    player.leftSleeve.visible = false;
+                }
+                if (target.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem armor && armor.getMaterial() instanceof JJKDeflatedArmorMaterial) {
+                    player.rightPants.visible = false;
+                    player.leftPants.visible = false;
+                }
+            }
 
             ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
 
@@ -378,7 +381,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.LAVA_ROCK.get(), LavaRockRenderer::new);
             event.registerEntityRenderer(JJKEntities.LIGHTNING.get(), LightningRenderer::new);
-            event.registerEntityRenderer(JJKEntities.EMITTING_LIGHTNING.get(), EmittingLightningRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.PROJECTION_FRAME.get(), ProjectionFrameRenderer::new);
@@ -406,6 +408,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.BLOOD.get(), BloodParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
         }
 
         @SubscribeEvent

@@ -1,18 +1,41 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "builtin/entity"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "jujutsu_kaisen:item/yuta_okkotsu_sword_inventory"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    32,
+    32
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        8.5,
+        1.5
+      ]
     },
-    "ground": {
-      "parent": "jujutsu_kaisen:item/yuta_okkotsu_sword_inventory"
+    "gui": {
+      "rotation": [
+        -90,
+        -45,
+        -90
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
     },
     "fixed": {
-      "parent": "jujutsu_kaisen:item/yuta_okkotsu_sword_inventory"
+      "rotation": [
+        90,
+        -45,
+        90
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
     }
   }
 }

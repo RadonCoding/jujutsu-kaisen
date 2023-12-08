@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -37,6 +38,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.world.gen.biome.modifier.JJKBiomeModifiers;
 import radon.jujutsu_kaisen.world.gen.loot.JJKLootModifiers;
 import radon.jujutsu_kaisen.world.gen.processor.JJKProcessors;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod(JujutsuKaisen.MOD_ID)
 public class JujutsuKaisen {
@@ -80,10 +82,6 @@ public class JujutsuKaisen {
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);
-
-        if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
-            MinecraftForge.EVENT_BUS.register(new CuriosEventHandler());
-        }
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {
@@ -101,5 +99,7 @@ public class JujutsuKaisen {
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_TWO.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get(), RenderType.cutout());
+
+         CuriosRendererRegistry.register(JJKItems.INVENTORY_CURSE.get(), InventoryCurseRenderer::new);
     }
 }

@@ -27,10 +27,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ChantHandler;
-import radon.jujutsu_kaisen.CuriosWrapper;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
@@ -270,11 +269,8 @@ public class JJKEventHandler {
             if (stack != null) {
                 List<Item> stacks = new ArrayList<>();
                 stacks.add(stack.getItem());
-
-                if (ModList.get().isLoaded(JujutsuKaisen.CURIOS_MOD_ID)) {
-                    stacks.addAll(CuriosWrapper.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                            .stream().map(ItemStack::getItem).toList());
-                }
+                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                        .stream().map(ItemStack::getItem).toList());
 
                 if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {

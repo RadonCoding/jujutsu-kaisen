@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -30,11 +31,9 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
     public void preRender(PoseStack poseStack, WheelEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
-        float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        Entity vehicle = animatable.getVehicle();
+        float scale = vehicle == null ? 1.0F : vehicle.getBbWidth();
+        poseStack.scale(scale, scale, scale);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

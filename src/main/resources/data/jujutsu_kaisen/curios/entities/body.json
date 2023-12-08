@@ -1,0 +1,6 @@
+{
+  "entities": ["player", "jujutsu_kaisen:toji_fushiguro"],
+  "slots": [
+    "body"
+  ]
+}
