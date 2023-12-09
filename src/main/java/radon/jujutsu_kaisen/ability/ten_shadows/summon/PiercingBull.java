@@ -52,7 +52,7 @@ public class PiercingBull extends Summon<PiercingBullEntity> {
     }
 
     @Override
-    protected PiercingBullEntity summon(int index, LivingEntity owner) {
+    protected PiercingBullEntity summon(LivingEntity owner) {
         return new PiercingBullEntity(owner, this.isTamed(owner));
     }
 

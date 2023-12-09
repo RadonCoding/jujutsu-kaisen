@@ -13,6 +13,7 @@
     - Simple Domain better fr
     - Added sound effects
     - Improved Shining Sea of Flowers and Horizon of The Captivating Skandha
+    - Improved Rabbit Escape & Toad
 
 ## Traits
     - Added Perfect Body trait

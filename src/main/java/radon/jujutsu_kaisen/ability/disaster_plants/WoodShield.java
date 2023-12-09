@@ -45,7 +45,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Override
-    protected WoodShieldEntity summon(int index, LivingEntity owner) {
+    protected WoodShieldEntity summon(LivingEntity owner) {
         return new WoodShieldEntity(owner);
     }
 

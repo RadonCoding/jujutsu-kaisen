@@ -74,6 +74,17 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected abstract boolean hasMeleeAttack();
 
+    protected boolean shouldDespawn() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            if (!JJKAbilities.hasToggled(owner, this.getAbility())) {
+                return true;
+            }
+        }
+        return this.isDeadOrDying();
+    }
+
     private void createGoals() {
         int target = 1;
         int goal = 1;
@@ -232,8 +243,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                (!this.isDeadOrDying() && !JJKAbilities.hasToggled(owner, this.getAbility())))) {
+        if (this.isTame() && !this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.shouldDespawn())) {
             this.discard();
         } else {
             super.tick();

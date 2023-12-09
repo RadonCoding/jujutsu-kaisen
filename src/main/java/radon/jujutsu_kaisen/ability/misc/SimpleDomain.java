@@ -57,7 +57,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> implements IDuratio
     }
 
     @Override
-    protected SimpleDomainEntity summon(int index, LivingEntity owner) {
+    protected SimpleDomainEntity summon(LivingEntity owner) {
         return new SimpleDomainEntity(owner);
     }
 

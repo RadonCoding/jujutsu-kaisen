@@ -87,7 +87,7 @@ public class Rika extends Summon<RikaEntity> {
     }
 
     @Override
-    protected RikaEntity summon(int index, LivingEntity owner) {
+    protected RikaEntity summon(LivingEntity owner) {
         return new RikaEntity(owner);
     }
 

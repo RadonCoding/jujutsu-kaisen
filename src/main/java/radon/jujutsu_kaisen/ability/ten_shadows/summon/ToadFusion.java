@@ -61,7 +61,7 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
     }
 
     @Override
-    protected ToadFusionEntity summon(int index, LivingEntity owner) {
+    protected ToadFusionEntity summon(LivingEntity owner) {
         return new ToadFusionEntity(owner, false);
     }
 }

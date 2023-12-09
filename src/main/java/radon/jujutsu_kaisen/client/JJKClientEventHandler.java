@@ -338,7 +338,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TOAD.get(), ToadRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOAD_FUSION.get(), ToadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RABBIT_ESCAPE.get(), RabbitEscapeRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);

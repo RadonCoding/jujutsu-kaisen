@@ -52,7 +52,7 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     }
 
     @Override
-    protected GreatSerpentEntity summon(int index, LivingEntity owner) {
+    protected GreatSerpentEntity summon(LivingEntity owner) {
         return new GreatSerpentEntity(owner, this.isTamed(owner));
     }
 

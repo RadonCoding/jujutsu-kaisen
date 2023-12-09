@@ -31,8 +31,13 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return this.isTamed(owner) ? ActivationType.TOGGLED : ActivationType.INSTANT;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
-        return 0.1F;
+        return this.isTamed(owner) ? 0.1F : 10.0F;
     }
 
     @Override
@@ -41,13 +46,13 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
-    public boolean canDie() {
-        return true;
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.TOAD.get());
     }
 
     @Override
-    public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.TOAD.get());
+    public boolean canDie() {
+        return true;
     }
 
     @Override
@@ -56,7 +61,12 @@ public class Toad extends Summon<ToadEntity> {
     }
 
     @Override
-    protected ToadEntity summon(int index, LivingEntity owner) {
-        return new ToadEntity(JJKEntities.TOAD.get(), owner, false);
+    protected boolean canTame() {
+        return true;
+    }
+
+    @Override
+    protected ToadEntity summon(LivingEntity owner) {
+        return new ToadEntity(JJKEntities.TOAD.get(), owner, this.isTamed(owner), false);
     }
 }

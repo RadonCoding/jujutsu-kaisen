@@ -85,7 +85,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     }
 
     @Override
-    protected MahoragaEntity summon(int index, LivingEntity owner) {
+    protected MahoragaEntity summon(LivingEntity owner) {
         return new MahoragaEntity(owner, this.isTamed(owner));
     }
 

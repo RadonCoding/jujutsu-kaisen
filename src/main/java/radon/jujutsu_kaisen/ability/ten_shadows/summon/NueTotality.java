@@ -46,7 +46,7 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    protected NueTotalityEntity summon(int index, LivingEntity owner) {
+    protected NueTotalityEntity summon(LivingEntity owner) {
         return new NueTotalityEntity(owner);
     }
 
