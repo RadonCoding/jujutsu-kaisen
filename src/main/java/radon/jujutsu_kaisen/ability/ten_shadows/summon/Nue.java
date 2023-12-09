@@ -48,7 +48,7 @@ public class Nue extends Summon<NueEntity> {
     }
 
     @Override
-    protected NueEntity summon(int index, LivingEntity owner) {
+    protected NueEntity summon(LivingEntity owner) {
         return new NueEntity(owner, this.isTamed(owner));
     }
 
@@ -71,6 +71,4 @@ public class Nue extends Summon<NueEntity> {
     public int getCooldown() {
         return 15 * 20;
     }
-
-
 }

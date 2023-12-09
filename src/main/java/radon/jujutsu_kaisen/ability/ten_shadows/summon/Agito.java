@@ -56,7 +56,7 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
-    protected AgitoEntity summon(int index, LivingEntity owner) {
+    protected AgitoEntity summon(LivingEntity owner) {
         return new AgitoEntity(owner);
     }
 }

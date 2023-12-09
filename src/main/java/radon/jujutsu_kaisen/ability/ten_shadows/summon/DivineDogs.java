@@ -49,7 +49,7 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     }
 
     @Override
-    protected DivineDogEntity summon(int index, LivingEntity owner) {
+    protected DivineDogEntity summon(LivingEntity owner) {
         return null;
     }
 

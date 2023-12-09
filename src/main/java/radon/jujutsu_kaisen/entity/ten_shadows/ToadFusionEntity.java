@@ -12,7 +12,7 @@ public class ToadFusionEntity extends ToadEntity {
     }
 
     public ToadFusionEntity(LivingEntity owner, boolean ritual) {
-        super(JJKEntities.TOAD_FUSION.get(), owner, ritual);
+        super(JJKEntities.TOAD_FUSION.get(), owner, true, ritual);
     }
 
     @Override

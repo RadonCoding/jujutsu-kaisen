@@ -242,7 +242,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                 this.level().addFreshEntity(dog);
             }
             for (int i = 0; i < 6; i++) {
-                ToadEntity dog = new ToadEntity(JJKEntities.TOAD.get(), this, true);
+                ToadEntity dog = new ToadEntity(JJKEntities.TOAD.get(), this, false, true);
                 dog.setRitual(i, RITUAL_DURATION);
                 this.level().addFreshEntity(dog);
             }

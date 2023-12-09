@@ -52,7 +52,7 @@ public class TranquilDeer extends Summon<TranquilDeerEntity> {
     }
 
     @Override
-    protected TranquilDeerEntity summon(int index, LivingEntity owner) {
+    protected TranquilDeerEntity summon(LivingEntity owner) {
         return new TranquilDeerEntity(owner, this.isTamed(owner));
     }
 

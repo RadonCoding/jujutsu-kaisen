@@ -66,7 +66,7 @@ public class Wheel extends Summon<WheelEntity> {
     }
 
     @Override
-    protected WheelEntity summon(int index, LivingEntity owner) {
+    protected WheelEntity summon(LivingEntity owner) {
         return new WheelEntity(owner);
     }
 

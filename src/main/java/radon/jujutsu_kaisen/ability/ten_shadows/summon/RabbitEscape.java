@@ -34,16 +34,6 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
     }
 
     @Override
-    protected int getCount() {
-        return 64;
-    }
-
-    @Override
-    public boolean isTenShadows() {
-        return true;
-    }
-
-    @Override
     public void run(LivingEntity owner) {
         super.run(owner);
 
@@ -52,18 +42,31 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return this.isTamed(owner) ? ActivationType.TOGGLED : ActivationType.INSTANT;
     }
 
     @Override
-    protected RabbitEscapeEntity summon(int index, LivingEntity owner) {
-        return new RabbitEscapeEntity(owner);
+    protected RabbitEscapeEntity summon(LivingEntity owner) {
+        return new RabbitEscapeEntity(owner, this.isTamed(owner));
+    }
+
+    @Override
+    public boolean canDie() {
+        return true;
+    }
+
+    @Override
+    public boolean isTenShadows() {
+        return true;
+    }
+
+    @Override
+    protected boolean canTame() {
+        return true;
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 50.0F;
+        return this.isTamed(owner) ? 0.1F : 10.0F;
     }
-
-
 }

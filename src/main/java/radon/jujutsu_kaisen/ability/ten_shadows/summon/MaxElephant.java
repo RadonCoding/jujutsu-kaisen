@@ -52,7 +52,7 @@ public class MaxElephant extends Summon<MaxElephantEntity> {
     }
 
     @Override
-    protected MaxElephantEntity summon(int index, LivingEntity owner) {
+    protected MaxElephantEntity summon(LivingEntity owner) {
         return new MaxElephantEntity(owner, this.isTamed(owner));
     }
 

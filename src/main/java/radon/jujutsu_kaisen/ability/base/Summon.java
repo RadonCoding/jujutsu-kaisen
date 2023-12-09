@@ -33,10 +33,6 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return false;
     }
 
-    protected int getCount() {
-        return 1;
-    }
-
     public boolean display() {
         return true;
     }
@@ -147,11 +143,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (this.getActivationType(owner) == ActivationType.INSTANT) {
             if (!owner.level().isClientSide) {
                 owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    for (int i = 0; i < this.getCount(); i++) {
-                        T summon = this.summon(i, owner);
-                        owner.level().addFreshEntity(summon);
-                        cap.addSummon(summon);
-                    }
+                    T summon = this.summon(owner);
+                    owner.level().addFreshEntity(summon);
+                    cap.addSummon(summon);
                 });
             }
         }
@@ -181,21 +175,19 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return super.checkStatus(owner);
     }
 
-    protected abstract T summon(int index, LivingEntity owner);
+    protected abstract T summon(LivingEntity owner);
 
     public void spawn(LivingEntity owner, boolean clone) {
         if (!owner.level().isClientSide) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            for (int i = 0; i < this.getCount(); i++) {
-                T summon = this.summon(i, owner);
+            T summon = this.summon(owner);
 
-                if (summon instanceof TenShadowsSummon) {
-                    ((TenShadowsSummon) summon).setClone(clone);
-                }
-                owner.level().addFreshEntity(summon);
-                cap.addSummon(summon);
+            if (summon instanceof TenShadowsSummon) {
+                ((TenShadowsSummon) summon).setClone(clone);
             }
+            owner.level().addFreshEntity(summon);
+            cap.addSummon(summon);
         }
     }
 

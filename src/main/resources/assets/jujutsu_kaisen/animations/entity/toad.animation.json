@@ -11,7 +11,7 @@
 							"vector": [0, 0, 0]
 						},
 						"0.25": {
-							"vector": [40, 0, 0]
+							"vector": [45, 0, 0]
 						},
 						"0.5": {
 							"vector": [0, 0, 0]
@@ -22,10 +22,7 @@
 							"vector": [0, 0, 0]
 						},
 						"0.125": {
-							"vector": [0, 12, 0]
-						},
-						"0.25": {
-							"vector": [0, 14, 0]
+							"vector": [0, 10, 0]
 						},
 						"0.5": {
 							"vector": [0, 0, 0]
@@ -53,7 +50,7 @@
 						"0.25": {
 							"vector": [130, 0, 0]
 						},
-						"0.5": {
+						"0.375": {
 							"vector": [0, 0, 0]
 						}
 					}
@@ -79,7 +76,7 @@
 						"0.25": {
 							"vector": [130, 0, 0]
 						},
-						"0.5": {
+						"0.375": {
 							"vector": [0, 0, 0]
 						}
 					}
@@ -125,27 +122,11 @@
 				}
 			}
 		},
-		"attack.tongue": {
-			"loop": "hold_on_last_frame",
-			"animation_length": 0.25,
-			"bones": {
-				"mouth": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.25": {
-							"vector": [-30, 0, 0]
-						}
-					}
-				}
-			}
-		},
 		"misc.howl": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.5,
 			"bones": {
-				"Head": {
+				"head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -162,6 +143,138 @@
 						},
 						"0.5": {
 							"vector": [-12.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"attack.swing": {
+			"animation_length": 0.75,
+			"bones": {
+				"body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [-245, 0, 0]
+						},
+						"0.75": {
+							"vector": [-360, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [0, 15, -10]
+						},
+						"0.5": {
+							"vector": [0, 17.5, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_thigh": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [155, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_leg": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-105, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_thigh": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [155, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_leg": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-105, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-135, 0, 0]
+						},
+						"0.5": {
+							"vector": [-110, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-135, 0, 0]
+						},
+						"0.5": {
+							"vector": [-110, 0, 0]
+						},
+						"0.75": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"attack.tongue": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"mouth": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [-30, 0, 0]
 						}
 					}
 				}

@@ -46,7 +46,7 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    protected DivineDogTotalityEntity summon(int index, LivingEntity owner) {
+    protected DivineDogTotalityEntity summon(LivingEntity owner) {
         return new DivineDogTotalityEntity(owner);
     }
 
