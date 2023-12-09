@@ -61,4 +61,9 @@ public class Lightning extends Ability {
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
+
+    @Override
+    public boolean isTechnique() {
+        return false;
+    }
 }

@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -70,9 +71,20 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
                     this.setPartVisibility(model, slot);
 
+                    pPoseStack.pushPose();
+
+                    if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ||
+                            transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
+                        if (((RenderLayer<T, M>) (Object) this).getParentModel() instanceof PlayerModel<?> player) {
+                            if (((IPlayerModelAccessor) player).getSlim()) {
+                                pPoseStack.translate(transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ? 0.07F : -0.07F, 0.0F, 0.0F);
+                            }
+                        }
+                    }
                     Model armor = this.getArmorModelHook(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, model);
                     this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) transformation.getItem().asItem(), armor, this.usesInnerModel(slot),
                             1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
+                    pPoseStack.popPose();
                 }
             }
         }

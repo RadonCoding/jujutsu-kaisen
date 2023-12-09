@@ -12,10 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.item.armor.InstantSpiritBodyOfDistortedKillingItem;
-import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
-import radon.jujutsu_kaisen.item.armor.JJKArmorMaterial;
-import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
+import radon.jujutsu_kaisen.item.armor.*;
 import radon.jujutsu_kaisen.item.cursed_object.*;
 import radon.jujutsu_kaisen.item.cursed_tool.*;
 import radon.jujutsu_kaisen.item.veil.VeilRodItem;
@@ -47,10 +44,13 @@ public class JJKItems {
     public static RegistryObject<Item> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
             () -> new JetBlackShadowSwordItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
 
-    public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
-            () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ITEMS.register("instant_body_of_distorted_killing",
             () -> new InstantSpiritBodyOfDistortedKillingItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> ARM_BLADE = ITEMS.register("arm_blade",
+            () -> new ArmBladeItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+
+    public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
+            () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_BLINDFOLD = ITEMS.register("satoru_blindfold",
             () -> new ArmorItem(JJKArmorMaterials.SATORU_BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_CHESTPLATE = ITEMS.register("satoru_chestplate",

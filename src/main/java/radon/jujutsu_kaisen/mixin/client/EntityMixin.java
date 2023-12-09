@@ -32,7 +32,7 @@ public abstract class EntityMixin {
         if (data != null) {
             for (Ability ability : data.toggled) {
                 if (ability instanceof ITransformation transformation) {
-                    if (transformation.isFullBody()) {
+                    if (transformation.getBodyPart() == ITransformation.Part.BODY) {
                         cir.setReturnValue(true);
                     }
                     return;
