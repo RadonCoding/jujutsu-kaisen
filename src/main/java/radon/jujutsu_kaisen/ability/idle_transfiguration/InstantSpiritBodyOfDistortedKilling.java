@@ -75,7 +75,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
     }
 
     @Override
-    public boolean isFullBody() {
-        return true;
+    public Part getBodyPart() {
+        return Part.BODY;
     }
 }

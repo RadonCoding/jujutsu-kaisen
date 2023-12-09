@@ -43,9 +43,9 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
         Vec3 start = new Vec3(pEntity.getX(), pEntity.getY(), pEntity.getZ());
         Vec3 end = new Vec3(collidePosX, collidePosY, collidePosZ);
-        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(0.0F, 0.05F, 0.0F, 0.0F,
-                new Vector4f(color.x(), color.y(), color.z(), 0.8F), 1.8F);
-        BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 10)))
+        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(1.0F, 0.1F, 0.1F, 0.1F,
+                new Vector4f(color.x(), color.y(), color.z(), 0.8F), 1.4F);
+        BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end))))
                 .size(0.05F)
                 .lifespan(1)
                 .fade(BoltEffect.FadeFunction.NONE)
