@@ -289,8 +289,6 @@ public class SukunaEntity extends SorcererEntity {
 
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src -> {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> {
-                dst.setTraits(src.getTraits());
-                dst.setAdditional(src.getTechnique());
                 dst.setTamed(src.getTamed());
                 dst.setDead(src.getDead());
             });
