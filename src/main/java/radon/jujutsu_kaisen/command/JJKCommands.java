@@ -20,5 +20,6 @@ public class JJKCommands {
         SetExperienceCommand.register(event.getDispatcher());
         PactAcceptCommand.register(event.getDispatcher());
         PactDeclineCommand.register(event.getDispatcher());
+        AddPointsCommand.register(event.getDispatcher());
     }
 }
