@@ -1,15 +1,22 @@
 package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.GrassColor;
@@ -17,9 +24,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -62,6 +73,8 @@ import radon.jujutsu_kaisen.network.packet.c2s.KuchisakeOnnaAnswerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import java.io.IOException;
 

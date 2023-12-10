@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -150,6 +151,8 @@ public class ExperienceHandler {
 
             // If owner is dead they get 25% of the experience
             amount *= owner.isDeadOrDying() ? 0.25F : 1.0F;
+
+            amount *= ConfigHolder.SERVER.experienceMultiplier.get().floatValue();
 
             if (amount < 0.1F) return;
 

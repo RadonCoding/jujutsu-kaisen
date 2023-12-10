@@ -50,6 +50,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
+    public final ForgeConfigSpec.DoubleValue experienceMultiplier;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -104,6 +105,8 @@ public class ServerConfig {
                 .defineInRange("sorcererFleshRarity", 20, 0, 100000);
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare)")
                 .defineInRange("curseFleshRarity", 20, 0, 100000);
+        this.experienceMultiplier = builder.comment("Scale of experience you gain")
+                        .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100000.0F);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
