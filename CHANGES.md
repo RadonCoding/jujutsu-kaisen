@@ -31,6 +31,7 @@
     - Made NPCs use chants when low on energy
     - Increased the speed of all NPCs
     - Sukuna will now start taming the Ten Shadows starting with Mahoraga
+    - Sukuna's tames are transferred over to the vessel
 
 ## Bugs
     - Fixed dogs being able to eat cursed objects
