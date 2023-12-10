@@ -14,6 +14,7 @@
     - Added sound effects
     - Improved Shining Sea of Flowers and Horizon of The Captivating Skandha
     - Improved Rabbit Escape & Toad
+    - Shadow Travel works with shadows & during night
 
 ## Traits
     - Added Perfect Body trait
