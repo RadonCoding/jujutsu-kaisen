@@ -9,6 +9,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -43,9 +46,12 @@ public class ShadowTravel extends Ability {
         if (hit.getType() == HitResult.Type.BLOCK && (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
                 ((BlockHitResult) hit).getDirection() != Direction.UP)) return null;
 
+        long time = owner.level().getLevelData().getDayTime();
+        boolean night = time >= 13000 && time < 24000;
+
         if (hit instanceof EntityHitResult entityHit && entityHit.getEntity() instanceof TenShadowsSummon ||
-                (owner.level().isNight() && owner.level().getLightEmission(BlockPos.containing(hit.getLocation())) == 0) ||
-                owner.level().getMaxLocalRawBrightness(BlockPos.containing(hit.getLocation()), 0) < 15) {
+                ((night || owner.level().getBrightness(LightLayer.SKY, BlockPos.containing(hit.getLocation())) < 15) &&
+                        owner.level().getBrightness(LightLayer.BLOCK, BlockPos.containing(hit.getLocation())) == 0)) {
             return hit;
         }
         return null;
