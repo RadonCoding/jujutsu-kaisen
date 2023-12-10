@@ -279,9 +279,22 @@ public class SukunaEntity extends SorcererEntity {
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
 
-        if (this.getOwner() instanceof ServerPlayer player) {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (owner instanceof ServerPlayer player) {
             player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
         }
+
+        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src -> {
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> {
+                dst.setTraits(src.getTraits());
+                dst.setAdditional(src.getTechnique());
+                dst.setTamed(src.getTamed());
+                dst.setDead(src.getDead());
+            });
+        });
     }
 
     @Override
