@@ -78,4 +78,9 @@ public class InstantSpiritBodyOfDistortedKilling extends Ability implements Abil
     public Part getBodyPart() {
         return Part.BODY;
     }
+
+    @Override
+    public void onRightClick() {
+
+    }
 }

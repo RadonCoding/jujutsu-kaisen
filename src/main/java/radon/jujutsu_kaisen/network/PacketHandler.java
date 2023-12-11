@@ -202,6 +202,11 @@ public class PacketHandler {
                 .encoder(SyncMouthS2CPacket::encode)
                 .consumerMainThread(SyncMouthS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(TransformationRightClickC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(TransformationRightClickC2SPacket::new)
+                .encoder(TransformationRightClickC2SPacket::encode)
+                .consumerMainThread(TransformationRightClickC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

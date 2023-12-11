@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
@@ -9,12 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.ability.base.Transformation;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class ArmBlade extends Transformation {
+public class Gun extends Transformation {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -52,7 +47,7 @@ public class ArmBlade extends Transformation {
 
     @Override
     public Item getItem() {
-        return JJKItems.ARM_BLADE.get();
+        return JJKItems.GUN.get();
     }
 
     @Override
