@@ -18,12 +18,13 @@ public class AbilityHandler {
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (cap.isChanneling(ability)) {
-                cap.channel(ability);
+            cap.channel(ability);
             }
         }
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
