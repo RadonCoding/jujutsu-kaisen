@@ -11,8 +11,6 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled {
         return false;
     }
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;

@@ -103,7 +103,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
                 ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
-                    if (!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getAbilityPower())) continue;
+                    if (entity == this ||!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getAbilityPower())) continue;
 
                     entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getAbilityPower()));
                     entity.hurtMarked = true;
