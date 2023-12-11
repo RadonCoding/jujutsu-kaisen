@@ -13,5 +13,8 @@ public interface ITransformation {
     }
 
     Item getItem();
+
     Part getBodyPart();
+
+    void onRightClick();
 }

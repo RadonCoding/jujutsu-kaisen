@@ -1,24 +1,33 @@
 package radon.jujutsu_kaisen.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -26,11 +35,17 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
+import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
+import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
+import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
+import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -67,13 +82,10 @@ import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.ChangeOutputC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.CommandableTargetC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.KuchisakeOnnaAnswerC2SPacket;
-import radon.jujutsu_kaisen.network.packet.c2s.OpenInventoryCurseC2SPacket;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import java.io.IOException;
@@ -81,6 +93,86 @@ import java.io.IOException;
 public class JJKClientEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class JJKClientEventHandlerForgeEvents {
+        @SubscribeEvent
+        public static <T extends Item & GeoItem> void onRenderHand(RenderHandEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (mc.player == null || !mc.player.getItemInHand(event.getHand()).isEmpty()) return;
+
+            ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            boolean translated = false;
+
+            for (Ability ability : cap.getToggled()) {
+                if (!(ability instanceof ITransformation transformation)) continue;
+
+                HumanoidArm arm = event.getHand() == InteractionHand.MAIN_HAND && mc.player.getMainArm() == HumanoidArm.RIGHT ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
+
+                if ((transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM && arm == HumanoidArm.RIGHT) || (transformation.getBodyPart() == ITransformation.Part.LEFT_ARM && arm == HumanoidArm.LEFT)) {
+                    PlayerRenderer renderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(mc.player);
+                    PlayerModel<AbstractClientPlayer> model = renderer.getModel();
+
+                    model.attackTime = mc.player.getAttackAnim(event.getPartialTick());
+
+                    model.riding = mc.player.isPassenger() && (mc.player.getVehicle() != null && mc.player.getVehicle().shouldRiderSit());
+                    model.young = mc.player.isBaby();
+
+                    model.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+                    model.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+
+                    model.setupAnim(mc.player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+
+                    GeoArmorRenderer<T> armor = (GeoArmorRenderer<T>) ForgeHooksClient.getArmorModel(mc.player, transformation.getItem().getDefaultInstance(), EquipmentSlot.CHEST, model);
+
+                    VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.armorCutoutNoCull(armor.getTextureLocation((T) transformation.getItem())));
+
+                    float f = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+
+                    if (!translated) {
+                        event.getPoseStack().translate(f * 0.125F, -0.125F, 0.0F);
+                        translated = true;
+                    }
+
+                    float swing = arm == HumanoidArm.RIGHT ? mc.player.getAttackAnim(event.getPartialTick()) : 0.0F;
+                    float equip = 1.0F - Mth.lerp(event.getPartialTick(), ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getOMainHandHeight(),
+                            ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getMainHandHeight());
+
+                    IClientItemExtensions extensions = IClientItemExtensions.of(transformation.getItem());
+
+                    if (extensions.applyForgeHandTransform(event.getPoseStack(), mc.player, arm, transformation.getItem().getDefaultInstance(), event.getPartialTick(), equip, swing)) {
+                        event.setCanceled(true);
+                    }
+
+                    event.getPoseStack().pushPose();
+
+                    if (!event.isCanceled()) {
+                        float f1 = Mth.sqrt(swing);
+                        float f2 = -0.3F * Mth.sin(f1 * (float) Math.PI);
+                        float f3 = 0.4F * Mth.sin(f1 * ((float) Math.PI * 2.0F));
+                        float f4 = -0.4F * Mth.sin(swing * (float) Math.PI);
+                        event.getPoseStack().translate(f * (f2 + 0.64000005F), f3 - 0.6F + equip * -0.6F, f4 - 0.71999997F);
+
+                        event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * 45.0F));
+                        float f5 = Mth.sin(swing * swing * (float) Math.PI);
+                        float f6 = Mth.sin(f1 * (float) Math.PI);
+                        event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * f6 * 70.0F));
+                        event.getPoseStack().mulPose(Axis.ZP.rotationDegrees(f * f5 * -20.0F));
+                        event.getPoseStack().translate(f * -1.0F, 3.6F, 3.5F);
+                        event.getPoseStack().mulPose(Axis.ZP.rotationDegrees(f * 120.0F));
+                        event.getPoseStack().mulPose(Axis.XP.rotationDegrees(200.0F));
+                        event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * -135.0F));
+                        event.getPoseStack().translate(f * 5.6F, 0.0F, 0.0F);
+                    }
+
+                    if (((IPlayerModelAccessor) model).getSlim()) {
+                        event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
+                    }
+                    armor.renderToBuffer(event.getPoseStack(), consumer, event.getPackedLight(), OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                    event.getPoseStack().popPose();
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onMovementInput(MovementInputUpdateEvent event) {
             Minecraft mc = Minecraft.getInstance();
@@ -105,10 +197,22 @@ public class JJKClientEventHandler {
                 if ((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
                     event.setCanceled(true);
                     event.setSwingHand(false);
-                } else if (mc.options.keyShift.isDown() && event.isUseItem()) {
-                    if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
-                        if (hit.getEntity() instanceof LivingEntity target) {
-                            PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
+                } else if (event.isUseItem()) {
+                    if (mc.options.keyShift.isDown()) {
+                        if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
+                            if (hit.getEntity() instanceof LivingEntity target) {
+                                PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
+                            }
+                        }
+                    } else {
+                        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                        for (Ability ability : cap.getToggled()) {
+                            if (!(ability instanceof ITransformation transformation)) continue;
+
+                            transformation.onRightClick();
+
+                            PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
                         }
                     }
                 }
@@ -314,11 +418,6 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(NaoyaZeninModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(InstantSpiritBodyOfDistortedKillingModel.LAYER_LOCATION, InstantSpiritBodyOfDistortedKillingModel::createBodyLayer);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(new JJKResourceManager());
         }
 
         @SubscribeEvent

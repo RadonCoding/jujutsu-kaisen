@@ -48,6 +48,8 @@ public class JJKItems {
             () -> new InstantSpiritBodyOfDistortedKillingItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> ARM_BLADE = ITEMS.register("arm_blade",
             () -> new ArmBladeItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> GUN = ITEMS.register("gun",
+            () -> new GunItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
