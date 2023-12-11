@@ -194,7 +194,7 @@ public class JJKEventHandler {
 
                 if (owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
                     if (!cap.hasTrait(Trait.SIX_EYES)) {
-                        owner.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 2, 0, false, false, false));
+                        owner.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, false, false, false));
                     }
                 } else if (cap.hasTrait(Trait.SIX_EYES)) {
                     owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));

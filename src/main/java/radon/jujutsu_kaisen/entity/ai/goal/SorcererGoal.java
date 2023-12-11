@@ -29,7 +29,7 @@ public class SorcererGoal extends Goal {
                         AbilityHandler.trigger(this.mob, ability);
                     }
                 } else if (JJKAbilities.hasToggled(this.mob, ability)) {
-                    AbilityHandler.trigger(this.mob, ability);
+                    AbilityHandler.stop(this.mob, ability);
                 }
             } else if (ability.getActivationType(this.mob) == Ability.ActivationType.CHANNELED) {
                 if (success) {
@@ -37,7 +37,7 @@ public class SorcererGoal extends Goal {
                         AbilityHandler.trigger(this.mob, ability);
                     }
                 } else if (JJKAbilities.isChanneling(this.mob, ability)) {
-                    AbilityHandler.trigger(this.mob, ability);
+                    AbilityHandler.stop(this.mob, ability);
                 }
             } else if (success) {
                 AbilityHandler.trigger(this.mob, ability);

@@ -9,8 +9,21 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 
 public class AbilityHandler {
+    public static void stop(LivingEntity owner, Ability ability) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
+            if (cap.hasToggled(ability)) {
+                cap.toggle(ability);
+            }
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
+            if (cap.isChanneling(ability)) {
+                cap.channel(ability);
+            }
+        }
+    }
+
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
@@ -26,12 +39,12 @@ public class AbilityHandler {
             Ability.Status status;
 
             if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
-                if (!cap.hasToggled(ability)) {
+                if (cap.hasToggled(ability)) {
+                    cap.toggle(ability);
+                } else {
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                     cap.toggle(ability);
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-                } else {
-                    cap.toggle(ability);
                 }
             }
             return status;
