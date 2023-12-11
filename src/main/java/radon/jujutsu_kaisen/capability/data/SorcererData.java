@@ -324,6 +324,8 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateSummons() {
+        if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
+
         if (this.owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.summons.iterator();
 

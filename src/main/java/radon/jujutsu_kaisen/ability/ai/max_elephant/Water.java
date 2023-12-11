@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.MaxElephant;
+import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.client.particle.VaporParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Water extends Ability implements Ability.IChannelened, Ability.IDurationable {
-    public static final double RANGE = 20;
+    public static final double RANGE = 32;
     private static final float SCALE = 2.0F;
     private static final float DAMAGE = 1.0F;
 
@@ -45,7 +46,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return JJKAbilities.isChanneling(owner, this) || target != null && owner.distanceTo(target) <= RANGE;
+        return owner.isVehicle() ? JJKAbilities.isChanneling(owner, this) : target != null && (JJKAbilities.isChanneling(owner, this) || owner.distanceTo(target) <= RANGE);
     }
 
     @Override
@@ -107,21 +108,6 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
-        ParticleOptions particle = new VaporParticle.VaporParticleOptions(Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat() * 5.0F,
-                0.5F, false, HelperMethods.RANDOM.nextInt(20) + 1);
-
-        for (int i = 0; i < 32; i++) {
-            Vec3 dir = owner.getLookAngle().scale(3.0D);
-            double dx = dir.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
-            double dy = dir.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
-            double dz = dir.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.5D);
-
-            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
-                    spawn.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
-                    spawn.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 1.5D),
-                    0, dx, dy, dz, 1.0D);
-        }
-
         float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);
         float pitch = (float) (-owner.getXRot() * Math.PI / 180.0F);
 
@@ -131,6 +117,17 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
         Vec3 end = new Vec3(endPosX, endPosY, endPosZ);
         Vec3 collision = this.getCollision(owner, spawn, end);
+
+        ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat(),
+                0.1F, false, (int) spawn.distanceTo(collision) / 2);
+
+        for (int i = 0; i < 32; i++) {
+            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+                    spawn.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+                    spawn.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+                    0, 0.0D, 0.0D, 0.0D, 1.0D);
+        }
+
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
         for (Entity entity : entities) {
