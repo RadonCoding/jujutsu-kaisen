@@ -5,11 +5,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Gun extends Transformation {
     @Override
@@ -19,7 +21,10 @@ public class Gun extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+        return target != null && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

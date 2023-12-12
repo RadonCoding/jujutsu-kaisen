@@ -25,7 +25,7 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, this)) {
-            return target != null;
+            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
         }
         return target != null && HelperMethods.RANDOM.nextInt(10 ) == 0;
     }

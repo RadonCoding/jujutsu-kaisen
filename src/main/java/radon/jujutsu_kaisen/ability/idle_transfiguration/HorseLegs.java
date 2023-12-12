@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -22,7 +23,10 @@ public class HorseLegs extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+        return target != null && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override
