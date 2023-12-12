@@ -38,7 +38,7 @@ public class TransformationRightClickC2SPacket {
 
             if (!(ability instanceof ITransformation transformation)) return;
 
-            transformation.onRightClick();
+            transformation.onRightClick(sender);
         });
         ctx.setPacketHandled(true);
     }

@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.ability.base;
 
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 
 public interface ITransformation {
@@ -7,14 +9,27 @@ public interface ITransformation {
         HEAD,
         RIGHT_ARM,
         LEFT_ARM,
-        RIGHT_LEG,
-        LEFT_LEG,
-        BODY
+        LEGS,
+        BODY;
+
+        public EquipmentSlot getSlot() {
+            return switch (this) {
+                case HEAD -> EquipmentSlot.HEAD;
+                case BODY, RIGHT_ARM, LEFT_ARM -> EquipmentSlot.CHEST;
+                case LEGS -> EquipmentSlot.LEGS;
+            };
+        }
     }
+
+    boolean isReplacement();
 
     Item getItem();
 
     Part getBodyPart();
 
-    void onRightClick();
+    void onRightClick(LivingEntity owner);
+
+    void applyModifiers(LivingEntity owner);
+
+    void removeModifiers(LivingEntity owner);
 }

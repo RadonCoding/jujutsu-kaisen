@@ -50,6 +50,8 @@ public class JJKItems {
             () -> new ArmBladeItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
     public static RegistryObject<ArmorItem> GUN = ITEMS.register("gun",
             () -> new GunItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> HORSE_LEGS = ITEMS.register("horse_legs",
+            () -> new HorseLegsItem(JJKArmorMaterials.CUSTOM_MODEL, ArmorItem.Type.LEGGINGS, new Item.Properties()));
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));

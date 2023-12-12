@@ -1,17 +1,20 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class Gun extends Transformation {
+import java.util.UUID;
+
+public class HorseLegs extends Transformation {
+    private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("a26b52df-b562-419d-bace-dcc957d1d1b1");
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -39,31 +42,31 @@ public class Gun extends Transformation {
 
     @Override
     public boolean isReplacement() {
-        return false;
+        return true;
     }
 
     @Override
     public Item getItem() {
-        return JJKItems.GUN.get();
+        return JJKItems.HORSE_LEGS.get();
     }
 
     @Override
     public Part getBodyPart() {
-        return Part.RIGHT_ARM;
+        return Part.LEGS;
     }
 
     @Override
     public void onRightClick(LivingEntity owner) {
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
     }
 
     @Override
     public void applyModifiers(LivingEntity owner) {
-
+        HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 4.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
 
     @Override
     public void removeModifiers(LivingEntity owner) {
-
+        HelperMethods.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 }

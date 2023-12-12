@@ -15,6 +15,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +39,35 @@ import java.util.*;
 public class HelperMethods {
     public static final Random RANDOM = new Random();
     private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
+
+    public static boolean applyModifier(LivingEntity owner, Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
+        AttributeInstance instance = owner.getAttribute(attribute);
+        AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
+
+        if (instance != null) {
+            AttributeModifier existing = instance.getModifier(identifier);
+
+            if (existing != null) {
+                if (existing.getAmount() != amount) {
+                    instance.removeModifier(identifier);
+                    instance.addTransientModifier(modifier);
+                    return true;
+                }
+            } else {
+                instance.addTransientModifier(modifier);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void removeModifier(LivingEntity owner, Attribute attribute, UUID identifier) {
+        AttributeInstance instance = owner.getAttribute(attribute);
+
+        if (instance != null) {
+            instance.removeModifier(identifier);
+        }
+    }
 
     public static void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();

@@ -85,6 +85,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
@@ -98,6 +99,8 @@ public class JJKClientEventHandler {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null || !mc.player.getItemInHand(event.getHand()).isEmpty()) return;
+
+            if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
             ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -117,10 +120,12 @@ public class JJKClientEventHandler {
                     model.riding = mc.player.isPassenger() && (mc.player.getVehicle() != null && mc.player.getVehicle().shouldRiderSit());
                     model.young = mc.player.isBaby();
 
-                    model.rightArmPose = HumanoidModel.ArmPose.EMPTY;
-                    model.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+                    if (model.attackTime == 0) {
+                        model.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+                        model.leftArmPose = HumanoidModel.ArmPose.EMPTY;
 
-                    model.setupAnim(mc.player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                        model.setupAnim(mc.player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                    }
 
                     GeoArmorRenderer<T> armor = (GeoArmorRenderer<T>) ForgeHooksClient.getArmorModel(mc.player, transformation.getItem().getDefaultInstance(), EquipmentSlot.CHEST, model);
 
@@ -210,7 +215,7 @@ public class JJKClientEventHandler {
                         for (Ability ability : cap.getToggled()) {
                             if (!(ability instanceof ITransformation transformation)) continue;
 
-                            transformation.onRightClick();
+                            transformation.onRightClick(mc.player);
 
                             PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
                         }
@@ -396,6 +401,8 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SatoruGojoModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(YutaOkkotsuModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(YutaOkkotsuModel.INNER_LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(YutaOkkotsuModel.OUTER_LAYER, SkinModel::createBodyLayer);
 
             event.registerLayerDefinition(MegumiFushiguroModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);

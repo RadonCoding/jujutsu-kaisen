@@ -9,7 +9,6 @@
   "refmap": "jujutsu_kaisen.refmap.json",
   "client": [
     "client.ClientSuggestionProviderMixin",
-    "client.EntityMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",

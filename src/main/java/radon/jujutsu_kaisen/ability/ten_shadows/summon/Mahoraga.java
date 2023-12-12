@@ -40,6 +40,10 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                         if (ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
                             return true;
                         }
+                    } else if (targetCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                        if (ownerCap.isAdaptedTo(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                            return true;
+                        }
                     } else if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
                         return true;
                     }
