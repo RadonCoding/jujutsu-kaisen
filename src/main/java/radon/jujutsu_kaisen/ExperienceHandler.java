@@ -167,7 +167,7 @@ public class ExperienceHandler {
                 amount *= (Math.max(1, targetCap.getExperience()) / Math.max(1, ownerCap.getExperience()));
 
                 // Limit the experience to the max health of the target multiplied by whether the target can heal
-                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth() * (targetCap.getType() == JujutsuType.CURSE || targetCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? 1.5F : 1.0F));
+                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth() * (targetCap.getType() == JujutsuType.CURSE || targetcap.isUnlocked(JJKAbilities.RCT1.get()) ? 1.5F : 1.0F));
             } else {
                 // Limit the experience to 10% of the max health of the target
                 amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth()) * 0.1F;

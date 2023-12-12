@@ -45,18 +45,14 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
-    }
-
-    @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.OUTPUT_RCT.get());
     }
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(),
+                JJKAbilities.OUTPUT_RCT.get());
     }
 
     @Override

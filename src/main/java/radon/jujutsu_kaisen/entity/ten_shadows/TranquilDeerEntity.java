@@ -157,13 +157,8 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
-    public @NotNull List<Trait> getTraits() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
-    }
-
-    @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
+        return List.of(JJKAbilities.RCT1.get(),  JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get(), JJKAbilities.OUTPUT_RCT.get());
     }
 
     @Override

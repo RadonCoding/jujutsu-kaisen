@@ -444,7 +444,7 @@ public class JJKEventHandler {
 
                 if (HelperMethods.RANDOM.nextInt(chance) == 0) {
                     if (victimCap.getType() == JujutsuType.SORCERER) {
-                        if (!victimCap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE)) {
+                        if (!victimcap.isUnlocked(JJKAbilities.RCT1.get())) {
                             victim.setHealth(victim.getMaxHealth() / 2);
                             victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
 

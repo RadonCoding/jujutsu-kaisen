@@ -9,7 +9,6 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 public enum Trait {
     SIX_EYES,
     HEAVENLY_RESTRICTION,
-    REVERSE_CURSED_TECHNIQUE,
     VESSEL(JJKAbilities.SWITCH.get()),
     PERFECT_BODY;
 
