@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -104,6 +106,28 @@ public class ExperienceHandler {
     public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
         Entity owner = event.getEntity();
         battles.remove(owner.getUUID());
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if (entity.level().isClientSide) return;
+
+        if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getExperience() > 0.0F) {
+            float penalty = (cap.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
+            cap.setExperience(cap.getExperience() - penalty);
+
+            if (entity instanceof ServerPlayer player) {
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.penalty", JujutsuKaisen.MOD_ID), penalty));
+
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
+        }
     }
 
     private static class BattleData {
