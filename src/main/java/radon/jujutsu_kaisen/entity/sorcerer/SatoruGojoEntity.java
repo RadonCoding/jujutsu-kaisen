@@ -49,7 +49,7 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(), JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get());
+        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.UNLIMITED_VOID.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get(), JJKAbilities.ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION.get(), JJKAbilities.RCT3.get());
     }
 
     @Override

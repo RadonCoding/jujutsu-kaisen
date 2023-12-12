@@ -187,11 +187,16 @@ public class AgitoEntity extends TenShadowsSummon {
 
     @Override
     public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.NUE_LIGHTNING.get(), JJKAbilities.OUTPUT_RCT.get());
+        return List.of(JJKAbilities.NUE_LIGHTNING.get());
     }
 
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.OUTPUT_RCT.get(), JJKAbilities.RCT3.get());
     }
 }

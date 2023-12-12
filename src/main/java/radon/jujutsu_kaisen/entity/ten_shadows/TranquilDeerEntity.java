@@ -152,11 +152,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     }
 
     @Override
-    public List<Ability> getCustom() {
-        return List.of(JJKAbilities.OUTPUT_RCT.get());
-    }
-
-    @Override
     public Summon<?> getAbility() {
         return JJKAbilities.TRANQUIL_DEER.get();
     }
@@ -164,6 +159,11 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     @Override
     public @NotNull List<Trait> getTraits() {
         return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
+    }
+
+    @Override
+    public List<Ability> getUnlocked() {
+        return List.of(JJKAbilities.OUTPUT_RCT.get(), JJKAbilities.RCT3.get());
     }
 
     @Override
