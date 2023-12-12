@@ -134,7 +134,7 @@ public abstract class Ability {
 
     public abstract void run(LivingEntity owner);
 
-    public List<Trait> getRequirements() {
+    public List<Ability> getRequirements() {
         return List.of();
     }
 
@@ -169,8 +169,8 @@ public abstract class Ability {
         if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isExperienced(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
             return false;
 
-        for (Trait trait : this.getRequirements()) {
-            if (!cap.hasTrait(trait)) return false;
+        for (Ability ability : this.getRequirements()) {
+            if (!cap.isUnlocked(ability)) return false;
         }
         return true;
     }

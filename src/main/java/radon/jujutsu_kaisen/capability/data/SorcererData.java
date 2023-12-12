@@ -381,7 +381,7 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.SIX_EYES)) HelperMethods.giveAdvancement(player, "six_eyes");
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) HelperMethods.giveAdvancement(player, "heavenly_restriction");
         if (this.traits.contains(Trait.VESSEL)) HelperMethods.giveAdvancement(player, "vessel");
-        if (this.traits.contains(Trait.REVERSE_CURSED_TECHNIQUE))
+        if (this.unlocked.contains(JJKAbilities.RCT1.get()))
             HelperMethods.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.PERFECT_BODY))
             HelperMethods.giveAdvancement(player, "perfect_body");

@@ -63,7 +63,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 }
             }
 
-            boolean result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.hasTrait(Trait.REVERSE_CURSED_TECHNIQUE) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
+            boolean result = owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.8F :
                     owner.getHealth() / owner.getMaxHealth() < 0.3F || target.getHealth() > owner.getHealth() * 2;
 
             for (DomainExpansionEntity ignored : cap.getDomains((ServerLevel) owner.level())) {

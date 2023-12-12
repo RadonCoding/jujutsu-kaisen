@@ -60,7 +60,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, 2.0F);
+        return new Vec2(3.0F, 2.0F);
     }
 
     @Override
@@ -137,11 +137,6 @@ public class OutputRCT extends Ability {
     @Override
     public int getCooldown() {
         return 10;
-    }
-
-    @Override
-    public List<Trait> getRequirements() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
     }
 
     @Override
