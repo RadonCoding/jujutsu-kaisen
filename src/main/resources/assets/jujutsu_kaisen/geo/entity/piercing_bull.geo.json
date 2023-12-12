@@ -25,7 +25,7 @@
 					]
 				},
 				{
-					"name": "Head",
+					"name": "head",
 					"parent": "upper_body",
 					"pivot": [0, 27.25, -10],
 					"cubes": [
