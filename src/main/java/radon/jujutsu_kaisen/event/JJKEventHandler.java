@@ -444,9 +444,9 @@ public class JJKEventHandler {
 
                 if (HelperMethods.RANDOM.nextInt(chance) == 0) {
                     if (victimCap.getType() == JujutsuType.SORCERER) {
-                        if (!victimcap.isUnlocked(JJKAbilities.RCT1.get())) {
+                        if (!victimCap.isUnlocked(JJKAbilities.RCT1.get())) {
                             victim.setHealth(victim.getMaxHealth() / 2);
-                            victimCap.addTrait(Trait.REVERSE_CURSED_TECHNIQUE);
+                            victimCap.unlock(JJKAbilities.RCT1.get());
 
                             if (victim instanceof ServerPlayer player) {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
