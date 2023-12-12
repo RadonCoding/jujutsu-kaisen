@@ -5,6 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +32,8 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class SimpleDomainEntity extends Mob {
+    private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
+
     private static final float STRENGTH = 500.0F;
     private static final double X_STEP = 0.05D;
     public static final float RADIUS = 3.0F;
@@ -58,6 +63,19 @@ public class SimpleDomainEntity extends Mob {
             attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
             this.setHealth(this.getMaxHealth());
         }
+
+        this.entityData.set(DATA_RADIUS, RADIUS * cap.getAbilityPower());
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_RADIUS, 0.0F);
+    }
+
+    public double getRadius() {
+        return this.entityData.get(DATA_RADIUS);
     }
 
     @Override
@@ -107,9 +125,9 @@ public class SimpleDomainEntity extends Mob {
                     1.0F, true, 1);
 
             for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {
-                double x = this.getX() + RADIUS * Math.cos(phi);
+                double x = this.getX() + this.getRadius() * Math.cos(phi);
                 double y = this.getY();
-                double z = this.getZ() + RADIUS * Math.sin(phi);
+                double z = this.getZ() + this.getRadius() * Math.sin(phi);
                 this.level().addParticle(particle, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble(), 0.0D);
             }
         }
@@ -170,6 +188,7 @@ public class SimpleDomainEntity extends Mob {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
+        pCompound.putFloat("radius", this.entityData.get(DATA_RADIUS));
     }
 
     @Override
@@ -179,6 +198,7 @@ public class SimpleDomainEntity extends Mob {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
+        this.entityData.set(DATA_RADIUS, pCompound.getFloat("radius"));
     }
 
     @Override

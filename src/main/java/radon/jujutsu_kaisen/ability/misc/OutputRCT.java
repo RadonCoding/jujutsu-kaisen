@@ -6,15 +6,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -58,17 +55,17 @@ public class OutputRCT extends Ability {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return null;
+        return JJKAbilities.RCT3.get();
     }
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(0.0F, 2.0F);
+        return new Vec2(4.0F, 2.0F);
     }
 
     @Override
     public int getPointsCost() {
-        return ConfigHolder.SERVER.outputRCT.get();
+        return ConfigHolder.SERVER.outputRCTCost.get();
     }
 
     @Override

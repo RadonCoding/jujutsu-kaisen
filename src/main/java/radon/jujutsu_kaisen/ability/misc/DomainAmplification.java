@@ -1,11 +1,9 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +32,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         Ability domain = ((ISorcerer) owner).getDomain();
         return target != null && owner.distanceTo(target) <= 3.0D && owner.hasLineOfSight(target) &&
-                (HelperMethods.isStrongest(cap.getExperience()) || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+                (HelperMethods.isExperienced(cap.getExperience()) || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
     }
 
     @Override
@@ -116,7 +114,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
                 Ability domain = ((ISorcerer) victim).getDomain();
 
-                if ((HelperMethods.isStrongest(cap.getExperience()) || !JJKAbilities.hasToggled(victim, domain))) {
+                if ((HelperMethods.isExperienced(cap.getExperience()) || !JJKAbilities.hasToggled(victim, domain))) {
                     AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
             }

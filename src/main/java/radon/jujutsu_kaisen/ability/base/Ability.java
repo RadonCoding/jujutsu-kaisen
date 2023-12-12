@@ -166,7 +166,7 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isStrongest(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isExperienced(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
             return false;
 
         for (Trait trait : this.getRequirements()) {
@@ -190,7 +190,7 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
 
-            if ((this.isTechnique() && !(this instanceof DomainExpansion && HelperMethods.isStrongest(cap.getExperience()))) &&
+            if ((this.isTechnique() && !(this instanceof DomainExpansion && HelperMethods.isExperienced(cap.getExperience()))) &&
                     cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 return Status.DOMAIN_AMPLIFICATION;
             }

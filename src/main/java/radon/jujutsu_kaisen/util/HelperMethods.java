@@ -29,7 +29,6 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -336,8 +335,8 @@ public class HelperMethods {
         return random;
     }
 
-    public static boolean isStrongest(float experience) {
-        return experience >= ConfigHolder.SERVER.requiredExperienceForStrongest.get().floatValue();
+    public static boolean isExperienced(float experience) {
+        return experience >= ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue();
     }
 
     public static float getPower(float experience) {

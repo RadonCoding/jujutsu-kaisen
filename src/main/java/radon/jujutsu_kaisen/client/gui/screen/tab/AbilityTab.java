@@ -39,7 +39,8 @@ public class AbilityTab extends JJKTab {
         for (RegistryObject<Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == null) {
+            // Check if the ability is a parent or is displayed
+            if ((ability.isDisplayed(this.minecraft.player) || hasDisplayedChildren(ability)) && ability.getParent(this.minecraft.player) == null) {
                 this.addAbilityAndChildren(ability);
             }
         }
@@ -51,11 +52,25 @@ public class AbilityTab extends JJKTab {
         for (RegistryObject<Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
             Ability current = entry.get();
 
+            // Check if the ability is a child of the current ability
             if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == ability) {
                 this.addAbilityAndChildren(current);
             }
         }
     }
+
+    private boolean hasDisplayedChildren(Ability parent) {
+        for (RegistryObject<Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
+            Ability current = entry.get();
+
+            // Check if the current ability is a child of the parent
+            if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
