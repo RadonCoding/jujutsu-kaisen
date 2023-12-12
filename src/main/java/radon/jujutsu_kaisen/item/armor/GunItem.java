@@ -57,6 +57,8 @@ public class GunItem extends ArmorItem implements GeoItem {
 
             @Override
             public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+                poseStack.translate(0.25F, 0.5F, 1.3F);
+
                 float f = -0.4F * Mth.sin(Mth.sqrt(swingProcess) * (float) Math.PI);
 
                 float f1 = Mth.sqrt(swingProcess);
@@ -70,7 +72,6 @@ public class GunItem extends ArmorItem implements GeoItem {
                 float f7 = -0.4F * Mth.sin(f5 * (float) Math.PI);
                 poseStack.translate(0.0F, -f6 / 2.0F, f7);
 
-                poseStack.translate(0.25F, 0.5F, 1.3F);
                 poseStack.mulPose(Axis.YN.rotationDegrees(5.0F));
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
 
