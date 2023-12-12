@@ -133,4 +133,31 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
             pPoseStack.popPose();
         }
     }
+
+    @Inject(method = "renderArmorPiece", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;setPartVisibility(Lnet/minecraft/client/model/HumanoidModel;Lnet/minecraft/world/entity/EquipmentSlot;)V", shift = At.Shift.AFTER))
+    public void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
+
+        if (data == null) return;
+
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
+
+            if (transformation.isReplacement()) {
+                switch (transformation.getBodyPart()) {
+                    case HEAD -> {
+                        pModel.head.visible = false;
+                        pModel.hat.visible = false;
+                    }
+                    case BODY -> pModel.setAllVisible(false);
+                    case RIGHT_ARM -> pModel.rightArm.visible = false;
+                    case LEFT_ARM -> pModel.leftArm.visible = false;
+                    case LEGS -> {
+                        pModel.rightLeg.visible = false;
+                        pModel.leftLeg.visible = false;
+                    }
+                }
+            }
+        }
+    }
 }
