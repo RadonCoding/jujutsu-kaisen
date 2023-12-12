@@ -158,16 +158,16 @@ public abstract class DomainExpansionEntity extends Mob {
         return this.isInsideBarrier(pos);
     }
 
-    protected boolean isAffected(Entity entity) {
+    protected boolean isAffected(Entity victim) {
         LivingEntity owner = this.getOwner();
 
-        if (owner == null || entity == owner) {
+        if (owner == null || victim == owner) {
             return false;
         }
 
-        if (entity instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
+        if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        if (entity instanceof LivingEntity living) {
+        if (victim instanceof LivingEntity living) {
             if (!owner.canAttack(living)) return false;
 
             if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -182,11 +182,14 @@ public abstract class DomainExpansionEntity extends Mob {
                         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                         simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower() * 10.0F);
                     }
-                    return false;
+                }
+
+                for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+                    if (victim.distanceTo(simple) < simple.getRadius()) return false;
                 }
             }
         }
-        return this.isAffected(entity.blockPosition());
+        return this.isAffected(victim.blockPosition());
     }
 
     @Override

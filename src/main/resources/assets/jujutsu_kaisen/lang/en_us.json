@@ -39,6 +39,7 @@
 
   "gui.jujutsu_kaisen.ability": "Abilities",
   "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
+  "gui.jujutsu_kaisen.ability.unlockable": "Unlockable",
   "gui.jujutsu_kaisen.ability.points": "Points: %1$d",
 
   "gui.jujutsu_kaisen.player_card.grade": "Grade: %1$s",
@@ -228,7 +229,9 @@
   "ability.jujutsu_kaisen.zero_point_two_second_domain_expansion": "0.2s Domain Expansion",
   "ability.jujutsu_kaisen.switch": "Switch",
 
-  "ability.jujutsu_kaisen.rct": "Reverse Cursed Technique",
+  "ability.jujutsu_kaisen.rct1": "Reverse Cursed Technique - Tier 1",
+  "ability.jujutsu_kaisen.rct2": "Reverse Cursed Technique - Tier 2",
+  "ability.jujutsu_kaisen.rct3": "Reverse Cursed Technique - Tier 3",
   "ability.jujutsu_kaisen.output_rct": "Output RCT",
 
   "ability.jujutsu_kaisen.heal": "Heal",

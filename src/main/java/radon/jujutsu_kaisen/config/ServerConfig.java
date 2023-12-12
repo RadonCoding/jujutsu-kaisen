@@ -47,7 +47,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
     public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
-    public final ForgeConfigSpec.DoubleValue requiredExperienceForStrongest;
+    public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
     public final ForgeConfigSpec.IntValue sorcererFleshRarity;
     public final ForgeConfigSpec.IntValue curseFleshRarity;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
@@ -70,7 +70,9 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue domainAmplificationCost;
     public final ForgeConfigSpec.IntValue zeroPointTwoSecondDomainExpansionCost;
     public final ForgeConfigSpec.IntValue divergentFistCost;
-    public final ForgeConfigSpec.IntValue outputRCT;
+    public final ForgeConfigSpec.IntValue rct2Cost;
+    public final ForgeConfigSpec.IntValue rct3Cost;
+    public final ForgeConfigSpec.IntValue outputRCTCost;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
@@ -100,8 +102,8 @@ public class ServerConfig {
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")
                 .defineInRange("reverseCursedTechniqueChance", 20, 1, 1000);
-        this.requiredExperienceForStrongest = builder.comment("The amount of experience required for a player to be classified as strongest (meaning they can heal CT burnout using RCT and use domain amplification during a domain expansion)")
-                .defineInRange("requiredExperienceForStrongest", 3000.0F, 1.0F, 100000.0F);
+        this.requiredExperienceForExperienced = builder.comment("The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)")
+                .defineInRange("requiredExperienceForExperienced", 3000.0F, 1.0F, 100000.0F);
         this.sorcererFleshRarity = builder.comment("Rarity of sorcerers dropping flesh (bigger value means more rare)")
                 .defineInRange("sorcererFleshRarity", 20, 0, 100000);
         this.curseFleshRarity = builder.comment("Rarity of curses dropping flesh (bigger value means more rare)")
@@ -150,8 +152,12 @@ public class ServerConfig {
                 .defineInRange("zeroPointTwoSecondDomainExpansionCost", 100, 1, 10000);
         this.divergentFistCost = builder.comment("The amount of points divergent fist costs to unlock")
                 .defineInRange("divergentFistCost", 50, 1, 10000);
-        this.outputRCT = builder.comment("The amount of points output RCT costs to unlock")
-                .defineInRange("outputRCT", 300, 1, 10000);
+        this.rct2Cost = builder.comment("The amount of points tier 2 RCT costs to unlock")
+                .defineInRange("rct2Cost", 100, 1, 10000);
+        this.rct3Cost = builder.comment("The amount of points tier 3 RCT costs to unlock")
+                .defineInRange("rct2Cost", 200, 1, 10000);
+        this.outputRCTCost = builder.comment("The amount of points output RCT costs to unlock")
+                .defineInRange("outputRCTCost", 300, 1, 10000);
         builder.pop();
     }
 

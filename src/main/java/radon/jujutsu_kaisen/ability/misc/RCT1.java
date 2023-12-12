@@ -2,10 +2,10 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 
-public class RCT extends Ability implements Ability.IChannelened {
+public class RCT1 extends Ability implements Ability.IChannelened {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -25,15 +25,6 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public boolean isTechnique() {
         return false;
-    }
-
-    private RCT1 getTier(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
-        if (cap.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();
-
-        return JJKAbilities.RCT3.get();
     }
 
     @Override
@@ -50,31 +41,25 @@ public class RCT extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        RCT1 tier = getTier(owner);
-        tier.run(owner);
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner));
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        RCT1 tier = getTier(owner);
-        return tier.getCost(owner);
+        if (owner.getHealth() < owner.getMaxHealth()) {
+            return ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * this.getMultiplier();
+        }
+        return 0;
+    }
+
+    @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(0.0F, 2.0F);
     }
 
     @Override
     public MenuType getMenuType() {
         return MenuType.NONE;
-    }
-
-    @Override
-    public List<Trait> getRequirements() {
-        return List.of(Trait.REVERSE_CURSED_TECHNIQUE);
-    }
-
-    @Override
-    public boolean isValid(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 
     @Override
@@ -85,5 +70,9 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public void onRelease(LivingEntity owner) {
 
+    }
+
+    protected int getMultiplier() {
+        return 2;
     }
 }

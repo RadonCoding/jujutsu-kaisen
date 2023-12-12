@@ -51,13 +51,20 @@ public class AbilityWidget {
         this.ability = ability;
         this.display = ability.getDisplay(minecraft.player);
         this.minecraft = minecraft;
-        this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(ability.getName(), 163));
+        this.title = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(ability.getName(), 255));
         this.x = Mth.floor(this.display.getX() * 28.0F);
         this.y = Mth.floor(this.display.getY() * 27.0F);
         int l = 29 + minecraft.font.width(this.title);
 
+        int cost = this.minecraft.player == null ? 0 : this.ability.getRealPointsCost(this.minecraft.player);
+
         MutableComponent component = Component.empty();
-        component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), this.minecraft.player == null ? 0 : this.ability.getRealPointsCost(this.minecraft.player)));
+
+        if (cost > 0) {
+            component.append(Component.translatable(String.format("gui.%s.ability.cost", JujutsuKaisen.MOD_ID), cost));
+        } else {
+            component.append(Component.translatable(String.format("gui.%s.ability.unlockable", JujutsuKaisen.MOD_ID), cost));
+        }
         this.description = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component.copy(), Style.EMPTY), l));
 
         for (FormattedCharSequence sequence : this.description) {
