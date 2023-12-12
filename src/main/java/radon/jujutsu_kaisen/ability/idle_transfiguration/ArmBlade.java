@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.ability.base.Transformation;
@@ -28,7 +29,10 @@ public class ArmBlade extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+        return target != null && HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override
