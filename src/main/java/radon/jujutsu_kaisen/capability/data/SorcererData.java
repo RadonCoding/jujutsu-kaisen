@@ -123,12 +123,6 @@ public class SorcererData implements ISorcererData {
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
-    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID = UUID.fromString("81461f5f-89d5-4cc9-8b25-17e7caac9255");
-    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID = UUID.fromString("84341016-e56a-4b95-9fd5-42b36154c885");
-    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID = UUID.fromString("654c65b5-dc0f-4092-8423-59cbe3d19682");
-    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID = UUID.fromString("486fd273-fdbc-4876-b0b8-af5a64bfb08a");
-    private static final UUID INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID = UUID.fromString("0be71dde-8aeb-4c5d-955f-d37325c31a94");
-
     private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
@@ -277,36 +271,6 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-
-    private boolean applyModifier(Attribute attribute, UUID identifier, String name, double amount, AttributeModifier.Operation operation) {
-        AttributeInstance instance = this.owner.getAttribute(attribute);
-        AttributeModifier modifier = new AttributeModifier(identifier, name, amount, operation);
-
-        if (instance != null) {
-            AttributeModifier existing = instance.getModifier(identifier);
-
-            if (existing != null) {
-                if (existing.getAmount() != amount) {
-                    instance.removeModifier(identifier);
-                    instance.addTransientModifier(modifier);
-                    return true;
-                }
-            } else {
-                instance.addTransientModifier(modifier);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void removeModifier(Attribute attribute, UUID identifier) {
-        AttributeInstance instance = this.owner.getAttribute(attribute);
-
-        if (instance != null) {
-            instance.removeModifier(identifier);
-        }
-    }
-
     private void updateDomains() {
         if (this.owner.level() instanceof ServerLevel level) {
             Iterator<UUID> iter = this.domains.iterator();
@@ -441,9 +405,9 @@ public class SorcererData implements ISorcererData {
 
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                this.applyModifier(Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                HelperMethods.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                HelperMethods.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
                 if (this.owner.walkDist == this.owner.walkDistO) {
                     this.noMotionTime++;
@@ -455,23 +419,9 @@ public class SorcererData implements ISorcererData {
                     this.resetSpeedStacks();
                 }
             } else {
-                this.removeModifier(Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-                this.removeModifier(Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                this.removeModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
-            }
-
-            if (this.toggled.contains(JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get())) {
-                this.applyModifier(Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                this.applyModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-                this.applyModifier(Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
-                this.applyModifier(Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-            } else {
-                this.removeModifier(Attributes.ATTACK_DAMAGE, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ATTACK_DAMAGE_UUID);
-                this.removeModifier(Attributes.MOVEMENT_SPEED, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_MOVEMENT_SPEED_UUID);
-                this.removeModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_STEP_HEIGHT_UUID);
-                this.removeModifier(Attributes.ARMOR, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_UUID);
-                this.removeModifier(Attributes.ARMOR_TOUGHNESS, INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING_ARMOR_TOUGHNESS_UUID);
+                HelperMethods.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+                HelperMethods.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+                HelperMethods.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
             }
         }
 
@@ -496,18 +446,18 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
 
-            if (this.applyModifier(Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
             double damage = this.getRealPower() * 2.0D;
-            this.applyModifier(Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double attack = this.getRealPower() * 0.5D;
-            this.applyModifier(Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
+            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.05D;
-            this.applyModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(3 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
@@ -516,19 +466,19 @@ public class SorcererData implements ISorcererData {
                 this.owner.heal(1.0F / 20);
             }
         } else {
-            this.removeModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+            HelperMethods.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
 
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
-            if (this.applyModifier(Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
             double damage = this.getRealPower();
-            this.applyModifier(Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.025D;
-            this.applyModifier(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
@@ -1384,14 +1334,16 @@ public class SorcererData implements ISorcererData {
     public void tryAdapt(DamageSource source) {
         boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
-        Ability ability;
-
-        if (melee && source.getEntity() instanceof LivingEntity attacker && JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
-            ability = JJKAbilities.INFINITY.get();
-        } else {
-            ability = this.getAbility(source);
+        if (melee && source.getEntity() instanceof LivingEntity attacker) {
+            if (JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
+                this.tryAdapt(JJKAbilities.INFINITY.get());
+                return;
+            } else if (JJKAbilities.hasToggled(attacker, JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                this.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                return;
+            }
         }
-        this.tryAdapt(ability);
+        this.tryAdapt(this.getAbility(source));
     }
 
     @Override

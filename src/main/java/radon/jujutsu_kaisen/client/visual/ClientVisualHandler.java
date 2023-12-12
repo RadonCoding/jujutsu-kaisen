@@ -317,16 +317,44 @@ public class ClientVisualHandler {
 
         if (data == null) return;
 
-        if (!(event.getRenderer().getModel() instanceof HumanoidModel<?> humanoid)) return;
+        if (!(event.getRenderer().getModel() instanceof PlayerModel<?> player)) return;
 
         for (Ability ability : data.toggled) {
             if (!(ability instanceof ITransformation transformation)) continue;
 
+            if (transformation.isReplacement()) {
+                switch (transformation.getBodyPart()) {
+                    case HEAD -> {
+                        player.head.visible = false;
+                        player.hat.visible = false;
+                    }
+                    case BODY -> player.setAllVisible(false);
+                    case RIGHT_ARM -> {
+                        player.rightArm.visible = false;
+                        player.rightSleeve.visible = false;
+                    }
+                    case LEFT_ARM -> {
+                        player.leftArm.visible = false;
+                        player.rightSleeve.visible = false;
+                    }
+                    case LEGS -> {
+                        player.rightLeg.visible = false;
+                        player.rightPants.visible = false;
+                        player.leftLeg.visible = false;
+                        player.leftPants.visible = false;
+                    }
+                }
+            }
+
             HumanoidModel.ArmPose pose = IClientItemExtensions.of(transformation.getItem()).getArmPose(event.getEntity(), InteractionHand.MAIN_HAND, transformation.getItem().getDefaultInstance());
 
-            if (pose == null) return;
-
-            humanoid.rightArmPose = pose;
+            if (pose != null) {
+                if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM) {
+                    player.rightArmPose = pose;
+                } else if (transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
+                    player.leftArmPose = pose;
+                }
+            }
         }
     }
 

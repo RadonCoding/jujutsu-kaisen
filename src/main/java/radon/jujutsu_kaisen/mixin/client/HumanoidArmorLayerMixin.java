@@ -25,6 +25,11 @@ import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> {
     @Shadow
@@ -60,11 +65,21 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
 
         if (data != null) {
+            Set<EquipmentSlot> hidden = new HashSet<>();
+
             for (Ability ability : data.toggled) {
                 if (!(ability instanceof ITransformation transformation)) continue;
 
-                for (int i = 0; i < 4; i++) {
-                    EquipmentSlot slot = EquipmentSlot.values()[EquipmentSlot.values().length - i - 1];
+                if (transformation.isReplacement()) {
+                    hidden.add(transformation.getBodyPart().getSlot());
+                }
+            }
+
+            for (Ability ability : data.toggled) {
+                if (!(ability instanceof ITransformation transformation)) continue;
+
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    if (transformation.getBodyPart().getSlot() != slot && hidden.contains(slot)) continue;
 
                     A model = this.getArmorModel(slot);
                     ((RenderLayer<T, M>) (Object) this).getParentModel().copyPropertiesTo(model);

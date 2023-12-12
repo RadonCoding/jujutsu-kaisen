@@ -18,4 +18,14 @@ public abstract class Transformation extends Ability implements Ability.IToggled
         }
         return super.checkTriggerable(owner);
     }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+        this.applyModifiers(owner);
+    }
+
+    @Override
+    public void onDisabled(LivingEntity owner) {
+        this.removeModifiers(owner);
+    }
 }

@@ -88,5 +88,10 @@
     "sounds": [
       "jujutsu_kaisen:flame_explosion"
     ]
+  },
+  "shoot": {
+    "sounds": [
+      "jujutsu_kaisen:shoot"
+    ]
   }
 }

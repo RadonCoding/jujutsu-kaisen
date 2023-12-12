@@ -4,6 +4,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -14,7 +16,11 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.UUID;
+
 public class ArmBlade extends Transformation {
+    private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("2b553d20-2aab-46c3-9199-4c6500948aaa");
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -41,13 +47,8 @@ public class ArmBlade extends Transformation {
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onDisabled(LivingEntity owner) {
-
+    public boolean isReplacement() {
+        return false;
     }
 
     @Override
@@ -61,7 +62,17 @@ public class ArmBlade extends Transformation {
     }
 
     @Override
-    public void onRightClick() {
+    public void onRightClick(LivingEntity owner) {
 
+    }
+
+    @Override
+    public void applyModifiers(LivingEntity owner) {
+        HelperMethods.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 4.0D, AttributeModifier.Operation.ADDITION);
+    }
+
+    @Override
+    public void removeModifiers(LivingEntity owner) {
+        HelperMethods.removeModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID);
     }
 }
