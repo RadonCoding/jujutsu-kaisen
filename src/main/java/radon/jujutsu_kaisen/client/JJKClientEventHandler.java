@@ -507,7 +507,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CLONE.get(), CloneRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
             event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
