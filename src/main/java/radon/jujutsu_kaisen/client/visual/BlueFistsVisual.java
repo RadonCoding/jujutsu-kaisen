@@ -65,7 +65,7 @@ public class BlueFistsVisual {
             double y = pos.y() + yOffset * (RADIUS * 0.1F);
             double z = pos.z() + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE_COLOR, RADIUS * 0.2F, 0.2F, true, 1),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE, RADIUS * 0.2F, 0.2F, true, 1),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -81,7 +81,7 @@ public class BlueFistsVisual {
             double y = pos.y() + yOffset * (RADIUS * 0.5F * 0.1F);
             double z = pos.z() + zOffset * (RADIUS * 0.5F * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE_COLOR, RADIUS * 0.1F, 0.2F, true, 1),
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE, RADIUS * 0.1F, 0.2F, true, 1),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }

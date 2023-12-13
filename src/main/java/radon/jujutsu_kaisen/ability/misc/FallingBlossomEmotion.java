@@ -17,18 +17,17 @@ import radon.jujutsu_kaisen.ability.base.Ability.IDurationable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class SimpleDomain extends Summon<SimpleDomainEntity> {
-    public SimpleDomain() {
-        super(SimpleDomainEntity.class);
-    }
-
+public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (!owner.level().isClientSide) {
@@ -44,23 +43,27 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
+    public ActivationType getActivationType(LivingEntity owner) {
+        return null;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        if (!(owner.level() instanceof ServerLevel level)) return;
+
+        for (int i = 0; i < 8; i++) {
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).x();
+            double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight());
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).z();
+            double speed = (owner.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
+            level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.FALLING_BLOSSOM_EMOTION, owner.getBbWidth() * 0.5F,
+                    0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
+        }
+    }
+
+    @Override
     public boolean isTechnique() {
         return false;
-    }
-
-    @Override
-    public List<EntityType<?>> getTypes() {
-        return List.of(JJKEntities.SIMPLE_DOMAIN.get());
-    }
-
-    @Override
-    public boolean isTenShadows() {
-        return false;
-    }
-
-    @Override
-    protected SimpleDomainEntity summon(LivingEntity owner) {
-        return new SimpleDomainEntity(owner);
     }
 
     @Override
@@ -79,11 +82,6 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
-    public boolean display() {
-        return false;
-    }
-
-    @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
     }
@@ -95,36 +93,22 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
-    public int getPointsCost() {
-        return ConfigHolder.SERVER.simpleDomainCost.get();
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(3.0F, 5.0F);
     }
 
     @Override
-    public Vec2 getDisplayCoordinates() {
-        return new Vec2(3.0F, 4.0F);
+    public int getPointsCost() {
+        return ConfigHolder.SERVER.fallingBlossomEmotionCost.get();
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class SimpleDomainForgeEvents {
-        @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            if (!(event.getSource().getDirectEntity() instanceof DomainExpansionEntity)) return;
+    @Override
+    public void onEnabled(LivingEntity owner) {
 
-            LivingEntity victim = event.getEntity();
+    }
 
-            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get()))
-                return;
+    @Override
+    public void onDisabled(LivingEntity owner) {
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            SimpleDomainEntity domain = cap.getSummonByClass((ServerLevel) victim.level(), SimpleDomainEntity.class);
-
-            if (domain != null) {
-                domain.hurt(event.getSource(), event.getAmount());
-                event.setCanceled(true);
-            }
-        }
     }
 }

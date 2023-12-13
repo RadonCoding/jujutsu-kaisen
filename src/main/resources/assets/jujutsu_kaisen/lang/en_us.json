@@ -217,6 +217,9 @@
   "ability.jujutsu_kaisen.simple_domain": "Simple Domain",
   "ability.jujutsu_kaisen.simple_domain.enable": "Activated simple domain",
   "ability.jujutsu_kaisen.simple_domain.disable": "Deactivated simple domain",
+  "ability.jujutsu_kaisen.falling_blossom_emotion": "Falling Blossom Emotion",
+  "ability.jujutsu_kaisen.falling_blossom_emotion.enable": "Activated falling blossom emotion",
+  "ability.jujutsu_kaisen.falling_blossom_emotion.disable": "Deactivated falling blossom emotion",
   "ability.jujutsu_kaisen.water_walking": "Water Walking",
   "ability.jujutsu_kaisen.water_walking.enable": "Activated water walking",
   "ability.jujutsu_kaisen.water_walking.disable": "Deactivated water walking",
@@ -476,8 +479,9 @@
 
   "chat.jujutsu_kaisen.cost": "Cost: %1$d/%2$d",
   "chat.jujutsu_kaisen.experience": "You've gained %1$f experience from your battle",
-  "chat.jujutsu_kaisen.penalty": "You lost %1$f experience by dying",
+  "chat.jujutsu_kaisen.experience_penalty": "You lost %1$f experience by dying",
   "chat.jujutsu_kaisen.points": "You've gained %1$d points from your battle",
+  "chat.jujutsu_kaisen.points_penalty": "You lost %1$d points by dying",
   "chat.jujutsu_kaisen.charge": "Charge: %1$d%%",
 
   "chat.jujutsu_kaisen.pact_request": "Sent a pact request to %1$s",

@@ -115,7 +115,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(4.0F, -0.5F);
+        return new Vec2(4.0F, 0.0F);
     }
 
     @Override

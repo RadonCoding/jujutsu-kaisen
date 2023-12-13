@@ -140,6 +140,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
     public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
     public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
+    public static RegistryObject<Ability> FALLING_BLOSSOM_EMOTION = ABILITIES.register("falling_blossom_emotion", FallingBlossomEmotion::new);
     public static RegistryObject<Ability> WATER_WALKING = ABILITIES.register("water_walking", WaterWalking::new);
     public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
     public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);

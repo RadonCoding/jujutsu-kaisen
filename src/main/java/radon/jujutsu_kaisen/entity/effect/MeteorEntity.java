@@ -272,9 +272,9 @@ public class MeteorEntity extends JujutsuProjectile {
                             double x = this.getX() + xOffset * radius;
                             double z = this.getZ() + zOffset * radius;
 
-                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, radius * 0.3F, 1.0F, true, 20),
+                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.RED_FIRE, radius * 0.3F, 1.0F, true, 20),
                                     true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
-                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.SMOKE_COLOR, radius * 0.3F, 1.0F, false, 20),
+                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.SMOKE, radius * 0.3F, 1.0F, false, 20),
                                     true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
                         }
                     }

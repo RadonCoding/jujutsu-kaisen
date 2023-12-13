@@ -511,6 +511,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    @Override
     public void addPoints(int points) {
         this.points += points;
     }

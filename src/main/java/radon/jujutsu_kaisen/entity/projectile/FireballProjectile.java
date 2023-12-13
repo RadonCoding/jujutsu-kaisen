@@ -91,9 +91,9 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
             double z = center.z() + zOffset * this.getFlamePillarRadius();
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
         }
 
@@ -112,7 +112,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
             double z = center.z() + zOffset * this.getFlamePillarRadius();
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
                     true, startX, center.y(), startZ);
         }
 
@@ -128,7 +128,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
             double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 
@@ -142,7 +142,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
             double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE_COLOR, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
+            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
                     true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 

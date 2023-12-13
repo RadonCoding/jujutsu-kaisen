@@ -60,7 +60,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(3.0F, 2.0F);
+        return new Vec2(5.0F, 2.0F);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class OutputRCT extends Ability {
                     double y = target.getY() + HelperMethods.RANDOM.nextDouble() * (target.getBbHeight());
                     double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - target.getLookAngle().scale(0.35D).z();
                     double speed = (target.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
-                    level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.RCT_COLOR, target.getBbWidth() * 0.5F,
+                    level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.RCT, target.getBbWidth() * 0.5F,
                             0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
                 }
             }, i * 2);
