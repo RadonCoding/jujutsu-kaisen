@@ -1,31 +1,33 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.logging.Level;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExperienceHandler {
@@ -39,28 +41,6 @@ public class ExperienceHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity owner = event.getEntity();
-
-        if (owner.level().isClientSide) return;
-        if (!battles.containsKey(owner.getUUID())) return;
-
-        for (BattleData data : battles.get(owner.getUUID())) {
-            boolean fighting = data.tick(owner);
-
-            if (!fighting) {
-                data.end(owner);
-
-                battles.get(owner.getUUID()).remove(data);
-
-                if (battles.get(owner.getUUID()).isEmpty()) {
-                    battles.remove(owner.getUUID());
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event) {
         LivingEntity victim = event.getEntity();
 
@@ -70,33 +50,27 @@ public class ExperienceHandler {
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 boolean existing = false;
 
-                if (battles.containsKey(attacker.getUUID())) {
-                    for (BattleData battle : battles.get(attacker.getUUID())) {
-                        if (battle.target != victim) continue;
-                        battle.attack(event.getAmount());
-                        existing = true;
+                Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
+
+                while (iter.hasNext()) {
+                    for (BattleData battle : iter.next().getValue()) {
+                        if (battle.getTargetUUID() == victim.getUUID()) {
+                            battle.attack(attacker.getUUID(), event.getAmount());
+                            existing = true;
+                        }
                     }
                 }
                 if (!existing) {
                     if (attacker.getLastHurtByMob() == victim) {
-                        addBattle(attacker.getUUID(), new BattleData(victim));
+                        addBattle(attacker.getUUID(), new BattleData(attacker.getUUID(), victim.getUUID()));
                     }
                 }
             }
 
             if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                boolean existing = false;
-
-                if (battles.containsKey(victim.getUUID())) {
-                    for (BattleData battle : battles.get(victim.getUUID())) {
-                        if (battle.target != attacker) continue;
-                        battle.hurt(event.getAmount());
-                        existing = true;
-                    }
-                }
-                if (!existing) {
+                if (!battles.containsKey(victim.getUUID())) {
                     if (victim.getLastHurtMob() == attacker) {
-                        addBattle(victim.getUUID(), new BattleData(attacker));
+                        addBattle(victim.getUUID(), new BattleData(victim.getUUID(), attacker.getUUID()));
                     }
                 }
             }
@@ -113,7 +87,7 @@ public class ExperienceHandler {
     public static void onLivingDeath(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
 
-        if (entity.level().isClientSide) return;
+        if (!(entity.level() instanceof ServerLevel level)) return;
 
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
@@ -141,68 +115,107 @@ public class ExperienceHandler {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
+
+        Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            for (BattleData battle : iter.next().getValue()) {
+                if (battle.getOwnerUUID() == entity.getUUID() || battle.getTargetUUID() == entity.getUUID()) {
+                    battle.end(level);
+                    iter.remove();
+                }
+            }
+        }
     }
 
     private static class BattleData {
-        private static final int MAX_DURATION = 60 * 20;
+        private final UUID ownerUUID;
+        private final UUID targetUUID;
 
-        private final LivingEntity target;
-        private int idle;
-        private float damageDealt;
-        private float damageTaken;
+        private float totalDamageDealt;
+        private float damageDealtByOwner;
 
-        public BattleData(LivingEntity target) {
-            this.target = target;
+        public BattleData(UUID ownerUUID, UUID targetUUID) {
+            this.ownerUUID = ownerUUID;
+            this.targetUUID = targetUUID;
         }
 
-        public void end(LivingEntity owner) {
-            if (this.idle >= MAX_DURATION || owner.isRemoved() || this.target.isRemoved()) return;
+        public UUID getOwnerUUID() {
+            return this.ownerUUID;
+        }
 
-            if (this.damageDealt == 0.0F || this.damageTaken == 0.0F) return;
+        public UUID getTargetUUID() {
+            return targetUUID;
+        }
 
-            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        private static float calculateStrength(LivingEntity entity) {
+            float strength = entity.getMaxHealth();
+            float armor = (float) entity.getArmorValue();
+            float toughness = (float) entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+            float f = 2.0F + toughness / 4.0F;
+            float f1 = Mth.clamp(armor - strength / f, armor * 0.2F, 20.0F);
+            strength /= 1.0F - f1 / 25.0F;
 
-            float amount = (this.damageDealt + this.damageTaken) * 2.0F;
+            MobEffectInstance instance = entity.getEffect(MobEffects.DAMAGE_RESISTANCE);
 
-            // Decrease amount to a minimum of 25% depending on the relativity of the damage taken and dealt
-            amount *= Math.max(0.25F, Math.abs(this.damageDealt - this.damageTaken) / Math.max(this.damageDealt, this.damageTaken));
+            if (instance != null) {
+                int resistance = instance.getAmplifier();
+                int i = (resistance + 1) * 5;
+                int j = 25 - i;
 
-            // If owner has less health than target increase experience, if target has less health than owner decrease experience
-            amount *= (this.target.getMaxHealth() + this.target.getArmorValue()) / (owner.getMaxHealth() + owner.getArmorValue());
-
-            // Decrease amount to a minimum of 25% depending on the health of owner and target, if both are relatively on the same health amount owner gets the full amount
-            amount *= Math.min(1.0F, 0.25F + 1.0F - Math.abs((owner.getHealth() / owner.getMaxHealth()) - (this.target.getHealth() / this.target.getMaxHealth())));
-
-            if (this.target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData targetCap = this.target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                // If owner has less experience than target increase experience, if target has less experience than owner decrease experience
-                amount *= (Math.max(1, targetCap.getExperience()) / Math.max(1, ownerCap.getExperience()));
-
-                // Limit the experience to the max health of the target multiplied by whether the target can heal
-                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth() * (targetCap.getType() == JujutsuType.CURSE || targetCap.isUnlocked(JJKAbilities.RCT1.get()) ? 1.5F : 1.0F));
-            } else {
-                // Limit the experience to 10% of the max health of the target
-                amount = Mth.clamp(amount, 0.0F, this.target.getMaxHealth()) * 0.1F;
-            }
-
-            // If owner is dead they get 25% of the experience
-            amount *= owner.isDeadOrDying() ? 0.25F : 1.0F;
-
-            amount *= ConfigHolder.SERVER.experienceMultiplier.get().floatValue();
-
-            if (amount < 0.1F) return;
-
-            if (ownerCap.addExperience(amount)) {
-                if (owner instanceof Player player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), amount));
+                if (j == 0) {
+                    return strength;
+                } else {
+                    float x = 25.0F / (float) j;
+                    strength = strength * x;
                 }
             }
 
-            int points = (int) Math.floor(amount * 0.1F);
+            int k = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), entity.damageSources().generic());
+
+            if (k > 0) {
+                float f2 = Mth.clamp(k, 0.0F, 20.0F);
+                strength /= 1.0F - f2 / 25.0F;
+            }
+
+            strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
+
+            if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                if (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get())) {
+                    strength *= 2.0F;
+                }
+            }
+            return strength;
+        }
+
+        public void end(ServerLevel level) {
+            if (!(level.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !(level.getEntity(this.targetUUID) instanceof LivingEntity target)) return;
+            if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            float targetStrength = calculateStrength(target);
+            float ownerStrength = calculateStrength(owner);
+
+            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 100.0F
+                    * (this.totalDamageDealt / this.damageDealtByOwner)
+                    * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
+
+            if (experience < 0.1F) return;
+
+            if (cap.addExperience(experience)) {
+                if (owner instanceof Player player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience", JujutsuKaisen.MOD_ID), experience));
+                }
+            }
+
+            int points = (int) Math.floor(experience * 0.1F);
 
             if (points > 0) {
-                ownerCap.addPoints(points);
+                cap.addPoints(points);
 
                 if (owner instanceof Player player) {
                     player.sendSystemMessage(Component.translatable(String.format("chat.%s.points", JujutsuKaisen.MOD_ID), points));
@@ -210,23 +223,16 @@ public class ExperienceHandler {
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
         }
 
-        public void attack(float damage) {
-            this.idle = 0;
-            this.damageDealt += damage;
-        }
+        public void attack(UUID attackerUUID, float damage) {
+            this.totalDamageDealt += damage;
 
-        public void hurt(float damage) {
-            this.idle = 0;
-            this.damageTaken += damage;
-        }
-
-        public boolean tick(LivingEntity owner) {
-            this.idle++;
-            return this.idle < MAX_DURATION && owner.isAlive() && this.target.isAlive();
+            if (attackerUUID == this.ownerUUID) {
+                this.damageDealtByOwner += damage;
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ public class RCT extends Ability implements Ability.IChannelened {
         return false;
     }
 
-    private RCT1 getTier(LivingEntity owner) {
+    public static RCT1 getTier(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
