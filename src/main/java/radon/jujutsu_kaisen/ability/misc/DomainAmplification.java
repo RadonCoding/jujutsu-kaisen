@@ -4,6 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -103,7 +104,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class DomainAmplificationForgeEvents {
         @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
+        public static void onLivingHurt(LivingHurtEvent event) {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             LivingEntity victim = event.getEntity();

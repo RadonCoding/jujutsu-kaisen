@@ -154,11 +154,11 @@ public abstract class DomainExpansionEntity extends Mob {
         }
     }
 
-    protected boolean isAffected(BlockPos pos) {
+    public boolean isAffected(BlockPos pos) {
         return this.isInsideBarrier(pos);
     }
 
-    protected boolean isAffected(Entity victim) {
+    public boolean isAffected(Entity victim) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null || victim == owner) {

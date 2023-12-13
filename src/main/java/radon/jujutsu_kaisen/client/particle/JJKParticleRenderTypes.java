@@ -55,7 +55,6 @@ public class JJKParticleRenderTypes {
         @Override
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
             RenderSystem.depthMask(true);
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);

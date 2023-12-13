@@ -57,7 +57,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    protected boolean isAffected(BlockPos pos) {
+    public boolean isAffected(BlockPos pos) {
         if (VeilHandler.isProtected(this.level(), pos)) return false;
 
         for (DomainExpansionEntity domain : this.getDomains()) {
