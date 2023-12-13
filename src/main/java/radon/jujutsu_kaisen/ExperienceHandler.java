@@ -129,7 +129,7 @@ public class ExperienceHandler {
                 cap.setPoints(Math.max(0, cap.getPoints() - points));
 
                 if (entity instanceof ServerPlayer player) {
-                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), penalty));
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), points));
 
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                 }

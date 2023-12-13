@@ -400,8 +400,8 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(SatoruGojoModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(YutaOkkotsuModel.LAYER, SkinModel::createBodyLayer);
-            event.registerLayerDefinition(YutaOkkotsuModel.INNER_LAYER, SkinModel::createBodyLayer);
-            event.registerLayerDefinition(YutaOkkotsuModel.OUTER_LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(YutaOkkotsuModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(YutaOkkotsuModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(MegumiFushiguroModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MegumiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
