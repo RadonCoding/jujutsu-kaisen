@@ -246,7 +246,7 @@ public class SorcererData implements ISorcererData {
 
             if (status == Ability.Status.SUCCESS) {
                 ability.run(this.owner);
-            } else if (status == Ability.Status.UNUSUABLE) {
+            } else {
                 remove.add(ability);
             }
         }

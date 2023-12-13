@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,12 +18,16 @@ import radon.jujutsu_kaisen.ability.base.Ability.IDurationable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class SimpleDomain extends Summon<SimpleDomainEntity> {
     public SimpleDomain() {
@@ -31,14 +36,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!owner.level().isClientSide) {
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level())) {
-                if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
-                return true;
-            }
+        for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level())) {
+            if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
+            return true;
         }
         return false;
     }
