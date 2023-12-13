@@ -15,22 +15,8 @@ import radon.jujutsu_kaisen.client.gui.screen.tab.PactTab;
 import java.util.Objects;
 
 public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry> {
-    private final PactTab parent;
-
     public PactListWidget(IBuilder<Pact, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y, PactTab parent) {
         super(builder, callback, minecraft, width, height, x, y);
-
-        this.parent = parent;
-    }
-
-    private boolean isInvalid(Entry entry) {
-        if (this.minecraft.player == null) return false;
-
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        PlayerListWidget.Entry selected = this.parent.getSelectedPlayer();
-
-        return selected != null && cap.hasPact(selected.get().getProfile().getId(), entry.get());
     }
 
     @Override
@@ -39,9 +25,7 @@ public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry>
 
         e.renderBack(pGuiGraphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, Objects.equals(this.getHovered(), e), pPartialTick);
 
-        if (this.isInvalid(e)) {
-            pGuiGraphics.renderOutline(pLeft - 2, pTop - 2, pWidth, pHeight + 3, -65536);
-        } else if (this.isSelectedItem(pIndex)) {
+        if (this.isSelectedItem(pIndex)) {
             pGuiGraphics.renderOutline(pLeft - 2, pTop - 2, pWidth, pHeight + 3, -1);
         }
         e.render(pGuiGraphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, Objects.equals(this.getHovered(), e), pPartialTick);
@@ -84,10 +68,8 @@ public class PactListWidget extends JJKSelectionList<Pact, PactListWidget.Entry>
 
         @Override
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-            if (!PactListWidget.this.isInvalid(this)) {
-                PactListWidget.this.callback.setSelected(this);
-                PactListWidget.this.setSelected(this);
-            }
+            PactListWidget.this.callback.setSelected(this);
+            PactListWidget.this.setSelected(this);
             return false;
         }
 

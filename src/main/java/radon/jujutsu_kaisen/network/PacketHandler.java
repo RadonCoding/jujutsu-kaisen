@@ -207,6 +207,11 @@ public class PacketHandler {
                 .encoder(TransformationRightClickC2SPacket::encode)
                 .consumerMainThread(TransformationRightClickC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(QuestionRemovePactC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(QuestionRemovePactC2SPacket::new)
+                .encoder(QuestionRemovePactC2SPacket::encode)
+                .consumerMainThread(QuestionRemovePactC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

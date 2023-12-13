@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.client.gui.screen.widget.PactListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.PlayerListWidget;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.QuestionCreatePactC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.QuestionRemovePactC2SPacket;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -29,6 +30,7 @@ public class PactTab extends JJKTab {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private Button create;
+    private Button remove;
     private MultiLineTextWidget description;
 
     @Nullable
@@ -93,7 +95,16 @@ public class PactTab extends JJKTab {
     public void tick() {
         super.tick();
 
-        this.create.active = this.player != null && this.pact != null;
+        if (this.minecraft == null || this.minecraft.player == null) return;
+
+        this.create.active = false;
+        this.remove.active = false;
+
+        if (this.player != null && this.pact != null) {
+            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            this.create.active = !cap.hasPact(this.player.get().getProfile().getId(), this.pact.get());
+            this.remove.active = cap.hasPact(this.player.get().getProfile().getId(), this.pact.get());
+        }
     }
 
     @Override
@@ -116,19 +127,25 @@ public class PactTab extends JJKTab {
 
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
+            this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_create", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
             PacketHandler.sendToServer(new QuestionCreatePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
-            cap.createPactRequest(this.player.get().getProfile().getId(), this.pact.get());
-        }).size(87, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build();
+            cap.createPactCreationRequest(this.player.get().getProfile().getId(), this.pact.get());
+        }).size(40, 20).pos(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.create);
+
+        this.remove = Button.builder(Component.translatable(String.format("gui.%s.pact.remove", JujutsuKaisen.MOD_ID)), pButton -> {
+            if (this.player == null || this.pact == null) return;
+
+            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            this.minecraft.player.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_request_remove", JujutsuKaisen.MOD_ID), this.player.get().getProfile().getName()));
+            PacketHandler.sendToServer(new QuestionRemovePactC2SPacket(this.player.get().getProfile().getId(), this.pact.get()));
+            cap.createPactRemovalRequest(this.player.get().getProfile().getId(), this.pact.get());
+        }).size(40, 20).pos(xOffset + 176, yOffset + this.minecraft.font.lineHeight + 66).build();
+        this.addRenderableWidget(this.remove);
 
         this.description = new MultiLineTextWidget(xOffset + 128, yOffset + this.minecraft.font.lineHeight + 1, Component.empty(), this.minecraft.font)
                 .setMaxWidth(87);
         this.addRenderableWidget(this.description);
-    }
-
-    @Override
-    public void mouseClicked(double pMouseX, double pMouseY, int pButton) {
-
     }
 }

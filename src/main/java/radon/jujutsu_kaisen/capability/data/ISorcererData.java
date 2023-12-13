@@ -51,11 +51,17 @@ public interface ISorcererData {
 
     void removePact(UUID recipient, Pact pact);
 
-    void createPactRequest(UUID recipient, Pact pact);
+    void createPactCreationRequest(UUID recipient, Pact pact);
 
-    void removePactRequest(UUID recipient, Pact pact);
+    void createPactRemovalRequest(UUID recipient, Pact pact);
 
-    boolean hasRequestedPact(UUID recipient, Pact pact);
+    void removePactCreationRequest(UUID recipient, Pact pact);
+
+    void removePactRemovalRequest(UUID recipient, Pact pact);
+
+    boolean hasRequestedPactCreation(UUID recipient, Pact pact);
+
+    boolean hasRequestedPactRemoval(UUID recipient, Pact pact);
 
     void addBindingVow(BindingVow vow);
 
