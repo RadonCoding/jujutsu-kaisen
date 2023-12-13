@@ -170,7 +170,7 @@ public abstract class Ability {
             return false;
 
         for (Ability ability : this.getRequirements()) {
-            if (!cap.isUnlocked(ability)) return false;
+            if (!ability.isUnlocked(owner)) return false;
         }
         return true;
     }

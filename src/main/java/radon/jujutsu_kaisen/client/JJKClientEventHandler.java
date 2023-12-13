@@ -104,21 +104,6 @@ public class JJKClientEventHandler {
 
             ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            PlayerRenderer renderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(mc.player);
-            PlayerModel<AbstractClientPlayer> model = renderer.getModel();
-
-            model.attackTime = mc.player.getAttackAnim(event.getPartialTick());
-
-            model.riding = mc.player.isPassenger() && (mc.player.getVehicle() != null && mc.player.getVehicle().shouldRiderSit());
-            model.young = mc.player.isBaby();
-
-            if (model.attackTime == 0) {
-                model.rightArmPose = HumanoidModel.ArmPose.EMPTY;
-                model.leftArmPose = HumanoidModel.ArmPose.EMPTY;
-
-                model.setupAnim(mc.player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-            }
-
             boolean translated = false;
 
             for (Ability ability : cap.getToggled()) {
@@ -127,6 +112,9 @@ public class JJKClientEventHandler {
                 HumanoidArm arm = event.getHand() == InteractionHand.MAIN_HAND && mc.player.getMainArm() == HumanoidArm.RIGHT ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
 
                 if ((transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM && arm == HumanoidArm.RIGHT) || (transformation.getBodyPart() == ITransformation.Part.LEFT_ARM && arm == HumanoidArm.LEFT)) {
+                    PlayerRenderer renderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(mc.player);
+                    PlayerModel<AbstractClientPlayer> model = renderer.getModel();
+
                     GeoArmorRenderer<T> armor = (GeoArmorRenderer<T>) ForgeHooksClient.getArmorModel(mc.player, transformation.getItem().getDefaultInstance(), EquipmentSlot.CHEST, model);
 
                     VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.armorCutoutNoCull(armor.getTextureLocation((T) transformation.getItem())));
@@ -134,6 +122,17 @@ public class JJKClientEventHandler {
                     float f = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
 
                     if (!translated) {
+                        model.attackTime = mc.player.getAttackAnim(event.getPartialTick());
+
+                        model.riding = mc.player.isPassenger() && (mc.player.getVehicle() != null && mc.player.getVehicle().shouldRiderSit());
+                        model.young = mc.player.isBaby();
+
+                        if (model.attackTime == 0) {
+                            model.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+                            model.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+
+                            model.setupAnim(mc.player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                        }
                         event.getPoseStack().translate(f * 0.125F, -0.125F, 0.0F);
                         translated = true;
                     }
