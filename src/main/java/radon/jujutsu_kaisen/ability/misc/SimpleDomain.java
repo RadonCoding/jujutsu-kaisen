@@ -4,9 +4,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +22,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -108,6 +111,20 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class SimpleDomainForgeEvents {
+        @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
+            if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            for (SimpleDomainEntity simple : victim.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+                if (victim.distanceTo(simple) < simple.getRadius()) {
+                    event.setAmount(event.getAmount() * 0.5F);
+                    simple.hurt(event.getSource(), event.getAmount());
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             if (!(event.getSource().getDirectEntity() instanceof DomainExpansionEntity)) return;
