@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -53,7 +54,8 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return !JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) &&
+                !owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D)).isEmpty();
     }
 
     @Override
@@ -159,11 +161,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             if (attacker.level().isClientSide) return;
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            // If not enabled, then enable
-            if (attacker instanceof ISorcerer && !JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                AbilityHandler.trigger(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get());
-            }
 
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
