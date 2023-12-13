@@ -7,24 +7,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -35,7 +30,6 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
@@ -91,8 +85,10 @@ public class SorcererData implements ISorcererData {
     private final Set<UUID> domains;
     private final Set<UUID> summons;
     private final Map<UUID, Set<Pact>> acceptedPacts;
-    private final Map<UUID, Set<Pact>> requestedPacts;
-    private final Map<UUID, Integer> requestExpirations;
+    private final Map<UUID, Set<Pact>> requestedPactsCreations;
+    private final Map<UUID, Integer> createRequestExpirations;
+    private final Map<UUID, Set<Pact>> requestedPactsRemovals;
+    private final Map<UUID, Integer> removeRequestExpirations;
     private final Set<BindingVow> bindingVows;
     private final Map<BindingVow, Integer> bindingVowCooldowns;
     private final Map<Ability, Set<String>> chants;
@@ -156,8 +152,10 @@ public class SorcererData implements ISorcererData {
         this.domains = new HashSet<>();
         this.summons = new HashSet<>();
         this.acceptedPacts = new HashMap<>();
-        this.requestedPacts = new HashMap<>();
-        this.requestExpirations = new HashMap<>();
+        this.requestedPactsCreations = new HashMap<>();
+        this.createRequestExpirations = new HashMap<>();
+        this.requestedPactsRemovals = new HashMap<>();
+        this.removeRequestExpirations = new HashMap<>();
         this.bindingVows = new HashSet<>();
         this.bindingVowCooldowns = new HashMap<>();
         this.chants = new HashMap<>();
@@ -344,7 +342,7 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateRequestExpirations() {
-        Iterator<Map.Entry<UUID, Integer>> iter = this.requestExpirations.entrySet().iterator();
+        Iterator<Map.Entry<UUID, Integer>> iter = this.createRequestExpirations.entrySet().iterator();
 
         while (iter.hasNext()) {
             Map.Entry<UUID, Integer> entry = iter.next();
@@ -352,10 +350,10 @@ public class SorcererData implements ISorcererData {
             int remaining = entry.getValue();
 
             if (remaining > 0) {
-                this.requestExpirations.put(entry.getKey(), --remaining);
+                this.createRequestExpirations.put(entry.getKey(), --remaining);
             } else {
                 iter.remove();
-                this.requestedPacts.remove(entry.getKey());
+                this.requestedPactsCreations.remove(entry.getKey());
             }
         }
     }
@@ -555,27 +553,51 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void removePact(UUID recipient, Pact pact) {
-        this.acceptedPacts.remove(recipient);
-    }
+        this.acceptedPacts.get(recipient).remove(pact);
 
-    @Override
-    public void createPactRequest(UUID recipient, Pact pact) {
-        if (!this.requestedPacts.containsKey(recipient)) {
-            this.requestedPacts.put(recipient, new HashSet<>());
+        if (this.acceptedPacts.get(recipient).isEmpty()) {
+            this.acceptedPacts.remove(recipient);
         }
-        this.requestedPacts.get(recipient).add(pact);
-        this.requestExpirations.put(recipient, 30 * 20);
     }
 
     @Override
-    public void removePactRequest(UUID recipient, Pact pact) {
-        this.requestedPacts.getOrDefault(recipient, new HashSet<>()).remove(pact);
-        this.requestExpirations.remove(recipient);
+    public void createPactCreationRequest(UUID recipient, Pact pact) {
+        if (!this.requestedPactsCreations.containsKey(recipient)) {
+            this.requestedPactsCreations.put(recipient, new HashSet<>());
+        }
+        this.requestedPactsCreations.get(recipient).add(pact);
+        this.createRequestExpirations.put(recipient, 30 * 20);
     }
 
     @Override
-    public boolean hasRequestedPact(UUID recipient, Pact pact) {
-        return this.requestedPacts.getOrDefault(recipient, Set.of()).contains(pact);
+    public void createPactRemovalRequest(UUID recipient, Pact pact) {
+        if (!this.requestedPactsRemovals.containsKey(recipient)) {
+            this.requestedPactsRemovals.put(recipient, new HashSet<>());
+        }
+        this.requestedPactsRemovals.get(recipient).add(pact);
+        this.removeRequestExpirations.put(recipient, 30 * 20);
+    }
+
+    @Override
+    public void removePactCreationRequest(UUID recipient, Pact pact) {
+        this.requestedPactsCreations.getOrDefault(recipient, new HashSet<>()).remove(pact);
+        this.createRequestExpirations.remove(recipient);
+    }
+
+    @Override
+    public void removePactRemovalRequest(UUID recipient, Pact pact) {
+        this.requestedPactsRemovals.getOrDefault(recipient, new HashSet<>()).remove(pact);
+        this.removeRequestExpirations.remove(recipient);
+    }
+
+    @Override
+    public boolean hasRequestedPactCreation(UUID recipient, Pact pact) {
+        return this.requestedPactsCreations.getOrDefault(recipient, Set.of()).contains(pact);
+    }
+
+    @Override
+    public boolean hasRequestedPactRemoval(UUID recipient, Pact pact) {
+        return this.requestedPactsRemovals.getOrDefault(recipient, Set.of()).contains(pact);
     }
 
     @Override
@@ -1914,7 +1936,7 @@ public class SorcererData implements ISorcererData {
 
             Set<Pact> pacts = new HashSet<>();
 
-            for (Tag entry : data.getList("entries", Tag.TAG_COMPOUND)) {
+            for (Tag entry : data.getList("entries", Tag.TAG_INT)) {
                 pacts.add(Pact.values()[((IntTag) entry).getAsInt()]);
             }
             this.acceptedPacts.put(data.getUUID("recipient"), pacts);

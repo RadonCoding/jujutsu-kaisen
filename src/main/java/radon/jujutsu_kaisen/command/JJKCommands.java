@@ -18,8 +18,10 @@ public class JJKCommands {
         ResetSummonsCommand.register(event.getDispatcher());
         SetNatureCommand.register(event.getDispatcher());
         SetExperienceCommand.register(event.getDispatcher());
-        PactAcceptCommand.register(event.getDispatcher());
-        PactDeclineCommand.register(event.getDispatcher());
+        PactCreationAcceptCommand.register(event.getDispatcher());
+        PactCreationDeclineCommand.register(event.getDispatcher());
         AddPointsCommand.register(event.getDispatcher());
+        PactRemovalAcceptCommand.register(event.getDispatcher());
+        PactRemovalDeclineCommand.register(event.getDispatcher());
     }
 }

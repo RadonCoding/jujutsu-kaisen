@@ -12,15 +12,17 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-public class PactDeclineCommand {
+public class PactRemovalDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactdecline")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("pactremovaldecline")
                 .then(Commands.argument("player", EntityArgument.entity())
                         .then(Commands.argument("pact", EnumArgument.enumArgument(Pact.class))
                                 .executes(ctx -> decline(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), ctx.getArgument("pact", Pact.class))))));
 
-        dispatcher.register(Commands.literal("pactdecline").redirect(node));
+        dispatcher.register(Commands.literal("pactremovaldecline").redirect(node));
     }
 
     public static int decline(CommandSourceStack stack, ServerPlayer dst, Pact pact) {
@@ -30,12 +32,12 @@ public class PactDeclineCommand {
 
         ISorcererData dstCap = dst.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (dstCap.hasRequestedPact(src.getUUID(), pact)) {
-            dstCap.removePactRequest(src.getUUID(), pact);
+        if (dstCap.hasRequestedPactRemoval(src.getUUID(), pact)) {
+            dstCap.removePactRemovalRequest(src.getUUID(), pact);
 
-            dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_decline", JujutsuKaisen.MOD_ID), src.getName(), pact.getName().getString().toLowerCase()));
+            dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_removal_decline", JujutsuKaisen.MOD_ID), src.getName(), pact.getName().getString().toLowerCase()));
         } else {
-            src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_failure", JujutsuKaisen.MOD_ID), dst.getName(), pact.getName().getString().toLowerCase()));
+            src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_removal_decline", JujutsuKaisen.MOD_ID), dst.getName(), pact.getName().getString().toLowerCase()));
             return 0;
         }
         return 1;
