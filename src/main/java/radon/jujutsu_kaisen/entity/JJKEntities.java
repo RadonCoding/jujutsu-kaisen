@@ -158,10 +158,6 @@ public class JJKEntities {
                     .sized(1.0F, 2.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
                             .toString()));
-    public static RegistryObject<EntityType<CloneEntity>> CLONE = ENTITIES.register("clone", () ->
-            EntityType.Builder.<CloneEntity>of(CloneEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "clone")
-                            .toString()));
     public static RegistryObject<EntityType<NaoyaZeninEntity>> NAOYA_ZENIN = ENTITIES.register("naoya_zenin", () ->
             EntityType.Builder.<NaoyaZeninEntity>of(NaoyaZeninEntity::new, MobCategory.MISC)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "naoya_zenin")
@@ -433,7 +429,6 @@ public class JJKEntities {
         event.put(TOGE_INUMAKI.get(), SorcererEntity.createAttributes().build());
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
         event.put(HEIAN_SUKUNA.get(), SorcererEntity.createAttributes().build());
-        event.put(CLONE.get(), SorcererEntity.createAttributes().build());
         event.put(NAOYA_ZENIN.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
