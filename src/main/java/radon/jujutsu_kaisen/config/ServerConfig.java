@@ -149,7 +149,7 @@ public class ServerConfig {
                 .defineInRange("chantSimilarityThreshold", 0.25F, 0.0F, 1.0F);
         builder.pop();
 
-        builder.comment("Abilities").push("chants");
+        builder.comment("Abilities").push("abilities");
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.quickDrawCost = builder.comment("The amount of points quick draw costs to unlock")
