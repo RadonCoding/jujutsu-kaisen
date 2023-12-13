@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +19,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,11 +52,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
         if (domain == null) return;
 
         for (Entity entity : owner.level().getEntities(owner, domain.getBoundingBox())) {
-            if (entity == domain) continue;
+            if (entity == domain || entity.distanceTo(domain) > domain.getRadius()) continue;
 
             if (entity instanceof AbstractArrow || entity instanceof ThrowableItemProjectile) {
                 entity.discard();
-            } else {
+            } else if (entity instanceof LivingEntity) {
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 if (owner instanceof Player player) {
@@ -86,6 +89,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
             POSITIONS.remove(owner.getUUID());
+
+            if (owner instanceof ServerPlayer player) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
         }
     }
 
