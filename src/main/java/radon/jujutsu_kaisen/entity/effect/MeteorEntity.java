@@ -281,7 +281,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 }
 
                 if (this.explosionTime > 0) {
-                    this.setNoGravity(!this.getFeetBlockState().isAir());
+                    this.setNoGravity(!this.getFeetBlockState().isAir() || !this.getFeetBlockState().getFluidState().isEmpty());
 
                     if (this.explosionTime >= duration) {
                         this.discard();
