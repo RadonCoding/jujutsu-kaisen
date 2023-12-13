@@ -10,10 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -35,8 +32,9 @@ public class SimpleDomainEntity extends Mob {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SimpleDomainEntity.class, EntityDataSerializers.FLOAT);
 
     private static final float STRENGTH = 500.0F;
-    private static final double X_STEP = 0.05D;
-    public static final float RADIUS = 3.0F;
+    private static final double X_STEP = 0.025D;
+    public static final float RADIUS = 2.0F;
+    private static final float MAX_RADIUS = 4.0F;
     private static final float DAMAGE = 10.0F;
 
     @Nullable
@@ -63,8 +61,12 @@ public class SimpleDomainEntity extends Mob {
             attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
             this.setHealth(this.getMaxHealth());
         }
+        this.entityData.set(DATA_RADIUS, Math.min(MAX_RADIUS, RADIUS * cap.getAbilityPower()));
+    }
 
-        this.entityData.set(DATA_RADIUS, RADIUS * cap.getAbilityPower());
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+        return EntityDimensions.fixed((float) this.getRadius(), (float) this.getRadius());
     }
 
     @Override
@@ -95,6 +97,8 @@ public class SimpleDomainEntity extends Mob {
 
     @Override
     public void tick() {
+        this.refreshDimensions();
+
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()))) {
@@ -121,7 +125,7 @@ public class SimpleDomainEntity extends Mob {
 
             float factor = (this.getHealth() / this.getMaxHealth()) * 2.0F;
 
-            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, HelperMethods.RANDOM.nextFloat() * 1.5F,
+            ParticleOptions particle = new VaporParticle.VaporParticleOptions(ParticleColors.SIMPLE_DOMAIN, (float) (this.getRadius() * 0.25D),
                     1.0F, true, 1);
 
             for (double phi = 0.0D; phi < Math.PI * factor; phi += X_STEP) {

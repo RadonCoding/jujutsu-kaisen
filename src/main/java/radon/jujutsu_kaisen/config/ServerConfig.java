@@ -66,6 +66,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue chantSimilarityThreshold;
 
     public final ForgeConfigSpec.IntValue simpleDomainCost;
+    public final ForgeConfigSpec.IntValue quickDrawCost;
     public final ForgeConfigSpec.IntValue fallingBlossomEmotionCost;
     public final ForgeConfigSpec.IntValue domainExpansionCost;
     public final ForgeConfigSpec.IntValue domainAmplificationCost;
@@ -144,6 +145,8 @@ public class ServerConfig {
 
         builder.comment("Abilities").push("chants");
         this.simpleDomainCost = builder.comment("The amount of points simple domain costs to unlock")
+                .defineInRange("simpleDomainCost", 50, 1, 10000);
+        this.quickDrawCost = builder.comment("The amount of points quick draw costs to unlock")
                 .defineInRange("simpleDomainCost", 50, 1, 10000);
         this.fallingBlossomEmotionCost = builder.comment("The amount of points falling blossom emotion costs to unlock")
                 .defineInRange("fallingBlossomEmotionCost", 50, 1, 10000);
