@@ -76,6 +76,12 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue rct3Cost;
     public final ForgeConfigSpec.IntValue outputRCTCost;
 
+    public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
+    public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
+    public final ForgeConfigSpec.IntValue curseRarity;
+    public final ForgeConfigSpec.IntValue vesselRarity;
+    public final ForgeConfigSpec.IntValue sixEyesRarity;
+
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
         this.cursedEnergyAmounts = builder.comment("Cursed energy amounts for NPCs (scales with experience)")
@@ -164,6 +170,19 @@ public class ServerConfig {
                 .defineInRange("rct2Cost", 200, 1, 10000);
         this.outputRCTCost = builder.comment("The amount of points output RCT costs to unlock")
                 .defineInRange("outputRCTCost", 300, 1, 10000);
+        builder.pop();
+
+        builder.comment("Rarity").push("rarity");
+        this.heavenlyRestrictionRarity = builder.comment("Rarity of heavenly restriction (bigger value = rarer)")
+                .defineInRange("heavenlyRestrictionRarity", 10, 1, 1000000);
+        this.cursedEnergyNatureRarity = builder.comment("Rarity of a cursed energy nature other than basic (bigger value = rarer)")
+                .defineInRange("cursedEnergyNatureRarity", 5, 1, 1000000);
+        this.curseRarity = builder.comment("Rarity of being a curse (bigger value = rarer)")
+                .defineInRange("curseRarity", 5, 1, 1000000);
+        this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
+                .defineInRange("vesselRarity", 10, 1, 1000000);
+        this.sixEyesRarity = builder.comment("Rarity of having six eyes (bigger value = rarer)")
+                .defineInRange("sixEyesRarity", 10, 1, 1000000);
         builder.pop();
     }
 
