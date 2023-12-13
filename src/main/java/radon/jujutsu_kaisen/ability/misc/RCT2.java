@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -26,9 +27,7 @@ public class RCT2 extends RCT1 {
         super.run(owner);
 
         if (owner.getHealth() == owner.getMaxHealth()) {
-            for (MobEffect effect : owner.getActiveEffectsMap().keySet()) {
-                if (!effect.isBeneficial()) owner.removeEffect(effect);
-            }
+            owner.getActiveEffects().removeIf(instance -> !instance.getEffect().isBeneficial());
         }
     }
 
