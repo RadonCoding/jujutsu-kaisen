@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -32,8 +33,9 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Ability domain = ((ISorcerer) owner).getDomain();
-        return target != null && owner.distanceTo(target) <= 3.0D && owner.hasLineOfSight(target) &&
-                (HelperMethods.isExperienced(cap.getExperience()) || !JJKAbilities.hasToggled(owner, domain)) && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get());
+        return (!owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D)).isEmpty() ||
+                (target != null && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D)) &&
+                (HelperMethods.isExperienced(cap.getExperience()) || !JJKAbilities.hasToggled(owner, domain));
     }
 
     @Override
@@ -108,17 +110,6 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             LivingEntity victim = event.getEntity();
-
-            // If not enabled, then enable
-            if (victim instanceof ISorcerer && !JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                Ability domain = ((ISorcerer) victim).getDomain();
-
-                if ((HelperMethods.isExperienced(cap.getExperience()) || !JJKAbilities.hasToggled(victim, domain))) {
-                    AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                }
-            }
 
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
