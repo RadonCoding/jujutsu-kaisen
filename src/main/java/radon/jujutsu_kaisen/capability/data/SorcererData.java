@@ -135,6 +135,8 @@ public class SorcererData implements ISorcererData {
 
         this.unlocked = new HashSet<>();
 
+        this.nature = CursedEnergyNature.BASIC;
+
         this.type = JujutsuType.SORCERER;
 
         this.copied = new LinkedHashSet<>();
