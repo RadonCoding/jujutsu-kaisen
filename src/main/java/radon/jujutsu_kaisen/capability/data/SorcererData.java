@@ -140,8 +140,6 @@ public class SorcererData implements ISorcererData {
         this.copied = new LinkedHashSet<>();
         this.absorbed = new LinkedHashSet<>();
 
-        this.nature = CursedEnergyNature.BASIC;
-
         this.output = 1.0F;
 
         this.mode = TenShadowsMode.SUMMON;
@@ -1426,13 +1424,13 @@ public class SorcererData implements ISorcererData {
     public void generate(ServerPlayer owner) {
         this.initialized = true;
 
+        this.technique = null;
+
         this.traits.remove(Trait.SIX_EYES);
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
 
-        if (HelperMethods.RANDOM.nextInt(10) == 0) {
-            this.technique = null;
-            this.nature = CursedEnergyNature.BASIC;
+        if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
@@ -1455,22 +1453,19 @@ public class SorcererData implements ISorcererData {
                 this.technique = HelperMethods.randomEnum(CursedTechnique.class);
             }
 
-            if (HelperMethods.RANDOM.nextInt(5) == 0) {
-                this.nature = HelperMethods.randomEnum(CursedEnergyNature.class);
-
-                if (this.nature != CursedEnergyNature.BASIC) {
-                    owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
-                }
+            if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
+                this.nature = HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));
+                owner.sendSystemMessage(Component.translatable(String.format("chat.%s.nature", JujutsuKaisen.MOD_ID), this.nature.getName()));
             }
-            this.type = HelperMethods.RANDOM.nextInt(5) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
+            this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
             if (this.type == JujutsuType.SORCERER) {
-                if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
                     this.addTrait(Trait.VESSEL);
                 }
             }
 
-            if (HelperMethods.RANDOM.nextInt(10) == 0) {
+            if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
 

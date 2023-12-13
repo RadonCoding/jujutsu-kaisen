@@ -98,6 +98,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public int getCooldown() {
+        return 5 * 20;
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 0;
     }
