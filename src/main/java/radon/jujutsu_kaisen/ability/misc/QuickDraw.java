@@ -57,6 +57,8 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (entity instanceof AbstractArrow || entity instanceof ThrowableItemProjectile) {
                 entity.discard();
             } else if (entity instanceof LivingEntity) {
+                if (entity.invulnerableTime > 0) continue;
+
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 if (owner instanceof Player player) {

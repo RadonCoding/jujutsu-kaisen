@@ -1426,6 +1426,8 @@ public class SorcererData implements ISorcererData {
 
         this.technique = null;
 
+        this.nature = CursedEnergyNature.BASIC;
+
         this.traits.remove(Trait.SIX_EYES);
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
