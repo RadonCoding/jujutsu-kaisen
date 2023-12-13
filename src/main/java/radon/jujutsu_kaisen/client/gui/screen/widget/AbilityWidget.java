@@ -131,21 +131,21 @@ public class AbilityWidget {
                 if (this.unlocked) {
                     color = 0xFF005304;
                 } else if (this.unlockable) {
-                    color = -1;
+                    color = 0xFF2B2B2B;
                 } else if (this.blocked) {
                     color = 0xFF6A0000;
                 } else {
-                    color = 0xFF3F3F3F;
+                    color = 0xFF000000;
                 }
             } else {
                 if (this.unlocked) {
                     color = 0xFF008711;
                 } else if (this.unlockable) {
-                    color = 0xFFA7A7A7;
+                    color = 0xFF666666;
                 } else if (this.blocked) {
                     color = 0xFFCF0000;
                 } else {
-                    color = 0xFF222222;
+                    color = 0xFFFFFFFF;
                 }
             }
 

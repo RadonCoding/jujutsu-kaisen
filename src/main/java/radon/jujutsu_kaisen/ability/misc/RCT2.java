@@ -50,7 +50,7 @@ public class RCT2 extends RCT1 {
 
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(1.0F, 2.0F);
+        return new Vec2(3.0F, 2.0F);
     }
 
     @Override

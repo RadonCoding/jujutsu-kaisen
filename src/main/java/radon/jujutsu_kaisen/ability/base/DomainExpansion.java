@@ -164,7 +164,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        return JJKAbilities.SIMPLE_DOMAIN.get();
+        return JJKAbilities.CURSED_ENERGY_FLOW.get();
     }
 
     @Override

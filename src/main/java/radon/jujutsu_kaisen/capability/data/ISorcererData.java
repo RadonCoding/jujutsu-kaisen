@@ -33,6 +33,8 @@ public interface ISorcererData {
 
     int getPoints();
 
+    void setPoints(int points);
+
     void addPoints(int points);
 
     void usePoints(int count);

@@ -121,10 +121,22 @@ public class ExperienceHandler {
 
         if (cap.getExperience() > 0.0F) {
             float penalty = (cap.getExperience() * ConfigHolder.SERVER.deathPenalty.get().floatValue());
-            cap.setExperience(cap.getExperience() - penalty);
+            cap.setExperience(Math.max(0.0F, cap.getExperience() - penalty));
+
+            int points = (int) Math.floor(penalty * 0.1F);
+
+            if (points > 0) {
+                cap.setPoints(Math.max(0, cap.getPoints() - points));
+
+                if (entity instanceof ServerPlayer player) {
+                    player.sendSystemMessage(Component.translatable(String.format("chat.%s.points_penalty", JujutsuKaisen.MOD_ID), penalty));
+
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                }
+            }
 
             if (entity instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.penalty", JujutsuKaisen.MOD_ID), penalty));
+                player.sendSystemMessage(Component.translatable(String.format("chat.%s.experience_penalty", JujutsuKaisen.MOD_ID), penalty));
 
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }

@@ -12,11 +12,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -26,6 +28,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
@@ -110,6 +114,28 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             return cost * 10.0F;
         }
         return cost;
+    }
+
+    @Override
+    public boolean isUnlocked(LivingEntity owner) {
+        return true;
+    }
+
+    @Override
+    public boolean isDisplayed(LivingEntity owner) {
+        return true;
+    }
+
+    @Override
+    public Vec2 getDisplayCoordinates() {
+        return new Vec2(0.0F, 2.0F);
+    }
+
+    @Override
+    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        Vec2 coordinates = this.getDisplayCoordinates();
+        return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
     }
 
     @Override

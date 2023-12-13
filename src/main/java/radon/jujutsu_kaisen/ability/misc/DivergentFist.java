@@ -59,9 +59,15 @@ public class DivergentFist extends Ability {
         return null;
     }
 
+    @Nullable
+    @Override
+    public Ability getParent(LivingEntity owner) {
+        return JJKAbilities.CURSED_ENERGY_FLOW.get();
+    }
+
     @Override
     public Vec2 getDisplayCoordinates() {
-        return new Vec2(0.0F, 1.0F);
+        return new Vec2(2.0F, 3.0F);
     }
 
     @Override
@@ -70,8 +76,6 @@ public class DivergentFist extends Ability {
         Vec2 coordinates = this.getDisplayCoordinates();
         return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
     }
-
-
 
     @Override
     public int getPointsCost() {

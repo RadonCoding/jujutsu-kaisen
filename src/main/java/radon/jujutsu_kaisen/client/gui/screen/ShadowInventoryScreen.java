@@ -131,7 +131,7 @@ public class ShadowInventoryScreen extends Screen {
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
         for (int i = 0; i < this.items.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);

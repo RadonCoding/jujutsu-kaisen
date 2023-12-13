@@ -64,43 +64,43 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
         ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
 
-        if (data != null) {
-            Set<EquipmentSlot> hidden = new HashSet<>();
+        if (data == null) return;
 
-            for (Ability ability : data.toggled) {
-                if (!(ability instanceof ITransformation transformation)) continue;
+        Set<EquipmentSlot> hidden = new HashSet<>();
 
-                if (transformation.isReplacement()) {
-                    hidden.add(transformation.getBodyPart().getSlot());
-                }
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
+
+            if (transformation.isReplacement()) {
+                hidden.add(transformation.getBodyPart().getSlot());
             }
+        }
 
-            for (Ability ability : data.toggled) {
-                if (!(ability instanceof ITransformation transformation)) continue;
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
 
-                for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    if (transformation.getBodyPart().getSlot() != slot && hidden.contains(slot)) continue;
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                if (transformation.getBodyPart().getSlot() != slot && hidden.contains(slot)) continue;
 
-                    A model = this.getArmorModel(slot);
-                    ((RenderLayer<T, M>) (Object) this).getParentModel().copyPropertiesTo(model);
+                A model = this.getArmorModel(slot);
+                ((RenderLayer<T, M>) (Object) this).getParentModel().copyPropertiesTo(model);
 
-                    this.setPartVisibility(model, slot);
+                this.setPartVisibility(model, slot);
 
-                    pPoseStack.pushPose();
+                pPoseStack.pushPose();
 
-                    if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ||
-                            transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
-                        if (((RenderLayer<T, M>) (Object) this).getParentModel() instanceof PlayerModel<?> player) {
-                            if (((IPlayerModelAccessor) player).getSlim()) {
-                                pPoseStack.translate(transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ? 0.0625 : -0.0625, 0.0F, 0.0F);
-                            }
+                if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ||
+                        transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
+                    if (((RenderLayer<T, M>) (Object) this).getParentModel() instanceof PlayerModel<?> player) {
+                        if (((IPlayerModelAccessor) player).getSlim()) {
+                            pPoseStack.translate(transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ? 0.0625 : -0.0625, 0.0F, 0.0F);
                         }
                     }
-                    Model armor = this.getArmorModelHook(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, model);
-                    this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) transformation.getItem().asItem(), armor, this.usesInnerModel(slot),
-                            1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
-                    pPoseStack.popPose();
                 }
+                Model armor = this.getArmorModelHook(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, model);
+                this.renderModel(pPoseStack, pBuffer, pPackedLight, (ArmorItem) transformation.getItem().asItem(), armor, this.usesInnerModel(slot),
+                        1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
+                pPoseStack.popPose();
             }
         }
     }

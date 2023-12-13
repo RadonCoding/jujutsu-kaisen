@@ -110,7 +110,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
                     double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                     double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
                     double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING_COLOR, 0.5F, 1),
+                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING, 0.5F, 1),
                             victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
                             0, 0.0D, 0.0D, 0.0D, 0.0D);
                 }

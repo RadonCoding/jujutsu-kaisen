@@ -156,7 +156,7 @@ public class SkyHandler {
             float f7 = color[1];
             float f8 = color[2];
             Matrix4f matrix4f = poseStack.last().pose();
-            buffer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+            buffer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION);
             buffer.vertex(matrix4f, 0.0F, 100.0F, 0.0F).color(f6, f7, f8, color[3]).endVertex();
 
             for (int j = 0; j <= 16; ++j) {
