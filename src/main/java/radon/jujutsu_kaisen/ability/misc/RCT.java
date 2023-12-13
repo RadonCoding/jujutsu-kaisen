@@ -33,7 +33,7 @@ public class RCT extends Ability implements Ability.IChannelened {
         if (cap.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
         if (cap.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();
 
-        return JJKAbilities.RCT3.get();
+        return JJKAbilities.RCT1.get();
     }
 
     @Override
