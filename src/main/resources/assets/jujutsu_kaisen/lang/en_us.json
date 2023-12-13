@@ -39,7 +39,7 @@
 
   "gui.jujutsu_kaisen.ability": "Abilities",
   "gui.jujutsu_kaisen.ability.cost": "Cost: %1$d",
-  "gui.jujutsu_kaisen.ability.unlockable": "Unlockable",
+  "gui.jujutsu_kaisen.ability.locked": "Cannot be unlocked",
   "gui.jujutsu_kaisen.ability.points": "Points: %1$d",
 
   "gui.jujutsu_kaisen.player_card.grade": "Grade: %1$s",
