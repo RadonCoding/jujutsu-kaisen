@@ -149,7 +149,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         if (this.getOwner() instanceof LivingEntity owner) {
             Vec3 location = result.getLocation();
             ExplosionHandler.spawn(this.level().dimension(), location, this.getExplosionRadius(),
-                    20, this.getPower(), owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), true);
+                    20, this.getPower() * 0.5F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), true);
         }
         this.discard();
     }
