@@ -5,7 +5,7 @@
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -57,7 +57,7 @@
 						}
 					}
 				},
-				"tenticle": {
+				"tenticle_1": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -73,7 +73,7 @@
 						}
 					}
 				},
-				"tenticle2": {
+				"tenticle_2": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -92,7 +92,7 @@
 						}
 					}
 				},
-				"tenticle3": {
+				"tenticle_3": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -137,7 +137,7 @@
 						"vector": [-10, 0, 10]
 					}
 				},
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [22.5, 0, 0]
@@ -184,7 +184,7 @@
 						"vector": [-20, 0, 0]
 					}
 				},
-				"tenticle": {
+				"tenticle_1": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -200,7 +200,7 @@
 						}
 					}
 				},
-				"tenticle2": {
+				"tenticle_2": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -219,7 +219,7 @@
 						}
 					}
 				},
-				"tenticle3": {
+				"tenticle_3": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -248,12 +248,12 @@
 						"vector": [9.89638, -1.61888, -7.3242]
 					}
 				},
-				"right_arm2": {
+				"right_forearm": {
 					"rotation": {
 						"vector": [0, -52.5, 0]
 					}
 				},
-				"left_arm2": {
+				"left_forearm": {
 					"rotation": {
 						"vector": [0, 37.5, 0]
 					}
@@ -387,7 +387,7 @@
 						}
 					}
 				},
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [-0.02154, 7.49282, 2.17098]
@@ -413,7 +413,7 @@
 						}
 					}
 				},
-				"right_arm2": {
+				"right_forearm": {
 					"rotation": {
 						"vector": [0, 5, 0]
 					}
@@ -444,7 +444,7 @@
 						}
 					}
 				},
-				"left_arm2": {
+				"left_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -483,7 +483,7 @@
 						}
 					}
 				},
-				"tenticle": {
+				"tenticle_1": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -496,7 +496,7 @@
 						}
 					}
 				},
-				"tenticle2": {
+				"tenticle_2": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -509,7 +509,7 @@
 						}
 					}
 				},
-				"tenticle3": {
+				"tenticle_3": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -737,7 +737,7 @@
 						}
 					}
 				},
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, -25, 0]
@@ -748,7 +748,7 @@
 						"0.4167": {
 							"vector": [0, 17.5, 0]
 						},
-						"0.6667": {
+						"0.625": {
 							"vector": [0, -13, 0]
 						},
 						"0.8333": {
@@ -772,7 +772,7 @@
 						}
 					}
 				},
-				"right_arm2": {
+				"right_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, -85, 0]
@@ -801,7 +801,7 @@
 						}
 					}
 				},
-				"left_arm2": {
+				"left_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 20, 0]
@@ -833,7 +833,7 @@
 						}
 					}
 				},
-				"tenticle": {
+				"tenticle_1": {
 					"rotation": {
 						"0.0": {
 							"vector": [47.5, 0, 0]
@@ -849,7 +849,7 @@
 						}
 					}
 				},
-				"tenticle2": {
+				"tenticle_2": {
 					"rotation": {
 						"0.0": {
 							"vector": [20, 0, 0]
@@ -865,7 +865,7 @@
 						}
 					}
 				},
-				"tenticle3": {
+				"tenticle_3": {
 					"rotation": {
 						"0.0": {
 							"vector": [-42.5, 0, 0]
@@ -1030,7 +1030,7 @@
 						}
 					}
 				},
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1079,7 +1079,7 @@
 						}
 					}
 				},
-				"right_arm2": {
+				"right_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, -102.5, 0]
@@ -1131,7 +1131,7 @@
 						}
 					}
 				},
-				"left_arm2": {
+				"left_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 77.5, 0]
@@ -1174,7 +1174,7 @@
 						}
 					}
 				},
-				"tenticle": {
+				"tenticle_1": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1184,7 +1184,7 @@
 						}
 					}
 				},
-				"tenticle2": {
+				"tenticle_2": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1197,7 +1197,7 @@
 						}
 					}
 				},
-				"tenticle3": {
+				"tenticle_3": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1212,7 +1212,7 @@
 		"attack.swing": {
 			"animation_length": 0.41667,
 			"bones": {
-				"uppertorso": {
+				"torso": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 52.5, 0]
@@ -1251,7 +1251,7 @@
 						}
 					}
 				},
-				"right_arm2": {
+				"right_forearm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, -100]
