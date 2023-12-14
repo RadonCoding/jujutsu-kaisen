@@ -61,7 +61,6 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         }
 
         ItemStack stack = ctx.getItemInHand();
-
         NyoiStaffEntity staff = new NyoiStaffEntity(player, stack, Vec3.atLowerCornerWithOffset(ctx.getClickedPos(), 0.5D, 0.0D, 0.5D));
 
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -74,11 +73,9 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
             }
             staff.setCharged(true);
         }
+        stack.shrink(1);
         ctx.getLevel().addFreshEntity(staff);
 
-        if (!player.getAbilities().instabuild) {
-            stack.shrink(1);
-        }
         return InteractionResult.sidedSuccess(ctx.getLevel().isClientSide);
     }
 
