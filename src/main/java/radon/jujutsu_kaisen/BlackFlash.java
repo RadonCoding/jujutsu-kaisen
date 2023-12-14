@@ -46,7 +46,7 @@ public class BlackFlash {
                 long lastBlackFlashTime = cap.getLastBlackFlashTime();
                 int seconds = (int) (owner.level().getGameTime() - lastBlackFlashTime) / 20;
 
-                if (lastBlackFlashTime == 0 || seconds > 1) {
+                /*if (lastBlackFlashTime == 0 || seconds > 1) {
                     int rng = 150 - (HelperMethods.getGrade(cap.getExperience()).ordinal() * 5);
 
                     if (HelperMethods.RANDOM.nextInt(rng / (cap.isInZone() ? 2 : 1)) != 0) {
@@ -54,7 +54,7 @@ public class BlackFlash {
                     }
                 } else {
                     return;
-                }
+                }*/
                 cap.onBlackFlash();
 
                 if (owner instanceof ServerPlayer player) {

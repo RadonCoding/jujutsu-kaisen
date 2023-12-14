@@ -79,41 +79,44 @@ public class BoltEffect {
 
     public List<BoltQuads> generate() {
         List<BoltQuads> quads = new ArrayList<>();
-        Vec3 diff = end.subtract(start);
+        Vec3 diff = this.end.subtract(this.start);
         float totalDistance = (float) diff.length();
-        for (int i = 0; i < count; i++) {
+
+        for (int i = 0; i < this.count; i++) {
             LinkedList<BoltInstructions> drawQueue = new LinkedList<>();
-            drawQueue.add(new BoltInstructions(start, 0, new Vec3(0, 0, 0), null, false));
+            drawQueue.add(new BoltInstructions(this.start, 0, new Vec3(0, 0, 0), null, false));
+
             while (!drawQueue.isEmpty()) {
                 BoltInstructions data = drawQueue.poll();
                 Vec3 perpendicularDist = data.perpendicularDist;
                 float progress = data.progress + (1F / segments) * (1 - renderInfo.parallelNoise + random.nextFloat() * renderInfo.parallelNoise * 2);
                 Vec3 segmentEnd;
+
                 if (progress >= 1) {
-                    segmentEnd = end;
+                    segmentEnd = this.end;
                 } else {
-                    float segmentDiffScale = renderInfo.spreadFunction.getMaxSpread(progress);
-                    float maxDiff = renderInfo.spreadFactor * segmentDiffScale * totalDistance * renderInfo.randomFunction.getRandom(random);
+                    float segmentDiffScale = this.renderInfo.spreadFunction.getMaxSpread(progress);
+                    float maxDiff = this.renderInfo.spreadFactor * segmentDiffScale * totalDistance * this.renderInfo.randomFunction.getRandom(this.random);
                     Vec3 randVec = findRandomOrthogonalVector(diff, random);
-                    perpendicularDist = renderInfo.segmentSpreader.getSegmentAdd(perpendicularDist, randVec, maxDiff, segmentDiffScale, progress);
+                    perpendicularDist = this.renderInfo.segmentSpreader.getSegmentAdd(perpendicularDist, randVec, maxDiff, segmentDiffScale, progress);
                     // new vector is original + current progress through segments + perpendicular change
-                    segmentEnd = start.add(diff.scale(progress)).add(perpendicularDist);
+                    segmentEnd = this.start.add(diff.scale(progress)).add(perpendicularDist);
                 }
-                float boltSize = size * (0.5F + (1 - progress) * 0.5F);
+                float boltSize = this.size * (0.5F + (1 - progress) * 0.5F);
                 Pair<BoltQuads, QuadCache> quadData = createQuads(data.cache, data.start, segmentEnd, boltSize);
                 quads.add(quadData.getLeft());
 
-                if (segmentEnd == end) {
+                if (segmentEnd == this.end) {
                     break; // break if we've reached the defined end point
                 } else if (!data.isBranch) {
                     // continue the bolt if this is the primary (non-branch) segment
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), false));
-                } else if (random.nextFloat() < renderInfo.branchContinuationFactor) {
+                } else if (this.random.nextFloat() < this.renderInfo.branchContinuationFactor) {
                     // branch continuation
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), true));
                 }
 
-                while (random.nextFloat() < renderInfo.branchInitiationFactor * (1 - progress)) {
+                while (this.random.nextFloat() < this.renderInfo.branchInitiationFactor * (1 - progress)) {
                     // branch initiation (probability decreases as progress increases)
                     drawQueue.add(new BoltInstructions(segmentEnd, progress, perpendicularDist, quadData.getRight(), true));
                 }

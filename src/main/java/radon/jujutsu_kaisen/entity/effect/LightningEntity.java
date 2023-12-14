@@ -87,8 +87,7 @@ public class LightningEntity extends JujutsuProjectile {
             this.setYaw((float) ((yaw + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-pitch * Math.PI / 180.0D));
 
-            Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+            Vec3 spawn = this.calculateStartPos();
             this.setPos(spawn.x(), spawn.y(), spawn.z());
         }
         this.calculateEndPos();
@@ -178,6 +177,15 @@ public class LightningEntity extends JujutsuProjectile {
 
     public void setPitch(float pitch) {
         this.entityData.set(DATA_PITCH, pitch);
+    }
+
+    protected Vec3 calculateStartPos() {
+        Entity owner = this.getOwner();
+
+        if (owner == null) return Vec3.ZERO;
+
+        Vec3 look = owner.getLookAngle();
+        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
     }
 
     protected void calculateEndPos() {
