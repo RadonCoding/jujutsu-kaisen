@@ -116,14 +116,23 @@ public class ExperienceHandler {
             }
         }
 
-        Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
+        Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> battleIter = battles.entrySet().iterator();
 
-        while (iter.hasNext()) {
-            for (BattleData battle : iter.next().getValue()) {
+        while (battleIter.hasNext()) {
+            Set<BattleData> current = battleIter.next().getValue();
+            Iterator<BattleData> battleDataIter = current.iterator();
+
+            while (battleDataIter.hasNext()) {
+                BattleData battle = battleDataIter.next();
+
                 if (battle.getOwnerUUID() == entity.getUUID() || battle.getTargetUUID() == entity.getUUID()) {
                     battle.end(level);
-                    iter.remove();
+                    battleDataIter.remove();
                 }
+            }
+
+            if (current.isEmpty()) {
+                battleIter.remove();
             }
         }
     }
