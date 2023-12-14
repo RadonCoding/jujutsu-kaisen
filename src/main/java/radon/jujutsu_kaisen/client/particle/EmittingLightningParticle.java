@@ -54,7 +54,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
 
         Vec3 offset = this.getPos()
                 .add(HelperMethods.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
-                .scale((this.random.nextFloat() + 0.5D) * this.quadSize));
+                .scale(this.random.nextFloat() * this.quadSize));
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
