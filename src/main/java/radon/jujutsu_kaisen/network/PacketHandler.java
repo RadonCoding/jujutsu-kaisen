@@ -212,6 +212,11 @@ public class PacketHandler {
                 .encoder(QuestionRemovePactC2SPacket::encode)
                 .consumerMainThread(QuestionRemovePactC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(NyoiStaffSummonLightningC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(NyoiStaffSummonLightningC2SPacket::new)
+                .encoder(NyoiStaffSummonLightningC2SPacket::encode)
+                .consumerMainThread(NyoiStaffSummonLightningC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

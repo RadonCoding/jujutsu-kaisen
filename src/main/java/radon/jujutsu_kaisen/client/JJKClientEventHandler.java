@@ -41,6 +41,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.item.armor.InventoryCurseItem;
 import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
@@ -209,14 +210,16 @@ public class JJKClientEventHandler {
                             }
                         }
                     } else {
-                        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        if (HelperMethods.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
+                            PacketHandler.sendToServer(new NyoiStaffSummonLightningC2SPacket(hit.getEntity().getUUID()));
+                        } else {
+                            ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        for (Ability ability : cap.getToggled()) {
-                            if (!(ability instanceof ITransformation transformation)) continue;
-
-                            transformation.onRightClick(mc.player);
-
-                            PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
+                            for (Ability ability : cap.getToggled()) {
+                                if (!(ability instanceof ITransformation transformation)) continue;
+                                transformation.onRightClick(mc.player);
+                                PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
+                            }
                         }
                     }
                 }
@@ -512,6 +515,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
         }
 
         @SubscribeEvent

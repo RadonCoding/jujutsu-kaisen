@@ -35,7 +35,7 @@ public class SwapSelf extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHitAny(owner, RANGE) instanceof EntityHitResult hit) {
+        if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator() && target.isPickable()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
             return target.isPickable() || target instanceof ItemEntity || target instanceof Projectile ? target : null;
         }
@@ -64,7 +64,7 @@ public class SwapSelf extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 5.0F;
     }
 
     @Override

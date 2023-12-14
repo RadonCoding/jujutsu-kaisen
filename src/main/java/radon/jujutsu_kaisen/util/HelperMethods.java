@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class HelperMethods {
     public static final Random RANDOM = new Random();
@@ -362,10 +363,10 @@ public class HelperMethods {
     }
 
     public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end) {
-        return getHitResult(entity, start, end, true);
+        return getHitResult(entity, start, end, target -> !target.isSpectator() && target.isPickable());
     }
 
-    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, boolean hasToBePickable) {
+    public static HitResult getHitResult(Entity entity, Vec3 start, Vec3 end, Predicate<Entity> filter) {
         Level level = entity.level();
 
         HitResult blockHit = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
@@ -375,7 +376,7 @@ public class HelperMethods {
         }
 
         HitResult entityHit = ProjectileUtil.getEntityHitResult(level, entity, start, end, entity.getBoundingBox()
-                .expandTowards(end.subtract(start)).inflate(1.0D), target -> !target.isSpectator() && (!hasToBePickable || target.isPickable()));
+                .expandTowards(end.subtract(start)).inflate(1.0D), filter);
 
         if (entityHit != null) {
             return entityHit;
@@ -383,18 +384,15 @@ public class HelperMethods {
         return blockHit;
     }
 
-    public static HitResult getLookAtHit(Entity entity, double range) {
+    public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
         Vec3 start = entity.getEyePosition();
         Vec3 look = entity.getLookAngle();
         Vec3 end = start.add(look.scale(range));
-        return getHitResult(entity, start, end);
+        return getHitResult(entity, start, end, filter);
     }
 
-    public static HitResult getLookAtHitAny(Entity entity, double range) {
-        Vec3 start = entity.getEyePosition();
-        Vec3 look = entity.getLookAngle();
-        Vec3 end = start.add(look.scale(range));
-        return getHitResult(entity, start, end, false);
+    public static HitResult getLookAtHit(Entity entity, double range) {
+        return getLookAtHit(entity, range, target -> !target.isSpectator() && target.isPickable());
     }
 
     public static List<Entity> getEntityCollisions(Level level, AABB bounds) {

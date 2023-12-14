@@ -335,7 +335,11 @@ public class JJKEntities {
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wheel")
                             .toString()));
-
+    public static RegistryObject<EntityType<NyoiStaffEntity>> NYOI_STAFF = ENTITIES.register("nyoi_staff", () ->
+            EntityType.Builder.<NyoiStaffEntity>of(NyoiStaffEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nyoi_staff")
+                            .toString()));
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)

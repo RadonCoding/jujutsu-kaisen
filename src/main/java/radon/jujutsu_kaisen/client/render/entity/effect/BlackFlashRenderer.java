@@ -38,13 +38,13 @@ public class BlackFlashRenderer extends EntityRenderer<BlackFlashEntity> {
         Vec3 start = new Vec3(pEntity.getX(), pEntity.getY(), pEntity.getZ());
         Vec3 end = start.add(pEntity.getStart().subtract(start).scale(RANGE))
                 .add(OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D));
-        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(0.0F, 0.05F, 0.1F, 0.0F,
-                new Vector4f(ParticleColors.BLACK_FLASH.x(), ParticleColors.BLACK_FLASH.y(), ParticleColors.BLACK_FLASH.z(), 0.8F), 1.8F);
-        BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 10)))
-                .size(0.05F)
+        BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(1.0F, 0.1F, 0.1F, 0.1F,
+                new Vector4f(ParticleColors.BLACK_FLASH.x(), ParticleColors.BLACK_FLASH.y(), ParticleColors.BLACK_FLASH.z(), 0.8F), 1.4F);
+        BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end))) * 10)
+                .size(0.2F)
                 .lifespan(1)
                 .fade(BoltEffect.FadeFunction.NONE)
-                .spawn(BoltEffect.SpawnFunction.NO_DELAY);
+                .spawn(BoltEffect.SpawnFunction.CONSECUTIVE);
         this.renderer.update(null, bolt, pPartialTick);
         pPoseStack.translate(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ());
         this.renderer.render(pPartialTick, pPoseStack, pBuffer);
