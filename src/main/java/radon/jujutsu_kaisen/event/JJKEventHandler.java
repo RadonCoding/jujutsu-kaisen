@@ -29,6 +29,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ChantHandler;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -234,6 +235,28 @@ public class JJKEventHandler {
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
+            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+
+            if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
+                boolean cursed = false;
+
+                if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
+                    cursed = true;
+                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem) || JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get()))) {
+                    cursed = true;
+                }
+
+                if (!cursed) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+
             // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
             if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
@@ -258,20 +281,7 @@ public class JJKEventHandler {
                 return;
             }
 
-            ItemStack stack = null;
-
-            if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
-                stack = chain.getStack();
-            } else if (melee) {
-                stack = attacker.getItemInHand(InteractionHand.MAIN_HAND);
-            }
-
             if (stack != null) {
-                List<Item> stacks = new ArrayList<>();
-                stacks.add(stack.getItem());
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                        .stream().map(ItemStack::getItem).toList());
-
                 if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {
                         if (victim.hurt(JJKDamageSources.soulAttack(attacker), event.getAmount())) {
