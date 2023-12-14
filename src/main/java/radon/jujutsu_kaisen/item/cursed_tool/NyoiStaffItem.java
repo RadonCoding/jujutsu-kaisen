@@ -16,6 +16,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
@@ -32,17 +33,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class NyoiStaffItem extends CursedToolItem implements GeoItem {
-    private static final float COST = 100.0F;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public NyoiStaffItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable(String.format("item.%s.cost", JujutsuKaisen.MOD_ID), COST));
     }
 
     @Override
@@ -66,8 +60,10 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
-            if (cap.getEnergy() >= COST) {
-                cap.useEnergy(COST);
+            float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.5F;
+
+            if (cap.getEnergy() >= cost) {
+                cap.useEnergy(cost);
             } else if (!player.getAbilities().instabuild) {
                 return InteractionResult.FAIL;
             }
