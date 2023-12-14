@@ -120,16 +120,16 @@ public class ExperienceHandler {
 
         while (battleIter.hasNext()) {
             Set<BattleData> current = battleIter.next().getValue();
-            Iterator<BattleData> battleDataIter = current.iterator();
+            List<BattleData> battlesToRemove = new ArrayList<>();
 
-            while (battleDataIter.hasNext()) {
-                BattleData battle = battleDataIter.next();
-
+            for (BattleData battle : current) {
                 if (battle.getOwnerUUID() == entity.getUUID() || battle.getTargetUUID() == entity.getUUID()) {
                     battle.end(level);
-                    battleDataIter.remove();
+                    battlesToRemove.add(battle);
                 }
             }
+
+            battlesToRemove.forEach(current::remove);
 
             if (current.isEmpty()) {
                 battleIter.remove();
