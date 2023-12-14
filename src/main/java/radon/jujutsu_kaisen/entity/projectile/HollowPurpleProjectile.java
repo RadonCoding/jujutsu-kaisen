@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -16,11 +17,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.UUID;
 
 public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
@@ -61,6 +66,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
         for (int i = 0; i < SPEED; i++) {
             double radius = Math.max(Math.PI, this.getRadius());
             AABB bounds = this.getBoundingBox().inflate(radius);
@@ -77,7 +84,15 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                         if (distance <= radius) {
-                            if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                            boolean destroyable = state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
+
+                            if (!destroyable && this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                UUID identifier = be.getIdentifier();
+                                destroyable = identifier == null || !(((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity domain) ||
+                                        !domain.isInsideBarrier(owner.blockPosition());
+                            }
+
+                            if (destroyable) {
                                 if (state.getFluidState().isEmpty()) {
                                     this.level().destroyBlock(pos, false);
                                 } else {
