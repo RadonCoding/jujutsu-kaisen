@@ -115,7 +115,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.setPos(pos);
 
                 Vec3 offset = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
-                ExplosionHandler.spawn(this.level().dimension(), offset, this.power * 2.0F, 3 * 20, this.getPower() * 0.5F, owner,
+                ExplosionHandler.spawn(this.level().dimension(), offset, this.power * 2.0F, 3 * 20, this.getPower(), owner,
                         JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_UZUMAKI.get()), false);
             }
         }
