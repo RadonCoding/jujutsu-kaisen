@@ -497,15 +497,6 @@ public class JJKEventHandler {
                 entity.setBarrage(Barrage.DURATION * 2);
             }
 
-            // Playing "spark" sound
-            float cost = ability.getRealCost(owner);
-
-            if (cost >= ConfigHolder.SERVER.sparkSoundThreshold.get().floatValue()) {
-                float volume = cost / ConfigHolder.SERVER.sparkSoundThreshold.get().floatValue();
-                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(),
-                        JJKSounds.SPARK.get(), SoundSource.MASTER, volume, 1.0F);
-            }
-
             // Making mobs use chants
             if (owner.level() instanceof ServerLevel level) {
                 if (owner instanceof Mob) {
