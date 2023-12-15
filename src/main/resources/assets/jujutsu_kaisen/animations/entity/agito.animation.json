@@ -36,11 +36,11 @@
 							"vector": [0, 0, 0]
 						},
 						"0.1667": {
-							"vector": [-45, 0, 0],
+							"vector": [45, 0, 0],
 							"easing": "linear"
 						},
 						"0.5417": {
-							"vector": [45, 0, 0],
+							"vector": [-45, 0, 0],
 							"easing": "linear"
 						},
 						"0.75": {
@@ -71,11 +71,11 @@
 							"vector": [0, 0, 0]
 						},
 						"0.1667": {
-							"vector": [45, 0, 0],
+							"vector": [-45, 0, 0],
 							"easing": "linear"
 						},
 						"0.5417": {
-							"vector": [-45, 0, 0],
+							"vector": [45, 0, 0],
 							"easing": "linear"
 						},
 						"0.75": {

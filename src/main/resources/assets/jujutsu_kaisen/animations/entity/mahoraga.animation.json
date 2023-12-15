@@ -5,7 +5,7 @@
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -137,7 +137,7 @@
 						"vector": [-10, 0, 10]
 					}
 				},
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [22.5, 0, 0]
@@ -387,7 +387,7 @@
 						}
 					}
 				},
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [-0.02154, 7.49282, 2.17098]
@@ -737,7 +737,7 @@
 						}
 					}
 				},
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, -25, 0]
@@ -1030,7 +1030,7 @@
 						}
 					}
 				},
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1212,7 +1212,7 @@
 		"attack.swing": {
 			"animation_length": 0.41667,
 			"bones": {
-				"torso": {
+				"upper_body": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 52.5, 0]
