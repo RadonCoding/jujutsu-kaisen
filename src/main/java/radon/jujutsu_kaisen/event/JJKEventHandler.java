@@ -281,7 +281,7 @@ public class JJKEventHandler {
                 return;
             }
 
-            if (stack != null) {
+            if (melee) {
                 if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {
                         if (victim.hurt(JJKDamageSources.soulAttack(attacker), event.getAmount())) {
