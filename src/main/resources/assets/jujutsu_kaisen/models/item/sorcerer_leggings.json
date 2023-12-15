@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "jujutsu_kaisen:item/yuji_leggings"
+    "layer0": "jujutsu_kaisen:item/sorcerer_leggings"
   }
 }

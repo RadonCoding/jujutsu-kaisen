@@ -55,6 +55,8 @@ public class JJKItems {
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<ArmorItem> SORCERER_LEGGINGS = ITEMS.register("sorcerer_leggings",
+            () -> new ArmorItem(JJKArmorMaterials.SORCERER_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_BLINDFOLD = ITEMS.register("satoru_blindfold",
             () -> new ArmorItem(JJKArmorMaterials.SATORU_BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
     public static RegistryObject<ArmorItem> SATORU_CHESTPLATE = ITEMS.register("satoru_chestplate",
@@ -65,14 +67,10 @@ public class JJKItems {
             () -> new ArmorItem(JJKArmorMaterials.SATORU_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<ArmorItem> YUJI_CHESTPLATE = ITEMS.register("yuji_chestplate",
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
-    public static RegistryObject<ArmorItem> YUJI_LEGGINGS = ITEMS.register("yuji_leggings",
-            () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> YUJI_BOOTS = ITEMS.register("yuji_boots",
             () -> new ArmorItem(JJKArmorMaterials.YUJI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<ArmorItem> MEGUMI_CHESTPLATE = ITEMS.register("megumi_chestplate",
             () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
-    public static RegistryObject<ArmorItem> MEGUMI_LEGGINGS = ITEMS.register("megumi_leggings",
-            () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
     public static RegistryObject<ArmorItem> MEGUMI_BOOTS = ITEMS.register("megumi_boots",
             () -> new ArmorItem(JJKArmorMaterials.MEGUMI_OUTFIT, ArmorItem.Type.BOOTS, new Item.Properties()));
     public static RegistryObject<ArmorItem> TOGE_HELMET = ITEMS.register("toge_helmet",
@@ -183,6 +181,8 @@ public class JJKItems {
         public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKDeflatedArmorMaterial SORCERER_OUTFIT = new JJKDeflatedArmorMaterial("sorcerer_otutfit", 100, new int[] { 0, 6, 0, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+                4.0F, 0.1F, () -> Ingredient.EMPTY, 0.8F, 0.91F, 1.0F, 0.94F);
         public static JJKDeflatedArmorMaterial SATORU_BLINDFOLD = new JJKDeflatedArmorMaterial("satoru_blindfold", 100, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY, 0.84F, 0.91F, 1.0F, 0.94F);
         public static JJKDeflatedArmorMaterial SATORU_OUTFIT = new JJKDeflatedArmorMaterial("satoru_outfit", 100, new int[] { 3, 6, 8, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
