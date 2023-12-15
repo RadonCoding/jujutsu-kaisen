@@ -6,12 +6,14 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
+import java.util.ArrayList;
+
 public abstract class Transformation extends Ability implements Ability.IToggled, ITransformation {
     @Override
     public Status checkTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (Ability ability : cap.getToggled()) {
+        for (Ability ability : new ArrayList<>(cap.getToggled())) {
             if (!(ability instanceof ITransformation transformation)) continue;
 
             if (transformation.getBodyPart() == this.getBodyPart()) {
