@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
@@ -88,16 +89,16 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
             double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
 
-            int lifetime = 20;
+            int lifetime = 2 * 20;
 
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 2; j++) {
                 double x = center.x() + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
                 double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
                 double z = center.z() + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
 
                 Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
                 Vec3 end = new Vec3(x, y, z);
-                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime);
+                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
@@ -105,11 +106,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                                 start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
                         break;
                     case 1:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
-                        break;
-                    case 2:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.FLAME, true,
+                        HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
                         break;
                 }
@@ -125,15 +122,15 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
             double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
 
-            int lifetime = 20;
+            int lifetime = 2 * 20;
 
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 2; j++) {
                 double x = center.x() + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
                 double z = center.z() + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
 
                 Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
                 Vec3 end = new Vec3(x, start.y(), z);
-                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime);
+                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
@@ -141,11 +138,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                                 start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
                         break;
                     case 1:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
-                        break;
-                    case 2:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.FLAME, true,
+                        HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
                         break;
                 }

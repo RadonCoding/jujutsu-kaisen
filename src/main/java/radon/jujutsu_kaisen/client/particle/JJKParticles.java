@@ -71,6 +71,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<BetterSmokeParticle.BetterSmokeParticleOptions>> SMOKE = PARTICLES.register("smoke", () ->
+            new ParticleType<>(false, BetterSmokeParticle.BetterSmokeParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<BetterSmokeParticle.BetterSmokeParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->
