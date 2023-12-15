@@ -66,4 +66,9 @@ public class Lightning extends Ability {
     public boolean isTechnique() {
         return false;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIGHTNING;
+    }
 }
