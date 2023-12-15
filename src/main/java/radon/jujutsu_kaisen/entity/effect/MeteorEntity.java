@@ -270,8 +270,8 @@ public class MeteorEntity extends JujutsuProjectile {
                             double xOffset = radius * Math.sin(phi) * Math.cos(theta);
                             double zOffset = radius * Math.cos(phi);
 
-                            double x = this.getX() + xOffset * radius;
-                            double z = this.getZ() + zOffset * radius;
+                            double x = this.getX() + xOffset * radius * this.random.nextDouble();
+                            double z = this.getZ() + zOffset * radius * this.random.nextDouble();
 
                             HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), radius * 0.3F, true, 20),
                                     true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
