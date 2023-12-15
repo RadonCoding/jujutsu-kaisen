@@ -60,7 +60,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
         double d2 = Mth.lerp(pPartialTicks, this.zo, this.z);
 
-        Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        Vec3 cam = pRenderInfo.getPosition();
 
         pose.pushPose();
         pose.translate(d0 - cam.x(), d1 - cam.y(), d2 - cam.z());

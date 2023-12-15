@@ -20,7 +20,7 @@ import java.util.Locale;
 public class LightningParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
-    protected LightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, LightningParticleOptions options, SpriteSet pSprites) {
+    protected LightningParticle(ClientLevel pLevel, double pX, double pY, double pZ, LightningParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
         Vector3f color = options.color();
@@ -121,7 +121,7 @@ public class LightningParticle extends TextureSheetParticle {
         @Override
         public LightningParticle createParticle(@NotNull LightningParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
                                                 double xSpeed, double ySpeed, double zSpeed) {
-            return new LightningParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options, this.sprites);
+            return new LightningParticle(level, x, y, z, options, this.sprites);
         }
     }
 }

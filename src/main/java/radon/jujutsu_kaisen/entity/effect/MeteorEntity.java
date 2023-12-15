@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -272,9 +273,7 @@ public class MeteorEntity extends JujutsuProjectile {
                             double x = this.getX() + xOffset * radius;
                             double z = this.getZ() + zOffset * radius;
 
-                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.RED_FIRE, radius * 0.3F, 1.0F, true, 20),
-                                    true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
-                            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), ParticleColors.SMOKE, radius * 0.3F, 1.0F, false, 20),
+                            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), radius * 0.3F, true, 20),
                                     true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
                         }
                     }

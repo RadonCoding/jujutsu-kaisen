@@ -33,6 +33,11 @@ public class JujutsuProjectile extends Projectile {
         this.setPower(power);
     }
 
+    @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
     protected void setPower(float power) {
         this.entityData.set(DATA_POWER, power);
     }

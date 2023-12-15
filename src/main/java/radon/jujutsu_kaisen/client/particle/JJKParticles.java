@@ -64,6 +64,13 @@ public class JJKParticles {
                     return null;
                 }
             });
+    public static RegistryObject<ParticleType<FireParticle.FireParticleOptions>> FIRE = PARTICLES.register("fire", () ->
+            new ParticleType<>(false, FireParticle.FireParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<FireParticle.FireParticleOptions> codec() {
+                    return null;
+                }
+            });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
     public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->
