@@ -75,7 +75,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
         Vec3 location = result.getLocation();
         Vec3 center = new Vec3(location.x(), location.y() + (this.getBbHeight() / 2.0F), location.z());
 
-        int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 64;
+        int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 32;
 
         for (int i = 0; i < pillarCount; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -109,7 +109,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             }
         }
 
-        int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 64;
+        int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 32;
 
         for (int i = 0; i < shockwaveCount; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;

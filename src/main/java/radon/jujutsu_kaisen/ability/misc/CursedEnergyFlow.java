@@ -204,9 +204,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
             }
 
             // Shield
-            if (victim instanceof Mob && !JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
-            }
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
             if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
@@ -221,12 +218,14 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
                 event.setAmount(event.getAmount() * 0.75F);
 
-                switch (victimCap.getNature()) {
-                    case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
-                            false, false, false));
-                    case ROUGH -> {
-                        if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
-                            attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
+                if (melee) {
+                    switch (victimCap.getNature()) {
+                        case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
+                                false, false, false));
+                        case ROUGH -> {
+                            if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
+                                attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
+                            }
                         }
                     }
                 }

@@ -181,7 +181,7 @@ public class JJKItems {
         public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);
         public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY);
-        public static JJKDeflatedArmorMaterial SORCERER_OUTFIT = new JJKDeflatedArmorMaterial("sorcerer_otutfit", 100, new int[] { 0, 6, 0, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
+        public static JJKDeflatedArmorMaterial SORCERER_OUTFIT = new JJKDeflatedArmorMaterial("sorcerer_outfit", 100, new int[] { 0, 6, 0, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY, 0.8F, 0.91F, 1.0F, 0.94F);
         public static JJKDeflatedArmorMaterial SATORU_BLINDFOLD = new JJKDeflatedArmorMaterial("satoru_blindfold", 100, new int[] { 0, 0, 0, 3 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
                 4.0F, 0.1F, () -> Ingredient.EMPTY, 0.84F, 0.91F, 1.0F, 0.94F);

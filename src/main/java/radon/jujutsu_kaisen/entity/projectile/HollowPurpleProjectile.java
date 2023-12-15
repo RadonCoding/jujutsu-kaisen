@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -107,8 +108,10 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void onInsideBlock(@NotNull BlockState pState) {
-        if (this.getTime() >= DELAY && pState.getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
+    protected void onHitBlock(BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+
+        if (this.getTime() >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
             this.discard();
         }
     }

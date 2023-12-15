@@ -105,7 +105,7 @@ public class ServerConfig {
                         .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().name(), x.getValue()))
                         .toList(), obj -> obj instanceof String);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
-                .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 100000.0F);
+                .defineInRange("maximumExperienceAmount", 10000.0F, 1.0F, 1000000.0F);
         this.cursedObjectEnergyForGrade = builder.comment("The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)")
                 .defineInRange("cursedObjectEnergyForGrade", 100.0F, 1.0F, 1000.0F);
         this.reverseCursedTechniqueChance = builder.comment("The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)")

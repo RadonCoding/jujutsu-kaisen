@@ -124,14 +124,14 @@ public class EmittingLightningParticle extends TextureSheetParticle {
             buf.writeFloat(this.color.x());
             buf.writeFloat(this.color.y());
             buf.writeFloat(this.color.z());
-            buf.writeInt(this.lifetime);
             buf.writeFloat(this.scalar);
+            buf.writeInt(this.lifetime);
         }
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %d %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.lifetime, this.scalar);
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+                    this.color.x(), this.color.y(), this.color.z(), this.scalar, this.lifetime);
         }
     }
 
