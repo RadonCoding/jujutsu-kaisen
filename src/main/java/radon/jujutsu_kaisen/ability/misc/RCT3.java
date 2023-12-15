@@ -22,13 +22,15 @@ public class RCT3 extends RCT2 {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (owner.getHealth() == owner.getMaxHealth()) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isExperienced(cap.getExperience())) {
-            int burnout = cap.getBurnout();
+            if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isExperienced(cap.getExperience())) {
+                int burnout = cap.getBurnout();
 
-            if (burnout > 0) {
-                cap.setBurnout(Math.max(0, burnout - 10));
+                if (burnout > 0) {
+                    cap.setBurnout(Math.max(0, burnout - 10));
+                }
             }
         }
     }

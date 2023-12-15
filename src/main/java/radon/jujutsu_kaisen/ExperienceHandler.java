@@ -203,6 +203,7 @@ public class ExperienceHandler {
         public void end(ServerLevel level) {
             if (!(level.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !(level.getEntity(this.targetUUID) instanceof LivingEntity target)) return;
             if (owner.isRemoved() || owner.isDeadOrDying() || target.isRemoved()) return;
+            if (this.damageDealtByOwner == 0.0F) return;
 
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
