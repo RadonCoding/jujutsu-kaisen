@@ -28,17 +28,17 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
 
+                        pOutput.accept(JJKItems.SORCERER_LEGGINGS.get());
+
                         pOutput.accept(JJKItems.SATORU_BLINDFOLD.get());
                         pOutput.accept(JJKItems.SATORU_CHESTPLATE.get());
                         pOutput.accept(JJKItems.SATORU_LEGGINGS.get());
                         pOutput.accept(JJKItems.SATORU_BOOTS.get());
 
                         pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.YUJI_LEGGINGS.get());
                         pOutput.accept(JJKItems.YUJI_BOOTS.get());
 
                         pOutput.accept(JJKItems.MEGUMI_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.MEGUMI_LEGGINGS.get());
                         pOutput.accept(JJKItems.MEGUMI_BOOTS.get());
 
                         pOutput.accept(JJKItems.TOGE_HELMET.get());
