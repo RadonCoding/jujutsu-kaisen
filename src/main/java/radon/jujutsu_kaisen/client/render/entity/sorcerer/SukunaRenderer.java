@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.*;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
@@ -28,6 +30,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerModel<SukunaEntity>> {
+    public static ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "main");
+    public static ModelLayerLocation INNER_LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "inner_armor");
+    public static ModelLayerLocation OUTER_LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "outer_armor");
+
     private final PlayerModel<SukunaEntity> normal;
     private final PlayerModel<SukunaEntity> slim;
 
@@ -37,13 +43,13 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
     public SukunaRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
-                new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), pContext.getModelManager()));
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(INNER_LAYER)),
+                new HumanoidArmorModel<>(pContext.bakeLayer(OUTER_LAYER)), pContext.getModelManager()));
         this.addLayer(new SukunaMarkingsLayer<>(this));
         this.addLayer(new JJKOverlayLayer<>(this));
 
-        this.normal = new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), false);
-        this.slim = new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), true);
+        this.normal = new PlayerModel<>(pContext.bakeLayer(LAYER), false);
+        this.slim = new PlayerModel<>(pContext.bakeLayer(LAYER), true);
     }
 
     @Override
