@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -67,7 +68,6 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         }
     }
 
-    @Override
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
@@ -75,9 +75,10 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         this.playSound(JJKSounds.FLAME_EXPLOSION.get(), 3.0F, 1.0F);
 
-        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+        Vec3 location = result.getLocation();
+        Vec3 center = new Vec3(location.x(), location.y() + (this.getBbHeight() / 2.0F), location.z());
 
-        int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 32;
+        int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 64;
 
         for (int i = 0; i < pillarCount; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -91,32 +92,15 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
             double z = center.z() + zOffset * this.getFlamePillarRadius();
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.RED_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
-                    true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.YELLOW_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
-                    true, center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, y, z).toVector3f(),
+                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
+                    center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, y, z).toVector3f(),
+                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
+                    center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
         }
 
-        for (int i = 0; i < pillarCount / 2; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.cos(theta);
-            double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
-            double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
-
-            double startX = center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F);
-            double startZ = center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F);
-
-            double x = center.x() + xOffset * this.getFlamePillarRadius();
-            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
-            double z = center.z() + zOffset * this.getFlamePillarRadius();
-
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.SMOKE, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
-                    true, startX, center.y(), startZ);
-        }
-
-        int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 32;
+        int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 64;
 
         for (int i = 0; i < shockwaveCount; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -128,26 +112,12 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
             double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.RED_FIRE, this.getFlamePillarRadius() * 0.3F, 1.0F, true, 20),
-                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
-        }
-
-        for (int i = 0; i < shockwaveCount / 2; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
-            double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
-
-            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
-            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
-
-            HelperMethods.sendParticles((ServerLevel) this.level(), new TravelParticle.TravelParticleOptions(new Vec3(x, center.y(), z).toVector3f(), ParticleColors.SMOKE, this.getFlamePillarRadius() * 0.3F, 1.0F, false, 20),
-                    true, center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
+            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, center.y(), z).toVector3f(),
+                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
+                    center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            Vec3 location = result.getLocation();
             ExplosionHandler.spawn(this.level().dimension(), location, this.getExplosionRadius(),
                     20, this.getPower() * 0.5F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), true);
         }
