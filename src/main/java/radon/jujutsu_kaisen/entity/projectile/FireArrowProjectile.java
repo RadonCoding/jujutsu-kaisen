@@ -84,9 +84,9 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
             double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
 
-            double x = center.x() + xOffset * this.getFlamePillarRadius();
-            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F);
-            double z = center.z() + zOffset * this.getFlamePillarRadius();
+            double x = center.x() + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
+            double z = center.z() + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
 
             HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, y, z).toVector3f(),
                             this.getFlamePillarRadius() * 0.3F, true, 20), true,
@@ -105,8 +105,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
             double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
 
-            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2;
-            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2;
+            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
 
             HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, center.y(), z).toVector3f(),
                             this.getFlamePillarRadius() * 0.3F, true, 20), true,
