@@ -418,7 +418,7 @@
 						"vector": [0, 5, 0]
 					}
 				},
-				"right_fingers2": {
+				"right_fingers": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1241,7 +1241,7 @@
 				"right_arm": {
 					"rotation": {
 						"0.0": {
-							"vector": [14.12976, 63.28688, 132.59073]
+							"vector": [-33.37024, 63.28688, 132.59073]
 						},
 						"0.1667": {
 							"vector": [-67.52787, -88.37891, 42.42949]
@@ -1264,7 +1264,7 @@
 						}
 					}
 				},
-				"right_fingers2": {
+				"right_fingers": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, -90]
