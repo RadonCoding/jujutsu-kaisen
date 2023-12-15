@@ -259,23 +259,6 @@ public class MeteorEntity extends JujutsuProjectile {
                         ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner,
                                 JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
                         this.explosionTime++;
-
-                        float radius = this.getSize() * 0.5F;
-                        int shockwaveCount = (int) (radius * Math.PI * 2) * 32;
-
-                        for (int i = 0; i < shockwaveCount; i++) {
-                            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-                            double phi = this.random.nextDouble() * Math.PI;
-
-                            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
-                            double zOffset = radius * Math.cos(phi);
-
-                            double x = this.getX() + xOffset * radius * this.random.nextDouble();
-                            double z = this.getZ() + zOffset * radius * this.random.nextDouble();
-
-                            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, this.getY(), z).toVector3f(), radius * 0.3F, true, 20),
-                                    true, this.getX() + (this.random.nextDouble() - 0.5D), this.getY(), this.getZ() + (this.random.nextDouble() - 0.5D));
-                        }
                     }
                 }
 
