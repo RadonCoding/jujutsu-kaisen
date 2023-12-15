@@ -84,16 +84,32 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
             double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
 
-            double x = center.x() + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
-            double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
-            double z = center.z() + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+            int lifetime = 20;
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, y, z).toVector3f(),
-                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
-                    center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
-            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, y, z).toVector3f(),
-                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
-                    center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+            for (int j = 0; j < 3; j++) {
+                double x = center.x() + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+                double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
+                double z = center.z() + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+
+                Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+                Vec3 end = new Vec3(x, y, z);
+                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime);
+
+                switch (j) {
+                    case 0:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                    case 1:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                    case 2:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.FLAME, true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                }
+            }
         }
 
         int shockwaveCount = (int) (this.getFlamePillarRadius() * 2 * Math.PI * 2) * 64;
@@ -105,12 +121,31 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
             double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
 
-            double x = center.x() + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
-            double z = center.z() + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+            int lifetime = 20;
 
-            HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(new Vec3(x, center.y(), z).toVector3f(),
-                            this.getFlamePillarRadius() * 0.3F, true, 20), true,
-                    center.x() + (this.random.nextDouble() - 0.5D), center.y(), center.z() + (this.random.nextDouble() - 0.5D));
+            for (int j = 0; j < 3; j++) {
+                double x = center.x() + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+                double z = center.z() + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+
+                Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+                Vec3 end = new Vec3(x, start.y(), z);
+                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime);
+
+                switch (j) {
+                    case 0:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                    case 1:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                    case 2:
+                        HelperMethods.sendParticles((ServerLevel) this.level(), ParticleTypes.FLAME, true,
+                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                        break;
+                }
+            }
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
