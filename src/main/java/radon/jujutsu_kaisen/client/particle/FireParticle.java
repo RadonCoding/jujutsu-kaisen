@@ -29,15 +29,16 @@ import org.joml.Vector3f;
 import java.util.Locale;
 
 public class FireParticle extends TextureSheetParticle {
-    private final Vec3 target;
-
-    protected FireParticle(ClientLevel pLevel, double pX, double pY, double pZ, FireParticleOptions options) {
+    protected FireParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, FireParticleOptions options) {
         super(pLevel, pX, pY, pZ);
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
-        this.target = new Vec3(options.target());
+        this.xd = pXSpeed;
+        this.yd = pYSpeed;
+        this.zd = pZSpeed;
+
+        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
     }
 
     private void fireVertex(PoseStack.Pose pMatrixEntry, VertexConsumer pBuffer, float pX, float pY, float pZ, float pTexU, float pTexV) {
@@ -104,54 +105,20 @@ public class FireParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        Vec3 pos = new Vec3(this.x, this.y, this.z);
-        Vec3 direction = this.target.subtract(pos).normalize();
-
-        double remaining = this.target.distanceTo(pos);
-        double distance = remaining / this.lifetime;
-
-        Vec3 newPos = pos.add(direction.scale(distance));
-        this.setPos(newPos.x(), newPos.y(), newPos.z());
-    }
-
-    @Override
     public @NotNull ParticleRenderType getRenderType() {
         return ParticleRenderType.CUSTOM;
     }
 
-    public record FireParticleOptions(Vector3f target, float scalar, boolean glow, int lifetime) implements ParticleOptions {
+    public record FireParticleOptions( float scalar, boolean glow, int lifetime) implements ParticleOptions {
         public static Deserializer<FireParticleOptions> DESERIALIZER = new Deserializer<>() {
             public @NotNull FireParticleOptions fromCommand(@NotNull ParticleType<FireParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-                Vector3f target = FireParticleOptions.readTargetVector3f(reader);
-                reader.expect(' ');
-                return new FireParticleOptions(target, reader.readFloat(), reader.readBoolean(), reader.readInt());
+                return new FireParticleOptions(reader.readFloat(), reader.readBoolean(), reader.readInt());
             }
 
             public @NotNull FireParticleOptions fromNetwork(@NotNull ParticleType<FireParticleOptions> type, @NotNull FriendlyByteBuf buf) {
-                return new FireParticleOptions(readTargetFromNetwork(buf), buf.readFloat(), buf.readBoolean(), buf.readInt());
+                return new FireParticleOptions(buf.readFloat(), buf.readBoolean(), buf.readInt());
             }
         };
-
-        public static Vector3f readTargetVector3f(StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            float f0 = reader.readFloat();
-            reader.expect(' ');
-            float f1 = reader.readFloat();
-            reader.expect(' ');
-            float f2 = reader.readFloat();
-            return new Vector3f(f0, f1, f2);
-        }
-
-        public static Vector3f readTargetFromNetwork(FriendlyByteBuf buf) {
-            return new Vector3f(buf.readFloat(), buf.readFloat(), buf.readFloat());
-        }
-
-        public static Vector3f readColorFromNetwork(FriendlyByteBuf buf) {
-            return new Vector3f(buf.readFloat(), buf.readFloat(), buf.readFloat());
-        }
 
         @Override
         public @NotNull ParticleType<?> getType() {
@@ -160,9 +127,6 @@ public class FireParticle extends TextureSheetParticle {
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.target.x());
-            buf.writeFloat(this.target.y());
-            buf.writeFloat(this.target.z());
             buf.writeFloat(this.scalar);
             buf.writeBoolean(this.glow);
             buf.writeInt(this.lifetime);
@@ -170,8 +134,7 @@ public class FireParticle extends TextureSheetParticle {
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.target.x(), this.target.y(), this.target.z(), this.scalar, this.glow, this.lifetime);
+            return String.format(Locale.ROOT, "%s %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.scalar, this.glow, this.lifetime);
         }
     }
 
@@ -182,7 +145,7 @@ public class FireParticle extends TextureSheetParticle {
         @Override
         public FireParticle createParticle(@NotNull FireParticleOptions options, @NotNull ClientLevel level, double x, double y, double z,
                                              double xSpeed, double ySpeed, double zSpeed) {
-            return new FireParticle(level, x, y, z, options);
+            return new FireParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, options);
         }
     }
 }
