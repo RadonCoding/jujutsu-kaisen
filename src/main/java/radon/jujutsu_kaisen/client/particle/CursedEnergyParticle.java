@@ -19,8 +19,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
     protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
-        this.hasPhysics = false;
-
+        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
         this.xd = pXSpeed;
@@ -34,7 +33,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
 
         this.alpha = options.opacity();
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.hasPhysics = false;
 
         this.sprites = pSprites;
         this.setSpriteFromAge(this.sprites);
