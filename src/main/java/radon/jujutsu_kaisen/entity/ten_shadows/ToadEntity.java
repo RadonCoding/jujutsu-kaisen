@@ -184,7 +184,7 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     private PlayState tonguePredicate(AnimationState<ToadEntity> animationState) {
-        if (!this.entityData.get(DATA_CAN_SHOOT)) {
+        if (!this.canShoot()) {
             return animationState.setAndContinue(TONGUE);
         }
         return PlayState.STOP;
@@ -211,12 +211,20 @@ public class ToadEntity extends TenShadowsSummon {
         return this.hasWings() ? JJKAbilities.TOAD_FUSION.get() : JJKAbilities.TOAD.get();
     }
 
+    public boolean canShoot() {
+        return this.entityData.get(DATA_CAN_SHOOT);
+    }
+
     public void setCanShoot(boolean canShoot) {
         this.entityData.set(DATA_CAN_SHOOT, canShoot);
     }
 
     @Override
     protected void customServerAiStep() {
+        if (!this.canShoot()) {
+            this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
+        }
+        
         LivingEntity owner = this.getOwner();
 
         if (this.isTame() && owner != null && this.hasWings()) {
@@ -257,7 +265,7 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     private void shoot(Entity target) {
-        if (!this.entityData.get(DATA_CAN_SHOOT)) return;
+        if (!this.canShoot()) return;
 
         this.yHeadRot = HelperMethods.getYRotD(this, target.getEyePosition());
         this.yBodyRot = HelperMethods.getYRotD(this, target.getEyePosition());
