@@ -6,9 +6,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ItemInHandRenderer.class)
 public interface IItemInHandRendererAccessor {
-    @Accessor
-    float getMainHandHeight();
+    @Accessor("mainHandHeight")
+    float getMainHandHeightAccessor();
 
-    @Accessor
-    float getOMainHandHeight();
+    @Accessor("oMainHandHeight")
+    float getOMainHandHeightAccessor();
 }

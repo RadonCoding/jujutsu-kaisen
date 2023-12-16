@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(PlayerModel.class)
 public interface IPlayerModelAccessor {
-    @Accessor
-    boolean getSlim();
+    @Accessor("slim")
+    boolean getSlimAccessor();
 }

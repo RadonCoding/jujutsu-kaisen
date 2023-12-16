@@ -10,6 +10,6 @@ import java.util.List;
 
 @Mixin(PostChain.class)
 public interface IPostChainAccessor {
-    @Accessor
-    List<PostPass> getPasses();
+    @Accessor("passes")
+    List<PostPass> getPassesAccessor();
 }

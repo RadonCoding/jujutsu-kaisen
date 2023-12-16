@@ -78,7 +78,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
                 if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ||
                         transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
                     if (((RenderLayer<T, M>) (Object) this).getParentModel() instanceof PlayerModel<?> player) {
-                        if (((IPlayerModelAccessor) player).getSlim()) {
+                        if (((IPlayerModelAccessor) player).getSlimAccessor()) {
                             pPoseStack.translate(transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ? 0.0625 : -0.0625, 0.0F, 0.0F);
                         }
                     }

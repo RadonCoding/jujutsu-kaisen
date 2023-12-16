@@ -323,12 +323,14 @@ public class HelperMethods {
     }
 
     public static <T extends Enum<T>> T randomEnum(Class<T> clazz, Set<T> excluded) {
-        EnumSet<T> available = EnumSet.complementOf(EnumSet.copyOf(excluded));
+        if (!excluded.isEmpty()) {
+            EnumSet<T> available = EnumSet.complementOf(EnumSet.copyOf(excluded));
 
-        if (available.isEmpty()) {
-            return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
+            if (!available.isEmpty()) {
+                return (T) available.toArray()[RANDOM.nextInt(available.size())];
+            }
         }
-        return (T) available.toArray()[RANDOM.nextInt(available.size())];
+        return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
     }
 
     public static boolean isExperienced(float experience) {

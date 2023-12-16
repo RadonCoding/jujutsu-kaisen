@@ -18,7 +18,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
@@ -124,8 +123,8 @@ public class JJKClientEventHandler {
                     }
 
                     float swing = arm == HumanoidArm.RIGHT ? mc.player.getAttackAnim(event.getPartialTick()) : 0.0F;
-                    float equip = 1.0F - Mth.lerp(event.getPartialTick(), ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getOMainHandHeight(),
-                            ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getMainHandHeight());
+                    float equip = 1.0F - Mth.lerp(event.getPartialTick(), ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getOMainHandHeightAccessor(),
+                            ((IItemInHandRendererAccessor) mc.gameRenderer.itemInHandRenderer).getMainHandHeightAccessor());
 
                     IClientItemExtensions extensions = IClientItemExtensions.of(transformation.getItem());
 
@@ -154,7 +153,7 @@ public class JJKClientEventHandler {
                         event.getPoseStack().translate(f * 5.6F, 0.0F, 0.0F);
                     }
 
-                    if (((IPlayerModelAccessor) model).getSlim()) {
+                    if (((IPlayerModelAccessor) model).getSlimAccessor()) {
                         event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
                     }
                     armor.renderToBuffer(event.getPoseStack(), consumer, event.getPackedLight(), OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
