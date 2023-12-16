@@ -18,6 +18,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
@@ -28,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -37,6 +39,7 @@ import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -166,7 +169,10 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return this.fingers * (ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue() / 20);
+        Map<ResourceLocation, Float> experience = ConfigHolder.SERVER.getExperienceMultipliers();
+        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(this.getType());
+        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * experience.getOrDefault(key, 1.0F);
+        return this.fingers * (max / 20);
     }
 
     @Override
