@@ -119,11 +119,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
-        List<LivingEntity> entities = new ArrayList<>();
-
-        this.level().getEntities(EntityTypeTest.forClass(LivingEntity.class), bounds, entity -> entity != this && this.isAffected(entity), entities, 1);
-
-        for (LivingEntity entity : entities) {
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, this::isAffected)) {
             this.ability.onHitEntity(this, owner, entity, false);
         }
     }
