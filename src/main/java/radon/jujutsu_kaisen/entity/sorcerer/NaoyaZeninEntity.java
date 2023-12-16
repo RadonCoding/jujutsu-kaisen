@@ -42,13 +42,4 @@ public class NaoyaZeninEntity extends SorcererEntity {
     public @Nullable Ability getDomain() {
         return null;
     }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.NAOYA_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.NAOYA_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.NAOYA_BOOTS.get()));
-    }
 }

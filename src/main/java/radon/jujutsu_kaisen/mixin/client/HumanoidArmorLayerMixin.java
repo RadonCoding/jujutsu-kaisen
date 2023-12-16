@@ -16,18 +16,14 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
-import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Mixin(HumanoidArmorLayer.class)
@@ -49,16 +45,6 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
     @Shadow
     protected abstract void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, ArmorItem pArmorItem, Model pModel, boolean pWithGlint, float pRed, float pGreen, float pBlue, ResourceLocation armorResource);
-
-    @Unique
-    private static boolean jujutsu_kaisen$isScaled(LivingEntity entity, EquipmentSlot slot) {
-        ItemStack stack = entity.getItemBySlot(slot);
-
-        if (stack.getItem() instanceof ArmorItem armor) {
-            return armor.getMaterial() instanceof JJKDeflatedArmorMaterial;
-        }
-        return false;
-    }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"))
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
@@ -102,35 +88,6 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
                         1.0F, 1.0F, 1.0F, this.getArmorResource(pLivingEntity, transformation.getItem().getDefaultInstance(), slot, null));
                 pPoseStack.popPose();
             }
-        }
-    }
-
-    @Inject(method = "renderArmorPiece", at = @At("HEAD"))
-    public void renderArmorPieceHead(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
-        if (jujutsu_kaisen$isScaled(pLivingEntity, pSlot)) {
-            JJKDeflatedArmorMaterial material = (JJKDeflatedArmorMaterial) ((ArmorItem) pLivingEntity.getItemBySlot(pSlot).getItem()).getMaterial();
-
-            float scale = switch (pSlot) {
-                case HEAD -> material.headDeflate();
-                case CHEST -> material.chestDeflate();
-                case LEGS -> material.legsDeflate();
-                case FEET -> material.feetDeflate();
-                default -> 1.0F;
-            };
-
-            pPoseStack.pushPose();
-
-            if (pSlot == EquipmentSlot.FEET) {
-                pPoseStack.translate(0.0F, 1.0F - scale, 0.0F);
-            }
-            pPoseStack.scale(scale, scale, scale);
-        }
-    }
-
-    @Inject(method = "renderArmorPiece", at = @At("TAIL"))
-    public void renderArmorPieceTail(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
-        if (jujutsu_kaisen$isScaled(pLivingEntity, pSlot)) {
-            pPoseStack.popPose();
         }
     }
 

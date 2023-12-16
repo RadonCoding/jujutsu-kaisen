@@ -62,42 +62,4 @@ public class SatoruGojoEntity extends SorcererEntity {
     public @Nullable Ability getDomain() {
         return JJKAbilities.UNLIMITED_VOID.get();
     }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.SATORU_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.SATORU_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.SATORU_BOOTS.get()));
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        LivingEntity target = this.getTarget();
-
-        boolean wear = false;
-
-        if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            wear = true;
-        } else {
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (HelperMethods.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
-                wear = true;
-            }
-        }
-
-        if (wear) {
-            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.SATORU_BLINDFOLD.get()));
-            }
-        } else {
-            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-            }
-        }
-    }
 }

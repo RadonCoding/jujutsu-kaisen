@@ -79,15 +79,6 @@ public class YujiItadoriEntity extends SorcererEntity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.YUJI_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.SORCERER_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.YUJI_BOOTS.get()));
-    }
-
-    @Override
     public void init(ISorcererData data) {
         super.init(data);
 

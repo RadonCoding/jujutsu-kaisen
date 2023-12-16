@@ -35,7 +35,7 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
+        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
     }
 
     @Override

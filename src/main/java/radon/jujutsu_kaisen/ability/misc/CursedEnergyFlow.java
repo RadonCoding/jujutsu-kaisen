@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
@@ -186,21 +187,24 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (melee) {
-                        float increased = switch (attackerCap.getNature()) {
-                            case BASIC -> event.getAmount() * 1.25F;
-                            case LIGHTNING ->
-                                    event.getAmount() * 1.25F * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
-                            case ROUGH -> event.getAmount() * 1.5F;
+                        float increased = event.getAmount() * (1.0F + attackerCap.getExperience() * 0.001F);
+
+                        switch (attackerCap.getNature()) {
+                            case LIGHTNING -> increased *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
+                            case ROUGH -> increased *= 1.5F;
                         };
                         float increase = increased - event.getAmount();
 
-                        float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                        if (attackerCap.getEnergy() < cost) return;
-                        attackerCap.useEnergy(cost);
+                        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+                            float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                            if (attackerCap.getEnergy() < cost) return;
+                            attackerCap.useEnergy(cost);
 
-                        if (attacker instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                            if (attacker instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                            }
                         }
+                        event.setAmount(increased);
                     }
                 }
             }
@@ -255,16 +259,18 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    float armor = victimCap.getExperience() * 0.003F * (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.0F);
+                    float armor = victimCap.getExperience() * 0.01F * (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 2.0F : 1.0F);
                     float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
                     float block = event.getAmount() - blocked;
 
-                    float cost = block * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                    if (victimCap.getEnergy() < cost) return;
-                    victimCap.useEnergy(cost);
+                    if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+                        float cost = block * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                        if (victimCap.getEnergy() < cost) return;
+                        victimCap.useEnergy(cost);
 
-                    if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                        }
                     }
                     event.setAmount(blocked);
                 }

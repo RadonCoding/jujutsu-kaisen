@@ -92,9 +92,5 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         super.onAddedToWorld();
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.YUTA_OKKOTSU_SWORD.get()));
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.YUTA_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.YUTA_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.YUTA_BOOTS.get()));
     }
 }

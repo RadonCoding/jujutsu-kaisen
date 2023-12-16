@@ -86,10 +86,6 @@ public class SuguruGetoEntity extends SorcererEntity {
         super.onAddedToWorld();
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.SUGURU_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.SUGURU_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.SUGURU_BOOTS.get()));
     }
 
     @Override

@@ -52,8 +52,14 @@ public class AbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS) {
-                cap.channel(ability);
+            if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS || cap.isChanneling(ability)) {
+                if (cap.isChanneling(ability)) {
+                    cap.channel(ability);
+                } else {
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                    cap.channel(ability);
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                }
             }
             return status;
         }
