@@ -40,7 +40,7 @@ public class RCT3 extends RCT2 {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.getHealth() == owner.getMaxHealth() && cap.getBurnout() > 0) {
-            return 1.0F / 20;
+            return 100.0F / 20;
         }
         return super.getCost(owner);
     }
