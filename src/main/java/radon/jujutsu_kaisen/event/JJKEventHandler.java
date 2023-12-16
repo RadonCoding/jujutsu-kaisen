@@ -245,12 +245,13 @@ public class JJKEventHandler {
             if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
                 boolean cursed = false;
 
-                ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
                 if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
                     cursed = true;
-                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem) || cap.getEnergy() > 0.0F)) {
+                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                     cursed = true;
+                } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cursed = cap.getEnergy() > 0.0F;
                 }
 
                 if (!cursed) {
