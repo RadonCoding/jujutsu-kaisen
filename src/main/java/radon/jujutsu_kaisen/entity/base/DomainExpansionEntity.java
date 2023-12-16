@@ -159,6 +159,8 @@ public abstract class DomainExpansionEntity extends Mob {
     }
 
     public boolean isAffected(Entity victim) {
+        if (victim == this) return false;
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null || victim == owner) {
