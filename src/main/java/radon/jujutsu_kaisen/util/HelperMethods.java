@@ -318,22 +318,17 @@ public class HelperMethods {
         return BlockPos.containing((double) Mth.floor(pos.x) + 0.5D, pos.getSpawnY(level, level.dimensionType().height()), (double) Mth.floor(pos.z) + 0.5D);
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass) {
-        int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
-        return enumClass.getEnumConstants()[x];
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass, Set<T> blacklist) {
-        int x = RANDOM.nextInt(enumClass.getEnumConstants().length);
-        T random = enumClass.getEnumConstants()[x];
+    public static <T extends Enum<T>> T randomEnum(Class<T> clazz, Set<T> excluded) {
+        EnumSet<T> available = EnumSet.complementOf(EnumSet.copyOf(excluded));
 
-        for (T blacklisted : blacklist) {
-            if (random == blacklisted) {
-                x = RANDOM.nextInt(enumClass.getEnumConstants().length);
-                random = enumClass.getEnumConstants()[x];
-            }
+        if (available.isEmpty()) {
+            return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
         }
-        return random;
+        return (T) available.toArray()[RANDOM.nextInt(available.size())];
     }
 
     public static boolean isExperienced(float experience) {
