@@ -97,7 +97,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     }
 
     @Override
-    public void applyModifiers(LivingEntity owner) {
+    public void onEnabled(LivingEntity owner) {
         HelperMethods.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         HelperMethods.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
@@ -106,7 +106,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     }
 
     @Override
-    public void removeModifiers(LivingEntity owner) {
+    public void onDisabled(LivingEntity owner) {
         HelperMethods.removeModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID);
         HelperMethods.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
         HelperMethods.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_UUID);

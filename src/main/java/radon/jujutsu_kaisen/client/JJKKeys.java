@@ -19,13 +19,13 @@ public class JJKKeys {
     public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",
             InputConstants.KEY_B);
     public static KeyMapping ACTIVATE_WATER_WALKING = createKeyMapping("activate_water_walking",
+            InputConstants.KEY_N);
+    public static KeyMapping ACTIVATE_CURSED_ENERGY_SHIELD = createKeyMapping("activate_cursed_energy_shield",
             InputConstants.KEY_Z);
     public static KeyMapping SHOW_ABILITY_MENU = createKeyMapping("show_ability_menu",
             InputConstants.KEY_C);
     public static KeyMapping SHOW_DOMAIN_MENU = createKeyMapping("show_domain_menu",
             InputConstants.KEY_V);
-    public static KeyMapping SHOW_PLAYER_CARD = createKeyMapping("show_player_card",
-            InputConstants.KEY_N);
     public static KeyMapping DASH = createKeyMapping("dash",
             InputConstants.KEY_G);
     public static KeyMapping OPEN_JUJUTSU_MENU = createKeyMapping("open_jujutsu_menu",

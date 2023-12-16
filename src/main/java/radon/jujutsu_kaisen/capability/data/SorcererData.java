@@ -471,10 +471,6 @@ public class SorcererData implements ISorcererData {
             if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
-
-            double damage = this.getRealPower();
-            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
-
             double movement = this.getRealPower() * 0.025D;
             HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
@@ -839,11 +835,11 @@ public class SorcererData implements ISorcererData {
 
     public void toggle(Ability ability) {
         if (!this.owner.level().isClientSide && this.owner instanceof Player) {
-            if (((Ability.IToggled) ability).shouldLog()) {
+            if (ability.shouldLog(this.owner)) {
                 if (this.hasToggled(ability)) {
-                    this.owner.sendSystemMessage(((Ability.IToggled) ability).getDisableMessage());
+                    this.owner.sendSystemMessage(ability.getDisableMessage());
                 } else {
-                    this.owner.sendSystemMessage(((Ability.IToggled) ability).getEnableMessage());
+                    this.owner.sendSystemMessage(ability.getEnableMessage());
                 }
             }
         }
@@ -1065,6 +1061,10 @@ public class SorcererData implements ISorcererData {
     public void channel(@Nullable Ability ability) {
         if (this.channeled != null) {
             ((Ability.IChannelened) this.channeled).onRelease(this.owner);
+
+            if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
+                this.owner.sendSystemMessage(this.channeled.getDisableMessage());
+            }
         }
 
         if (this.channeled == ability) {
@@ -1074,6 +1074,10 @@ public class SorcererData implements ISorcererData {
 
             if (this.channeled != null) {
                 ((Ability.IChannelened) this.channeled).onStart(this.owner);
+
+                if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
+                    this.owner.sendSystemMessage(this.channeled.getEnableMessage());
+                }
             }
         }
     }

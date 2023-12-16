@@ -127,10 +127,10 @@ public class ChantTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        this.addRenderableWidget(new AbilityListWidget(this::buildAbilityList, this::setSelectedAbility, this.minecraft, 65, 85,
+        this.addRenderableWidget(new AbilityListWidget(this::buildAbilityList, this::setSelectedAbility, this.minecraft, 67, 85,
                 xOffset, yOffset + this.minecraft.font.lineHeight + 1));
 
-        this.chants = new ChantListWidget(this::buildChantList, this::setSelectedChant, this.minecraft, 65, 85,
+        this.chants = new ChantListWidget(this::buildChantList, this::setSelectedChant, this.minecraft, 67, 85,
                 xOffset + 77, yOffset + this.minecraft.font.lineHeight + 1);
         this.addRenderableWidget(this.chants);
 

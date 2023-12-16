@@ -28,8 +28,4 @@ public interface ITransformation {
     Part getBodyPart();
 
     void onRightClick(LivingEntity owner);
-
-    void applyModifiers(LivingEntity owner);
-
-    void removeModifiers(LivingEntity owner);
 }

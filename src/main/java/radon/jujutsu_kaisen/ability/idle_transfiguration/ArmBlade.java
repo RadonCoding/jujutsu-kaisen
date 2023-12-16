@@ -71,12 +71,12 @@ public class ArmBlade extends Transformation {
     }
 
     @Override
-    public void applyModifiers(LivingEntity owner) {
+    public void onEnabled(LivingEntity owner) {
         HelperMethods.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 4.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
-    public void removeModifiers(LivingEntity owner) {
+    public void onDisabled(LivingEntity owner) {
         HelperMethods.removeModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID);
     }
 }

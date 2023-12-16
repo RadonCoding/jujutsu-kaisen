@@ -259,6 +259,26 @@ public abstract class Ability {
 
     public abstract float getCost(LivingEntity owner);
 
+    public boolean shouldLog(LivingEntity owner) {
+        return this.getActivationType(owner) == ActivationType.TOGGLED;
+    }
+
+    public Component getEnableMessage() {
+        ResourceLocation key = JJKAbilities.getKey(this);
+
+        if (key == null) return Component.empty();
+
+        return Component.translatable(String.format("ability.%s.%s.enable", key.getNamespace(), key.getPath()));
+    }
+
+    public Component getDisableMessage() {
+        ResourceLocation key = JJKAbilities.getKey(this);
+
+        if (key == null) return Component.empty();
+
+        return Component.translatable(String.format("ability.%s.%s.disable", key.getNamespace(), key.getPath()));
+    }
+
     public float getRealCost(LivingEntity owner) {
         float cost = this.getCost(owner);
 
@@ -317,27 +337,5 @@ public abstract class Ability {
         void onEnabled(LivingEntity owner);
 
         void onDisabled(LivingEntity owner);
-
-        default boolean shouldLog() {
-            return true;
-        }
-
-        default Component getEnableMessage() {
-            Ability ability = (Ability) this;
-            ResourceLocation key = JJKAbilities.getKey(ability);
-
-            if (key == null) return Component.empty();
-
-            return Component.translatable(String.format("ability.%s.%s.enable", key.getNamespace(), key.getPath()));
-        }
-
-        default Component getDisableMessage() {
-            Ability ability = (Ability) this;
-            ResourceLocation key = JJKAbilities.getKey(ability);
-
-            if (key == null) return Component.empty();
-
-            return Component.translatable(String.format("ability.%s.%s.disable", key.getNamespace(), key.getPath()));
-        }
     }
 }

@@ -14,6 +14,8 @@
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.energy": "Energy: %1$f/%2$f",
 
+  "gui.jujutsu_kaisen.stats": "Stats",
+
   "gui.jujutsu_kaisen.domain_customization": "Domain Customization",
   "gui.jujutsu_kaisen.domain_customization.size": "Size",
 
@@ -43,11 +45,11 @@
   "gui.jujutsu_kaisen.ability.locked": "Cannot be unlocked",
   "gui.jujutsu_kaisen.ability.points": "Points: %1$d",
 
-  "gui.jujutsu_kaisen.player_card.grade": "Grade: %1$s",
-  "gui.jujutsu_kaisen.player_card.experience": "Experience: %1$f/%1$f",
-  "gui.jujutsu_kaisen.player_card.cursed_technique": "Cursed Technique: %1$s",
-  "gui.jujutsu_kaisen.player_card.cursed_energy_nature": "Cursed Energy Nature: %1$s",
-  "gui.jujutsu_kaisen.player_card.traits": "Traits: %1$s",
+  "gui.jujutsu_kaisen.stats.grade": "Grade: %1$s",
+  "gui.jujutsu_kaisen.stats.experience": "Experience: %1$f/%1$f",
+  "gui.jujutsu_kaisen.stats.cursed_technique": "Cursed Technique: %1$s",
+  "gui.jujutsu_kaisen.stats.cursed_energy_nature": "Cursed Energy Nature: %1$s",
+  "gui.jujutsu_kaisen.stats.traits": "Traits: %1$s",
 
   "key.category.jujutsu_kaisen": "Jujutsu Kaisen",
   "key.jujutsu_kaisen.activate_ability": "Activate Selected Ability",
@@ -57,9 +59,9 @@
   "key.jujutsu_kaisen.activate_rct_or_heal": "Activate RCT or Heal",
   "key.jujutsu_kaisen.open_inventory_curse": "Open Inventory Curse",
   "key.jujutsu_kaisen.activate_water_walking": "Activate Water Walking",
+  "key.jujutsu_kaisen.activate_cursed_energy_shield": "Activate Cursed Energy Shield",
   "key.jujutsu_kaisen.show_ability_menu": "Show Ability Menu",
   "key.jujutsu_kaisen.show_domain_menu": "Show Domain Menu",
-  "key.jujutsu_kaisen.show_player_card": "Show Player Card",
   "key.jujutsu_kaisen.dash": "Dash",
   "key.jujutsu_kaisen.open_jujutsu_menu": "Open Jujutsu Menu",
   "key.jujutsu_kaisen.increase_output": "Increase Output",
@@ -229,6 +231,9 @@
   "ability.jujutsu_kaisen.cursed_energy_flow": "CE Flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.enable": "Activated CE flow",
   "ability.jujutsu_kaisen.cursed_energy_flow.disable": "Deactivated CE flow",
+  "ability.jujutsu_kaisen.cursed_energy_shield": "CE Shield",
+  "ability.jujutsu_kaisen.cursed_energy_shield.enable": "Started shielding...",
+  "ability.jujutsu_kaisen.cursed_energy_shield.disable": "Stopped shielding...",
   "ability.jujutsu_kaisen.cursed_energy_blast": "CE Blast",
   "ability.jujutsu_kaisen.lightning": "Lightning",
   "ability.jujutsu_kaisen.discharge": "Discharge",
