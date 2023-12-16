@@ -139,7 +139,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public boolean shouldLog() {
+    public boolean shouldLog(LivingEntity owner) {
         return false;
     }
 

@@ -103,7 +103,7 @@ public class BindingVowTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        this.addRenderableWidget(new BindingVowListWidget(this::buildBindingVowList, this::setSelectedBindingVow, this.minecraft, 74, 85,
+        this.addRenderableWidget(new BindingVowListWidget(this::buildBindingVowList, this::setSelectedBindingVow, this.minecraft, 78, 85,
                 xOffset, yOffset + this.minecraft.font.lineHeight + 1));
 
         this.add = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.add", JujutsuKaisen.MOD_ID)), pButton -> {
@@ -118,7 +118,7 @@ public class BindingVowTab extends JJKTab {
             this.remove.active = cap.hasBindingVow(this.vow.get());
 
             cap.addBindingVowCooldown(this.vow.get());
-        }).size(62, 20).pos(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 66).build();
+        }).size(61, 20).pos(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.add);
 
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.remove", JujutsuKaisen.MOD_ID)), pButton -> {
@@ -133,7 +133,7 @@ public class BindingVowTab extends JJKTab {
             this.remove.active = cap.hasBindingVow(this.vow.get());
 
             cap.addBindingVowCooldown(this.vow.get());
-        }).size(62, 20).pos(xOffset + 154, yOffset + this.minecraft.font.lineHeight + 66).build();
+        }).size(61, 20).pos(xOffset + 155, yOffset + this.minecraft.font.lineHeight + 66).build();
         this.addRenderableWidget(this.remove);
 
         this.description = new MultiLineTextWidget(xOffset + 86, yOffset + this.minecraft.font.lineHeight + 1, Component.empty(), this.minecraft.font)

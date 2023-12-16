@@ -80,7 +80,9 @@ public class JujutsuScreen extends Screen {
         this.selectedTab = null;
 
         int index = 0;
-        this.tabs.add(new DomainCustomizationTab(this.minecraft, this, JJKTabType.ABOVE, 0, 0));
+        this.tabs.add(new StatsTab(this.minecraft, this, JJKTabType.ABOVE, 0, 0));
+        index++;
+        this.tabs.add(new DomainCustomizationTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
         index++;
         this.tabs.add(new PactTab(this.minecraft, this, JJKTabType.ABOVE, index % JJKTabType.MAX_TABS, index / JJKTabType.MAX_TABS));
         index++;

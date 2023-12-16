@@ -65,12 +65,12 @@ public class HorseLegs extends Transformation {
     }
 
     @Override
-    public void applyModifiers(LivingEntity owner) {
+    public void onEnabled(LivingEntity owner) {
         HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 4.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
 
     @Override
-    public void removeModifiers(LivingEntity owner) {
+    public void onDisabled(LivingEntity owner) {
         HelperMethods.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 }

@@ -124,6 +124,13 @@ public class ClientAbilityHandler {
                     ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
                 }
 
+                if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
+                    mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
+                        current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
+                    });
+                }
+
                 if (JJKKeys.DASH.isDown()) {
                     PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                     ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
