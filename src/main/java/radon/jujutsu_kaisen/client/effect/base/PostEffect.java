@@ -52,7 +52,7 @@ public abstract class PostEffect implements ResourceManagerReloadListener {
             this.onResourceManagerReload(mc.getResourceManager());
         }
 
-        for (PostPass pass : ((IPostChainAccessor) this.postChain).getPasses()) {
+        for (PostPass pass : ((IPostChainAccessor) this.postChain).getPassesAccessor()) {
             this.applyUniforms(pass);
         }
         ((PostChain) this.postChain).process(partialTicks);

@@ -10,31 +10,27 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.font.providers.UnihexProvider;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.*;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.common.util.LazyOptional;
 import org.joml.Matrix4f;
+import radon.jujutsu_kaisen.mixin.client.ILevelRendererAccessor;
 
 public class SkyHandler {
     private static final ResourceLocation SUN_LOCATION = new ResourceLocation("textures/environment/sun.png");
 
-    private static ClientLevel level;
-    private static LevelRenderer levelRenderer;
+    private static ClientLevel overworld;
     private static TextureTarget target;
     private static int skyWidth = -1;
     private static int skyHeight = -1;
@@ -118,34 +114,30 @@ public class SkyHandler {
             return;
         }
 
-        if (level == null) {
+        if (overworld == null) {
             ClientPacketListener conn = mc.getConnection();
 
             if (conn == null) return;
 
             Holder<DimensionType> holder = mc.level.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD);
-            level = new ClientLevel(conn, new ClientLevel.ClientLevelData(Difficulty.NORMAL, false, false),
+            overworld = new ClientLevel(conn, new ClientLevel.ClientLevelData(Difficulty.NORMAL, false, false),
                     Level.OVERWORLD, holder, 0, 0, mc::getProfiler, mc.levelRenderer, false, 0);
-            levelRenderer = new LevelRenderer(mc, mc.getEntityRenderDispatcher(), mc.getBlockEntityRenderDispatcher(), mc.renderBuffers());
-            levelRenderer.setLevel(level);
+            overworld.setDayTime(1000);
         }
         final Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 pos = camera.getPosition();
 
-        long time = level.getDayTime();
-        level.setDayTime(1000);
-
-        FogRenderer.setupColor(camera, partialTick, level, mc.options.getEffectiveRenderDistance(), mc.gameRenderer.getDarkenWorldAmount(partialTick));
+        FogRenderer.setupColor(camera, partialTick, overworld, mc.options.getEffectiveRenderDistance(), mc.gameRenderer.getDarkenWorldAmount(partialTick));
         FogRenderer.levelFogColor();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
         final float distance = mc.gameRenderer.getRenderDistance();
-        final boolean fog = level.effects().isFoggyAt(Mth.floor(pos.x()), Mth.floor(pos.z())) || mc.gui.getBossOverlay().shouldCreateWorldFog();
+        final boolean fog = overworld.effects().isFoggyAt(Mth.floor(pos.x()), Mth.floor(pos.z())) || mc.gui.getBossOverlay().shouldCreateWorldFog();
         FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, distance, fog, partialTick);
         RenderSystem.setShader(GameRenderer::getPositionShader);
 
         Vec3 vec3 = mc.gameRenderer.getMainCamera().getPosition().subtract(2.0D, 2.0D, 2.0D).scale(0.25D);
         Vec3 vec31 = CubicSampler.gaussianSampleVec3(vec3, (p_194161_, p_194162_, p_194163_) -> Vec3.fromRGB24(7907327));
-        float f1 = Mth.cos(level.getTimeOfDay(partialTick) * ((float) Math.PI * 2.0F)) * 2.0F + 0.5F;
+        float f1 = Mth.cos(overworld.getTimeOfDay(partialTick) * ((float) Math.PI * 2.0F)) * 2.0F + 0.5F;
         f1 = Mth.clamp(f1, 0.0F, 1.0F);
         float f2 = (float) vec31.x() * f1;
         float f3 = (float) vec31.y() * f1;
@@ -161,21 +153,21 @@ public class SkyHandler {
         VertexBuffer.unbind();
         RenderSystem.enableBlend();
 
-        float[] color = level.effects().getSunriseColor(level.getTimeOfDay(partialTick), partialTick);
+        float[] color = overworld.effects().getSunriseColor(overworld.getTimeOfDay(partialTick), partialTick);
 
         if (color != null) {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             poseStack.pushPose();
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-            float f5 = Mth.sin(level.getSunAngle(partialTick)) < 0.0F ? 180.0F : 0.0F;
+            float f5 = Mth.sin(overworld.getSunAngle(partialTick)) < 0.0F ? 180.0F : 0.0F;
             poseStack.mulPose(Axis.ZP.rotationDegrees(f5));
             poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             float f6 = color[0];
             float f7 = color[1];
             float f8 = color[2];
             Matrix4f matrix4f = poseStack.last().pose();
-            buffer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION);
+            buffer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
             buffer.vertex(matrix4f, 0.0F, 100.0F, 0.0F).color(f6, f7, f8, color[3]).endVertex();
 
             for (int j = 0; j <= 16; ++j) {
@@ -192,7 +184,7 @@ public class SkyHandler {
         poseStack.pushPose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        poseStack.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(partialTick) * 360.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(overworld.getTimeOfDay(partialTick) * 360.0F));
         Matrix4f matrix4f1 = poseStack.last().pose();
         float f12 = 30.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -220,7 +212,10 @@ public class SkyHandler {
         if (mc.options.getCloudsType() != CloudStatus.OFF) {
             RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            levelRenderer.renderClouds(poseStack, projection, partialTick, pos.x(), pos.y(), pos.z());
+            ClientLevel previous = ((ILevelRendererAccessor) mc.levelRenderer).getLevelAccessor();
+            ((ILevelRendererAccessor) mc.levelRenderer).setLevelAccessor(overworld);
+            mc.levelRenderer.renderClouds(poseStack, projection, partialTick, pos.x(), pos.y(), pos.z());
+            ((ILevelRendererAccessor) mc.levelRenderer).setLevelAccessor(previous);
         }
 
         RenderSystem.depthMask(false);
@@ -230,7 +225,5 @@ public class SkyHandler {
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
         FogRenderer.setupNoFog();
-
-        level.setDayTime(time);
     }
 }
