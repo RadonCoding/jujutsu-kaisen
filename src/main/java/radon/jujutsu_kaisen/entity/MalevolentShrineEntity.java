@@ -76,7 +76,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         if (this.first) {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    int delay = i * 4;
+                    int delay = i * 8;
 
                     int horizontal = i;
                     int vertical = j;
@@ -98,14 +98,14 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                                     BlockState state = owner.level().getBlockState(pos);
 
                                     owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
-                                            1.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.5F);
+                                            1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
 
                                     if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
                                         if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                                             owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
                                                     Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
-                                            if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                                            if (this.random.nextInt(10) == 0) {
                                                 ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
                                                         0.0D, 0.0D, 0.0D, 0.0D);
                                             }
