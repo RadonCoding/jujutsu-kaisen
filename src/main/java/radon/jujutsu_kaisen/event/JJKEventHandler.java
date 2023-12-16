@@ -245,9 +245,11 @@ public class JJKEventHandler {
             if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
                 boolean cursed = false;
 
+                ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
                 if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
                     cursed = true;
-                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem) || JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get()))) {
+                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem) || cap.getEnergy() > 0.0F)) {
                     cursed = true;
                 }
 
