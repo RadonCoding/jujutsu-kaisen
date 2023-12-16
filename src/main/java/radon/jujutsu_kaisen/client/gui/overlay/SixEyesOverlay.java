@@ -42,62 +42,60 @@ public class SixEyesOverlay {
 
         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTrait(Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.SATORU_BLINDFOLD.get())) {
-            if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
-                if (hit.getEntity() instanceof LivingEntity target) {
-                    if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-                        return;
+        if (!cap.hasTrait(Trait.SIX_EYES)) return;
+        if (!(HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
+        if (!(hit.getEntity() instanceof LivingEntity target)) return;
 
-                    if (current == null) {
-                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
-                        return;
-                    } else if (mc.level.getGameTime() % 20 == 0) {
-                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
-                    }
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+            return;
 
-                    UUID identifier = current.getKey();
+        if (current == null) {
+            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+            return;
+        } else if (mc.level.getGameTime() % 20 == 0) {
+            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+        }
 
-                    if (target.getUUID().equals(identifier)) {
-                        SixEyesData data = current.getValue();
+        UUID identifier = current.getKey();
 
-                        if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
+        if (target.getUUID().equals(identifier)) {
+            SixEyesData data = current.getValue();
 
-                        List<Component> lines = new ArrayList<>();
+            if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
 
-                        if (data.technique != null) {
-                            Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                                    data.technique.getName());
-                            lines.add(techniqueText);
-                        }
+            List<Component> lines = new ArrayList<>();
 
-                        Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                                data.grade.getName());
-                        lines.add(gradeText);
+            if (data.technique != null) {
+                Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
+                        data.technique.getName());
+                lines.add(techniqueText);
+            }
 
-                        Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
-                                data.energy, data.maxEnergy);
-                        lines.add(energyText);
+            Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
+                    data.grade.getName());
+            lines.add(gradeText);
 
-                        int offset = 0;
+            Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
+                    data.energy, data.maxEnergy);
+            lines.add(energyText);
 
-                        for (Component line : lines) {
-                            if (mc.font.width(line) > offset) {
-                                offset = mc.font.width(line);
-                            }
-                        }
+            int offset = 0;
 
-                        int x = (width - offset) / 2;
-                        int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
-
-                        for (Component line : lines) {
-                            graphics.drawString(gui.getFont(), line, x, y, 53503);
-                            y += mc.font.lineHeight;
-                        }
-                    } else {
-                        PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
-                    }
+            for (Component line : lines) {
+                if (mc.font.width(line) > offset) {
+                    offset = mc.font.width(line);
                 }
             }
+
+            int x = (width - offset) / 2;
+            int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
+
+            for (Component line : lines) {
+                graphics.drawString(gui.getFont(), line, x, y, 53503);
+                y += mc.font.lineHeight;
+            }
+        } else {
+            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
         }
     };
 
@@ -124,7 +122,7 @@ public class SixEyesOverlay {
 
         public static SixEyesData deserializeNBT(CompoundTag nbt) {
             Set<Trait> traits = new HashSet<>();
-            
+
             for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
                 traits.add(Trait.values()[((IntTag) key).getAsInt()]);
             }

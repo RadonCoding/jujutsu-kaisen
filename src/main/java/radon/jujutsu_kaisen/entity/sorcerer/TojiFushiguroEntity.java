@@ -200,10 +200,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
         InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
 
         CuriosUtil.setItemInSlot(this, "body", inventory);
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.TOJI_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.TOJI_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.TOJI_BOOTS.get()));
     }
 
     @Override

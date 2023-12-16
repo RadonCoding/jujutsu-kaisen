@@ -28,40 +28,6 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
 
-                        pOutput.accept(JJKItems.SORCERER_LEGGINGS.get());
-
-                        pOutput.accept(JJKItems.SATORU_BLINDFOLD.get());
-                        pOutput.accept(JJKItems.SATORU_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.SATORU_LEGGINGS.get());
-                        pOutput.accept(JJKItems.SATORU_BOOTS.get());
-
-                        pOutput.accept(JJKItems.YUJI_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.YUJI_BOOTS.get());
-
-                        pOutput.accept(JJKItems.MEGUMI_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.MEGUMI_BOOTS.get());
-
-                        pOutput.accept(JJKItems.TOGE_HELMET.get());
-                        pOutput.accept(JJKItems.TOGE_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.TOGE_LEGGINGS.get());
-                        pOutput.accept(JJKItems.TOGE_BOOTS.get());
-
-                        pOutput.accept(JJKItems.YUTA_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.YUTA_LEGGINGS.get());
-                        pOutput.accept(JJKItems.YUTA_BOOTS.get());
-
-                        pOutput.accept(JJKItems.SUGURU_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.SUGURU_LEGGINGS.get());
-                        pOutput.accept(JJKItems.SUGURU_BOOTS.get());
-
-                        pOutput.accept(JJKItems.NAOYA_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.NAOYA_LEGGINGS.get());
-                        pOutput.accept(JJKItems.NAOYA_BOOTS.get());
-
-                        pOutput.accept(JJKItems.TOJI_CHESTPLATE.get());
-                        pOutput.accept(JJKItems.TOJI_LEGGINGS.get());
-                        pOutput.accept(JJKItems.TOJI_BOOTS.get());
-
                         pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SPAWN_EGG.get());

@@ -51,30 +51,4 @@ public class TogeInumakiEntity extends SorcererEntity {
     public @Nullable Ability getDomain() {
         return null;
     }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(JJKItems.TOGE_CHESTPLATE.get()));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(JJKItems.TOGE_LEGGINGS.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(JJKItems.TOGE_BOOTS.get()));
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        LivingEntity target = this.getTarget();
-
-        boolean wear = target == null;
-
-        if (wear) {
-            if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.TOGE_HELMET.get()));
-            }
-        } else {
-            if (!this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-            }
-        }
-    }
 }

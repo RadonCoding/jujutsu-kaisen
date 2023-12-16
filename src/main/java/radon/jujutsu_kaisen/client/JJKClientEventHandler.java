@@ -69,7 +69,6 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.armor.JJKDeflatedArmorMaterial;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -264,18 +263,6 @@ public class JJKClientEventHandler {
             assert mc.player != null;
 
             LivingEntity target = event.getEntity();
-
-            if (event.getRenderer().getModel() instanceof PlayerModel<?> player) {
-                if (target.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorItem armor && armor.getMaterial() instanceof JJKDeflatedArmorMaterial) {
-                    player.jacket.visible = false;
-                    player.rightSleeve.visible = false;
-                    player.leftSleeve.visible = false;
-                }
-                if (target.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem armor && armor.getMaterial() instanceof JJKDeflatedArmorMaterial) {
-                    player.rightPants.visible = false;
-                    player.leftPants.visible = false;
-                }
-            }
 
             ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
 
