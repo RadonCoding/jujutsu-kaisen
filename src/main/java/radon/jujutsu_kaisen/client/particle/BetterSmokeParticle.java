@@ -25,6 +25,8 @@ public class BetterSmokeParticle extends SmokeParticle {
         this.xd = pXSpeed;
         this.yd = pYSpeed;
         this.zd = pZSpeed;
+
+        this.hasPhysics = false;
     }
 
     public record BetterSmokeParticleOptions(float scalar, int lifetime) implements ParticleOptions {
