@@ -14,7 +14,7 @@ public abstract class Transformation extends Ability implements Ability.IToggled
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (Ability ability : new ArrayList<>(cap.getToggled())) {
-            if (!(ability instanceof ITransformation transformation)) continue;
+            if (!(ability instanceof ITransformation transformation) || ability == this) continue;
 
             if (transformation.getBodyPart() == this.getBodyPart()) {
                 cap.toggle(ability);
