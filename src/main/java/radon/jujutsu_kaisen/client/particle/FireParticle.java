@@ -39,6 +39,8 @@ public class FireParticle extends TextureSheetParticle {
         this.zd = pZSpeed;
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+
+        this.hasPhysics = false;
     }
 
     private void fireVertex(PoseStack.Pose pMatrixEntry, VertexConsumer pBuffer, float pX, float pY, float pZ, float pTexU, float pTexV) {
