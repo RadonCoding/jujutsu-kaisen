@@ -8,6 +8,8 @@ import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -31,6 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerModel<SukunaEntity>> {
     public static ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "main");
+    public static ModelLayerLocation LAYER_SLIM = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "slim");
     public static ModelLayerLocation INNER_LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "inner_armor");
     public static ModelLayerLocation OUTER_LAYER = new ModelLayerLocation(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna"), "outer_armor");
 
@@ -49,7 +52,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
         this.addLayer(new JJKOverlayLayer<>(this));
 
         this.normal = new PlayerModel<>(pContext.bakeLayer(LAYER), false);
-        this.slim = new PlayerModel<>(pContext.bakeLayer(LAYER), true);
+        this.slim = new PlayerModel<>(pContext.bakeLayer(LAYER_SLIM), true);
     }
 
     @Override
@@ -60,32 +63,10 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             if (type == EntityType.PLAYER) {
                 GameProfile profile = pEntity.getPlayer();
 
-                AtomicReference<ResourceLocation> texture = new AtomicReference<>(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
-                AtomicReference<String> model = new AtomicReference<>(DefaultPlayerSkin.getSkinModelName(profile.getId()));
-
-                try {
-                    SkullBlockEntity.updateGameprofile(profile, updated -> {
-                        if (!updated.isComplete()) return;
-
-                        Minecraft mc = Minecraft.getInstance();
-                        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = mc.getSkinManager().getInsecureSkinInformation(updated);
-
-                        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                            ((ISkinManagerAccessor) mc.getSkinManager()).invokeRegisterTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, (pTextureType, pLocation, pProfileTexture) -> {
-                                texture.set(pLocation);
-
-                                String metadata = pProfileTexture.getMetadata("model");
-
-                                if (metadata == null) return;
-
-                                model.set(metadata);
-                            });
-                        }
-                    });
-                } catch (Exception ignored) {}
-
-                this.texture = texture.get();
-                this.model = model.get().equals("default") ? this.normal : this.slim;
+                ClientPacketListener conn = Minecraft.getInstance().getConnection();
+                PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
+                this.texture = info == null ? DefaultPlayerSkin.getDefaultSkin(profile.getId()) : info.getSkinLocation();
+                this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
             } else {
                 Minecraft mc = Minecraft.getInstance();
                 assert mc.level != null;

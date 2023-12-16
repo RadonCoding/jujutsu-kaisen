@@ -393,6 +393,7 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(NaoyaZeninModel.OUTER_LAYER, SkinModel::createOuterLayer);
 
             event.registerLayerDefinition(SukunaRenderer.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(SukunaRenderer.LAYER_SLIM, SkinModel::createSlimBodyLayer);
             event.registerLayerDefinition(SukunaRenderer.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(SukunaRenderer.OUTER_LAYER, SkinModel::createOuterLayer);
 
