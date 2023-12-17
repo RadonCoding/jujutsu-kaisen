@@ -140,7 +140,7 @@ public class StatsTab extends JJKTab {
                 cap.getTraits().stream().map(Trait::getName).map(Component::getString).collect(Collectors.joining(", "))));
         component.append("\n");
 
-        List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component, Style.EMPTY), WINDOW_INSIDE_WIDTH - 96));
+        List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(component, Style.EMPTY), WINDOW_INSIDE_WIDTH - 104));
 
         int offset = 0;
 
