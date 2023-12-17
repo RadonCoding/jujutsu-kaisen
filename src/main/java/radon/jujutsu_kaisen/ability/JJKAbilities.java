@@ -132,7 +132,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
     public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
     public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
-    public static RegistryObject<Ability> RCT = ABILITIES.register("rct", RCT::new);
     public static RegistryObject<RCT1> RCT1 = ABILITIES.register("rct1", RCT1::new);
     public static RegistryObject<RCT1> RCT2 = ABILITIES.register("rct2", RCT2::new);
     public static RegistryObject<RCT1> RCT3 = ABILITIES.register("rct3", RCT3::new);

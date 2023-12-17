@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
 
@@ -114,7 +115,7 @@ public class ClientAbilityHandler {
 
                 if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
                     mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        channeled = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
+                        channeled = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : HelperMethods.getRCTTier(mc.player);
                         current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
                     });
                 }
