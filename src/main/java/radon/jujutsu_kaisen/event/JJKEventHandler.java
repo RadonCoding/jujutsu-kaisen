@@ -408,6 +408,8 @@ public class JJKEventHandler {
         public static void onLivingDeath(LivingDeathEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (victim.level().isClientSide) return;
+
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

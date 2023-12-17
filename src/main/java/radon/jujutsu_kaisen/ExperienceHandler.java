@@ -33,11 +33,11 @@ import java.util.logging.Level;
 public class ExperienceHandler {
     private static final Map<UUID, CopyOnWriteArraySet<BattleData>> battles = new HashMap<>();
 
-    private static void addBattle(UUID owner, BattleData data) {
-        if (!battles.containsKey(owner)) {
-            battles.put(owner, new CopyOnWriteArraySet<>());
+    private static void addBattle(UUID ownerUUID, BattleData data) {
+        if (!battles.containsKey(ownerUUID)) {
+            battles.put(ownerUUID, new CopyOnWriteArraySet<>());
         }
-        battles.get(owner).add(data);
+        battles.get(ownerUUID).add(data);
     }
 
     @SubscribeEvent
@@ -48,7 +48,11 @@ public class ExperienceHandler {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                boolean existing = false;
+                boolean existing = battles.containsKey(attacker.getUUID());
+
+                if (!existing) {
+                    addBattle(attacker.getUUID(), new BattleData(attacker.getUUID(), victim.getUUID()));
+                }
 
                 Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
 
@@ -56,21 +60,7 @@ public class ExperienceHandler {
                     for (BattleData battle : iter.next().getValue()) {
                         if (battle.getTargetUUID() == victim.getUUID()) {
                             battle.attack(attacker.getUUID(), event.getAmount());
-                            existing = true;
                         }
-                    }
-                }
-                if (!existing) {
-                    if (attacker.getLastHurtByMob() == victim) {
-                        addBattle(attacker.getUUID(), new BattleData(attacker.getUUID(), victim.getUUID()));
-                    }
-                }
-            }
-
-            if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                if (!battles.containsKey(victim.getUUID())) {
-                    if (victim.getLastHurtMob() == attacker) {
-                        addBattle(victim.getUUID(), new BattleData(victim.getUUID(), attacker.getUUID()));
                     }
                 }
             }
@@ -194,7 +184,7 @@ public class ExperienceHandler {
                 ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 if (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get())) {
-                    strength *= 2.0F;
+                    strength *= 1.25F;
                 }
             }
             return strength;
@@ -210,9 +200,11 @@ public class ExperienceHandler {
             float targetStrength = calculateStrength(target);
             float ownerStrength = calculateStrength(owner);
 
-            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 100.0F
+            float experience = Math.min(targetStrength, (targetStrength - ownerStrength)
                     * (this.totalDamageDealt / this.damageDealtByOwner)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
+
+            System.out.println(String.format("Experience: %f, Target: %f, Owner: %f", experience, targetStrength, ownerStrength));
 
             if (experience < 0.1F) return;
 

@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -65,44 +66,46 @@ public class GetCrushed extends Ability {
         owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (Entity entity : getEntities(owner)) {
-            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                owner.level().playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
-                        4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
+            if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
-                if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    float radius = Math.min(10.0F, entity.getBbWidth() * entity.getBbHeight() * 2.0F);
-                    int minX = Mth.floor(entity.getX() - radius - 1.0F);
-                    int maxX = Mth.floor(entity.getX() + radius + 1.0F);
-                    int minY = Mth.floor(entity.getY() - radius - 1.0F);
-                    int maxY = Mth.floor(entity.getY() + radius + 1.0F);
-                    int minZ = Mth.floor(entity.getZ() - radius - 1.0F);
-                    int maxZ = Mth.floor(entity.getZ() + radius + 1.0F);
+            Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            owner.level().playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+                    4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-                    for (int x = minX; x <= maxX; x++) {
-                        for (int y = minY; y <= maxY; y++) {
-                            for (int z = minZ; z <= maxZ; z++) {
-                                double distance = (x - entity.getX()) * (x - entity.getX()) +
-                                        (y - entity.getY()) * (y - entity.getY()) +
-                                        (z - entity.getZ()) * (z - entity.getZ());
+            if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                float radius = Math.min(10.0F, entity.getBbWidth() * entity.getBbHeight() * 2.0F);
+                int minX = Mth.floor(entity.getX() - radius - 1.0F);
+                int maxX = Mth.floor(entity.getX() + radius + 1.0F);
+                int minY = Mth.floor(entity.getY() - radius - 1.0F);
+                int maxY = Mth.floor(entity.getY() + radius + 1.0F);
+                int minZ = Mth.floor(entity.getZ() - radius - 1.0F);
+                int maxZ = Mth.floor(entity.getZ() + radius + 1.0F);
 
-                                if (distance <= radius * radius) {
-                                    BlockPos pos = new BlockPos(x, y, z);
-                                    BlockState state = owner.level().getBlockState(pos);
+                for (int x = minX; x <= maxX; x++) {
+                    for (int y = minY; y <= maxY; y++) {
+                        for (int z = minZ; z <= maxZ; z++) {
+                            double distance = (x - entity.getX()) * (x - entity.getX()) +
+                                    (y - entity.getY()) * (y - entity.getY()) +
+                                    (z - entity.getZ()) * (z - entity.getZ());
 
-                                    if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                        owner.level().destroyBlock(pos, false);
-                                    }
+                            if (distance <= radius * radius) {
+                                BlockPos pos = new BlockPos(x, y, z);
+                                BlockState state = owner.level().getBlockState(pos);
+
+                                if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
+                                    owner.level().destroyBlock(pos, false);
                                 }
                             }
                         }
                     }
                 }
-                entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
-                entity.hurtMarked = true;
             }
+            entity.setDeltaMovement(0.0D, CRUSH_POWER * this.getPower(owner) * -1.0D, 0.0D);
+            entity.hurtMarked = true;
+
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.get_crushed", JujutsuKaisen.MOD_ID), owner.getName()));
             }

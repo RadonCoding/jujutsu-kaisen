@@ -68,13 +68,7 @@ public class RCT extends Ability implements Ability.IChannelened {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() != JujutsuType.CURSE && super.isValid(owner);
-    }
-
-    @Override
-    public boolean isUnlocked(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isUnlocked(JJKAbilities.RCT1.get());
+        return cap.isUnlocked(JJKAbilities.RCT1.get()) && cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
 
     @Override

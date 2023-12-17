@@ -277,7 +277,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        return SorcererGrade.GRADE_1.getRequiredExperience();
     }
 
     @Override
