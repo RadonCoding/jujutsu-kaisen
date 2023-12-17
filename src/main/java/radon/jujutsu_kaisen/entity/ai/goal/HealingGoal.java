@@ -19,7 +19,7 @@ public class HealingGoal extends Goal {
     @Override
     public void tick() {
         this.mob.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            Ability ability = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : JJKAbilities.RCT.get();
+            Ability ability = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : JJKAbilities.RCT1.get();
             boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
 
             if (success) {

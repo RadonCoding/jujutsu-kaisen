@@ -33,7 +33,7 @@ public class Red extends Ability {
 
     @Override
     public List<Ability> getRequirements() {
-        return List.of(JJKAbilities.RCT.get());
+        return List.of(JJKAbilities.RCT1.get());
     }
 
     @Override
