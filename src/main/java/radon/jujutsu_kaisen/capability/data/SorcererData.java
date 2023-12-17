@@ -1476,7 +1476,12 @@ public class SorcererData implements ISorcererData {
                     if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
                     ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    taken.add(cap.getTechnique());
+
+                    CursedTechnique current = cap.getTechnique();
+
+                    if (current == null) continue;
+
+                    taken.add(current);
                 }
                 this.technique = HelperMethods.randomEnum(CursedTechnique.class, taken);
             } else {
