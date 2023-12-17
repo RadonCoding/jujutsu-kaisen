@@ -63,7 +63,7 @@ public class WaterWalking extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0;
+        return 0.01F;
     }
 
     @Override
