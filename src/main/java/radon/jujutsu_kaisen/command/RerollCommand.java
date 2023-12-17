@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
 public class RerollCommand {
@@ -41,13 +42,14 @@ public class RerollCommand {
     }
 
     public static int reroll(ServerPlayer player) {
-        player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            removeAdvancement(player, "six_eyes");
-            removeAdvancement(player, "heavenly_restriction");
-            removeAdvancement(player, "vessel");
+        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            cap.generate(player);
-        });
+        removeAdvancement(player, "six_eyes");
+        removeAdvancement(player, "heavenly_restriction");
+        removeAdvancement(player, "vessel");
+
+        cap.generate(player);
+
         return 1;
     }
 }
