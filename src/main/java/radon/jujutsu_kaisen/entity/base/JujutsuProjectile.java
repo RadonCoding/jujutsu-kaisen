@@ -51,6 +51,10 @@ public class JujutsuProjectile extends Projectile {
         return false;
     }
 
+    protected boolean isProjectile() {
+        return true;
+    }
+
     @Override
     public void tick() {
         Entity owner = this.getOwner();
@@ -63,19 +67,21 @@ public class JujutsuProjectile extends Projectile {
             int time = this.getTime();
             this.setTime(++time);
 
-            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+            if (this.isProjectile()) {
+                HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 
-            if (hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit)) {
-                this.onHit(hit);
+                if (hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit)) {
+                    this.onHit(hit);
+                }
+
+                this.checkInsideBlocks();
+
+                Vec3 movement = this.getDeltaMovement();
+                double d0 = this.getX() + movement.x();
+                double d1 = this.getY() + movement.y();
+                double d2 = this.getZ() + movement.z();
+                this.setPos(d0, d1, d2);
             }
-
-            this.checkInsideBlocks();
-
-            Vec3 movement = this.getDeltaMovement();
-            double d0 = this.getX() + movement.x();
-            double d1 = this.getY() + movement.y();
-            double d2 = this.getZ() + movement.z();
-            this.setPos(d0, d1, d2);
         }
     }
 
