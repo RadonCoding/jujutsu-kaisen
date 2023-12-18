@@ -169,14 +169,14 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
             double f = i == 0 ? 0.7D : 1.04D;
 
-            double destX = followX + f * diff.x();
-            double destY = followY + f * diff.y();
-            double destZ = followZ + f * diff.z();
+            double destX = followX + f * diff.x;
+            double destY = followY + f * diff.y;
+            double destZ = followZ + f * diff.z;
 
             this.segments[i].setPos(destX, destY, destZ);
 
-            double distance = Mth.sqrt((float) (diff.x() * diff.x() + diff.z() * diff.z()));
-            this.segments[i].setRot((float) (Math.atan2(diff.z(), diff.x()) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y(), distance) * 180.0D / Math.PI));
+            double distance = Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z));
+            this.segments[i].setRot((float) (Math.atan2(diff.z, diff.x) * 180.0D / Math.PI) + 90.0F, -(float) (Math.atan2(diff.y, distance) * 180.0D / Math.PI));
         }
     }
 

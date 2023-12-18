@@ -43,7 +43,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             case UP, DOWN -> xRot = -xRot;
             case WEST -> xRot -= 180.0F;
         }
-        this.moveTo(center.x(), center.y() - this.getBbHeight() / 2.0F, center.z(), dir.toYRot(), xRot);
+        this.moveTo(center.x, center.y - this.getBbHeight() / 2.0F, center.z, dir.toYRot(), xRot);
     }
 
     @Override
@@ -60,14 +60,14 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (this.getTime() >= DURATION) {
+        if (this.tickCount >= DURATION) {
             this.discard();
-        } else if (this.getTime() >= DELAY) {
+        } else if (this.tickCount >= DELAY) {
             Vec3 look = this.getLookAngle();
 
             for (int i = 0; i < 48; i++) {
                 Vec3 speed = look.add((this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D);
-                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
+                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x, speed.y, speed.z);
             }
 
             if (this.getOwner() instanceof LivingEntity owner) {
@@ -83,9 +83,9 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             }
         }
 
-        if (this.getTime() % 5 == 0) {
+        if (this.tickCount % 5 == 0) {
             Vec3 speed = this.getLookAngle().scale(0.25D);
-            this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x(), speed.y(), speed.z());
+            this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x, speed.y, speed.z);
         }
     }
 

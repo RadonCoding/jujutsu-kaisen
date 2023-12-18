@@ -127,7 +127,7 @@ public class Dash extends Ability {
             double y = r * Math.sin(phi) * Math.sin(theta);
             double z = r * Math.cos(phi);
             Vec3 speed = look.add(x, y, z).reverse();
-            level.sendParticles(ParticleTypes.CLOUD, pos.x(), pos.y(), pos.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
+            level.sendParticles(ParticleTypes.CLOUD, pos.x, pos.y, pos.z, 0, speed.x, speed.y, speed.z, 1.0D);
         }
     }
 

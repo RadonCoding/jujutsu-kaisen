@@ -80,7 +80,7 @@ public class SwapOthers extends Ability {
                 Vec2 targetRot = first.getRotationVector();
 
                 first.moveTo(second.getX(), second.getY(), second.getZ(), ownerRot.y, ownerRot.x);
-                second.moveTo(pos.x(), pos.y(), pos.z(), targetRot.y, targetRot.x);
+                second.moveTo(pos.x, pos.y, pos.z, targetRot.y, targetRot.x);
 
                 TARGETS.remove(owner.getUUID());
             } else {

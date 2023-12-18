@@ -49,7 +49,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Vec3 direction = owner.getLookAngle();
         Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
-        this.moveTo(behind.x(), behind.y(), behind.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(behind.x, behind.y, behind.z, owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATA_RADIUS, radius);
 
@@ -66,7 +66,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean shouldCollapse(float strength) {
         int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius;
+        boolean completed = this.tickCount >= radius;
         return completed && super.shouldCollapse(strength);
     }
 
@@ -132,9 +132,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         BlockPos pos = center.offset(x, y, z);
 
                         // Calculate the delay based on the distance from the center to the front of the wall
-                        double front = Math.sqrt((x + direction.x() * radius) * (x + direction.x() * radius) +
-                                (y + direction.y() * radius) * (y + direction.y() * radius) +
-                                (z + direction.z() * radius) * (z + direction.z() * radius));
+                        double front = Math.sqrt((x + direction.x * radius) * (x + direction.x * radius) +
+                                (y + direction.y * radius) * (y + direction.y * radius) +
+                                (z + direction.z * radius) * (z + direction.z * radius));
                         int delay = (int) Math.round(front) / 2;
 
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -242,7 +242,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Entity entity = pSource.getEntity();
 
         int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius * 2;
+        boolean completed = this.tickCount >= radius * 2;
 
         if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
             return false;
@@ -324,7 +324,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (owner != null) {
             if (!this.level().isClientSide) {
                 int radius = this.getRadius();
-                boolean completed = this.getTime() >= radius * 2;
+                boolean completed = this.tickCount >= radius * 2;
 
                 if (this.checkSureHitEffect()) {
                     this.warn();
@@ -343,11 +343,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                             (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
                         if (!this.isInsideBarrier(pos)) continue;
                         Vec3 center = pos.getCenter();
-                        ((ServerLevel) this.level()).sendParticles(particle, center.x(), center.y(), center.z(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
+                        ((ServerLevel) this.level()).sendParticles(particle, center.x, center.y, center.z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                     }
                 }
 
-                if (this.getTime() == 0) {
+                if (this.tickCount == 0) {
                     this.createBarrier(owner);
                 } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();

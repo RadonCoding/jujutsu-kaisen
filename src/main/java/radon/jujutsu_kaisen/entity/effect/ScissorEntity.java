@@ -52,7 +52,7 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     private PlayState cutPredicate(AnimationState<ScissorEntity> animationState) {
-        if (this.getTime() - CUT_DURATION > 0) {
+        if (this.tickCount - CUT_DURATION > 0) {
             return animationState.setAndContinue(CUT);
         }
         return PlayState.STOP;
@@ -85,11 +85,11 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
 
         Vec3 direction = this.target.position().subtract(this.position()).normalize();
 
-        double pitch = Math.asin(direction.y());
-        double yaw = Math.atan2(direction.x(), direction.z());
+        double pitch = Math.asin(direction.y);
+        double yaw = Math.atan2(direction.x, direction.z);
         this.setRot((float) Math.toDegrees(yaw), (float) Math.toDegrees(pitch));
 
-        if (this.getTime() == DELAY) {
+        if (this.tickCount == DELAY) {
             this.setDeltaMovement(this.target.position().subtract(this.position()).normalize().scale(SPEED));
         }
     }

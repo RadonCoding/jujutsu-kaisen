@@ -96,7 +96,7 @@ public class BoltRenderer {
             Pair<Integer, Integer> bounds = bolt.getFadeFunction().getRenderBounds(renderQuads.size(), lifeScale);
             for (int i = bounds.getLeft(); i < bounds.getRight(); i++) {
                 renderQuads.get(i).getVecs().forEach(v -> buffer.vertex(matrix, (float) v.x, (float) v.y, (float) v.z)
-                        .color(bolt.getColor().x(), bolt.getColor().y(), bolt.getColor().z(), bolt.getColor().w())
+                        .color(bolt.getColor().x, bolt.getColor().y, bolt.getColor().z, bolt.getColor().w())
                         .endVertex());
             }
         }

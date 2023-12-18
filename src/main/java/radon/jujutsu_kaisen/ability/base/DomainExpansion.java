@@ -54,7 +54,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 int radius = Math.round(closed.getRadius(owner));
                 Vec3 direction = owner.getLookAngle();
                 Vec3 behind = owner.position().add(direction.scale(radius - DomainExpansionEntity.OFFSET));
-                BlockPos center = BlockPos.containing(behind.x(), behind.y() - (double) (radius / 2), behind.z())
+                BlockPos center = BlockPos.containing(behind.x, behind.y - (double) (radius / 2), behind.z)
                         .offset(0, radius / 2, 0);
                 BlockPos relative = target.blockPosition().subtract(center);
 

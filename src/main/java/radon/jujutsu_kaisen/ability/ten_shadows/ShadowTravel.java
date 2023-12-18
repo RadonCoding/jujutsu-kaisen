@@ -80,7 +80,7 @@ public class ShadowTravel extends Ability {
             }
 
             Vec3 pos = target.getLocation();
-            owner.teleportTo(pos.x(), pos.y(), pos.z());
+            owner.teleportTo(pos.x, pos.y, pos.z);
 
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.FISHING_BOBBER_SPLASH, SoundSource.MASTER, 1.0F, 1.0F);
 

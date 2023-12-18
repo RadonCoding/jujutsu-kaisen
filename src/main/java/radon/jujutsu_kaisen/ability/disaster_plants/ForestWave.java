@@ -45,7 +45,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth()))
                     .add(look.scale(charge + i));
-            forest.moveTo(spawn.x(), spawn.y(), spawn.z(), yRot, xRot);
+            forest.moveTo(spawn.x, spawn.y, spawn.z, yRot, xRot);
 
             if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
                 continue;

@@ -27,9 +27,9 @@ public abstract class EntityMixin {
 
         Vector3f color = ParticleColors.getCursedEnergyColor(data.type);
 
-        int r = (int) (color.x() * 255.0D);
-        int g = (int) (color.y() * 255.0D);
-        int b = (int) (color.z() * 255.0D);
+        int r = (int) (color.x * 255.0D);
+        int g = (int) (color.y * 255.0D);
+        int b = (int) (color.z * 255.0D);
 
         r = Math.max(0, Math.min(255, r));
         g = Math.max(0, Math.min(255, g));

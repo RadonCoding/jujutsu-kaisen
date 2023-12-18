@@ -53,10 +53,10 @@ public class Explode extends Ability {
 
         for (int i = 1; i < RANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
-            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x, dst.y, dst.z, 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
         }
 
-        owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;

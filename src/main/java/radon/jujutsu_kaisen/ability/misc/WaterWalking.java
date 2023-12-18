@@ -42,9 +42,9 @@ public class WaterWalking extends Ability implements Ability.IToggled {
             Vec3 movement = owner.getDeltaMovement();
 
             if (!owner.level().getBlockState(owner.blockPosition().above()).getFluidState().isEmpty()) {
-                owner.setDeltaMovement(movement.x(), 0.1D, movement.z());
-            } else if (movement.y() < 0.0D) {
-                owner.setDeltaMovement(movement.x(), 0.01D, movement.z());
+                owner.setDeltaMovement(movement.x, 0.1D, movement.z);
+            } else if (movement.y < 0.0D) {
+                owner.setDeltaMovement(movement.x, 0.01D, movement.z);
             }
             owner.setOnGround(true);
         }

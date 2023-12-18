@@ -31,9 +31,9 @@ public class TravelParticle extends TextureSheetParticle {
         this.target = new Vec3(options.target());
 
         Vector3f color = options.color();
-        this.rCol = color.x();
-        this.gCol = color.y();
-        this.bCol = color.z();
+        this.rCol = color.x;
+        this.gCol = color.y;
+        this.bCol = color.z;
 
         this.alpha = options.opacity();
 
@@ -59,7 +59,7 @@ public class TravelParticle extends TextureSheetParticle {
         double distance = remaining / this.lifetime;
 
         Vec3 newPos = pos.add(direction.scale(distance));
-        this.setPos(newPos.x(), newPos.y(), newPos.z());
+        this.setPos(newPos.x, newPos.y, newPos.z);
     }
 
     @Override
@@ -117,12 +117,12 @@ public class TravelParticle extends TextureSheetParticle {
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.target.x());
-            buf.writeFloat(this.target.y());
-            buf.writeFloat(this.target.z());
-            buf.writeFloat(this.color.x());
-            buf.writeFloat(this.color.y());
-            buf.writeFloat(this.color.z());
+            buf.writeFloat(this.target.x);
+            buf.writeFloat(this.target.y);
+            buf.writeFloat(this.target.z);
+            buf.writeFloat(this.color.x);
+            buf.writeFloat(this.color.y);
+            buf.writeFloat(this.color.z);
             buf.writeFloat(this.scalar);
             buf.writeFloat(this.opacity);
             buf.writeBoolean(this.glow);
@@ -132,7 +132,7 @@ public class TravelParticle extends TextureSheetParticle {
         @Override
         public @NotNull String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.target.x(), this.target.y(), this.target.z(), this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.glow, this.lifetime);
+                    this.target.x, this.target.y, this.target.z, this.color.x, this.color.y, this.color.z, this.scalar, this.opacity, this.glow, this.lifetime);
         }
     }
 

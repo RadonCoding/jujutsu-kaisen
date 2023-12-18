@@ -64,9 +64,9 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
 
         for (int i = 0; i < 16; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).x();
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).x;
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight());
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).z();
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - owner.getLookAngle().scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
             level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.FALLING_BLOSSOM_EMOTION, owner.getBbWidth() * 0.5F,
                     0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);

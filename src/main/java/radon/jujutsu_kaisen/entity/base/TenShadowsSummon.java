@@ -171,8 +171,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (!this.isTame()) {
             Vec3 center = this.position();
-            AABB area = new AABB(center.x() - RITUAL_RANGE, center.y() - RITUAL_RANGE, center.z() - RITUAL_RANGE,
-                    center.x() + RITUAL_RANGE, center.y() + RITUAL_RANGE, center.z() + RITUAL_RANGE);
+            AABB area = new AABB(center.x - RITUAL_RANGE, center.y - RITUAL_RANGE, center.z - RITUAL_RANGE,
+                    center.x + RITUAL_RANGE, center.y + RITUAL_RANGE, center.z + RITUAL_RANGE);
 
             for (LivingEntity participant : this.level().getEntitiesOfClass(LivingEntity.class, area)) {
                 if ((participant.getType() == this.getType() && ((TenShadowsSummon) participant).isClone()) || participant == this)

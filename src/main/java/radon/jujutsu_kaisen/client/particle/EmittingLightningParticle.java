@@ -63,12 +63,12 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         Vec3 cam = pRenderInfo.getPosition();
 
         pose.pushPose();
-        pose.translate(d0 - cam.x(), d1 - cam.y(), d2 - cam.z());
+        pose.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         Vec3 start = new Vec3(this.x, this.y, this.z);
-        Vec3 end = new Vec3(offset.x(), offset.y(), offset.z());
+        Vec3 end = new Vec3(offset.x, offset.y, offset.z);
         BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(0.0F, 0.075F, 0.0F, 0.0F,
-                new Vector4f(this.color.x(), this.color.y(), this.color.z(), 0.8F), 1.8F);
+                new Vector4f(this.color.x, this.color.y, this.color.z, 0.8F), 1.8F);
         BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end) * 100)))
                 .size(0.05F)
                 .lifespan(1)
@@ -121,9 +121,9 @@ public class EmittingLightningParticle extends TextureSheetParticle {
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.color.x());
-            buf.writeFloat(this.color.y());
-            buf.writeFloat(this.color.z());
+            buf.writeFloat(this.color.x);
+            buf.writeFloat(this.color.y);
+            buf.writeFloat(this.color.z);
             buf.writeFloat(this.scalar);
             buf.writeInt(this.lifetime);
         }
@@ -131,7 +131,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         @Override
         public @NotNull String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.scalar, this.lifetime);
+                    this.color.x, this.color.y, this.color.z, this.scalar, this.lifetime);
         }
     }
 

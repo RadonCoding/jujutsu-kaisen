@@ -28,9 +28,9 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
     @Override
     public void tick() {
-        if (this.getTime() >= DURATION) {
+        if (this.tickCount >= DURATION) {
             this.discard();
-        } else if (this.getTime() == 0) {
+        } else if (this.tickCount == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
             if (this.level().isClientSide) return;

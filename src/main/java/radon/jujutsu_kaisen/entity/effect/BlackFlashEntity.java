@@ -19,7 +19,6 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.UUID;
 
 public class BlackFlashEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.VECTOR3);
 
     private static final int DURATION = 10;
@@ -66,14 +65,6 @@ public class BlackFlashEntity extends Entity {
         return pDistance < d0 * d0;
     }
 
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
-    }
-
     @Override
     public void tick() {
         LivingEntity victim = this.getVictim();
@@ -83,9 +74,6 @@ public class BlackFlashEntity extends Entity {
         } else {
             super.tick();
 
-            int time = this.getTime();
-            this.setTime(++time);
-
             for (int i = 0; i < 32; i++) {
                 double offsetX = this.random.nextGaussian() * 1.5D;
                 double offsetY = this.random.nextGaussian() * 1.5D;
@@ -93,7 +81,7 @@ public class BlackFlashEntity extends Entity {
                 this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
             }
 
-            if (this.getTime() >= DURATION) {
+            if (this.tickCount >= DURATION) {
                 this.discard();
             } else {
                 if (victim != null) {
@@ -149,12 +137,10 @@ public class BlackFlashEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
-
         Vector3f start = this.entityData.get(DATA_START);
-        pCompound.putFloat("start_x", start.x());
-        pCompound.putFloat("start_y", start.y());
-        pCompound.putFloat("start_z", start.z());
+        pCompound.putFloat("start_x", start.x);
+        pCompound.putFloat("start_y", start.y);
+        pCompound.putFloat("start_z", start.z);
     }
 
     @Override
@@ -165,13 +151,11 @@ public class BlackFlashEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
         this.entityData.set(DATA_START, new Vector3f(pCompound.getFloat("start_x"), pCompound.getFloat("start_y"), pCompound.getFloat("start_z")));
     }
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_START, Vec3.ZERO.toVector3f());
     }
 }

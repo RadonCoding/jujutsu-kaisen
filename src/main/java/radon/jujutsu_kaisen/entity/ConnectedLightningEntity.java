@@ -29,8 +29,8 @@ public class ConnectedLightningEntity extends LightningEntity {
 
     @Override
     protected void calculateEndPos() {
-        this.endPosX = this.end.x();
-        this.endPosY = this.end.y();
-        this.endPosZ = this.end.z();
+        this.endPosX = this.end.x;
+        this.endPosY = this.end.y;
+        this.endPosZ = this.end.z;
     }
 }

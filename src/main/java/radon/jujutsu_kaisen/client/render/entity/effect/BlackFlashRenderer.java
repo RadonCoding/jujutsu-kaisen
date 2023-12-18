@@ -39,7 +39,7 @@ public class BlackFlashRenderer extends EntityRenderer<BlackFlashEntity> {
         Vec3 end = start.add(pEntity.getStart().subtract(start).scale(RANGE))
                 .add(OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D), OFFSET * (HelperMethods.RANDOM.nextDouble() - 0.5D));
         BoltEffect.BoltRenderInfo info = new BoltEffect.BoltRenderInfo(1.0F, 0.1F, 0.1F, 0.1F,
-                new Vector4f(ParticleColors.BLACK_FLASH.x(), ParticleColors.BLACK_FLASH.y(), ParticleColors.BLACK_FLASH.z(), 0.8F), 1.4F);
+                new Vector4f(ParticleColors.BLACK_FLASH.x, ParticleColors.BLACK_FLASH.y, ParticleColors.BLACK_FLASH.z, 0.8F), 1.4F);
         BoltEffect bolt = new BoltEffect(info, start, end, (int) (Math.sqrt(start.distanceTo(end))) * 10)
                 .size(0.2F)
                 .lifespan(1)

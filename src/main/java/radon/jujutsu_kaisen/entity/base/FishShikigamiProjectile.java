@@ -127,8 +127,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         if (target != null) {
             Vec3 delta = target.position().subtract(this.position());
             double d0 = delta.horizontalDistance();
-            this.setYRot((float) (Mth.atan2(delta.x(), delta.z()) * (double) (180.0F / (float) Math.PI)));
-            this.setXRot((float) (Mth.atan2(delta.y(), d0) * (double) (180.0F / (float) Math.PI)));
+            this.setYRot((float) (Mth.atan2(delta.x, delta.z) * (double) (180.0F / (float) Math.PI)));
+            this.setXRot((float) (Mth.atan2(delta.y, d0) * (double) (180.0F / (float) Math.PI)));
             this.yRotO = this.getYRot();
             this.xRotO = this.getXRot();
         }
@@ -148,7 +148,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                     .add(look)
                     .add(look.yRot(-90.0F).scale(xOffset))
                     .add(new Vec3(0.0F, yOffset, 0.0F));
-            this.setPos(spawn.x(), spawn.y(), spawn.z());
+            this.setPos(spawn.x, spawn.y, spawn.z);
         }
     }
 
@@ -183,16 +183,16 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
+            if (this.tickCount < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.getTime() % 5 == 0) {
+                    if (this.tickCount % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     this.applyOffset();
                 }
-            } else if (this.getTime() >= DELAY) {
+            } else if (this.tickCount >= DELAY) {
                 this.applyRotation();
 
                 if (!this.level().isClientSide) {

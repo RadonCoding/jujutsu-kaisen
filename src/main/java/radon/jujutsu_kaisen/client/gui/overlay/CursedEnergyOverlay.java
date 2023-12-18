@@ -30,7 +30,7 @@ public class CursedEnergyOverlay {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
                     ParticleColors.CURSED_ENERGY_SORCERER : ParticleColors.CURSED_ENERGY_CURSE;
-            RenderSystem.setShaderColor(color.x(), color.y(), color.z(), 1.0F);
+            RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
             graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
 

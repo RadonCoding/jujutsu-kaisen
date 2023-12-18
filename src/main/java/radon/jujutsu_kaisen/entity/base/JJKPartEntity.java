@@ -108,7 +108,7 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
 
     public void readData(UpdateMultipartS2CPacket.PartDataHolder data) {
         Vec3 vec = new Vec3(data.x(), data.y(), data.z());
-        this.setPositionAndRotationDirect(vec.x(), vec.y(), vec.z(), data.yRot(), data.xRot(), 3);
+        this.setPositionAndRotationDirect(vec.x, vec.y, vec.z, data.yRot(), data.xRot(), 3);
         final float w = data.width();
         final float h = data.height();
         this.setSize(data.fixed() ? EntityDimensions.fixed(w, h) : EntityDimensions.scalable(w, h));

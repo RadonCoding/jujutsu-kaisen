@@ -31,8 +31,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(SummonEntity.class, EntityDataSerializers.INT);
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Nullable
@@ -105,7 +103,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
     @Override
@@ -115,22 +112,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_TIME, 0);
-    }
-
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -141,9 +122,6 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
             this.discard();
         } else {
             super.tick();
-
-            int time = this.getTime();
-            this.setTime(++time);
         }
     }
 

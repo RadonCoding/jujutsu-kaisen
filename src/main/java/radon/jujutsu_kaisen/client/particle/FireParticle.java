@@ -64,7 +64,7 @@ public class FireParticle extends TextureSheetParticle {
         Vec3 cam = pRenderInfo.getPosition();
 
         pose.pushPose();
-        pose.translate(d0 - cam.x(), d1 - cam.y(), d2 - cam.z());
+        pose.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         TextureAtlasSprite fire0 = ModelBakery.FIRE_0.sprite();
         TextureAtlasSprite fire1 = ModelBakery.FIRE_1.sprite();
@@ -108,7 +108,7 @@ public class FireParticle extends TextureSheetParticle {
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.CUSTOM;
+        return JJKParticleRenderTypes.CUSTOM;
     }
 
     public record FireParticleOptions( float scalar, boolean glow, int lifetime) implements ParticleOptions {

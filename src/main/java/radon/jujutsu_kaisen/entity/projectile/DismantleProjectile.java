@@ -54,7 +54,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(owner.getLookAngle());
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATE_ROLL, roll);
     }
@@ -62,7 +62,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATE_ROLL, roll);
         this.entityData.set(DATA_LENGTH, length);
@@ -71,7 +71,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant, boolean destroy) {
         this(owner, power, roll, pos, length);
 
-        this.moveTo(pos.x(), pos.y(), pos.z(), (this.random.nextFloat() - 0.5F) * 360.0F, 0.0F);
+        this.moveTo(pos.x, pos.y, pos.z, (this.random.nextFloat() - 0.5F) * 360.0F, 0.0F);
 
         this.instant = instant;
         this.destroy = destroy;
@@ -142,7 +142,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public List<HitResult> getHitResults() {
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
         Vec3 movement = this.getDeltaMovement();
-        Direction direction = Direction.getNearest(movement.x(), movement.y(), movement.z()).getOpposite();
+        Direction direction = Direction.getNearest(movement.x, movement.y, movement.z).getOpposite();
 
         Direction perpendicular;
 
@@ -180,7 +180,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
                 this.level().destroyBlock(pos, false);
             }
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z(),
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
                     0, 1.0D, 0.0D, 0.0D, 1.0D);
         });
         return hits;
@@ -198,7 +198,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || this.getTime() >= DURATION) {
+        if (this.instant || this.tickCount >= DURATION) {
             this.discard();
         }
     }

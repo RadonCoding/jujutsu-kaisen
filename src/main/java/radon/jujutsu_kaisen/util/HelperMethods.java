@@ -355,20 +355,20 @@ public class HelperMethods {
     }
 
     public static float getYaw(Vec3 vec) {
-        return (float) (-Mth.atan2(vec.x(), vec.z()) * (180.0D / Math.PI));
+        return (float) (-Mth.atan2(vec.x, vec.z) * (180.0D / Math.PI));
     }
 
     public static float getXRotD(Entity src, Vec3 target) {
-        double d0 = target.x() - src.getX();
-        double d1 = target.y() - src.getEyeY();
-        double d2 = target.z() - src.getZ();
+        double d0 = target.x - src.getX();
+        double d1 = target.y - src.getEyeY();
+        double d2 = target.z - src.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         return (float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)));
     }
 
     public static float getYRotD(Entity src, Vec3 target) {
-        double d0 = target.x() - src.getX();
-        double d1 = target.z() - src.getZ();
+        double d0 = target.x - src.getX();
+        double d1 = target.z - src.getZ();
         return (float) (Mth.atan2(d1, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F;
     }
 

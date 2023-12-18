@@ -40,7 +40,7 @@ public class LavaRockRenderer extends EntityRenderer<LavaRockProjectile> {
             if (state != level.getBlockState(pEntity.blockPosition()) && state.getRenderShape() != RenderShape.INVISIBLE) {
                 pPoseStack.pushPose();
                 pPoseStack.translate(0.0D, 0.5D, 0.0D);
-                float time = (pEntity.getTime() + pPartialTick) * 30.0F;
+                float time = (pEntity.tickCount + pPartialTick) * 30.0F;
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(time));
                 pPoseStack.mulPose(Axis.ZP.rotationDegrees(time));
 

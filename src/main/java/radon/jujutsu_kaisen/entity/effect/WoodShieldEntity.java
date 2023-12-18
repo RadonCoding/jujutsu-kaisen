@@ -93,7 +93,7 @@ public class WoodShieldEntity extends Mob {
             super.tick();
 
             if (owner != null && this.pos != null) {
-                owner.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
+                owner.teleportTo(this.pos.x, this.pos.y, this.pos.z);
             }
         }
     }
@@ -151,9 +151,9 @@ public class WoodShieldEntity extends Mob {
         super.addAdditionalSaveData(pCompound);
 
         if (this.pos != null) {
-            pCompound.putDouble("pos_x", this.pos.x());
-            pCompound.putDouble("pos_y", this.pos.y());
-            pCompound.putDouble("pos_z", this.pos.z());
+            pCompound.putDouble("pos_x", this.pos.x);
+            pCompound.putDouble("pos_y", this.pos.y);
+            pCompound.putDouble("pos_z", this.pos.z);
         }
 
         if (this.ownerUUID != null) {

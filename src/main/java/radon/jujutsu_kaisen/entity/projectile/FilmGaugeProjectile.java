@@ -54,7 +54,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         Vec3 look = center.getLookAngle();
         Vec3 spawn = new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), center.getYRot(), center.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, center.getYRot(), center.getXRot());
 
         this.entityData.set(DATA_START, this.position().toVector3f());
     }
@@ -94,9 +94,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         super.addAdditionalSaveData(pCompound);
 
         Vector3f start = this.entityData.get(DATA_START);
-        pCompound.putFloat("start_x", start.x());
-        pCompound.putFloat("start_y", start.y());
-        pCompound.putFloat("start_z", start.z());
+        pCompound.putFloat("start_x", start.x);
+        pCompound.putFloat("start_y", start.y);
+        pCompound.putFloat("start_z", start.z);
 
         if (this.targetUUID != null) {
             pCompound.putUUID("target", this.targetUUID);

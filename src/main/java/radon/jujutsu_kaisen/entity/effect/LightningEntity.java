@@ -88,7 +88,7 @@ public class LightningEntity extends JujutsuProjectile {
             this.setPitch((float) (-pitch * Math.PI / 180.0D));
 
             Vec3 spawn = this.calculateStartPos();
-            this.setPos(spawn.x(), spawn.y(), spawn.z());
+            this.setPos(spawn.x, spawn.y, spawn.z);
         }
         this.calculateEndPos();
         this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
@@ -125,9 +125,9 @@ public class LightningEntity extends JujutsuProjectile {
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                        double centerX = bounds.getCenter().x();
-                        double centerY = bounds.getCenter().y();
-                        double centerZ = bounds.getCenter().z();
+                        double centerX = bounds.getCenter().x;
+                        double centerY = bounds.getCenter().y;
+                        double centerZ = bounds.getCenter().z;
 
                         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -199,9 +199,9 @@ public class LightningEntity extends JujutsuProjectile {
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
-            this.collidePosX = pos.x();
-            this.collidePosY = pos.y();
-            this.collidePosZ = pos.z();
+            this.collidePosX = pos.x;
+            this.collidePosY = pos.y;
+            this.collidePosZ = pos.z;
             this.side = result.getDirection();
         } else {
             this.collidePosX = this.endPosX;

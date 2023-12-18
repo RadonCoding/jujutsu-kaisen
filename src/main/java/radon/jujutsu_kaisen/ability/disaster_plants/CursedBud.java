@@ -48,7 +48,7 @@ public class CursedBud extends Ability {
 
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (bud.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        bud.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        bud.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
         owner.level().addFreshEntity(bud);
     }

@@ -47,7 +47,7 @@ public class SkyStrikeEntity extends JujutsuProjectile {
         this.setOwner(owner);
         this.setPower(power);
 
-        this.setPos(pos.x() + 0.5F, pos.y() + 1.0625F, pos.z() + 0.5F);
+        this.setPos(pos.x + 0.5F, pos.y + 1.0625F, pos.z + 0.5F);
     }
 
     public float getStrikeDrawTime(float partialTicks) {

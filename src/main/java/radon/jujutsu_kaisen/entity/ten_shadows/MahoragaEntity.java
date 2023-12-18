@@ -64,7 +64,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     public boolean isInvulnerable() {
-        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerable();
+        return (!this.isTame() && this.tickCount <= RITUAL_DURATION) || super.isInvulnerable();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
@@ -204,7 +204,7 @@ public class MahoragaEntity extends TenShadowsSummon {
                     target.hurtMarked = true;
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(this.getLookAngle());
-                    this.level().explode(this, explosionPos.x(), explosionPos.y(), explosionPos.z(), SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                    this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }
         }
@@ -212,7 +212,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level())) {
-            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2)
+            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.tickCount < closed.getRadius() * 2)
                 continue;
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
         }
@@ -284,7 +284,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         super.tick();
 
         if (!this.isTame()) {
-            this.setNoAi(this.getTime() <= RITUAL_DURATION);
+            this.setNoAi(this.tickCount <= RITUAL_DURATION);
         }
 
         if (!this.level().isClientSide) {

@@ -73,8 +73,8 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     private static float getYaw(Vec3 from, Vec3 to) {
         Vec3 delta = to.subtract(from);
-        double dx = delta.x();
-        double dz = delta.z();
+        double dx = delta.x;
+        double dz = delta.z;
         return -(float) Math.toDegrees(Math.atan2(dx, dz));
     }
 
@@ -112,7 +112,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 float middleYaw = getYaw(middle, next);
                 cap.addFrame(middle, middleYaw);
 
-                owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), true, middle.x(), middle.y(), middle.z(),
+                owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), true, middle.x, middle.y, middle.z,
                         0.0D, 0.0D, 0.0D);
             }
         } else {
@@ -120,7 +120,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         }
         cap.addFrame(next, nextYaw);
 
-        owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), true, next.x(), next.y(), next.z(),
+        owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), true, next.x, next.y, next.z,
                 0.0D, 0.0D, 0.0D);
     }
 
@@ -197,7 +197,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                         owner.doHurtTarget(entity);
                     }
                 }
-                owner.moveTo(frame.x(), frame.y(), frame.z(), yaw, 0.0F);
+                owner.moveTo(frame.x, frame.y, frame.z, yaw, 0.0F);
                 cap.removeFrame(entry);
                 previous.set(frame);
             }, delay++);
@@ -227,8 +227,8 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             if (speed <= 0.0F) return;
 
             Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
-            ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            victim.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 look = attacker.getLookAngle();
 

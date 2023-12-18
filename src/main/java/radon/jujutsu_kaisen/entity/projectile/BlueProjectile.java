@@ -53,7 +53,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
     @Override
@@ -88,9 +88,9 @@ public class BlueProjectile extends JujutsuProjectile {
 
     private void breakBlocks() {
         AABB bounds = this.getBoundingBox();
-        double centerX = bounds.getCenter().x();
-        double centerY = bounds.getCenter().y();
-        double centerZ = bounds.getCenter().z();
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
 
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -131,9 +131,9 @@ public class BlueProjectile extends JujutsuProjectile {
         float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * 2.0F;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
-        double centerX = bounds.getCenter().x();
-        double centerY = bounds.getCenter().y();
-        double centerZ = bounds.getCenter().z();
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
 
         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -165,7 +165,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.getTime() < DELAY ? 0.25F : 1.0F);
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.tickCount < DELAY ? 0.25F : 1.0F);
         int count = (int) (radius * Math.PI * 2) * 2;
 
         for (int i = 0; i < count; i++) {
@@ -176,9 +176,9 @@ public class BlueProjectile extends JujutsuProjectile {
             double yOffset = radius * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.1F);
+            double x = center.x + xOffset * (radius * 0.1F);
+            double y = center.y + yOffset * (radius * 0.1F);
+            double z = center.z + zOffset * (radius * 0.1F);
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE, radius * 0.05F, 0.2F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
@@ -192,9 +192,9 @@ public class BlueProjectile extends JujutsuProjectile {
             double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * 0.75F * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.5F * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
+            double x = center.x + xOffset * 0.1F;
+            double y = center.y + yOffset * 0.1F;
+            double z = center.z + zOffset * 0.1F;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.025F, 0.2F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
@@ -223,12 +223,12 @@ public class BlueProjectile extends JujutsuProjectile {
 
     private void spin() {
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() % 5 == 0) {
+            if (this.tickCount % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
             Vec3 pos = center.add(owner.getLookAngle().scale(OFFSET));
-            this.setPos(pos.x(), pos.y() - (this.getBbHeight() / 2.0F), pos.z());
+            this.setPos(pos.x, pos.y - (this.getBbHeight() / 2.0F), pos.z);
         }
     }
 
@@ -239,30 +239,30 @@ public class BlueProjectile extends JujutsuProjectile {
         this.refreshDimensions();
 
         if (this.entityData.get(DATA_MOTION)) {
-            if (this.getTime() >= DELAY) {
+            if (this.tickCount >= DELAY) {
                 this.spin();
             }
         }
 
-        if (this.getTime() >= DURATION) {
+        if (this.tickCount >= DURATION) {
             this.discard();
         } else {
             this.spawnParticles();
 
             if (this.getOwner() instanceof LivingEntity owner) {
-                if (this.getTime() < DELAY) {
+                if (this.tickCount < DELAY) {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
-                        if (this.getTime() % 5 == 0) {
+                        if (this.tickCount % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = owner.getLookAngle();
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
-                    if (this.getTime() == DELAY) {
+                    if (this.tickCount == DELAY) {
                         Vec3 start = owner.getEyePosition();
                         Vec3 look = owner.getLookAngle();
                         Vec3 end = start.add(look.scale(RANGE));

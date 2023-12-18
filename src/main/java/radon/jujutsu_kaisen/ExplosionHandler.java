@@ -74,20 +74,20 @@ public class ExplosionHandler {
             if (event.level.dimension() != explosion.dimension) return;
 
             float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-            int minX = Mth.floor(explosion.position.x() - radius - 1.0F);
-            int maxX = Mth.floor(explosion.position.x() + radius + 1.0F);
-            int minY = Mth.floor(explosion.position.y() - radius - 1.0F);
-            int maxY = Mth.floor(explosion.position.y() + radius + 1.0F);
-            int minZ = Mth.floor(explosion.position.z() - radius - 1.0F);
-            int maxZ = Mth.floor(explosion.position.z() + radius + 1.0F);
+            int minX = Mth.floor(explosion.position.x - radius - 1.0F);
+            int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
+            int minY = Mth.floor(explosion.position.y - radius - 1.0F);
+            int maxY = Mth.floor(explosion.position.y + radius + 1.0F);
+            int minZ = Mth.floor(explosion.position.z - radius - 1.0F);
+            int maxZ = Mth.floor(explosion.position.z + radius + 1.0F);
 
             if (explosion.age == 0) {
-                event.level.playSound(null, explosion.position.x(), explosion.position.y(), explosion.position.z(),
-                        SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 10.0F, 1.0F);
-                AABB bounds = new AABB(explosion.position.x() - (radius * 2.0F), explosion.position.y() - (radius * 2.0F),
-                        explosion.position.z() - (radius * 2.0F),
-                        explosion.position.x() + (radius * 2.0F), explosion.position.y() + (radius * 2.0F),
-                        explosion.position.z() + (radius * 2.0F));
+                event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, radius, 1.0F);
+
+                AABB bounds = new AABB(explosion.position.x - (radius * 2.0F), explosion.position.y - (radius * 2.0F),
+                        explosion.position.z - (radius * 2.0F),
+                        explosion.position.x + (radius * 2.0F), explosion.position.y + (radius * 2.0F),
+                        explosion.position.z + (radius * 2.0F));
 
                 for (ServerPlayer player : event.level.getEntitiesOfClass(ServerPlayer.class, bounds)) {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
@@ -102,9 +102,9 @@ public class ExplosionHandler {
                     double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / radius;
 
                     if (d12 <= 1.0D) {
-                        double d5 = entity.getX() - explosion.position.x();
-                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y();
-                        double d9 = entity.getZ() - explosion.position.z();
+                        double d5 = entity.getX() - explosion.position.x;
+                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y;
+                        double d9 = entity.getZ() - explosion.position.z;
                         double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
 
                         if (d13 != 0.0D) {
@@ -138,9 +138,9 @@ public class ExplosionHandler {
                 for (int x = minX; x <= maxX; x++) {
                     for (int y = minY; y <= maxY; y++) {
                         for (int z = minZ; z <= maxZ; z++) {
-                            double distance = (x - explosion.position.x()) * (x - explosion.position.x()) +
-                                    (y - explosion.position.y()) * (y - explosion.position.y()) +
-                                    (z - explosion.position.z()) * (z - explosion.position.z());
+                            double distance = (x - explosion.position.x) * (x - explosion.position.x) +
+                                    (y - explosion.position.y) * (y - explosion.position.y) +
+                                    (z - explosion.position.z) * (z - explosion.position.z);
 
                             double adjusted = radius * ((double) explosion.age / explosion.duration);
 
@@ -174,8 +174,8 @@ public class ExplosionHandler {
                                         block.onBlockExploded(event.level, pos, current);
 
                                         if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                                            ((ServerLevel) event.level).sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0,
-                                                    0.0D, 0.0D, 0.0D, 0.0D);
+                                            HelperMethods.sendParticles((ServerLevel) event.level, ParticleTypes.EXPLOSION, true, x, y, z,
+                                                    0.0D, 0.0D, 0.0D);
                                         }
                                     }
                                 }
