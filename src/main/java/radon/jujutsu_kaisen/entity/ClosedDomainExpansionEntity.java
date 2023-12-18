@@ -347,7 +347,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     }
                 }
 
-                if (this.tickCount == 0) {
+                if (this.tickCount - 1 == 0) {
                     this.createBarrier(owner);
                 } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();

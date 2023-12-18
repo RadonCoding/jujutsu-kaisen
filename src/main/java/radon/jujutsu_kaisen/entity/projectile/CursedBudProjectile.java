@@ -103,13 +103,11 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             } else if (this.tickCount >= DURATION) {
                 this.discard();
             } else if (this.plant) {
-                if (this.tickCount == 0) {
+                if (this.tickCount - 1 == 0) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 }
-            } else if (this.tickCount >= DELAY) {
-                if (this.tickCount == DELAY) {
-                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
-                }
+            } else if (this.tickCount == DELAY) {
+                this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
             }
         }
         super.tick();

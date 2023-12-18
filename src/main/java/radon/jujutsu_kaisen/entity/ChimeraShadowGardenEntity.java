@@ -136,7 +136,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
         if (owner != null) {
             if (!this.level().isClientSide) {
-                if (this.tickCount == 0) {
+                if (this.tickCount - 1 == 0) {
                     this.createBarrier(owner);
                 }
             }
