@@ -289,7 +289,7 @@ public class JJKEventHandler {
                     }
                 } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                    attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x(), pos.y(), pos.z(), 1.0F, false, Level.ExplosionInteraction.NONE);
+                    attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
                 } else if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                     victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         cap.clearToggled();

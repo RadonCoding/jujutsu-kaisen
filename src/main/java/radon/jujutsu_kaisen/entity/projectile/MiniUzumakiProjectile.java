@@ -86,7 +86,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -141,7 +141,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() % 5 == 0) {
+            if (this.tickCount % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
@@ -161,7 +161,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 }
             }
 
-            if (this.getTime() > DELAY) {
+            if (this.tickCount > DELAY) {
                 this.calculateEndPos();
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
@@ -180,9 +180,9 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                        double centerX = bounds.getCenter().x();
-                        double centerY = bounds.getCenter().y();
-                        double centerZ = bounds.getCenter().z();
+                        double centerX = bounds.getCenter().x;
+                        double centerY = bounds.getCenter().y;
+                        double centerZ = bounds.getCenter().z;
 
                         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -203,7 +203,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                     }
                 }
 
-                if (this.getTime() - DELAY >= DURATION) {
+                if (this.tickCount - DELAY >= DURATION) {
                     this.on = false;
                 }
             }
@@ -251,9 +251,9 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
-            this.collidePosX = pos.x();
-            this.collidePosY = pos.y();
-            this.collidePosZ = pos.z();
+            this.collidePosX = pos.x;
+            this.collidePosY = pos.y;
+            this.collidePosZ = pos.z;
             this.side = result.getDirection();
         } else {
             this.collidePosX = this.endPosX;
@@ -293,7 +293,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
             Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-            this.setPos(spawn.x(), spawn.y(), spawn.z());
+            this.setPos(spawn.x, spawn.y, spawn.z);
         }
     }
 

@@ -69,10 +69,10 @@ public class AvoidDomainsGoal extends Goal {
 
             if (pos == null) {
                 return false;
-            } else if (this.toAvoid.distanceToSqr(pos.x(), pos.y(), pos.z()) < this.toAvoid.distanceToSqr(this.mob)) {
+            } else if (this.toAvoid.distanceToSqr(pos.x, pos.y, pos.z) < this.toAvoid.distanceToSqr(this.mob)) {
                 return false;
             } else {
-                this.path = this.pathNav.createPath(pos.x(), pos.y(), pos.z(), 0);
+                this.path = this.pathNav.createPath(pos.x, pos.y, pos.z, 0);
                 return this.path != null;
             }
         }

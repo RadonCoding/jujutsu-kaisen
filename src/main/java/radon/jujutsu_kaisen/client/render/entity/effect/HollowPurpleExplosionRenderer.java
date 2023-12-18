@@ -22,7 +22,7 @@ public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleEx
 
     @Override
     public void render(HollowPurpleExplosion pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        float f0 = ((float) pEntity.getTime() + pPartialTick) / HollowPurpleExplosion.DURATION;
+        float f0 = ((float) pEntity.tickCount + pPartialTick) / HollowPurpleExplosion.DURATION;
         float f1 = Math.min(f0 > 0.8F ? (f0 - 0.8F) / 0.2F : 0.0F, 1.0F);
         RandomSource random = RandomSource.create(432L);
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.lightning());

@@ -42,7 +42,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(owner.getLookAngle());
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
     public void setTarget(@Nullable LivingEntity target) {

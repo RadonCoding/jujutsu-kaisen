@@ -41,7 +41,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getXRot(), owner.getYRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
 
         this.entityData.set(DATA_WIDTH, width);
         this.entityData.set(DATA_HEIGHT, height);

@@ -131,7 +131,7 @@ public class SkyHandler {
         FogRenderer.levelFogColor();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
         final float distance = mc.gameRenderer.getRenderDistance();
-        final boolean fog = overworld.effects().isFoggyAt(Mth.floor(pos.x()), Mth.floor(pos.z())) || mc.gui.getBossOverlay().shouldCreateWorldFog();
+        final boolean fog = overworld.effects().isFoggyAt(Mth.floor(pos.x), Mth.floor(pos.z)) || mc.gui.getBossOverlay().shouldCreateWorldFog();
         FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, distance, fog, partialTick);
         RenderSystem.setShader(GameRenderer::getPositionShader);
 
@@ -139,9 +139,9 @@ public class SkyHandler {
         Vec3 vec31 = CubicSampler.gaussianSampleVec3(vec3, (p_194161_, p_194162_, p_194163_) -> Vec3.fromRGB24(7907327));
         float f1 = Mth.cos(overworld.getTimeOfDay(partialTick) * ((float) Math.PI * 2.0F)) * 2.0F + 0.5F;
         f1 = Mth.clamp(f1, 0.0F, 1.0F);
-        float f2 = (float) vec31.x() * f1;
-        float f3 = (float) vec31.y() * f1;
-        float f4 = (float) vec31.z() * f1;
+        float f2 = (float) vec31.x * f1;
+        float f3 = (float) vec31.y * f1;
+        float f4 = (float) vec31.z * f1;
 
         FogRenderer.levelFogColor();
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
@@ -214,7 +214,7 @@ public class SkyHandler {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             ClientLevel previous = ((ILevelRendererAccessor) mc.levelRenderer).getLevelAccessor();
             ((ILevelRendererAccessor) mc.levelRenderer).setLevelAccessor(overworld);
-            mc.levelRenderer.renderClouds(poseStack, projection, partialTick, pos.x(), pos.y(), pos.z());
+            mc.levelRenderer.renderClouds(poseStack, projection, partialTick, pos.x, pos.y, pos.z);
             ((ILevelRendererAccessor) mc.levelRenderer).setLevelAccessor(previous);
         }
 

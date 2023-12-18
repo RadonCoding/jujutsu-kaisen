@@ -1,34 +1,22 @@
 package radon.jujutsu_kaisen.entity.effect;
 
-import com.google.common.base.Objects;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
@@ -36,8 +24,9 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.mixin.common.IEntityAccessor;
 
 import java.util.List;
 
@@ -45,11 +34,11 @@ public class MeteorEntity extends JujutsuProjectile {
     public static final int SIZE = 5;
     public static final int HEIGHT = 30;
     private static final int MAX_SIZE = 20;
+    public static final int DELAY = 3 * 20;
+    private static final double SPEED = 3.0D;
+    private static final int DURATION = 5 * 20;
 
     private int explosionTime;
-
-    private float xxa;
-    private float zza;
 
     private int lerpSteps;
     private double lerpX;
@@ -65,8 +54,12 @@ public class MeteorEntity extends JujutsuProjectile {
     public MeteorEntity(LivingEntity owner, float power) {
         super(JJKEntities.METEOR.get(), owner.level(), owner, power);
 
-        this.setPos(owner.position().add(0.0D, HEIGHT, 0.0D));
-        owner.startRiding(this);
+        owner.setPos(owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D));
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
     }
 
     @Override
@@ -147,26 +140,16 @@ public class MeteorEntity extends JujutsuProjectile {
         this.lerpSteps = pPosRotationIncrements;
     }
 
-    @Nullable
-    @Override
-    public LivingEntity getControllingPassenger() {
-        Entity entity = this.getFirstPassenger();
-
-        if (entity instanceof LivingEntity living) {
-            return living;
-        }
-        return null;
-    }
-
-    public void travel(Vec3 pTravelVector) {
+    public void travel() {
         if (this.isControlledByLocalInstance()) {
             double d0 = 0.08D;
 
             BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement();
             float f2 = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getFriction(level(), this.getBlockPosBelowThatAffectsMyMovement(), this);
             float f3 = this.onGround() ? f2 * 0.91F : 0.91F;
-            Vec3 vec35 = this.handleRelativeFrictionAndCalculateMovement(pTravelVector, f2);
-            double d2 = vec35.y();
+            Vec3 vec35 = this.handleRelativeFrictionAndCalculateMovement(Vec3.ZERO, f2);
+
+            double d2 = vec35.y;
 
             if (this.level().isClientSide && !this.level().hasChunkAt(pos)) {
                 if (this.getY() > (double) this.level().getMinBuildHeight()) {
@@ -177,11 +160,16 @@ public class MeteorEntity extends JujutsuProjectile {
             } else if (!this.isNoGravity()) {
                 d2 -= d0;
             }
-            this.setDeltaMovement(vec35.x() * (double) f3, d2 * (double) 0.98F, vec35.z() * (double) f3);
+            this.setDeltaMovement(vec35.x * (double) f3, d2 * (double) 0.98F, vec35.z * (double) f3);
         }
     }
 
     public void aiStep() {
+        if (this.isControlledByLocalInstance()) {
+            this.lerpSteps = 0;
+            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+        }
+
         if (this.lerpSteps > 0) {
             double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
             double d2 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
@@ -197,30 +185,21 @@ public class MeteorEntity extends JujutsuProjectile {
         }
 
         Vec3 vec31 = this.getDeltaMovement();
-        double d1 = vec31.x();
-        double d3 = vec31.y();
-        double d5 = vec31.z();
+        double d1 = vec31.x;
+        double d3 = vec31.y;
+        double d5 = vec31.z;
 
-        if (Math.abs(vec31.x()) < 0.003D) {
+        if (Math.abs(vec31.x) < 0.003D) {
             d1 = 0.0D;
         }
-
-        if (Math.abs(vec31.y()) < 0.003D) {
+        if (Math.abs(vec31.y) < 0.003D) {
             d3 = 0.0D;
         }
-
-        if (Math.abs(vec31.z()) < 0.003D) {
+        if (Math.abs(vec31.z) < 0.003D) {
             d5 = 0.0D;
         }
-
         this.setDeltaMovement(d1, d3, d5);
-
-        this.xxa *= 0.98F;
-        this.zza *= 0.98F;
-
-        Vec3 vec3 = new Vec3(this.xxa, 0.0D, this.zza);
-        this.travel(vec3);
-
+        this.travel();
         this.pushEntities();
     }
 
@@ -229,7 +208,7 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     public int getSize() {
-        return getSize(this.getPower());
+        return Math.round(getSize(this.getPower()) * ((float) Math.min(DELAY, this.tickCount) / DELAY));
     }
 
     @Override
@@ -243,26 +222,120 @@ public class MeteorEntity extends JujutsuProjectile {
         return false;
     }
 
+    private void spawnParticles() {
+        Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
+
+        float radius = this.getSize() * 1.25F;
+        int count = (int) (radius * Math.PI * 2);
+
+        for (int i = 0; i < count; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * Math.cos(phi);
+
+            double x = center.x + xOffset;
+            double y = center.y + yOffset;
+            double z = center.z + zOffset;
+
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.5F, 0.1F, true, 5),
+                    true, x, y, z, 0.0D, 0.0D, 0.0D);
+        }
+
+        for (int i = 0; i < count; i++) {
+            double theta = this.random.nextDouble() * Math.PI * 2.0D;
+            double phi = this.random.nextDouble() * Math.PI;
+
+            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * 0.75F * Math.cos(phi);
+
+            double x = center.x + xOffset * 0.1F;
+            double y = center.y + yOffset * 0.1F;
+            double z = center.z + zOffset * 0.1F;
+
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_YELLOW, radius * 0.25F, 0.1F, true, 5),
+                    true, x, y, z, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
+    private void breakBlocks() {
+        float radius = this.getSize();
+        AABB bounds = AABB.ofSize(this.position(), radius * 2, radius * 2, radius * 2);
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
+
+        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = this.level().getBlockState(pos);
+
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+
+                    if (distance <= radius) {
+                        if (!state.getFluidState().isEmpty() || state.getBlock().defaultDestroyTime() == Block.INDESTRUCTIBLE) continue;
+
+                        this.level().destroyBlock(pos, false);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void tick() {
         super.tick();
 
         this.refreshDimensions();
 
-        if (!this.isRemoved()) {
-            this.aiStep();
+        if (this.explosionTime == 0 && this.tickCount - DELAY >= DURATION) {
+            this.discard();
+            return;
         }
 
-        if (!this.level().isClientSide) {
-            if (this.getOwner() instanceof LivingEntity owner) {
-                int duration = (this.getSize() / 2) * 20;
+        this.spawnParticles();
 
-                if (this.onGround()) {
-                    if (this.explosionTime == 0) {
-                        ExplosionHandler.spawn(this.level().dimension(), this.position(), this.getSize() * 1.5F, duration, this.getPower(), owner,
-                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
+        if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.explosionTime == 0 && this.tickCount > DELAY) {
+                this.move(MoverType.SELF, this.getDeltaMovement());
+            } else {
+                this.aiStep();
+            }
+
+            if (this.tickCount < DELAY) {
+                Vec3 movement = owner.getDeltaMovement();
+
+                if (movement.y < 0.0D) {
+                    owner.setDeltaMovement(movement.x, 0.0D, movement.z);
+                    owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
+                }
+
+                if (!this.level().isClientSide) {
+                    Vec3 look = owner.getLookAngle();
+                    this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getBbHeight() * 2, this.getBbWidth() * 2)));
+                }
+            } else if (!this.level().isClientSide) {
+                if (this.tickCount == DELAY) {
+                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
+                }
+
+                int duration = this.getSize() * 5;
+
+                if (this.explosionTime == 0) {
+                    if (this.horizontalCollision || this.verticalCollision) {
                         this.explosionTime++;
+
+                        AABB bounds = this.getBoundingBox().expandTowards(this.getDeltaMovement());
+                        Vec3 collision = this.position().add(Entity.collideBoundingBox(this, this.getDeltaMovement(), bounds, this.level(),
+                                this.level().getEntityCollisions(this, bounds)));
+                        ExplosionHandler.spawn(this.level().dimension(), collision, this.getSize(), duration, this.getPower(), owner,
+                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
                     }
+                    this.breakBlocks();
                 }
 
                 if (this.explosionTime > 0) {

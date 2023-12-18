@@ -22,8 +22,6 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.UUID;
 
 public class ProjectionFrameEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
-
     private static final int DURATION = 3 * 20;
 
     @Nullable
@@ -43,6 +41,11 @@ public class ProjectionFrameEntity extends Entity {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+
     }
 
     public ProjectionFrameEntity(LivingEntity owner, LivingEntity target, float power) {
@@ -73,19 +76,8 @@ public class ProjectionFrameEntity extends Entity {
         return pDistance < d0 * d0;
     }
 
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
-    }
-
     @Override
     public void tick() {
-        int time = this.getTime();
-        this.setTime(++time);
-
         LivingEntity victim = this.getVictim();
 
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
@@ -95,13 +87,13 @@ public class ProjectionFrameEntity extends Entity {
 
             if (this.level().isClientSide) return;
 
-            if (this.getTime() >= DURATION) {
+            if (this.tickCount >= DURATION) {
                 this.discard();
             } else if (victim != null) {
                 victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
 
                 if (this.pos != null) {
-                    victim.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
+                    victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);
                 }
             }
         }
@@ -147,9 +139,9 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putDouble("pos_x", this.pos.x());
-        pCompound.putDouble("pos_y", this.pos.y());
-        pCompound.putDouble("pos_z", this.pos.z());
+        pCompound.putDouble("pos_x", this.pos.x);
+        pCompound.putDouble("pos_y", this.pos.y);
+        pCompound.putDouble("pos_z", this.pos.z);
 
         if (this.victimUUID != null) {
             pCompound.putUUID("victim", this.victimUUID);
@@ -158,7 +150,6 @@ public class ProjectionFrameEntity extends Entity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("power", this.power);
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
     @Override
@@ -172,12 +163,6 @@ public class ProjectionFrameEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.power = pCompound.getFloat("power");
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
     }
 
     @Override

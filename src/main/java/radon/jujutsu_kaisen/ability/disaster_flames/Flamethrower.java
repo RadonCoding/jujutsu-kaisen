@@ -48,7 +48,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 double z = r * Math.cos(phi);
                 Vec3 speed = look.add(x, y, z);
                 Vec3 offset = owner.getEyePosition().add(owner.getLookAngle());
-                level.sendParticles(ParticleTypes.FLAME, offset.x(), offset.y(), offset.z(), 0, speed.x(), speed.y(), speed.z(), 1.0D);
+                level.sendParticles(ParticleTypes.FLAME, offset.x, offset.y, offset.z, 0, speed.x, speed.y, speed.z, 1.0D);
             }
 
             Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));

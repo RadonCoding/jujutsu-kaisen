@@ -27,7 +27,6 @@ public class ThrownChainProjectile extends AbstractArrow {
     private static final double PULL_STRENGTH = 5.0D;
 
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
 
     private boolean released;
     private boolean dealtDamage;
@@ -43,7 +42,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         Vec3 spawn = new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ())
                 .add(pShooter.getLookAngle());
-        this.setPos(spawn.x(), spawn.y(), spawn.z());
+        this.setPos(spawn.x, spawn.y, spawn.z);
 
         this.entityData.set(DATA_ITEM, stack);
     }
@@ -51,14 +50,6 @@ public class ThrownChainProjectile extends AbstractArrow {
     @Override
     public boolean shouldRender(double pX, double pY, double pZ) {
         return true;
-    }
-
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -126,12 +117,9 @@ public class ThrownChainProjectile extends AbstractArrow {
             this.dealtDamage = true;
         }
 
-        int time = this.getTime();
-        this.setTime(++time);
-
         if (this.getOwner() instanceof LivingEntity owner) {
             if (!this.released) {
-                double angle = Math.toRadians(this.getTime() * this.getTime());
+                double angle = Math.toRadians(this.tickCount * this.tickCount);
                 double radius = 2.0D;
                 float yaw = (float) Math.toRadians(owner.getYRot());
                 float pitch = (float) Math.toRadians(90.0F);
@@ -141,9 +129,9 @@ public class ThrownChainProjectile extends AbstractArrow {
                 Vec3 position = owner.position().add(owner.getLookAngle().scale(2.5D)).add(offset);
 
                 if (owner.isUsingItem()) {
-                    this.setPos(position.x(), position.y(), position.z());
-                    this.setRot((float) Math.toDegrees(Math.atan2(offset.x(), offset.z())),
-                            -(float) Math.toDegrees(Math.asin(offset.y() / offset.length())));
+                    this.setPos(position.x, position.y, position.z);
+                    this.setRot((float) Math.toDegrees(Math.atan2(offset.x, offset.z)),
+                            -(float) Math.toDegrees(Math.asin(offset.y / offset.length())));
 
                     if (this.random.nextInt(5) == 0) {
                         this.playSound(SoundEvents.CHAIN_PLACE);
@@ -151,7 +139,7 @@ public class ThrownChainProjectile extends AbstractArrow {
                 } else {
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                             .add(owner.getLookAngle());
-                    this.setPos(spawn.x(), spawn.y(), spawn.z());
+                    this.setPos(spawn.x, spawn.y, spawn.z);
                     this.setRot(-owner.getYRot(), owner.getXRot());
 
                     this.setDeltaMovement(owner.getLookAngle().scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
@@ -203,6 +191,5 @@ public class ThrownChainProjectile extends AbstractArrow {
         super.defineSynchedData();
 
         this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
-        this.entityData.define(DATA_TIME, 0);
     }
 }

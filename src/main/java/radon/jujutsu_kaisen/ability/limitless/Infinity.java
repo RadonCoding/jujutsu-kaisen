@@ -161,9 +161,9 @@ public class Infinity extends Ability implements Ability.IToggled {
                 this.putBoolean("no_gravity", target.isNoGravity());
 
                 Vec3 movement = target.getDeltaMovement();
-                this.putDouble("movement_x", movement.x());
-                this.putDouble("movement_y", movement.y());
-                this.putDouble("movement_z", movement.z());
+                this.putDouble("movement_x", movement.x);
+                this.putDouble("movement_y", movement.y);
+                this.putDouble("movement_z", movement.z);
             }
 
             public FrozenProjectileNBT(CompoundTag tag) {

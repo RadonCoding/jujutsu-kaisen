@@ -24,9 +24,9 @@ public class LightningParticle extends TextureSheetParticle {
         super(pLevel, pX, pY, pZ);
 
         Vector3f color = options.color();
-        this.rCol = color.x();
-        this.gCol = color.y();
-        this.bCol = color.z();
+        this.rCol = color.x;
+        this.gCol = color.y;
+        this.bCol = color.z;
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
@@ -97,9 +97,9 @@ public class LightningParticle extends TextureSheetParticle {
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.color.x());
-            buf.writeFloat(this.color.y());
-            buf.writeFloat(this.color.z());
+            buf.writeFloat(this.color.x);
+            buf.writeFloat(this.color.y);
+            buf.writeFloat(this.color.z);
             buf.writeFloat(this.scalar);
             buf.writeInt(this.lifetime);
         }
@@ -107,7 +107,7 @@ public class LightningParticle extends TextureSheetParticle {
         @Override
         public @NotNull String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.scalar, this.lifetime);
+                    this.color.x, this.color.y, this.color.z, this.scalar, this.lifetime);
         }
     }
 

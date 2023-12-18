@@ -35,7 +35,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
-        if (pEntity.getTime() < 20) {
+        if (pEntity.tickCount < 20) {
             this.renderLight(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
         } else {
             this.renderBall(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
@@ -90,7 +90,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
     }
 
     private void renderLight(RedProjectile pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        float f0 = ((float) pEntity.getTime() + pPartialTick) / 20;
+        float f0 = ((float) pEntity.tickCount + pPartialTick) / 20;
         float f1 = Math.min(f0 > 0.8F ? (f0 - 0.8F) / 0.2F : 0.0F, 1.0F);
         RandomSource random = RandomSource.create(432L);
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.lightning());

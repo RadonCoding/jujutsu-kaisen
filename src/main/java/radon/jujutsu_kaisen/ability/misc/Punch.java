@@ -87,8 +87,8 @@ public class Punch extends Ability {
             Vec3 look = owner.getLookAngle();
 
             Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-            ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x(), pos.y(), pos.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            target.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
             if (owner instanceof Player player) {
                 player.attack(target);

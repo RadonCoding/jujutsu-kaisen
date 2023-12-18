@@ -62,13 +62,13 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         Vec3 look = owner.getLookAngle();
 
-        this.setDeltaMovement(look.x() * (this.random.nextDouble() * 2.0D + 1.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),
-                look.y() * (this.random.nextDouble() * 4.0D + 2.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),
-                look.z() * (this.random.nextDouble() * 2.0D + 1.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D));
+        this.setDeltaMovement(look.x * (this.random.nextDouble() * 2.0D + 1.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),
+                look.y * (this.random.nextDouble() * 4.0D + 2.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),
+                look.z * (this.random.nextDouble() * 2.0D + 1.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D));
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;

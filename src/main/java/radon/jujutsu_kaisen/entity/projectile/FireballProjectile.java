@@ -53,7 +53,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(owner.getLookAngle());
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
     @Override
@@ -69,6 +69,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         }
     }
 
+    @Override
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
 
@@ -77,7 +78,8 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         this.playSound(JJKSounds.FLAME_EXPLOSION.get(), 3.0F, 1.0F);
 
         Vec3 location = result.getLocation();
-        Vec3 center = new Vec3(location.x(), location.y() + (this.getBbHeight() / 2.0F), location.z());
+
+        Vec3 center = new Vec3(location.x, location.y + (this.getBbHeight() / 2.0F), location.z);
 
         int pillarCount = (int) (this.getFlamePillarRadius() * Math.PI * 2) * 8;
 
@@ -92,22 +94,22 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             int lifetime = 2 * 20;
 
             for (int j = 0; j < 2; j++) {
-                double x = center.x() + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
-                double y = center.y() + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
-                double z = center.z() + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+                double x = center.x + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
+                double y = center.y + yOffset * (this.getFlamePillarRadius() * 10.0F) * this.random.nextDouble();
+                double z = center.z + zOffset * this.getFlamePillarRadius() * this.random.nextDouble();
 
-                Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
+                Vec3 start = new Vec3(center.x + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y, center.z + zOffset * (this.getFlamePillarRadius() * 0.1F));
                 Vec3 end = new Vec3(x, y, z);
                 Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
                         HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                                start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
                         HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                                start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
             }
@@ -125,21 +127,21 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
             int lifetime = 2 * 20;
 
             for (int j = 0; j < 2; j++) {
-                double x = center.x() + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
-                double z = center.z() + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+                double x = center.x + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
+                double z = center.z + zOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
 
-                Vec3 start = new Vec3(center.x() + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y(), center.z() + zOffset * (this.getFlamePillarRadius() * 0.1F));
-                Vec3 end = new Vec3(x, start.y(), z);
+                Vec3 start = new Vec3(center.x + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y, center.z + zOffset * (this.getFlamePillarRadius() * 0.1F));
+                Vec3 end = new Vec3(x, start.y, z);
                 Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
                         HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                                start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
                         HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
-                                start.x(), start.y(), start.z(), speed.x(), speed.y(), speed.z());
+                                start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
             }
@@ -167,35 +169,33 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         if (this.getOwner() instanceof LivingEntity owner) {
             for (int i = 0; i < 2; i++) {
                 Vec3 dir = owner.getLookAngle().reverse().scale(0.1D);
-                double dx = dir.x() + ((this.random.nextDouble() - 0.5D) * 0.5D);
-                double dy = dir.y() + ((this.random.nextDouble() - 0.5D) * 0.5D);
-                double dz = dir.z() + ((this.random.nextDouble() - 0.5D) * 0.5D);
+                double dx = dir.x + ((this.random.nextDouble() - 0.5D) * 0.5D);
+                double dy = dir.y + ((this.random.nextDouble() - 0.5D) * 0.5D);
+                double dz = dir.z + ((this.random.nextDouble() - 0.5D) * 0.5D);
 
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
-            if (this.getTime() < DELAY) {
+            if (this.tickCount < DELAY) {
                 Vec3 look = owner.getLookAngle();
                 double d0 = look.horizontalDistance();
-                this.setYRot((float) (Mth.atan2(look.x(), look.z()) * (double) (180.0F / (float) Math.PI)));
-                this.setXRot((float) (Mth.atan2(look.y(), d0) * (double) (180.0F / (float) Math.PI)));
+                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
+                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
                 this.yRotO = this.getYRot();
                 this.xRotO = this.getXRot();
 
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.getTime() % 5 == 0) {
+                    if (this.tickCount % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                             .add(owner.getLookAngle());
-                    this.setPos(spawn.x(), spawn.y(), spawn.z());
+                    this.setPos(spawn.x, spawn.y, spawn.z);
                 }
-            } else if (this.getTime() >= DELAY) {
-                if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                }
+            } else if (this.tickCount == DELAY) {
+                this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }
     }

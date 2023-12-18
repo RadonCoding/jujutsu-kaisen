@@ -59,7 +59,7 @@ public class ToadEntity extends TenShadowsSummon {
 
         Vec3 pos = ritual ? owner.position() : owner.position()
                 .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
@@ -126,7 +126,7 @@ public class ToadEntity extends TenShadowsSummon {
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
                 .add(look.scale((index % 3) * 3.0D));
-        this.setPos(x + offset.x(), y, z + offset.z());
+        this.setPos(x + offset.x, y, z + offset.z);
 
         float yRot = this.getYRot();
 
@@ -242,7 +242,7 @@ public class ToadEntity extends TenShadowsSummon {
             this.lookControl.setLookAt(target, 30.0F, 30.0F);
 
             if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
-                if (this.getTime() % SHOOT_INTERVAL == 0) {
+                if (this.tickCount % SHOOT_INTERVAL == 0) {
                     this.shoot(target);
                 }
             }

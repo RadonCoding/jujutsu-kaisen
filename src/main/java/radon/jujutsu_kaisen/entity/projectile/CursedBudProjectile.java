@@ -42,7 +42,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
     public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
@@ -50,7 +50,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         Vec3 look = plant.getLookAngle();
         Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), plant.getYRot(), plant.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, plant.getYRot(), plant.getXRot());
 
         this.plant = true;
     }
@@ -89,25 +89,25 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
-            if (!this.plant && this.getTime() < DELAY) {
+            if (!this.plant && this.tickCount < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.getTime() % 5 == 0) {
+                    if (this.tickCount % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 look = owner.getLookAngle();
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                    this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                    this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
-            } else if (this.getTime() >= DURATION) {
+            } else if (this.tickCount >= DURATION) {
                 this.discard();
             } else if (this.plant) {
-                if (this.getTime() == 0) {
+                if (this.tickCount == 0) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 }
-            } else if (this.getTime() >= DELAY) {
-                if (this.getTime() == DELAY) {
+            } else if (this.tickCount >= DELAY) {
+                if (this.tickCount == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
             }

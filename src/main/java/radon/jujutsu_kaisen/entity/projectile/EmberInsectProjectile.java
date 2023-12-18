@@ -106,9 +106,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             Vec3 yaw = dir.yRot(this.random.nextFloat() * 360.0F);
             Vec3 pitch = yaw.xRot(this.random.nextFloat() * 180.0F - 90.0F);
 
-            double dx = pitch.x() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dy = pitch.y() + (this.random.nextDouble() - 0.5D) * 0.2D;
-            double dz = pitch.z() + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dx = pitch.x + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dy = pitch.y + (this.random.nextDouble() - 0.5D) * 0.2D;
+            double dz = pitch.z + (this.random.nextDouble() - 0.5D) * 0.2D;
 
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0, dx, dy, dz, 1.0D);
         }
@@ -131,7 +131,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                     .add(HelperMethods.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
                     .add(HelperMethods.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
                     .add(look);
-            this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+            this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
         }
     }
 
@@ -140,17 +140,17 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
+            if (this.tickCount < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.getTime() % 5 == 0) {
+                    if (this.tickCount % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     this.applyOffset();
                 }
-            } else if (this.getTime() >= DELAY) {
-                if (this.getTime() == DELAY) {
+            } else if (this.tickCount >= DELAY) {
+                if (this.tickCount == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
             }

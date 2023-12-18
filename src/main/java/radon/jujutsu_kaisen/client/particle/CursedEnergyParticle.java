@@ -27,9 +27,9 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
         this.zd = pZSpeed;
 
         Vector3f color = options.color();
-        this.rCol = color.x();
-        this.gCol = color.y();
-        this.bCol = color.z();
+        this.rCol = color.x;
+        this.gCol = color.y;
+        this.bCol = color.z;
 
         this.alpha = options.opacity();
 
@@ -85,9 +85,9 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
 
         @Override
         public void writeToNetwork(FriendlyByteBuf buf) {
-            buf.writeFloat(this.color.x());
-            buf.writeFloat(this.color.y());
-            buf.writeFloat(this.color.z());
+            buf.writeFloat(this.color.x);
+            buf.writeFloat(this.color.y);
+            buf.writeFloat(this.color.z);
             buf.writeFloat(this.scalar);
             buf.writeFloat(this.opacity);
             buf.writeInt(this.lifetime);
@@ -96,7 +96,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
         @Override
         public @NotNull String writeToString() {
             return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
-                    this.color.x(), this.color.y(), this.color.z(), this.scalar, this.opacity, this.lifetime);
+                    this.color.x, this.color.y, this.color.z, this.scalar, this.opacity, this.lifetime);
         }
     }
 

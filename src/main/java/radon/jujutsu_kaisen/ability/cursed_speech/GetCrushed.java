@@ -60,19 +60,19 @@ public class GetCrushed extends Ability {
 
         for (int i = 1; i < RANGE + 7; i++) {
             Vec3 dst = src.add(look.scale(i));
-            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x(), dst.y(), dst.z(), 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(JJKParticles.CURSED_SPEECH.get(), dst.x, dst.y, dst.z, 0, src.distanceTo(dst) * 0.5D, 0.0D, 0.0D, 1.0D);
         }
 
-        owner.level().playSound(null, src.x(), src.y(), src.z(), JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+        owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x(), center.y(), center.z(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            owner.level().playSound(null, center.x(), center.y(), center.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                     4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
             if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

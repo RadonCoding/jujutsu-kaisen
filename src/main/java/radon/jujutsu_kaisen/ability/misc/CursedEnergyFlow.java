@@ -84,9 +84,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
         for (int i = 0; i < 12 * scale; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).x();
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).x;
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).z();
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - owner.getLookAngle().scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
             level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.5F * scale,
                             0.2F * scale, 6), x, y, z, 0, 0.0D, speed * scale, 0.0D, 1.0D);

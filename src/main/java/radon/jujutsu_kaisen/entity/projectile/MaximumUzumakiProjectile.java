@@ -49,7 +49,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(0.0D, this.getBbHeight(), 0.0D);
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
@@ -94,18 +94,18 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
-            if (this.getTime() < DELAY) {
+            if (this.tickCount < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
                     Vec3 pos = owner.position()
                             .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                             .add(0.0D, this.getBbHeight(), 0.0D);
-                    this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+                    this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 }
-            } else if (this.getTime() - 20 >= DELAY) {
+            } else if (this.tickCount - 20 >= DELAY) {
                 this.discard();
-            } else if (this.getTime() == DELAY) {
+            } else if (this.tickCount == DELAY) {
                 Vec3 start = owner.getEyePosition();
                 Vec3 look = owner.getLookAngle();
                 Vec3 end = start.add(look.scale(RANGE));

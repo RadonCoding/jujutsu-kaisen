@@ -23,7 +23,7 @@ public class TenShadowsRenderer<T extends TenShadowsSummon & GeoAnimatable> exte
     @Override
     public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (animatable.isClone()) {
-            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, COLOR.x(), COLOR.y(), COLOR.z(), alpha);
+            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, COLOR.x, COLOR.y, COLOR.z, alpha);
         } else {
             super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         }

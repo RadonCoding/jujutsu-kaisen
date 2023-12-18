@@ -33,7 +33,7 @@ public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
         Vec3 trans = pEntity.getLookAngle().scale(pEntity.getBbHeight() * 2.0F);
 
         pPoseStack.pushPose();
-        pPoseStack.translate(trans.x(), trans.y(), trans.z());
+        pPoseStack.translate(trans.x, trans.y, trans.z);
         pPoseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());

@@ -59,7 +59,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         Vec3 pos = ritual ? owner.position() : owner.position()
                 .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(owner.getLookAngle().yRot(90.0F).scale(this.getVariant() == Variant.WHITE ? -0.45D : 0.45D));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
@@ -105,7 +105,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
                 .add(look.scale(1.5D + (index % 3) * 3.0D));
-        this.setPos(x + offset.x(), y, z + offset.z());
+        this.setPos(x + offset.x, y, z + offset.z);
 
         float yRot = this.getYRot();
 

@@ -29,8 +29,6 @@ import java.util.UUID;
 public abstract class DomainExpansionEntity extends Mob {
     public static final int OFFSET = 5;
 
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
-
     @Nullable
     private UUID ownerUUID;
     @Nullable
@@ -138,18 +136,14 @@ public abstract class DomainExpansionEntity extends Mob {
             super.tick();
 
             if (!this.level().isClientSide) {
-                int time = this.getTime();
-
                 if (owner != null) {
                     if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (!cap.hasToggled(this.ability)) {
                         this.discard();
-                        return;
                     }
                 }
-                this.setTime(++time);
             }
         }
     }
@@ -201,7 +195,6 @@ public abstract class DomainExpansionEntity extends Mob {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
         pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
         pCompound.putBoolean("first", this.first);
     }
@@ -213,16 +206,8 @@ public abstract class DomainExpansionEntity extends Mob {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_TIME, 0);
     }
 
     public boolean shouldCollapse(float strength) {
@@ -234,13 +219,5 @@ public abstract class DomainExpansionEntity extends Mob {
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
-    }
-
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
     }
 }

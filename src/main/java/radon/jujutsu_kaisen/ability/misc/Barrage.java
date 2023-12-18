@@ -53,20 +53,20 @@ public class Barrage extends Ability {
                     for (int j = 0; j < 4; j++) {
                         Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
                         level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
-                                offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 0, 0.0D, 0.0D, 0.0D, 1.0D);
                     }
                     for (int j = 0; j < 4; j++) {
                         Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(2.5D));
                         level.sendParticles(ParticleTypes.CRIT,
-                                offset.x() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                offset.y() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
-                                offset.z() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                                offset.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 0, 0.0D, 0.0D, 0.0D, 1.0D);
                     }
-                    owner.level().playSound(null, pos.x(), pos.y(), pos.z(), SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+                    owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
                     Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
 

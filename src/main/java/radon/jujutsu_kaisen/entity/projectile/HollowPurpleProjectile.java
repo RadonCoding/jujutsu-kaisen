@@ -47,7 +47,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         Vec3 look = owner.getLookAngle();
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(this.getRadius() * 0.5F));
-        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
     public float getRadius() {
@@ -73,9 +73,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         for (int i = 0; i < SPEED; i++) {
             double radius = Math.max(Math.PI, this.getRadius());
             AABB bounds = this.getBoundingBox().inflate(radius);
-            double centerX = bounds.getCenter().x();
-            double centerY = bounds.getCenter().y();
-            double centerZ = bounds.getCenter().z();
+            double centerX = bounds.getCenter().x;
+            double centerY = bounds.getCenter().y;
+            double centerZ = bounds.getCenter().z;
 
             for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                 for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -112,7 +112,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (this.getTime() >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
+        if (this.tickCount >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
             this.discard();
         }
     }
@@ -134,12 +134,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.1F);
+            double x = center.x + xOffset;
+            double y = center.y + yOffset;
+            double z = center.z + zOffset;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_BLUE, radius * 0.2F, 0.2F, true, 5), true,
-                    center.x(), center.y(), center.z(), 0.0D, 0.0D, 0.0D);
+                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
         for (int i = 0; i < count; i++) {
@@ -150,9 +150,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * 0.5F * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.5F * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
+            double x = center.x + xOffset * 0.1F;
+            double y = center.y + yOffset * 0.1F;
+            double z = center.z + zOffset * 0.1F;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.1F, 0.2F, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
@@ -171,12 +171,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.1F);
+            double x = center.x + xOffset;
+            double y = center.y + yOffset;
+            double z = center.z + zOffset;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_RED, radius * 0.2F, 0.2F, true, 5), true,
-                    center.x(), center.y(), center.z(), 0.0D, 0.0D, 0.0D);
+                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
         for (int i = 0; i < count; i++) {
@@ -187,9 +187,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * 0.5F * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.5F * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
+            double x = center.x + xOffset * 0.1F;
+            double y = center.y + yOffset * 0.1F;
+            double z = center.z + zOffset * 0.1F;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_RED, radius * 0.1F, 0.2F, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
@@ -198,7 +198,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     private void animate() {
         float size = this.getRadius() / Mth.PI;
-        float fraction = (float) this.getTime() / ANIMATION;
+        float fraction = (float) this.tickCount / ANIMATION;
         fraction = fraction < 0.5F ? 2 * fraction * fraction : fraction;
         float offset = Mth.lerp(fraction, size * 2, 0.0F);
 
@@ -218,7 +218,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        if (this.getTime() <= ANIMATION) {
+        if (this.tickCount <= ANIMATION) {
             this.animate();
             return;
         }
@@ -236,12 +236,12 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.1F);
+            double x = center.x + xOffset;
+            double y = center.y + yOffset;
+            double z = center.z + zOffset;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_PURPLE, radius * 0.2F, 0.2F, true, 5), true,
-                    center.x(), center.y(), center.z(), 0.0D, 0.0D, 0.0D);
+                    center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
         }
 
         for (int i = 0; i < count; i++) {
@@ -252,9 +252,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
             double zOffset = radius * 0.5F * Math.cos(phi);
 
-            double x = center.x() + xOffset * (radius * 0.5F * 0.1F);
-            double y = center.y() + yOffset * (radius * 0.5F * 0.1F);
-            double z = center.z() + zOffset * (radius * 0.5F * 0.1F);
+            double x = center.x + xOffset * 0.1F;
+            double y = center.y + yOffset * 0.1F;
+            double z = center.z + zOffset * 0.1F;
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_PURPLE, radius * 0.2F, 0.2F, true, 5), true,
                     x, y, z, 0.0D, 0.0D, 0.0D);
@@ -272,23 +272,23 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         this.refreshDimensions();
 
-        if (this.getTime() >= DURATION) {
+        if (this.tickCount >= DURATION) {
             this.discard();
         } else {
             if (this.getOwner() instanceof LivingEntity owner) {
                 this.spawnParticles();
 
-                if (this.getTime() < DELAY) {
+                if (this.tickCount < DELAY) {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
-                        if (this.getTime() % 5 == 0) {
+                        if (this.tickCount % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = owner.getLookAngle();
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                                 .add(look.scale(this.getRadius() * 0.5F));
-                        this.moveTo(spawn.x(), spawn.y(), spawn.z(), owner.getYRot(), owner.getXRot());
+                        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (!this.level().isClientSide) {
@@ -299,7 +299,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         }
                     }
 
-                    if (this.getTime() == DELAY) {
+                    if (this.tickCount == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     }

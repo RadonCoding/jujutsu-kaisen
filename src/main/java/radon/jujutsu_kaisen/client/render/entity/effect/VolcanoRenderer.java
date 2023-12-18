@@ -41,7 +41,7 @@ public class VolcanoRenderer extends GeoEntityRenderer<VolcanoEntity> {
     public @NotNull ResourceLocation getTextureLocation(@NotNull VolcanoEntity animatable) {
         ResourceLocation key = super.getTextureLocation(animatable);
 
-        if (animatable.getTime() >= VolcanoEntity.DELAY) {
+        if (animatable.tickCount >= VolcanoEntity.DELAY) {
             return new ResourceLocation(key.getNamespace(), key.getPath().replace(".png",
                     String.format("_%s.%s", "erupt", "png")));
         }

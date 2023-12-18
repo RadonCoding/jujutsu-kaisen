@@ -68,13 +68,13 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
-            collidePosX = pos.x();
-            collidePosY = pos.y();
-            collidePosZ = pos.z();
+            collidePosX = pos.x;
+            collidePosY = pos.y;
+            collidePosZ = pos.z;
         } else {
-            collidePosX = to.x();
-            collidePosY = to.y();
-            collidePosZ = to.z();
+            collidePosX = to.x;
+            collidePosY = to.y;
+            collidePosZ = to.z;
         }
         return new Vec3(collidePosX, collidePosY, collidePosZ);
     }
@@ -82,9 +82,9 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     public List<Entity> checkCollisions(LivingEntity owner, Vec3 from, Vec3 to, Vec3 collision) {
         List<Entity> entities = new ArrayList<>();
 
-        AABB bounds = new AABB(Math.min(from.x(), collision.x()), Math.min(from.y(), collision.y()),
-                Math.min(from.z(), collision.z()), Math.max(from.x(), collision.x()),
-                Math.max(from.y(), collision.y()), Math.max(from.z(), collision.z()))
+        AABB bounds = new AABB(Math.min(from.x, collision.x), Math.min(from.y, collision.y),
+                Math.min(from.z, collision.z), Math.max(from.x, collision.x),
+                Math.max(from.y, collision.y), Math.max(from.z, collision.z))
                 .inflate(SCALE);
 
         for (Entity entity : owner.level().getEntities(owner, bounds)) {
@@ -111,9 +111,9 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);
         float pitch = (float) (-owner.getXRot() * Math.PI / 180.0F);
 
-        double endPosX = spawn.x() + RANGE * Math.cos(yaw) * Math.cos(pitch);
-        double endPosY = spawn.y() + RANGE * Math.sin(pitch);
-        double endPosZ = spawn.z() + RANGE * Math.sin(yaw) * Math.cos(pitch);
+        double endPosX = spawn.x + RANGE * Math.cos(yaw) * Math.cos(pitch);
+        double endPosY = spawn.y + RANGE * Math.sin(pitch);
+        double endPosZ = spawn.z + RANGE * Math.sin(yaw) * Math.cos(pitch);
 
         Vec3 end = new Vec3(endPosX, endPosY, endPosZ);
         Vec3 collision = this.getCollision(owner, spawn, end);
@@ -122,9 +122,9 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
                 0.1F, false, (int) spawn.distanceTo(collision) / 2);
 
         for (int i = 0; i < 32; i++) {
-            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
-                    spawn.y() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
-                    spawn.z() + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+                    spawn.y + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+                    spawn.z + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
@@ -142,11 +142,11 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             double radius = SCALE * 2.0F;
 
-            AABB bounds = new AABB(collision.x() - radius, collision.y() - radius, collision.z() - radius,
-                    collision.x() + radius, collision.y() + radius, collision.z() + radius);
-            double centerX = bounds.getCenter().x();
-            double centerY = bounds.getCenter().y();
-            double centerZ = bounds.getCenter().z();
+            AABB bounds = new AABB(collision.x - radius, collision.y - radius, collision.z - radius,
+                    collision.x + radius, collision.y + radius, collision.z + radius);
+            double centerX = bounds.getCenter().x;
+            double centerY = bounds.getCenter().y;
+            double centerZ = bounds.getCenter().z;
 
             for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                 for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {

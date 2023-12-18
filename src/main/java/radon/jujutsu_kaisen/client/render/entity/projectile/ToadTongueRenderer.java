@@ -36,8 +36,8 @@ public class ToadTongueRenderer extends EntityRenderer<ToadTongueProjectile> {
             Vec3 relative = ownerPos.subtract(projectilePos);
             float f0 = (float) relative.length();
             relative = relative.normalize();
-            float f1 = (float) Math.acos(relative.y());
-            float f2 = (float) Math.atan2(relative.z(), relative.x());
+            float f1 = (float) Math.acos(relative.y);
+            float f2 = (float) Math.atan2(relative.z, relative.x);
             pPoseStack.mulPose(Axis.YP.rotationDegrees((((float) Math.PI / 2.0F) - f2) * (180.0F / (float) Math.PI)));
             pPoseStack.mulPose(Axis.XP.rotationDegrees(f1 * (180.0F / (float) Math.PI)));
 

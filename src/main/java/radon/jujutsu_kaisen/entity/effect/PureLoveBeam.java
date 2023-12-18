@@ -135,7 +135,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                 }
             }
 
-            if (this.getTime() > CHARGE) {
+            if (this.tickCount > CHARGE) {
                 this.calculateEndPos();
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
@@ -154,9 +154,9 @@ public class PureLoveBeam extends JujutsuProjectile {
 
                         AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                                 this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                        double centerX = bounds.getCenter().x();
-                        double centerY = bounds.getCenter().y();
-                        double centerZ = bounds.getCenter().z();
+                        double centerX = bounds.getCenter().x;
+                        double centerY = bounds.getCenter().y;
+                        double centerZ = bounds.getCenter().z;
 
                         for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
                             for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
@@ -177,7 +177,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - CHARGE - this.getDuration() / 2 > this.getDuration()) {
+            if (this.tickCount - CHARGE - this.getDuration() / 2 > this.getDuration()) {
                 this.on = false;
             }
         }
@@ -224,9 +224,9 @@ public class PureLoveBeam extends JujutsuProjectile {
 
         if (result.getType() != HitResult.Type.MISS) {
             Vec3 pos = result.getLocation();
-            this.collidePosX = pos.x();
-            this.collidePosY = pos.y();
-            this.collidePosZ = pos.z();
+            this.collidePosX = pos.x;
+            this.collidePosY = pos.y;
+            this.collidePosZ = pos.z;
             this.side = result.getDirection();
         } else {
             this.collidePosX = this.endPosX;
@@ -265,7 +265,7 @@ public class PureLoveBeam extends JujutsuProjectile {
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
             Vec3 look = owner.getLookAngle();
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-            this.setPos(spawn.x(), spawn.y(), spawn.z());
+            this.setPos(spawn.x, spawn.y, spawn.z);
         }
     }
 }

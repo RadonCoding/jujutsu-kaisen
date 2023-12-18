@@ -66,4 +66,16 @@ public class JJKParticleRenderTypes {
             tesselator.end();
         }
     };
+
+    public static ParticleRenderType CUSTOM = new ParticleRenderType() {
+        @Override
+        public void begin(@NotNull BufferBuilder buffer, @NotNull TextureManager manager) {
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        @Override
+        public void end(Tesselator tesselator) {
+            tesselator.end();
+        }
+    };
 }

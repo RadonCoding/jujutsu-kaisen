@@ -64,9 +64,9 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
         int count = (int) (owner.getBbWidth() * owner.getBbHeight()) * 8;
 
         for (int i = 0; i < count; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2) - owner.getLookAngle().scale(0.35D).x();
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2) - owner.getLookAngle().scale(0.35D).x;
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2) - owner.getLookAngle().scale(0.35D).z();
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2) - owner.getLookAngle().scale(0.35D).z;
             level.sendParticles(ParticleTypes.SMOKE, x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D, 1.0D);
         }
     }

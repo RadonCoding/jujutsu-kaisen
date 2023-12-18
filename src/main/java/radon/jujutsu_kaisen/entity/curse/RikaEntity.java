@@ -73,7 +73,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z());
+        this.moveTo(pos.x, pos.y, pos.z);
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
 
@@ -199,14 +199,14 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 Vec3 pos = owner.position()
                         .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                         .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
-                this.moveTo(pos.x(), pos.y(), pos.z(), owner.getYRot(), owner.getXRot());
+                this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
                 this.yHeadRot = this.getYRot();
                 this.yHeadRotO = this.yHeadRot;
             }
 
             if (!this.level().isClientSide) {
-                if (this.getTime() >= DURATION) {
+                if (this.tickCount >= DURATION) {
                     this.discard();
                 }
                 if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

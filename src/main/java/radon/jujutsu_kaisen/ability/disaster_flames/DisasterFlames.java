@@ -44,12 +44,12 @@ public class DisasterFlames extends Ability {
             Vec3 speed = new Vec3(HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian(), HelperMethods.RANDOM.nextGaussian())
                     .normalize().scale(scale);
 
-            double offsetX = x + speed.x();
-            double offsetY = y + speed.y();
-            double offsetZ = z + speed.z();
+            double offsetX = x + speed.x;
+            double offsetY = y + speed.y;
+            double offsetZ = z + speed.z;
 
             ((ServerLevel) entity.level()).sendParticles((ParticleOptions) ParticleTypes.FLAME, offsetX, offsetY, offsetZ, 0,
-                    speed.x(), speed.y(), speed.z(), 1.0D);
+                    speed.x, speed.y, speed.z, 1.0D);
         }
     }
 

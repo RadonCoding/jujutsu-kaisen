@@ -73,7 +73,7 @@ public class Spiderweb extends Ability {
 
             for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
                 cap.delayTickEvent(() -> {
-                    owner.level().playSound(null, center.x(), center.y(), center.z(),
+                    owner.level().playSound(null, center.x, center.y, center.z,
                             JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
                     BlockPos.betweenClosedStream(bounds).forEach(pos -> {

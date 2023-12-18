@@ -22,8 +22,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ForestRootsEntity.class, EntityDataSerializers.INT);
-
     private static final int DURATION = 5 * 20;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -54,19 +52,8 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), 0.0F);
     }
 
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    private void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
-    }
-
     @Override
     public void tick() {
-        int time = this.getTime();
-        this.setTime(++time);
-
         LivingEntity victim = this.getVictim();
 
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
@@ -74,11 +61,11 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         } else {
             super.tick();
 
-            if (this.getTime() >= DURATION) {
+            if (this.tickCount >= DURATION) {
                 this.discard();
             } else if (victim != null) {
                 if (this.pos != null) {
-                    victim.teleportTo(this.pos.x(), this.pos.y(), this.pos.z());
+                    victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);
                 }
             }
         }
@@ -105,14 +92,13 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putDouble("pos_x", this.pos.x());
-        pCompound.putDouble("pos_y", this.pos.y());
-        pCompound.putDouble("pos_z", this.pos.z());
+        pCompound.putDouble("pos_x", this.pos.x);
+        pCompound.putDouble("pos_y", this.pos.y);
+        pCompound.putDouble("pos_z", this.pos.z);
 
         if (this.victimUUID != null) {
             pCompound.putUUID("victim", this.victimUUID);
         }
-        pCompound.putInt("time", this.entityData.get(DATA_TIME));
     }
 
     @Override
@@ -122,14 +108,6 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         if (pCompound.hasUUID("victim")) {
             this.victimUUID = pCompound.getUUID("victim");
         }
-        this.entityData.set(DATA_TIME, pCompound.getInt("time"));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_TIME, 0);
     }
 
     @Override

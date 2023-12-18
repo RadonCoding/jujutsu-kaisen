@@ -47,7 +47,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x(), pos.y(), pos.z(), owner.getXRot(), owner.getYRot());
+        this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
     }
 
     @Override
@@ -133,7 +133,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
 
         if (buds == 0) {
             this.discard();
-        } else if (this.getTime() % 5 == 0) {
+        } else if (this.tickCount % 5 == 0) {
             this.level().addFreshEntity(new CursedBudProjectile(owner, this.getPower(), this));
             this.entityData.set(DATA_BUD_COUNT, --buds);
         }

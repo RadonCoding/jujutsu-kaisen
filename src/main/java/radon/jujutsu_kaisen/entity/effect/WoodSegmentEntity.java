@@ -37,7 +37,7 @@ public class WoodSegmentEntity extends Entity {
         Vec2 rot = segment.getRotationOffset();
         Vec3 offset = new Vec3(offsetX, offsetY, offsetZ).xRot(-rot.x * 0.017453292F)
                 .yRot(-rot.y * 0.017453292F).add(segment.getPositionOffset());
-        this.setOffset(offset.x(), offset.y(), offset.z(), rot.y + yawOffset, rot.x + pitchOffset);
+        this.setOffset(offset.x, offset.y, offset.z, rot.y + yawOffset, rot.x + pitchOffset);
         this.setParent(segment.getParent());
         this.setPositionAndRotationFromParent();
         this.setIndex(segment.getIndex() + 1);

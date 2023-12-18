@@ -51,7 +51,7 @@ public class Teleport extends Ability {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
 
             Vec3 pos = target.getLocation();
-            owner.setPos(pos.x(), pos.y(), pos.z());
+            owner.setPos(pos.x, pos.y, pos.z);
 
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.MASTER, 1.0F, 1.0F);
         }
