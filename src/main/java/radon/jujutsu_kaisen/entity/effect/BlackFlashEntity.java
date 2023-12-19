@@ -67,26 +67,22 @@ public class BlackFlashEntity extends Entity {
 
     @Override
     public void tick() {
+        super.tick();
+
         LivingEntity victim = this.getVictim();
 
-        if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
+        for (int i = 0; i < 32; i++) {
+            double offsetX = this.random.nextGaussian() * 3.0D;
+            double offsetY = this.random.nextGaussian() * 3.0D;
+            double offsetZ = this.random.nextGaussian() * 3.0D;
+            this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
+        }
+
+        if (this.tickCount >= DURATION) {
             this.discard();
         } else {
-            super.tick();
-
-            for (int i = 0; i < 32; i++) {
-                double offsetX = this.random.nextGaussian() * 1.5D;
-                double offsetY = this.random.nextGaussian() * 1.5D;
-                double offsetZ = this.random.nextGaussian() * 1.5D;
-                this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
-            }
-
-            if (this.tickCount >= DURATION) {
-                this.discard();
-            } else {
-                if (victim != null) {
-                    this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
-                }
+            if (victim != null) {
+                this.setPos(victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D).add(0.0D, this.getBbHeight() / 2.0F, 0.0D));
             }
         }
     }
