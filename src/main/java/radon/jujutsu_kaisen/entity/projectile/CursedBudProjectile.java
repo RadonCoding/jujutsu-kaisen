@@ -89,24 +89,24 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
-            if (!this.plant && this.tickCount < DELAY) {
+            if (!this.plant && this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.tickCount % 5 == 0) {
+                    if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 look = owner.getLookAngle();
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
-            } else if (this.tickCount >= DURATION) {
+            } else if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (this.plant) {
-                if (this.tickCount - 1 == 0) {
+                if (this.getTime() == 0) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 }
-            } else if (this.tickCount == DELAY) {
+            } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
             }
         }

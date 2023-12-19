@@ -94,7 +94,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
-            if (this.tickCount < DELAY) {
+            if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
@@ -103,9 +103,9 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                             .add(0.0D, this.getBbHeight(), 0.0D);
                     this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 }
-            } else if (this.tickCount - 20 >= DELAY) {
+            } else if (this.getTime() - 20 >= DELAY) {
                 this.discard();
-            } else if (this.tickCount == DELAY) {
+            } else if (this.getTime() == DELAY) {
                 Vec3 start = owner.getEyePosition();
                 Vec3 look = owner.getLookAngle();
                 Vec3 end = start.add(look.scale(RANGE));

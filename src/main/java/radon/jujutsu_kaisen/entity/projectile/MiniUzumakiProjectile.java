@@ -141,7 +141,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount % 5 == 0) {
+            if (this.getTime() % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
@@ -161,7 +161,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                 }
             }
 
-            if (this.tickCount > DELAY) {
+            if (this.getTime() > DELAY) {
                 this.calculateEndPos();
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
@@ -203,7 +203,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
                     }
                 }
 
-                if (this.tickCount - DELAY >= DURATION) {
+                if (this.getTime() - DELAY >= DURATION) {
                     this.on = false;
                 }
             }

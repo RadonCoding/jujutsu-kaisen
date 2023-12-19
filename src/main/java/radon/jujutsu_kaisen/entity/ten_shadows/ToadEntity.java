@@ -242,7 +242,7 @@ public class ToadEntity extends TenShadowsSummon {
             this.lookControl.setLookAt(target, 30.0F, 30.0F);
 
             if (this.hasLineOfSight(target) && this.distanceTo(target) <= RANGE) {
-                if (this.tickCount % SHOOT_INTERVAL == 0) {
+                if (this.getTime() % SHOOT_INTERVAL == 0) {
                     this.shoot(target);
                 }
             }

@@ -23,13 +23,11 @@ public class SelfEmbodimentOfPerfectionEntity extends DomainExpansionCenterEntit
     }
 
     public SelfEmbodimentOfPerfectionEntity(DomainExpansionEntity domain) {
-        super(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), domain.level());
-
-        this.setDomain(domain);
+        super(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), domain);
     }
 
     private PlayState activateIdlePredicate(AnimationState<SelfEmbodimentOfPerfectionEntity> animationState) {
-        return animationState.setAndContinue(this.tickCount <= ACTIVATION_DURATION ? ACTIVATE : IDLE);
+        return animationState.setAndContinue(this.getTime() <= ACTIVATION_DURATION ? ACTIVATE : IDLE);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean shouldCollapse(float strength) {
         int radius = this.getRadius();
-        boolean completed = this.tickCount >= radius;
+        boolean completed = this.getTime() >= radius;
         return completed && super.shouldCollapse(strength);
     }
 
@@ -242,7 +242,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Entity entity = pSource.getEntity();
 
         int radius = this.getRadius();
-        boolean completed = this.tickCount >= radius * 2;
+        boolean completed = this.getTime() >= radius * 2;
 
         if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
             return false;
@@ -324,7 +324,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (owner != null) {
             if (!this.level().isClientSide) {
                 int radius = this.getRadius();
-                boolean completed = this.tickCount >= radius * 2;
+                boolean completed = this.getTime() >= radius * 2;
 
                 if (this.checkSureHitEffect()) {
                     this.warn();
@@ -347,7 +347,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                     }
                 }
 
-                if (this.tickCount - 1 == 0) {
+                if (this.getTime() == 0) {
                     this.createBarrier(owner);
                 } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();

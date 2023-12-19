@@ -78,7 +78,7 @@ public class RedProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             if (entity == owner) return;
 
-            float factor = 1.0F - (((float) this.tickCount - DELAY) / DURATION);
+            float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
                 entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
@@ -108,20 +108,20 @@ public class RedProjectile extends JujutsuProjectile {
         super.tick();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount < DELAY) {
+            if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.tickCount % 5 == 0) {
+                    if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 look = owner.getLookAngle();
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
-            } else if (this.tickCount >= DURATION) {
+            } else if (this.getTime() >= DURATION) {
                 this.discard();
-            } else if (this.tickCount >= DELAY) {
+            } else if (this.getTime() >= DELAY) {
                 if (!this.level().isClientSide) {
                     if (this.chanted) {
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -148,7 +148,7 @@ public class RedProjectile extends JujutsuProjectile {
                     }
                 }
 
-                if (this.tickCount == DELAY) {
+                if (this.getTime() == DELAY) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 }
             }

@@ -96,7 +96,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount % 5 == 0) {
+            if (this.getTime() % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
@@ -155,7 +155,7 @@ public class WaterTorrentEntity extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.tickCount - DURATION / 2 > DURATION) {
+            if (this.getTime() - DURATION / 2 > DURATION) {
                 this.on = false;
             }
         }

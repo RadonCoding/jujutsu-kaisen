@@ -13,10 +13,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 
 import javax.annotation.Nullable;
 
 public class WoodSegmentEntity extends Entity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_PARENT = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Vector3f> DATA_OFFSET = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.FLOAT);
@@ -45,11 +47,27 @@ public class WoodSegmentEntity extends Entity {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_PARENT, -1);
         this.entityData.define(DATA_OFFSET, Vec3.ZERO.toVector3f());
         this.entityData.define(DATA_YAW, 0.0F);
         this.entityData.define(DATA_PITCH, 0.0F);
         this.entityData.define(DATA_INDEX, 0);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.setTime(this.getTime() + 1);
     }
 
     protected void setOffset(double x, double y, double z, float yaw, float pitch) {
@@ -100,12 +118,12 @@ public class WoodSegmentEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        this.setTime(pCompound.getInt("time"));
     }
 }

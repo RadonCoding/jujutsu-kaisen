@@ -68,7 +68,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
 
         this.renderStart(frame, pPoseStack, consumer, pPackedLight);
 
-        if (pEntity.tickCount > PureLoveBeam.CHARGE) {
+        if (pEntity.getTime() > PureLoveBeam.CHARGE) {
             this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
             pPoseStack.pushPose();

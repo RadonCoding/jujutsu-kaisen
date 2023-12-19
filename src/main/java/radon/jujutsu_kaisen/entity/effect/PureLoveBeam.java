@@ -135,7 +135,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                 }
             }
 
-            if (this.tickCount > CHARGE) {
+            if (this.getTime() > CHARGE) {
                 this.calculateEndPos();
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
@@ -177,7 +177,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.tickCount - CHARGE - this.getDuration() / 2 > this.getDuration()) {
+            if (this.getTime() - CHARGE - this.getDuration() / 2 > this.getDuration()) {
                 this.on = false;
             }
         }

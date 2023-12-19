@@ -95,7 +95,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
         if (target != null) {
             this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
 
-            if ((this.onGround() || this.isInFluidType()) && (this.isSprinting() || this.tickCount % INTERVAL == 0)) {
+            if ((this.onGround() || this.isInFluidType()) && (this.isSprinting() || this.getTime() % INTERVAL == 0)) {
                 this.setSprinting(true);
                 this.move(MoverType.SELF, target.position().subtract(this.position()).normalize().scale(this.distanceTo(target)));
                 float distance = this.distanceTo(target);

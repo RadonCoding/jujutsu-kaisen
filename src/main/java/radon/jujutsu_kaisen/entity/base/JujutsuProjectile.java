@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
 public class JujutsuProjectile extends Projectile {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
 
     public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
@@ -30,6 +31,14 @@ public class JujutsuProjectile extends Projectile {
 
         this.setOwner(pShooter);
         this.setPower(power);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -56,6 +65,8 @@ public class JujutsuProjectile extends Projectile {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         Entity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
@@ -85,14 +96,16 @@ public class JujutsuProjectile extends Projectile {
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putFloat("power", this.entityData.get(DATA_POWER));
+        pCompound.putInt("time", this.getTime());
+        pCompound.putFloat("power", this.getPower());
     }
 
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.entityData.set(DATA_POWER, pCompound.getFloat("power"));
+        this.setTime(pCompound.getInt("time"));
+        this.setPower(pCompound.getFloat("power"));
     }
 
     @Override
@@ -102,6 +115,7 @@ public class JujutsuProjectile extends Projectile {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_POWER, 0.0F);
     }
 

@@ -46,7 +46,7 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
 
         pPoseStack.scale(1.5F, 1.5F, 1.5F);
 
-        boolean still = pEntity.tickCount >= FireArrowProjectile.DELAY;
+        boolean still = pEntity.getTime() >= FireArrowProjectile.DELAY;
         RenderType type = JJKRenderTypes.glow(still ? STILL : STARTUP);
 
         for (int i = 0; i < 2; i++) {

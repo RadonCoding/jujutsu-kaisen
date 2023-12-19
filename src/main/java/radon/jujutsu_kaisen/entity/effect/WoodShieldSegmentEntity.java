@@ -85,7 +85,6 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
             pCompound.putDouble("pos_y", this.pos.y);
             pCompound.putDouble("pos_z", this.pos.z);
         }
-
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
@@ -105,7 +104,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
     @Override
     public void tick() {
         if (!this.level().isClientSide && this.isDying) {
-            if (this.tickCount - this.start >= COUNT - this.getIndex()) {
+            if (this.getTime() - this.start >= COUNT - this.getIndex()) {
                 this.discard();
             }
             return;
@@ -116,15 +115,13 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
         if (!this.level().isClientSide && !this.isDying && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             if (owner == null || owner.isRemoved()) {
                 this.isDying = true;
-                this.start = this.tickCount;
+                this.start = this.getTime();
             } else if (!owner.isAlive()) {
                 this.discard();
             }
         } else if (owner != null) {
-            super.tick();
-
             if (this.pos != null) {
-                if (!this.level().isClientSide && this.getIndex() == 0 && this.tickCount == 1) {
+                if (!this.level().isClientSide && this.getIndex() == 0 && this.getTime() == 0) {
                     for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
                         Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
                         float f = HelperMethods.getYaw(this.pos.subtract(this.position().add(pos)));
@@ -133,7 +130,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                         this.level().addFreshEntity(segment);
                     }
                 }
-                if (!this.level().isClientSide && this.getIndex() == 1 && this.tickCount > 1 && this.tickCount <= COUNT) {
+                if (!this.level().isClientSide && this.getIndex() == 1 && this.getTime() > 0 && this.getTime() <= COUNT) {
                     float yaw = (this.random.nextFloat() - 0.5F) * 30.0F;
                     int i = this.prevSegment.getIndex();
 
@@ -148,5 +145,6 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                 owner.teleportTo(this.pos.x, this.pos.y, this.pos.z);
             }
         }
+        super.tick();
     }
 }

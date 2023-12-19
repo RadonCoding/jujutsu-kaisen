@@ -61,7 +61,7 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
         } else {
             super.tick();
 
-            if (this.tickCount >= DURATION) {
+            if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
                 if (this.pos != null) {

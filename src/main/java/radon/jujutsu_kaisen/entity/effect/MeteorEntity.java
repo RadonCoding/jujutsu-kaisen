@@ -219,7 +219,7 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     public int getSize() {
-        return Math.round(getSize(this.getPower()) * ((float) Math.min(DELAY, this.tickCount) / DELAY));
+        return Math.round(getSize(this.getPower()) * ((float) Math.min(DELAY, this.getTime()) / DELAY));
     }
 
     @Override
@@ -317,7 +317,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
         this.refreshDimensions();
 
-        if (this.getExplosionTime() == 0 && this.tickCount - DELAY >= DURATION) {
+        if (this.getExplosionTime() == 0 && this.getTime() - DELAY >= DURATION) {
             this.discard();
             return;
         }
@@ -325,13 +325,13 @@ public class MeteorEntity extends JujutsuProjectile {
         this.spawnParticles();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount >= DELAY && this.getExplosionTime() == 0) {
+            if (this.getTime() >= DELAY && this.getExplosionTime() == 0) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
             } else {
                 this.aiStep();
             }
 
-            if (this.tickCount < DELAY) {
+            if (this.getTime() < DELAY) {
                 Vec3 movement = owner.getDeltaMovement();
 
                 if (movement.y < 0.0D) {
@@ -345,7 +345,7 @@ public class MeteorEntity extends JujutsuProjectile {
             } else if (!this.level().isClientSide) {
                 this.hurtEntities();
 
-                if (this.tickCount == DELAY) {
+                if (this.getTime() == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
 

@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 public class ThrownChainProjectile extends AbstractArrow {
     private static final double PULL_STRENGTH = 5.0D;
 
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
 
     private boolean released;
@@ -45,6 +46,40 @@ public class ThrownChainProjectile extends AbstractArrow {
         this.setPos(spawn.x, spawn.y, spawn.z);
 
         this.entityData.set(DATA_ITEM, stack);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_TIME, 0);
+        this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putInt("time", this.getTime());
+        pCompound.putBoolean("released", this.released);
+        pCompound.putBoolean("dealt_damage", this.dealtDamage);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.setTime(pCompound.getInt("time"));
+        this.released = pCompound.getBoolean("released");
+        this.dealtDamage = pCompound.getBoolean("dealt_damage");
     }
 
     @Override
@@ -102,6 +137,8 @@ public class ThrownChainProjectile extends AbstractArrow {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         if (this.inGroundTime > 20) {
             if (this.getOwner() instanceof LivingEntity owner) {
                 if (!owner.isRemoved() && !owner.isDeadOrDying()) {
@@ -119,7 +156,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (!this.released) {
-                double angle = Math.toRadians(this.tickCount * this.tickCount);
+                double angle = Math.toRadians(this.getTime() * this.getTime());
                 double radius = 2.0D;
                 float yaw = (float) Math.toRadians(owner.getYRot());
                 float pitch = (float) Math.toRadians(90.0F);
@@ -157,22 +194,6 @@ public class ThrownChainProjectile extends AbstractArrow {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putBoolean("released", this.released);
-        pCompound.putBoolean("dealt_damage", this.dealtDamage);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.released = pCompound.getBoolean("released");
-        this.dealtDamage = pCompound.getBoolean("dealt_damage");
-    }
-
-    @Override
     protected float getWaterInertia() {
         return 0.99F;
     }
@@ -184,12 +205,5 @@ public class ThrownChainProjectile extends AbstractArrow {
 
     public ItemStack getStack() {
         return this.entityData.get(DATA_ITEM);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
     }
 }

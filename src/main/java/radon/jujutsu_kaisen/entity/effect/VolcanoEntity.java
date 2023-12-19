@@ -60,9 +60,9 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     public void tick() {
         super.tick();
 
-        if (this.tickCount >= DURATION) {
+        if (this.getTime() >= DURATION) {
             this.discard();
-        } else if (this.tickCount >= DELAY) {
+        } else if (this.getTime() >= DELAY) {
             Vec3 look = this.getLookAngle();
 
             for (int i = 0; i < 48; i++) {
@@ -83,7 +83,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
             }
         }
 
-        if (this.tickCount % 5 == 0) {
+        if (this.getTime() % 5 == 0) {
             Vec3 speed = this.getLookAngle().scale(0.25D);
             this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x, speed.y, speed.z);
         }
