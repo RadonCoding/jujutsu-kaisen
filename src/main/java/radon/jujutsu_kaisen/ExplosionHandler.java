@@ -95,6 +95,7 @@ public class ExplosionHandler {
             }
 
             for (Entity entity : event.level.getEntities(null, AABB.ofSize(explosion.position, radius * 2, radius * 2, radius * 2))) {
+                if (!explosion.hurtsInstigator && entity == explosion.instigator) continue;
                 if (Math.sqrt(entity.distanceToSqr(explosion.position)) > radius) continue;
 
                 if (!entity.ignoreExplosion()) {
@@ -205,11 +206,15 @@ public class ExplosionHandler {
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire));
+        explosions.add(new ExplosionData(dimension, position, radius, duration, 1.0F, instigator, source, causesFire, true));
     }
 
     public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire) {
-        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire));
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire, true));
+    }
+
+    public static void spawn(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean causesFire, boolean hurtsInstigator) {
+        explosions.add(new ExplosionData(dimension, position, radius, duration, damage, instigator, source, causesFire, hurtsInstigator));
     }
 
     private static class ExplosionData {
@@ -223,8 +228,9 @@ public class ExplosionHandler {
         private final @Nullable LivingEntity instigator;
         private final DamageSource source;
         private final boolean fire;
+        private final boolean hurtsInstigator;
 
-        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire) {
+        public ExplosionData(ResourceKey<Level> dimension, Vec3 position, float radius, int duration, float damage, @Nullable LivingEntity instigator, DamageSource source, boolean fire, boolean hurts) {
             this.calculator = instigator == null ? new ExplosionDamageCalculator() : new EntityBasedExplosionDamageCalculator(instigator);
             this.dimension = dimension;
             this.position = position;
@@ -234,6 +240,7 @@ public class ExplosionHandler {
             this.instigator = instigator;
             this.source = source;
             this.fire = fire;
+            this.hurtsInstigator = hurts;
         }
     }
 }
