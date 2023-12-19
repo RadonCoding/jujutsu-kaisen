@@ -207,8 +207,6 @@ public class ExperienceHandler {
                     * (this.totalDamageDealt / this.damageDealtByOwner)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
 
-            System.out.println(String.format("Experience: %f, Target: %f, Owner: %f", experience, targetStrength, ownerStrength));
-
             if (experience < 0.1F) return;
 
             if (cap.addExperience(experience)) {
