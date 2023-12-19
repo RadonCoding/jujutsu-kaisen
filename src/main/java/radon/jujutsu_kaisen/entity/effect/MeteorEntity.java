@@ -235,8 +235,8 @@ public class MeteorEntity extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level().getEntities(owner, bounds)) {
                 if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())) >= this.getSize()) continue;
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()),
-                        DAMAGE * this.getPower());
+                if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), DAMAGE * this.getPower())) continue;
+                entity.setSecondsOnFire(10);
             }
         }
     }
