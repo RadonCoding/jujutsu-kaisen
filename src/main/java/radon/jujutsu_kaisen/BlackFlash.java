@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -25,7 +26,7 @@ public class BlackFlash {
     public static class BlackFlashForgeEvents {
         private static final float MAX_DAMAGE = 100.0F;
 
-        @SubscribeEvent
+        @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
             LivingEntity target = event.getEntity();
