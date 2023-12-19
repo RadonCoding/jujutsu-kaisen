@@ -80,7 +80,7 @@ public class ProjectionFrameEntity extends Entity {
     public void tick() {
         LivingEntity victim = this.getVictim();
 
-        if (!this.level().isClientSide && (victim == null || victim.isRemoved() || !victim.isAlive())) {
+        if (!this.level().isClientSide && (victim == null || victim.isRemoved() || victim.isDeadOrDying())) {
             this.discard();
         } else {
             super.tick();
