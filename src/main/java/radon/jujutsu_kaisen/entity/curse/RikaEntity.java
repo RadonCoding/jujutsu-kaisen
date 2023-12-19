@@ -223,7 +223,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     public boolean canPerformSorcery() {
-        return false;
+        return true;
     }
 
     @Override
