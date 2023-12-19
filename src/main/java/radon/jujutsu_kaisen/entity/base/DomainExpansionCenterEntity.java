@@ -1,6 +1,9 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -15,6 +18,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionCenterEntity.class, EntityDataSerializers.INT);
+
     @Nullable
     private UUID domainUUID;
     @Nullable
@@ -34,6 +39,8 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         DomainExpansionEntity domain = this.getDomain();
 
         if (!this.level().isClientSide && (domain == null || domain.isRemoved() || !domain.isAlive())) {
@@ -64,14 +71,15 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
 
     @Override
     protected void defineSynchedData() {
-
+        this.entityData.define(DATA_TIME, 0);
     }
 
-    @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        if (pCompound.hasUUID("domain")) {
-            this.domainUUID = pCompound.getUUID("domain");
-        }
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -79,6 +87,15 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
         if (this.domainUUID != null) {
             pCompound.putUUID("domain", this.domainUUID);
         }
+        pCompound.putInt("time", this.getTime());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        if (pCompound.hasUUID("domain")) {
+            this.domainUUID = pCompound.getUUID("domain");
+        }
+        this.setTime(pCompound.getInt("time"));
     }
 
     @Override

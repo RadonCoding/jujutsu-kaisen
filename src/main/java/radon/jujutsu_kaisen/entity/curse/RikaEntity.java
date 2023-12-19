@@ -206,7 +206,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             }
 
             if (!this.level().isClientSide) {
-                if (this.tickCount >= DURATION) {
+                if (this.getTime() >= DURATION) {
                     this.discard();
                 }
                 if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {

@@ -198,7 +198,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || this.tickCount >= DURATION) {
+        if (this.instant || this.getTime() >= DURATION) {
             this.discard();
         }
     }

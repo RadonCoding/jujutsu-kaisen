@@ -111,7 +111,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (this.tickCount >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
+        if (this.getTime() >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
             this.discard();
         }
     }
@@ -197,7 +197,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
     private void animate() {
         float size = this.getRadius() / Mth.PI;
-        float fraction = (float) this.tickCount / ANIMATION;
+        float fraction = (float) this.getTime() / ANIMATION;
         fraction = fraction < 0.5F ? 2 * fraction * fraction : fraction;
         float offset = Mth.lerp(fraction, size * 2, 0.0F);
 
@@ -217,7 +217,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     private void spawnParticles() {
-        if (this.tickCount <= ANIMATION) {
+        if (this.getTime() <= ANIMATION) {
             this.animate();
             return;
         }
@@ -271,17 +271,17 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         this.refreshDimensions();
 
-        if (this.tickCount >= DURATION) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         } else {
             if (this.getOwner() instanceof LivingEntity owner) {
                 this.spawnParticles();
 
-                if (this.tickCount < DELAY) {
+                if (this.getTime() < DELAY) {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
-                        if (this.tickCount % 5 == 0) {
+                        if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = owner.getLookAngle();
@@ -298,7 +298,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         }
                     }
 
-                    if (this.tickCount == DELAY) {
+                    if (this.getTime() == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     }

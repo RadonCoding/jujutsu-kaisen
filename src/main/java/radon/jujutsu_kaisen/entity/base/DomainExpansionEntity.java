@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class DomainExpansionEntity extends Mob {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
+
     public static final int OFFSET = 5;
 
     @Nullable
@@ -47,6 +49,45 @@ public abstract class DomainExpansionEntity extends Mob {
         this.setOwner(owner);
 
         this.ability = ability;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_TIME, 0);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        if (this.ownerUUID != null) {
+            pCompound.putUUID("owner", this.ownerUUID);
+        }
+        pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
+        pCompound.putBoolean("first", this.first);
+        pCompound.putInt("time", this.getTime());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        if (pCompound.hasUUID("owner")) {
+            this.ownerUUID = pCompound.getUUID("owner");
+        }
+        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
+        this.first = pCompound.getBoolean("first");
+        this.setTime(pCompound.getInt("time"));
     }
 
     @Override
@@ -128,6 +169,8 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
@@ -186,28 +229,6 @@ public abstract class DomainExpansionEntity extends Mob {
             }
         }
         return this.isAffected(victim.blockPosition());
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        if (this.ownerUUID != null) {
-            pCompound.putUUID("owner", this.ownerUUID);
-        }
-        pCompound.putString("ability", JJKAbilities.getKey(this.ability).toString());
-        pCompound.putBoolean("first", this.first);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        if (pCompound.hasUUID("owner")) {
-            this.ownerUUID = pCompound.getUUID("owner");
-        }
-        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
-        this.first = pCompound.getBoolean("first");
     }
 
     public boolean shouldCollapse(float strength) {

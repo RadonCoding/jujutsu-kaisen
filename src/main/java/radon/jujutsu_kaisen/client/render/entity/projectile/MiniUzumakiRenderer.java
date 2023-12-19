@@ -40,7 +40,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
 
     @Override
     public void render(MiniUzumakiProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        if (pEntity.tickCount >= MiniUzumakiProjectile.DELAY) {
+        if (pEntity.getTime() >= MiniUzumakiProjectile.DELAY) {
             Entity owner = pEntity.getOwner();
             this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                     Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;

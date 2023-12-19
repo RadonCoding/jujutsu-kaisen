@@ -131,7 +131,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
-            this.riding = this.tickCount;
+            this.riding = this.getTime();
 
             if (pPlayer.startRiding(this)) {
                 pPlayer.setYRot(this.getYRot());
@@ -262,7 +262,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public void setDown(boolean down) {
         if (this.level().isClientSide) return;
-        if (this.tickCount - this.riding < 20) return;
+        if (this.getTime() - this.riding < 20) return;
 
         boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
 

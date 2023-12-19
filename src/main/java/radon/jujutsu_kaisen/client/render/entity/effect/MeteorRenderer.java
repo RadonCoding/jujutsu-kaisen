@@ -41,7 +41,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
         pPoseStack.translate(-0.5D, (pEntity.getBbHeight() / 2.0) - 0.5D, -0.5D);
 
         if (pEntity.getExplosionTime() < 10) {
-            float time = (pEntity.tickCount + pPartialTick) * 10.0F;
+            float time = (pEntity.getTime() + pPartialTick) * 10.0F;
             pPoseStack.mulPose(Axis.ZP.rotationDegrees(time * 1.5F));
             pPoseStack.mulPose(Axis.YP.rotationDegrees(time * 1.5F));
         }

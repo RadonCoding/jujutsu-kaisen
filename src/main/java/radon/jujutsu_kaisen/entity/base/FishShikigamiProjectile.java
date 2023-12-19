@@ -183,16 +183,16 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount < DELAY) {
+            if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.tickCount % 5 == 0) {
+                    if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     this.applyOffset();
                 }
-            } else if (this.tickCount >= DELAY) {
+            } else if (this.getTime() >= DELAY) {
                 this.applyRotation();
 
                 if (!this.level().isClientSide) {

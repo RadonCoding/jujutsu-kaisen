@@ -165,7 +165,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.tickCount < DELAY ? 0.25F : 1.0F);
+        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.getTime() < DELAY ? 0.25F : 1.0F);
         int count = (int) (radius * Math.PI * 2) * 2;
 
         for (int i = 0; i < count; i++) {
@@ -223,7 +223,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
     private void spin() {
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.tickCount % 5 == 0) {
+            if (this.getTime() % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
@@ -239,22 +239,22 @@ public class BlueProjectile extends JujutsuProjectile {
         this.refreshDimensions();
 
         if (this.entityData.get(DATA_MOTION)) {
-            if (this.tickCount >= DELAY) {
+            if (this.getTime() >= DELAY) {
                 this.spin();
             }
         }
 
-        if (this.tickCount >= DURATION) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         } else {
             this.spawnParticles();
 
             if (this.getOwner() instanceof LivingEntity owner) {
-                if (this.tickCount < DELAY) {
+                if (this.getTime() < DELAY) {
                     if (!owner.isAlive()) {
                         this.discard();
                     } else {
-                        if (this.tickCount % 5 == 0) {
+                        if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
                         Vec3 look = owner.getLookAngle();
@@ -262,7 +262,7 @@ public class BlueProjectile extends JujutsuProjectile {
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
-                    if (this.tickCount == DELAY) {
+                    if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
                         Vec3 look = owner.getLookAngle();
                         Vec3 end = start.add(look.scale(RANGE));

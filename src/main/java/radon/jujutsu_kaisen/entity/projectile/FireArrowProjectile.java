@@ -161,14 +161,14 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public void tick() {
         super.tick();
 
-        if (this.tickCount >= DELAY) {
+        if (this.getTime() >= DELAY) {
             if (this.animation < STILL_FRAMES) {
                 this.animation++;
             } else {
                 this.animation = 0;
             }
         } else {
-            if (this.tickCount > 0 && this.tickCount % (DELAY / STARTUP_FRAMES) == 0) {
+            if (this.getTime() > 0 && this.getTime() % (DELAY / STARTUP_FRAMES) == 0) {
                 if (this.animation < STARTUP_FRAMES) {
                     this.animation++;
                 }
@@ -185,7 +185,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
 
-            if (this.tickCount < DELAY) {
+            if (this.getTime() < DELAY) {
                 Vec3 look = owner.getLookAngle();
                 double d0 = look.horizontalDistance();
                 this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
@@ -196,13 +196,13 @@ public class FireArrowProjectile extends JujutsuProjectile {
                 if (!owner.isAlive()) {
                     this.discard();
                 } else {
-                    if (this.tickCount % 5 == 0) {
+                    if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
                     this.setPos(spawn.x, spawn.y, spawn.z);
                 }
-            } else if (this.tickCount == DELAY) {
+            } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }

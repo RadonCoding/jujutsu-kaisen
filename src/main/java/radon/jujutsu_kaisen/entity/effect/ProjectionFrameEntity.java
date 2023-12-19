@@ -22,6 +22,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.UUID;
 
 public class ProjectionFrameEntity extends Entity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
+
     private static final int DURATION = 3 * 20;
 
     @Nullable
@@ -43,11 +45,6 @@ public class ProjectionFrameEntity extends Entity {
         this.noCulling = true;
     }
 
-    @Override
-    protected void defineSynchedData() {
-
-    }
-
     public ProjectionFrameEntity(LivingEntity owner, LivingEntity target, float power) {
         this(JJKEntities.PROJECTION_FRAME.get(), target.level());
 
@@ -60,6 +57,50 @@ public class ProjectionFrameEntity extends Entity {
 
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
     }
+
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        pCompound.putDouble("pos_x", this.pos.x);
+        pCompound.putDouble("pos_y", this.pos.y);
+        pCompound.putDouble("pos_z", this.pos.z);
+
+        if (this.victimUUID != null) {
+            pCompound.putUUID("victim", this.victimUUID);
+        }
+        if (this.ownerUUID != null) {
+            pCompound.putUUID("owner", this.ownerUUID);
+        }
+        pCompound.putFloat("power", this.power);
+        pCompound.putInt("time", this.getTime());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        this.pos = new Vec3(pCompound.getDouble("pos_x"), pCompound.getDouble("pos_y"), pCompound.getDouble("pos_z"));
+
+        if (pCompound.hasUUID("victim")) {
+            this.victimUUID = pCompound.getUUID("victim");
+        }
+        if (pCompound.hasUUID("owner")) {
+            this.ownerUUID = pCompound.getUUID("owner");
+        }
+        this.power = pCompound.getFloat("power");
+        this.setTime(pCompound.getInt("time"));
+    }
+
 
     public float getPower() {
         return this.power;
@@ -87,7 +128,7 @@ public class ProjectionFrameEntity extends Entity {
 
             if (this.level().isClientSide) return;
 
-            if (this.tickCount >= DURATION) {
+            if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
                 victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
@@ -135,34 +176,6 @@ public class ProjectionFrameEntity extends Entity {
         } else {
             return null;
         }
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putDouble("pos_x", this.pos.x);
-        pCompound.putDouble("pos_y", this.pos.y);
-        pCompound.putDouble("pos_z", this.pos.z);
-
-        if (this.victimUUID != null) {
-            pCompound.putUUID("victim", this.victimUUID);
-        }
-        if (this.ownerUUID != null) {
-            pCompound.putUUID("owner", this.ownerUUID);
-        }
-        pCompound.putFloat("power", this.power);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        this.pos = new Vec3(pCompound.getDouble("pos_x"), pCompound.getDouble("pos_y"), pCompound.getDouble("pos_z"));
-
-        if (pCompound.hasUUID("victim")) {
-            this.victimUUID = pCompound.getUUID("victim");
-        }
-        if (pCompound.hasUUID("owner")) {
-            this.ownerUUID = pCompound.getUUID("owner");
-        }
-        this.power = pCompound.getFloat("power");
     }
 
     @Override
