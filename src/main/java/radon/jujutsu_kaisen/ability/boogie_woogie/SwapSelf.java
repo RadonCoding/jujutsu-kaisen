@@ -11,8 +11,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -37,7 +39,11 @@ public class SwapSelf extends Ability {
     private @Nullable Entity getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator() && target.isPickable()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
-            return target.isPickable() || target instanceof ItemEntity || target instanceof Projectile ? target : null;
+
+            if (!target.isPickable() && !(target instanceof ItemEntity) && !(target instanceof Projectile) || (target instanceof LivingEntity living &&
+                    JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION))) return null;
+
+            return target;
         }
         return null;
     }
