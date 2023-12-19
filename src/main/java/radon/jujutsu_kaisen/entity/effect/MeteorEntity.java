@@ -246,22 +246,6 @@ public class MeteorEntity extends JujutsuProjectile {
             this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.1F, true, 5),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
-
-        for (int i = 0; i < count; i++) {
-            double theta = this.random.nextDouble() * Math.PI * 2.0D;
-            double phi = this.random.nextDouble() * Math.PI;
-
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
-
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
-
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_YELLOW, radius * 0.2F, 0.1F, true, 5),
-                    true, x, y, z, 0.0D, 0.0D, 0.0D);
-        }
     }
 
     private void breakBlocks() {

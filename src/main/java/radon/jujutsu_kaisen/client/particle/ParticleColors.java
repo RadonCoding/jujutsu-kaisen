@@ -23,7 +23,6 @@ public class ParticleColors {
     public static Vector3f PURPLE_LIGHTNING = Vec3.fromRGB24(9267447).toVector3f();
     public static Vector3f BLACK_FLASH = Vec3.fromRGB24(16188677).toVector3f();
     public static Vector3f FIRE_ORANGE = Vec3.fromRGB24(16734720).toVector3f();
-    public static Vector3f FIRE_YELLOW = Vec3.fromRGB24(16771080).toVector3f();
 
     public static Vector3f getCursedEnergyColor(LivingEntity entity) {
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
