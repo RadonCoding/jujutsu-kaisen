@@ -323,24 +323,6 @@ public class MeteorEntity extends JujutsuProjectile {
 
                 int duration = this.getSize() * 5;
 
-                if (this.getExplosionTime() == 0) {
-                    Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
-                    Vec3 end = start.add(this.getDeltaMovement().scale(this.getSize()));
-
-                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
-
-                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
-                        this.setExplosionTime(1);
-
-                        AABB bounds = this.getBoundingBox().expandTowards(this.getDeltaMovement());
-                        Vec3 collision = this.position().add(Entity.collideBoundingBox(this, this.getDeltaMovement(), bounds, this.level(),
-                                this.level().getEntityCollisions(this, bounds)));
-                        ExplosionHandler.spawn(this.level().dimension(), collision, this.getSize(), duration, this.getPower(), owner,
-                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
-                    }
-                    this.breakBlocks();
-                }
-
                 int time = this.getExplosionTime();
 
                 if (time > 0) {
@@ -349,6 +331,19 @@ public class MeteorEntity extends JujutsuProjectile {
                     } else {
                         this.setExplosionTime(++time);
                     }
+                } else {
+                    Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+                    Vec3 end = start.add(this.getDeltaMovement().scale((double) this.getSize() / 2));
+
+                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
+
+                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
+                        this.setExplosionTime(1);
+
+                        ExplosionHandler.spawn(this.level().dimension(), clip.getBlockPos().getCenter(), this.getSize(), duration, this.getPower(), owner,
+                                JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
+                    }
+                    this.breakBlocks();
                 }
             }
         }
