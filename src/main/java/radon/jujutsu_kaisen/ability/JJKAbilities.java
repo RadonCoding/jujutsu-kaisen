@@ -349,25 +349,9 @@ public class JJKAbilities {
                 abilities.addAll(Arrays.asList(trait.getAbilities()));
             }
 
-            CursedTechnique technique = cap.getTechnique();
-
-            if (technique != null) {
-                Ability domain = technique.getDomain();
-
-                if (domain != null) {
-                    abilities.add(domain);
-                }
+            for (CursedTechnique technique : cap.getTechniques()) {
                 abilities.addAll(Arrays.asList(technique.getAbilities()));
             }
-
-            CursedTechnique additional = cap.getAdditional();
-            if (additional != null) abilities.addAll(Arrays.asList(additional.getAbilities()));
-
-            CursedTechnique copied = cap.getCurrentCopied();
-            if (copied != null) abilities.addAll(Arrays.asList(copied.getAbilities()));
-
-            CursedTechnique absorbed = cap.getCurrentAbsorbed();
-            if (absorbed != null) abilities.addAll(Arrays.asList(absorbed.getAbilities()));
         }
         abilities.removeIf(ability -> !ability.isValid(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
 

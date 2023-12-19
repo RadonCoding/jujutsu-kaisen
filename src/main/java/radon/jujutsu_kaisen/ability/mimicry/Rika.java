@@ -95,6 +95,4 @@ public class Rika extends Summon<RikaEntity> {
     public int getCooldown() {
         return 30 * 20;
     }
-
-
 }
