@@ -38,6 +38,8 @@ public class TravelParticle extends TextureSheetParticle {
 
         this.opacity = options.opacity();
 
+        this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
+
         this.glow = options.glow();
 
         this.sprites = pSprites;
