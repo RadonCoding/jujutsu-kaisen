@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -116,7 +117,7 @@ public class ChantHandler {
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        ability.getName(), Math.round(getChant(owner, ability) * 100)), false), player);
+                        ability.getName().copy(), Math.round(getChant(owner, ability) * 100)), false), player);
             }
 
             int delta = messages.get(owner.getUUID()).size() - 5;
@@ -143,7 +144,7 @@ public class ChantHandler {
                 Entity owner = null;
 
                 for (ServerLevel level : event.getServer().getAllLevels()) {
-                    if ((owner = level.getEntity(entry.getKey())) == null) break;
+                    if ((owner = level.getEntity(entry.getKey())) != null) break;
                 }
 
                 if (owner == null) continue;
