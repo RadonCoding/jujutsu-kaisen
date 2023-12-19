@@ -464,15 +464,11 @@ public class SorcererData implements ISorcererData {
                 this.owner.heal(1.0F / 20);
             }
         } else {
-            HelperMethods.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
-
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
             if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
-            double movement = this.getRealPower() * 0.025D;
-            HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
             this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
