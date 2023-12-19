@@ -54,6 +54,8 @@ public class MeteorEntity extends JujutsuProjectile {
         super(JJKEntities.METEOR.get(), owner.level(), owner, power);
 
         owner.setPos(owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D));
+
+        this.applyOffset();
     }
 
     @Override
@@ -284,6 +286,15 @@ public class MeteorEntity extends JujutsuProjectile {
         this.entityData.set(DATA_EXPLOSION_TIME, time);
     }
 
+    private void applyOffset() {
+        Entity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        Vec3 look = owner.getLookAngle();
+        this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getBbHeight() * 2, this.getBbWidth() * 2)));
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -313,8 +324,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 }
 
                 if (!this.level().isClientSide) {
-                    Vec3 look = owner.getLookAngle();
-                    this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getBbHeight() * 2, this.getBbWidth() * 2)));
+                    this.applyOffset();
                 }
             } else if (!this.level().isClientSide) {
                 if (this.tickCount == DELAY) {
