@@ -38,6 +38,7 @@ public class MeteorEntity extends JujutsuProjectile {
     public static final int DELAY = 3 * 20;
     private static final double SPEED = 3.0D;
     private static final int DURATION = 5 * 20;
+    private static final float DAMAGE = 10.0F;
 
     private int lerpSteps;
     private double lerpX;
@@ -109,10 +110,12 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     private void pushEntities() {
+        AABB bounds = AABB.ofSize(this.position(), this.getSize() * 2, this.getSize() * 2, this.getSize() * 2);
+
         if (this.level().isClientSide) {
-            this.level().getEntities(EntityTypeTest.forClass(Player.class), this.getBoundingBox(), EntitySelector.pushableBy(this)).forEach(this::doPush);
+            this.level().getEntities(EntityTypeTest.forClass(Player.class), bounds, EntitySelector.pushableBy(this)).forEach(this::doPush);
         } else {
-            List<Entity> entities = this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
+            List<Entity> entities = this.level().getEntities(this, bounds, EntitySelector.pushableBy(this));
 
             if (!entities.isEmpty()) {
                 int i = this.level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
@@ -225,6 +228,19 @@ public class MeteorEntity extends JujutsuProjectile {
         return EntityDimensions.fixed(size, size);
     }
 
+    private void hurtEntities() {
+        double radius = this.getSize();
+        AABB bounds = this.getBoundingBox().inflate(radius);
+
+        if (this.getOwner() instanceof LivingEntity owner) {
+            for (Entity entity : this.level().getEntities(owner, bounds)) {
+                if (Math.sqrt(entity.distanceToSqr(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ())) >= this.getSize()) continue;
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()),
+                        DAMAGE * this.getPower());
+            }
+        }
+    }
+
     @Override
     protected boolean isProjectile() {
         return false;
@@ -327,6 +343,8 @@ public class MeteorEntity extends JujutsuProjectile {
                     this.applyOffset();
                 }
             } else if (!this.level().isClientSide) {
+                this.hurtEntities();
+
                 if (this.tickCount == DELAY) {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
