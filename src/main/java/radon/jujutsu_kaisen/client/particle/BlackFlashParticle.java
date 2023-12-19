@@ -17,6 +17,8 @@ public class BlackFlashParticle extends TextureSheetParticle {
 
         this.lifetime = (int) (2.0F / (this.random.nextFloat() * 0.9F + 0.1F));
 
+        this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * 4.0F;
+
         this.rCol = ParticleColors.BLACK_FLASH.x;
         this.gCol = ParticleColors.BLACK_FLASH.y;
         this.bCol = ParticleColors.BLACK_FLASH.z;
