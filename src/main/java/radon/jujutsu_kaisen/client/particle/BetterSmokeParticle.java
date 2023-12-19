@@ -19,6 +19,9 @@ public class BetterSmokeParticle extends SmokeParticle {
     protected BetterSmokeParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, BetterSmokeParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ, 0.0D, 0.0D, 0.0D, options.scalar, pSprites);
 
+        this.gravity = 0.0F;
+        this.friction = 0.98F;
+
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
@@ -27,6 +30,8 @@ public class BetterSmokeParticle extends SmokeParticle {
         this.zd = pZSpeed;
 
         this.hasPhysics = false;
+
+        this.speedUpWhenYMotionIsBlocked = false;
     }
 
     public record BetterSmokeParticleOptions(float scalar, int lifetime) implements ParticleOptions {

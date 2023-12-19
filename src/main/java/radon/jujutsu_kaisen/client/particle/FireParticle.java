@@ -29,6 +29,8 @@ import org.joml.Vector3f;
 import java.util.Locale;
 
 public class FireParticle extends TextureSheetParticle {
+    private final float size;
+
     protected FireParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, FireParticleOptions options) {
         super(pLevel, pX, pY, pZ);
 
@@ -38,9 +40,16 @@ public class FireParticle extends TextureSheetParticle {
         this.yd = pYSpeed;
         this.zd = pZSpeed;
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.size = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
 
         this.hasPhysics = false;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.quadSize = this.size * (1.0F - ((float) this.age / this.lifetime));
     }
 
     private void fireVertex(PoseStack.Pose pMatrixEntry, VertexConsumer pBuffer, float pX, float pY, float pZ, float pTexU, float pTexV) {

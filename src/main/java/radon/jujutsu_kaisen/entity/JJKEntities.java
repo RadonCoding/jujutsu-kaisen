@@ -204,7 +204,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<FireballProjectile>> FIREBALL = ENTITIES.register("fireball", () ->
             EntityType.Builder.<FireballProjectile>of(FireballProjectile::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fireball")
                             .toString()));
     public static RegistryObject<EntityType<PiercingWaterEntity>> PIERCING_WATER = ENTITIES.register("piercing_water", () ->

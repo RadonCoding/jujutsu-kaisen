@@ -86,7 +86,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double yOffset = this.getFlamePillarRadius() * Math.sin(phi) * Math.sin(theta);
             double zOffset = this.getFlamePillarRadius() * Math.cos(phi);
 
-            int lifetime = 2 * 20;
+            int lifetime = 3 * 20;
 
             for (int j = 0; j < 2; j++) {
                 double x = center.x + xOffset * this.getFlamePillarRadius() * this.random.nextDouble();
@@ -119,7 +119,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             double xOffset = this.getFlamePillarRadius() * 2 * Math.sin(phi) * Math.cos(theta);
             double zOffset = this.getFlamePillarRadius() * 2 * Math.cos(phi);
 
-            int lifetime = 2 * 20;
+            int lifetime = 3 * 20;
 
             for (int j = 0; j < 2; j++) {
                 double x = center.x + xOffset * this.getFlamePillarRadius() * 2 * this.random.nextDouble();
