@@ -56,8 +56,8 @@ public class ExperienceHandler {
                 while (iter.hasNext()) {
                     for (BattleData battle : iter.next().getValue()) {
                         if (battle.getTargetUUID() != victim.getUUID()) continue;
-
                         battle.attack(attacker.getUUID(), event.getAmount());
+                        existing = true;
                     }
                 }
 
