@@ -141,6 +141,11 @@ public class ChantHandler {
             while (iter.hasNext()) {
                 Map.Entry<UUID, Integer> entry = iter.next();
 
+                if (!messages.containsKey(entry.getKey())) {
+                    iter.remove();
+                    continue;
+                }
+
                 Entity owner = null;
 
                 for (ServerLevel level : event.getServer().getAllLevels()) {
