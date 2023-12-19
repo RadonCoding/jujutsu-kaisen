@@ -48,20 +48,23 @@ public class ExperienceHandler {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
             if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                boolean existing = battles.containsKey(attacker.getUUID());
-
-                if (!existing) {
-                    addBattle(attacker.getUUID(), new BattleData(attacker.getUUID(), victim.getUUID()));
-                }
-
                 Iterator<Map.Entry<UUID, CopyOnWriteArraySet<BattleData>>> iter = battles.entrySet().iterator();
 
+                boolean existing = false;
+
+                // Find battles where the target is the victim and increase the total damage
                 while (iter.hasNext()) {
                     for (BattleData battle : iter.next().getValue()) {
-                        if (battle.getTargetUUID() == victim.getUUID()) {
-                            battle.attack(attacker.getUUID(), event.getAmount());
-                        }
+                        if (battle.getTargetUUID() != victim.getUUID()) continue;
+
+                        battle.attack(attacker.getUUID(), event.getAmount());
                     }
+                }
+
+                if (!existing) {
+                    BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
+                    addBattle(attacker.getUUID(), battle);
+                    battle.attack(attacker.getUUID(), event.getAmount());
                 }
             }
         }

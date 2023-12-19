@@ -21,6 +21,7 @@ public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
     private final boolean glow;
+    private final float opacity;
 
     protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
@@ -35,7 +36,7 @@ public class TravelParticle extends TextureSheetParticle {
         this.gCol = color.y;
         this.bCol = color.z;
 
-        this.alpha = options.opacity();
+        this.opacity = options.opacity();
 
         this.glow = options.glow();
 
@@ -48,7 +49,7 @@ public class TravelParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
-        this.alpha = 1.0F - ((float) this.age / this.lifetime);
+        this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.setSprite(this.sprites.get(this.level.random));
 
