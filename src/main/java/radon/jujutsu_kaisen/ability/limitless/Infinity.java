@@ -60,7 +60,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-
+        owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
     }
 
     @Override
