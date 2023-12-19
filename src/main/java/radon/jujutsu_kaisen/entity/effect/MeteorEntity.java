@@ -9,7 +9,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
@@ -334,12 +332,15 @@ public class MeteorEntity extends JujutsuProjectile {
                         this.setExplosionTime(++time);
                     }
                 } else {
-                    HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+                    Vec3 start = this.position();
+                    Vec3 end = start.add(this.getDeltaMovement().scale((double) this.getSize() / 2));
 
-                    if (hit.getType() == HitResult.Type.ENTITY || (hit instanceof BlockHitResult blockHit && !this.level().getBlockState(blockHit.getBlockPos()).isAir())) {
+                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
+
+                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
                         this.setExplosionTime(1);
 
-                        ExplosionHandler.spawn(this.level().dimension(), hit.getLocation(), this.getSize(), duration, this.getPower(), owner,
+                        ExplosionHandler.spawn(this.level().dimension(), clip.getLocation(), this.getSize(), duration, this.getPower(), owner,
                                 JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true, false);
                     }
                     this.breakBlocks();
