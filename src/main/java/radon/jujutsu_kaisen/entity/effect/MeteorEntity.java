@@ -2,9 +2,10 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -17,31 +18,26 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.mixin.common.IEntityAccessor;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
 public class MeteorEntity extends JujutsuProjectile {
+    private static final EntityDataAccessor<Integer> DATA_EXPLOSION_TIME = SynchedEntityData.defineId(MeteorEntity.class, EntityDataSerializers.INT);
+
     public static final int SIZE = 5;
     public static final int HEIGHT = 30;
     private static final int MAX_SIZE = 20;
     public static final int DELAY = 3 * 20;
     private static final double SPEED = 3.0D;
     private static final int DURATION = 5 * 20;
-
-    private int explosionTime;
 
     private int lerpSteps;
     private double lerpX;
@@ -58,6 +54,13 @@ public class MeteorEntity extends JujutsuProjectile {
         super(JJKEntities.METEOR.get(), owner.level(), owner, power);
 
         owner.setPos(owner.position().add(0.0D, MeteorEntity.HEIGHT + MeteorEntity.getSize(power), 0.0D));
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_EXPLOSION_TIME, 0);
     }
 
     @Override
@@ -79,14 +82,14 @@ public class MeteorEntity extends JujutsuProjectile {
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
 
-        this.explosionTime = pCompound.getInt("explosion_time");
+        this.setExplosionTime(pCompound.getInt("explosion_time"));
     }
 
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
-        pCompound.putInt("explosion_time", this.explosionTime);
+        pCompound.putInt("explosion_time", this.getExplosionTime());
     }
 
     private float getFrictionInfluencedSpeed(float pFriction) {
@@ -243,7 +246,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.1F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.5F, true, 1),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -273,13 +276,21 @@ public class MeteorEntity extends JujutsuProjectile {
         }
     }
 
+    public int getExplosionTime() {
+        return this.entityData.get(DATA_EXPLOSION_TIME);
+    }
+
+    private void setExplosionTime(int time) {
+        this.entityData.set(DATA_EXPLOSION_TIME, time);
+    }
+
     @Override
     public void tick() {
         super.tick();
 
         this.refreshDimensions();
 
-        if (this.explosionTime == 0 && this.tickCount - DELAY >= DURATION) {
+        if (this.getExplosionTime() == 0 && this.tickCount - DELAY >= DURATION) {
             this.discard();
             return;
         }
@@ -287,7 +298,7 @@ public class MeteorEntity extends JujutsuProjectile {
         this.spawnParticles();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.explosionTime == 0 && this.tickCount > DELAY) {
+            if (this.tickCount >= DELAY && this.getExplosionTime() == 0) {
                 this.move(MoverType.SELF, this.getDeltaMovement());
             } else {
                 this.aiStep();
@@ -312,14 +323,14 @@ public class MeteorEntity extends JujutsuProjectile {
 
                 int duration = this.getSize() * 5;
 
-                if (this.explosionTime == 0) {
+                if (this.getExplosionTime() == 0) {
                     Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
                     Vec3 end = start.add(this.getDeltaMovement().scale(this.getSize()));
 
                     BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
 
                     if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
-                        this.explosionTime++;
+                        this.setExplosionTime(1);
 
                         AABB bounds = this.getBoundingBox().expandTowards(this.getDeltaMovement());
                         Vec3 collision = this.position().add(Entity.collideBoundingBox(this, this.getDeltaMovement(), bounds, this.level(),
@@ -330,11 +341,13 @@ public class MeteorEntity extends JujutsuProjectile {
                     this.breakBlocks();
                 }
 
-                if (this.explosionTime > 0) {
-                    if (this.explosionTime >= duration) {
+                int time = this.getExplosionTime();
+
+                if (time > 0) {
+                    if (time >= duration) {
                         this.discard();
                     } else {
-                        this.explosionTime++;
+                        this.setExplosionTime(++time);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,14 +15,11 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
-
-import java.util.List;
 
 public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
     public MeteorRenderer(EntityRendererProvider.Context pContext) {
@@ -41,6 +39,12 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
 
         pPoseStack.pushPose();
         pPoseStack.translate(-0.5D, (pEntity.getBbHeight() / 2.0) - 0.5D, -0.5D);
+
+        if (pEntity.getExplosionTime() > 20) {
+            float time = (pEntity.tickCount + pPartialTick) * 10.0F;
+            pPoseStack.mulPose(Axis.ZP.rotationDegrees(time * 1.5F));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(time * 1.5F));
+        }
 
         ModelBlockRenderer.enableCaching();
 
