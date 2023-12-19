@@ -8,12 +8,14 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +29,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.mixin.common.IEntityAccessor;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -226,7 +229,7 @@ public class MeteorEntity extends JujutsuProjectile {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
         float radius = this.getSize() * 1.25F;
-        int count = (int) (radius * Math.PI * 2);
+        int count = (int) (radius * Math.PI * 2) * 2;
 
         for (int i = 0; i < count; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -240,7 +243,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.5F, 0.1F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.1F, true, 5),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -256,7 +259,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset * 0.1F;
             double z = center.z + zOffset * 0.1F;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_YELLOW, radius * 0.25F, 0.1F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_YELLOW, radius * 0.2F, 0.1F, true, 5),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -326,7 +329,12 @@ public class MeteorEntity extends JujutsuProjectile {
                 int duration = this.getSize() * 5;
 
                 if (this.explosionTime == 0) {
-                    if (this.horizontalCollision || this.verticalCollision) {
+                    Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+                    Vec3 end = start.add(this.getDeltaMovement().scale(this.getSize()));
+
+                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
+
+                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
                         this.explosionTime++;
 
                         AABB bounds = this.getBoundingBox().expandTowards(this.getDeltaMovement());

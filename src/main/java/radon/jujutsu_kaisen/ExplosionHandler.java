@@ -82,7 +82,7 @@ public class ExplosionHandler {
             int maxZ = Mth.floor(explosion.position.z + radius + 1.0F);
 
             if (explosion.age == 0) {
-                event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, radius, 1.0F);
+                event.level.playSound(null, explosion.position.x, explosion.position.y, explosion.position.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, radius * 2, 1.0F);
 
                 AABB bounds = new AABB(explosion.position.x - (radius * 2.0F), explosion.position.y - (radius * 2.0F),
                         explosion.position.z - (radius * 2.0F),
