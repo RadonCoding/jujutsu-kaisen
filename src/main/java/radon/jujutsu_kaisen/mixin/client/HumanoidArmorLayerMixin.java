@@ -23,7 +23,9 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Mixin(HumanoidArmorLayer.class)
@@ -52,13 +54,27 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
         if (data == null) return;
 
+        Map<Ability, ITransformation.Part> parts = new HashMap<>();
+
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
+
+            if (transformation.isReplacement()) {
+                parts.put(ability, transformation.getBodyPart());
+            }
+        }
+
         Set<EquipmentSlot> hidden = new HashSet<>();
 
         for (Ability ability : data.toggled) {
             if (!(ability instanceof ITransformation transformation)) continue;
 
             if (transformation.isReplacement()) {
-                hidden.add(transformation.getBodyPart().getSlot());
+                for (Map.Entry<Ability, ITransformation.Part> entry : parts.entrySet()) {
+                    if (entry.getKey() == ability || (entry.getValue() != ITransformation.Part.BODY && entry.getValue() != transformation.getBodyPart())) continue;
+                    hidden.add(transformation.getBodyPart().getSlot());
+                    break;
+                }
             }
         }
 
