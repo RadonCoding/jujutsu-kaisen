@@ -112,6 +112,8 @@ public class BlackFlashEntity extends Entity {
     public void tick() {
         super.tick();
 
+        this.setTime(this.getTime() + 1);
+
         LivingEntity victim = this.getVictim();
 
         for (int i = 0; i < 32; i++) {
