@@ -97,14 +97,16 @@ public class ThrownChainProjectile extends AbstractArrow {
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        Entity owner = this.getOwner();
+        if (!this.dealtDamage) {
+            Entity owner = this.getOwner();
 
-        if (this.getStack().isEmpty()) {
-            if (owner != null) {
-                owner.setDeltaMovement(this.position().subtract(owner.position()).normalize().scale(PULL_STRENGTH));
-                owner.hurtMarked = true;
+            if (this.getStack().isEmpty()) {
+                if (owner != null) {
+                    owner.setDeltaMovement(this.position().subtract(owner.position()).normalize().scale(PULL_STRENGTH));
+                    owner.hurtMarked = true;
 
-                this.dealtDamage = true;
+                    this.dealtDamage = true;
+                }
             }
         }
     }
@@ -133,6 +135,7 @@ public class ThrownChainProjectile extends AbstractArrow {
             SwordItem sword = (SwordItem) this.getStack().getItem();
             target.hurt(source, (float) (sword.getDamage() * speed));
         }
+        this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
     }
 
     @Override
