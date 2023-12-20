@@ -96,5 +96,10 @@ public class VeilHandler {
 
         veils.entrySet().removeIf(entry ->
                 event.level.dimension() == entry.getKey() && !(event.level.getBlockEntity(entry.getValue()) instanceof VeilRodBlockEntity));
+
+        domains.entrySet().removeIf(entry ->
+                event.level.dimension() == entry.getKey() && entry.getValue().isEmpty());
+        domains.getOrDefault(event.level.dimension(), Set.of()).removeIf(identifier ->
+                !(((ServerLevel) event.level).getEntity(identifier) instanceof DomainExpansionEntity));
     }
 }
