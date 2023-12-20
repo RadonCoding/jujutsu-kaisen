@@ -101,7 +101,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.blockPosition())) {
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {
             if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition()))
                 continue;
 

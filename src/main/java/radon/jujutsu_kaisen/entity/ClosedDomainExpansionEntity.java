@@ -241,7 +241,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (!completed) return false;
 
-        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.blockPosition());
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
 
         for (DomainExpansionEntity domain : domains) {
             if (domain.getOwner() == this.getOwner()) continue;
