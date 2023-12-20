@@ -99,18 +99,6 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         return this.getBbHeight();
     }
 
-    private void breakBlocks() {
-        AABB bounds = this.getBoundingBox();
-
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level().getBlockState(pos);
-
-            if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level().destroyBlock(pos, false);
-            }
-        });
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -170,17 +158,6 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.level().isClientSide) {
-            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                this.breakBlocks();
-            }
-        }
     }
 
     @Override

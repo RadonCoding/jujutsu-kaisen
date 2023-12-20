@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -88,11 +89,11 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             if (source.is(JJKDamageSources.SOUL)) return;
 
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            for (DomainExpansionEntity domain : cap.getDomains(((ServerLevel) victim.level()))) {
+            for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) victim.level()), victim.blockPosition())) {
                 if (domain.getOwner() == source.getEntity()) return;
             }
+
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float cost = event.getAmount() * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
             if (cap.getEnergy() < cost) return;

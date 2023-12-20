@@ -109,10 +109,6 @@ public interface ISorcererData {
 
     void setDomainSize(float domainSize);
 
-    List<DomainExpansionEntity> getDomains(ServerLevel level);
-
-    void onInsideDomain(DomainExpansionEntity domain);
-
     boolean hasToggled(Ability ability);
 
     @Nullable CursedTechnique getAdditional();
@@ -253,10 +249,6 @@ public interface ISorcererData {
     void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
 
     void revive(boolean full);
-
-    void setDomain(DomainExpansionEntity domain);
-
-    @Nullable DomainExpansionEntity getDomain(ServerLevel level);
 
     Set<Ability> getAdapted();
 

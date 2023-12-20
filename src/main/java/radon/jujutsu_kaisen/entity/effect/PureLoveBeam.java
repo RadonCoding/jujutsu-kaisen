@@ -149,27 +149,24 @@ public class PureLoveBeam extends JujutsuProjectile {
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null), DAMAGE * this.getPower());
                     }
 
-                    if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                        double radius = SCALE * 2.0F;
+                    double radius = SCALE * 2.0F;
 
-                        AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
-                                this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                        double centerX = bounds.getCenter().x;
-                        double centerY = bounds.getCenter().y;
-                        double centerZ = bounds.getCenter().z;
+                    AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
+                            this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
+                    double centerX = bounds.getCenter().x;
+                    double centerY = bounds.getCenter().y;
+                    double centerZ = bounds.getCenter().z;
 
-                        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                                    BlockPos pos = new BlockPos(x, y, z);
-                                    BlockState state = this.level().getBlockState(pos);
+                    for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                        for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                            for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                                BlockPos pos = new BlockPos(x, y, z);
 
-                                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                                    if (distance <= radius) {
-                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                            this.level().destroyBlock(pos, false);
-                                        }
+                                if (distance <= radius) {
+                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                        this.level().destroyBlock(pos, false);
                                     }
                                 }
                             }

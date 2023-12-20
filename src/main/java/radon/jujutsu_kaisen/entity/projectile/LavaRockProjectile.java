@@ -93,7 +93,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+            DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) this.level(), DomainExpansionEntity.class);
 
             if (domain == null) return;
 
@@ -110,7 +110,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
             if (this.getOwner() instanceof LivingEntity owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+                DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) this.level(), DomainExpansionEntity.class);
 
                 if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get())) {
                     this.discard();

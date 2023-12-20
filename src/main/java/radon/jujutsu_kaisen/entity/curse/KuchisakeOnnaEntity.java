@@ -20,9 +20,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -196,48 +198,46 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         if (this.cooldown > 0) this.cooldown--;
 
-        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!cap.getDomains(((ServerLevel) this.level())).isEmpty()) {
+        if (!VeilHandler.getDomains(((ServerLevel) this.level()), this.blockPosition()).isEmpty()) {
+            this.reset();
+            return;
+        }
+
+        this.getCurrent().ifPresent(identifier -> {
+            if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
+
+            this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
+
+            if (JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
                 this.reset();
-                return;
-            }
-
-            this.getCurrent().ifPresent(identifier -> {
-                if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
-
-                this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
-
-                if (JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
-                    this.reset();
-                } else if (Math.sqrt(target.distanceToSqr(this.start)) >= 3.0D) {
-                    this.attack();
-                }
-            });
-
-            LivingEntity target = this.getTarget();
-
-            if (target == null || target.isRemoved() || !target.isAlive() || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())) {
-                return;
-            }
-
-            if (!this.isOpen()) {
-                if (this.cooldown > 0) return;
-
-                if (this.distanceTo(target) <= RANGE) {
-                    this.entityData.set(DATA_TARGET, Optional.of(target.getUUID()));
-
-                    this.start = target.position();
-
-                    if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, false, false) == Ability.Status.SUCCESS) {
-                        target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID), this.getName().getString()));
-                        this.entityData.set(DATA_OPEN, true);
-                    } else {
-                        this.entityData.set(DATA_TARGET, Optional.empty());
-                    }
-                } else {
-                    this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), this.getSpeed());
-                }
+            } else if (Math.sqrt(target.distanceToSqr(this.start)) >= 3.0D) {
+                this.attack();
             }
         });
+
+        LivingEntity target = this.getTarget();
+
+        if (target == null || target.isRemoved() || !target.isAlive() || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())) {
+            return;
+        }
+
+        if (!this.isOpen()) {
+            if (this.cooldown > 0) return;
+
+            if (this.distanceTo(target) <= RANGE) {
+                this.entityData.set(DATA_TARGET, Optional.of(target.getUUID()));
+
+                this.start = target.position();
+
+                if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, false, false) == Ability.Status.SUCCESS) {
+                    target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID), this.getName().getString()));
+                    this.entityData.set(DATA_OPEN, true);
+                } else {
+                    this.entityData.set(DATA_TARGET, Optional.empty());
+                }
+            } else {
+                this.moveControl.setWantedPosition(target.getX(), target.getY(), target.getZ(), this.getSpeed());
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -16,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -48,10 +50,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isAffected(BlockPos pos) {
         if (VeilHandler.isProtected(this.level(), pos)) return false;
-
-        for (DomainExpansionEntity domain : this.getDomains()) {
-            if (domain.isInsideBarrier(pos)) return false;
-        }
+        if (!VeilHandler.getDomains((ServerLevel) this.level(), pos).isEmpty()) return false;
         return super.isAffected(pos);
     }
 
@@ -69,13 +68,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.define(DATA_WIDTH, 0);
         this.entityData.define(DATA_HEIGHT, 0);
-    }
-
-    @Override
-    public void warn() {
-        for (Entity entity : this.getAffected()) {
-            entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
-        }
     }
 
     @Override
@@ -99,12 +91,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         this.entityData.set(DATA_HEIGHT, pCompound.getInt("height"));
     }
 
-    protected List<DomainExpansionEntity> getDomains() {
-        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), this.getBounds());
-        domains.removeIf(domain -> domain.is(this));
-        return domains;
-    }
-
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         AABB bounds = this.getBounds();
 
@@ -115,7 +101,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        for (DomainExpansionEntity domain : this.getDomains()) {
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level())) {
             if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition()))
                 continue;
 
@@ -125,15 +111,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        if (this.checkSureHitEffect()) {
-            this.warn();
-        }
     }
 
     @Override
@@ -163,8 +140,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         if (owner != null) {
             if (!this.level().isClientSide) {
                 if (this.checkSureHitEffect()) {
-                    this.warn();
-
                     this.doSureHitEffect(owner);
                 }
             }

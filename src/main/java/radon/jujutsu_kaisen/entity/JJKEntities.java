@@ -332,7 +332,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<WheelEntity>> WHEEL = ENTITIES.register("wheel", () ->
             EntityType.Builder.<WheelEntity>of(WheelEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 1.0F)
+                    .sized(1.0F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "wheel")
                             .toString()));
     public static RegistryObject<EntityType<NyoiStaffEntity>> NYOI_STAFF = ENTITIES.register("nyoi_staff", () ->

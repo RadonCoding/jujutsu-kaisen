@@ -163,18 +163,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         return JJKAbilities.RIKA.get();
     }
 
-    private void breakBlocks() {
-        AABB bounds = this.getBoundingBox();
-
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level().getBlockState(pos);
-
-            if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level().destroyBlock(pos, false);
-            }
-        });
-    }
-
     @Override
     public void tick() {
         LivingEntity owner = this.getOwner();
@@ -208,9 +196,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             if (!this.level().isClientSide) {
                 if (this.getTime() >= DURATION) {
                     this.discard();
-                }
-                if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                    this.breakBlocks();
                 }
             }
         }

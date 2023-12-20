@@ -32,15 +32,13 @@ public class ShiningSeaOfFlowers extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    protected void createBarrier(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int radius = Math.round(this.getRadius(owner));
+    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+        int radius = Math.round(this.getRadius(owner));
 
-            ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
-            owner.level().addFreshEntity(domain);
+        ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
+        owner.level().addFreshEntity(domain);
 
-            cap.setDomain(domain);
-        });
+        return domain;
     }
 
     @Override

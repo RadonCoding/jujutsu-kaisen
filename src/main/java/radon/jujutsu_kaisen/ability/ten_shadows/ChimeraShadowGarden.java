@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -31,30 +32,29 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
     }
 
     @Override
-    protected void createBarrier(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            int width = Math.round(this.getWidth() * cap.getDomainSize());
-            int height = Math.round(this.getHeight() * cap.getDomainSize());
+    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
-            owner.level().addFreshEntity(domain);
+        int width = Math.round(this.getWidth() * cap.getDomainSize());
+        int height = Math.round(this.getHeight() * cap.getDomainSize());
 
-            cap.setDomain(domain);
+        ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
+        owner.level().addFreshEntity(domain);
 
-            if (owner.level() instanceof ServerLevel level) {
-                List<TenShadowsSummon> summons = new ArrayList<>();
+        if (owner.level() instanceof ServerLevel level) {
+            List<TenShadowsSummon> summons = new ArrayList<>();
 
-                for (Entity entity : cap.getSummons(level)) {
-                    if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
-                }
+            for (Entity entity : cap.getSummons(level)) {
+                if (entity instanceof TenShadowsSummon summon && summon.isTame()) summons.add(summon);
+            }
 
-                for (TenShadowsSummon summon : summons) {
-                    if (summons.stream().noneMatch(x -> x.getJujutsuType() == summon.getJujutsuType() && x.isClone())) {
-                        summon.getAbility().spawn(owner, true);
-                    }
+            for (TenShadowsSummon summon : summons) {
+                if (summons.stream().noneMatch(x -> x.getJujutsuType() == summon.getJujutsuType() && x.isClone())) {
+                    summon.getAbility().spawn(owner, true);
                 }
             }
-        });
+        }
+        return domain;
     }
 
     @Override

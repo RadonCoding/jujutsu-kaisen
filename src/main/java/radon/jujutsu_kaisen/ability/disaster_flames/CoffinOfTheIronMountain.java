@@ -51,14 +51,12 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
     }
 
     @Override
-    protected void createBarrier(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+    protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         int radius = Math.round(this.getRadius(owner));
 
         ClosedDomainExpansionEntity domain = new ClosedDomainExpansionEntity(owner, this, radius);
         owner.level().addFreshEntity(domain);
 
-        cap.setDomain(domain);
+        return domain;
     }
 }

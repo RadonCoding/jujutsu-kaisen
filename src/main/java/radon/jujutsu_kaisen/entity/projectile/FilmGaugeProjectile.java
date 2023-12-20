@@ -125,7 +125,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         if (this.getOwner() instanceof LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+            DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) this.level(), DomainExpansionEntity.class);
 
             if (domain == null) return;
 
@@ -142,7 +142,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
             if (this.getOwner() instanceof LivingEntity owner) {
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+                DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) this.level(), DomainExpansionEntity.class);
 
                 if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.TIME_CELL_MOON_PALACE.get())) {
                     this.discard();

@@ -186,7 +186,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1D, true));
         this.goalSelector.addGoal(4, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 

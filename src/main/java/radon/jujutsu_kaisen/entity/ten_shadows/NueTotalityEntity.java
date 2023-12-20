@@ -95,7 +95,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
                 if (AbilityHandler.trigger(this, JJKAbilities.NUE_TOTALITY_LIGHTNING.get()) == Ability.Status.SUCCESS) {
                     this.swing(InteractionHand.MAIN_HAND);
                 }
-            } else {
+            } else if (!this.isVehicle()) {
                 this.moveControl.setWantedPosition(target.getX(), target.getY() + (this.getBbHeight() * 3.0F), target.getZ(), this.getFlyingSpeed());
             }
         }

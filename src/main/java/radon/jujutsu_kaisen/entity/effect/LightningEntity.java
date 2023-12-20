@@ -68,10 +68,6 @@ public class LightningEntity extends JujutsuProjectile {
         this.setPower(power);
     }
 
-    protected boolean isEmitting() {
-        return false;
-    }
-
     protected float getDamage() {
         return 20.0F;
     }
@@ -81,11 +77,8 @@ public class LightningEntity extends JujutsuProjectile {
         super.onAddedToWorld();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            float yaw = this.isEmitting() ? (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F : owner.getYRot();
-            float pitch = this.isEmitting() ? (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F : owner.getXRot();
-
-            this.setYaw((float) ((yaw + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-pitch * Math.PI / 180.0D));
+            this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
+            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
 
             Vec3 spawn = this.calculateStartPos();
             this.setPos(spawn.x, spawn.y, spawn.z);
@@ -120,27 +113,24 @@ public class LightningEntity extends JujutsuProjectile {
                                 this.getDamage() * this.getPower());
                     }
 
-                    if (!this.isEmitting() && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                        double radius = SCALE * 2.0F;
+                    double radius = SCALE * 2.0F;
 
-                        AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
-                                this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
-                        double centerX = bounds.getCenter().x;
-                        double centerY = bounds.getCenter().y;
-                        double centerZ = bounds.getCenter().z;
+                    AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
+                            this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
+                    double centerX = bounds.getCenter().x;
+                    double centerY = bounds.getCenter().y;
+                    double centerZ = bounds.getCenter().z;
 
-                        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                                    BlockPos pos = new BlockPos(x, y, z);
-                                    BlockState state = this.level().getBlockState(pos);
+                    for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+                        for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                            for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                                BlockPos pos = new BlockPos(x, y, z);
 
-                                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                                double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                                    if (distance <= radius) {
-                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                            this.level().destroyBlock(pos, false);
-                                        }
+                                if (distance <= radius) {
+                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                        this.level().destroyBlock(pos, false);
                                     }
                                 }
                             }

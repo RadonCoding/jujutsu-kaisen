@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -51,7 +52,7 @@ public class AvoidDomainsGoal extends Goal {
         this.mob.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             DomainExpansionEntity current = null;
 
-            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.mob.level())) {
+            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.mob.level())) {
                 double distance = this.mob.distanceTo(domain);
 
                 if (current == null || distance < this.mob.distanceTo(current)) {

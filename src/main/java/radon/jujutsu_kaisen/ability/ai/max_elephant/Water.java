@@ -119,7 +119,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 collision = this.getCollision(owner, spawn, end);
 
         ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat(),
-                0.1F, false, (int) spawn.distanceTo(collision) / 2);
+                0.5F, false, (int) spawn.distanceTo(collision) / 2);
 
         for (int i = 0; i < 32; i++) {
             ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
@@ -139,27 +139,25 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
             }
         }
 
-        if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-            double radius = SCALE * 2.0F;
+        double radius = SCALE * 2.0F;
 
-            AABB bounds = new AABB(collision.x - radius, collision.y - radius, collision.z - radius,
-                    collision.x + radius, collision.y + radius, collision.z + radius);
-            double centerX = bounds.getCenter().x;
-            double centerY = bounds.getCenter().y;
-            double centerZ = bounds.getCenter().z;
+        AABB bounds = new AABB(collision.x - radius, collision.y - radius, collision.z - radius,
+                collision.x + radius, collision.y + radius, collision.z + radius);
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
 
-            for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
-                for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
-                    for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-                        BlockState state = owner.level().getBlockState(pos);
+        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = owner.level().getBlockState(pos);
 
-                        double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                        if (distance <= radius) {
-                            if (state.getFluidState().isEmpty() && !state.canOcclude()) {
-                                owner.level().destroyBlock(pos, false);
-                            }
+                    if (distance <= radius) {
+                        if (!state.isSolidRender(owner.level(), pos)) {
+                            owner.level().destroyBlock(pos, false);
                         }
                     }
                 }
