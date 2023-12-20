@@ -74,7 +74,6 @@ public class SorcererData implements ISorcererData {
 
     private @Nullable Ability channeled;
     private int charge;
-    private @Nullable UUID domain;
 
     private final Set<Ability> toggled;
 
@@ -82,7 +81,6 @@ public class SorcererData implements ISorcererData {
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
-    private final Set<UUID> domains;
     private final Set<UUID> summons;
     private final Map<UUID, Set<Pact>> acceptedPacts;
     private final Map<UUID, Set<Pact>> requestedPactsCreations;
@@ -149,7 +147,6 @@ public class SorcererData implements ISorcererData {
         this.delayedTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
         this.durations = new HashMap<>();
-        this.domains = new HashSet<>();
         this.summons = new HashSet<>();
         this.acceptedPacts = new HashMap<>();
         this.requestedPactsCreations = new HashMap<>();
@@ -269,22 +266,6 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateDomains() {
-        if (this.owner.level() instanceof ServerLevel level) {
-            Iterator<UUID> iter = this.domains.iterator();
-
-            while (iter.hasNext()) {
-                UUID identifier = iter.next();
-                Entity entity = level.getEntity(identifier);
-
-                if (!(entity instanceof DomainExpansionEntity) || !entity.isAlive() ||
-                        entity.isRemoved() || !((DomainExpansionEntity) entity).isInsideBarrier(this.owner.blockPosition())) {
-                    iter.remove();
-                }
-            }
-        }
-    }
-
     private void updateSummons() {
         if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
 
@@ -299,18 +280,6 @@ public class SorcererData implements ISorcererData {
                 if (entity == null || !entity.isAlive() || entity.isRemoved()) {
                     iter.remove();
                 }
-            }
-        }
-    }
-
-    private void updateDomain() {
-        if (this.domain == null) return;
-
-        if (this.owner.level() instanceof ServerLevel level) {
-            Entity entity = level.getEntity(this.domain);
-
-            if (entity == null || !entity.isAlive() || entity.isRemoved()) {
-                this.domain = null;
             }
         }
     }
@@ -387,9 +356,7 @@ public class SorcererData implements ISorcererData {
 
     public void tick(LivingEntity owner) {
         this.owner = owner;
-        
-        this.updateDomain();
-        this.updateDomains();
+
         this.updateSummons();
 
         this.updateCooldowns();
@@ -1243,23 +1210,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void setDomain(DomainExpansionEntity domain) {
-        this.domain = domain.getUUID();
-    }
-
-    @Override
-    public DomainExpansionEntity getDomain(ServerLevel level) {
-        if (this.domain != null) {
-            Entity entity = level.getEntity(this.domain);
-
-            if (entity instanceof DomainExpansionEntity) {
-                return (DomainExpansionEntity) entity;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public Set<Ability> getAdapted() {
         return this.adapted;
     }
@@ -1548,25 +1498,6 @@ public class SorcererData implements ISorcererData {
         return real;
     }
 
-    @Override
-    public List<DomainExpansionEntity> getDomains(ServerLevel level) {
-        List<DomainExpansionEntity> result = new ArrayList<>();
-
-        for (UUID identifier : this.domains) {
-            Entity entity = level.getEntity(identifier);
-
-            if (entity instanceof DomainExpansionEntity) {
-                result.add((DomainExpansionEntity) entity);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public void onInsideDomain(DomainExpansionEntity domain) {
-        this.domains.add(domain.getUUID());
-    }
-
     public boolean hasToggled(Ability ability) {
         return this.toggled.contains(ability);
     }
@@ -1614,10 +1545,6 @@ public class SorcererData implements ISorcererData {
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
-
-        if (this.domain != null) {
-            nbt.putUUID("domain", this.domain);
-        }
 
         if (this.channeled != null) {
             ResourceLocation key = JJKAbilities.getKey(this.channeled);
@@ -1697,14 +1624,6 @@ public class SorcererData implements ISorcererData {
             durationsTag.add(data);
         }
         nbt.put("durations", durationsTag);
-
-        ListTag domainsTag = new ListTag();
-
-        for (UUID identifier : this.domains) {
-            domainsTag.add(LongTag.valueOf(identifier.getLeastSignificantBits()));
-            domainsTag.add(LongTag.valueOf(identifier.getMostSignificantBits()));
-        }
-        nbt.put("domains", domainsTag);
 
         ListTag summonsTag = new ListTag();
 
@@ -1860,10 +1779,6 @@ public class SorcererData implements ISorcererData {
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
 
-        if (nbt.hasUUID("domain")) {
-            this.domain = nbt.getUUID("domain");
-        }
-
         if (nbt.contains("channeled")) {
             this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));
         }
@@ -1912,16 +1827,6 @@ public class SorcererData implements ISorcererData {
             CompoundTag data = (CompoundTag) key;
             this.durations.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
                     data.getInt("duration"));
-        }
-
-        this.domains.clear();
-
-        ListTag domainsTag = nbt.getList("domains", Tag.TAG_LONG);
-
-        for (int i = 0; i < domainsTag.size(); i += 2) {
-            if (domainsTag.get(i) instanceof LongTag least && domainsTag.get(i + 1) instanceof LongTag most) {
-                this.domains.add(new UUID(least.getAsLong(), most.getAsLong()));
-            }
         }
 
         this.summons.clear();

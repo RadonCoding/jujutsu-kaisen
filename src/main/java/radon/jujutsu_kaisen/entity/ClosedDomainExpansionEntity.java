@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -29,10 +30,9 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.tags.JJKBlockTags;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
@@ -86,11 +86,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     public int getRadius() {
         return this.entityData.get(DATA_RADIUS);
-    }
-
-    private List<DomainExpansionEntity> getDomainsInside() {
-        AABB bounds = this.getBounds();
-        return new ArrayList<>(HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, this.level(), bounds));
     }
 
     @Override
@@ -192,19 +187,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public void warn() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner != null) {
-            AABB bounds = this.getBounds();
-
-            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> cap.onInsideDomain(this));
-            }
-        }
-    }
-
-    @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         int radius = this.getRadius() * 2;
         return EntityDimensions.fixed(radius, radius);
@@ -254,7 +236,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     @Override
     public boolean checkSureHitEffect() {
-        List<DomainExpansionEntity> domains = this.getDomainsInside();
+        int radius = this.getRadius();
+        boolean completed = this.getTime() >= radius * 2;
+
+        if (!completed) return false;
+
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level());
 
         for (DomainExpansionEntity domain : domains) {
             if (domain.getOwner() == this.getOwner()) continue;
@@ -313,7 +300,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         total++;
 
-                        if (state.is(JJKBlockTags.DOMAIN)) count++;
+                        if (state.is(JJKBlockTags.DOMAIN) || state.is(Blocks.BEDROCK)) count++;
                     }
                 }
             }
@@ -336,11 +323,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 boolean completed = this.getTime() >= radius * 2;
 
                 if (this.checkSureHitEffect()) {
-                    this.warn();
-
-                    if (completed) {
-                        this.doSureHitEffect(owner);
-                    }
+                    this.doSureHitEffect(owner);
                 }
 
                 if (completed) {

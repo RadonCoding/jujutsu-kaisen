@@ -75,29 +75,26 @@ public class GetCrushed extends Ability {
             owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
                     4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
-            if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                float radius = Math.min(10.0F, entity.getBbWidth() * entity.getBbHeight() * 2.0F);
-                int minX = Mth.floor(entity.getX() - radius - 1.0F);
-                int maxX = Mth.floor(entity.getX() + radius + 1.0F);
-                int minY = Mth.floor(entity.getY() - radius - 1.0F);
-                int maxY = Mth.floor(entity.getY() + radius + 1.0F);
-                int minZ = Mth.floor(entity.getZ() - radius - 1.0F);
-                int maxZ = Mth.floor(entity.getZ() + radius + 1.0F);
+            float radius = Math.min(10.0F, entity.getBbWidth() * entity.getBbHeight() * 2.0F);
+            int minX = Mth.floor(entity.getX() - radius - 1.0F);
+            int maxX = Mth.floor(entity.getX() + radius + 1.0F);
+            int minY = Mth.floor(entity.getY() - radius - 1.0F);
+            int maxY = Mth.floor(entity.getY() + radius + 1.0F);
+            int minZ = Mth.floor(entity.getZ() - radius - 1.0F);
+            int maxZ = Mth.floor(entity.getZ() + radius + 1.0F);
 
-                for (int x = minX; x <= maxX; x++) {
-                    for (int y = minY; y <= maxY; y++) {
-                        for (int z = minZ; z <= maxZ; z++) {
-                            double distance = (x - entity.getX()) * (x - entity.getX()) +
-                                    (y - entity.getY()) * (y - entity.getY()) +
-                                    (z - entity.getZ()) * (z - entity.getZ());
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        double distance = (x - entity.getX()) * (x - entity.getX()) +
+                                (y - entity.getY()) * (y - entity.getY()) +
+                                (z - entity.getZ()) * (z - entity.getZ());
 
-                            if (distance <= radius * radius) {
-                                BlockPos pos = new BlockPos(x, y, z);
-                                BlockState state = owner.level().getBlockState(pos);
+                        if (distance <= radius * radius) {
+                            BlockPos pos = new BlockPos(x, y, z);
 
-                                if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE && !state.isAir()) {
-                                    owner.level().destroyBlock(pos, false);
-                                }
+                            if (HelperMethods.isDestroyable(owner.level(), owner, pos)) {
+                                owner.level().destroyBlock(pos, false);
                             }
                         }
                     }
@@ -121,10 +118,6 @@ public class GetCrushed extends Ability {
     public int getCooldown() {
         return 15 * 20;
     }
-
-
-
-
 
     @Override
     public Classification getClassification() {

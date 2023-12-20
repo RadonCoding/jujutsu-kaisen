@@ -16,6 +16,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -33,6 +35,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Float> DATE_ROLL = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.FLOAT);
@@ -128,7 +131,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                DomainExpansionEntity domain = cap.getDomain((ServerLevel) this.level());
+                DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) this.level(), DomainExpansionEntity.class);
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DISMANTLE.get()), DAMAGE * this.getPower());
             }
         }
@@ -140,6 +143,8 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     public List<HitResult> getHitResults() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return List.of();
+
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
         Vec3 movement = this.getDeltaMovement();
         Direction direction = Direction.getNearest(movement.x, movement.y, movement.z).getOpposite();
@@ -169,19 +174,19 @@ public class DismantleProjectile extends JujutsuProjectile {
                 hits.add(new EntityHitResult(entity));
             }
 
-            if (!this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return;
-
             if (!this.destroy) return;
 
             BlockState state = this.level().getBlockState(pos);
 
-            if (!state.getFluidState().isEmpty() || state.isAir()) return;
-
-            if (state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level().destroyBlock(pos, false);
+            if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                if (state.getFluidState().isEmpty()) {
+                    this.level().destroyBlock(pos, false);
+                } else {
+                    this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                }
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
+                        0, 1.0D, 0.0D, 0.0D, 1.0D);
             }
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
-                    0, 1.0D, 0.0D, 0.0D, 1.0D);
         });
         return hits;
     }

@@ -17,12 +17,14 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoRenderer;
 
 public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
-    public static final Vector3f COLOR = Vec3.fromRGB24(0x000000).toVector3f();
-
     public WheelRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "wheel")));
     }
@@ -30,6 +32,9 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
     @Override
     public void preRender(PoseStack poseStack, WheelEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
+
+        float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
+        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
 
         Entity vehicle = animatable.getVehicle();
         float scale = vehicle == null ? 1.0F : vehicle.getBbWidth();
@@ -46,10 +51,16 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
             ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner.getUUID());
 
             if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, COLOR.x, COLOR.y, COLOR.z, alpha);
-                return;
+                red = 0.0F;
+                green = 0.0F;
+                blue = 0.0F;
             }
         }
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+        this.updateAnimatedTextureFrame(animatable);
+
+        for (GeoBone group : model.topLevelBones()) {
+            this.renderRecursively(poseStack, animatable, group, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        }
     }
 }

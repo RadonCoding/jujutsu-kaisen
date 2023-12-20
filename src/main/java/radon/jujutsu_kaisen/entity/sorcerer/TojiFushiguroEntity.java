@@ -11,6 +11,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -62,6 +66,36 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         Arrays.fill(this.armorDropChances, 0.0F);
         Arrays.fill(this.handDropChances, 0.0F);
+    }
+
+    @Override
+    protected boolean isCustom() {
+        return true;
+    }
+
+    @Override
+    protected void registerGoals() {
+        int target = 1;
+        int goal = 1;
+
+        this.goalSelector.addGoal(goal++, new AvoidDomainsGoal(this, 1.1D, 1.1D));
+        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
+
+        if (this.hasMeleeAttack()) {
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        }
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+
+        if (this.targetsSorcerers()) {
+            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
+        }
+        if (this.targetsCurses()) {
+            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+        }
     }
 
     @Override
@@ -200,16 +234,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
         InventoryCurseItem.addItem(inventory, SPLIT_SOUL_KATANA, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
 
         CuriosUtil.setItemInSlot(this, "body", inventory);
-    }
-
-    @Override
-    protected boolean isCustom() {
-        return false;
-    }
-
-    @Override
-    protected boolean targetsCurses() {
-        return false;
     }
 
     private int getSlot(ItemStack stack) {

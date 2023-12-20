@@ -8,7 +8,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -100,6 +103,9 @@ public class WheelEntity extends Entity implements GeoEntity {
                 if (spin > 0) {
                     this.entityData.set(DATA_SPIN, --spin);
                 }
+            } else if (this.getVehicle() instanceof LivingEntity living) {
+                this.setYRot(living.yHeadRot);
+                this.yRotO = living.yHeadRotO;
             }
         }
     }

@@ -144,8 +144,6 @@ public abstract class DomainExpansionEntity extends Entity {
 
     public abstract boolean isInsideBarrier(BlockPos pos);
 
-    public abstract void warn();
-
     @Override
     public boolean isInWall() {
         return false;

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -20,12 +21,16 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.UUID;
 
 public class BlueProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -87,6 +92,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
         AABB bounds = this.getBoundingBox();
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
@@ -101,8 +108,12 @@ public class BlueProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= this.getRadius()) {
-                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                            this.level().destroyBlock(pos, false);
+                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                            if (state.getFluidState().isEmpty()) {
+                                this.level().destroyBlock(pos, false);
+                            } else {
+                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                            }
                         }
                     }
                 }
@@ -128,6 +139,8 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullBlocks() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
         float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * 2.0F;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
@@ -146,7 +159,7 @@ public class BlueProjectile extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= radius) {
-                        if (!state.isAir() && state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
+                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                             if (this.level().destroyBlock(pos, false)) {
                                 FallingBlockEntity entity = FallingBlockEntity.fall(this.level(), pos, state);
                                 entity.noPhysics = true;
@@ -275,10 +288,8 @@ public class BlueProjectile extends JujutsuProjectile {
                     this.hurtEntities();
 
                     if (!this.level().isClientSide) {
-                        if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                            this.pullBlocks();
-                            this.breakBlocks();
-                        }
+                        this.pullBlocks();
+                        this.breakBlocks();
                     }
                 }
             }

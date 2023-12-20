@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
@@ -10,16 +11,44 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class VeilHandler {
     private static final Map<ResourceKey<Level>, BlockPos> veils = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Set<UUID>> domains = new HashMap<>();
 
-    public static void create(ResourceKey<Level> dimension, BlockPos pos) {
+    public static void veil(ResourceKey<Level> dimension, BlockPos pos) {
         veils.put(dimension, pos);
+    }
+
+    public static void domain(ResourceKey<Level> dimension, UUID identifier) {
+        if (!domains.containsKey(dimension)) {
+            domains.put(dimension, new HashSet<>());
+        }
+        domains.get(dimension).add(identifier);
+    }
+
+    public static Set<DomainExpansionEntity> getDomains(ServerLevel level) {
+        Set<DomainExpansionEntity> result = new HashSet<>();
+
+        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
+            result.add(domain);
+        }
+        return result;
+    }
+
+    public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
+        Set<DomainExpansionEntity> result = new HashSet<>();
+
+        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !domain.isInsideBarrier(pos)) continue;
+            result.add(domain);
+        }
+        return result;
     }
 
     public static boolean canSpawn(Mob mob, double x, double y, double z) {

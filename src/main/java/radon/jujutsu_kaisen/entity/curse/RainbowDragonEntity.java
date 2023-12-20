@@ -108,20 +108,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         return false;
     }
 
-    private void breakBlocks() {
-        for (int i = 0; i < this.segments.length + 1; i++) {
-            AABB bounds = i == 0 ? this.getBoundingBox() : this.segments[i - 1].getBoundingBox();
-
-            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                BlockState state = this.level().getBlockState(pos);
-
-                if (state.getFluidState().isEmpty() && !state.canOcclude()) {
-                    this.level().destroyBlock(pos, false);
-                }
-            });
-        }
-    }
-
     @Override
     public float getStepHeight() {
         return 2.0F;
@@ -250,12 +236,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         this.refreshDimensions();
 
         this.yHeadRot = this.getYRot();
-
-        if (!this.level().isClientSide) {
-            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                this.breakBlocks();
-            }
-        }
         this.moveSegments();
     }
 

@@ -63,6 +63,25 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     }
 
     @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            AABB bounds = this.getBounds();
+
+            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
+                if (!(entity instanceof ServerPlayer player)) continue;
+
+                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
+                player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
+                        player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
+            }
+        }
+    }
+
+    @Override
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         super.doSureHitEffect(owner);
 
@@ -93,22 +112,18 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                                 if (distance < horizontal && distance >= horizontal - 1) {
                                     BlockPos pos = center.offset(x, vertical, z);
 
-                                    if (!this.isAffected(pos) || this.level().getBlockState(pos).isAir()) continue;
-
-                                    BlockState state = owner.level().getBlockState(pos);
+                                    if (!this.isAffected(pos)) continue;
 
                                     owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
                                             1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
 
-                                    if (owner.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                                        if (state.getFluidState().isEmpty() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                                            owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                        owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
-                                            if (this.random.nextInt(10) == 0) {
-                                                ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
-                                                        0.0D, 0.0D, 0.0D, 0.0D);
-                                            }
+                                        if (this.random.nextInt(10) == 0) {
+                                            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
+                                                    0.0D, 0.0D, 0.0D, 0.0D);
                                         }
                                     }
                                 }
@@ -126,26 +141,6 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY,
                 (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
             this.ability.onHitBlock(this, owner, pos);
-        }
-    }
-
-    @Override
-    public void warn() {
-        LivingEntity owner = this.getOwner();
-
-        if (owner != null) {
-            AABB bounds = this.getBounds();
-
-            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
-                entity.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    if (this.getTime() < MalevolentShrine.DELAY && entity instanceof ServerPlayer player && !cap.getDomains((ServerLevel) this.level()).contains(this)) {
-                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
-                        player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
-                                player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
-                    }
-                    cap.onInsideDomain(this);
-                });
-            }
         }
     }
 

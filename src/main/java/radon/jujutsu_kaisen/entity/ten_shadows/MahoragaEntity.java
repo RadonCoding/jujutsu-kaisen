@@ -20,6 +20,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -210,7 +211,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) this.level())) {
+        for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) this.level()), this.blockPosition())) {
             if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2)
                 continue;
             if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
@@ -266,30 +267,12 @@ public class MahoragaEntity extends TenShadowsSummon {
         }
     }
 
-    private void breakBlocks() {
-        AABB bounds = this.getBoundingBox();
-
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level().getBlockState(pos);
-
-            if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level().destroyBlock(pos, false);
-            }
-        });
-    }
-
     @Override
     public void tick() {
         super.tick();
 
         if (!this.isTame()) {
             this.setNoAi(this.getTime() <= RITUAL_DURATION);
-        }
-
-        if (!this.level().isClientSide) {
-            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                this.breakBlocks();
-            }
         }
     }
 

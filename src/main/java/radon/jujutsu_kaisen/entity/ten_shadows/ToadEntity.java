@@ -91,7 +91,7 @@ public class ToadEntity extends TenShadowsSummon {
         int target = 1;
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));

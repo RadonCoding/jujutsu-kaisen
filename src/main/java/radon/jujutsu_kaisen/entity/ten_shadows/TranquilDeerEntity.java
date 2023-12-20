@@ -81,29 +81,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
-    private void breakBlocks() {
-        AABB bounds = this.getBoundingBox();
-
-        BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-            BlockState state = this.level().getBlockState(pos);
-
-            if (state.getFluidState().isEmpty() && state.canOcclude() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE) {
-                this.level().destroyBlock(pos, false);
-            }
-        });
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.level().isClientSide) {
-            if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                this.breakBlocks();
-            }
-        }
-    }
-
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {

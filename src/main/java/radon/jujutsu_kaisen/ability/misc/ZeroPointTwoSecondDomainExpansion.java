@@ -87,7 +87,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         AbilityHandler.trigger(owner, ability);
 
-        DomainExpansionEntity domain = cap.getDomain(level);
+        DomainExpansionEntity domain = cap.getSummonByClass(level, DomainExpansionEntity.class);
 
         if (domain == null) return;
 

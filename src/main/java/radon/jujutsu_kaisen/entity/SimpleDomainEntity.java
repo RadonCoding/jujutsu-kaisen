@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -112,7 +113,7 @@ public class SimpleDomainEntity extends Mob {
             if (this.level() instanceof ServerLevel level) {
                 ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                for (DomainExpansionEntity domain : ownerCap.getDomains(level)) {
+                for (DomainExpansionEntity domain : VeilHandler.getDomains(level, owner.blockPosition())) {
                     if (domain.checkSureHitEffect()) {
                         LivingEntity target = domain.getOwner();
 

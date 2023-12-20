@@ -85,15 +85,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                         if (distance <= radius) {
-                            boolean destroyable = state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
-
-                            if (!destroyable && this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                UUID identifier = be.getIdentifier();
-                                destroyable = identifier == null || !(((ServerLevel) this.level()).getEntity(identifier) instanceof DomainExpansionEntity domain) ||
-                                        !domain.isInsideBarrier(owner.blockPosition());
-                            }
-
-                            if (destroyable) {
+                            if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                                 if (state.getFluidState().isEmpty()) {
                                     this.level().destroyBlock(pos, false);
                                 } else {
@@ -292,12 +284,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                 } else {
                     if (!this.level().isClientSide) {
                         this.hurtEntities();
-
-                        if (this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-                            this.breakBlocks();
-                        }
                     }
-
                     if (this.getTime() == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);

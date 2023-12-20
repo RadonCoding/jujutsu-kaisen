@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -199,13 +200,10 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     private static boolean canBlock(LivingEntity target, Projectile projectile) {
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         if (projectile instanceof ThrownChainProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
-        for (DomainExpansionEntity ignored : cap.getDomains(((ServerLevel) target.level()))) {
+        for (DomainExpansionEntity ignored : VeilHandler.getDomains(((ServerLevel) target.level()), target.blockPosition())) {
             return false;
         }
         if (projectile.getOwner() instanceof LivingEntity owner && JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) &&
@@ -282,7 +280,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     }
 
                     if (target.level() instanceof ServerLevel level) {
-                        for (DomainExpansionEntity ignored : targetCap.getDomains(level)) {
+                        for (DomainExpansionEntity ignored : VeilHandler.getDomains(level, target.blockPosition())) {
                             return;
                         }
 

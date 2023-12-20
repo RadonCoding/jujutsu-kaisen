@@ -15,6 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -44,7 +45,7 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
             if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            for (DomainExpansionEntity domain : cap.getDomains((ServerLevel) owner.level())) {
+            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
                 if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
                 return true;
             }
@@ -78,7 +79,7 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
 
             ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            DomainExpansionEntity domain = cap.getDomain(level);
+            DomainExpansionEntity domain = cap.getSummonByClass(level, DomainExpansionEntity.class);
 
             if (domain == null || !domain.isAffected(owner)) continue;
 

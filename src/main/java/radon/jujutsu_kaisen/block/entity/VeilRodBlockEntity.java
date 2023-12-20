@@ -13,10 +13,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.VeilBlock;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -29,7 +27,6 @@ import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 import radon.jujutsu_kaisen.item.veil.modifier.ModifierUtils;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,7 +52,7 @@ public class VeilRodBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
-        VeilHandler.create(pLevel.dimension(), pPos);
+        VeilHandler.veil(pLevel.dimension(), pPos);
 
         if (++pBlockEntity.counter != INTERVAL) return;
 
@@ -92,10 +89,6 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
-        AABB bounds = AABB.ofSize(pPos.getCenter(), pBlockEntity.size, pBlockEntity.size, pBlockEntity.size);
-
-        List<DomainExpansionEntity> domains = HelperMethods.getEntityCollisionsOfClass(DomainExpansionEntity.class, pLevel, bounds);
-
         for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
             for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
                 for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
@@ -106,7 +99,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                         boolean blocked = false;
 
-                        for (DomainExpansionEntity domain : domains) {
+                        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) pLevel)) {
                             LivingEntity opponent = domain.getOwner();
 
                             if (opponent == null) continue;
