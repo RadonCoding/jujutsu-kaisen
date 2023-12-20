@@ -31,7 +31,9 @@ public class SoulRestoration extends Ability {
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            return target;
+            if (owner.canAttack(target)) {
+                return target;
+            }
         }
         return null;
     }
