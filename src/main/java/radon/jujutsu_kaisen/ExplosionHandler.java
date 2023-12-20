@@ -32,6 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -66,7 +67,7 @@ public class ExplosionHandler {
 
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT) return;
+        if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) return;
 
         List<ExplosionData> remove = new ArrayList<>();
 

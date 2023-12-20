@@ -9,8 +9,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -152,7 +155,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
                 level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             }
 
-            if (!success || target instanceof SimpleDomainEntity || target instanceof DomainExpansionEntity) return;
+            if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
 

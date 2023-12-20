@@ -87,12 +87,14 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven { url 'https://cursemaven.com' }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven' }
     maven { url 'https://maven.theillusivec4.top' }
 }
 
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${neo_version}"
+    implementation fg.deobf('curse.maven:spark-361579:4738952')
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}")

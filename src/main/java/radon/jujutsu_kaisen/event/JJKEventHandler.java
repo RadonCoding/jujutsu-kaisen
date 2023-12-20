@@ -274,10 +274,6 @@ public class JJKEventHandler {
                     event.setCanceled(true);
                     return;
                 }
-            } else if (victim instanceof DomainExpansionEntity domain && domain.getOwner() == attacker) {
-                // Prevent the owner from destroying their own domain
-                event.setCanceled(true);
-                return;
             }
 
             if (melee) {
