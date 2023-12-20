@@ -6,14 +6,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -29,7 +27,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ChimeraShadowGardenEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
+    public ChimeraShadowGardenEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -96,7 +94,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                         be.destroy();
 
                                         state = this.level().getBlockState(pos);
-                                    } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
+                                    } else if (state.is(JJKBlockTags.DOMAIN)) {
                                         continue;
                                     } else if (existing != null) {
                                         saved = existing.saveWithFullMetadata();
@@ -121,11 +119,6 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
     @Override
     public boolean canBeHitByProjectile() {
         return this.isAlive();
-    }
-
-    @Override
-    protected void doPush(@NotNull Entity p_20971_) {
-
     }
 
     @Override

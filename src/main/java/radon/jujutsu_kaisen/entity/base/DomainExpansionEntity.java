@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class DomainExpansionEntity extends Mob {
+public abstract class DomainExpansionEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(DomainExpansionEntity.class, EntityDataSerializers.INT);
 
     public static final int OFFSET = 5;
@@ -39,11 +39,11 @@ public abstract class DomainExpansionEntity extends Mob {
     protected DomainExpansion ability;
     protected boolean first = true;
 
-    protected DomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
+    protected DomainExpansionEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability) {
+    public DomainExpansionEntity(EntityType<?> pEntityType, LivingEntity owner, DomainExpansion ability) {
         super(pEntityType, owner.level());
 
         this.setOwner(owner);
@@ -53,8 +53,6 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     protected void defineSynchedData() {
-        super.defineSynchedData();
-
         this.entityData.define(DATA_TIME, 0);
     }
 
@@ -68,8 +66,6 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
@@ -80,19 +76,12 @@ public abstract class DomainExpansionEntity extends Mob {
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
-    }
-
-    @Override
-    public boolean isPickable() {
-        return false;
     }
 
     @Override
@@ -160,11 +149,6 @@ public abstract class DomainExpansionEntity extends Mob {
     @Override
     public boolean isInWall() {
         return false;
-    }
-
-    @Override
-    public boolean isPersistenceRequired() {
-        return true;
     }
 
     @Override

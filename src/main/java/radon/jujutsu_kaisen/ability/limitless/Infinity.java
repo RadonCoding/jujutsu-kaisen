@@ -217,7 +217,7 @@ public class Infinity extends Ability implements Ability.IToggled {
     public static class InfinityForgeEvents {
         @SubscribeEvent
         public static void onLevelTick(TickEvent.LevelTickEvent event) {
-            if (event.phase != TickEvent.Phase.START) return;
+            if (event.phase == TickEvent.Phase.START) return;
 
             if (event.level instanceof ServerLevel level) {
                 FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,

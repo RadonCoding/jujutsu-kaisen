@@ -7,5 +7,5 @@ import net.minecraft.world.level.block.Block;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKBlockTags {
-    public static final TagKey<Block> DOMAIN_IGNORE = BlockTags.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "domain_ignore"));
+    public static final TagKey<Block> DOMAIN = BlockTags.create(new ResourceLocation(JujutsuKaisen.MOD_ID, "domain"));
 }

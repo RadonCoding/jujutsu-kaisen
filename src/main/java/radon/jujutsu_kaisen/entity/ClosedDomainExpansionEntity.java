@@ -11,8 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -38,9 +36,8 @@ import java.util.List;
 
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
-    private static final float STRENGTH = 10.0F;
 
-    public ClosedDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
+    public ClosedDomainExpansionEntity(EntityType<? > pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -52,15 +49,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         this.moveTo(behind.x, behind.y, behind.z, owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATA_RADIUS, radius);
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
-
-        if (attribute != null) {
-            attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
-            this.setHealth(this.getMaxHealth());
-        }
     }
 
     @Override
@@ -153,7 +141,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                                     be.destroy();
 
                                     state = this.level().getBlockState(pos);
-                                } else if (state.is(JJKBlockTags.DOMAIN_IGNORE)) {
+                                } else if (state.is(JJKBlockTags.DOMAIN)) {
                                     return;
                                 } else if (existing != null) {
                                     saved = existing.saveWithFullMetadata();
@@ -203,7 +191,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
     }
 
-
     @Override
     public void warn() {
         LivingEntity owner = this.getOwner();
@@ -221,15 +208,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         int radius = this.getRadius() * 2;
         return EntityDimensions.fixed(radius, radius);
-    }
-
-    @Override
-    public void aiStep() {
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
     }
 
     @Override
@@ -315,6 +293,37 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         this.refreshDimensions();
     }
 
+    private void check() {
+        int radius = this.getRadius();
+
+        Vec3 behind = this.position().add(0.0D, radius, 0.0D);
+        BlockPos center = BlockPos.containing(behind);
+
+        int total = 0;
+        int count = 0;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+
+                    if (distance < radius && distance >= radius - 1) {
+                        BlockPos pos = center.offset(x, y, z);
+                        BlockState state = this.level().getBlockState(pos);
+
+                        total++;
+
+                        if (state.is(JJKBlockTags.DOMAIN)) count++;
+                    }
+                }
+            }
+        }
+
+        if ((float) count / total < 0.75F) {
+            this.discard();
+        }
+    }
+
     @Override
     public void tick() {
         this.refreshDimensions();
@@ -331,6 +340,12 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (completed) {
                         this.doSureHitEffect(owner);
+                    }
+                }
+
+                if (completed) {
+                    if (this.getTime() % 20 == 0) {
+                        this.check();
                     }
                 }
 

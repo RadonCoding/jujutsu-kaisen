@@ -465,10 +465,6 @@ public class JJKEntities {
         event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
 
-        event.put(CLOSED_DOMAIN_EXPANSION.get(), Mob.createMobAttributes().build());
-        event.put(MALEVOLENT_SHRINE.get(), Mob.createMobAttributes().build());
-        event.put(CHIMERA_SHADOW_GARDEN.get(), Mob.createMobAttributes().build());
-
         event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
     }

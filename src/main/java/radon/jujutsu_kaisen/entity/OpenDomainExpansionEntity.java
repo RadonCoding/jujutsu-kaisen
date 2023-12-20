@@ -29,13 +29,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
-    private static final float STRENGTH = 500.0F;
-
-    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
+    public OpenDomainExpansionEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public OpenDomainExpansionEntity(EntityType<? extends Mob> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height) {
+    public OpenDomainExpansionEntity(EntityType<?> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height) {
         super(pEntityType, owner, ability);
 
         Vec3 pos = owner.position()
@@ -45,15 +43,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         this.entityData.set(DATA_WIDTH, width);
         this.entityData.set(DATA_HEIGHT, height);
-
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
-
-            if (attribute != null) {
-                attribute.setBaseValue(STRENGTH * cap.getAbilityPower());
-                this.setHealth(this.getMaxHealth());
-            }
-        });
     }
 
     @Override
