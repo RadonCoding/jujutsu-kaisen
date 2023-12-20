@@ -54,7 +54,7 @@ public class HelperMethods {
         if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
 
         BlockState state = getter.getBlockState(pos);
-        boolean destroyable = state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
+        boolean destroyable = !state.isAir() && state.getBlock().defaultDestroyTime() > Block.INDESTRUCTIBLE;
 
         if (!destroyable && source != null && source.level() instanceof ServerLevel level && getter.getBlockEntity(pos) instanceof DomainBlockEntity be) {
             UUID identifier = be.getIdentifier();
