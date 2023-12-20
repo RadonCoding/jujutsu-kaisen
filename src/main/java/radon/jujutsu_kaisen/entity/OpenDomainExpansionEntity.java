@@ -71,11 +71,6 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
@@ -102,8 +97,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean checkSureHitEffect() {
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds())) {
-            if (domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition()))
-                continue;
+            if (domain == this || domain instanceof ClosedDomainExpansionEntity closed && !closed.isInsideBarrier(this.blockPosition())) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();

@@ -121,7 +121,7 @@ public abstract class DomainExpansionEntity extends Entity {
 
     @Nullable
     public DomainExpansionCenterEntity getDomainCenter() {
-        List<DomainExpansionCenterEntity> collisions = HelperMethods.getEntityCollisionsOfClass(DomainExpansionCenterEntity.class, this.level(), this.getBounds());
+        List<DomainExpansionCenterEntity> collisions = this.level().getEntitiesOfClass(DomainExpansionCenterEntity.class, this.getBounds());
 
         for (DomainExpansionCenterEntity collision : collisions) {
             if (collision.getDomain() == this) {
@@ -165,21 +165,10 @@ public abstract class DomainExpansionEntity extends Entity {
 
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, this.ability))) {
             this.discard();
         } else {
             super.tick();
-
-            if (!this.level().isClientSide) {
-                if (owner != null) {
-                    if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-                    if (!cap.hasToggled(this.ability)) {
-                        this.discard();
-                    }
-                }
-            }
         }
     }
 
