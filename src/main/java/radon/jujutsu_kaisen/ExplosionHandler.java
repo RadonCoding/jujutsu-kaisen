@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.*;
@@ -148,7 +149,7 @@ public class ExplosionHandler {
                                 (z - explosion.position.z) * (z - explosion.position.z);
 
                         float stage = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-                        double adjusted = stage * ((double) explosion.age / explosion.duration);
+                        float adjusted = stage * ((float) explosion.age / explosion.duration);
 
                         if (distance <= adjusted * adjusted) {
                             BlockPos pos = new BlockPos(x, y, z);
@@ -168,12 +169,15 @@ public class ExplosionHandler {
                                     BlockPos imm = pos.immutable();
 
                                     if (block.canDropFromExplosion(event.level, pos, current)) {
-                                        BlockEntity blockentity = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
-                                        LootParams.Builder builder = (new LootParams.Builder((ServerLevel) event.level)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-                                                .withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity)
-                                                .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator);
-                                        block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, false);
-                                        block.getDrops(builder).forEach(stack -> addBlockDrops(drops, stack, imm));
+                                            BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
+                                            LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
+                                                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+                                                    .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+                                                    .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
+                                                    .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
+                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
+                                            block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
+                                            block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
                                     }
                                     block.onBlockExploded(event.level, pos, current);
 
