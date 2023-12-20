@@ -352,6 +352,12 @@ public class JJKAbilities {
             for (CursedTechnique technique : cap.getTechniques()) {
                 abilities.addAll(Arrays.asList(technique.getAbilities()));
             }
+
+            CursedTechnique technique = cap.getTechnique();
+
+            if (technique != null && technique.getDomain() != null) {
+                abilities.add(technique.getDomain());
+            }
         }
         abilities.removeIf(ability -> !ability.isValid(owner) && !(owner instanceof ISorcerer sorcerer && sorcerer.getCustom().contains(ability)));
 
