@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -46,6 +47,16 @@ public class VeilHandler {
 
         for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !domain.isInsideBarrier(pos)) continue;
+            result.add(domain);
+        }
+        return result;
+    }
+
+    public static Set<DomainExpansionEntity> getDomains(ServerLevel level, AABB bounds) {
+        Set<DomainExpansionEntity> result = new HashSet<>();
+
+        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !bounds.intersects(domain.getBounds())) continue;
             result.add(domain);
         }
         return result;
