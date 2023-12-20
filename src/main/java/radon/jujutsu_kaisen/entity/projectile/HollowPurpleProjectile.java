@@ -284,7 +284,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                 } else {
                     if (!this.level().isClientSide) {
                         this.hurtEntities();
+                        this.breakBlocks();
                     }
+
                     if (this.getTime() == DELAY) {
                         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
