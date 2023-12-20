@@ -99,7 +99,11 @@ public class VeilHandler {
 
         domains.entrySet().removeIf(entry ->
                 event.level.dimension() == entry.getKey() && entry.getValue().isEmpty());
-        domains.getOrDefault(event.level.dimension(), Set.of()).removeIf(identifier ->
-                !(((ServerLevel) event.level).getEntity(identifier) instanceof DomainExpansionEntity));
+
+
+        if (domains.containsKey(event.level.dimension())) {
+            domains.get(event.level.dimension()).removeIf(identifier ->
+                    !(((ServerLevel) event.level).getEntity(identifier) instanceof DomainExpansionEntity));
+        }
     }
 }
