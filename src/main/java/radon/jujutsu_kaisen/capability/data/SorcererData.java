@@ -355,7 +355,17 @@ public class SorcererData implements ISorcererData {
     }
 
     public void tick(LivingEntity owner) {
-        this.owner = owner;
+        if (this.owner == null) {
+            this.owner = owner;
+
+            // This is for shit like applying attribute modifiers to the owner etc
+            for (Ability ability : this.toggled) {
+                ((Ability.IToggled) ability).onEnabled(this.owner);
+            }
+            if (this.channeled != null) {
+                ((Ability.IChannelened) this.channeled).onStart(this.owner);
+            }
+        }
 
         this.updateSummons();
 
