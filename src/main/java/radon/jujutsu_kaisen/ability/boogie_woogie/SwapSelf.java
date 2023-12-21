@@ -65,8 +65,14 @@ public class SwapSelf extends Ability {
             Vec2 ownerRot = owner.getRotationVector();
             Vec2 targetRot = target.getRotationVector();
 
-            target.moveTo(owner.getX(), owner.getY(), owner.getZ(), ownerRot.y, ownerRot.x);
-            owner.moveTo(pos.x, pos.y, pos.z, targetRot.y, targetRot.x);
+            target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
+            owner.teleportTo(pos.x, pos.y, pos.z);
+
+            target.setYRot(ownerRot.y);
+            target.setXRot(ownerRot.x);
+
+            owner.setYRot(targetRot.y);
+            owner.setXRot(targetRot.x);
         }
     }
 
