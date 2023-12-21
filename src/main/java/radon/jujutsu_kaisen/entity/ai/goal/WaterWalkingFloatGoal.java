@@ -31,7 +31,7 @@ public class WaterWalkingFloatGoal extends Goal {
 
     @Override
     public void tick() {
-        Ability ability = JJKAbilities.WATER_WALKING.get();
+        Ability ability = JJKAbilities.CURSED_ENERGY_FLOW.get();
 
         boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
 

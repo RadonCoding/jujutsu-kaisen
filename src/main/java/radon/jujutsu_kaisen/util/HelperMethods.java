@@ -47,7 +47,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class HelperMethods {
-    public static final Random RANDOM = new Random();
+    public static final RandomSource RANDOM = RandomSource.createThreadSafe();
     private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
 
     public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos) {
@@ -141,7 +141,7 @@ public class HelperMethods {
         return combo;
     }
 
-    public static <E> E getWeightedRandom(Map<E, Double> weights, Random random) {
+    public static <E> E getWeightedRandom(Map<E, Double> weights, RandomSource random) {
         E result = null;
         double bestValue = Double.MAX_VALUE;
 
