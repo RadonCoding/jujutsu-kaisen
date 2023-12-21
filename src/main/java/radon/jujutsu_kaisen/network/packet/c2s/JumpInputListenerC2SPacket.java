@@ -32,6 +32,8 @@ public class JumpInputListenerC2SPacket {
 
             if (sender.getVehicle() instanceof IJumpInputListener listener) {
                 listener.setJump(this.down);
+            } else if (sender.getFirstPassenger() instanceof IJumpInputListener listener) {
+                listener.setJump(this.down);
             }
         });
         ctx.setPacketHandled(true);

@@ -93,9 +93,14 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            if (event.getKey() == KeyEvent.VK_SPACE && mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
-                listener.setJump(event.getAction() != InputConstants.RELEASE);
+            if (event.getKey() == KeyEvent.VK_SPACE) {
+                if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
+                    listener.setJump(event.getAction() != InputConstants.RELEASE);
+                } else if (mc.player.getFirstPassenger() instanceof IJumpInputListener listener) {
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
+                    listener.setJump(event.getAction() != InputConstants.RELEASE);
+                }
             }
 
             if (event.getAction() == InputConstants.PRESS) {
