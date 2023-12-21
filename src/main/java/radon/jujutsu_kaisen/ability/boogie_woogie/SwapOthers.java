@@ -46,7 +46,7 @@ public class SwapOthers extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator() && target.isPickable()) instanceof EntityHitResult hit) {
+        if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
             if (!target.isPickable() && !(target instanceof ItemEntity) && !(target instanceof Projectile) || (target instanceof LivingEntity living &&
@@ -56,7 +56,7 @@ public class SwapOthers extends Ability {
         }
         return null;
     }
-
+    
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
