@@ -94,10 +94,10 @@ public class ExplosionHandler {
                 }
 
                 List<Entity> entities = event.level.getEntities(explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
-                        Mth.floor(explosion.position.x + diameter + 1.0F),
                         Mth.floor(explosion.position.y - diameter - 1.0F),
-                        Mth.floor(explosion.position.y + diameter + 1.0F),
                         Mth.floor(explosion.position.z - diameter - 1.0F),
+                        Mth.floor(explosion.position.x + diameter + 1.0F),
+                        Mth.floor(explosion.position.y + diameter + 1.0F),
                         Mth.floor(explosion.position.z + diameter + 1.0F)));
                 ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
 
@@ -154,9 +154,9 @@ public class ExplosionHandler {
                                 (y - explosion.position.y) * (y - explosion.position.y) +
                                 (z - explosion.position.z) * (z - explosion.position.z);
 
-                        double adjusted = radius * ((double) explosion.age / explosion.duration);
+                        float adjusted = radius * ((float) explosion.age / explosion.duration);
 
-                        if (distance <= adjusted * adjusted) {
+                        if (distance <= radius * radius) {
                             BlockPos pos = new BlockPos(x, y, z);
                             BlockState block = event.level.getBlockState(pos);
                             FluidState fluid = event.level.getFluidState(pos);
@@ -174,15 +174,15 @@ public class ExplosionHandler {
                                     BlockPos imm = pos.immutable();
 
                                     if (block.canDropFromExplosion(event.level, pos, current)) {
-                                            BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
-                                            LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
-                                                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-                                                    .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
-                                                    .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
-                                                    .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
-                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
-                                            block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
-                                            block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
+                                        BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
+                                        LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
+                                                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+                                                .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+                                                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
+                                                .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
+                                                .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
+                                        block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
+                                        block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
                                     }
                                     block.onBlockExploded(event.level, pos, current);
 

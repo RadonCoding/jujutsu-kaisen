@@ -36,7 +36,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
     public static final int SIZE = 5;
     public static final int HEIGHT = 30;
-    private static final int MAX_SIZE = 20;
+    private static final int MAX_SIZE = 15;
     public static final int DELAY = 3 * 20;
     private static final double SPEED = 3.0D;
     private static final int DURATION = 5 * 20;
@@ -274,8 +274,8 @@ public class MeteorEntity extends JujutsuProjectile {
     private void breakBlocks() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        float radius = this.getSize() + 1;
-        AABB bounds = AABB.ofSize(this.position(), radius, radius, radius);
+        float radius = this.getSize();
+        AABB bounds = AABB.ofSize(this.position(), radius * 2, radius * 2, radius * 2);
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
@@ -357,7 +357,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
 
-                int duration = this.getSize() * 3;
+                int duration = this.getSize() * 5;
 
                 int time = this.getExplosionTime();
 
