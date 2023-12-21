@@ -52,6 +52,8 @@ public class SwapSelf extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
+        if (owner.level().isClientSide) return;
+
         Entity target = this.getTarget(owner);
 
         if (target != null) {
