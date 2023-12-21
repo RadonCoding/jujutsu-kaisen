@@ -264,7 +264,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.5F, true, 20),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.25F, true, 20),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
