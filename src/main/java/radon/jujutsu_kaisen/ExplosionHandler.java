@@ -77,13 +77,6 @@ public class ExplosionHandler {
 
             float diameter = explosion.radius * 2.0F;
 
-            int minX = Mth.floor(explosion.position.x - diameter - 1.0F);
-            int maxX = Mth.floor(explosion.position.x + diameter + 1.0F);
-            int minY = Mth.floor(explosion.position.y - diameter - 1.0F);
-            int maxY = Mth.floor(explosion.position.y + diameter + 1.0F);
-            int minZ = Mth.floor(explosion.position.z - diameter - 1.0F);
-            int maxZ = Mth.floor(explosion.position.z + diameter + 1.0F);
-
             Explosion current = new Explosion(event.level, explosion.instigator, 0.0D, 0.0D, 0.0D, 0.0F, List.of());
 
             if (explosion.age == 0) {
@@ -100,7 +93,12 @@ public class ExplosionHandler {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
                 }
 
-                List<Entity> entities = event.level.getEntities(explosion.instigator, new AABB(minX, minY, minZ, maxX, maxY, maxZ));
+                List<Entity> entities = event.level.getEntities(explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
+                        Mth.floor(explosion.position.x + diameter + 1.0F),
+                        Mth.floor(explosion.position.y - diameter - 1.0F),
+                        Mth.floor(explosion.position.y + diameter + 1.0F),
+                        Mth.floor(explosion.position.z - diameter - 1.0F),
+                        Mth.floor(explosion.position.z + diameter + 1.0F)));
                 ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
 
                 for (Entity entity : entities) {
@@ -141,6 +139,14 @@ public class ExplosionHandler {
 
             ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
 
+            float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
+            int minX = Mth.floor(explosion.position.x - radius - 1.0F);
+            int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
+            int minY = Mth.floor(explosion.position.y - radius - 1.0F);
+            int maxY = Mth.floor(explosion.position.y + radius + 1.0F);
+            int minZ = Mth.floor(explosion.position.z - radius - 1.0F);
+            int maxZ = Mth.floor(explosion.position.z + radius + 1.0F);
+
             for (int x = minX; x <= maxX; x++) {
                 for (int y = minY; y <= maxY; y++) {
                     for (int z = minZ; z <= maxZ; z++) {
@@ -148,8 +154,7 @@ public class ExplosionHandler {
                                 (y - explosion.position.y) * (y - explosion.position.y) +
                                 (z - explosion.position.z) * (z - explosion.position.z);
 
-                        float stage = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-                        float adjusted = stage * ((float) explosion.age / explosion.duration);
+                        double adjusted = radius * ((double) explosion.age / explosion.duration);
 
                         if (distance <= adjusted * adjusted) {
                             BlockPos pos = new BlockPos(x, y, z);
