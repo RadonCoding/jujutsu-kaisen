@@ -102,7 +102,9 @@ public class TojiFushiguroEntity extends SorcererEntity {
     protected void dropCustomDeathLoot(@NotNull DamageSource pSource, int pLooting, boolean pRecentlyHit) {
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
 
-        this.spawnAtLocation(JJKItems.INVENTORY_CURSE.get());
+        ItemStack inventory = CuriosUtil.findSlot(this, "body");
+        this.spawnAtLocation(inventory);
+        CuriosUtil.setItemInSlot(this, "body", ItemStack.EMPTY);
     }
 
     public void setCurrentCustomer(@Nullable Player pPlayer) {
