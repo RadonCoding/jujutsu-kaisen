@@ -47,11 +47,6 @@ public class OutputRCT extends Ability {
         return MenuType.SCROLL;
     }
 
-    @Override
-    public boolean isUnlockable(LivingEntity owner) {
-        return JJKAbilities.getType(owner) == JujutsuType.SORCERER && super.isUnlockable(owner);
-    }
-
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
