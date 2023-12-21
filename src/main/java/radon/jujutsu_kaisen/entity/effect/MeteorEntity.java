@@ -13,6 +13,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
@@ -26,6 +27,7 @@ import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -270,8 +272,10 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     private void breakBlocks() {
-        float radius = this.getSize();
-        AABB bounds = AABB.ofSize(this.position(), radius * 2, radius * 2, radius * 2);
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        float radius = this.getSize() + 1;
+        AABB bounds = AABB.ofSize(this.position(), radius, radius, radius);
         double centerX = bounds.getCenter().x;
         double centerY = bounds.getCenter().y;
         double centerZ = bounds.getCenter().z;
@@ -285,9 +289,13 @@ public class MeteorEntity extends JujutsuProjectile {
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
                     if (distance <= radius) {
-                        if (!state.getFluidState().isEmpty() || state.getBlock().defaultDestroyTime() == Block.INDESTRUCTIBLE) continue;
-
-                        this.level().destroyBlock(pos, false);
+                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                            if (state.getFluidState().isEmpty()) {
+                                this.level().destroyBlock(pos, false);
+                            } else {
+                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                            }
+                        }
                     }
                 }
             }
@@ -349,7 +357,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
                 }
 
-                int duration = this.getSize() * 5;
+                int duration = this.getSize() * 3;
 
                 int time = this.getExplosionTime();
 
@@ -360,15 +368,10 @@ public class MeteorEntity extends JujutsuProjectile {
                         this.setExplosionTime(++time);
                     }
                 } else {
-                    Vec3 start = this.position();
-                    Vec3 end = start.add(this.getDeltaMovement().scale((double) this.getSize() / 2));
-
-                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
-
-                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
+                    if (this.horizontalCollision || this.verticalCollision) {
                         this.setExplosionTime(1);
 
-                        ExplosionHandler.spawn(this.level().dimension(), clip.getLocation(), this.getSize() * 1.5F, duration, this.getPower() * 0.25F, owner,
+                        ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), this.getSize() * 1.5F, duration, this.getPower() * 0.25F, owner,
                                 JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.MAXIMUM_METEOR.get()), true);
                     }
                     this.breakBlocks();
