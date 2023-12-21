@@ -31,13 +31,16 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
 
     @Override
     public void preRender(PoseStack poseStack, WheelEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        LivingEntity owner = animatable.getOwner();
+
+        if (owner == null) return;
+
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
+        float yaw = Mth.lerp(partialTick, owner.yRotO, owner.getYRot());
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
 
-        Entity vehicle = animatable.getVehicle();
-        float scale = vehicle == null ? 1.0F : vehicle.getBbWidth();
+        float scale = owner.getBbWidth();
         poseStack.scale(scale, scale, scale);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
@@ -47,14 +50,14 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
     public void actuallyRender(PoseStack poseStack, WheelEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         LivingEntity owner = animatable.getOwner();
 
-        if (owner != null) {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner.getUUID());
+        if (owner == null) return;
 
-            if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                red = 0.0F;
-                green = 0.0F;
-                blue = 0.0F;
-            }
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner.getUUID());
+
+        if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            red = 0.0F;
+            green = 0.0F;
+            blue = 0.0F;
         }
 
         this.updateAnimatedTextureFrame(animatable);

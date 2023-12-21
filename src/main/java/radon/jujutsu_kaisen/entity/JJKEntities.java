@@ -183,6 +183,11 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect")
                             .toString()));
+    public static RegistryObject<EntityType<EmberInsectFlightEntity>> EMBER_INSECT_FLIGHT = ENTITIES.register("ember_insect_flight", () ->
+            EntityType.Builder.<EmberInsectFlightEntity>of(EmberInsectFlightEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 0.2F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "ember_insect_flight")
+                            .toString()));
     public static RegistryObject<EntityType<VolcanoEntity>> VOLCANO = ENTITIES.register("volcano", () ->
             EntityType.Builder.<VolcanoEntity>of(VolcanoEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)

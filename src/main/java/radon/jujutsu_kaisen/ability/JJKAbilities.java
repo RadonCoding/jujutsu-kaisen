@@ -96,6 +96,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
+    public static RegistryObject<Ability> EMBER_INSECT_FLIGHT = ABILITIES.register("ember_insect_flight", EmberInsectFlight::new);
     public static RegistryObject<Ability> VOLCANO = ABILITIES.register("volcano", Volcano::new);
     public static RegistryObject<Ability> MAXIMUM_METEOR = ABILITIES.register("maximum_meteor", MaximumMeteor::new);
     public static RegistryObject<Ability> DISASTER_FLAMES = ABILITIES.register("disaster_flames", DisasterFlames::new);

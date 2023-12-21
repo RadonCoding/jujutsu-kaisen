@@ -103,9 +103,6 @@ public class WheelEntity extends Entity implements GeoEntity {
                 if (spin > 0) {
                     this.entityData.set(DATA_SPIN, --spin);
                 }
-            } else if (this.getVehicle() instanceof LivingEntity living) {
-                this.setYRot(living.yHeadRot);
-                this.yRotO = living.yHeadRotO;
             }
         }
     }
