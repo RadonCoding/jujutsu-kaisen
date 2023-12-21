@@ -31,7 +31,6 @@
     "common.MeleeAttackGoalMixin",
     "common.MobMixin",
     "common.PathNavigationMixin",
-    "server.PlayerListMixin",
     "common.ServerEntityMixin"
   ]
 }
