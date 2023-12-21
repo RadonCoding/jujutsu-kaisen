@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -77,6 +78,28 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
+        if (!owner.level().getBlockState(owner.blockPosition()).getFluidState().isEmpty()) {
+            Vec3 movement = owner.getDeltaMovement();
+
+            if (!owner.level().getBlockState(owner.blockPosition().above()).getFluidState().isEmpty()) {
+                owner.setDeltaMovement(movement.x, 0.1D, movement.z);
+            } else if (movement.y < 0.0D) {
+                owner.setDeltaMovement(movement.x, 0.01D, movement.z);
+            }
+            owner.setOnGround(true);
+        }
+
+        if (owner instanceof Player player) {
+            float f;
+
+            if (owner.onGround() && !owner.isDeadOrDying() && !owner.isSwimming()) {
+                f = Math.min(0.1F, (float) owner.getDeltaMovement().horizontalDistance());
+            } else {
+                f = 0.0F;
+            }
+            player.bob += (f - player.bob) * 0.4F;
+        }
+
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -155,7 +178,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public void onEnabled(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        double movement = cap.getEnergy() * 0.001D;
+        double movement = cap.getExperience() * 0.001D;
         HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
                 Math.min(owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
     }

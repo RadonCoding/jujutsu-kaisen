@@ -120,11 +120,6 @@ public class ClientAbilityHandler {
                     });
                 }
 
-                if (JJKKeys.ACTIVATE_WATER_WALKING.isDown()) {
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.WATER_WALKING.get())));
-                    ClientAbilityHandler.trigger(JJKAbilities.WATER_WALKING.get());
-                }
-
                 if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
                     mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
