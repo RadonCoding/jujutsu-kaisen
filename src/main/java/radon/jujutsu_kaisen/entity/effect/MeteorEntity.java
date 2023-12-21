@@ -249,8 +249,8 @@ public class MeteorEntity extends JujutsuProjectile {
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = this.getSize() * 1.25F;
-        int count = (int) (radius * Math.PI * 2) * 2;
+        float radius = this.getSize() * 1.1F;
+        int count = (int) (radius * Math.PI * 2) / 2;
 
         for (int i = 0; i < count; i++) {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
@@ -264,7 +264,7 @@ public class MeteorEntity extends JujutsuProjectile {
             double y = center.y + yOffset;
             double z = center.z + zOffset;
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.5F, true, 1),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.FIRE_ORANGE, radius * 0.4F, 0.5F, true, 20),
                     true, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
