@@ -368,7 +368,12 @@ public class MeteorEntity extends JujutsuProjectile {
                         this.setExplosionTime(++time);
                     }
                 } else {
-                    if (this.horizontalCollision || this.verticalCollision) {
+                    Vec3 start = this.position();
+                    Vec3 end = start.add(this.getDeltaMovement().scale((double) this.getSize() / 2));
+
+                    BlockHitResult clip = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this));
+
+                    if (!this.level().getBlockState(clip.getBlockPos()).isAir()) {
                         this.setExplosionTime(1);
 
                         ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), this.getSize() * 1.5F, duration, this.getPower() * 0.25F, owner,
