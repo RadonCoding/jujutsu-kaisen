@@ -59,6 +59,11 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         return true;
     }
 
+    @Override
+    public boolean isUnlockable(LivingEntity owner) {
+        return false;
+    }
+
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
