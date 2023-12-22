@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.base;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -180,8 +181,8 @@ public abstract class Ability {
         return true;
     }
 
-    public Status getStatus(LivingEntity owner, boolean cost, boolean charge, boolean cooldown, boolean duration) {
-        if (!(this instanceof Wheel) && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
+    public Status getStatus(LivingEntity owner, boolean checkCost, boolean chargeCost, boolean checkCooldown, boolean addCooldown, boolean addDuration) {
+        if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -200,26 +201,20 @@ public abstract class Ability {
                 return Status.DOMAIN_AMPLIFICATION;
             }
 
-            if (this.getRealCooldown(owner) > 0) {
-                if (!cap.isCooldownDone(this) && !cap.hasToggled(this) && !cap.isChanneling(this)) {
-                    return Status.COOLDOWN;
-                }
+            if (checkCooldown && !cap.isCooldownDone(this)) {
+                return Status.COOLDOWN;
             }
 
-            if (cost) {
-                if (!this.checkCost(owner, charge)) {
-                    return Status.ENERGY;
-                }
+            if (checkCost && !this.checkCost(owner, chargeCost)) {
+                return Status.ENERGY;
             }
 
-            if (cooldown) {
-                if (this.getRealCooldown(owner) > 0) {
-                    cap.addCooldown(this);
-                }
+            if (addCooldown && this.getRealCooldown(owner) > 0) {
+                cap.addCooldown(this);
             }
         }
 
-        if (duration) {
+        if (addDuration) {
             if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
                 cap.addDuration(this);
             }
@@ -227,20 +222,23 @@ public abstract class Ability {
         return Status.SUCCESS;
     }
 
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
 
         if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
-        return this.getStatus(owner, true, this.getActivationType(owner) == ActivationType.INSTANT, true, this.getActivationType(owner) != ActivationType.INSTANT);
+        return this.getStatus(owner, true, this.getActivationType(owner) == ActivationType.INSTANT,
+                true, true, this.getActivationType(owner) != ActivationType.INSTANT);
     }
 
-    public Status checkStatus(LivingEntity owner) {
-        return this.getStatus(owner, true, true, true, false);
+    public Status isStillUsable(LivingEntity owner) {
+        if (this instanceof IAttack) {
+            return this.getStatus(owner, false, false, false, false, false);
+        }
+        return this.getStatus(owner, true, true, false, true, false);
     }
 
-    public boolean checkCost(LivingEntity owner, boolean use) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+    public boolean checkCost(LivingEntity owner, boolean chargeCost) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
@@ -250,7 +248,7 @@ public abstract class Ability {
                 return false;
             }
 
-            if (use) {
+            if (chargeCost) {
                 cap.useEnergy(cost);
             }
         }
@@ -342,5 +340,9 @@ public abstract class Ability {
         void onEnabled(LivingEntity owner);
 
         void onDisabled(LivingEntity owner);
+    }
+
+    public interface IAttack {
+        void attack(DamageSource source, LivingEntity owner, LivingEntity target);
     }
 }

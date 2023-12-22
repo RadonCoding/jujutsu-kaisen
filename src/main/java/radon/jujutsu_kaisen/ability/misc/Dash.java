@@ -22,8 +22,6 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
     private static final float DASH = 1.5F;
@@ -57,11 +55,11 @@ public class Dash extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         if (!canDash(owner)) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     private static boolean canDash(LivingEntity owner) {

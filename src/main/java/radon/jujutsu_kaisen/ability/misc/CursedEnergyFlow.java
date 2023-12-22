@@ -3,22 +3,18 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -26,10 +22,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -39,12 +32,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -187,9 +177,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status isStillUsable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getEnergy() == 0.0F ? Status.FAILURE : super.checkStatus(owner);
+        return cap.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -201,15 +191,13 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             if (attacker.level().isClientSide) return;
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
             LivingEntity victim = event.getEntity();
 
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (melee) {
+                    if (HelperMethods.isMelee(source)) {
                         float increased = event.getAmount() * (1.0F + attackerCap.getExperience() * 0.0005F);
 
                         switch (attackerCap.getNature()) {
@@ -249,7 +237,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 }
             }
 
-            if (melee) {
+            if (HelperMethods.isMelee(source)) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -285,7 +273,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    if (melee) {
+                    if (HelperMethods.isMelee(source)) {
                         switch (victimCap.getNature()) {
                             case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
                                     false, false, false));

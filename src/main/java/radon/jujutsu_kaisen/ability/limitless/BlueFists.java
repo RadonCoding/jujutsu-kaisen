@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class BlueFists extends Ability implements Ability.IToggled {
     @Override
@@ -63,9 +64,7 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            if (!melee) return;
+            if (!HelperMethods.isMelee(source)) return;
 
             if (!JJKAbilities.hasToggled(attacker, JJKAbilities.BLUE_FISTS.get())) return;
 

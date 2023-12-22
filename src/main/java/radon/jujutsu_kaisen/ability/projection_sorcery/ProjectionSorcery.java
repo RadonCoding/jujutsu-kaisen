@@ -1,13 +1,11 @@
 package radon.jujutsu_kaisen.ability.projection_sorcery;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +31,6 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
@@ -59,11 +56,11 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status isStillUsable(LivingEntity owner) {
         if (owner.hasEffect(JJKEffects.STUN.get())) {
             return Status.FAILURE;
         }
-        return super.checkStatus(owner);
+        return super.isStillUsable(owner);
     }
 
     @Override

@@ -42,7 +42,6 @@ public class NueLightning extends Ability implements Ability.IToggled {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return !cap.hasToggled(JJKAbilities.NUE.get()) &&
                 cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
@@ -92,9 +91,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            if (!melee) return;
+            if (!HelperMethods.isMelee(source)) return;
 
             if (!JJKAbilities.hasToggled(attacker, JJKAbilities.NUE_LIGHTNING.get())) return;
 

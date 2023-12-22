@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
-import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +15,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -71,13 +69,13 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status isStillUsable(LivingEntity owner) {
         if (POSITIONS.containsKey(owner.getUUID())) {
             if (owner.position() != POSITIONS.get(owner.getUUID())) {
                 return Status.FAILURE;
             }
         }
-        return super.checkStatus(owner);
+        return super.isStillUsable(owner);
     }
 
     @Override

@@ -21,6 +21,8 @@ import java.util.*;
 
 @AutoRegisterCapability
 public interface ISorcererData {
+    void attack(DamageSource source, LivingEntity target);
+
     void tick(LivingEntity owner);
 
     void init(LivingEntity owner);

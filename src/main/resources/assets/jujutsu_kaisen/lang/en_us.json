@@ -8,6 +8,7 @@
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
+  "gui.jujutsu_kaisen.ability_overlay.cooldown": "Cooldown: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.total": "Total: %1$d",
   "gui.jujutsu_kaisen.ability_overlay.count": "Count: %1$d",
@@ -541,6 +542,7 @@
   "death.attack.jujutsu_bypass": "%1$s was killed by %2$s using jujutsu",
   "death.attack.soul": "%1$s had their soul killed by %2$s",
   "death.attack.self": "%1$s killed themselves because of %2$s",
+  "death.attack.split_soul_katana": "%1$s was slain by %2$s",
 
   "advancements.jujutsu_kaisen.root.title": "Jujutsu Kaisen",
   "advancements.jujutsu_kaisen.root.description": "Enter the world of cursed energy.",

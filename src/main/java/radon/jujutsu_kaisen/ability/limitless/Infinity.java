@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
 
@@ -293,10 +294,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                     }
 
                     if (source.getEntity() instanceof LivingEntity living) {
-                        boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                                || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-                        if (melee) {
+                        if (HelperMethods.isMelee(source)) {
                             if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                                 return;
                             }

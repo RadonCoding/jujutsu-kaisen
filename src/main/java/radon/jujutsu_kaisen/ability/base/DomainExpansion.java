@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -22,11 +21,9 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -73,7 +70,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 break;
             }
 
-            Status status = this.getStatus(owner, true, false, false, false);
+            Status status = this.getStatus(owner, true, false, false, false, false);
 
             if (result && (status == Status.DOMAIN_AMPLIFICATION)) {
                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
@@ -86,14 +83,14 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status isStillUsable(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
             if (cap.getSummonByClass(level, DomainExpansionEntity.class) == null) return Status.FAILURE;
         }
-        return super.checkStatus(owner);
+        return super.isStillUsable(owner);
     }
 
     @Override

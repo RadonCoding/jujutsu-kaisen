@@ -53,10 +53,7 @@ public class CuriosEventHandler {
 
         if (!JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) return;
 
-        boolean melee = (source instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-        if (!melee) return;
+        if (!HelperMethods.isMelee(source)) return;
 
         LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(attacker);
 

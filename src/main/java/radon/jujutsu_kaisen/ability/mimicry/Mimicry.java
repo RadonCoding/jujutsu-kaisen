@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen.ability.mimicry;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -15,8 +17,10 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Mimicry extends Ability implements Ability.IToggled {
     @Override
@@ -69,7 +73,9 @@ public class Mimicry extends Ability implements Ability.IToggled {
     public static class MimicryForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
-            LivingEntity victim = event.getEntity();
+            DamageSource source = event.getSource();
+
+            if (!HelperMethods.isMelee(source)) return;
 
             if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
 
@@ -78,6 +84,8 @@ public class Mimicry extends Ability implements Ability.IToggled {
             ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (!attackerCap.hasToggled(JJKAbilities.MIMICRY.get())) return;
+
+            LivingEntity victim = event.getEntity();
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
@@ -92,6 +100,7 @@ public class Mimicry extends Ability implements Ability.IToggled {
                 attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
                 attackerCap.copy(copied);
+
                 attackerCap.toggle(JJKAbilities.MIMICRY.get());
 
                 if (attacker instanceof ServerPlayer player) {

@@ -187,6 +187,16 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
+
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
+                    cap.attack(event.getSource(), victim));
+        }
+
+        @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
             LivingEntity owner = event.getEntity();
 
@@ -231,8 +241,6 @@ public class JJKEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
             ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
 
             List<Item> stacks = new ArrayList<>();
@@ -245,7 +253,7 @@ public class JJKEventHandler {
 
                 if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
                     cursed = true;
-                } else if (melee && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
+                } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                     cursed = true;
                 } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -278,10 +286,10 @@ public class JJKEventHandler {
                 }
             }
 
-            if (melee) {
+            if (HelperMethods.isMelee(source)) {
                 if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {
-                        if (victim.hurt(JJKDamageSources.soulAttack(attacker), event.getAmount())) {
+                        if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
                             victim.invulnerableTime = 0;
                         }
                     }
@@ -365,10 +373,7 @@ public class JJKEventHandler {
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
-                    boolean melee = (source instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                            || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-                    if (melee) {
+                    if (HelperMethods.isMelee(source)) {
                         event.setAmount(event.getAmount() * 2.0F);
                     }
                 }

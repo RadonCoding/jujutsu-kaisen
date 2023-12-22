@@ -152,7 +152,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
@@ -160,11 +160,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                 return Status.FAILURE;
             }
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override
-    public Status checkStatus(LivingEntity owner) {
+    public Status isStillUsable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner.level() instanceof ServerLevel level) {
@@ -172,7 +172,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                 return Status.FAILURE;
             }
         }
-        return super.checkStatus(owner);
+        return super.isStillUsable(owner);
     }
 
     protected abstract T summon(LivingEntity owner);

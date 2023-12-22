@@ -31,17 +31,16 @@ import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
+public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
     private static final float DAMAGE = 15.0F;
-    private static final int INVULNERABLE_TIME = 20;
-
-    private static final Map<UUID, Long> invulnerable = new HashMap<>();
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -50,7 +49,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return false;
+        return true;
     }
 
     @Override
@@ -65,7 +64,12 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.5F;
+        return 10.0F;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 2 * 20;
     }
 
     @Override
@@ -76,6 +80,17 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
     @Override
     public void onDisabled(LivingEntity owner) {
 
+    }
+
+    @Override
+    public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return;
+
+        owner.level().addFreshEntity(new ProjectionFrameEntity(owner, target, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
+
+        if (target instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
+        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -104,42 +119,10 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled {
 
                 if (owner != null) {
                     victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * frame.getPower());
-                    invulnerable.put(victim.getUUID(), victim.level().getGameTime());
                 }
                 return;
             }
 
-            boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                    || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            if (!melee) return;
-
-            if (attacker instanceof Mob && !JJKAbilities.hasToggled(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())) {
-                AbilityHandler.trigger(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get());
-            }
-
-            Iterator<Map.Entry<UUID, Long>> iter = invulnerable.entrySet().iterator();
-
-            while (iter.hasNext()) {
-                Map.Entry<UUID, Long> entry = iter.next();
-
-                if (victim.level().getGameTime() - entry.getValue() >= INVULNERABLE_TIME) {
-                    iter.remove();
-                } else if (entry.getKey() == victim.getUUID()) {
-                    return;
-                }
-            }
-
-            if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())
-                return;
-
-            if (JJKAbilities.hasToggled(attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get())) {
-                attacker.level().addFreshEntity(new ProjectionFrameEntity(attacker, victim, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), attacker)));
-
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
-                }
-            }
         }
     }
 }

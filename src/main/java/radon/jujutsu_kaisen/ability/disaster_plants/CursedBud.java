@@ -69,9 +69,7 @@ public class CursedBud extends Ability {
 
             LivingEntity victim = event.getEntity();
 
-            boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-            if (!melee) return;
+            if (!HelperMethods.isMelee(source)) return;
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 

@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.ability;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 
@@ -30,7 +29,7 @@ public class AbilityHandler {
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             Ability.Status status;
 
-            if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS) {
+            if ((status = ability.isTriggerable(owner)) == Ability.Status.SUCCESS) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
@@ -39,7 +38,7 @@ public class AbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
-            if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
+            if ((status = ability.isTriggerable(owner)) == Ability.Status.SUCCESS || cap.hasToggled(ability)) {
                 if (cap.hasToggled(ability)) {
                     cap.toggle(ability);
                 } else {
@@ -52,7 +51,7 @@ public class AbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if ((status = ability.checkTriggerable(owner)) == Ability.Status.SUCCESS || cap.isChanneling(ability)) {
+            if ((status = ability.isTriggerable(owner)) == Ability.Status.SUCCESS || cap.isChanneling(ability)) {
                 if (cap.isChanneling(ability)) {
                     cap.channel(ability);
                 } else {
