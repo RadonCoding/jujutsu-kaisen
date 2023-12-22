@@ -67,7 +67,7 @@ public class SimpleDomainEntity extends Mob {
 
     @Override
     public boolean fireImmune() {
-        return false;
+        return true;
     }
 
     @Override

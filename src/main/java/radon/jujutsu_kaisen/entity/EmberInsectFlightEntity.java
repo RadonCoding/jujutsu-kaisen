@@ -27,7 +27,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class EmberInsectFlightEntity extends Entity implements GeoEntity, PlayerRideable, IJumpInputListener {
-    private static final float SPEED = 0.1F;
+    private static final float SPEED = 0.05F;
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
@@ -66,9 +66,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
 
             if (owner != null) {
                 if (this.jump) {
-                    owner.setDeltaMovement(owner.getDeltaMovement().add(0.0D, SPEED, 0.0D));
-                } else if (!this.onGround()) {
-                    owner.setDeltaMovement(owner.getDeltaMovement().subtract(0.0D, -0.01D, 0.0D));
+                    owner.setDeltaMovement(owner.getDeltaMovement().add(0.0D, SPEED * 2, 0.0D));
                 }
 
                 float f = owner.xxa * 0.5F;

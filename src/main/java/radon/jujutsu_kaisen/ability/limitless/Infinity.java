@@ -45,6 +45,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.*;
 
 public class Infinity extends Ability implements Ability.IToggled {
+    private static final float SPEED = 0.05F;
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -62,7 +64,16 @@ public class Infinity extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
+        Vec3 movement = owner.getDeltaMovement();
+        owner.setDeltaMovement(movement.x, SPEED * 2, movement.z);
+
+        float f = owner.xxa * 0.5F;
+        float f1 = owner.zza;
+
+        if (f1 <= 0.0F) {
+            f1 *= 0.25F;
+        }
+        owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
     }
 
     @Override

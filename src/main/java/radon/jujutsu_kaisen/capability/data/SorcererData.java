@@ -146,7 +146,7 @@ public class SorcererData implements ISorcererData {
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
-        this.delayedTickEvents = new CopyOnWriteArrayList<>();
+        this.delayedTickEvents = new ArrayList<>();
         this.cooldowns = new HashMap<>();
         this.durations = new HashMap<>();
         this.summons = new HashSet<>();
@@ -222,16 +222,21 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateTickEvents() {
-        List<DelayedTickEvent> remove = new ArrayList<>();
+        Iterator<DelayedTickEvent> iter = this.delayedTickEvents.iterator();
 
-        for (DelayedTickEvent event : this.delayedTickEvents) {
-            event.tick();
+        while (iter.hasNext()) {
+            DelayedTickEvent current = iter.next();
 
-            if (event.run()) {
-                remove.add(event);
+            current.tick();
+
+            if (current.finished()) {
+                iter.remove();
             }
         }
-        this.delayedTickEvents.removeAll(remove);
+
+        for (DelayedTickEvent event : this.delayedTickEvents) {
+            event.run();
+        }
     }
 
     private void updateToggled() {
