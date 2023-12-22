@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.repository.Pack;
@@ -203,16 +204,48 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
             boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
 
+            LivingEntity victim = event.getEntity();
+
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (melee) {
-                        float increased = event.getAmount() * (1.0F + attackerCap.getExperience() * 0.001F);
+                        float increased = event.getAmount() * (1.0F + attackerCap.getExperience() * 0.0005F);
 
                         switch (attackerCap.getNature()) {
-                            case LIGHTNING -> increased *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
                             case ROUGH -> increased *= 1.5F;
+                            case LIGHTNING -> increased *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
+                            case DIVERGENT -> {
+                                Vec3 look = attacker.getLookAngle();
+
+                                attackerCap.delayTickEvent(() -> {
+                                    victim.invulnerableTime = 0;
+
+                                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+
+                                    for (int i = 0; i < 96; i++) {
+                                        double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+                                        double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+                                        double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+                                        double x = r * Math.sin(phi) * Math.cos(theta);
+                                        double y = r * Math.sin(phi) * Math.sin(theta);
+                                        double z = r * Math.cos(phi);
+                                        Vec3 speed = look.add(x, y, z);
+                                        Vec3 offset = pos.add(look);
+                                        ((ServerLevel) victim.level()).sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(attacker),
+                                                victim.getBbWidth(), 0.2F, 8), offset.x, offset.y, offset.z, 0, speed.x, speed.y, speed.z, 1.0D);
+                                    }
+
+                                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), event.getAmount())) {
+                                        ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                                        victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+
+                                        victim.setDeltaMovement(look.scale(1.0F + (attackerCap.getAbilityPower() * 0.1F)));
+                                        victim.hurtMarked = true;
+                                    }
+                                }, 5);
+                            }
                         };
                         float increase = increased - event.getAmount();
 
@@ -229,8 +262,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     }
                 }
             }
-
-            LivingEntity victim = event.getEntity();
 
             if (melee) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

@@ -37,6 +37,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class SorcererData implements ISorcererData {
@@ -144,7 +145,7 @@ public class SorcererData implements ISorcererData {
 
         this.toggled = new HashSet<>();
         this.traits = new HashSet<>();
-        this.delayedTickEvents = new ArrayList<>();
+        this.delayedTickEvents = new CopyOnWriteArrayList<>();
         this.cooldowns = new HashMap<>();
         this.durations = new HashMap<>();
         this.summons = new HashSet<>();
@@ -220,17 +221,16 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateTickEvents() {
-        Iterator<DelayedTickEvent> delayed = this.delayedTickEvents.iterator();
+        List<DelayedTickEvent> remove = new ArrayList<>();
 
-        while (delayed.hasNext()) {
-            DelayedTickEvent current = delayed.next();
+        for (DelayedTickEvent event : this.delayedTickEvents) {
+            event.tick();
 
-            current.tick();
-
-            if (current.run()) {
-                delayed.remove();
+            if (event.run()) {
+                remove.add(event);
             }
         }
+        this.delayedTickEvents.removeAll(remove);
     }
 
     private void updateToggled() {
