@@ -42,7 +42,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Integer> DATA_LENGTH = SynchedEntityData.defineId(DismantleProjectile.class, EntityDataSerializers.INT);
 
     public static final float DAMAGE = 10.0F;
-    private static final int DURATION = 5;
+    private static final int DURATION = 10;
     private static final int LINE_LENGTH = 3;
 
     private boolean instant;
