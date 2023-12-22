@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
@@ -50,7 +51,14 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     @Override
     public boolean isAffected(BlockPos pos) {
         if (VeilHandler.isProtected(this.level(), pos)) return false;
-        if (!VeilHandler.getDomains((ServerLevel) this.level(), pos).isEmpty()) return false;
+
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), pos);
+
+        for (DomainExpansionEntity domain : domains) {
+            if (domain == this) continue;
+
+            return false;
+        }
         return super.isAffected(pos);
     }
 
@@ -87,9 +95,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        AABB bounds = this.getBounds();
-
-        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, bounds, this::isAffected)) {
+        for (LivingEntity entity : this.getAffected()) {
             this.ability.onHitEntity(this, owner, entity, false);
         }
     }
@@ -131,11 +137,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            if (!this.level().isClientSide) {
-                if (this.checkSureHitEffect()) {
-                    this.doSureHitEffect(owner);
-                }
+        if (owner == null) return;
+
+        if (!this.level().isClientSide) {
+            if (this.checkSureHitEffect()) {
+                this.doSureHitEffect(owner);
             }
         }
     }

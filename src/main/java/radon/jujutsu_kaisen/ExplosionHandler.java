@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
@@ -137,77 +138,76 @@ public class ExplosionHandler {
                 }
             }
 
-            ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
+            if (explosion.instigator instanceof Player || event.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
 
-            float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
-            int minX = Mth.floor(explosion.position.x - radius - 1.0F);
-            int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
-            int minY = Mth.floor(explosion.position.y - radius - 1.0F);
-            int maxY = Mth.floor(explosion.position.y + radius + 1.0F);
-            int minZ = Mth.floor(explosion.position.z - radius - 1.0F);
-            int maxZ = Mth.floor(explosion.position.z + radius + 1.0F);
+                float radius = Math.min(explosion.radius, explosion.radius * (0.5F + ((float) explosion.age / explosion.duration)));
+                int minX = Mth.floor(explosion.position.x - radius - 1.0F);
+                int maxX = Mth.floor(explosion.position.x + radius + 1.0F);
+                int minY = Mth.floor(explosion.position.y - radius - 1.0F);
+                int maxY = Mth.floor(explosion.position.y + radius + 1.0F);
+                int minZ = Mth.floor(explosion.position.z - radius - 1.0F);
+                int maxZ = Mth.floor(explosion.position.z + radius + 1.0F);
 
-            for (int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        double distance = (x - explosion.position.x) * (x - explosion.position.x) +
-                                (y - explosion.position.y) * (y - explosion.position.y) +
-                                (z - explosion.position.z) * (z - explosion.position.z);
+                for (int x = minX; x <= maxX; x++) {
+                    for (int y = minY; y <= maxY; y++) {
+                        for (int z = minZ; z <= maxZ; z++) {
+                            double distance = (x - explosion.position.x) * (x - explosion.position.x) +
+                                    (y - explosion.position.y) * (y - explosion.position.y) +
+                                    (z - explosion.position.z) * (z - explosion.position.z);
 
-                        float adjusted = radius * ((float) explosion.age / explosion.duration);
+                            if (distance <= radius * radius) {
+                                BlockPos pos = new BlockPos(x, y, z);
+                                BlockState block = event.level.getBlockState(pos);
+                                FluidState fluid = event.level.getFluidState(pos);
 
-                        if (distance <= radius * radius) {
-                            BlockPos pos = new BlockPos(x, y, z);
-                            BlockState block = event.level.getBlockState(pos);
-                            FluidState fluid = event.level.getFluidState(pos);
+                                float f = explosion.radius * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F);
 
-                            float f = explosion.radius * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F);
+                                Optional<Float> optional = explosion.calculator.getBlockExplosionResistance(current, event.level, pos, block, fluid);
 
-                            Optional<Float> optional = explosion.calculator.getBlockExplosionResistance(current, event.level, pos, block, fluid);
+                                if (optional.isPresent()) {
+                                    f -= (optional.get() + 0.3F) * 0.3F;
+                                }
 
-                            if (optional.isPresent()) {
-                                f -= (optional.get() + 0.3F) * 0.3F;
-                            }
+                                if (f > 0.0F && explosion.calculator.shouldBlockExplode(current, event.level, pos, block, f)) {
+                                    if (!block.isAir()) {
+                                        BlockPos imm = pos.immutable();
 
-                            if (f > 0.0F && explosion.calculator.shouldBlockExplode(current, event.level, pos, block, f)) {
-                                if (!block.isAir()) {
-                                    BlockPos imm = pos.immutable();
+                                        if (block.canDropFromExplosion(event.level, pos, current)) {
+                                            BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
+                                            LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
+                                                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+                                                    .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+                                                    .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
+                                                    .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
+                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
+                                            block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
+                                            block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
+                                        }
+                                        block.onBlockExploded(event.level, pos, current);
 
-                                    if (block.canDropFromExplosion(event.level, pos, current)) {
-                                        BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
-                                        LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
-                                                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-                                                .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
-                                                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
-                                                .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
-                                                .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
-                                        block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
-                                        block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
-                                    }
-                                    block.onBlockExploded(event.level, pos, current);
+                                        if (HelperMethods.RANDOM.nextInt(10) == 0) {
+                                            HelperMethods.sendParticles((ServerLevel) event.level, ParticleTypes.EXPLOSION, true, x, y, z,
+                                                    0.0D, 0.0D, 0.0D);
+                                        }
 
-                                    if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                                        HelperMethods.sendParticles((ServerLevel) event.level, ParticleTypes.EXPLOSION, true, x, y, z,
-                                                0.0D, 0.0D, 0.0D);
-                                    }
-
-                                    if (explosion.fire) {
-                                        if (HelperMethods.RANDOM.nextInt(3) == 0 && event.level.getBlockState(pos).isAir() &&
-                                                event.level.getBlockState(pos.below()).isSolidRender(event.level, pos.below())) {
-                                            event.level.setBlockAndUpdate(pos, BaseFireBlock.getState(event.level, pos));
+                                        if (explosion.fire) {
+                                            if (HelperMethods.RANDOM.nextInt(3) == 0 && event.level.getBlockState(pos).isAir() &&
+                                                    event.level.getBlockState(pos.below()).isSolidRender(event.level, pos.below())) {
+                                                event.level.setBlockAndUpdate(pos, BaseFireBlock.getState(event.level, pos));
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                for (Pair<ItemStack, BlockPos> pair : drops) {
-                    Block.popResource(event.level, pair.getSecond(), pair.getFirst());
+                    for (Pair<ItemStack, BlockPos> pair : drops) {
+                        Block.popResource(event.level, pair.getSecond(), pair.getFirst());
+                    }
                 }
             }
-
             explosion.age++;
 
             if (explosion.age >= explosion.duration) {

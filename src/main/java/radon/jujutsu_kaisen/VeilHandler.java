@@ -35,7 +35,9 @@ public class VeilHandler {
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level) {
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+        if (!domains.containsKey(level.dimension())) return result;
+
+        for (UUID identifier : domains.get(level.dimension())) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain)) continue;
             result.add(domain);
         }
@@ -45,7 +47,9 @@ public class VeilHandler {
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, BlockPos pos) {
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+        if (!domains.containsKey(level.dimension())) return result;
+
+        for (UUID identifier : domains.get(level.dimension())) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !domain.isInsideBarrier(pos)) continue;
             result.add(domain);
         }
@@ -55,7 +59,9 @@ public class VeilHandler {
     public static Set<DomainExpansionEntity> getDomains(ServerLevel level, AABB bounds) {
         Set<DomainExpansionEntity> result = new HashSet<>();
 
-        for (UUID identifier : domains.getOrDefault(level.dimension(), Set.of())) {
+        if (!domains.containsKey(level.dimension())) return result;
+
+        for (UUID identifier : domains.get(level.dimension())) {
             if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !bounds.intersects(domain.getBounds())) continue;
             result.add(domain);
         }

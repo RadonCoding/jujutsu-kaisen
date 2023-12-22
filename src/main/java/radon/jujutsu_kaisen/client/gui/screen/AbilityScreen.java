@@ -20,9 +20,8 @@ import java.util.*;
 public class AbilityScreen extends RadialScreen {
     @Override
     protected List<DisplayItem> getItems() {
-        assert this.minecraft != null && this.minecraft.level != null && this.minecraft.player != null;
+        if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return List.of();
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
@@ -45,6 +44,12 @@ public class AbilityScreen extends RadialScreen {
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
+
+        if (this.minecraft == null || this.minecraft.player == null) return;
+
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!cap.hasTechnique(CursedTechnique.MIMICRY)) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

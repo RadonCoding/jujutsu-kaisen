@@ -222,20 +222,21 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateTickEvents() {
-        Iterator<DelayedTickEvent> iter = this.delayedTickEvents.iterator();
+        List<DelayedTickEvent> finished = new ArrayList<>();
 
-        while (iter.hasNext()) {
-            DelayedTickEvent current = iter.next();
-
+        for (DelayedTickEvent current : this.delayedTickEvents) {
             current.tick();
 
             if (current.finished()) {
-                iter.remove();
+                finished.add(current);
             }
         }
 
-        for (DelayedTickEvent event : this.delayedTickEvents) {
-            event.run();
+        if (!finished.isEmpty()) {
+            for (DelayedTickEvent event : finished) {
+                event.run();
+            }
+            this.delayedTickEvents.removeAll(finished);
         }
     }
 

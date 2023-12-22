@@ -99,9 +99,9 @@ public abstract class DomainExpansionEntity extends Entity {
         return Vec3.ZERO;
     }
 
-    public List<Entity> getAffected() {
+    public List<LivingEntity> getAffected() {
         AABB bounds = this.getBounds();
-        return this.level().getEntities(this, bounds, this::isAffected);
+        return this.level().getEntitiesOfClass(LivingEntity.class, bounds, this::isAffected);
     }
 
     public boolean hasSureHitEffect() {
@@ -176,9 +176,7 @@ public abstract class DomainExpansionEntity extends Entity {
         return this.isInsideBarrier(pos);
     }
 
-    public boolean isAffected(Entity victim) {
-        if (victim == this) return false;
-
+    public boolean isAffected(LivingEntity victim) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null || victim == owner) {
@@ -187,26 +185,24 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        if (victim instanceof LivingEntity living) {
-            if (!owner.canAttack(living)) return false;
+        if (!owner.canAttack(victim)) return false;
 
-            if (living.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData victimCap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (victimCap.isAdaptedTo(this.ability) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
+            if (victimCap.isAdaptedTo(this.ability) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
 
-                if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                    SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
+            if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
 
-                    if (simple != null) {
-                        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower() * 10.0F);
-                    }
+                if (simple != null) {
+                    ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower() * 10.0F);
                 }
+            }
 
-                for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
-                    if (victim.distanceTo(simple) < simple.getRadius()) return false;
-                }
+            for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+                if (victim.distanceTo(simple) < simple.getRadius()) return false;
             }
         }
         return this.isAffected(victim.blockPosition());
