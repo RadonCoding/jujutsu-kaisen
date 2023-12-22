@@ -81,6 +81,8 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return;
+
         if (!HelperMethods.isMelee(source)) return;
 
         if (!owner.getMainHandItem().isEmpty()) return;

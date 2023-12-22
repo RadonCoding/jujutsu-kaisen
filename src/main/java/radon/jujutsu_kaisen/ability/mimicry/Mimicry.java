@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -18,11 +19,12 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class Mimicry extends Ability implements Ability.IToggled {
+public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttack {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -51,7 +53,7 @@ public class Mimicry extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0.0F;
+        return 10.0F;
     }
 
     @Override
@@ -69,43 +71,29 @@ public class Mimicry extends Ability implements Ability.IToggled {
         return 30 * 20;
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class MimicryForgeEvents {
-        @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
+    @Override
+    public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return;
 
-            if (!HelperMethods.isMelee(source)) return;
+        if (!HelperMethods.isMelee(source)) return;
 
-            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        CursedTechnique current = ownerCap.getTechnique();
+        CursedTechnique copied = targetCap.getTechnique();
 
-            if (!attackerCap.hasToggled(JJKAbilities.MIMICRY.get())) return;
+        if (copied == null || current == null || ownerCap.hasTechnique(copied)) return;
 
-            LivingEntity victim = event.getEntity();
+        if (current != copied) {
+            owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ownerCap.copy(copied);
 
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            CursedTechnique current = attackerCap.getTechnique();
-            CursedTechnique copied = victimCap.getTechnique();
-
-            if (copied == null || current == null || attackerCap.hasTechnique(copied)) return;
-
-            if (current != copied) {
-                attacker.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
-
-                attackerCap.copy(copied);
-
-                attackerCap.toggle(JJKAbilities.MIMICRY.get());
-
-                if (attacker instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-                }
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
             }
         }
     }
