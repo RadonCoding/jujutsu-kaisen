@@ -60,6 +60,16 @@ public class DisasterFlames extends Ability {
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        List<Entity> targets = this.getTargets(owner);
+
+        if (targets.isEmpty()) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
