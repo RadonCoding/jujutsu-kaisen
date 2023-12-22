@@ -27,7 +27,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public class EmberInsectFlightEntity extends Entity implements GeoEntity, PlayerRideable, IJumpInputListener {
-    private static final float SPEED = 0.05F;
+    private static final float SPEED = 0.1F;
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 

@@ -316,7 +316,7 @@ public class MeteorEntity extends JujutsuProjectile {
         if (owner == null) return;
 
         Vec3 look = owner.getLookAngle();
-        this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getBbHeight() * 2, this.getBbWidth() * 2)));
+        this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getSize() * 2, this.getBbWidth() * 2)));
     }
 
     @Override
