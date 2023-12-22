@@ -33,8 +33,6 @@ public class ClientSuggestionProviderMixin {
 
         String next = ChantHandler.next(player);
 
-        System.out.println(next);
-
         if (next == null) {
             result.addAll(cap.getFirstChants());
         } else {

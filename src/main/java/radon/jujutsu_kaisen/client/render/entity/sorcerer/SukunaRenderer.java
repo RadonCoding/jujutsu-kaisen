@@ -82,7 +82,6 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             assert mc.level != null;
             Entity entity = type.create(mc.level);
             assert entity != null;
-            System.out.println(type);
             return this.entityRenderDispatcher.getRenderer(entity).getTextureLocation(entity);
         }
     }
