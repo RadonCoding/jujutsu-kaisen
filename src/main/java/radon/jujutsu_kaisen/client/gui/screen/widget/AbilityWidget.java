@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
@@ -171,7 +173,16 @@ public class AbilityWidget {
 
     public void draw(GuiGraphics pGuiGraphics, int pX, int pY) {
         pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
+
+        if (this.ability.isCursedEnergyColor()) {
+            if (this.minecraft.player != null) {
+                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                Vector3f color = Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+                RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+            }
+        }
         pGuiGraphics.blit(this.display.getIcon(), pX + this.x + 8, pY + this.y + 5, 0, 0, 16, 16, 16, 16);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         for (AbilityWidget widget : this.children) {
             widget.draw(pGuiGraphics, pX, pY);

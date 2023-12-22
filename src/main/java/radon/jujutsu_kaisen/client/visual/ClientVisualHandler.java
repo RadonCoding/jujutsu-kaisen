@@ -108,7 +108,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType());
+                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType(), cap.getCursedEnergyColor());
             }
         }
         return null;
@@ -288,6 +288,7 @@ public class ClientVisualHandler {
         if (data == null) return;
 
         BlueFistsVisual.tick(data, entity);
+        IdleTransfigurationVisual.tick(data, entity);
 
         if (entity.level().getGameTime() % 5 == 0) {
             if (data.mouth > 0) {
@@ -298,7 +299,7 @@ public class ClientVisualHandler {
         }
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
 
@@ -309,7 +310,7 @@ public class ClientVisualHandler {
         if (data == null) return;
 
         BlueFistsVisual.tick(data, player);
-    }
+    }*/
 
     @SubscribeEvent
     public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
@@ -363,6 +364,7 @@ public class ClientVisualHandler {
         public final Set<Trait> traits;
         public final Set<CursedTechnique> techniques;
         public final JujutsuType type;
+        public final int cursedEnergyColor;
 
         public int mouth;
 
@@ -388,13 +390,15 @@ public class ClientVisualHandler {
             }
 
             this.type = JujutsuType.values()[nbt.getInt("type")];
+            this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
         }
 
-        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type) {
+        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type, int cursedEnergyColor) {
             this.toggled = toggled;
             this.traits = traits;
             this.techniques = techniques;
             this.type = type;
+            this.cursedEnergyColor = cursedEnergyColor;
         }
 
         public CompoundTag serializeNBT() {
@@ -422,6 +426,7 @@ public class ClientVisualHandler {
             nbt.put("techniques", techniquesTag);
 
             nbt.putInt("type", this.type.ordinal());
+            nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
 
             return nbt;
         }

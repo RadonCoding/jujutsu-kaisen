@@ -66,6 +66,11 @@ public class SimpleDomainEntity extends Mob {
     }
 
     @Override
+    public boolean fireImmune() {
+        return false;
+    }
+
+    @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         float radius = (float) (this.getRadius() * 2.0D);
         return EntityDimensions.fixed(radius, radius);

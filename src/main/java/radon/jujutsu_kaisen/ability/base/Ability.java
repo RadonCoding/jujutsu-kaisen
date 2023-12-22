@@ -68,6 +68,11 @@ public abstract class Ability {
     }
 
     // Used for skill tree
+    public boolean isCursedEnergyColor() {
+        return false;
+    }
+
+    // Used for skill tree
     public boolean isDisplayed(LivingEntity owner) {
         return this.getPointsCost() > 0;
     }

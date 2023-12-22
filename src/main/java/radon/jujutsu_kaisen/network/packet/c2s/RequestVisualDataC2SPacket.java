@@ -43,7 +43,7 @@ public class RequestVisualDataC2SPacket {
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), cap.getTechniques(), cap.getType());
+                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), cap.getTechniques(), cap.getType(), cap.getCursedEnergyColor());
                     PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
                 });
             }

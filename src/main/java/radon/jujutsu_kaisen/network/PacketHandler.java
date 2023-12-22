@@ -217,6 +217,11 @@ public class PacketHandler {
                 .encoder(NyoiStaffSummonLightningC2SPacket::encode)
                 .consumerMainThread(NyoiStaffSummonLightningC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SetCursedEnergyColorC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetCursedEnergyColorC2SPacket::new)
+                .encoder(SetCursedEnergyColorC2SPacket::encode)
+                .consumerMainThread(SetCursedEnergyColorC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

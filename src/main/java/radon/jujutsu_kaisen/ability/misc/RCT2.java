@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec2;
@@ -17,17 +18,28 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
 public class RCT2 extends RCT1 {
+    private static final List<MobEffect> HARMFUL = new ArrayList<>();
+
+    static {
+        HARMFUL.add(MobEffects.BLINDNESS);
+        HARMFUL.add(MobEffects.POISON);
+        HARMFUL.add(MobEffects.WITHER);
+        HARMFUL.add(MobEffects.CONFUSION);
+        HARMFUL.add(MobEffects.WEAKNESS);
+    }
+
     @Override
     public void run(LivingEntity owner) {
         super.run(owner);
 
         if (owner.getHealth() == owner.getMaxHealth()) {
-            owner.getActiveEffects().removeIf(instance -> !instance.getEffect().isBeneficial());
+            owner.getActiveEffects().removeIf(instance -> HARMFUL.contains(instance.getEffect()));
         }
     }
 
@@ -35,7 +47,7 @@ public class RCT2 extends RCT1 {
     public float getCost(LivingEntity owner) {
         if (owner.getHealth() == owner.getMaxHealth()) {
             for (MobEffect effect : owner.getActiveEffectsMap().keySet()) {
-                if (!effect.isBeneficial()) return 1.0F / 20;
+                if (HARMFUL.contains(effect)) return 1.0F / 20;
             }
         }
         return super.getCost(owner);
