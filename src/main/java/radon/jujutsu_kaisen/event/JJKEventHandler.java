@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -379,10 +380,17 @@ public class JJKEventHandler {
                 }
             }
 
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) ||
-                    !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                float armor = cap.getExperience() * 0.0025F;
+                float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
+                event.setAmount(blocked);
+            }
+
+            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             if (!cap.isAdaptedTo(event.getSource())) {
                 cap.tryAdapt(event.getSource());

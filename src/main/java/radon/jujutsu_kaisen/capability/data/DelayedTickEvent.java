@@ -13,11 +13,11 @@ public class DelayedTickEvent {
         this.delay--;
     }
 
-    public boolean run() {
-        if (this.delay <= 0) {
-            this.task.run();
-            return true;
-        }
-        return false;
+    public boolean finished() {
+        return this.delay <= 0;
+    }
+
+    public void run() {
+        this.task.run();
     }
 }

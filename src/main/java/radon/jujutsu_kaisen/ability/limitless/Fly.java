@@ -38,6 +38,8 @@ public class Fly extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         Vec3 movement = owner.getDeltaMovement();
         owner.setDeltaMovement(movement.x, 0.3D, movement.z);
+
+        owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
     }
 
     @Override
