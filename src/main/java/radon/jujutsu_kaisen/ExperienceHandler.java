@@ -187,7 +187,7 @@ public class ExperienceHandler {
                 ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                 if (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get())) {
-                    strength *= 1.25F;
+                    strength *= 1.5F;
                 }
             }
             return strength;
