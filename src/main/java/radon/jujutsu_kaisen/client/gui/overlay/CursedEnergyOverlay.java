@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -28,8 +29,7 @@ public class CursedEnergyOverlay {
             RenderSystem.depthMask(false);
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : cap.getType() == JujutsuType.SORCERER ?
-                    ParticleColors.CURSED_ENERGY_SORCERER : ParticleColors.CURSED_ENERGY_CURSE;
+            Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
             RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
             graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);

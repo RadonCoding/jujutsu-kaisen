@@ -9,12 +9,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class BlueFistsVisual {
+public class IdleTransfigurationVisual {
     private static final float RADIUS = 1.5F;
 
     private static Vec3 rotateRoll(Vec3 pos, float roll) {
@@ -45,12 +46,12 @@ public class BlueFistsVisual {
     }
 
     public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
-        if (data.toggled.contains(JJKAbilities.BLUE_FISTS.get())) {
+        if (data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             run(entity);
         }
     }
 
-    private static void spawn(Level level, Vec3 pos) {
+    private static void spawn(Level level, Vec3 pos, Vector3f color) {
         int count = (int) (RADIUS * Math.PI * 2);
 
         for (int i = 0; i < count; i++) {
@@ -65,24 +66,8 @@ public class BlueFistsVisual {
             double y = pos.y + yOffset * (RADIUS * 0.1F);
             double z = pos.z + zOffset * (RADIUS * 0.1F);
 
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.DARK_BLUE, RADIUS * 0.2F, 0.2F, true, 20),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
-        }
-
-        for (int i = 0; i < count; i++) {
-            double theta = HelperMethods.RANDOM.nextDouble() * Math.PI * 2.0D;
-            double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-
-            double xOffset = RADIUS * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = RADIUS * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = RADIUS * 0.5F * Math.cos(phi);
-
-            double x = pos.x + xOffset * (RADIUS * 0.5F * 0.1F);
-            double y = pos.y + yOffset * (RADIUS * 0.5F * 0.1F);
-            double z = pos.z + zOffset * (RADIUS * 0.5F * 0.1F);
-
-            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), ParticleColors.LIGHT_BLUE, RADIUS * 0.1F, 0.2F, true, 20),
-                    x, y, z, 0.0D, 0.0D, 0.0D);
+            level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), color, RADIUS * 0.15F, 0.2F, true, 20),
+                    x, y, z, 0.0D, 1.0D, 0.0D);
         }
     }
 
@@ -96,13 +81,13 @@ public class BlueFistsVisual {
                     new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            spawn(entity.level(), right);
+            spawn(entity.level(), right, ParticleColors.getCursedEnergyColor(entity));
 
             Vec3 left = transform3rdPersonLeft(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.425D, 0.0D),
                     new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, mc.getPartialTick())
                     .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
                     .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            spawn(entity.level(), left);
+            spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
         }
     }
 }

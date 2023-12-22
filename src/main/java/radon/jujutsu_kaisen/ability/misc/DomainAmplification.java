@@ -50,6 +50,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
+    public boolean isCursedEnergyColor() {
+        return true;
+    }
+
+    @Override
     public void run(LivingEntity owner) {
 
     }
@@ -85,13 +90,6 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public Vec2 getDisplayCoordinates() {
         return new Vec2(4.0F, 1.0F);
-    }
-
-    @Override
-    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Vec2 coordinates = this.getDisplayCoordinates();
-        return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
     }
 
     @Override

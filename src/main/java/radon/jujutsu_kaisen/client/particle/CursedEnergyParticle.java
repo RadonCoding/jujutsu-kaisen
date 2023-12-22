@@ -8,15 +8,16 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Locale;
 
-public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyParticleOptions> extends TextureSheetParticle {
+public class CursedEnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
-    protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, T options, SpriteSet pSprites) {
+    protected CursedEnergyParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, CursedEnergyParticle.CursedEnergyParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
         this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
@@ -95,7 +96,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
 
         @Override
         public @NotNull String writeToString() {
-            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %b %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
+            return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %d", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()),
                     this.color.x, this.color.y, this.color.z, this.scalar, this.opacity, this.lifetime);
         }
     }
@@ -109,7 +110,7 @@ public class CursedEnergyParticle<T extends CursedEnergyParticle.CursedEnergyPar
 
         public Particle createParticle(@NotNull CursedEnergyParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
-            return new CursedEnergyParticle<>(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType, this.sprites);
+            return new CursedEnergyParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pType, this.sprites);
         }
     }
 }

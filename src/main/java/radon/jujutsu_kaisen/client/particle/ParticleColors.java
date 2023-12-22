@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 
 public class ParticleColors {
@@ -25,8 +26,16 @@ public class ParticleColors {
     public static Vector3f FIRE_ORANGE = Vec3.fromRGB24(16734720).toVector3f();
 
     public static Vector3f getCursedEnergyColor(LivingEntity entity) {
+        if (entity.level().isClientSide) {
+            ClientVisualHandler.VisualData data = ClientVisualHandler.get(entity);
+
+            if (data == null) {
+                return Vec3.ZERO.toVector3f();
+            }
+            return Vec3.fromRGB24(data.cursedEnergyColor).toVector3f();
+        }
         ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return getCursedEnergyColor(cap.getType());
+        return Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
     }
 
     public static Vector3f getCursedEnergyColorBright(LivingEntity entity) {

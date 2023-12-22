@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
@@ -75,6 +76,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
+    }
+
+    @Override
+    public boolean isCursedEnergyColor() {
+        return true;
     }
 
     @Override
@@ -168,13 +174,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public AbilityDisplayInfo getDisplay(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Vec2 coordinates = this.getDisplayCoordinates();
-        return new AbilityDisplayInfo(String.format("%s_%s", JJKAbilities.getKey(this).getPath(), cap.getType().name().toLowerCase()), coordinates.x, coordinates.y);
-    }
-
-    @Override
     public void onEnabled(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         double movement = cap.getExperience() * 0.001D;
@@ -223,19 +222,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                     victim.invulnerableTime = 0;
 
                                     Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
-
-                                    for (int i = 0; i < 96; i++) {
-                                        double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
-                                        double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-                                        double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
-                                        double x = r * Math.sin(phi) * Math.cos(theta);
-                                        double y = r * Math.sin(phi) * Math.sin(theta);
-                                        double z = r * Math.cos(phi);
-                                        Vec3 speed = look.add(x, y, z);
-                                        Vec3 offset = pos.add(look);
-                                        ((ServerLevel) victim.level()).sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(attacker),
-                                                victim.getBbWidth(), 0.2F, 8), offset.x, offset.y, offset.z, 0, speed.x, speed.y, speed.z, 1.0D);
-                                    }
 
                                     if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), event.getAmount())) {
                                         ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);

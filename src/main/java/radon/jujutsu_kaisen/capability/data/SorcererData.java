@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,6 +26,7 @@ import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -42,6 +44,8 @@ import java.util.stream.Collectors;
 
 public class SorcererData implements ISorcererData {
     private boolean initialized;
+
+    private int cursedEnergyColor;
 
     private int points;
     private final Set<Ability> unlocked;
@@ -173,7 +177,7 @@ public class SorcererData implements ISorcererData {
 
     private void sync() {
         if (!this.owner.level().isClientSide) {
-            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getType());
+            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getType(), this.getCursedEnergyColor());
             PacketHandler.broadcast(new SyncVisualDataS2CPacket(this.owner.getUUID(), data.serializeNBT()));
         }
     }
@@ -455,6 +459,17 @@ public class SorcererData implements ISorcererData {
     @Override
     public void init(LivingEntity owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public int getCursedEnergyColor() {
+        return this.cursedEnergyColor == 0 ? HelperMethods.getRGB24(ParticleColors.getCursedEnergyColor(this.type)) : this.cursedEnergyColor;
+    }
+
+    @Override
+    public void setCursedEnergyColor(int color) {
+        this.cursedEnergyColor = color;
+        this.sync();
     }
 
     @Override
@@ -1527,6 +1542,7 @@ public class SorcererData implements ISorcererData {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("initialized", this.initialized);
+        nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
         nbt.putInt("points", this.points);
         nbt.putFloat("domain_size", this.domainSize);
 
@@ -1759,6 +1775,8 @@ public class SorcererData implements ISorcererData {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         this.initialized = nbt.getBoolean("initialized");
+
+        this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
 
         this.points = nbt.getInt("points");
         this.domainSize = nbt.getFloat("domain_size");

@@ -25,6 +25,10 @@ public interface ISorcererData {
 
     void init(LivingEntity owner);
 
+    int getCursedEnergyColor();
+
+    void setCursedEnergyColor(int color);
+
     float getMaximumOutput();
 
     void increaseOutput();
