@@ -211,10 +211,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void doSureHitEffect(@NotNull LivingEntity owner) {
-        for (Entity entity : this.getAffected()) {
-            if (entity instanceof LivingEntity living) {
-                this.ability.onHitEntity(this, owner, living, false);
-            }
+        for (LivingEntity entity : this.getAffected()) {
+            this.ability.onHitEntity(this, owner, entity, false);
         }
 
         int radius = this.getRadius();

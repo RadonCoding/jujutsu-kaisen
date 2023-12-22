@@ -68,16 +68,14 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            AABB bounds = this.getBounds();
+        if (owner == null) return;
 
-            for (Entity entity : this.level().getEntities(this, bounds, this::isAffected)) {
-                if (!(entity instanceof ServerPlayer player)) continue;
+        for (LivingEntity entity : this.getAffected()) {
+            if (!(entity instanceof ServerPlayer player)) continue;
 
-                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
-                player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
-                        player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
-            }
+            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MalevolentShrine.DELAY, 0, false, false));
+            player.connection.send(new ClientboundSoundPacket(ForgeRegistries.SOUND_EVENTS.getHolder(JJKSounds.MALEVOLENT_SHRINE.get()).orElseThrow(), SoundSource.MASTER,
+                    player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, this.random.nextLong()));
         }
     }
 
@@ -138,8 +136,9 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         int size = width * height / 4;
         AABB bounds = this.getBounds();
 
-        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY,
-                (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+        for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, size, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ, (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+            if (!this.isAffected(pos)) continue;
+
             this.ability.onHitBlock(this, owner, pos);
         }
     }
