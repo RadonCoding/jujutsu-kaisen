@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -26,6 +27,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     public static final int DELAY = 20;
     private static final int DURATION = 3 * 20;
     private static final float DAMAGE = 5.0F;
+    private static final double RANGE = 20.0D;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -52,11 +54,6 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
     }
 
     @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
-
-    @Override
     public void tick() {
         super.tick();
 
@@ -65,13 +62,21 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         } else if (this.getTime() >= DELAY) {
             Vec3 look = this.getLookAngle();
 
-            for (int i = 0; i < 48; i++) {
-                Vec3 speed = look.add((this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D, (this.random.nextDouble() - 0.5D) * 0.2D);
-                this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x, speed.y, speed.z);
+            for (int i = 0; i < 96; i++) {
+                double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
+                double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
+                double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+                double x = r * Math.sin(phi) * Math.cos(theta);
+                double y = r * Math.sin(phi) * Math.sin(theta);
+                double z = r * Math.cos(phi);
+                Vec3 start = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+                Vec3 end = start.add(look.scale(RANGE)).add(x, y, z);
+                Vec3 speed = start.subtract(end).scale(1.0D / 12).reverse();
+                this.level().addParticle(ParticleTypes.FLAME, start.x, start.y, start.z, speed.x, speed.y, speed.z);
             }
 
             if (this.getOwner() instanceof LivingEntity owner) {
-                AABB bounds = this.getBoundingBox().expandTowards(look.scale(10.0D));
+                AABB bounds = this.getBoundingBox().expandTowards(look.scale(RANGE)).inflate(1.0D);
 
                 for (Entity entity : this.level().getEntities(owner, bounds)) {
                     if (!(entity instanceof LivingEntity living) || !owner.canAttack(living) || !living.hasLineOfSight(this)) continue;
@@ -81,11 +86,6 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
                     }
                 }
             }
-        }
-
-        if (this.getTime() % 5 == 0) {
-            Vec3 speed = this.getLookAngle().scale(0.25D);
-            this.level().addParticle(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), speed.x, speed.y, speed.z);
         }
     }
 

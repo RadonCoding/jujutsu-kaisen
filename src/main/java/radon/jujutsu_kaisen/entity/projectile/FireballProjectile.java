@@ -100,7 +100,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
                 Vec3 start = new Vec3(center.x + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y, center.z + zOffset * (this.getFlamePillarRadius() * 0.1F));
                 Vec3 end = new Vec3(x, y, z);
-                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
+                Vec3 speed = start.subtract(end).scale(1.0D / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
@@ -132,7 +132,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
                 Vec3 start = new Vec3(center.x + xOffset * (this.getFlamePillarRadius() * 0.1F), center.y, center.z + zOffset * (this.getFlamePillarRadius() * 0.1F));
                 Vec3 end = new Vec3(x, start.y, z);
-                Vec3 speed = start.subtract(end).scale((double) 1 / lifetime * 2.0D);
+                Vec3 speed = start.subtract(end).scale(1.0D / lifetime * 2.0D);
 
                 switch (j) {
                     case 0:
