@@ -344,7 +344,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
                 if (movement.y < 0.0D) {
                     owner.setDeltaMovement(movement.x, 0.0D, movement.z);
-                    owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
+                    owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, 0.0D, owner.zza));
                 }
 
                 if (!this.level().isClientSide) {
