@@ -77,6 +77,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue rct2Cost;
     public final ForgeConfigSpec.IntValue rct3Cost;
     public final ForgeConfigSpec.IntValue outputRCTCost;
+    public final ForgeConfigSpec.IntValue maximumCopiedTechniques;
 
     public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
     public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
@@ -170,6 +171,8 @@ public class ServerConfig {
                 .defineInRange("rct2Cost", 200, 1, 10000);
         this.outputRCTCost = builder.comment("The amount of points output RCT costs to unlock")
                 .defineInRange("outputRCTCost", 300, 1, 10000);
+        this.maximumCopiedTechniques = builder.comment("The amount of techniques mimicry can copy")
+                .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
         builder.pop();
 
         builder.comment("Rarity").push("rarity");

@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class RadialScreen extends Screen {
-    private static final float RADIUS_IN = 50.0F;
-    private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
+    protected static final int RADIUS_IN = 50;
+    protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
     private final List<List<DisplayItem>> pages = new ArrayList<>();
     private final Map<EntityType<?>, Integer> curses = new HashMap<>();

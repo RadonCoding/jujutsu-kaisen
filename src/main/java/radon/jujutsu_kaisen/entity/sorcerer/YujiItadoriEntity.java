@@ -59,11 +59,6 @@ public class YujiItadoriEntity extends SorcererEntity {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.DIVERGENT_FIST.get());
-    }
-
-    @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }

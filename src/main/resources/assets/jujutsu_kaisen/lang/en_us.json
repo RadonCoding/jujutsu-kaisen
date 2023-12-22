@@ -1,6 +1,8 @@
 {
   "creative_mode_tab.jujutsu_kaisen.main": "Jujutsu Kaisen",
 
+  "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove copied techniques",
+
   "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
   "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
 
@@ -178,7 +180,6 @@
 
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.punch": "Punch",
-  "ability.jujutsu_kaisen.divergent_fist": "Divergent Fist",
   "ability.jujutsu_kaisen.slam": "Slam",
   "ability.jujutsu_kaisen.barrage": "Barrage",
   "ability.jujutsu_kaisen.domain_amplification": "Domain Amplification",
@@ -415,6 +416,7 @@
   "cursed_energy_nature.jujutsu_kaisen.basic": "Basic",
   "cursed_energy_nature.jujutsu_kaisen.rough": "Rough",
   "cursed_energy_nature.jujutsu_kaisen.lightning": "Lightning",
+  "cursed_energy_nature.jujutsu_kaisen.divergent": "Divergent",
 
   "trait.jujutsu_kaisen.six_eyes": "Six Eyes",
   "trait.jujutsu_kaisen.heavenly_restriction": "Heavenly Restriction",
