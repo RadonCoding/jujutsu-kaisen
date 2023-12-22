@@ -287,7 +287,7 @@ public class JJKEventHandler {
             }
 
             if (HelperMethods.isMelee(source)) {
-                if (!source.is(JJKDamageSources.SOUL) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                if (!source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (attacker.canAttack(victim)) {
                         if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
                             victim.invulnerableTime = 0;
