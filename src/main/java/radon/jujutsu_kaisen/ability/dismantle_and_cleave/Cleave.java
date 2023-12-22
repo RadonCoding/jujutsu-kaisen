@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
@@ -23,7 +22,6 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -113,13 +111,13 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override

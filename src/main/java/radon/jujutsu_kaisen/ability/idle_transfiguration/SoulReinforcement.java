@@ -77,10 +77,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
-                boolean melee = (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                        || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-                if (melee) {
+                if (HelperMethods.isMelee(source)) {
                     if (JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                         return;
                     }

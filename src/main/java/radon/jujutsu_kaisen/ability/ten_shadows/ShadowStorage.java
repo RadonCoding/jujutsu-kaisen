@@ -59,7 +59,7 @@ public class ShadowStorage extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -68,7 +68,7 @@ public class ShadowStorage extends Ability {
         } else {
             if (cap.getShadowInventory().size() == 0) return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override

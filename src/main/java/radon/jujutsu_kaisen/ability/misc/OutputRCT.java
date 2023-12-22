@@ -12,14 +12,11 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
-
-import java.util.List;
 
 public class OutputRCT extends Ability {
     public static final float RANGE = 5.0F;
@@ -117,13 +114,13 @@ public class OutputRCT extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override

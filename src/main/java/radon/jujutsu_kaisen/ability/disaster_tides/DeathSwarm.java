@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
@@ -55,13 +54,13 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override

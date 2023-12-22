@@ -1,40 +1,24 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.enchantment.ProtectionEnchantment;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.ClientWrapper;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
-
-import java.util.List;
 
 public class Punch extends Ability {
     private static final float DAMAGE = 10.0F;
@@ -108,7 +92,7 @@ public class Punch extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         if (owner.isUsingItem()) return Status.FAILURE;
 
         LivingEntity target = this.getTarget(owner);
@@ -116,7 +100,7 @@ public class Punch extends Ability {
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.checkTriggerable(owner);
+        return super.isTriggerable(owner);
     }
 
     @Override

@@ -84,8 +84,13 @@ public class AbilityOverlay {
             float cost = ability.getRealCost(player);
 
             if (cost > 0.0F) {
-                Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost);
-                lines.add(costText);
+                lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
+            }
+
+            int cooldown = ability.getRealCooldown(player);
+
+            if (cooldown > 0.0F) {
+                lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), (float) cooldown / 20));
             }
 
             if (ability instanceof Ability.IDurationable durationable) {

@@ -88,10 +88,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static void check(LivingEntity victim, DamageSource source) {
-        boolean melee = (source instanceof JJKDamageSources.JujutsuDamageSource src && src.getAbility() != null && src.getAbility().isMelee())
-                || !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-        if (!melee) return;
+        if (!HelperMethods.isMelee(source)) return;
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 

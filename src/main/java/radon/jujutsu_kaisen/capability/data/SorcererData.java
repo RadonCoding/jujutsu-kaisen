@@ -7,9 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -30,7 +28,6 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -241,7 +238,7 @@ public class SorcererData implements ISorcererData {
         List<Ability> remove = new ArrayList<>();
 
         for (Ability ability : new ArrayList<>(this.toggled)) {
-            Ability.Status status = ability.checkStatus(this.owner);
+            Ability.Status status = ability.isStillUsable(this.owner);
 
             if (status == Ability.Status.SUCCESS) {
                 ability.run(this.owner);
@@ -257,7 +254,7 @@ public class SorcererData implements ISorcererData {
 
     private void updateChanneled() {
         if (this.channeled != null) {
-            Ability.Status status = this.channeled.checkStatus(this.owner);
+            Ability.Status status = this.channeled.isStillUsable(this.owner);
 
             if (status == Ability.Status.SUCCESS) {
                 this.channeled.run(this.owner);
@@ -358,6 +355,20 @@ public class SorcererData implements ISorcererData {
             HelperMethods.giveAdvancement(player, "perfect_body");
     }
 
+    @Override
+    public void attack(DamageSource source, LivingEntity target) {
+        for (Ability ability : this.toggled) {
+            if (!(ability instanceof Ability.IAttack attack)) continue;
+            if (ability.getStatus(this.owner, true, true, true, true, false) != Ability.Status.SUCCESS) continue;
+            attack.attack(source, this.owner, target);
+        }
+
+        if (this.owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(this.serializeNBT()), player);
+        }
+    }
+
+    @Override
     public void tick(LivingEntity owner) {
         if (this.owner == null) {
             this.owner = owner;
@@ -1334,9 +1345,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void tryAdapt(DamageSource source) {
-        boolean melee = !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SOUL));
-
-        if (melee && source.getEntity() instanceof LivingEntity attacker) {
+        if (HelperMethods.isMelee(source) && source.getEntity() instanceof LivingEntity attacker) {
             if (JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
                 this.tryAdapt(JJKAbilities.INFINITY.get());
                 return;

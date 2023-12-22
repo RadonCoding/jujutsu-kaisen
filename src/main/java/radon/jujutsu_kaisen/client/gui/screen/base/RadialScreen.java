@@ -313,8 +313,13 @@ public abstract class RadialScreen extends Screen {
                     float cost = item.ability.getRealCost(this.minecraft.player);
 
                     if (cost > 0.0F) {
-                        Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost);
-                        lines.add(costText);
+                        lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
+                    }
+
+                    int cooldown = item.ability.getRealCooldown(this.minecraft.player);
+
+                    if (cooldown > 0.0F) {
+                        lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), (float) cooldown / 20));
                     }
 
                     if (item instanceof Ability.IDurationable durationable) {

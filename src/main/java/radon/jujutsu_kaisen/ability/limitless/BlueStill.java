@@ -35,9 +35,9 @@ public class BlueStill extends Ability {
     }
 
     @Override
-    public Status checkTriggerable(LivingEntity owner) {
+    public Status isTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isCooldownDone(JJKAbilities.BLUE_MOTION.get()) ? super.checkTriggerable(owner) : Status.FAILURE;
+        return cap.isCooldownDone(JJKAbilities.BLUE_MOTION.get()) ? super.isTriggerable(owner) : Status.FAILURE;
     }
 
     @Override
