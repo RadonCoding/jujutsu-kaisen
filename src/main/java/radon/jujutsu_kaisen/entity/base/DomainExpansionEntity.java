@@ -53,6 +53,11 @@ public abstract class DomainExpansionEntity extends Entity {
     }
 
     @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
