@@ -215,7 +215,13 @@ public class ClientAbilityHandler {
             Ability.Status status;
 
             if (isSuccess(ability, status = ability.isTriggerable(owner)) || cap.isChanneling(ability)) {
-                cap.channel(ability);
+                if (cap.isChanneling(ability)) {
+                    cap.channel(ability);
+                } else {
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                    cap.channel(ability);
+                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                }
             }
             return status;
         }

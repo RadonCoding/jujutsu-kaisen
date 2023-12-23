@@ -213,7 +213,7 @@ public class SorcererData implements ISorcererData {
                     }
                 } else if (ability instanceof Ability.IChannelened) {
                     if (this.isChanneling(ability)) {
-                        this.channel(null);
+                        this.channel(ability);
                     }
                 }
                 iter.remove();
