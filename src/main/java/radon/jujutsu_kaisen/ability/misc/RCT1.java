@@ -61,7 +61,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean isUnlockable(LivingEntity owner) {
-        return false;
+        return owner instanceof Player player && player.getAbilities().instabuild;
     }
 
     @Nullable
