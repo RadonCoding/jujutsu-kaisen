@@ -259,7 +259,16 @@ public class AbilityWidget {
                 pGuiGraphics.drawString(this.minecraft.font, this.description.get(l1), k + 5, pY + this.y + 9 + 17 + l1 * 9, -5592406, false);
             }
         }
+
+        if (this.ability.isCursedEnergyColor()) {
+            if (this.minecraft.player != null) {
+                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                Vector3f color = Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+                RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+            }
+        }
         pGuiGraphics.blit(this.display.getIcon(), pX + this.x + 8, pY + this.y + 5, 0, 0, 16, 16, 16, 16);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     public boolean isMouseOver(int pX, int pY, int pMouseX, int pMouseY) {
