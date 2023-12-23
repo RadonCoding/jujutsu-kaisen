@@ -151,7 +151,7 @@ public class ExperienceHandler {
         }
 
         private static float calculateStrength(LivingEntity entity) {
-            float strength = entity.getMaxHealth();
+            float strength = entity.getMaxHealth() * 0.1F;
             float armor = (float) entity.getArmorValue();
             float toughness = (float) entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
             float f = 2.0F + toughness / 4.0F;
