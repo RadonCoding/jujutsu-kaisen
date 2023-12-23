@@ -28,11 +28,6 @@ public class TogeInumakiEntity extends SorcererEntity {
     }
 
     @Override
-    protected boolean targetsCurses() {
-        return true;
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.SEMI_GRADE_1.getRequiredExperience();
     }

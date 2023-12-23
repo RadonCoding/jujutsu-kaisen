@@ -14,7 +14,7 @@ public class DelayedTickEvent {
     }
 
     public boolean finished() {
-        return this.delay <= 0;
+        return this.delay == 0;
     }
 
     public void run() {
