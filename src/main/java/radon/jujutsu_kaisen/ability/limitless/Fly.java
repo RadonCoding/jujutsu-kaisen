@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 
 public class Fly extends Ability implements Ability.IChannelened {
+    private static final float SPEED = 0.05F;
+
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -37,9 +39,15 @@ public class Fly extends Ability implements Ability.IChannelened {
     @Override
     public void run(LivingEntity owner) {
         Vec3 movement = owner.getDeltaMovement();
-        owner.setDeltaMovement(movement.x, 0.3D, movement.z);
+        owner.setDeltaMovement(movement.x, SPEED * 2, movement.z);
 
-        owner.moveRelative(0.02F * 2, new Vec3(owner.xxa, owner.yya, owner.zza));
+        float f = owner.xxa * 0.5F;
+        float f1 = owner.zza;
+
+        if (f1 <= 0.0F) {
+            f1 *= 0.25F;
+        }
+        owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
     }
 
     @Override
