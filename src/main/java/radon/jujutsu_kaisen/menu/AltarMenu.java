@@ -36,10 +36,6 @@ public class AltarMenu extends ItemCombinerMenu {
         this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
     }
 
-    private static ResourceLocation getKey(RegistryAccess access, EntityType<?> type) {
-        return access.registryOrThrow(Registries.ENTITY_TYPE).getKey(type);
-    }
-
     @Override
     protected @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
         return ItemCombinerMenuSlotDefinition.create()
