@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class VeilRodBlockEntity extends BlockEntity {
@@ -89,6 +90,8 @@ public class VeilRodBlockEntity extends BlockEntity {
             }
         }
 
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) pLevel);
+
         for (int x = -pBlockEntity.size; x <= pBlockEntity.size; x++) {
             for (int y = -pBlockEntity.size; y <= pBlockEntity.size; y++) {
                 for (int z = -pBlockEntity.size; z <= pBlockEntity.size; z++) {
@@ -99,7 +102,7 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                         boolean blocked = false;
 
-                        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) pLevel)) {
+                        for (DomainExpansionEntity domain : domains) {
                             LivingEntity opponent = domain.getOwner();
 
                             if (opponent == null) continue;
@@ -131,8 +134,10 @@ public class VeilRodBlockEntity extends BlockEntity {
                             state = pLevel.getBlockState(pos);
                         }
 
-                        pLevel.setBlock(pos, replacement,
-                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                        if (!(existing instanceof VeilBlockEntity)) {
+                            pLevel.setBlock(pos, replacement,
+                                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                        }
 
                         if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
                             be.create(pPos, pBlockEntity.size, state);
