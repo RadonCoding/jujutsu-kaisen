@@ -67,8 +67,6 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
         return 5;
     }
 
-
-
     @Override
     public Classification getClassification() {
         return Classification.SLASHING;
