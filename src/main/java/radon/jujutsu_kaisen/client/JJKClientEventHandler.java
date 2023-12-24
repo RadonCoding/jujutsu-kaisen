@@ -482,6 +482,7 @@ public class JJKClientEventHandler {
             event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
+            event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
         }
 
         @SubscribeEvent

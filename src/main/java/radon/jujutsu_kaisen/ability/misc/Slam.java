@@ -117,8 +117,6 @@ public class Slam extends Ability implements Ability.IChannelened {
 
         if (owner.level().isClientSide) return;
 
-        Vec3 target = this.getTarget(owner);
-
         Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
         owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
         owner.hurtMarked = true;
@@ -128,6 +126,7 @@ public class Slam extends Ability implements Ability.IChannelened {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         cap.delayTickEvent(() -> {
+            Vec3 target = this.getTarget(owner);
             owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
             owner.hurtMarked = true;
         }, 20);

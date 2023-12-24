@@ -159,24 +159,24 @@ public class ClientAbilityHandler {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer owner = mc.player;
 
-        assert owner != null;
+        if (owner == null) return false;
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            switch (status) {
-                case ENERGY ->
-                        mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
-                case COOLDOWN ->
-                        mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
-                                Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
-                case BURNOUT ->
-                        mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
-                                cap.getBurnout() / 20), false);
-                case FAILURE ->
-                        mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
-                case DOMAIN_AMPLIFICATION ->
-                        mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.domain_amplification", JujutsuKaisen.MOD_ID)), false);
-            }
-        });
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        switch (status) {
+            case ENERGY ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.energy", JujutsuKaisen.MOD_ID)), false);
+            case COOLDOWN ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.cooldown", JujutsuKaisen.MOD_ID),
+                            Math.max(1, cap.getRemainingCooldown(ability) / 20)), false);
+            case BURNOUT ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.burnout", JujutsuKaisen.MOD_ID),
+                            cap.getBurnout() / 20), false);
+            case FAILURE ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
+            case DOMAIN_AMPLIFICATION ->
+                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.domain_amplification", JujutsuKaisen.MOD_ID)), false);
+        }
         return status == Ability.Status.SUCCESS;
     }
 
@@ -184,12 +184,11 @@ public class ClientAbilityHandler {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer owner = mc.player;
 
-        assert owner != null;
+        if (owner == null) return Ability.Status.FAILURE;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (ability.getActivationType(mc.player) == Ability.ActivationType.INSTANT) {
+        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
@@ -198,23 +197,23 @@ public class ClientAbilityHandler {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
-        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.TOGGLED) {
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.isTriggerable(owner))) || cap.hasToggled(ability)) {
-                if (!cap.hasToggled(ability)) {
+                if (cap.hasToggled(ability)) {
+                    cap.toggle(ability);
+                } else {
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                     cap.toggle(ability);
                     MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-                } else {
-                    cap.toggle(ability);
                 }
             }
             return status;
-        } else if (ability.getActivationType(mc.player) == Ability.ActivationType.CHANNELED) {
+        } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if (isSuccess(ability, status = ability.isTriggerable(owner)) || cap.isChanneling(ability)) {
+            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || cap.isChanneling(ability)) {
                 if (cap.isChanneling(ability)) {
                     cap.channel(ability);
                 } else {
