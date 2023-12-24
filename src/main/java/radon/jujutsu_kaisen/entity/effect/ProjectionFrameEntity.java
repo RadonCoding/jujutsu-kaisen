@@ -119,6 +119,8 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         LivingEntity victim = this.getVictim();
 
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || victim.isDeadOrDying())) {
