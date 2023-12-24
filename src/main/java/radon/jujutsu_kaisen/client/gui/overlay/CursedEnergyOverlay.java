@@ -10,9 +10,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CursedEnergyOverlay {
     public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
@@ -50,6 +55,27 @@ public class CursedEnergyOverlay {
 
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
                     Math.round(23 * (1.0F / scale)), Math.round(34 * (1.0F / scale)), 16777215);
+
+            List<Component> lines = new ArrayList<>();
+
+            for (Ability ability : cap.getToggled()) {
+                if (!(ability instanceof Ability.IAttack)) continue;
+
+                int cooldown = cap.getRemainingCooldown(ability);
+
+                if (cooldown > 0) {
+                    lines.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
+                }
+            }
+
+            int x = 20;
+            int y = 43;
+
+            for (Component line : lines) {
+                graphics.drawString(gui.getFont(), line, Math.round(x * (1.0F / scale)), Math.round(y * (1.0F / scale)), 16777215);
+                y += mc.font.lineHeight;
+            }
+
             graphics.pose().popPose();
 
             RenderSystem.depthMask(true);

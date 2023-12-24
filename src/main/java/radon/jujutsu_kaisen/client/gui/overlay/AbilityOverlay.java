@@ -89,8 +89,8 @@ public class AbilityOverlay {
 
             int cooldown = ability.getRealCooldown(player);
 
-            if (cooldown > 0.0F) {
-                lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), (float) cooldown / 20));
+            if (cooldown > 0) {
+                lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), Math.round((float) cooldown / 20)));
             }
 
             if (ability instanceof Ability.IDurationable durationable) {
