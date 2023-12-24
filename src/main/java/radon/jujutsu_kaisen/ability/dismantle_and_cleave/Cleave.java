@@ -180,14 +180,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
         return 10 * 20;
     }
 
-
-
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
-
-
 
     @Override
     public Classification getClassification() {

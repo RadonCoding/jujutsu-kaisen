@@ -1,23 +1,20 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class SoulRestoration extends Ability {
-    public static final float RANGE = 5.0F;
-
-    @Override
-    public boolean isScalable(LivingEntity owner) {
-        return false;
-    }
+public class SoulDecimation extends Ability {
+    public static final double RANGE = 30.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -33,7 +30,18 @@ public class SoulRestoration extends Ability {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             if (!owner.canAttack(target)) return null;
 
-            if (owner.getHealth() == owner.getMaxHealth()) return null;
+            MobEffectInstance instance = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+
+            if (instance == null) return null;
+
+            int amplifier = instance.getAmplifier();
+
+            float attackerStrength = IdleTransfiguration.calculateStrength(owner);
+            float victimStrength = IdleTransfiguration.calculateStrength(target);
+
+            int required = Math.round((victimStrength / attackerStrength) * 2);
+
+            if (amplifier < required) return null;
 
             return target;
         }
@@ -44,32 +52,16 @@ public class SoulRestoration extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (!(owner.level() instanceof ServerLevel level)) return;
-
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;
 
-        target.setHealth(target.getMaxHealth());
-
-        int count = 8 + (int) (target.getBbWidth() * target.getBbHeight()) * 16;
-
-        for (int i = 0; i < count; i++) {
-            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - target.getLookAngle().scale(0.35D).x;
-            double y = target.getY() + HelperMethods.RANDOM.nextDouble() * target.getBbHeight();
-            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - target.getLookAngle().scale(0.35D).z;
-            level.sendParticles(ParticleTypes.SOUL, x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D, 1.0D);
-        }
+        target.hurt(JJKDamageSources.soulAttack(target), target.getMaxHealth());
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target != null && target.isAlive()) {
-            return (target.getMaxHealth() - target.getHealth()) * 2;
-        }
-        return 0;
+        return 50.0F;
     }
 
     @Override
