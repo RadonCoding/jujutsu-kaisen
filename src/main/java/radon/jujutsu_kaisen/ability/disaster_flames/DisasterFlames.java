@@ -22,8 +22,6 @@ public class DisasterFlames extends Ability {
     private static final double AOE_RANGE = 5.0D;
     private static final float DAMAGE = 25.0F;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.hasLineOfSight(target);
@@ -78,7 +76,7 @@ public class DisasterFlames extends Ability {
         for (Entity entity : this.getTargets(owner)) {
             entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner) * (float) (entity.distanceTo(owner) / AOE_RANGE))) {
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner) * (float) (AOE_RANGE - entity.distanceTo(owner)))) {
                 entity.setSecondsOnFire(5);
                 this.spawnParticles(entity);
             }
