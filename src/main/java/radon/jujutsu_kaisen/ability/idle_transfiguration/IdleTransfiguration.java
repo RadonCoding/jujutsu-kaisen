@@ -95,14 +95,5 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
             amplifier = existing.getAmplifier() + 1;
         }
         target.addEffect(new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true));
-
-        float attackerStrength = calculateStrength(owner);
-        float victimStrength = calculateStrength(target);
-
-        int required = Math.round((victimStrength / attackerStrength) * 2);
-
-        if (amplifier >= required) {
-            target.hurt(JJKDamageSources.soulAttack(owner), target.getMaxHealth());
-        }
     }
 }

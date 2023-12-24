@@ -204,7 +204,7 @@ public class ExperienceHandler {
             float targetStrength = calculateStrength(target);
             float ownerStrength = calculateStrength(owner);
 
-            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 10.0F
+            float experience = Math.min(targetStrength, (targetStrength - ownerStrength) * 5.0F
                     * (this.totalDamageDealt / this.damageDealtByOwner)
                     * ConfigHolder.SERVER.experienceMultiplier.get().floatValue());
 

@@ -218,7 +218,7 @@ public class ClientVisualHandler {
 
                 if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) instanceof LivingEntityRenderer<?, ?> renderer)) return;
 
-                float f7 = ((ILivingEntityRendererAccessor) renderer).invokeGetBob(entity, partialTicks);
+                float f7 = ((ILivingEntityRendererAccessor<?, ?>) renderer).invokeGetBob(entity, partialTicks);
                 float f8 = 0.0F;
                 float f5 = 0.0F;
 
