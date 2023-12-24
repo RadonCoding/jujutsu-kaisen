@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 
 public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
@@ -57,7 +58,7 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
                     if (distance < size && distance >= size - 1) {
                         BlockPos pos = center.offset(x, y, z);
 
-                        BlockState state = Blocks.MAGMA_BLOCK.defaultBlockState();
+                        BlockState state = JJKBlocks.METEOR.get().defaultBlockState();
                         BakedModel model = renderer.getBlockModel(state);
                         RandomSource rand = RandomSource.create();
                         rand.setSeed(state.getSeed(pos));

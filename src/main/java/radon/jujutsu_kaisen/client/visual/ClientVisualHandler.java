@@ -157,6 +157,15 @@ public class ClientVisualHandler {
         }
     }
 
+    public static boolean shouldRenderExtraArms(VisualData data) {
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
+            if (transformation.getBodyPart() != ITransformation.Part.BODY || !transformation.isReplacement()) continue;
+            return false;
+        }
+        return data.traits.contains(Trait.PERFECT_BODY);
+    }
+
     public static <T extends LivingEntity> void renderOverlay(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
         VisualData data = get(entity);
 
@@ -167,7 +176,7 @@ public class ClientVisualHandler {
             model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 1.0F);
         }
-        if (data.traits.contains(Trait.PERFECT_BODY)) {
+        if (shouldRenderExtraArms(data)) {
             VertexConsumer overlay = buffer.getBuffer(RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID,
                     String.format("textures/overlay/mouth_%d.png", data.mouth + 1))));
             model.renderToBuffer(poseStack, overlay, packedLight, OverlayTexture.NO_OVERLAY,
@@ -216,7 +225,8 @@ public class ClientVisualHandler {
                     f2 *= -1.0F;
                 }
 
-                if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) instanceof LivingEntityRenderer<?, ?> renderer)) return;
+                if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity) instanceof LivingEntityRenderer<?, ?> renderer))
+                    return;
 
                 float f7 = ((ILivingEntityRendererAccessor<?, ?>) renderer).invokeGetBob(entity, partialTicks);
                 float f8 = 0.0F;

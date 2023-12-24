@@ -29,7 +29,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
         if (data == null) return;
 
-        if (data.traits.contains(Trait.PERFECT_BODY)) {
+        if (ClientVisualHandler.shouldRenderExtraArms(data)) {
             if (this.rightArmPose == HumanoidModel.ArmPose.EMPTY || this.rightArmPose == HumanoidModel.ArmPose.ITEM) {
                 this.rightArm.xRot += this.rightArm.xRot * 0.5F - ((float) Math.PI * 0.1F);
                 this.rightArm.zRot -= this.rightArm.zRot * 0.5F - ((float) Math.PI * 0.1F);
