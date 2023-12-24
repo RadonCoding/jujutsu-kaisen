@@ -92,7 +92,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float cost = event.getAmount() * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            float cost = event.getAmount() * 2.0F * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
             if (cap.getEnergy() < cost) return;
             cap.useEnergy(cost);
 
