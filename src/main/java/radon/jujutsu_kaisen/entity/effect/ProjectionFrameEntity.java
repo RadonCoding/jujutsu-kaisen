@@ -101,7 +101,6 @@ public class ProjectionFrameEntity extends Entity {
         this.setTime(pCompound.getInt("time"));
     }
 
-
     public float getPower() {
         return this.power;
     }

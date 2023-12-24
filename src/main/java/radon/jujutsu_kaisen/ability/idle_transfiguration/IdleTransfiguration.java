@@ -44,7 +44,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         return ActivationType.TOGGLED;
     }
 
-    private static float calculateStrength(LivingEntity entity) {
+    public static float calculateStrength(LivingEntity entity) {
         float strength = entity.getHealth();
 
         if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {

@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +16,7 @@ import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
 import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
@@ -34,6 +36,14 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        float attackerStrength = IdleTransfiguration.calculateStrength(owner);
+        float victimStrength = IdleTransfiguration.calculateStrength(entity);
+
+        int required = Math.round((victimStrength / attackerStrength) * 2);
+        entity.addEffect(new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), required, false, true, true));
     }
 
     @Override
