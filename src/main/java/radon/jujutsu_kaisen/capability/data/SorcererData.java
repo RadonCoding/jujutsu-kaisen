@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
@@ -241,6 +242,10 @@ public class SorcererData implements ISorcererData {
 
             if (status == Ability.Status.SUCCESS) {
                 ability.run(this.owner);
+
+                if (ability instanceof ITransformation transformation) {
+                    transformation.applyModifiers(this.owner);
+                }
             } else {
                 remove.add(ability);
             }
@@ -371,14 +376,6 @@ public class SorcererData implements ISorcererData {
     public void tick(LivingEntity owner) {
         if (this.owner == null) {
             this.owner = owner;
-
-            // This is for shit like applying attribute modifiers to the owner etc
-            for (Ability ability : this.toggled) {
-                ((Ability.IToggled) ability).onEnabled(this.owner);
-            }
-            if (this.channeled != null) {
-                ((Ability.IChannelened) this.channeled).onStart(this.owner);
-            }
         }
 
         this.updateSummons();
@@ -844,6 +841,10 @@ public class SorcererData implements ISorcererData {
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
             ((Ability.IToggled) ability).onDisabled(this.owner);
+
+            if (ability instanceof ITransformation transformation) {
+                transformation.removeModifiers(this.owner);
+            }
         } else {
             this.toggled.add(ability);
             ((Ability.IToggled) ability).onEnabled(this.owner);
@@ -868,7 +869,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public int getRemainingCooldown(Ability ability) {
-        return this.cooldowns.get(ability);
+        return this.cooldowns.getOrDefault(ability, 0);
     }
 
     @Override
