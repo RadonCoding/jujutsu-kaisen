@@ -51,6 +51,8 @@ public class MeteorEntity extends JujutsuProjectile {
 
     public MeteorEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+
+        this.noCulling = true;
     }
 
     public MeteorEntity(LivingEntity owner, float power) {

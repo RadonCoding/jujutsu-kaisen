@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.MagmaBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -22,6 +23,10 @@ import radon.jujutsu_kaisen.block.fluid.JJKFluids;
 import javax.annotation.Nullable;
 
 public class JJKBlocks {
+    private static boolean always(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return false;
+    }
+
     private static boolean never(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return false;
     }
@@ -33,11 +38,19 @@ public class JJKBlocks {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JujutsuKaisen.MOD_ID);
 
+    public static final RegistryObject<Block> METEOR = BLOCKS.register("meteor", () -> new MagmaBlock(BlockBehaviour.Properties.of()
+            .mapColor(MapColor.NETHER)
+            .instrument(NoteBlockInstrument.BASEDRUM)
+            .requiresCorrectToolForDrops()
+            .lightLevel(pState -> 3)
+            .hasPostProcess(JJKBlocks::always)
+            .emissiveRendering(JJKBlocks::always)));
+
     public static RegistryObject<DomainBlock> DOMAIN = BLOCKS.register("domain", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
-                    .lightLevel((pState) -> 14)
+                    .lightLevel(pState -> 14)
                     .noLootTable()));
     public static RegistryObject<DomainAirBlock> DOMAIN_AIR = BLOCKS.register("domain_air", () ->
             new DomainAirBlock(BlockBehaviour.Properties.of()
