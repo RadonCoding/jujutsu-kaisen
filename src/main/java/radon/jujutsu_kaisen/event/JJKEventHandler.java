@@ -393,6 +393,10 @@ public class JJKEventHandler {
                 float armor = cap.getExperience() * 0.0025F;
                 float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
                 event.setAmount(blocked);
+            } else {
+                float armor = cap.getExperience() * 0.001F;
+                float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
+                event.setAmount(blocked);
             }
 
             if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;

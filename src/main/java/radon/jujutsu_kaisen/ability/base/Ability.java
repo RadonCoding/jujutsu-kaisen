@@ -184,7 +184,6 @@ public abstract class Ability {
     public Status getStatus(LivingEntity owner, boolean checkCost, boolean chargeCost, boolean checkCooldown, boolean addCooldown, boolean addDuration) {
         if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!JJKAbilities.getAbilities(owner).contains(this)) {

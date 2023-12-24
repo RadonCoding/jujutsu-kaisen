@@ -302,8 +302,13 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<ProjectionFrameEntity>> PROJECTION_FRAME = ENTITIES.register("projection_frame", () ->
             EntityType.Builder.<ProjectionFrameEntity>of(ProjectionFrameEntity::new, MobCategory.MISC)
-                    .sized(0.1F, 0.1F)
+                    .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "projection_frame")
+                            .toString()));
+    public static RegistryObject<EntityType<AirFrameEntity>> AIR_FRAME = ENTITIES.register("air_frame", () ->
+            EntityType.Builder.<AirFrameEntity>of(AirFrameEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "air_frame")
                             .toString()));
     public static RegistryObject<EntityType<BlackFlashEntity>> BLACk_FLASH = ENTITIES.register("black_flash", () ->
             EntityType.Builder.<BlackFlashEntity>of(BlackFlashEntity::new, MobCategory.MISC)

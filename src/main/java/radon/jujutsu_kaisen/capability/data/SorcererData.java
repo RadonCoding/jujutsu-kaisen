@@ -213,6 +213,7 @@ public class SorcererData implements ISorcererData {
                         this.toggle(ability);
                     }
                 } else if (ability instanceof Ability.IChannelened) {
+                    System.out.println(ability + ", " + this.owner.level().isClientSide);
                     if (this.isChanneling(ability)) {
                         this.channel(ability);
                     }
@@ -445,9 +446,6 @@ public class SorcererData implements ISorcererData {
             double movement = this.getRealPower() * 0.05D;
             HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
-            int resistance = Math.round(3 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
-            this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
-
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.0F / 20);
             }
@@ -457,9 +455,6 @@ public class SorcererData implements ISorcererData {
             if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
-
-            int resistance = Math.round(2 * (this.getRealPower() / HelperMethods.getPower(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue())));
-            this.owner.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2, resistance, false, false, false));
         }
     }
 

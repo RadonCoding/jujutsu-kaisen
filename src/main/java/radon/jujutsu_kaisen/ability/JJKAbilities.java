@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
+import radon.jujutsu_kaisen.ability.projection_sorcery.AirFrame;
 import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
 import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
@@ -197,6 +198,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
+    public static RegistryObject<Ability> AIR_FRAME = ABILITIES.register("air_frame", AirFrame::new);
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
 
     public static String getName(Ability ability) {

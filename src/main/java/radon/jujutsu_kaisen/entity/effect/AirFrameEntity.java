@@ -21,41 +21,30 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 
 import java.util.UUID;
 
-public class ProjectionFrameEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
+public class AirFrameEntity extends Entity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(AirFrameEntity.class, EntityDataSerializers.INT);
 
-    private static final int DURATION = 3 * 20;
-
-    @Nullable
-    private UUID victimUUID;
-    @Nullable
-    private LivingEntity cachedVictim;
+    private static final int DURATION = 20;
 
     @Nullable
     private UUID ownerUUID;
     @Nullable
     private LivingEntity cachedOwner;
 
-    private Vec3 pos;
     private float power;
 
-    public ProjectionFrameEntity(EntityType<?> pEntityType, Level pLevel) {
+    public AirFrameEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
         this.noCulling = true;
     }
 
-    public ProjectionFrameEntity(LivingEntity owner, LivingEntity target, float power) {
-        this(JJKEntities.PROJECTION_FRAME.get(), owner.level());
+    public AirFrameEntity(LivingEntity owner, float power) {
+        this(JJKEntities.AIR_FRAME.get(), owner.level());
 
         this.setOwner(owner);
-        this.setVictim(target);
 
         this.power = power;
-
-        this.pos = target.position();
-
-        this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
     }
 
     @Override
@@ -73,13 +62,6 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putDouble("pos_x", this.pos.x);
-        pCompound.putDouble("pos_y", this.pos.y);
-        pCompound.putDouble("pos_z", this.pos.z);
-
-        if (this.victimUUID != null) {
-            pCompound.putUUID("victim", this.victimUUID);
-        }
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
@@ -89,11 +71,6 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        this.pos = new Vec3(pCompound.getDouble("pos_x"), pCompound.getDouble("pos_y"), pCompound.getDouble("pos_z"));
-
-        if (pCompound.hasUUID("victim")) {
-            this.victimUUID = pCompound.getUUID("victim");
-        }
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
@@ -118,11 +95,13 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void tick() {
+        super.tick();
+
         this.setTime(this.getTime() + 1);
 
-        LivingEntity victim = this.getVictim();
+        LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (victim == null || victim.isRemoved() || victim.isDeadOrDying())) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || owner.isDeadOrDying())) {
             this.discard();
         } else {
             super.tick();
@@ -130,33 +109,11 @@ public class ProjectionFrameEntity extends Entity {
             if (this.level().isClientSide) return;
 
             if (this.getTime() >= DURATION) {
-                this.discard();
-            } else if (victim != null) {
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
-
-                if (this.pos != null) {
-                    victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);
+                if (owner != null) {
+                    this.level().explode(owner, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), this.getPower(), Level.ExplosionInteraction.NONE);
                 }
+                this.discard();
             }
-        }
-    }
-
-    public void setVictim(@Nullable LivingEntity victim) {
-        if (victim != null) {
-            this.victimUUID = victim.getUUID();
-            this.cachedVictim = victim;
-        }
-    }
-
-    @Nullable
-    public LivingEntity getVictim() {
-        if (this.cachedVictim != null && !this.cachedVictim.isRemoved()) {
-            return this.cachedVictim;
-        } else if (this.victimUUID != null && this.level() instanceof ServerLevel) {
-            this.cachedVictim = (LivingEntity) ((ServerLevel) this.level()).getEntity(this.victimUUID);
-            return this.cachedVictim;
-        } else {
-            return null;
         }
     }
 
@@ -176,23 +133,6 @@ public class ProjectionFrameEntity extends Entity {
             return this.cachedOwner;
         } else {
             return null;
-        }
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        LivingEntity entity = this.getVictim();
-        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        super.recreateFromPacket(pPacket);
-
-        LivingEntity victim = (LivingEntity) this.level().getEntity(pPacket.getData());
-
-        if (victim != null) {
-            this.setVictim(victim);
         }
     }
 }
