@@ -29,8 +29,8 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     private boolean grabbed;
     private Vec3 pos;
 
-    public ToadTongueProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ToadTongueProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

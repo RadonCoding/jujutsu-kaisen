@@ -44,8 +44,8 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     private boolean jump;
 
-    public NueTotalityEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public NueTotalityEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

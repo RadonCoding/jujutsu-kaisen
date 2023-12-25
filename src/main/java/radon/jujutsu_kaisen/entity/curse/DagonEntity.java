@@ -22,8 +22,8 @@ public class DagonEntity extends DisasterCurse {
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    public DagonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DagonEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

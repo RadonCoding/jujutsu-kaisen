@@ -39,8 +39,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
     public int animation;
 
-    public FireArrowProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FireArrowProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public FireArrowProjectile(LivingEntity owner, float power) {

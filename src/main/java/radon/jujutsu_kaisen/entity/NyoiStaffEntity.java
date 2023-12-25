@@ -35,8 +35,8 @@ public class NyoiStaffEntity extends Entity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public NyoiStaffEntity(EntityType<? extends Entity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public NyoiStaffEntity(EntityType<? extends Entity> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public NyoiStaffEntity(LivingEntity owner, ItemStack stack, Vec3 pos) {

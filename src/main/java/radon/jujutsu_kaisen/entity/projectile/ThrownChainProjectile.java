@@ -32,8 +32,8 @@ public class ThrownChainProjectile extends AbstractArrow {
     private boolean released;
     private boolean dealtDamage;
 
-    public ThrownChainProjectile(EntityType<? extends AbstractArrow> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ThrownChainProjectile(EntityType<? extends AbstractArrow> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

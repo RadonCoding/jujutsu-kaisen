@@ -39,8 +39,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     private static final int HEIGHT = 8;
     private static final float DAMAGE = 10.0F;
 
-    public WaterballEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WaterballEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public WaterballEntity(LivingEntity owner, float power) {

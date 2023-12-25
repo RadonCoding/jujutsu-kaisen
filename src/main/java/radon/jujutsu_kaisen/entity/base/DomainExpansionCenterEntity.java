@@ -27,12 +27,12 @@ public class DomainExpansionCenterEntity extends Entity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public DomainExpansionCenterEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DomainExpansionCenterEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
-    public DomainExpansionCenterEntity(EntityType<?> entityType, DomainExpansionEntity domain) {
-        super(entityType, domain.level());
+    public DomainExpansionCenterEntity(EntityType<?> pType, DomainExpansionEntity domain) {
+        super(pType, domain.level());
 
         this.setDomain(domain);
     }

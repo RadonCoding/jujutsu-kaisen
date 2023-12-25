@@ -28,8 +28,8 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public WoodShieldSegmentEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WoodShieldSegmentEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public WoodShieldSegmentEntity(LivingEntity owner) {

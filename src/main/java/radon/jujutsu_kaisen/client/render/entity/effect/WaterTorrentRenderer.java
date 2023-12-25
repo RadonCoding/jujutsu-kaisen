@@ -57,11 +57,11 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
         if (frame < 0) {
-            frame = PiercingWaterEntity.FRAMES * 2;
+            frame = pEntity.getFrames() * 2;
         }
 
         pPoseStack.pushPose();
-        pPoseStack.scale(PiercingWaterEntity.SCALE, PiercingWaterEntity.SCALE, PiercingWaterEntity.SCALE);
+        pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
         VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));

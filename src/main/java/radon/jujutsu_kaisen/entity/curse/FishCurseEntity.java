@@ -25,8 +25,8 @@ import software.bernie.geckolib.core.object.PlayState;
 public class FishCurseEntity extends PackCursedSpirit {
     private static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
 
-    public FishCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FishCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }

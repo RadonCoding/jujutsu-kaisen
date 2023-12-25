@@ -33,8 +33,8 @@ public class AirFrameEntity extends Entity {
 
     private float power;
 
-    public AirFrameEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public AirFrameEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

@@ -61,8 +61,8 @@ public class TojiFushiguroEntity extends SorcererEntity {
     @Nullable
     private Player currentCustomer;
 
-    public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
 
         Arrays.fill(this.armorDropChances, 0.0F);
         Arrays.fill(this.handDropChances, 0.0F);

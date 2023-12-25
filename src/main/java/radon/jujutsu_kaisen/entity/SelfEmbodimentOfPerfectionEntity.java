@@ -18,8 +18,8 @@ public class SelfEmbodimentOfPerfectionEntity extends DomainExpansionCenterEntit
     // Seconds to ticks
     private static final int ACTIVATION_DURATION = (int) (2.25F * 20);
 
-    public SelfEmbodimentOfPerfectionEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public SelfEmbodimentOfPerfectionEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public SelfEmbodimentOfPerfectionEntity(DomainExpansionEntity domain) {

@@ -26,8 +26,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import java.util.List;
 
 public class TojiZeninEntity extends SorcererEntity {
-    public TojiZeninEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public TojiZeninEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

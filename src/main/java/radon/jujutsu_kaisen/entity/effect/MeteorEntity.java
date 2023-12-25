@@ -49,8 +49,8 @@ public class MeteorEntity extends JujutsuProjectile {
     private double lerpYRot;
     private double lerpXRot;
 
-    public MeteorEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MeteorEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

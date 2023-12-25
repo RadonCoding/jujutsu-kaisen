@@ -37,8 +37,8 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
     private final GreatSerpentSegmentEntity[] segments;
 
-    public GreatSerpentEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public GreatSerpentEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.segments = new GreatSerpentSegmentEntity[MAX_SEGMENTS];
 

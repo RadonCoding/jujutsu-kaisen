@@ -36,8 +36,8 @@ public class WormCurseEntity extends CursedSpirit {
 
     private final WormCurseSegmentEntity[] segments;
 
-    public WormCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WormCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.segments = new WormCurseSegmentEntity[MAX_SEGMENTS];
 

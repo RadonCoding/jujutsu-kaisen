@@ -58,8 +58,8 @@ public class SukunaEntity extends SorcererEntity {
     @Nullable
     private GameType original;
 
-    public SukunaEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public SukunaEntity(LivingEntity owner, int fingers, boolean vessel) {

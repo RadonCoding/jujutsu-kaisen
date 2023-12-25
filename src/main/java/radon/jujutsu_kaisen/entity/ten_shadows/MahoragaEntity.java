@@ -59,8 +59,8 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
 
-    public MahoragaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MahoragaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

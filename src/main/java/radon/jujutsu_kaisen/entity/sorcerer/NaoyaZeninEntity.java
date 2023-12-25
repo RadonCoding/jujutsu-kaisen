@@ -14,8 +14,8 @@ import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
 public class NaoyaZeninEntity extends SorcererEntity {
-    public NaoyaZeninEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public NaoyaZeninEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

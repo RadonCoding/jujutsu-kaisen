@@ -8,8 +8,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
 
 public class EelShikigamiProjectile extends FishShikigamiProjectile {
-    public EelShikigamiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public EelShikigamiProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public EelShikigamiProjectile(LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {

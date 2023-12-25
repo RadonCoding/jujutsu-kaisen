@@ -1,46 +1,34 @@
-package radon.jujutsu_kaisen.entity.effect;
+package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PureLoveBeam extends JujutsuProjectile {
-    public static final int FRAMES = 3;
-    public static final float SCALE = 2.0F;
-    private static final double RADIUS = 20;
-    private static final float DAMAGE = 10.0F;
-    public static final int CHARGE = (int) (2.5F * 20);
-    public static final int DURATION = 3 * 20;
-
+public abstract class BeamEntity extends JujutsuProjectile {
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
     public double prevCollidePosX, prevCollidePosY, prevCollidePosZ;
@@ -50,25 +38,41 @@ public class PureLoveBeam extends JujutsuProjectile {
 
     public @Nullable Direction side = null;
 
-    private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(PureLoveBeam.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(PureLoveBeam.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.FLOAT);
 
     public float prevYaw;
     public float prevPitch;
 
     public int animation;
 
-    public PureLoveBeam(EntityType<? extends Projectile> pType, Level pLevel) {
+    public BeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
 
         this.noCulling = true;
     }
 
-    public PureLoveBeam(LivingEntity owner, float power) {
-        this(JJKEntities.PURE_LOVE.get(), owner.level());
+    public BeamEntity(EntityType<? extends Projectile> pType, LivingEntity owner, float power) {
+        this(pType, owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
+    }
+
+    public abstract int getFrames();
+
+    public abstract float getScale();
+
+    protected abstract double getRange();
+
+    protected abstract float getDamage();
+
+    protected abstract int getDuration();
+
+    public abstract int getCharge();
+
+    protected boolean causesFire() {
+        return false;
     }
 
     @Override
@@ -78,26 +82,6 @@ public class PureLoveBeam extends JujutsuProjectile {
         this.update();
         this.calculateEndPos();
         this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.endPosX, this.endPosY, this.endPosZ));
-    }
-
-    public float getScale() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return SCALE;
-        return SCALE * (rika.isOpen() ? 1.0F : 0.5F);
-    }
-
-    public double getRadius() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return RADIUS;
-        return RADIUS * (rika.isOpen() ? 1.0D : 0.5D);
-    }
-
-    public float getDamage() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return DAMAGE;
-        return DAMAGE * (rika.isOpen() ? 1.0F : 0.5F);
-    }
-
-    public float getDuration() {
-        if (!(this.getOwner() instanceof RikaEntity rika)) return DURATION;
-        return DURATION * (rika.isOpen() ? 1.0F : 0.5F);
     }
 
     @Override
@@ -118,6 +102,9 @@ public class PureLoveBeam extends JujutsuProjectile {
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
+            if (this.getTime() % 5 == 0) {
+                owner.swing(InteractionHand.MAIN_HAND);
+            }
             this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
             this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
 
@@ -125,31 +112,32 @@ public class PureLoveBeam extends JujutsuProjectile {
                 this.discard();
             }
 
-            if (this.on) {
-                if (this.animation < FRAMES) {
-                    this.animation++;
-                }
-            } else {
-                if (this.animation > 0) {
-                    this.animation--;
+            if (this.getFrames() > 0) {
+                if (this.on) {
+                    if (this.animation < this.getFrames()) {
+                        this.animation++;
+                    }
+                } else {
+                    if (this.animation > 0) {
+                        this.animation--;
+                    }
                 }
             }
 
-            if (this.getTime() > CHARGE) {
+            if (this.getTime() >= this.getCharge()) {
                 this.calculateEndPos();
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
                         new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
+                for (Entity entity : entities) {
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), this.getDamage() * this.getPower())) continue;
+                    entity.setSecondsOnFire(5);
+                }
+
                 if (!this.level().isClientSide) {
-                    for (Entity entity : entities) {
-                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
-                            continue;
-
-                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, null), DAMAGE * this.getPower());
-                    }
-
-                    double radius = SCALE * 2.0F;
+                    double radius = this.getScale() * 2.0F;
 
                     AABB bounds = new AABB(this.collidePosX - radius, this.collidePosY - radius, this.collidePosZ - radius,
                             this.collidePosX + radius, this.collidePosY + radius, this.collidePosZ + radius);
@@ -167,6 +155,13 @@ public class PureLoveBeam extends JujutsuProjectile {
                                 if (distance <= radius) {
                                     if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
                                         this.level().destroyBlock(pos, false);
+
+                                        if (this.causesFire()) {
+                                            if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
+                                                    this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
+                                                this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -174,7 +169,7 @@ public class PureLoveBeam extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - CHARGE - this.getDuration() / 2 > this.getDuration()) {
+            if (this.getTime() - this.getCharge() - this.getDuration() / 2 > this.getDuration()) {
                 this.on = false;
             }
         }
@@ -206,13 +201,13 @@ public class PureLoveBeam extends JujutsuProjectile {
 
     private void calculateEndPos() {
         if (this.level().isClientSide) {
-            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.renderPitch);
-            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosX = this.getX() + this.getRange() * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosZ = this.getZ() + this.getRange() * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosY = this.getY() + this.getRange() * Math.sin(this.renderPitch);
         } else {
-            this.endPosX = this.getX() + this.getRadius() * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosY = this.getY() + this.getRadius() * Math.sin(this.getPitch());
-            this.endPosZ = this.getZ() + this.getRadius() * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosX = this.getX() + this.getRange() * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosZ = this.getZ() + this.getRange() * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosY = this.getY() + this.getRange() * Math.sin(this.getPitch());
         }
     }
 
@@ -233,8 +228,9 @@ public class PureLoveBeam extends JujutsuProjectile {
         }
         List<Entity> entities = new ArrayList<>();
 
-        AABB bounds = new AABB(Math.min(this.getX(), this.collidePosX), Math.min(this.getY(), this.collidePosY), Math.min(this.getZ(), this.collidePosZ),
-                Math.max(this.getX(), this.collidePosX), Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
+        AABB bounds = new AABB(Math.min(this.getX(), this.collidePosX), Math.min(this.getY(), this.collidePosY),
+                Math.min(this.getZ(), this.collidePosZ), Math.max(this.getX(), this.collidePosX),
+                Math.max(this.getY(), this.collidePosY), Math.max(this.getZ(), this.collidePosZ))
                 .inflate(this.getScale());
 
         for (Entity entity : this.level().getEntities(this.getOwner(), bounds)) {
@@ -261,7 +257,7 @@ public class PureLoveBeam extends JujutsuProjectile {
             this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
             Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.setPos(spawn.x, spawn.y, spawn.z);
         }
     }

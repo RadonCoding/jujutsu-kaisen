@@ -25,8 +25,8 @@ public class WoodSegmentEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_INDEX = SynchedEntityData.defineId(WoodSegmentEntity.class, EntityDataSerializers.INT);
 
-    public WoodSegmentEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WoodSegmentEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public WoodSegmentEntity(WoodSegmentEntity segment, float yawOffset, float pitchOffset) {

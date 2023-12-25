@@ -58,8 +58,8 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     private Vec3 start;
     private int cooldown;
 
-    public KuchisakeOnnaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public KuchisakeOnnaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

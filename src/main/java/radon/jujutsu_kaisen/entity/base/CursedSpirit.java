@@ -57,8 +57,8 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Nullable
     private LivingEntity cachedOwner;
 
-    protected CursedSpirit(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected CursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.setTame(false);
     }

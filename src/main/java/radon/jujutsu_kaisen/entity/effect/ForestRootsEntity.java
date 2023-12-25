@@ -33,8 +33,8 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
 
     private Vec3 pos;
 
-    public ForestRootsEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ForestRootsEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

@@ -47,8 +47,8 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     private final RainbowDragonSegmentEntity[] segments;
 
-    public RainbowDragonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public RainbowDragonEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
 

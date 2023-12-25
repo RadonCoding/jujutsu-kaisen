@@ -32,8 +32,8 @@ public class ScissorEntity extends JujutsuProjectile implements GeoEntity {
 
     private LivingEntity target;
 
-    public ScissorEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ScissorEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ScissorEntity(LivingEntity owner, float power, LivingEntity target) {

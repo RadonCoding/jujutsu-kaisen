@@ -44,8 +44,8 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
     private static final float SPEED = 5.0F;
     public static final int DELAY = 20;
 
-    public FireballProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FireballProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public FireballProjectile(LivingEntity owner, float power) {

@@ -25,8 +25,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class MegumiFushiguroEntity extends SorcererEntity {
-    public MegumiFushiguroEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MegumiFushiguroEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

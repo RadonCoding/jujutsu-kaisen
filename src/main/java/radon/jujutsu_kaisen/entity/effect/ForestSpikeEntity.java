@@ -18,8 +18,8 @@ public class ForestSpikeEntity extends JujutsuProjectile {
     private static final int DURATION = 5 * 20;
     private static final float DAMAGE = 10.0F;
 
-    public ForestSpikeEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ForestSpikeEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ForestSpikeEntity(LivingEntity owner, float power) {

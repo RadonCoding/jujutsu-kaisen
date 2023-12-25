@@ -22,8 +22,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import java.util.List;
 
 public class YujiItadoriEntity extends SorcererEntity {
-    public YujiItadoriEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public YujiItadoriEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

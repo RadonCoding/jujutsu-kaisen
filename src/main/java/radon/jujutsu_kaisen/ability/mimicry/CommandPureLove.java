@@ -36,11 +36,9 @@ public class CommandPureLove extends Ability {
 
         if (rika == null) return;
 
-        ISorcererData summonCap = rika.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (JJKAbilities.SHOOT_PURE_LOVE.get().getStatus(rika, true, false, true, false, false) != Status.SUCCESS) return;
 
-        if (!summonCap.isCooldownDone(JJKAbilities.SHOOT_PURE_LOVE.get())) return;
-
-        rika.setOpen();
+        rika.setOpen(true);
     }
 
     @Override

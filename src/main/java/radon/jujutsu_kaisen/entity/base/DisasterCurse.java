@@ -16,8 +16,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public abstract class DisasterCurse extends CursedSpirit {
     private static final int RARITY = 10;
 
-    protected DisasterCurse(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected DisasterCurse(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

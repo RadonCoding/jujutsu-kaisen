@@ -23,8 +23,8 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.List;
 
 public class SatoruGojoEntity extends SorcererEntity {
-    public SatoruGojoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public SatoruGojoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

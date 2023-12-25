@@ -31,8 +31,8 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public VolcanoEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public VolcanoEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public VolcanoEntity(LivingEntity owner, float power, BlockPos pos, Direction dir) {

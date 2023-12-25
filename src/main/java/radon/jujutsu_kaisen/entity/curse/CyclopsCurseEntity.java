@@ -26,8 +26,8 @@ public class CyclopsCurseEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    public CyclopsCurseEntity(EntityType<? extends CursedSpirit> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public CyclopsCurseEntity(EntityType<? extends CursedSpirit> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

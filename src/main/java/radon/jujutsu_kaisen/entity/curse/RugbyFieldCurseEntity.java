@@ -28,8 +28,8 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
 
-    public RugbyFieldCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public RugbyFieldCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

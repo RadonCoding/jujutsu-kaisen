@@ -37,8 +37,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final float RADIUS = 1.0F;
     private static final int ANIMATION = 20;
 
-    public HollowPurpleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public HollowPurpleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public HollowPurpleProjectile(LivingEntity owner, float power) {

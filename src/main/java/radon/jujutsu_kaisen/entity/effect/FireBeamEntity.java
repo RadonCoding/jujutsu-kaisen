@@ -11,17 +11,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.BeamEntity;
@@ -32,13 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class WaterTorrentEntity extends BeamEntity {
-    public WaterTorrentEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+public class FireBeamEntity extends BeamEntity {
+    public FireBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public WaterTorrentEntity(LivingEntity owner, float power) {
-        this(JJKEntities.WATER_TORRENT.get(), owner.level());
+    public FireBeamEntity(LivingEntity owner, float power) {
+        this(JJKEntities.FIRE_BEAM.get(), owner.level());
 
         this.setOwner(owner);
         this.setPower(power);
@@ -51,7 +47,7 @@ public class WaterTorrentEntity extends BeamEntity {
 
     @Override
     public float getScale() {
-        return 2.0F;
+        return 1.0F;
     }
 
     @Override
@@ -72,5 +68,10 @@ public class WaterTorrentEntity extends BeamEntity {
     @Override
     public int getCharge() {
         return 0;
+    }
+
+    @Override
+    protected boolean causesFire() {
+        return true;
     }
 }

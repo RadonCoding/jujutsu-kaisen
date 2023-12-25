@@ -53,8 +53,8 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     private int riding;
 
-    public MaxElephantEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MaxElephantEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

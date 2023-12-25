@@ -47,8 +47,8 @@ public class WheelEntity extends Entity implements GeoEntity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public WheelEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WheelEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public WheelEntity(LivingEntity owner) {

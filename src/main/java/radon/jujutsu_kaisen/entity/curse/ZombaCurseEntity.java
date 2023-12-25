@@ -22,8 +22,8 @@ public class ZombaCurseEntity extends CursedSpirit {
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
 
-    public ZombaCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ZombaCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

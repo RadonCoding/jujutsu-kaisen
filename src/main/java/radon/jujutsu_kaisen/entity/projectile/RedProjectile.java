@@ -39,8 +39,8 @@ public class RedProjectile extends JujutsuProjectile {
 
     private boolean chanted;
 
-    public RedProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
-        super(pEntityType, level);
+    public RedProjectile(EntityType<? extends Projectile> pType, Level level) {
+        super(pType, level);
     }
 
     public RedProjectile(LivingEntity owner, float power, boolean chanted) {
