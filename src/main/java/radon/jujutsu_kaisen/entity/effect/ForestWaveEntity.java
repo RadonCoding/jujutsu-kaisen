@@ -58,7 +58,7 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox())) {
+        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity instanceof ForestWaveEntity)
                 continue;
 
