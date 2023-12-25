@@ -175,7 +175,8 @@ public class SorcererData implements ISorcererData {
 
     private void sync() {
         if (!this.owner.level().isClientSide) {
-            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getType(), this.getCursedEnergyColor());
+            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getTechnique(), this.getType(),
+                    this.getExperience(), this.getEnergy(), this.getMaxEnergy(), this.getCursedEnergyColor());
             PacketHandler.broadcast(new SyncVisualDataS2CPacket(this.owner.getUUID(), data.serializeNBT()));
         }
     }
@@ -701,6 +702,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setExperience(float experience) {
         this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), experience);
+        this.sync();
     }
 
     @Override
@@ -721,6 +723,7 @@ public class SorcererData implements ISorcererData {
             this.experience = ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue();
             return false;
         }
+        this.sync();
         return true;
     }
 
@@ -912,6 +915,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addEnergy(float amount) {
         this.energy = Math.min(this.getMaxEnergy(), this.energy + amount);
+        this.sync();
     }
 
     @Override
@@ -926,17 +930,20 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setMaxEnergy(float maxEnergy) {
         this.maxEnergy = maxEnergy;
+        this.sync();
     }
 
     @Override
     public void useEnergy(float amount) {
         MinecraftForge.EVENT_BUS.post(new CursedEnergyCostEvent(this.owner, amount));
         this.energy -= amount;
+        this.sync();
     }
 
     @Override
     public void setEnergy(float energy) {
         this.energy = energy;
+        this.sync();
     }
 
     @Override

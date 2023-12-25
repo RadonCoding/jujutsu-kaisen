@@ -108,7 +108,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getType(), cap.getCursedEnergyColor());
+                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getEnergy(), cap.getMaxEnergy(), cap.getCursedEnergyColor());
             }
         }
         return null;
@@ -373,7 +373,12 @@ public class ClientVisualHandler {
         public final Set<Ability> toggled;
         public final Set<Trait> traits;
         public final Set<CursedTechnique> techniques;
+        @Nullable
+        public final CursedTechnique technique;
         public final JujutsuType type;
+        public final float experience;
+        public final float energy;
+        public final float maxEnergy;
         public final int cursedEnergyColor;
 
         public int mouth;
@@ -382,6 +387,8 @@ public class ClientVisualHandler {
             this.toggled = new HashSet<>();
             this.traits = new HashSet<>();
             this.techniques = new HashSet<>();
+
+            this.technique = nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null;
 
             for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
                 this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
@@ -400,14 +407,21 @@ public class ClientVisualHandler {
             }
 
             this.type = JujutsuType.values()[nbt.getInt("type")];
+            this.experience = nbt.getFloat("experience");
+            this.energy = nbt.getFloat("energy");
+            this.maxEnergy = nbt.getFloat("max_energy");
             this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
         }
 
-        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, JujutsuType type, int cursedEnergyColor) {
+        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, float energy, float maxEnergy, int cursedEnergyColor) {
             this.toggled = toggled;
             this.traits = traits;
             this.techniques = techniques;
+            this.technique = technique;
             this.type = type;
+            this.experience = experience;
+            this.energy = energy;
+            this.maxEnergy = maxEnergy;
             this.cursedEnergyColor = cursedEnergyColor;
         }
 
@@ -436,6 +450,7 @@ public class ClientVisualHandler {
             nbt.put("techniques", techniquesTag);
 
             nbt.putInt("type", this.type.ordinal());
+            nbt.putFloat("experience", this.experience);
             nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
 
             return nbt;

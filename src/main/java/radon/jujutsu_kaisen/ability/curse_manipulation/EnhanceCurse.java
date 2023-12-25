@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -30,6 +31,22 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     private @Nullable CursedSpirit getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
+            if (!curse.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+
+            float experience;
+
+            if (owner.level().isClientSide) {
+                ClientVisualHandler.VisualData data = ClientVisualHandler.get(curse);
+
+                if (data == null) return null;
+
+                experience = data.experience;
+            } else {
+                ISorcererData cap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                experience = cap.getExperience();
+            }
+
+            if (experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
 
             return curse;
         }

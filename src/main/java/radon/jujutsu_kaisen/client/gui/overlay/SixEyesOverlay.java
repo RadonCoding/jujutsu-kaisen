@@ -1,38 +1,20 @@
 package radon.jujutsu_kaisen.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.RequestSixEyesDataC2SPacket;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
 
 public class SixEyesOverlay {
-    private static @Nullable AbstractMap.SimpleEntry<UUID, SixEyesData> current;
-
-    public static void setCurrent(UUID identifier, @NotNull SixEyesData data) {
-        current = new AbstractMap.SimpleEntry<>(identifier, data);
-    }
-
     public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
 
@@ -46,88 +28,42 @@ public class SixEyesOverlay {
         if (!(HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
         if (!(hit.getEntity() instanceof LivingEntity target)) return;
 
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent())
-            return;
+        ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
 
-        if (current == null) {
-            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
-            return;
-        } else if (mc.level.getGameTime() % 20 == 0) {
-            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+        if (data == null) return;
+
+        if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
+
+        List<Component> lines = new ArrayList<>();
+
+        if (data.technique != null) {
+            Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
+                    data.technique.getName());
+            lines.add(techniqueText);
         }
 
-        UUID identifier = current.getKey();
+        Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
+                HelperMethods.getGrade(data.experience).getName());
+        lines.add(gradeText);
 
-        if (target.getUUID().equals(identifier)) {
-            SixEyesData data = current.getValue();
+        Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
+                data.energy, data.maxEnergy);
+        lines.add(energyText);
 
-            if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
+        int offset = 0;
 
-            List<Component> lines = new ArrayList<>();
-
-            if (data.technique != null) {
-                Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                        data.technique.getName());
-                lines.add(techniqueText);
+        for (Component line : lines) {
+            if (mc.font.width(line) > offset) {
+                offset = mc.font.width(line);
             }
+        }
 
-            Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                    data.grade.getName());
-            lines.add(gradeText);
+        int x = (width - offset) / 2;
+        int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
 
-            Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
-                    data.energy, data.maxEnergy);
-            lines.add(energyText);
-
-            int offset = 0;
-
-            for (Component line : lines) {
-                if (mc.font.width(line) > offset) {
-                    offset = mc.font.width(line);
-                }
-            }
-
-            int x = (width - offset) / 2;
-            int y = (height - ((lines.size() - 1) * mc.font.lineHeight + 8)) / 2;
-
-            for (Component line : lines) {
-                graphics.drawString(gui.getFont(), line, x, y, 53503);
-                y += mc.font.lineHeight;
-            }
-        } else {
-            PacketHandler.sendToServer(new RequestSixEyesDataC2SPacket(target.getUUID()));
+        for (Component line : lines) {
+            graphics.drawString(gui.getFont(), line, x, y, 53503);
+            y += mc.font.lineHeight;
         }
     };
-
-    public record SixEyesData(@Nullable CursedTechnique technique, Set<Trait> traits, SorcererGrade grade, float energy, float maxEnergy) {
-        public CompoundTag serializeNBT() {
-            CompoundTag nbt = new CompoundTag();
-
-            if (this.technique != null) {
-                nbt.putInt("technique", this.technique.ordinal());
-            }
-
-            ListTag traitsTag = new ListTag();
-
-            for (Trait trait : this.traits) {
-                traitsTag.add(IntTag.valueOf(trait.ordinal()));
-            }
-            nbt.put("traits", traitsTag);
-
-            nbt.putInt("grade", this.grade.ordinal());
-            nbt.putFloat("energy", this.energy);
-            nbt.putFloat("max_energy", this.maxEnergy);
-            return nbt;
-        }
-
-        public static SixEyesData deserializeNBT(CompoundTag nbt) {
-            Set<Trait> traits = new HashSet<>();
-
-            for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-                traits.add(Trait.values()[((IntTag) key).getAsInt()]);
-            }
-            return new SixEyesData(nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null, traits,
-                    SorcererGrade.values()[nbt.getInt("grade")], nbt.getFloat("energy"), nbt.getFloat("max_energy"));
-        }
-    }
 }
