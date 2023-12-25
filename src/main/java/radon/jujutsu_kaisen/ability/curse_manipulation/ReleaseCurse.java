@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ReleaseCurse extends Ability {
-    private static final double RANGE = 100.0D;
+    private static final double RANGE = 32.0D;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
