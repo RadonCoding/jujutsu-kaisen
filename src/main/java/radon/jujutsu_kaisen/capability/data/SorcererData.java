@@ -204,6 +204,12 @@ public class SorcererData implements ISorcererData {
             Map.Entry<Ability, Integer> entry = iter.next();
 
             Ability ability = entry.getKey();
+
+            if (!this.isChanneling(ability)) {
+                iter.remove();
+                continue;
+            }
+
             int remaining = entry.getValue();
 
             if (remaining >= 0) {
