@@ -35,8 +35,7 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
         AirFrameEntity frame = new AirFrameEntity(owner, this.getPower(owner));
         Vec3 look = owner.getLookAngle();
-        Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
-                .add(look.yRot(90.0F).scale(-frame.getBbWidth()))
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (frame.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(charge * speed));
         frame.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
