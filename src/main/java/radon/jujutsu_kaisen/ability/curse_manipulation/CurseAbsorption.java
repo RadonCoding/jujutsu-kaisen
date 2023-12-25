@@ -60,8 +60,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         }
     }
 
-    public static boolean canAbsorb(LivingEntity owner, Entity entity) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+    public static boolean canAbsorb(LivingEntity owner, LivingEntity entity) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
                 (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.isDeadOrDying());
@@ -92,11 +91,11 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        if (!canAbsorb(attacker, victim)) return;
-
         if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!canAbsorb(attacker, victim)) return;
 
         if (!attackerCap.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 
