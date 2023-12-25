@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.curse;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,10 +14,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +37,7 @@ import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -54,14 +50,14 @@ import java.util.List;
 public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
     private static final int DURATION = 5 * 60 * 20;
 
-    public static EntityDataAccessor<Integer> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.INT);
+    public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    public RikaEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public RikaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public RikaEntity(LivingEntity owner) {
@@ -125,15 +121,15 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_OPEN, 0);
+        this.entityData.define(DATA_OPEN, false);
     }
 
-    public void setOpen() {
-        this.entityData.set(DATA_OPEN, PureLoveBeam.CHARGE + PureLoveBeam.DURATION);
+    public void setOpen(boolean open) {
+        this.entityData.set(DATA_OPEN, open);
     }
 
     public boolean isOpen() {
-        return this.entityData.get(DATA_OPEN) > 0;
+        return this.entityData.get(DATA_OPEN);
     }
 
     private PlayState openPredicate(AnimationState<RikaEntity> animationState) {
@@ -177,12 +173,15 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
 
             if (owner != null && this.isOpen()) {
-                int remaining = this.entityData.get(DATA_OPEN);
+                boolean open = false;
 
-                if (--remaining == 0) {
-                    this.discard();
+                for (PureLoveBeamEntity entity : this.level().getEntitiesOfClass(PureLoveBeamEntity.class, AABB.ofSize(this.position(), 8.0D, 8.0D, 8.0D))) {
+                    if (entity.getOwner() != this) continue;
+
+                    open = true;
+                    break;
                 }
-                this.entityData.set(DATA_OPEN, remaining);
+                this.setOpen(open);
 
                 Vec3 pos = owner.position()
                         .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))

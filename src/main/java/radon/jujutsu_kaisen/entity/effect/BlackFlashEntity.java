@@ -34,8 +34,8 @@ public class BlackFlashEntity extends Entity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public BlackFlashEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public BlackFlashEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

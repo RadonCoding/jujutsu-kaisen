@@ -102,6 +102,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DISASTER_FLAMES = ABILITIES.register("disaster_flames", DisasterFlames::new);
     public static RegistryObject<Ability> FLAMETHROWER = ABILITIES.register("flamethrower", Flamethrower::new);
     public static RegistryObject<Ability> FIREBALL = ABILITIES.register("fireball", Fireball::new);
+    public static RegistryObject<Ability> FIRE_BEAM = ABILITIES.register("fire_beam", FireBeam::new);
     public static RegistryObject<Ability> COFFIN_OF_THE_IRON_MOUNTAIN = ABILITIES.register("coffin_of_the_iron_mountain", CoffinOfTheIronMountain::new);
 
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);

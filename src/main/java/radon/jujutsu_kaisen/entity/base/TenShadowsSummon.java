@@ -58,8 +58,8 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected final List<UUID> participants = new ArrayList<>();
 
-    protected TenShadowsSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected TenShadowsSummon(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
 
         AttributeInstance attribute = this.getAttribute(Attributes.FOLLOW_RANGE);
 

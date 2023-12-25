@@ -19,9 +19,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeam;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 
-public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
+public class PureLoveRenderer extends EntityRenderer<PureLoveBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
     private static final int TEXTURE_WIDTH = 256;
     private static final int TEXTURE_HEIGHT = 32;
@@ -34,12 +34,12 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull PureLoveBeam pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull PureLoveBeamEntity pEntity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(PureLoveBeam pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(PureLoveBeamEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         Entity owner = pEntity.getOwner();
         this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
@@ -57,7 +57,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
         if (frame < 0) {
-            frame = PureLoveBeam.FRAMES * 2;
+            frame = pEntity.getFrames() * 2;
         }
 
         pPoseStack.pushPose();
@@ -68,7 +68,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeam> {
 
         this.renderStart(frame, pPoseStack, consumer, pPackedLight);
 
-        if (pEntity.getTime() > PureLoveBeam.CHARGE) {
+        if (pEntity.getTime() > pEntity.getCharge()) {
             this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
             pPoseStack.pushPose();

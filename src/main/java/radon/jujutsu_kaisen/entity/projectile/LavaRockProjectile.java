@@ -31,8 +31,8 @@ public class LavaRockProjectile extends JujutsuProjectile {
     @Nullable
     private LivingEntity cachedTarget;
 
-    public LavaRockProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public LavaRockProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public LavaRockProjectile(LivingEntity owner, float power, LivingEntity target) {

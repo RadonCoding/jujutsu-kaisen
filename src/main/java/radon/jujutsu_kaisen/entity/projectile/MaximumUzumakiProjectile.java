@@ -39,8 +39,8 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MaximumUzumakiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MaximumUzumakiProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public MaximumUzumakiProjectile(LivingEntity owner, float power) {

@@ -43,12 +43,12 @@ public class BlueProjectile extends JujutsuProjectile {
     private static final float MAX_RADIUS = 5.0F;
     private static final double OFFSET = 8.0D;
 
-    public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level) {
-        super(pEntityType, level);
+    public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level) {
+        super(pType, level);
     }
 
-    public BlueProjectile(EntityType<? extends BlueProjectile> pEntityType, Level level, LivingEntity owner, float power) {
-        super(pEntityType, level, owner, power);
+    public BlueProjectile(EntityType<? extends BlueProjectile> pType, Level level, LivingEntity owner, float power) {
+        super(pType, level, owner, power);
     }
 
     public BlueProjectile(LivingEntity owner, float power, boolean motion) {

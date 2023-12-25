@@ -26,8 +26,8 @@ public class ForestWaveEntity extends JujutsuProjectile {
 
     private boolean damage;
 
-    public ForestWaveEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ForestWaveEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ForestWaveEntity(LivingEntity owner, float power) {

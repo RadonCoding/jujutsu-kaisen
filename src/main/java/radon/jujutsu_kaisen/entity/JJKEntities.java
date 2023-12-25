@@ -173,8 +173,8 @@ public class JJKEntities {
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_arrow")
                             .toString()));
-    public static RegistryObject<EntityType<PureLoveBeam>> PURE_LOVE = ENTITIES.register("pure_love", () ->
-            EntityType.Builder.<PureLoveBeam>of(PureLoveBeam::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<PureLoveBeamEntity>> PURE_LOVE = ENTITIES.register("pure_love", () ->
+            EntityType.Builder.<PureLoveBeamEntity>of(PureLoveBeamEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "pure_love")
                             .toString()));
@@ -350,6 +350,12 @@ public class JJKEntities {
                     .sized(0.5F, 1.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nyoi_staff")
                             .toString()));
+    public static RegistryObject<EntityType<FireBeamEntity>> FIRE_BEAM = ENTITIES.register("fire_beam", () ->
+            EntityType.Builder.<FireBeamEntity>of(FireBeamEntity::new, MobCategory.MISC)
+                    .sized(0.1F, 0.1F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_beam")
+                            .toString()));
+
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)

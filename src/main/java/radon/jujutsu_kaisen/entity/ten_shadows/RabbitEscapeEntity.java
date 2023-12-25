@@ -49,8 +49,8 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
 
     private boolean original;
 
-    public RabbitEscapeEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public RabbitEscapeEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public RabbitEscapeEntity(LivingEntity owner, boolean tame) {

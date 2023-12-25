@@ -46,8 +46,8 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     private static final int LEAP_DURATION = 10;
 
-    public DivineDogEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DivineDogEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public DivineDogEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean ritual, Variant variant) {

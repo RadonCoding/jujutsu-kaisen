@@ -25,8 +25,8 @@ import java.util.List;
 public class YutaOkkotsuEntity extends SorcererEntity {
     private static final int CHANGE_INTERVAL = 10 * 20;
 
-    public YutaOkkotsuEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public YutaOkkotsuEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

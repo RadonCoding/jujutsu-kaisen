@@ -19,8 +19,8 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
     private static final float RADIUS = 5.0F;
     private static final float MAX_EXPLOSION = 25.0F;
 
-    public HollowPurpleExplosion(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public HollowPurpleExplosion(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

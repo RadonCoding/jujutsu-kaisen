@@ -35,8 +35,8 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
     @Nullable
     private LivingEntity cachedTarget;
 
-    public DisasterPlantEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DisasterPlantEntity(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public DisasterPlantEntity(LivingEntity owner, float power, LivingEntity target) {

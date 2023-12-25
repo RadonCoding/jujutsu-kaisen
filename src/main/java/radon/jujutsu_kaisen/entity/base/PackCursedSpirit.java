@@ -19,8 +19,8 @@ public abstract class PackCursedSpirit extends CursedSpirit {
     @Nullable
     private PackCursedSpirit cachedLeader;
 
-    protected PackCursedSpirit(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected PackCursedSpirit(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     protected abstract int getMinCount();

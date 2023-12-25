@@ -32,12 +32,12 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_WIDTH = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HEIGHT = SynchedEntityData.defineId(OpenDomainExpansionEntity.class, EntityDataSerializers.INT);
 
-    public OpenDomainExpansionEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public OpenDomainExpansionEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
-    public OpenDomainExpansionEntity(EntityType<?> pEntityType, LivingEntity owner, DomainExpansion ability, int width, int height) {
-        super(pEntityType, owner, ability);
+    public OpenDomainExpansionEntity(EntityType<?> pType, LivingEntity owner, DomainExpansion ability, int width, int height) {
+        super(pType, owner, ability);
 
         Vec3 pos = owner.position()
                 .subtract(owner.getLookAngle()

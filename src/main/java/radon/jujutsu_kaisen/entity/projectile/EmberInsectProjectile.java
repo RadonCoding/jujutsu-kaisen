@@ -44,8 +44,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     private static final float MAX_EXPLOSION = 5.0F;
     private static final int DELAY = 20;
 
-    public EmberInsectProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public EmberInsectProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public EmberInsectProjectile(LivingEntity owner, float power, float xOffset, float yOffset) {

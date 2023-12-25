@@ -8,8 +8,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
 
 public class PiranhaShikigamiProjectile extends FishShikigamiProjectile {
-    public PiranhaShikigamiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public PiranhaShikigamiProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public PiranhaShikigamiProjectile(LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {

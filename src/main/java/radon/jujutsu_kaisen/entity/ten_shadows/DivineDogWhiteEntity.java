@@ -7,8 +7,8 @@ import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 public class DivineDogWhiteEntity extends DivineDogEntity {
-    public DivineDogWhiteEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DivineDogWhiteEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public DivineDogWhiteEntity(LivingEntity owner, boolean ritual) {

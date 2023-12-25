@@ -38,8 +38,8 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     private boolean jump;
 
-    public NueEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public NueEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public NueEntity(LivingEntity owner, boolean tame) {

@@ -72,8 +72,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MiniUzumakiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MiniUzumakiProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

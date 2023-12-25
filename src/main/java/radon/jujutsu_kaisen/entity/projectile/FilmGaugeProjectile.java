@@ -38,8 +38,8 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
     @Nullable
     private LivingEntity cachedTarget;
 
-    public FilmGaugeProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FilmGaugeProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

@@ -7,8 +7,8 @@ import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 public class ToadFusionEntity extends ToadEntity {
-    public ToadFusionEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ToadFusionEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ToadFusionEntity(LivingEntity owner, boolean ritual) {

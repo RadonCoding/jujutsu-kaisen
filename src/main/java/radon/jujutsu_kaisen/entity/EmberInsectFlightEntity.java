@@ -40,8 +40,8 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
 
     private boolean jump;
 
-    public EmberInsectFlightEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public EmberInsectFlightEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public EmberInsectFlightEntity(LivingEntity owner) {

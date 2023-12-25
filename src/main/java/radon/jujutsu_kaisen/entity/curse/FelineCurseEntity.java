@@ -37,8 +37,8 @@ public class FelineCurseEntity extends PackCursedSpirit {
 
     private static final int LEAP_DURATION = 10;
 
-    public FelineCurseEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FelineCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public FelineCurseEntity(FelineCurseEntity leader) {

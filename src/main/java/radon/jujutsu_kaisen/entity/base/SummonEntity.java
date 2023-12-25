@@ -40,8 +40,8 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    protected SummonEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected SummonEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

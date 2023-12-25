@@ -48,8 +48,8 @@ public class DismantleProjectile extends JujutsuProjectile {
     private boolean instant;
     private boolean destroy = true;
 
-    public DismantleProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public DismantleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public DismantleProjectile(LivingEntity owner, float power, float roll) {

@@ -47,8 +47,8 @@ public class ToadEntity extends TenShadowsSummon {
     private static final int RANGE = 20;
     private static final int SHOOT_INTERVAL = 20;
 
-    public ToadEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ToadEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ToadEntity(EntityType<? extends TamableAnimal> type, LivingEntity owner, boolean tame, boolean ritual) {

@@ -37,8 +37,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MalevolentShrineEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public MalevolentShrineEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public MalevolentShrineEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {

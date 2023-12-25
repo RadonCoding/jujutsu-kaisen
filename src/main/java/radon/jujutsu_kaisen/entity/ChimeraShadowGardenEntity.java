@@ -27,8 +27,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ChimeraShadowGardenEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ChimeraShadowGardenEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ChimeraShadowGardenEntity(LivingEntity owner, DomainExpansion ability, int width, int height) {

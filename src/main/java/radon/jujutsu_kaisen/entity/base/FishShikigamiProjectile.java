@@ -49,12 +49,12 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     @Nullable
     private LivingEntity cachedTarget;
 
-    public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public FishShikigamiProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
-    public FishShikigamiProjectile(EntityType<? extends Projectile> pEntityType, LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
-        super(pEntityType, owner.level(), owner, power);
+    public FishShikigamiProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
+        super(pType, owner.level(), owner, power);
 
         this.setTarget(target);
 

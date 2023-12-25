@@ -29,8 +29,8 @@ public class JujutsuLightningEntity extends LightningBolt {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public JujutsuLightningEntity(EntityType<? extends LightningBolt> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public JujutsuLightningEntity(EntityType<? extends LightningBolt> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
         this.life = 2;

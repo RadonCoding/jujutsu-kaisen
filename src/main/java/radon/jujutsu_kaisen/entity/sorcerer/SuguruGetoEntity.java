@@ -39,8 +39,8 @@ import java.util.List;
 
 // Attack non-sorcerers
 public class SuguruGetoEntity extends SorcererEntity {
-    public SuguruGetoEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public SuguruGetoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     @Override

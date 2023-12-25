@@ -33,8 +33,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public CursedBudProjectile(EntityType<? extends Projectile> pEntityType, Level level) {
-        super(pEntityType, level);
+    public CursedBudProjectile(EntityType<? extends Projectile> pType, Level level) {
+        super(pType, level);
     }
 
     public CursedBudProjectile(LivingEntity owner, float power) {

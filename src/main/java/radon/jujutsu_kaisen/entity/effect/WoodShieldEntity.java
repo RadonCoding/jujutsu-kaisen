@@ -32,8 +32,8 @@ public class WoodShieldEntity extends Mob {
     @Nullable
     private LivingEntity cachedOwner;
 
-    public WoodShieldEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public WoodShieldEntity(EntityType<? extends Mob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public WoodShieldEntity(LivingEntity owner) {

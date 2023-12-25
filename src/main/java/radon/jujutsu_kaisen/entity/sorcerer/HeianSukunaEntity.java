@@ -36,8 +36,8 @@ public class HeianSukunaEntity extends SukunaEntity {
     private static final RawAnimation BARRAGE = RawAnimation.begin().thenLoop("attack.barrage");
     private static final RawAnimation SIT = RawAnimation.begin().thenPlayAndHold("misc.sit");
 
-    public HeianSukunaEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public HeianSukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public HeianSukunaEntity(Level pLevel, int fingers) {

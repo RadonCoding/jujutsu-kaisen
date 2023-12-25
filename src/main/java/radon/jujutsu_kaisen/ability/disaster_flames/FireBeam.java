@@ -1,15 +1,15 @@
-package radon.jujutsu_kaisen.ability.disaster_tides;
+package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.entity.effect.WaterTorrentEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-
-public class WaterTorrent extends Ability {
+public class FireBeam extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
@@ -24,8 +24,8 @@ public class WaterTorrent extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        WaterTorrentEntity torrent = new WaterTorrentEntity(owner, this.getPower(owner));
-        owner.level().addFreshEntity(torrent);
+        FireBeamEntity beam = new FireBeamEntity(owner, this.getPower(owner));
+        owner.level().addFreshEntity(beam);
     }
 
     @Override

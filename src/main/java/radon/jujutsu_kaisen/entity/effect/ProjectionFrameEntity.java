@@ -39,8 +39,8 @@ public class ProjectionFrameEntity extends Entity {
     private Vec3 pos;
     private float power;
 
-    public ProjectionFrameEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ProjectionFrameEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
 
         this.noCulling = true;
     }

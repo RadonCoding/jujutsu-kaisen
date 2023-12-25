@@ -22,12 +22,12 @@ public class JujutsuProjectile extends Projectile {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
 
-    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
-    public JujutsuProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel, Entity pShooter, float power) {
-        super(pEntityType, pLevel);
+    public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel, Entity pShooter, float power) {
+        super(pType, pLevel);
 
         this.setOwner(pShooter);
         this.setPower(power);

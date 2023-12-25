@@ -43,8 +43,8 @@ public class SimpleDomainEntity extends Mob {
     @Nullable
     private LivingEntity cachedOwner;
 
-    protected SimpleDomainEntity(EntityType<? extends Mob> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected SimpleDomainEntity(EntityType<? extends Mob> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public SimpleDomainEntity(LivingEntity owner) {

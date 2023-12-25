@@ -35,8 +35,8 @@ public class PiercingBullEntity extends TenShadowsSummon {
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
-    public PiercingBullEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public PiercingBullEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public PiercingBullEntity(LivingEntity owner, boolean tame) {

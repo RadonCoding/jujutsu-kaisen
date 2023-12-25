@@ -40,12 +40,12 @@ public abstract class DomainExpansionEntity extends Entity {
     protected DomainExpansion ability;
     protected boolean first = true;
 
-    protected DomainExpansionEntity(EntityType<?> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    protected DomainExpansionEntity(EntityType<?> pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
-    public DomainExpansionEntity(EntityType<?> pEntityType, LivingEntity owner, DomainExpansion ability) {
-        super(pEntityType, owner.level());
+    public DomainExpansionEntity(EntityType<?> pType, LivingEntity owner, DomainExpansion ability) {
+        super(pType, owner.level());
 
         this.setOwner(owner);
 

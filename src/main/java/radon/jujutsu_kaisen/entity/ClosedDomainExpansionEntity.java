@@ -37,8 +37,8 @@ import java.util.Set;
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
 
-    public ClosedDomainExpansionEntity(EntityType<? > pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
+        super(pType, pLevel);
     }
 
     public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
