@@ -137,6 +137,16 @@ public class ClientAbilityHandler {
                     ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
                 }
             } else if (event.getAction() == InputConstants.RELEASE) {
+                if (current != null && event.getKey() == current.getKey().getValue()) {
+                    if (JJKAbilities.isChanneling(mc.player, channeled)) {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+                        ClientAbilityHandler.trigger(channeled);
+                    }
+                    channeled = null;
+                    current = null;
+                    isChanneling = false;
+                }
+
                 if ((event.getKey() == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
                         (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
                         (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
