@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -31,11 +32,6 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
             if (!owner.canAttack(target)) return null;
             if (!(target instanceof CursedSpirit curse) || curse.getOwner() != owner) return null;
             if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
-
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (cap.getExperience() == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
-
             return curse;
         }
         return null;
@@ -78,5 +74,10 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     @Override
     public void onRelease(LivingEntity owner) {
 
+    }
+
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.SCROLL;
     }
 }
