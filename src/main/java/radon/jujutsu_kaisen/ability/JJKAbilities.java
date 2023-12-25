@@ -183,6 +183,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
     public static RegistryObject<Ability> RELEASE_CURSES = ABILITIES.register("release_curses", ReleaseCurses::new);
+    public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
 

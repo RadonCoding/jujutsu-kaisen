@@ -40,10 +40,8 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-            if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
+            if (domain.getOwner() == owner || !domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
             return true;
         }
         return false;
