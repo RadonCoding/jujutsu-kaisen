@@ -179,7 +179,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
 

@@ -67,7 +67,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
@@ -157,7 +157,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 64.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.MOVEMENT_SPEED, 0.24D)
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
