@@ -13,6 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -30,6 +31,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.JumpInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
+import radon.jujutsu_kaisen.network.packet.c2s.UntriggerAbilityC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.awt.event.KeyEvent;
@@ -57,13 +59,13 @@ public class ClientAbilityHandler {
 
                     if (isHeld) {
                         if (!isChanneling) {
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                             ClientAbilityHandler.trigger(channeled);
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                         }
                         isChanneling = true;
                     } else if (isChanneling) {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
-                        ClientAbilityHandler.trigger(channeled);
+                        AbilityHandler.untrigger(mc.player, channeled);
+                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
 
                         channeled = null;
                         current = null;
@@ -74,13 +76,13 @@ public class ClientAbilityHandler {
 
             if (mc.player.getVehicle() instanceof IRightClickInputListener listener) {
                 if (!isRightDown && mc.mouseHandler.isRightPressed()) {
-                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(true));
                     listener.setDown(true);
+                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(true));
 
                     isRightDown = true;
                 } else if (isRightDown && !mc.mouseHandler.isRightPressed()) {
-                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(false));
                     listener.setDown(false);
+                    PacketHandler.sendToServer(new RightClickInputListenerC2SPacket(false));
 
                     isRightDown = false;
                 }
@@ -95,11 +97,11 @@ public class ClientAbilityHandler {
 
             if (event.getKey() == KeyEvent.VK_SPACE) {
                 if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
                     listener.setJump(event.getAction() != InputConstants.RELEASE);
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
                 } else if (mc.player.getFirstPassenger() instanceof IJumpInputListener listener) {
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
                     listener.setJump(event.getAction() != InputConstants.RELEASE);
+                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
                 }
             }
 
@@ -112,8 +114,8 @@ public class ClientAbilityHandler {
                             channeled = ability;
                             current = JJKKeys.ACTIVATE_ABILITY;
                         } else {
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                             ClientAbilityHandler.trigger(ability);
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                         }
                     }
                 }
@@ -133,14 +135,14 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.DASH.isDown()) {
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                     ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
+                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                 }
             } else if (event.getAction() == InputConstants.RELEASE) {
                 if (current != null && event.getKey() == current.getKey().getValue()) {
                     if (JJKAbilities.isChanneling(mc.player, channeled)) {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                         ClientAbilityHandler.trigger(channeled);
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
                     }
                     channeled = null;
                     current = null;
@@ -201,27 +203,19 @@ public class ClientAbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || cap.hasToggled(ability)) {
-                if (cap.hasToggled(ability)) {
-                    cap.toggle(ability);
-                } else {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                    cap.toggle(ability);
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-                }
+            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                cap.toggle(ability);
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || cap.isChanneling(ability)) {
-                if (cap.isChanneling(ability)) {
-                    cap.channel(ability);
-                } else {
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                    cap.channel(ability);
-                    MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
-                }
+            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                cap.channel(ability);
+                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         }

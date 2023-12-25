@@ -212,6 +212,11 @@ public class PacketHandler {
                 .encoder(SetCursedEnergyColorC2SPacket::encode)
                 .consumerMainThread(SetCursedEnergyColorC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UntriggerAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UntriggerAbilityC2SPacket::new)
+                .encoder(UntriggerAbilityC2SPacket::encode)
+                .consumerMainThread(UntriggerAbilityC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

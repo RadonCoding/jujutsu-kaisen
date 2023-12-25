@@ -19,8 +19,6 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     private static final float DAMAGE = 7.5F;
     private static final double RANGE = 5.0D;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(5) == 0 && target != null &&
@@ -42,18 +40,19 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
             for (int i = 0; i < 96; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
                 double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-                double r = HelperMethods.RANDOM.nextDouble() * 0.8D;
+                double r = HelperMethods.RANDOM.nextDouble() * 4.0D;
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
-                Vec3 speed = look.add(x, y, z);
-                Vec3 offset = owner.getEyePosition().add(owner.getLookAngle());
-                level.sendParticles(ParticleTypes.FLAME, offset.x, offset.y, offset.z, 0, speed.x, speed.y, speed.z, 1.0D);
+                Vec3 start = owner.getEyePosition();
+                Vec3 end = start.add(look.scale(RANGE * 2)).add(x, y, z);
+                Vec3 speed = start.subtract(end).scale(1.0D / 12).reverse();
+                level.sendParticles(ParticleTypes.FLAME, start.x, start.y, start.z, 0, speed.x, speed.y, speed.z, 1.0D);
             }
 
-            Vec3 offset = owner.getEyePosition().add(owner.getLookAngle().scale(RANGE / 2));
+            AABB bounds = AABB.ofSize(owner.getEyePosition(), 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(1.0D);
 
-            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
+            for (Entity entity : owner.level().getEntities(owner, bounds)) {
                 if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                     entity.setSecondsOnFire(5);
                 }
