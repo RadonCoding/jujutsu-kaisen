@@ -57,7 +57,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (target == null) return;
 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setExperience(cap.getExperience() + 1.0F);
+        cap.addExperience(2.0F);
     }
 
     @Override
