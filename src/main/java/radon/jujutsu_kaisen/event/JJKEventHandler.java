@@ -188,7 +188,7 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent
+        @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -389,10 +389,10 @@ public class JJKEventHandler {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float armor = cap.getExperience() * 0.01F;
+            float armor = cap.getExperience() * 0.002F;
 
             if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                armor *= 2.0F;
+                armor *= 10.0F;
             }
             float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
             event.setAmount(blocked);
