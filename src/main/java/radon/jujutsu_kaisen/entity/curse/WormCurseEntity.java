@@ -152,7 +152,7 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 3 * 0.32D);
+        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 3 * 0.3D);
     }
 
     @Override

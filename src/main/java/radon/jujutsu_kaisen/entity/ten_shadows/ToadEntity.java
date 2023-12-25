@@ -91,7 +91,7 @@ public class ToadEntity extends TenShadowsSummon {
         int target = 1;
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
-        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
@@ -164,7 +164,7 @@ public class ToadEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.32D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
