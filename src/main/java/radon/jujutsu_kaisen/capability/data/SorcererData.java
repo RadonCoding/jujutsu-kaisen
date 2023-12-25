@@ -213,7 +213,6 @@ public class SorcererData implements ISorcererData {
                         this.toggle(ability);
                     }
                 } else if (ability instanceof Ability.IChannelened) {
-                    System.out.println(ability + ", " + this.owner.level().isClientSide);
                     if (this.isChanneling(ability)) {
                         this.channel(ability);
                     }
@@ -1576,14 +1575,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
 
-        if (this.channeled != null) {
-            ResourceLocation key = JJKAbilities.getKey(this.channeled);
-
-            if (key != null) {
-                nbt.putString("channeled", key.toString());
-            }
-        }
-
         ListTag unlockedTag = new ListTag();
 
         for (Ability ability : this.unlocked) {
@@ -1810,10 +1801,6 @@ public class SorcererData implements ISorcererData {
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
-
-        if (nbt.contains("channeled")) {
-            this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));
-        }
 
         this.unlocked.clear();
 
