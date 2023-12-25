@@ -37,16 +37,6 @@ public class PacketHandler {
                 .encoder(TriggerAbilityC2SPacket::encode)
                 .consumerMainThread(TriggerAbilityC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(RequestSixEyesDataC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(RequestSixEyesDataC2SPacket::new)
-                .encoder(RequestSixEyesDataC2SPacket::encode)
-                .consumerMainThread(RequestSixEyesDataC2SPacket::handle)
-                .add();
-        INSTANCE.messageBuilder(ReceiveSixEyesDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ReceiveSixEyesDataS2CPacket::new)
-                .encoder(ReceiveSixEyesDataS2CPacket::encode)
-                .consumerMainThread(ReceiveSixEyesDataS2CPacket::handle)
-                .add();
         INSTANCE.messageBuilder(OpenInventoryCurseC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(OpenInventoryCurseC2SPacket::new)
                 .encoder(OpenInventoryCurseC2SPacket::encode)
