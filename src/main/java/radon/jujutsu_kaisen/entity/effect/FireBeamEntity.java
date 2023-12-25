@@ -34,10 +34,7 @@ public class FireBeamEntity extends BeamEntity {
     }
 
     public FireBeamEntity(LivingEntity owner, float power) {
-        this(JJKEntities.FIRE_BEAM.get(), owner.level());
-
-        this.setOwner(owner);
-        this.setPower(power);
+        super(JJKEntities.FIRE_BEAM.get(), owner, power);
     }
 
     @Override

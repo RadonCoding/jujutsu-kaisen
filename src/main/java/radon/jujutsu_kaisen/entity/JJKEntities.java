@@ -355,6 +355,11 @@ public class JJKEntities {
                     .sized(0.1F, 0.1F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fire_beam")
                             .toString()));
+    public static RegistryObject<EntityType<ForestDashEntity>> FOREST_DASH = ENTITIES.register("forest_dash", () ->
+            EntityType.Builder.<ForestDashEntity>of(ForestDashEntity::new, MobCategory.MISC)
+                    .sized(ForestDashEntity.SIZE, ForestDashEntity.SIZE)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_dash")
+                            .toString()));
 
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->

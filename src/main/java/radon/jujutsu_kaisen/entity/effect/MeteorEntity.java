@@ -64,6 +64,16 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
+    public void push(@NotNull Entity pEntity) {
+
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 

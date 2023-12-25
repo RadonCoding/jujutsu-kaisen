@@ -38,10 +38,7 @@ public class PiercingWaterEntity extends BeamEntity {
     }
 
     public PiercingWaterEntity(LivingEntity owner, float power) {
-        this(JJKEntities.PIERCING_WATER.get(), owner.level());
-
-        this.setOwner(owner);
-        this.setPower(power);
+        super(JJKEntities.PIERCING_WATER.get(), owner, power);
     }
 
     @Override
