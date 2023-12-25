@@ -1,7 +1,9 @@
 package radon.jujutsu_kaisen.client.render.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -15,33 +17,35 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 
 import static net.minecraftforge.client.model.data.ModelData.EMPTY;
 
-public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
+public class ForestDashRenderer extends EntityRenderer<ForestDashEntity> {
     private final BlockRenderDispatcher dispatcher;
 
-    public ForestWaveRenderer(EntityRendererProvider.Context pContext) {
+    public ForestDashRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
 
         this.dispatcher = pContext.getBlockRenderDispatcher();
     }
 
     @Override
-    public void render(@NotNull ForestWaveEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull ForestDashEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         BlockState state = Blocks.OAK_WOOD.defaultBlockState();
 
         Level level = pEntity.level();
 
+        pPoseStack.pushPose();
+        pPoseStack.scale(ForestDashEntity.SIZE, ForestDashEntity.SIZE, ForestDashEntity.SIZE);
+
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-        pPoseStack.pushPose();
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
@@ -60,7 +64,7 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull ForestWaveEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ForestDashEntity pEntity) {
         return null;
     }
 }

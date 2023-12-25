@@ -26,10 +26,15 @@ public class JujutsuProjectile extends Projectile {
         super(pType, pLevel);
     }
 
-    public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel, Entity pShooter, float power) {
+    public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel, Entity pShooter) {
         super(pType, pLevel);
 
         this.setOwner(pShooter);
+    }
+
+    public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel, Entity pShooter, float power) {
+        this(pType, pLevel, pShooter);
+
         this.setPower(power);
     }
 

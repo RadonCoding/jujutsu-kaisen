@@ -34,6 +34,16 @@ public class ForestWaveEntity extends JujutsuProjectile {
         super(JJKEntities.FOREST_WAVE.get(), owner.level(), owner, power);
     }
 
+    @Override
+    public void push(@NotNull Entity pEntity) {
+
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
     public void setDamage(boolean damage) {
         this.damage = damage;
     }

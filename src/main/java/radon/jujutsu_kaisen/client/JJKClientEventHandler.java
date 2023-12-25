@@ -484,6 +484,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
             event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_BEAM.get(), FireBeamRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FOREST_DASH.get(), ForestDashRenderer::new);
         }
 
         @SubscribeEvent

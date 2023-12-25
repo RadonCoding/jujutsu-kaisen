@@ -13,10 +13,7 @@ public class PureLoveBeamEntity extends BeamEntity {
     }
 
     public PureLoveBeamEntity(LivingEntity owner, float power) {
-        this(JJKEntities.PURE_LOVE.get(), owner.level());
-
-        this.setOwner(owner);
-        this.setPower(power);
+        super(JJKEntities.PURE_LOVE.get(), owner, power);
     }
 
     @Override

@@ -38,10 +38,7 @@ public class WaterTorrentEntity extends BeamEntity {
     }
 
     public WaterTorrentEntity(LivingEntity owner, float power) {
-        this(JJKEntities.WATER_TORRENT.get(), owner.level());
-
-        this.setOwner(owner);
-        this.setPower(power);
+        super(JJKEntities.WATER_TORRENT.get(), owner, power);
     }
 
     @Override

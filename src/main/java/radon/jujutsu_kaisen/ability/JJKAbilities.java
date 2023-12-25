@@ -60,6 +60,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -118,6 +119,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSED_BUD = ABILITIES.register("cursed_bud", CursedBud::new);
     public static RegistryObject<Ability> FOREST_WAVE = ABILITIES.register("forest_wave", ForestWave::new);
     public static RegistryObject<Ability> FOREST_ROOTS = ABILITIES.register("forest_roots", ForestRoots::new);
+    public static RegistryObject<Ability> FOREST_DASH = ABILITIES.register("forest_dash", ForestDash::new);
     public static RegistryObject<Ability> DISASTER_PLANT = ABILITIES.register("disaster_plant", DisasterPlant::new);
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
 
