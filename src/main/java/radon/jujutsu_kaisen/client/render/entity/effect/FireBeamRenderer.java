@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +22,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.entity.effect.WaterTorrentEntity;
+import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 
 public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/fire_beam.png");
@@ -131,5 +133,10 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
+    }
+
+    @Override
+    protected int getBlockLightLevel(@NotNull FireBeamEntity pEntity, @NotNull BlockPos pPos) {
+        return 15;
     }
 }
