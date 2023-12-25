@@ -449,8 +449,13 @@ public class ClientVisualHandler {
             }
             nbt.put("techniques", techniquesTag);
 
+            if (this.technique != null) {
+                nbt.putInt("technique", this.technique.ordinal());
+            }
             nbt.putInt("type", this.type.ordinal());
             nbt.putFloat("experience", this.experience);
+            nbt.putFloat("energy", this.energy);
+            nbt.putFloat("max_energy", this.maxEnergy);
             nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
 
             return nbt;
