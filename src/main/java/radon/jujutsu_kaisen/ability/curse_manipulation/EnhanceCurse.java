@@ -28,10 +28,9 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     }
 
     private @Nullable CursedSpirit getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-            if (!(target instanceof CursedSpirit curse) || curse.getOwner() != owner) return null;
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
+            if (curse.getOwner() != owner) return null;
+
             return curse;
         }
         return null;
