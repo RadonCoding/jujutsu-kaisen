@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,5 +47,24 @@ public class ForestDashEntity extends JujutsuProjectile {
        if (this.getTime() >= DURATION) {
            this.discard();
        }
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        int i = pPacket.getId();
+        double d0 = pPacket.getX();
+        double d1 = pPacket.getY();
+        double d2 = pPacket.getZ();
+        this.syncPacketPositionCodec(d0, d1, d2);
+        this.moveTo(d0, d1, d2);
+        this.setXRot(pPacket.getXRot());
+        this.setYRot(pPacket.getYRot());
+        this.setId(i);
+        this.setUUID(pPacket.getUUID());
     }
 }

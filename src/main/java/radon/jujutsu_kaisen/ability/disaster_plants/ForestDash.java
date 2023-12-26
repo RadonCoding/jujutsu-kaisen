@@ -31,7 +31,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
         Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE));
 
-        for (double i = 0.0D; i <= SPEED * 2; i += ForestDashEntity.SIZE / 2) {
+        for (double i = 0.0D; i <= SPEED * 2; i += ForestDashEntity.SIZE) {
             Vec3 offset = start.add(look.scale(i));
 
             ForestDashEntity forest = new ForestDashEntity(owner);
