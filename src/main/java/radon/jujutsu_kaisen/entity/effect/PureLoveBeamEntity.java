@@ -37,7 +37,7 @@ public class PureLoveBeamEntity extends BeamEntity {
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 3 * 20;
     }
 

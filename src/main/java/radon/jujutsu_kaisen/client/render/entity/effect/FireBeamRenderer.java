@@ -68,12 +68,13 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
 
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 
-        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
+        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer,
+                1.0F - ((float) pEntity.getDuration() / pEntity.getTime()), pPackedLight);
 
         pPoseStack.popPose();
     }
 
-    private void drawCube(float length, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    private void drawCube(float length, int frame, PoseStack poseStack, VertexConsumer consumer, float alpha, int packedLight) {
         float minU = 0.0F;
         float minV = 16.0F / TEXTURE_HEIGHT * frame;
         float maxU = minU + 16.0F / TEXTURE_WIDTH;
@@ -83,44 +84,44 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
         Matrix3f matrix3f = pose.normal();
         float offset = this.clearerView ? -1.0F : 0.0F;
 
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, minV, alpha, packedLight);
 
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, alpha, packedLight);
 
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, maxU, minV, alpha, packedLight);
 
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, alpha, packedLight);
 
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, -BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, alpha, packedLight);
 
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, 1.0F, packedLight);
-        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, 1.0F, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, -BEAM_RADIUS, minU, minV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, length, BEAM_RADIUS, minU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, BEAM_RADIUS, maxU, maxV, alpha, packedLight);
+        this.drawVertex(matrix4f, matrix3f, consumer, BEAM_RADIUS, offset, -BEAM_RADIUS, maxU, minV, alpha, packedLight);
     }
 
-    private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
+    private void renderBeam(float length, float yaw, float pitch, int frame, PoseStack poseStack, VertexConsumer consumer, float alpha, int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(yaw - 90.0F));
         poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
 
-        this.drawCube(length, frame, poseStack, consumer, packedLight);
+        this.drawCube(length, frame, poseStack, consumer, alpha, packedLight);
 
         poseStack.popPose();
     }

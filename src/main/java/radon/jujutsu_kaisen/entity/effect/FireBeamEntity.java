@@ -58,7 +58,7 @@ public class FireBeamEntity extends BeamEntity {
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 4;
     }
 
@@ -69,6 +69,11 @@ public class FireBeamEntity extends BeamEntity {
 
     @Override
     protected boolean causesFire() {
+        return true;
+    }
+
+    @Override
+    protected boolean isStill() {
         return true;
     }
 }

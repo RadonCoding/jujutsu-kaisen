@@ -40,7 +40,7 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
 
     @Override
     public void render(WaterTorrentEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        Entity owner = pEntity.getOwner();
+        /*Entity owner = pEntity.getOwner();
         this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
@@ -68,7 +68,7 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
 
         this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, pPackedLight);
 
-        pPoseStack.popPose();
+        pPoseStack.popPose();*/
     }
 
     private void drawCube(float length, int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
