@@ -194,7 +194,10 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                         owner.doHurtTarget(entity);
                     }
                 }
-                owner.moveTo(frame.x, frame.y, frame.z, yaw, 0.0F);
+
+                owner.teleportTo(frame.x, frame.y, frame.z);
+                owner.setYRot(yaw);
+
                 cap.removeFrame(entry);
                 previous.set(frame);
             }, delay++);

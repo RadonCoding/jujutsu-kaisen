@@ -105,8 +105,6 @@ public class Punch extends Ability implements Ability.IChannelened {
 
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
 
-        System.out.println(charge);
-
         Vec3 look = owner.getLookAngle();
 
         Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
