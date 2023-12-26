@@ -75,6 +75,14 @@ public abstract class BeamEntity extends JujutsuProjectile {
         return false;
     }
 
+    protected boolean isStill() {
+        return false;
+    }
+
+    protected Vec3 calculateSpawnPos(LivingEntity owner) {
+        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ());
+    }
+
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
@@ -97,16 +105,20 @@ public abstract class BeamEntity extends JujutsuProjectile {
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (!this.level().isClientSide) {
-            this.update();
+        if (!this.isStill()) {
+            if (!this.level().isClientSide) {
+                this.update();
+            }
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() % 5 == 0) {
-                owner.swing(InteractionHand.MAIN_HAND);
+            if (!this.isStill()) {
+                if (this.getTime() % 5 == 0) {
+                    owner.swing(InteractionHand.MAIN_HAND);
+                }
+                this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
+                this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
             }
-            this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
-            this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
 
             if (!this.on && this.animation == 0) {
                 this.discard();
@@ -125,7 +137,9 @@ public abstract class BeamEntity extends JujutsuProjectile {
             }
 
             if (this.getTime() >= this.getCharge()) {
-                this.calculateEndPos();
+                if (!this.isStill()) {
+                    this.calculateEndPos();
+                }
 
                 List<Entity> entities = this.checkCollisions(new Vec3(this.getX(), this.getY(), this.getZ()),
                         new Vec3(this.endPosX, this.endPosY, this.endPosZ));
@@ -254,10 +268,11 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
     private void update() {
         if (this.getOwner() instanceof LivingEntity owner) {
+            this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
+            this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
             this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
-            Vec3 look = owner.getLookAngle();
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+            Vec3 spawn = this.calculateSpawnPos(owner);
             this.setPos(spawn.x, spawn.y, spawn.z);
         }
     }

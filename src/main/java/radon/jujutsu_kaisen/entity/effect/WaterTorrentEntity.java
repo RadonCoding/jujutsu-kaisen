@@ -62,7 +62,7 @@ public class WaterTorrentEntity extends BeamEntity {
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 4;
     }
 

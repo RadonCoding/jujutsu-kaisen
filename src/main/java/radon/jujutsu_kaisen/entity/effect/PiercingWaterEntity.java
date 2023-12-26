@@ -62,12 +62,17 @@ public class PiercingWaterEntity extends BeamEntity {
     }
 
     @Override
-    protected int getDuration() {
+    public int getDuration() {
         return 4;
     }
 
     @Override
     public int getCharge() {
         return 0;
+    }
+
+    @Override
+    protected Vec3 calculateSpawnPos(LivingEntity owner) {
+        return new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() * 0.75F) - (this.getBbHeight() / 2.0F), owner.getZ());
     }
 }
