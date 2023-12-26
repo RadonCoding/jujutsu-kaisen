@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -162,8 +163,14 @@ public abstract class RadialScreen extends Screen {
             switch (item.type) {
                 case ABILITY -> {
                     Ability ability = item.ability;
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                    ClientAbilityHandler.trigger(ability);
+
+                    if (cap.hasToggled(ability) || cap.isChanneling(ability)) {
+                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                        AbilityHandler.untrigger(this.minecraft.player, ability);
+                    } else {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                        ClientAbilityHandler.trigger(ability);
+                    }
                 }
                 case CURSE -> {
                     EntityType<?> type = item.curse.getKey();
