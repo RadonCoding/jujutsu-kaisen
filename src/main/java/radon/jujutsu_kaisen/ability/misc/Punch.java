@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Punch extends Ability implements Ability.IChannelened {
-    private static final float DAMAGE = 2.0F;
+    private static final float DAMAGE = 5.0F;
     private static final double RANGE = 3.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
@@ -104,6 +104,8 @@ public class Punch extends Ability implements Ability.IChannelened {
         owner.swing(InteractionHand.MAIN_HAND, true);
 
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
+
+        System.out.println(charge);
 
         Vec3 look = owner.getLookAngle();
 

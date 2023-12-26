@@ -113,12 +113,8 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && !this.isDying && (owner == null || owner.isRemoved() || !owner.isAlive())) {
-            if (owner == null || owner.isRemoved()) {
-                this.isDying = true;
-                this.start = this.getTime();
-            } else if (!owner.isAlive()) {
-                this.discard();
-            }
+            this.isDying = true;
+            this.start = this.getTime();
         } else if (owner != null) {
             if (this.pos != null) {
                 if (!this.level().isClientSide && this.getIndex() == 0 && this.getTime() == 0) {

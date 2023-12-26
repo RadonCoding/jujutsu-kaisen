@@ -46,7 +46,7 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
         pPoseStack.pushPose();
-        pPoseStack.translate(-0.5D, -0.5D, -0.5D);
+        pPoseStack.translate(-0.5D, 0.0D, -0.5D);
         BakedModel model = this.dispatcher.getBlockModel(state);
 
         BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
