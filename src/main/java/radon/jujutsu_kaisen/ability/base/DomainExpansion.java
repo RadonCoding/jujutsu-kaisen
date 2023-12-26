@@ -136,11 +136,6 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     protected abstract DomainExpansionEntity createBarrier(LivingEntity owner);
 
     @Override
-    public final int getCooldown() {
-        return 60 * 20;
-    }
-
-    @Override
     public boolean shouldLog(LivingEntity owner) {
         return false;
     }

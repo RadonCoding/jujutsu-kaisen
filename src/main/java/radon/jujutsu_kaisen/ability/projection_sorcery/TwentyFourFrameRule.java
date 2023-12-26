@@ -40,8 +40,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
-    private static final float DAMAGE = 15.0F;
-
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -90,38 +88,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
 
         if (target instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
-        }
-    }
-
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class TwentyFourFrameRuleForgeEvents {
-        @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            for (ProjectionFrameEntity frame : victim.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(victim.position(),
-                    8.0D, 8.0D, 8.0D))) {
-                if (frame.getVictim() != victim) continue;
-
-                Vec3 center = new Vec3(frame.getX(), frame.getY(), frame.getZ());
-                ((ServerLevel) frame.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-
-                frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-                frame.level().playSound(null, frame.getX(), frame.getY(), frame.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-                frame.discard();
-
-                LivingEntity owner = frame.getOwner();
-
-                if (owner != null) {
-                    victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * frame.getPower());
-                }
-                return;
-            }
         }
     }
 }

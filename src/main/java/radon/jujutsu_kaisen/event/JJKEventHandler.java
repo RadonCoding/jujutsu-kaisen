@@ -188,7 +188,7 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
