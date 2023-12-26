@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -8,6 +9,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
@@ -25,6 +31,7 @@ public class ProjectionFrameEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
 
     private static final int DURATION = 3 * 20;
+    private static final float DAMAGE = 15.0F;
 
     @Nullable
     private UUID victimUUID;
@@ -56,6 +63,31 @@ public class ProjectionFrameEntity extends Entity {
         this.pos = target.position();
 
         this.moveTo(target.getX(), target.getY(), target.getZ(), target.getYRot(), target.getXRot());
+    }
+
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
+
+    @Override
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        if (!(pSource.getEntity() instanceof LivingEntity attacker)) return false;
+
+        Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
+        level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+        this.discard();
+
+        LivingEntity victim = this.getVictim();
+
+        if (victim != null) {
+            victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * this.getPower());
+        }
+        return false;
     }
 
     @Override
