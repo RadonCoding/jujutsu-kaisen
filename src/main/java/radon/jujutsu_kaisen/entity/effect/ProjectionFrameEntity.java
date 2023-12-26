@@ -66,31 +66,6 @@ public class ProjectionFrameEntity extends Entity {
     }
 
     @Override
-    public boolean isPickable() {
-        return true;
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if (!(this.level() instanceof ServerLevel level)) return false;
-        if (!(pSource.getEntity() instanceof LivingEntity attacker)) return false;
-
-        Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-        level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-
-        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GLASS_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
-        this.discard();
-
-        LivingEntity victim = this.getVictim();
-
-        if (victim != null) {
-            victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * this.getPower());
-        }
-        return false;
-    }
-
-    @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_TIME, 0);
     }
