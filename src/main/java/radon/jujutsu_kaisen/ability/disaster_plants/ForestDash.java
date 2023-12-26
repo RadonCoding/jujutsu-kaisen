@@ -29,9 +29,9 @@ public class ForestDash extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         Vec3 look = owner.getLookAngle();
 
-        Vec3 start = owner.position().subtract(0.0D, ForestDashEntity.SIZE, 0.0D);
+        Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE));
 
-        for (double i = 0.0D; i <= SPEED; i += ForestDashEntity.SIZE / 2) {
+        for (double i = 0.0D; i <= SPEED * 2; i += ForestDashEntity.SIZE / 2) {
             Vec3 offset = start.add(look.scale(i));
 
             ForestDashEntity forest = new ForestDashEntity(owner);
@@ -44,11 +44,6 @@ public class ForestDash extends Ability implements Ability.IChannelened {
     @Override
     public float getCost(LivingEntity owner) {
         return 1.0F;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 5 * 20;
     }
 
     @Override
