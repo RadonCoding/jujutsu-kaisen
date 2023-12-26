@@ -25,6 +25,7 @@ public class AirFrameEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(AirFrameEntity.class, EntityDataSerializers.INT);
 
     private static final int DURATION = 20;
+    private static final float EXPLOSIVE_POWER = 2.0F;
 
     @Nullable
     private UUID ownerUUID;
@@ -110,7 +111,7 @@ public class AirFrameEntity extends Entity {
 
             if (this.getTime() >= DURATION) {
                 if (owner != null) {
-                    this.level().explode(owner, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), this.getPower(), Level.ExplosionInteraction.NONE);
+                    this.level().explode(owner, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), EXPLOSIVE_POWER * this.getPower(), Level.ExplosionInteraction.NONE);
                 }
                 this.discard();
             }
