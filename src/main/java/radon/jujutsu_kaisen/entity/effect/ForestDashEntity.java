@@ -48,23 +48,4 @@ public class ForestDashEntity extends JujutsuProjectile {
            this.discard();
        }
     }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
-    }
-
-    @Override
-    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
-        int i = pPacket.getId();
-        double d0 = pPacket.getX();
-        double d1 = pPacket.getY();
-        double d2 = pPacket.getZ();
-        this.syncPacketPositionCodec(d0, d1, d2);
-        this.moveTo(d0, d1, d2);
-        this.setXRot(pPacket.getXRot());
-        this.setYRot(pPacket.getYRot());
-        this.setId(i);
-        this.setUUID(pPacket.getUUID());
-    }
 }
