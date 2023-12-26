@@ -24,7 +24,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-
 public class AltarMenu extends ItemCombinerMenu {
     private static final List<Integer> BLACKLIST = List.of(2, 5, 7, 8);
 

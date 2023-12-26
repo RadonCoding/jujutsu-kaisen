@@ -233,7 +233,7 @@ public class JJKEventHandler {
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
 
@@ -285,62 +285,6 @@ public class JJKEventHandler {
                 if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
                     return;
-                }
-            }
-
-            if (HelperMethods.isMelee(source)) {
-                if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
-                        victim.invulnerableTime = 0;
-                    }
-                } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
-                    Vec3 pos = attacker.getEyePosition().add(attacker.getLookAngle());
-                    attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
-                } else if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        List<Ability> remove = new ArrayList<>();
-
-                        for (Ability ability : cap.getToggled()) {
-                            if (!ability.isTechnique()) continue;
-
-                            remove.add(ability);
-                        }
-                        remove.forEach(cap::toggle);
-
-                        if (victim instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                        }
-                    });
-                } else if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
-                    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                            if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(cost);
-                        }
-
-                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
-                            victim.invulnerableTime = 0;
-
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
-
-                            attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
-                                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                            for (int i = 0; i < 32; i++) {
-                                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(attacker), 0.5F, 1),
-                                        victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
-                            }
-                        }
-
-                        if (attacker instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-                        }
-                    });
                 }
             }
 

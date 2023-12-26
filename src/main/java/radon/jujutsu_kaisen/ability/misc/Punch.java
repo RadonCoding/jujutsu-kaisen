@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
@@ -25,7 +26,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Punch extends Ability implements Ability.IChannelened {
     private static final float DAMAGE = 5.0F;
-    private static final double RANGE = 3.0D;
+    private static final double RANGE = 16.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -101,37 +102,50 @@ public class Punch extends Ability implements Ability.IChannelened {
 
         if (target == null) return;
 
-        owner.swing(InteractionHand.MAIN_HAND, true);
-
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
 
         Vec3 look = owner.getLookAngle();
 
-        Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-        ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-        target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-
-        if (owner instanceof Player player) {
-            player.attack(target);
-        } else {
-            owner.doHurtTarget(target);
-        }
-        target.invulnerableTime = 0;
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            if (target.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
-                target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
-                        .multiply(1.0D, 0.25D, 1.0D));
-                target.hurtMarked = true;
+        double range = cap.getRealPower() * charge;
+
+        if (charge >= 0.5F) {
+            if (owner.distanceTo(target) < range && owner.distanceTo(target) > 1.0D) {
+                Vec3 direction = target.position().subtract(owner.position());
+                owner.teleportRelative(direction.x, direction.y, direction.z);
             }
-        } else {
-            if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
-                target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
-                        .multiply(1.0D, 0.25D, 1.0D));
-                target.hurtMarked = true;
-            }
+        }
+
+        if (owner.distanceTo(target) <= 1.0D) {
+            cap.delayTickEvent(() -> {
+                Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+
+                owner.swing(InteractionHand.MAIN_HAND, true);
+
+                if (owner instanceof Player player) {
+                    player.attack(target);
+                } else {
+                    owner.doHurtTarget(target);
+                }
+                target.invulnerableTime = 0;
+
+                if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                    if (target.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
+                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                                .multiply(1.0D, 0.25D, 1.0D));
+                        target.hurtMarked = true;
+                    }
+                } else {
+                    if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
+                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                                .multiply(1.0D, 0.25D, 1.0D));
+                        target.hurtMarked = true;
+                    }
+                }
+            }, 1);
         }
     }
 }

@@ -198,11 +198,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (HelperMethods.isMelee(source)) {
-                        float increased = event.getAmount() * (1.0F + attackerCap.getExperience() * 0.0001F);
+                        float increase = attackerCap.getExperience() * 0.001F;
 
                         switch (attackerCap.getNature()) {
-                            case ROUGH -> increased *= 1.5F;
-                            case LIGHTNING -> increased *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
+                            case ROUGH -> increase *= 1.5F;
+                            case LIGHTNING -> increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
                             case DIVERGENT -> {
                                 Vec3 look = attacker.getLookAngle();
 
@@ -221,7 +221,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                 }, 5);
                             }
                         };
-                        float increase = increased - event.getAmount();
 
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
                             float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
@@ -232,7 +231,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
                             }
                         }
-                        event.setAmount(increased);
+                        event.setAmount(event.getAmount() + increase);
                     }
                 }
             }

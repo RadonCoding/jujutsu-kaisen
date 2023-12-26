@@ -268,7 +268,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             }
         }
 
-        @SubscribeEvent(priority = EventPriority.LOWEST)
+        @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 

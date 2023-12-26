@@ -55,6 +55,8 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue curseFleshRarity;
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue deathPenalty;
+    public final ForgeConfigSpec.IntValue blackFlashChance;
+    public final ForgeConfigSpec.IntValue parryChance;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -123,6 +125,10 @@ public class ServerConfig {
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
+        this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
+                .defineInRange("blackFlashChance", 100, 1, 1000);
+        this.parryChance = builder.comment("The chance of parrying an attack (smaller number equals bigger chance)")
+                .defineInRange("parryChance", 3, 1, 1000);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
