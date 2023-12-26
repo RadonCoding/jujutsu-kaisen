@@ -111,13 +111,13 @@ public class Punch extends Ability implements Ability.IChannelened {
         double range = cap.getRealPower() * charge;
 
         if (charge >= 0.5F) {
-            if (owner.distanceTo(target) < range && owner.distanceTo(target) > 1.0D) {
+            if (owner.distanceTo(target) < range && owner.distanceTo(target) > 3.0D) {
                 Vec3 direction = target.position().subtract(owner.position());
                 owner.teleportRelative(direction.x, direction.y, direction.z);
             }
         }
 
-        if (owner.distanceTo(target) <= 1.0D) {
+        if (owner.distanceTo(target) <= 3.0D) {
             cap.delayTickEvent(() -> {
                 Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
