@@ -116,8 +116,6 @@ public abstract class BeamEntity extends JujutsuProjectile {
                 if (this.getTime() % 5 == 0) {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }
-                this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
-                this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
             }
 
             if (!this.on && this.animation == 0) {
