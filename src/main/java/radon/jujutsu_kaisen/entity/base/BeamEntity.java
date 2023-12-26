@@ -106,9 +106,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
         this.zo = this.getZ();
 
         if (!this.isStill()) {
-            if (!this.level().isClientSide) {
-                this.update();
-            }
+            this.update();
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
@@ -181,7 +179,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
                     }
                 }
             }
-            if (this.getTime() - this.getCharge() - this.getDuration() / 2 > this.getDuration()) {
+            if (this.getTime() - this.getCharge() - this.getDuration() / 2 >= this.getDuration()) {
                 this.on = false;
             }
         }
