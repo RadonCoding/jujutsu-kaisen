@@ -121,17 +121,20 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.ACTIVATE_RCT_OR_HEAL.isDown()) {
-                    mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                        channeled = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : HelperMethods.getRCTTier(mc.player);
+                    Ability rct = HelperMethods.getRCTTier(mc.player);
+
+                    if (JJKAbilities.getType(mc.player) == JujutsuType.CURSE) {
+                        channeled = JJKAbilities.HEAL.get();
                         current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
-                    });
+                    } else if (rct != null) {
+                        channeled = rct;
+                        current = JJKKeys.ACTIVATE_RCT_OR_HEAL;
+                    }
                 }
 
                 if (JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD.isDown()) {
-                    mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         channeled = JJKAbilities.CURSED_ENERGY_SHIELD.get();
                         current = JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD;
-                    });
                 }
 
                 if (JJKKeys.DASH.isDown()) {

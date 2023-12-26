@@ -7,6 +7,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class HealingGoal extends Goal {
     private final PathfinderMob mob;
@@ -19,7 +20,18 @@ public class HealingGoal extends Goal {
     @Override
     public void tick() {
         this.mob.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            Ability ability = cap.getType() == JujutsuType.CURSE ? JJKAbilities.HEAL.get() : JJKAbilities.RCT1.get();
+            Ability ability = null;
+
+            Ability rct = HelperMethods.getRCTTier(this.mob);
+
+            if (cap.getType() == JujutsuType.CURSE) {
+                ability = JJKAbilities.HEAL.get();
+            } else if (rct != null) {
+                ability = rct;
+            }
+
+            if (ability == null) return;
+
             boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());
 
             if (success) {
@@ -27,7 +39,7 @@ public class HealingGoal extends Goal {
                     AbilityHandler.trigger(this.mob, ability);
                 }
             } else if (cap.isChanneling(ability)) {
-                AbilityHandler.trigger(this.mob, ability);
+                AbilityHandler.untrigger(this.mob, ability);
             }
         });
     }
