@@ -52,7 +52,7 @@ public class ClientAbilityHandler {
             if (mc.player == null) return;
 
             if (current != null) {
-                boolean possiblyChanneling = channeled != null && channeled.getActivationType(mc.player) == Ability.ActivationType.CHANNELED;
+                boolean possiblyChanneling = channeled != null;
 
                 if (possiblyChanneling) {
                     boolean isHeld = current.isDown();
@@ -139,16 +139,20 @@ public class ClientAbilityHandler {
                     PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
                 }
             } else if (event.getAction() == InputConstants.RELEASE) {
-                if (current != null && event.getKey() == current.getKey().getValue()) {
-                    if (JJKAbilities.isChanneling(mc.player, channeled)) {
-                        ClientAbilityHandler.trigger(channeled);
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
-                    }
-                    channeled = null;
-                    current = null;
-                    isChanneling = false;
-                }
+                if (current != null) {
+                    boolean possiblyChanneling = channeled != null;
 
+                    if (possiblyChanneling) {
+                        if (event.getKey() == current.getKey().getValue()) {
+                            AbilityHandler.untrigger(mc.player, channeled);
+                            PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+
+                            channeled = null;
+                            current = null;
+                            isChanneling = false;
+                        }
+                    }
+                }
                 if ((event.getKey() == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue() && mc.screen instanceof AbilityScreen) ||
                         (event.getKey() == JJKKeys.SHOW_DOMAIN_MENU.getKey().getValue() && mc.screen instanceof DomainScreen) ||
                         (event.getKey() == JJKKeys.ACTIVATE_ABILITY.getKey().getValue() && mc.screen instanceof ShadowInventoryScreen)) {
