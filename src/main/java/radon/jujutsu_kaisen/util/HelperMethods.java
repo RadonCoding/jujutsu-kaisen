@@ -221,6 +221,11 @@ public class HelperMethods {
         }
     }
 
+    public static <T extends ParticleOptions> void sendParticle(ServerPlayer player, T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+        ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, pLongDistance, pPosX, pPosY, pPosZ, (float) pXSpeed, (float) pYSpeed, (float) pZSpeed, 1.0F, 0);
+        sendParticles(player.serverLevel(), player, pLongDistance, pPosX, pPosY, pPosZ, packet);
+    }
+
     public static <T extends ParticleOptions> void sendParticles(ServerLevel pLevel, T pType, boolean pLongDistance, double pPosX, double pPosY, double pPosZ, double pXSpeed, double pYSpeed, double pZSpeed) {
         ClientboundLevelParticlesPacket packet = new ClientboundLevelParticlesPacket(pType, pLongDistance, pPosX, pPosY, pPosZ, (float) pXSpeed, (float) pYSpeed, (float) pZSpeed, 1.0F, 0);
 

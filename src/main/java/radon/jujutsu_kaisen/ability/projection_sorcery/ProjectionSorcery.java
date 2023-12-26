@@ -77,11 +77,15 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = cap.getFrames();
 
         if (frames.size() == 24) return;
+
+        System.out.println(frames.size());
 
         int charge = this.getCharge(owner) + 1;
 
@@ -93,12 +97,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         Vec3 next = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
                 block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
 
-        int index = this.getCharge(owner) - 1;
+        int index = this.getCharge(owner);
 
         float nextYaw;
 
-        if (index >= 0 && index < frames.size()) {
-            AbstractMap.SimpleEntry<Vec3, Float> entry = frames.get(index);
+        if (index > 0) {
+            AbstractMap.SimpleEntry<Vec3, Float> entry = frames.get(index - 1);
 
             Vec3 current = entry.getKey();
 
@@ -109,24 +113,26 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 float middleYaw = getYaw(middle, next);
                 cap.addFrame(middle, middleYaw);
 
-                owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), true, middle.x, middle.y, middle.z,
-                        0.0D, 0.0D, 0.0D);
+                if (owner instanceof ServerPlayer player) {
+                    HelperMethods.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
+                            0.0D, 0.0D, 0.0D);
+                }
             }
         } else {
             nextYaw = owner.getYRot();
         }
         cap.addFrame(next, nextYaw);
 
-        owner.level().addParticle(new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), true, next.x, next.y, next.z,
-                0.0D, 0.0D, 0.0D);
+        if (owner instanceof ServerPlayer player) {
+            HelperMethods.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), false, next.x, next.y, next.z,
+                    0.0D, 0.0D, 0.0D);
+        }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
         return 1.0F;
     }
-
-
 
     @Override
     public MenuType getMenuType() {
@@ -145,10 +151,15 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public void onRelease(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getFrames().size() < 24) {
-            cap.resetFrames();
+        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(cap.getFrames());
+
+        cap.resetFrames();
+
+        if (frames.size() < 24) {
             return;
         }
 
@@ -157,7 +168,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         AtomicBoolean cancelled = new AtomicBoolean();
         AtomicReference<Vec3> previous = new AtomicReference<>();
 
-        for (AbstractMap.SimpleEntry<Vec3, Float> entry : cap.getFrames()) {
+        for (AbstractMap.SimpleEntry<Vec3, Float> entry : frames) {
             Vec3 frame = entry.getKey();
             float yaw = entry.getValue();
 
@@ -176,7 +187,6 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                     if (owner instanceof ServerPlayer player) {
                         PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
                     }
-                    cap.resetFrames();
                     return;
                 }
                 if (owner.level() instanceof ServerLevel level) {
@@ -198,7 +208,6 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 owner.teleportTo(frame.x, frame.y, frame.z);
                 owner.setYRot(yaw);
 
-                cap.removeFrame(entry);
                 previous.set(frame);
             }, delay++);
         }
