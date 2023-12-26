@@ -42,11 +42,12 @@ public class ForestWaveRenderer extends EntityRenderer<ForestWaveEntity> {
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
         pPoseStack.pushPose();
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
         pPoseStack.pushPose();
-        pPoseStack.translate(-0.5D, 0.0D, -0.5D);
+        pPoseStack.translate(-0.5D, -0.5D, -0.5D);
         BakedModel model = this.dispatcher.getBlockModel(state);
 
         BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
