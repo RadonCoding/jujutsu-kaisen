@@ -50,12 +50,13 @@ public class ForestDashRenderer extends EntityRenderer<ForestDashEntity> {
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
         pPoseStack.pushPose();
-        BlockPos blockpos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
-        pPoseStack.translate(-0.5D, 0.0D, -0.5D);
-        var model = this.dispatcher.getBlockModel(state);
+        pPoseStack.translate(-0.5D, -0.5D, -0.5D);
+        BakedModel model = this.dispatcher.getBlockModel(state);
+
+        BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
 
         for (RenderType type : model.getRenderTypes(state, RandomSource.create(state.getSeed(pEntity.blockPosition())), ModelData.EMPTY)) {
-            this.dispatcher.getModelRenderer().tesselateBlock(level, model, state, blockpos, pPoseStack, pBuffer.getBuffer(type), false, RandomSource.create(),
+            this.dispatcher.getModelRenderer().tesselateBlock(level, model, state, pos, pPoseStack, pBuffer.getBuffer(type), false, RandomSource.create(),
                     state.getSeed(pEntity.blockPosition()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, type);
         }
         pPoseStack.popPose();
