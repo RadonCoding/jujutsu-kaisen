@@ -8,8 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -37,7 +35,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class SorcererData implements ISorcererData {
@@ -370,8 +367,10 @@ public class SorcererData implements ISorcererData {
     public void attack(DamageSource source, LivingEntity target) {
         for (Ability ability : this.toggled) {
             if (!(ability instanceof Ability.IAttack attack)) continue;
-            if (ability.getStatus(this.owner, true, true, true, true, false) != Ability.Status.SUCCESS) continue;
-            attack.attack(source, this.owner, target);
+            if (ability.getStatus(this.owner) != Ability.Status.SUCCESS) continue;
+            if (!attack.attack(source, this.owner, target)) continue;
+
+            ability.charge(this.owner);
         }
 
         if (this.owner instanceof ServerPlayer player) {
@@ -1066,7 +1065,13 @@ public class SorcererData implements ISorcererData {
     @Override
     public void channel(@Nullable Ability ability) {
         if (this.channeled != null) {
-            ((Ability.IChannelened) this.channeled).onRelease(this.owner);
+            ((Ability.IChannelened) this.channeled).onStop(this.owner);
+
+            if (this.channeled instanceof Ability.ICharged charged) {
+                if (charged.onRelease(this.owner)) {
+                    this.channeled.charge(this.owner);
+                }
+            }
 
             if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                 this.owner.sendSystemMessage(this.channeled.getDisableMessage());
@@ -1079,8 +1084,6 @@ public class SorcererData implements ISorcererData {
             this.channeled = ability;
 
             if (this.channeled != null) {
-                ((Ability.IChannelened) this.channeled).onStart(this.owner);
-
                 if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                     this.owner.sendSystemMessage(this.channeled.getEnableMessage());
                 }
@@ -1645,20 +1648,6 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("cooldowns", cooldownsTag);
 
-        ListTag durationsTag = new ListTag();
-
-        for (Map.Entry<Ability, Integer> entry : this.durations.entrySet()) {
-            ResourceLocation key = JJKAbilities.getKey(entry.getKey());
-
-            if (key == null) continue;
-
-            CompoundTag data = new CompoundTag();
-            data.putString("identifier", key.toString());
-            data.putInt("duration", entry.getValue());
-            durationsTag.add(data);
-        }
-        nbt.put("durations", durationsTag);
-
         ListTag summonsTag = new ListTag();
 
         for (UUID identifier : this.summons) {
@@ -1851,14 +1840,6 @@ public class SorcererData implements ISorcererData {
             CompoundTag data = (CompoundTag) key;
             this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
                     data.getInt("cooldown"));
-        }
-
-        this.durations.clear();
-
-        for (Tag key : nbt.getList("duration", Tag.TAG_COMPOUND)) {
-            CompoundTag data = (CompoundTag) key;
-            this.durations.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
-                    data.getInt("duration"));
         }
 
         this.summons.clear();

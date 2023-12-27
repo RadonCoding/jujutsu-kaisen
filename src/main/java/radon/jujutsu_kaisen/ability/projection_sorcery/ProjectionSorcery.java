@@ -85,8 +85,6 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
         if (frames.size() == 24) return;
 
-        System.out.println(frames.size());
-
         int charge = this.getCharge(owner) + 1;
 
         Vec3 start = owner.getEyePosition();
@@ -139,18 +137,13 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         return MenuType.SCROLL;
     }
 
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
     private static boolean isGrounded(Level level, BlockPos pos) {
         BlockHitResult hit = level.clip(new ClipContext(pos.getCenter(), pos.below(24).getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
         return hit.getType() == HitResult.Type.BLOCK;
     }
 
     @Override
-    public void onRelease(LivingEntity owner) {
+    public void onStop(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

@@ -13,7 +13,6 @@ import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -181,7 +180,27 @@ public abstract class Ability {
         return true;
     }
 
-    public Status getStatus(LivingEntity owner, boolean checkCost, boolean chargeCost, boolean checkCooldown, boolean addCooldown, boolean addDuration) {
+    private void addDuration(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
+            cap.addDuration(this);
+        }
+    }
+
+    public void charge(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
+            cap.useEnergy(this.getRealCost(owner));
+
+            if (this.getRealCooldown(owner) > 0) {
+                cap.addCooldown(this);
+            }
+        }
+    }
+
+    public Status getStatus(LivingEntity owner) {
         if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -200,22 +219,12 @@ public abstract class Ability {
                 return Status.DOMAIN_AMPLIFICATION;
             }
 
-            if (checkCooldown && !cap.isCooldownDone(this)) {
+            if (!cap.isCooldownDone(this) && !cap.isChanneling(this) && !cap.hasToggled(this)) {
                 return Status.COOLDOWN;
             }
 
-            if (checkCost && !this.checkCost(owner, chargeCost)) {
+            if (!this.checkCost(owner)) {
                 return Status.ENERGY;
-            }
-
-            if (addCooldown && this.getRealCooldown(owner) > 0) {
-                cap.addCooldown(this);
-            }
-        }
-
-        if (addDuration) {
-            if (this instanceof IDurationable durationable && durationable.getRealDuration(owner) > 0) {
-                cap.addDuration(this);
             }
         }
         return Status.SUCCESS;
@@ -226,30 +235,34 @@ public abstract class Ability {
 
         if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
-        return this.getStatus(owner, true, this.getActivationType(owner) == ActivationType.INSTANT,
-                true, true, this.getActivationType(owner) != ActivationType.INSTANT);
+        Status status = this.getStatus(owner);
+
+        if (status == Status.SUCCESS && this.getActivationType(owner) == ActivationType.INSTANT) {
+            this.charge(owner);
+        }
+        this.addDuration(owner);
+        return status;
     }
 
     public Status isStillUsable(LivingEntity owner) {
-        if (this instanceof IAttack) {
-            return this.getStatus(owner, false, false, false, false, false);
+        if (this instanceof IAttack || this instanceof ICharged) {
+            return this.getStatus(owner);
         }
-        return this.getStatus(owner, true, true, false, true, false);
+
+        Status status = this.getStatus(owner);
+
+        if (status == Status.SUCCESS) {
+            this.charge(owner);
+        }
+        return status;
     }
 
-    public boolean checkCost(LivingEntity owner, boolean chargeCost) {
+    public boolean checkCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             float cost = this.getRealCost(owner);
-
-            if (cap.getEnergy() < cost) {
-                return false;
-            }
-
-            if (chargeCost) {
-                cap.useEnergy(cost);
-            }
+            return cap.getEnergy() >= cost;
         }
         return true;
     }
@@ -325,13 +338,17 @@ public abstract class Ability {
     }
 
     public interface IChannelened {
-        void onStart(LivingEntity owner);
-
-        void onRelease(LivingEntity owner);
+        default void onStop(LivingEntity owner) {}
 
         default int getCharge(LivingEntity owner) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             return cap.getCharge();
+        }
+    }
+
+    public interface ICharged extends IChannelened {
+        default boolean onRelease(LivingEntity owner) {
+            return true;
         }
     }
 
@@ -342,6 +359,6 @@ public abstract class Ability {
     }
 
     public interface IAttack {
-        void attack(DamageSource source, LivingEntity owner, LivingEntity target);
+        boolean attack(DamageSource source, LivingEntity owner, LivingEntity target);
     }
 }

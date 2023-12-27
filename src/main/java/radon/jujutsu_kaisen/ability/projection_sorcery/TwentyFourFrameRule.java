@@ -84,12 +84,12 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
     }
 
     @Override
-    public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (!HelperMethods.isMelee(source)) return;
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return false;
 
         for (ProjectionFrameEntity frame : owner.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(target.position(),
                 8.0D, 8.0D, 8.0D))) {
-            if (frame.getVictim() == target) return;
+            if (frame.getVictim() == target) return false;
         }
 
         owner.level().addFreshEntity(new ProjectionFrameEntity(owner, target, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
@@ -97,6 +97,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
         if (target instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new ScreenFlashS2CPacket(), player);
         }
+        return true;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -128,7 +129,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
                 }
                 return;
             }
-
         }
     }
 }

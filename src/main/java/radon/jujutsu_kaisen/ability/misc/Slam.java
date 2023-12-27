@@ -91,11 +91,6 @@ public class Slam extends Ability implements Ability.IChannelened {
         return MenuType.SCROLL;
     }
 
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
     public static void onHitGround(LivingEntity owner, float distance) {
         if (!(owner.level() instanceof ServerLevel)) return;
 
@@ -110,7 +105,7 @@ public class Slam extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onRelease(LivingEntity owner) {
+    public void onStop(LivingEntity owner) {
         if (!owner.onGround()) return;
 
         owner.swing(InteractionHand.MAIN_HAND);

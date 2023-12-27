@@ -14,8 +14,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class ForestWave extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final int DELAY = 3;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return JJKAbilities.isChanneling(owner, this) ? target != null : HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
@@ -67,18 +65,8 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     }
 
     @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
-
-    @Override
     public int getDuration() {
-        return 20;
+        return 5;
     }
 
     @Override

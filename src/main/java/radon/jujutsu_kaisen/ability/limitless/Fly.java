@@ -54,14 +54,4 @@ public class Fly extends Ability implements Ability.IChannelened {
     public float getCost(LivingEntity owner) {
         return 1.0F;
     }
-
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
 }

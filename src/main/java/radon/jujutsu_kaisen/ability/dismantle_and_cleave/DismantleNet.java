@@ -35,28 +35,29 @@ public class DismantleNet extends Ability {
         int count = size / 4;
 
         Vec3 look = owner.getLookAngle();
+
         Vec3 center = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         float power = this.getPower(owner);
 
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
-                for (int k = 0; k < count; k++) {
-                    double xOffset = (i - (count - 1) / 2.0D) * (double) size / count;
-                    double yOffset = (j - (count - 1) / 2.0D) * (double) size / count;
-                    double zOffset = (k - (count - 1) / 2.0D) * (double) size / count;
+                double xOffset = (i - (count - 1) / 2.0D) * (double) size / count;
+                double yOffset = (j - (count - 1) / 2.0D) * (double) size / count;
 
-                    Vec3 position = center.add(xOffset, yOffset, zOffset);
+                Vec3 xAxis = owner.getUpVector(1.0F);
+                Vec3 yAxis = look.cross(xAxis).normalize();
 
-                    DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
-                    DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
+                Vec3 position = center.add(xAxis.scale(xOffset)).add(yAxis.scale(yOffset));
 
-                    horizontal.setDeltaMovement(horizontal.getLookAngle().scale(Dismantle.SPEED));
-                    vertical.setDeltaMovement(vertical.getLookAngle().scale(Dismantle.SPEED));
+                DismantleProjectile horizontal = new DismantleProjectile(owner, power, 0.0F, position, size);
+                DismantleProjectile vertical = new DismantleProjectile(owner, power, 90.0F, position, size);
 
-                    owner.level().addFreshEntity(horizontal);
-                    owner.level().addFreshEntity(vertical);
-                }
+                horizontal.setDeltaMovement(look.scale(Dismantle.SPEED));
+                vertical.setDeltaMovement(look.scale(Dismantle.SPEED));
+
+                owner.level().addFreshEntity(horizontal);
+                owner.level().addFreshEntity(vertical);
             }
         }
 

@@ -229,7 +229,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
                 this.start = target.position();
 
-                if (JJKAbilities.SCISSORS.get().getStatus(this, true, false, true, false, false) == Ability.Status.SUCCESS) {
+                if (JJKAbilities.SCISSORS.get().getStatus(this) == Ability.Status.SUCCESS) {
                     target.sendSystemMessage(Component.translatable(String.format("chat.%s.kuchisake_onna", JujutsuKaisen.MOD_ID), this.getName().getString()));
                     this.entityData.set(DATA_OPEN, true);
                 } else {

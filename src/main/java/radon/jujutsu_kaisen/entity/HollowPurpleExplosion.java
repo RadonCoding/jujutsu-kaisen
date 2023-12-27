@@ -48,13 +48,15 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
     @Override
     public void tick() {
+        super.tick();
+
         this.refreshDimensions();
 
         if (this.level().isClientSide) return;
 
         if (this.getTime() >= DURATION) {
             this.discard();
-        } else if (this.getTime() == 0) {
+        } else if (this.getTime() - 1 == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
             this.playSound(JJKSounds.HOLLOW_PURPLE_EXPLOSION.get(), 3.0F, 1.0F);
@@ -64,6 +66,5 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
             ExplosionHandler.spawn(this.level().dimension(), this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D), radius,
                     duration, this.getPower() * 0.5F, owner, JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.HOLLOW_PURPLE.get()), false);
         }
-        super.tick();
     }
 }

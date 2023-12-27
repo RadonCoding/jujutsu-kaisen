@@ -83,16 +83,6 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
-
-    @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }

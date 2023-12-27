@@ -18,10 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
@@ -43,10 +40,12 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public static final float DAMAGE = 10.0F;
     private static final int DURATION = 10;
-    private static final int LINE_LENGTH = 3;
+    private static final int LINE_LENGTH = 2;
+    private static final int MAX_LENGTH = 12;
 
     private boolean instant;
     private boolean destroy = true;
+    private int destroyed;
 
     public DismantleProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
@@ -100,6 +99,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         pCompound.putInt("length", this.getLength());
         pCompound.putBoolean("instant", this.instant);
         pCompound.putBoolean("destroy", this.destroy);
+        pCompound.putInt("destroyed", this.destroyed);
     }
 
     @Override
@@ -110,6 +110,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.entityData.set(DATA_LENGTH, pCompound.getInt("length"));
         this.instant = pCompound.getBoolean("instant");
         this.destroy = pCompound.getBoolean("destroy");
+        this.destroyed = pCompound.getInt("destroyed");
     }
 
     @Override
@@ -139,7 +140,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public int getLength() {
         int length = this.entityData.get(DATA_LENGTH);
-        return length > 0.0D ? length : Mth.floor(LINE_LENGTH * this.getPower());
+        return length > 0.0D ? length : Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower()));
     }
 
     public List<HitResult> getHitResults() {
@@ -179,13 +180,19 @@ public class DismantleProjectile extends JujutsuProjectile {
             BlockState state = this.level().getBlockState(pos);
 
             if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                boolean destroyed;
+
                 if (state.getFluidState().isEmpty()) {
-                    this.level().destroyBlock(pos, false);
+                    destroyed = this.level().destroyBlock(pos, false);
                 } else {
-                    this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    destroyed = this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 }
-                ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
-                        0, 1.0D, 0.0D, 0.0D, 1.0D);
+
+                if (destroyed) {
+                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
+                            0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    this.destroyed++;
+                }
             }
         });
         return hits;
@@ -203,7 +210,7 @@ public class DismantleProjectile extends JujutsuProjectile {
             }
         }
 
-        if (this.instant || this.getTime() >= DURATION) {
+        if (this.instant || this.destroyed >= this.getLength() || this.getTime() >= DURATION) {
             this.discard();
         }
     }

@@ -69,7 +69,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return Status.FAILURE;
 
-            if (ability.getStatus(owner, false, false, true, false, false) != Status.SUCCESS ) {
+            if (ability.getStatus(owner) != Status.SUCCESS ) {
                 return Status.FAILURE;
             }
         }
