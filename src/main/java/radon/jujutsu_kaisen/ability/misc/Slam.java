@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -65,6 +66,14 @@ public class Slam extends Ability implements Ability.ICharged {
         if (!(owner instanceof Player) || !owner.level().isClientSide) return;
         ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID),
                 Math.round(((float) Math.min(20, this.getCharge(owner)) / 20) * 100)), false);
+    }
+
+    @Override
+    public Status isStillUsable(LivingEntity owner) {
+        if (owner.hasEffect(JJKEffects.STUN.get())) {
+            return Status.FAILURE;
+        }
+        return super.isStillUsable(owner);
     }
 
     @Override

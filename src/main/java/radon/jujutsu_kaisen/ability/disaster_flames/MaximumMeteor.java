@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 
 public class MaximumMeteor extends Ability {
@@ -56,11 +57,9 @@ public class MaximumMeteor extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (!canSpawn(owner, this.getPower(owner))) {
+        if (owner.hasEffect(JJKEffects.STUN.get()) || !canSpawn(owner, this.getPower(owner))) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
     }
-
-
 }
