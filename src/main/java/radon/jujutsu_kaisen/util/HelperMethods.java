@@ -336,7 +336,7 @@ public class HelperMethods {
         }
 
         HitResult entityHit = ProjectileUtil.getEntityHitResult(level, entity, start, end, entity.getBoundingBox()
-                .expandTowards(end.subtract(start)).inflate(1.0D), filter);
+                .expandTowards(end.subtract(start)).inflate(2.0D), filter);
 
         if (entityHit != null) {
             return entityHit;
