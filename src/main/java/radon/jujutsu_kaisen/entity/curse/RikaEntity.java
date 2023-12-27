@@ -50,7 +50,7 @@ import java.util.List;
 public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer {
     private static final int DURATION = 5 * 60 * 20;
 
-    public static EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.BOOLEAN);
+    public static EntityDataAccessor<Integer> DATA_OPEN = SynchedEntityData.defineId(RikaEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     private static final RawAnimation OPEN = RawAnimation.begin().thenPlayAndHold("misc.open");
@@ -121,15 +121,19 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_OPEN, false);
+        this.entityData.define(DATA_OPEN, 0);
     }
 
-    public void setOpen(boolean open) {
-        this.entityData.set(DATA_OPEN, open);
+    public void setOpen(int duration) {
+        this.entityData.set(DATA_OPEN, duration);
+    }
+
+    public int getOpen() {
+        return this.entityData.get(DATA_OPEN);
     }
 
     public boolean isOpen() {
-        return this.entityData.get(DATA_OPEN);
+        return this.getOpen() > 0;
     }
 
     private PlayState openPredicate(AnimationState<RikaEntity> animationState) {
@@ -173,16 +177,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
 
             if (owner != null && this.isOpen()) {
-                boolean open = false;
-
-                for (PureLoveBeamEntity entity : this.level().getEntitiesOfClass(PureLoveBeamEntity.class, AABB.ofSize(this.position(), 8.0D, 8.0D, 8.0D))) {
-                    if (entity.getOwner() != this) continue;
-
-                    open = true;
-                    break;
-                }
-                this.setOpen(open);
-
                 Vec3 pos = owner.position()
                         .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                         .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
@@ -193,6 +187,12 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
             }
 
             if (!this.level().isClientSide) {
+                int remaining = this.getOpen();
+
+                if (remaining > 0) {
+                    this.setOpen(--remaining);
+                }
+
                 if (this.getTime() >= DURATION) {
                     this.discard();
                 }

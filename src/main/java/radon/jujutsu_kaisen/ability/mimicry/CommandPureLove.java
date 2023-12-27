@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 
 public class CommandPureLove extends Ability {
     @Override
@@ -38,7 +39,7 @@ public class CommandPureLove extends Ability {
 
         if (JJKAbilities.SHOOT_PURE_LOVE.get().getStatus(rika) != Status.SUCCESS) return;
 
-        rika.setOpen(true);
+        rika.setOpen(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
     }
 
     @Override

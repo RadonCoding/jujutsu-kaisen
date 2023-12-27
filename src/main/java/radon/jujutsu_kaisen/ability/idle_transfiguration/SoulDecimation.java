@@ -56,7 +56,7 @@ public class SoulDecimation extends Ability {
 
         if (target == null) return;
 
-        target.hurt(JJKDamageSources.soulAttack(target), target.getMaxHealth());
+        target.hurt(JJKDamageSources.soulAttack(owner), target.getMaxHealth());
     }
 
     @Override
