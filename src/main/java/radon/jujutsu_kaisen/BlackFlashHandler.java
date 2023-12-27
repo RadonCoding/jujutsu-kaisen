@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,51 +23,50 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class BlackFlashHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BlackFlashHandlerForgeEvents {
-        private static final float MAX_DAMAGE = 100.0F;
+        private static final float MAX_DAMAGE = 50.0F;
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
-            LivingEntity target = event.getEntity();
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            if (target.level().isClientSide) return;
+            LivingEntity victim = event.getEntity();
 
-            if (source.getEntity() instanceof LivingEntity owner &&
-                    !source.isIndirect() &&
-                    (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK))) {
-                if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            if (victim.level().isClientSide) return;
 
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!HelperMethods.isMelee(source)) return;
 
-                if (!cap.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !cap.hasToggled(JJKAbilities.BLUE_FISTS.get()))
-                    return;
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-                long lastBlackFlashTime = cap.getLastBlackFlashTime();
-                int seconds = (int) (owner.level().getGameTime() - lastBlackFlashTime) / 20;
+            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (lastBlackFlashTime == 0 || seconds > 1) {
-                    int rng = ConfigHolder.SERVER.blackFlashChance.get();
+            if (!cap.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) && !cap.hasToggled(JJKAbilities.BLUE_FISTS.get())) return;
 
-                    if (cap.isInZone()) rng /= 2;
-                    if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
-                } else {
-                    return;
-                }
-                cap.onBlackFlash();
+            long lastBlackFlashTime = cap.getLastBlackFlashTime();
+            int seconds = (int) (attacker.level().getGameTime() - lastBlackFlashTime) / 20;
 
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
+            if (lastBlackFlashTime == 0 || seconds > 1) {
+                int rng = ConfigHolder.SERVER.blackFlashChance.get();
 
-                event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));
-
-                owner.level().addFreshEntity(new BlackFlashEntity(owner, target));
-
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                        SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                        SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                if (cap.isInZone()) rng /= 2;
+                if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
+            } else {
+                return;
             }
+            cap.onBlackFlash();
+
+            if (attacker instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            }
+
+            event.setAmount(Math.min(MAX_DAMAGE, (float) Math.pow(event.getAmount(), 2.5D)));
+
+            attacker.level().addFreshEntity(new BlackFlashEntity(attacker, victim));
+
+            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+                    SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+            victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
         }
     }
 }
