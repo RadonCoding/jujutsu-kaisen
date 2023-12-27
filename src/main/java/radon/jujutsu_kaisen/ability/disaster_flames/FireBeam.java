@@ -31,7 +31,7 @@ public class FireBeam extends Ability {
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 10 * 20;
     }
 
     @Override
