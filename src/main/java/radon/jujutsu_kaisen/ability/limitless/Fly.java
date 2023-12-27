@@ -18,7 +18,7 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 1.0F;
+        return owner.fallDistance > 5.0F;
     }
 
     @Override
