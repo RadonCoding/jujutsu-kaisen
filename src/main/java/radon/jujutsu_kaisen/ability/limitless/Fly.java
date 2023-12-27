@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Fly extends Ability implements Ability.IChannelened {
     private static final float SPEED = 0.05F;
@@ -18,7 +19,10 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 5.0F;
+        if (JJKAbilities.isChanneling(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return owner.fallDistance > 0.0F;
     }
 
     @Override
