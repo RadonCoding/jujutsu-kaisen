@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Barrage extends Ability {
     private static final double RANGE = 5.0D;
-    public static int DURATION = 4;
+    public static int DURATION = 8;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
