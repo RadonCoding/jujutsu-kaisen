@@ -141,9 +141,14 @@ public abstract class BeamEntity extends JujutsuProjectile {
                         new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
                 for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
-                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), this.getDamage() * this.getPower())) continue;
-                    entity.setSecondsOnFire(5);
+                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
+                        continue;
+                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), this.getDamage() * this.getPower()))
+                        continue;
+
+                    if (this.causesFire()) {
+                        entity.setSecondsOnFire(5);
+                    }
                 }
 
                 if (!this.level().isClientSide) {
