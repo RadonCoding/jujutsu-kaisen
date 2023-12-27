@@ -110,6 +110,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
+            if (victim.isDeadOrDying()) return;
 
             for (ProjectionFrameEntity frame : victim.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(victim.position(),
                     8.0D, 8.0D, 8.0D))) {
