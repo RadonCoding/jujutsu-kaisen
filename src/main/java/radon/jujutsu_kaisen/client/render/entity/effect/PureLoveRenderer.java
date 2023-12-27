@@ -40,7 +40,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeamEntity> {
 
     @Override
     public void render(PureLoveBeamEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        /*Entity owner = pEntity.getOwner();
+        Entity owner = pEntity.getOwner();
         this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
@@ -76,7 +76,7 @@ public class PureLoveRenderer extends EntityRenderer<PureLoveBeamEntity> {
             this.renderEnd(frame, pEntity.side, pPoseStack, consumer, pPackedLight);
             pPoseStack.popPose();
         }
-        pPoseStack.popPose();*/
+        pPoseStack.popPose();
     }
 
     private void renderFlatQuad(int frame, PoseStack poseStack, VertexConsumer consumer, int packedLight) {
