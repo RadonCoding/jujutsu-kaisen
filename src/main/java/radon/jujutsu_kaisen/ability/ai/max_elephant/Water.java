@@ -179,14 +179,4 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     public int getDuration() {
         return 3 * 20;
     }
-
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
 }

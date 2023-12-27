@@ -86,6 +86,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
     @Override
     public void tick() {
+        super.tick();
+
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
@@ -103,14 +105,13 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             } else if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (this.plant) {
-                if (this.getTime() == 0) {
+                if (this.getTime() - 1 == 0) {
                     this.setDeltaMovement(this.getLookAngle().scale(SPEED));
                 }
             } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
             }
         }
-        super.tick();
     }
 
     @Override

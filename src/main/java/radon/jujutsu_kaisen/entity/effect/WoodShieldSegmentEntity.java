@@ -103,6 +103,8 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
 
     @Override
     public void tick() {
+        super.tick();
+
         if (!this.level().isClientSide && this.isDying) {
             if (this.getTime() - this.start >= COUNT - this.getIndex()) {
                 this.discard();
@@ -113,11 +115,15 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && !this.isDying && (owner == null || owner.isRemoved() || !owner.isAlive())) {
-            this.isDying = true;
-            this.start = this.getTime();
+            if (owner == null || owner.isRemoved()) {
+                this.isDying = true;
+                this.start = this.getTime();
+            } else if (!owner.isAlive()) {
+                this.discard();
+            }
         } else if (owner != null) {
             if (this.pos != null) {
-                if (!this.level().isClientSide && this.getIndex() == 0 && this.getTime() == 0) {
+                if (!this.level().isClientSide && this.getIndex() == 0 && this.getTime() - 1 == 0) {
                     for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
                         Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
                         float f = HelperMethods.getYaw(this.pos.subtract(this.position().add(pos)));
@@ -141,6 +147,5 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                 owner.teleportTo(this.pos.x, this.pos.y, this.pos.z);
             }
         }
-        super.tick();
     }
 }

@@ -72,12 +72,10 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
     }
 
     @Override
-    public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (owner.level().isClientSide) return;
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return false;
 
-        if (!HelperMethods.isMelee(source)) return;
-
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -85,7 +83,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         CursedTechnique current = ownerCap.getTechnique();
         CursedTechnique copied = targetCap.getTechnique();
 
-        if (copied == null || current == null || ownerCap.hasTechnique(copied)) return;
+        if (copied == null || current == null || ownerCap.hasTechnique(copied)) return false;
 
         if (current != copied) {
             owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
@@ -95,6 +93,8 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
             }
+            return true;
         }
+        return false;
     }
 }

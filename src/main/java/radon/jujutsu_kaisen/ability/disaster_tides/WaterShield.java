@@ -1,6 +1,10 @@
 package radon.jujutsu_kaisen.ability.disaster_tides;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -8,6 +12,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -16,15 +21,12 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class WaterShield extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final double RADIUS = 3.0D;
     private static final double X_STEP = 0.05D;
-    private static final float EXPLOSIVE_POWER = 2.0F;
-
-
-
-
+    private static final float DAMAGE = 10.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -75,15 +77,16 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
     }
 
     @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
+    public void onStop(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            owner.level().explode(owner, JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.WATER_SHIELD.get()), null, owner.position(),
-                    EXPLOSIVE_POWER * this.getPower(owner), false, Level.ExplosionInteraction.NONE);
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, owner.getX(), owner.getY(), owner.getZ(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, owner.getX(), owner.getY(), owner.getZ(), 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+                    4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
+
+            for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), RADIUS * 2, RADIUS * 2, RADIUS * 2))) {
+                entity.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.WATER_SHIELD.get()), DAMAGE * this.getPower(owner));
+            }
         }
     }
 

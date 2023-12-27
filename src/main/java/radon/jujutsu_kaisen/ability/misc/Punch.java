@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class Punch extends Ability implements Ability.IChannelened {
+public class Punch extends Ability implements Ability.ICharged {
     private static final float DAMAGE = 5.0F;
     private static final double RANGE = 16.0D;
     private static final double LAUNCH_POWER = 2.5D;
@@ -88,19 +88,14 @@ public class Punch extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onStart(LivingEntity owner) {
+    public boolean onRelease(LivingEntity owner) {
+        if (owner.level().isClientSide) return false;
 
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-        if (owner.level().isClientSide) return;
-
-        if (owner.isUsingItem()) return;
+        if (owner.isUsingItem()) return false;
 
         LivingEntity target = this.getTarget(owner);
 
-        if (target == null) return;
+        if (target == null) return false;
 
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
 
@@ -146,6 +141,8 @@ public class Punch extends Ability implements Ability.IChannelened {
                     }
                 }
             }, 1);
+            return true;
         }
+        return false;
     }
 }

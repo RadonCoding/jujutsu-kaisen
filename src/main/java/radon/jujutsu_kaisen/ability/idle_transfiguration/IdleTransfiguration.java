@@ -80,12 +80,10 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     @Override
-    public void attack(DamageSource source, LivingEntity owner, LivingEntity target) {
-        if (owner.level().isClientSide) return;
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return false;
 
-        if (!HelperMethods.isMelee(source)) return;
-
-        if (!owner.getMainHandItem().isEmpty()) return;
+        if (!owner.getMainHandItem().isEmpty()) return false;
 
         MobEffectInstance existing = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
 
@@ -95,5 +93,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
             amplifier = existing.getAmplifier() + 1;
         }
         target.addEffect(new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true));
+
+        return true;
     }
 }

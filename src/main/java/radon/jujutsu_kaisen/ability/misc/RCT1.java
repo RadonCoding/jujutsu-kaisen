@@ -80,16 +80,6 @@ public class RCT1 extends Ability implements Ability.IChannelened {
         return MenuType.NONE;
     }
 
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
-
     protected int getMultiplier() {
         return 2;
     }

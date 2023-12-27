@@ -75,18 +75,6 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
         return 20;
     }
 
-
-
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
-
     @Override
     public MenuType getMenuType() {
         return MenuType.SCROLL;

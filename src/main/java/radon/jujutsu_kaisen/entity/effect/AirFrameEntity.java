@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -8,16 +9,23 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.UUID;
 
@@ -25,7 +33,8 @@ public class AirFrameEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(AirFrameEntity.class, EntityDataSerializers.INT);
 
     private static final int DURATION = 20;
-    private static final float EXPLOSIVE_POWER = 2.0F;
+    private static final float DAMAGE = 15.0F;
+    private static final double RANGE = 3.0D;
 
     @Nullable
     private UUID ownerUUID;
@@ -111,7 +120,15 @@ public class AirFrameEntity extends Entity {
 
             if (this.getTime() >= DURATION) {
                 if (owner != null) {
-                    this.level().explode(owner, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), EXPLOSIVE_POWER * this.getPower(), Level.ExplosionInteraction.NONE);
+                    Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
+                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    owner.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS,
+                            4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
+
+                    for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(center, RANGE, RANGE, RANGE))) {
+                        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.AIR_FRAME.get()), DAMAGE * this.getPower());
+                    }
                 }
                 this.discard();
             }

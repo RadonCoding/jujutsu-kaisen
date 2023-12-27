@@ -76,14 +76,4 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
     public MenuType getMenuType() {
         return MenuType.SCROLL;
     }
-
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
-    }
 }

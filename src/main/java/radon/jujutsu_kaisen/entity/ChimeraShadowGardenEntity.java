@@ -123,18 +123,19 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
     @Override
     public void tick() {
+        super.tick();
+
         this.refreshDimensions();
 
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
             if (!this.level().isClientSide) {
-                if (this.getTime() == 0) {
+                if (this.getTime() - 1 == 0) {
                     this.createBarrier(owner);
                 }
             }
         }
-        super.tick();
     }
 
     @Override

@@ -44,27 +44,17 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 1.0F;
+        return 5.0F;
     }
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
-    }
-
-    @Override
-    public void onStart(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void onRelease(LivingEntity owner) {
-
+        return 10 * 20;
     }
 
     @Override
     public int getDuration() {
-        return 20;
+        return 5;
     }
 
     @Override
