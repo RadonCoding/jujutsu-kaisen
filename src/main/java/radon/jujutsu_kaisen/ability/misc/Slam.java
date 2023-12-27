@@ -92,8 +92,6 @@ public class Slam extends Ability implements Ability.ICharged {
     }
 
     public static void onHitGround(LivingEntity owner, float distance) {
-        TARGETS.remove(owner.getUUID());
-
         float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
 
         owner.swing(InteractionHand.MAIN_HAND);
@@ -103,6 +101,8 @@ public class Slam extends Ability implements Ability.ICharged {
                     owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
         }
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+        TARGETS.remove(owner.getUUID());
     }
 
     @Override
