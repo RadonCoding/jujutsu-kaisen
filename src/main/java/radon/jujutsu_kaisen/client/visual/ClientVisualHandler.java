@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.visual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -21,6 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -157,7 +159,9 @@ public class ClientVisualHandler {
         }
     }
 
-    public static boolean shouldRenderExtraArms(VisualData data) {
+    public static boolean shouldRenderExtraArms(LivingEntity entity, VisualData data) {
+        if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
+
         for (Ability ability : data.toggled) {
             if (!(ability instanceof ITransformation transformation)) continue;
             if (transformation.getBodyPart() != ITransformation.Part.BODY || !transformation.isReplacement()) continue;
@@ -176,7 +180,7 @@ public class ClientVisualHandler {
             model.renderToBuffer(poseStack, consumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 1.0F);
         }
-        if (shouldRenderExtraArms(data)) {
+        if (shouldRenderExtraArms(entity, data)) {
             VertexConsumer overlay = buffer.getBuffer(RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID,
                     String.format("textures/overlay/mouth_%d.png", data.mouth + 1))));
             model.renderToBuffer(poseStack, overlay, packedLight, OverlayTexture.NO_OVERLAY,
