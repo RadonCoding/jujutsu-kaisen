@@ -343,7 +343,7 @@ public abstract class RadialScreen extends Screen {
 
                     if (item.curse.getKey().create(this.minecraft.level) instanceof ISorcerer curse) {
                         Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                                JJKAbilities.getCurseCost(this.minecraft.player, curse.getGrade()) * this.curses.getOrDefault(item.curse.getKey(), 1));
+                                JJKAbilities.getCurseCost(curse.getGrade()) * this.curses.getOrDefault(item.curse.getKey(), 1));
                         lines.add(costText);
 
                         Component countText = Component.translatable(String.format("gui.%s.ability_overlay.count", JujutsuKaisen.MOD_ID),
