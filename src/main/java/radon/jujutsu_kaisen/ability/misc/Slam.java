@@ -92,15 +92,16 @@ public class Slam extends Ability implements Ability.ICharged {
     }
 
     public static void onHitGround(LivingEntity owner, float distance) {
-        if (!(owner.level() instanceof ServerLevel)) return;
+        TARGETS.remove(owner.getUUID());
 
         float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
 
-        owner.swing(InteractionHand.MAIN_HAND, true);
-        ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * 0.25F, owner,
-                owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
-        TARGETS.remove(owner.getUUID());
+        owner.swing(InteractionHand.MAIN_HAND);
 
+        if (!owner.level().isClientSide) {
+            ExplosionHandler.spawn(owner.level().dimension(), owner.position(), radius, 5, Ability.getPower(JJKAbilities.SLAM.get(), owner) * 0.25F, owner,
+                    owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), false);
+        }
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SLAM.get(), SoundSource.MASTER, 1.0F, 1.0F);
     }
 
@@ -110,21 +111,19 @@ public class Slam extends Ability implements Ability.ICharged {
 
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (!owner.level().isClientSide) {
-            Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
-            owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
+        Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
+        owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
+        owner.hurtMarked = true;
+
+        TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        cap.delayTickEvent(() -> {
+            Vec3 target = this.getTarget(owner);
+            owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
             owner.hurtMarked = true;
-
-            TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
-
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            cap.delayTickEvent(() -> {
-                Vec3 target = this.getTarget(owner);
-                owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
-                owner.hurtMarked = true;
-            }, 20);
-        }
+        }, 20);
         return true;
     }
 }
