@@ -99,7 +99,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
-    private void createBarrier(LivingEntity owner) {
+    private void createBarrier() {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
         int radius = this.getRadius();
 
         Vec3 direction = this.getLookAngle();
@@ -245,6 +249,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (domain == this) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
+                if (domain instanceof ClosedDomainExpansionEntity closed) {
+                    closed.createBarrier();
+                }
                 this.discard();
             }
             return false;
@@ -346,7 +353,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 }
 
                 if (this.getTime() - 1 == 0) {
-                    this.createBarrier(owner);
+                    this.createBarrier();
                 } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();
                 }

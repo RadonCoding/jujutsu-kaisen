@@ -70,7 +70,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
 
     @Override
     public int getCooldown() {
-        return 2 * 20;
+        return 5 * 20;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class TwentyFourFrameRuleForgeEvents {
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
@@ -110,7 +110,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
-            if (victim.isDeadOrDying()) return;
 
             for (ProjectionFrameEntity frame : victim.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(victim.position(),
                     8.0D, 8.0D, 8.0D))) {
@@ -128,6 +127,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
                 if (owner != null) {
                     victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * frame.getPower());
                 }
+                event.setCanceled(true);
                 return;
             }
         }
