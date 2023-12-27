@@ -92,6 +92,8 @@ public class Slam extends Ability implements Ability.ICharged {
     }
 
     public static void onHitGround(LivingEntity owner, float distance) {
+        if (owner.level().isClientSide) return;
+
         float radius = Math.min(MAX_EXPLOSION, distance * TARGETS.get(owner.getUUID()));
 
         owner.swing(InteractionHand.MAIN_HAND);
@@ -114,7 +116,9 @@ public class Slam extends Ability implements Ability.ICharged {
         Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
         owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
 
-        TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
+        if (!owner.level().isClientSide) {
+            TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
+        }
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
