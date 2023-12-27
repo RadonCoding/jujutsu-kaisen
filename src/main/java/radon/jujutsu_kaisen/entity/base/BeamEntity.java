@@ -117,7 +117,6 @@ public abstract class BeamEntity extends JujutsuProjectile {
             }
 
             if (!this.on && this.animation == 0) {
-                System.out.println(this.getTime());
                 this.discard();
             }
 
