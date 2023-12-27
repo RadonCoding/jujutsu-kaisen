@@ -60,7 +60,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -224,7 +223,7 @@ public class JJKAbilities {
         return cap.hasToggled(ability);
     }
 
-    public static float getCurseCost(LivingEntity owner, SorcererGrade grade) {
+    public static float getCurseCost(SorcererGrade grade) {
         return 50.0F * HelperMethods.getPower(grade.getRequiredExperience());
     }
 
@@ -239,7 +238,7 @@ public class JJKAbilities {
 
         for (int i = 0; i < count; i++) {
             if (type.create(owner.level()) instanceof CursedSpirit curse) {
-                float cost = getCurseCost(owner, curse.getGrade()) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
+                float cost = getCurseCost(curse.getGrade()) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
 
                 if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                     if (ownerCap.getEnergy() < cost) {
