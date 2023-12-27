@@ -68,7 +68,7 @@ public class FireBeamRenderer extends EntityRenderer<FireBeamEntity> {
 
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(this.getTextureLocation(pEntity)));
 
-        float brightness = 1.0F - ((float) pEntity.getTime() / (Math.max(pEntity.getFrames(), pEntity.getDuration()) - Math.min(pEntity.getFrames(), pEntity.getDuration())));
+        float brightness = 1.0F - ((float) pEntity.getTime() / (pEntity.getCharge() + pEntity.getDuration() + pEntity.getFrames()));
 
         this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer,
                 brightness, pPackedLight);

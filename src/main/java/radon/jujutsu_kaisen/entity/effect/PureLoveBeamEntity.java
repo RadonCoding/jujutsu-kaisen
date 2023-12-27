@@ -6,8 +6,15 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.BeamEntity;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 
 public class PureLoveBeamEntity extends BeamEntity {
+    public static final int FRAMES = 3;
+    public static final float SCALE = 2.0F;
+    private static final float DAMAGE = 10.0F;
+    public static final int CHARGE = (int) (2.5F * 20);
+    public static final int DURATION = 3 * 20;
+
     public PureLoveBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -18,12 +25,13 @@ public class PureLoveBeamEntity extends BeamEntity {
 
     @Override
     public int getFrames() {
-        return 3;
+        return FRAMES;
     }
 
     @Override
     public float getScale() {
-        return 2.0F;
+        if (!(this.getOwner() instanceof RikaEntity rika)) return SCALE;
+        return SCALE * (rika.isOpen() ? 1.0F : 0.5F);
     }
 
     @Override
@@ -33,16 +41,18 @@ public class PureLoveBeamEntity extends BeamEntity {
 
     @Override
     protected float getDamage() {
-        return 10.0F;
+        if (!(this.getOwner() instanceof RikaEntity rika)) return DAMAGE;
+        return DAMAGE * (rika.isOpen() ? 1.0F : 0.5F);
     }
 
     @Override
     public int getDuration() {
-        return 3 * 20;
+        if (!(this.getOwner() instanceof RikaEntity rika)) return DURATION;
+        return (int) (DURATION * (rika.isOpen() ? 1.0F : 0.5F));
     }
 
     @Override
     public int getCharge() {
-        return (int) (2.5F * 20);
+        return CHARGE;
     }
 }
