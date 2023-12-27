@@ -74,12 +74,12 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (target == null) return;
 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.addExperience(10.0F);
+        cap.addExperience(20.0F);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.getTarget(owner) == null ? 0.0F : 2.5F;
+        return this.getTarget(owner) == null ? 0.0F : 5.0F;
     }
 
     @Override
