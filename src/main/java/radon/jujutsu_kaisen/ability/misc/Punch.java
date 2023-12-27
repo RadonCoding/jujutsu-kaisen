@@ -89,8 +89,6 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public boolean onRelease(LivingEntity owner) {
-        if (owner.level().isClientSide) return false;
-
         if (owner.isUsingItem()) return false;
 
         LivingEntity target = this.getTarget(owner);
@@ -113,34 +111,36 @@ public class Punch extends Ability implements Ability.ICharged {
         }
 
         if (owner.distanceTo(target) <= 3.0D) {
-            cap.delayTickEvent(() -> {
-                Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-                ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            if (!owner.level().isClientSide) {
+                cap.delayTickEvent(() -> {
+                    Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                    ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                    target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                owner.swing(InteractionHand.MAIN_HAND, true);
+                    owner.swing(InteractionHand.MAIN_HAND, true);
 
-                if (owner instanceof Player player) {
-                    player.attack(target);
-                } else {
-                    owner.doHurtTarget(target);
-                }
-                target.invulnerableTime = 0;
-
-                if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    if (target.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
-                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
-                                .multiply(1.0D, 0.25D, 1.0D));
-                        target.hurtMarked = true;
+                    if (owner instanceof Player player) {
+                        player.attack(target);
+                    } else {
+                        owner.doHurtTarget(target);
                     }
-                } else {
-                    if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
-                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
-                                .multiply(1.0D, 0.25D, 1.0D));
-                        target.hurtMarked = true;
+                    target.invulnerableTime = 0;
+
+                    if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+                        if (target.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
+                            target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                                    .multiply(1.0D, 0.25D, 1.0D));
+                            target.hurtMarked = true;
+                        }
+                    } else {
+                        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
+                            target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                                    .multiply(1.0D, 0.25D, 1.0D));
+                            target.hurtMarked = true;
+                        }
                     }
-                }
-            }, 1);
+                }, 1);
+            }
             return true;
         }
         return false;

@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
 
-public class Slam extends Ability implements Ability.IChannelened {
+public class Slam extends Ability implements Ability.ICharged {
     private static final double RANGE = 30.0D;
     private static final double LAUNCH_POWER = 2.0D;
     private static final float MAX_EXPLOSION = 5.0F;
@@ -105,25 +105,26 @@ public class Slam extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public void onStop(LivingEntity owner) {
-        if (!owner.onGround()) return;
+    public boolean onRelease(LivingEntity owner) {
+        if (!owner.onGround()) return false;
 
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (owner.level().isClientSide) return;
-
-        Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
-        owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
-        owner.hurtMarked = true;
-
-        TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        cap.delayTickEvent(() -> {
-            Vec3 target = this.getTarget(owner);
-            owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
+        if (!owner.level().isClientSide) {
+            Vec3 direction = new Vec3(0.0D, LAUNCH_POWER, 0.0D);
+            owner.setDeltaMovement(owner.getDeltaMovement().add(direction));
             owner.hurtMarked = true;
-        }, 20);
+
+            TARGETS.put(owner.getUUID(), ((float) Math.min(20, this.getCharge(owner)) / 20));
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            cap.delayTickEvent(() -> {
+                Vec3 target = this.getTarget(owner);
+                owner.setDeltaMovement(owner.getDeltaMovement().add(target.subtract(owner.position()).normalize().scale(5.0D)));
+                owner.hurtMarked = true;
+            }, 20);
+        }
+        return true;
     }
 }
