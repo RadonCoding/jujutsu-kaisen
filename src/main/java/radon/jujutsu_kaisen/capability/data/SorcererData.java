@@ -244,7 +244,7 @@ public class SorcererData implements ISorcererData {
         for (Ability ability : new ArrayList<>(this.toggled)) {
             Ability.Status status = ability.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS) {
+            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
                 ability.run(this.owner);
 
                 if (ability instanceof ITransformation transformation) {
@@ -264,7 +264,7 @@ public class SorcererData implements ISorcererData {
         if (this.channeled != null) {
             Ability.Status status = this.channeled.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS) {
+            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
                 this.channeled.run(this.owner);
             } else {
                 this.channel(this.channeled);

@@ -219,7 +219,7 @@ public abstract class Ability {
                 return Status.DOMAIN_AMPLIFICATION;
             }
 
-            if (!cap.isCooldownDone(this) && !cap.isChanneling(this) && !cap.hasToggled(this)) {
+            if (!cap.isCooldownDone(this)) {
                 return Status.COOLDOWN;
             }
 
