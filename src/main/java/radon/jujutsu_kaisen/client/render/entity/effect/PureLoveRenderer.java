@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 
 public class PureLoveRenderer extends EntityRenderer<PureLoveBeamEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/pure_love.png");
-    private static final int TEXTURE_WIDTH = 256;
+    private static final int TEXTURE_WIDTH = 128;
     private static final int TEXTURE_HEIGHT = 32;
     private static final float START_RADIUS = 1.3F;
     private static final float BEAM_RADIUS = 1.0F;
