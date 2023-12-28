@@ -109,7 +109,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(2, new SorcererGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1D, true));
         this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(6, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));

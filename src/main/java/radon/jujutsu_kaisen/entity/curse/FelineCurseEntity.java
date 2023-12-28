@@ -77,7 +77,7 @@ public class FelineCurseEntity extends PackCursedSpirit {
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
 
         if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.2D, true));
+            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
         this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
