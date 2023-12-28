@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,15 +28,14 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.entity.effect.PureLoveBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -107,14 +105,17 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(2, new SorcererGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(6, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        int goal = 1;
+        int target = 1;
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(target, new HurtByTargetGoal(this));
     }
 
     @Override

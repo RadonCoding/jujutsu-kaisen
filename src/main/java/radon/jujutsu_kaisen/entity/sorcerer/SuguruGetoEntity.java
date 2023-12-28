@@ -6,7 +6,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -24,8 +23,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableHumanGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -124,13 +123,16 @@ public class SuguruGetoEntity extends SorcererEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(3, new SorcererGoal(this));
-        this.goalSelector.addGoal(4, new LookAtTargetGoal(this));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        int goal = 1;
+        int target = 1;
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableHumanGoal(this, false));
+        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target, new NearestAttackableHumanGoal(this, false));
     }
 }

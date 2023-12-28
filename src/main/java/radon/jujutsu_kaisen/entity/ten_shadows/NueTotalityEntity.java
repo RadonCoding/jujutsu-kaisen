@@ -103,13 +103,16 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(2, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 12.5F, true));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        int goal = 1;
+        int target = 1;
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
+        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 12.5F, true));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
     }
 
     @Override

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -184,15 +185,19 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(2, new CustomLeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(4, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        int goal = 1;
+        int target = 1;
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
+        this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
+        this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
+        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
+
+        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
