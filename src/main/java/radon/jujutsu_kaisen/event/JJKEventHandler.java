@@ -5,12 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -18,30 +15,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerNegotiationEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ChantHandler;
-import radon.jujutsu_kaisen.capability.data.DelayedTickEvent;
-import radon.jujutsu_kaisen.effect.JJKEffect;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
-import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.ability.misc.Slam;
@@ -50,30 +38,24 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.LightningParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
-import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.item.CursedEnergyFleshItem;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
+import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -273,37 +255,17 @@ public class JJKEventHandler {
             if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
                 if (tamable1.isTame() && tamable1.getOwner() == victim) {
                     event.setCanceled(true);
-                    return;
                 } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
                     // Prevent tames with the same owner from attacking each other
                     if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
                         event.setCanceled(true);
-                        return;
                     }
                 }
             } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
                 // Prevent the owner from attacking the tame
                 if (tamable.isTame() && tamable.getOwner() == attacker) {
                     event.setCanceled(true);
-                    return;
                 }
-            }
-
-            if (attacker instanceof MahoragaEntity) {
-                victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
-                    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                        Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
-
-                        for (Ability ability : toggled) {
-                            if (!attackerCap.isAdaptedTo(ability)) continue;
-                            victimCap.toggle(ability);
-                        }
-
-                        if (victim instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                        }
-                    });
-                });
             }
         }
 
@@ -341,33 +303,6 @@ public class JJKEventHandler {
             }
             float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
             event.setAmount(blocked);
-
-            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
-
-            if (!cap.isAdaptedTo(event.getSource())) {
-                cap.tryAdapt(event.getSource());
-            }
-
-            if (!(victim instanceof MahoragaEntity)) return;
-
-            if (cap.isAdaptedTo(event.getSource())) {
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
-            }
-            event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(event.getSource())));
-        }
-
-        @SubscribeEvent
-        public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
-            LivingEntity victim = event.getEntity();
-
-            if (victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
-
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.isAdaptedTo(event.getAbility())) {
-                    cap.tryAdapt(event.getAbility());
-                }
-            });
         }
 
         @SubscribeEvent
