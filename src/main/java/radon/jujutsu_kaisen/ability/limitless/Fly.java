@@ -22,7 +22,7 @@ public class Fly extends Ability implements Ability.IChannelened {
         if (JJKAbilities.isChanneling(owner, this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
-        return owner.fallDistance > 0.0F;
+        return owner.fallDistance > 5.0F;
     }
 
     @Override
