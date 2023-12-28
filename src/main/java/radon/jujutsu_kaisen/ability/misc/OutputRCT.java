@@ -34,7 +34,6 @@ public class OutputRCT extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
-        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() == JujutsuType.CURSE && this.getTarget(owner) == target;
     }
@@ -67,8 +66,6 @@ public class OutputRCT extends Ability {
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-            
             return target;
         }
         return null;
@@ -84,7 +81,6 @@ public class OutputRCT extends Ability {
 
         if (target == null) return;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < 8; i++) {
@@ -135,7 +131,6 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() != JujutsuType.CURSE && super.isValid(owner);
     }
