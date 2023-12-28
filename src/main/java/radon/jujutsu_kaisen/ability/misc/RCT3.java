@@ -22,7 +22,7 @@ public class RCT3 extends RCT2 {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.getHealth() == owner.getMaxHealth() && cap.getBurnout() > 0) {
+        if (cap.getBurnout() > 0) {
             return true;
         }
         return super.shouldTrigger(owner, target);
@@ -32,27 +32,27 @@ public class RCT3 extends RCT2 {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        if (owner.getHealth() == owner.getMaxHealth()) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isExperienced(cap.getExperience())) {
-                int burnout = cap.getBurnout();
+        if (cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isExperienced(cap.getExperience())) {
+            int burnout = cap.getBurnout();
 
-                if (burnout > 0) {
-                    cap.setBurnout(Math.max(0, burnout - 10));
-                }
+            if (burnout > 0) {
+                cap.setBurnout(Math.max(0, burnout - 10));
             }
         }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
+        float cost = super.getCost(owner);
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.getHealth() == owner.getMaxHealth() && cap.getBurnout() > 0) {
-            return 100.0F / 20;
+        if (cap.getBurnout() > 0) {
+            cost += 100.0F / 20;
         }
-        return super.getCost(owner);
+        return cost;
     }
 
     @Nullable
