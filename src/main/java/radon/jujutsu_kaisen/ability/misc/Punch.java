@@ -74,7 +74,7 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return this.getCharge(owner) > 20 ? 0.0F : JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 0.0F : 30.0F;
+        return JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 0.0F : 30.0F;
     }
 
     @Override
