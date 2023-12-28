@@ -35,6 +35,16 @@ public class RCT2 extends RCT1 {
     }
 
     @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (owner.getHealth() == owner.getMaxHealth()) {
+            for (MobEffect effect : owner.getActiveEffectsMap().keySet()) {
+                if (HARMFUL.contains(effect)) return true;
+            }
+        }
+        return super.shouldTrigger(owner, target);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         super.run(owner);
 

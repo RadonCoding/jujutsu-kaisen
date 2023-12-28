@@ -99,7 +99,70 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
-    private void createBarrier() {
+    private void createBlock(BlockPos pos, int radius, double distance) {
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (!this.isRemoved()) {
+            BlockState state = this.level().getBlockState(pos);
+
+            if (state.is(Blocks.BEDROCK)) return;
+
+            BlockEntity existing = this.level().getBlockEntity(pos);
+
+            CompoundTag saved = null;
+
+            if (existing instanceof VeilBlockEntity be) {
+                be.destroy();
+
+                state = this.level().getBlockState(pos);
+            } else if (state.is(JJKBlockTags.DOMAIN)) {
+                return;
+            } else if (existing != null) {
+                saved = existing.saveWithFullMetadata();
+            }
+
+            DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
+            List<Block> blocks = domain.getBlocks();
+            List<Block> fill = domain.getFillBlocks();
+            List<Block> floor = domain.getFloorBlocks();
+            List<Block> decoration = domain.getDecorationBlocks();
+
+            Block block = null;
+
+            if (distance >= radius - 1) {
+                block = JJKBlocks.DOMAIN.get();
+            } else if (!state.getFluidState().isEmpty()) {
+                block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
+            } else {
+                if (distance >= radius - 2) {
+                    block = blocks.get(this.random.nextInt(blocks.size()));
+                } else if (!state.isAir()) {
+                    if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
+                        block = floor.get(this.random.nextInt(floor.size()));
+                    } else {
+                        block = fill.get(this.random.nextInt(fill.size()));
+                    }
+                } else {
+                    if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos)) {
+                        block = decoration.get(this.random.nextInt(decoration.size()));
+                    }
+                }
+            }
+
+            if (block == null) return;
+
+            owner.level().setBlock(pos, block.defaultBlockState(),
+                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+            if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                be.create(this.uuid, state, saved);
+            }
+        }
+    }
+
+    private void createBarrier(boolean instant) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -126,64 +189,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        cap.delayTickEvent(() -> {
-                            if (!this.isRemoved()) {
-                                BlockState state = this.level().getBlockState(pos);
-
-                                if (state.is(Blocks.BEDROCK)) return;
-
-                                BlockEntity existing = this.level().getBlockEntity(pos);
-
-                                CompoundTag saved = null;
-
-                                if (existing instanceof VeilBlockEntity be) {
-                                    be.destroy();
-
-                                    state = this.level().getBlockState(pos);
-                                } else if (state.is(JJKBlockTags.DOMAIN)) {
-                                    return;
-                                } else if (existing != null) {
-                                    saved = existing.saveWithFullMetadata();
-                                }
-
-                                DomainExpansion.IClosedDomain domain = ((DomainExpansion.IClosedDomain) this.ability);
-                                List<Block> blocks = domain.getBlocks();
-                                List<Block> fill = domain.getFillBlocks();
-                                List<Block> floor = domain.getFloorBlocks();
-                                List<Block> decoration = domain.getDecorationBlocks();
-
-                                Block block = null;
-
-                                if (distance >= radius - 1) {
-                                    block = JJKBlocks.DOMAIN.get();
-                                } else if (!state.getFluidState().isEmpty()) {
-                                    block = distance >= radius - 2 ? blocks.get(this.random.nextInt(blocks.size())) : JJKBlocks.DOMAIN_AIR.get();
-                                } else {
-                                    if (distance >= radius - 2) {
-                                        block = blocks.get(this.random.nextInt(blocks.size()));
-                                    } else if (!state.isAir()) {
-                                        if (!floor.isEmpty() && domain.canPlaceFloor(this, pos)) {
-                                            block = floor.get(this.random.nextInt(floor.size()));
-                                        } else {
-                                            block = fill.get(this.random.nextInt(fill.size()));
-                                        }
-                                    } else {
-                                        if (!decoration.isEmpty() && domain.canPlaceDecoration(this, pos)) {
-                                            block = decoration.get(this.random.nextInt(decoration.size()));
-                                        }
-                                    }
-                                }
-
-                                if (block == null) return;
-
-                                owner.level().setBlock(pos, block.defaultBlockState(),
-                                        Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-
-                                if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                    be.create(this.uuid, state, saved);
-                                }
-                            }
-                        }, delay);
+                        if (instant) {
+                            this.createBlock(pos, radius, distance);
+                        } else {
+                            cap.delayTickEvent(() -> this.createBlock(pos, radius, distance), delay);
+                        }
                     }
                 }
             }
@@ -252,7 +262,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 this.discard();
 
                 if (domain instanceof ClosedDomainExpansionEntity closed) {
-                    closed.createBarrier();
+                    closed.createBarrier(true);
                 }
             }
             return false;
@@ -354,7 +364,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 }
 
                 if (this.getTime() - 1 == 0) {
-                    this.createBarrier();
+                    this.createBarrier(false);
                 } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
                     this.discard();
                 }
