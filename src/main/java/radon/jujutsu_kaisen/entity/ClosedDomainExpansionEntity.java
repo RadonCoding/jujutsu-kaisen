@@ -249,10 +249,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (domain == this) continue;
 
             if (this.shouldCollapse(domain.getStrength())) {
+                this.discard();
+
                 if (domain instanceof ClosedDomainExpansionEntity closed) {
                     closed.createBarrier();
                 }
-                this.discard();
             }
             return false;
         }
