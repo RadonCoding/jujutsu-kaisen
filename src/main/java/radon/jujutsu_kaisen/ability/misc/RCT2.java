@@ -46,9 +46,7 @@ public class RCT2 extends RCT1 {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        if (owner.getHealth() == owner.getMaxHealth()) {
-            owner.getActiveEffects().removeIf(instance -> HARMFUL.contains(instance.getEffect()));
-        }
+        owner.getActiveEffects().removeIf(instance -> HARMFUL.contains(instance.getEffect()));
     }
 
     @Override
