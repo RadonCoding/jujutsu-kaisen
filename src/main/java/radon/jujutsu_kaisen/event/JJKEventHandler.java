@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.capability.data.DelayedTickEvent;
+import radon.jujutsu_kaisen.effect.JJKEffect;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.JujutsuKaisen;
