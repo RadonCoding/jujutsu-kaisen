@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -40,6 +41,43 @@ import java.util.List;
 public class WeaponEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class WeaponEventHandlerForgeEvents {
+        @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+
+            if (HelperMethods.isMelee(source)) {
+                if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                    victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                        List<Ability> remove = new ArrayList<>();
+
+                        for (Ability ability : cap.getToggled()) {
+                            if (!ability.isTechnique()) continue;
+
+                            remove.add(ability);
+                        }
+                        remove.forEach(cap::toggle);
+
+                        if (victim instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        }
+                    });
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
