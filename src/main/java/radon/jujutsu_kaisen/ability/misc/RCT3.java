@@ -19,6 +19,16 @@ import java.util.List;
 
 public class RCT3 extends RCT2 {
     @Override
+    public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (owner.getHealth() == owner.getMaxHealth() && cap.getBurnout() > 0) {
+            return true;
+        }
+        return super.shouldTrigger(owner, target);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         super.run(owner);
 

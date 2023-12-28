@@ -35,9 +35,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return owner.getHealth() < owner.getMaxHealth() || ((cap.hasTrait(Trait.SIX_EYES) || HelperMethods.isExperienced(cap.getExperience())) && cap.getBurnout() > 0);
+        return owner.getHealth() < owner.getMaxHealth();
     }
 
     @Override
