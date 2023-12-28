@@ -330,13 +330,12 @@ public class JJKAbilities {
     public static List<Ability> getAbilities(LivingEntity owner) {
         Set<Ability> abilities = new LinkedHashSet<>(List.of(JJKAbilities.HEAL.get(), JJKAbilities.RCT1.get(), JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get()));
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return new ArrayList<>(abilities);
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner instanceof ISorcerer sorcerer) {
             abilities.removeIf(ability -> !ability.isValid(owner));
             abilities.addAll(sorcerer.getCustom());
+            abilities.addAll(sorcerer.getUnlocked());
 
             if (!sorcerer.canPerformSorcery()) return new ArrayList<>(abilities);
         }
