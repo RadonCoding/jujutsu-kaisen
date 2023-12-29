@@ -27,7 +27,7 @@ public class Red extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        RedProjectile red = new RedProjectile(owner, this.getPower(owner), ChantHandler.isChanted(owner, this));
+        RedProjectile red = new RedProjectile(owner, this.getPower(owner), ChantHandler.getChant(owner, this) >= 1.5F);
         owner.level().addFreshEntity(red);
     }
 
