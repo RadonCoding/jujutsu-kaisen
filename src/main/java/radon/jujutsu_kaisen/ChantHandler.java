@@ -29,7 +29,7 @@ public class ChantHandler {
     private static final int CLEAR_INTERVAL = 10 * 20;
 
     public static boolean isChanted(LivingEntity owner, Ability ability) {
-        return getChant(owner, ability) > 1.0F;
+        return getChant(owner, ability) > 0.0F;
     }
 
     public static float getOutput(LivingEntity owner, Ability ability) {
@@ -122,7 +122,7 @@ public class ChantHandler {
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        ability.getName().copy(), Math.round((cap.getOutput() + getChant(owner, ability)) * 100)), false), player);
+                        ability.getName().copy(), getOutput(owner, ability) * 100), false), player);
             }
 
             int delta = messages.get(owner.getUUID()).size() - 5;
