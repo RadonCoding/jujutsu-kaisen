@@ -308,7 +308,7 @@ public abstract class Ability {
         if (cap.hasTrait(Trait.SIX_EYES)) {
             cost *= 0.5F;
         }
-        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable(owner) ? cap.getOutput() : 1.0F)));
+        return Float.parseFloat(String.format(Locale.ROOT, "%.2f", cost * (this.isScalable(owner) ? cap.getOutput() : 1.0F))) * ChantHandler.getChant(owner, this);
     }
 
     public interface IDomainAttack {
