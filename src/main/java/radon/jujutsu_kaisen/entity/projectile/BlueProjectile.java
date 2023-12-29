@@ -69,7 +69,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private void pullEntities() {
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        float radius = this.getRadius();
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
 
@@ -88,7 +88,7 @@ public class BlueProjectile extends JujutsuProjectile {
     }
 
     private float getRadius() {
-        return Math.min(MAX_RADIUS, RADIUS * this.getPower());
+        return Math.max(RADIUS, Math.min(MAX_RADIUS, RADIUS * this.getPower()));
     }
 
     private void breakBlocks() {
@@ -141,7 +141,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void pullBlocks() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * 2.0F;
+        float radius = this.getRadius() * 2.0F;
         AABB bounds = new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                 this.getX() + radius, this.getY() + radius, this.getZ() + radius);
         double centerX = bounds.getCenter().x;
@@ -178,7 +178,7 @@ public class BlueProjectile extends JujutsuProjectile {
     private void spawnParticles() {
         Vec3 center = new Vec3(this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ());
 
-        float radius = Math.min(MAX_RADIUS, RADIUS * this.getPower()) * (this.getTime() < DELAY ? 0.25F : 1.0F);
+        float radius = this.getRadius() * (this.getTime() < DELAY ? 0.25F : 1.0F);
         int count = (int) (radius * Math.PI * 2) * 2;
 
         for (int i = 0; i < count; i++) {

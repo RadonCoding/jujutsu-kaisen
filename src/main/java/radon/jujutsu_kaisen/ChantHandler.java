@@ -32,16 +32,21 @@ public class ChantHandler {
         return getChant(owner, ability) > 1.0F;
     }
 
+    public static float getOutput(LivingEntity owner, Ability ability) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getOutput() + getChant(owner, ability);
+    }
+
     public static float getChant(LivingEntity owner, Ability ability) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Set<String> chants = cap.getFirstChants(ability);
 
-        if (chants.isEmpty()) return 1.0F;
+        if (chants.isEmpty()) return 0.0F;
 
         List<String> latest = messages.get(owner.getUUID());
 
-        if (latest == null || latest.isEmpty()) return 1.0F;
+        if (latest == null || latest.isEmpty()) return 0.0F;
 
         int count = 0;
         int length = 0;
@@ -56,7 +61,7 @@ public class ChantHandler {
         }
         float countFactor = (float) count / ConfigHolder.SERVER.maximumChantCount.get();
         float lengthFactor = (float) length / (ConfigHolder.SERVER.maximumChantCount.get() * ConfigHolder.SERVER.maximumChantLength.get());
-        return 1.0F + 0.75F * (0.6F * countFactor + 0.4F * lengthFactor);
+        return 0.75F * (0.6F * countFactor + 0.4F * lengthFactor);
     }
 
     @Nullable
@@ -117,7 +122,7 @@ public class ChantHandler {
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.chant", JujutsuKaisen.MOD_ID),
-                        ability.getName().copy(), Math.round(getChant(owner, ability) * 100)), false), player);
+                        ability.getName().copy(), Math.round((cap.getOutput() + getChant(owner, ability)) * 100)), false), player);
             }
 
             int delta = messages.get(owner.getUUID()).size() - 5;
