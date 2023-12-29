@@ -117,8 +117,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 be.destroy();
 
                 state = this.level().getBlockState(pos);
-            } else if (state.is(JJKBlockTags.DOMAIN)) {
-                return;
+            } else if (existing instanceof DomainBlockEntity be) {
+                BlockState original = be.getOriginal();
+
+                if (original == null) return;
+
+                state = original;
+                saved = be.getSaved();
             } else if (existing != null) {
                 saved = existing.saveWithFullMetadata();
             }
@@ -260,10 +265,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             if (this.shouldCollapse(domain.getStrength())) {
                 this.discard();
-
-                if (domain instanceof ClosedDomainExpansionEntity closed) {
-                    closed.createBarrier(true);
-                }
             }
             return false;
         }
@@ -316,7 +317,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         total++;
 
-                        if (state.is(JJKBlockTags.DOMAIN) || state.is(Blocks.BEDROCK)) count++;
+                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity || state.is(Blocks.BEDROCK)) count++;
                     }
                 }
             }
@@ -324,6 +325,19 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if ((float) count / total < 0.75F) {
             this.discard();
+        }
+    }
+
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
+        super.remove(pReason);
+
+        Set<DomainExpansionEntity> domains = VeilHandler.getDomains((ServerLevel) this.level(), this.getBounds());
+
+        for (DomainExpansionEntity domain : domains) {
+            if (domain == this || !(domain instanceof ClosedDomainExpansionEntity closed)) continue;
+
+            closed.createBarrier(true);
         }
     }
 
