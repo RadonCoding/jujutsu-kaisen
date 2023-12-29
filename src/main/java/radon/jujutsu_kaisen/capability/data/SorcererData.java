@@ -647,7 +647,23 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean hasChant(Ability ability, String chant) {
-        return this.chants.getOrDefault(ability, Set.of()).contains(chant);
+        List<String> chants = new ArrayList<>(this.chants.getOrDefault(ability, Set.of()));
+
+        if (chants.contains(chant)) return true;
+
+        chants.add(chant);
+
+        for (Map.Entry<Ability, Set<String>> entry : this.chants.entrySet()) {
+            if (entry.getKey() == ability) continue;
+
+            List<String> current = new ArrayList<>(entry.getValue());
+
+            for (int i = 0; i < chants.size(); i++) {
+                if (i > current.size() - 1) break;
+                if (chants.get(i).equals(current.get(i))) return true;
+            }
+        }
+        return false;
     }
 
     @Override
