@@ -94,8 +94,17 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                                         be.destroy();
 
                                         state = this.level().getBlockState(pos);
-                                    } else if (state.is(JJKBlockTags.DOMAIN)) {
-                                        continue;
+                                    } else if (existing instanceof VeilBlockEntity be) {
+                                        be.destroy();
+
+                                        state = this.level().getBlockState(pos);
+                                    } else if (existing instanceof DomainBlockEntity be) {
+                                        BlockState original = be.getOriginal();
+
+                                        if (original == null) return;
+
+                                        state = original;
+                                        saved = be.getSaved();
                                     } else if (existing != null) {
                                         saved = existing.saveWithFullMetadata();
                                     }

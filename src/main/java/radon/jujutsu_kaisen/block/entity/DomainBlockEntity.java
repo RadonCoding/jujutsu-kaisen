@@ -89,6 +89,10 @@ public class DomainBlockEntity extends BlockEntity {
         return this.original;
     }
 
+    public @Nullable CompoundTag getSaved() {
+        return this.saved;
+    }
+
     public void create(UUID identifier, BlockState state, CompoundTag saved) {
         this.initialized = true;
         this.identifier = identifier;
