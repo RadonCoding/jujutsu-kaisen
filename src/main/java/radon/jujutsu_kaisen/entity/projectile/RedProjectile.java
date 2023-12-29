@@ -131,7 +131,6 @@ public class RedProjectile extends JujutsuProjectile {
                                 if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
                                     continue;
                                 }
-                                cap.addCooldown(JJKAbilities.HOLLOW_PURPLE.get());
                             }
 
                             if (owner instanceof ServerPlayer player) {
