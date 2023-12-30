@@ -60,7 +60,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     @Override
     public int getCooldown() {
-        return 5 * 20;
+        return 15 * 20;
     }
 
     @Override
