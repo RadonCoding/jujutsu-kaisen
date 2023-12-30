@@ -87,7 +87,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<CyclopsCurseEntity>> CYCLOPS_CURSE = ENTITIES.register("cyclops_curse", () ->
             EntityType.Builder.<CyclopsCurseEntity>of(CyclopsCurseEntity::new, MobCategory.AMBIENT)
-                    .sized(2.0F, 6.0F)
+                    .sized(1.6F, 6.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cyclops_curse")
                             .toString()));
     public static RegistryObject<EntityType<KuchisakeOnnaEntity>> KUCHISAKE_ONNA = ENTITIES.register("kuchisake_onna", () ->
