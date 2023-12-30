@@ -18,8 +18,6 @@ public class JJKKeys {
             InputConstants.KEY_X);
     public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",
             InputConstants.KEY_B);
-    public static KeyMapping ACTIVATE_WATER_WALKING = createKeyMapping("activate_water_walking",
-            InputConstants.KEY_N);
     public static KeyMapping ACTIVATE_CURSED_ENERGY_SHIELD = createKeyMapping("activate_cursed_energy_shield",
             InputConstants.KEY_Z);
     public static KeyMapping SHOW_ABILITY_MENU = createKeyMapping("show_ability_menu",

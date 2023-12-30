@@ -338,7 +338,6 @@ public class JJKClientEventHandler {
             event.register(JJKKeys.ABILITY_DOWN);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
-            event.register(JJKKeys.ACTIVATE_WATER_WALKING);
             event.register(JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD);
             event.register(JJKKeys.SHOW_ABILITY_MENU);
             event.register(JJKKeys.SHOW_DOMAIN_MENU);
