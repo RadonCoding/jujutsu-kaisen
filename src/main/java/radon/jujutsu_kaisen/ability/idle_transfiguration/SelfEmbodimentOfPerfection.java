@@ -4,12 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
@@ -43,7 +45,13 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
         float victimStrength = IdleTransfiguration.calculateStrength(entity);
 
         int required = Math.round((victimStrength / attackerStrength) * 2);
-        entity.addEffect(new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), required, false, true, true));
+
+        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), required, false, true, true);
+        entity.addEffect(instance);
+
+        if (!owner.level().isClientSide) {
+            PacketDistributor.TRACKING_ENTITY.with(() -> entity).send(new ClientboundUpdateMobEffectPacket(entity.getId(), instance));
+        }
     }
 
     @Override
