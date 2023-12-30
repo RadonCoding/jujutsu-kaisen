@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.client.particle;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -25,7 +26,7 @@ public class ParticleColors {
     public static Vector3f BLACK_FLASH = Vec3.fromRGB24(16188677).toVector3f();
     public static Vector3f FIRE_ORANGE = Vec3.fromRGB24(16734720).toVector3f();
 
-    public static Vector3f getCursedEnergyColor(LivingEntity entity) {
+    public static Vector3f getCursedEnergyColor(Entity entity) {
         if (entity.level().isClientSide) {
             ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
 
