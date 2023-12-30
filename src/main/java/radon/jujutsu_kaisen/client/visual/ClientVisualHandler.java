@@ -102,7 +102,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new ClientData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getEnergy(), cap.getMaxEnergy(), cap.getCursedEnergyColor());
+                return new ClientData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
             }
         }
         return null;
@@ -360,8 +360,6 @@ public class ClientVisualHandler {
         public final CursedTechnique technique;
         public final JujutsuType type;
         public final float experience;
-        public final float energy;
-        public final float maxEnergy;
         public final int cursedEnergyColor;
 
         public int mouth;
@@ -391,20 +389,16 @@ public class ClientVisualHandler {
 
             this.type = JujutsuType.values()[nbt.getInt("type")];
             this.experience = nbt.getFloat("experience");
-            this.energy = nbt.getFloat("energy");
-            this.maxEnergy = nbt.getFloat("max_energy");
             this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
         }
 
-        public ClientData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, float energy, float maxEnergy, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
             this.toggled = toggled;
             this.traits = traits;
             this.techniques = techniques;
             this.technique = technique;
             this.type = type;
             this.experience = experience;
-            this.energy = energy;
-            this.maxEnergy = maxEnergy;
             this.cursedEnergyColor = cursedEnergyColor;
         }
 
@@ -437,8 +431,6 @@ public class ClientVisualHandler {
             }
             nbt.putInt("type", this.type.ordinal());
             nbt.putFloat("experience", this.experience);
-            nbt.putFloat("energy", this.energy);
-            nbt.putFloat("max_energy", this.maxEnergy);
             nbt.putInt("cursed_energy_color", this.cursedEnergyColor);
 
             return nbt;

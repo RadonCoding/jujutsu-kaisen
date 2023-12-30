@@ -46,10 +46,6 @@ public class SixEyesOverlay {
                 HelperMethods.getGrade(data.experience).getName());
         lines.add(gradeText);
 
-        Component energyText = Component.translatable(String.format("gui.%s.six_eyes_overlay.energy", JujutsuKaisen.MOD_ID),
-                data.energy, data.maxEnergy);
-        lines.add(energyText);
-
         int offset = 0;
 
         for (Component line : lines) {

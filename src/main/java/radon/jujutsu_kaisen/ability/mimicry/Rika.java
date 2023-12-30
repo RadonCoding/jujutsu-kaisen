@@ -58,7 +58,7 @@ public class Rika extends Summon<RikaEntity> {
                 if (rika == null) return;
 
                 rika.getCapability(SorcererDataHandler.INSTANCE).ifPresent(summonCap -> {
-                    if (summonCap.getEnergy() > AMOUNT) {
+                    if (summonCap.getEnergy() > AMOUNT && ownerCap.getEnergy() < ownerCap.getMaxEnergy()) {
                         ownerCap.addEnergy(AMOUNT);
                         summonCap.useEnergy(AMOUNT);
 
