@@ -31,6 +31,19 @@ public class SoulDecimation extends Ability {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             if (!owner.canAttack(target)) return null;
 
+            MobEffectInstance instance = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+
+            if (instance == null) return null;
+
+            int amplifier = instance.getAmplifier();
+
+            float attackerStrength = IdleTransfiguration.calculateStrength(owner);
+            float victimStrength = IdleTransfiguration.calculateStrength(target);
+
+            int required = Math.round((victimStrength / attackerStrength) * 2);
+
+            if (amplifier < required) return null;
+
             return target;
         }
         return null;
@@ -43,19 +56,6 @@ public class SoulDecimation extends Ability {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;
-
-        MobEffectInstance instance = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
-
-        if (instance == null) return;
-
-        int amplifier = instance.getAmplifier();
-
-        float attackerStrength = IdleTransfiguration.calculateStrength(owner);
-        float victimStrength = IdleTransfiguration.calculateStrength(target);
-
-        int required = Math.round((victimStrength / attackerStrength) * 2);
-
-        if (amplifier < required) return;
 
         target.hurt(JJKDamageSources.soulAttack(owner), target.getMaxHealth());
     }
