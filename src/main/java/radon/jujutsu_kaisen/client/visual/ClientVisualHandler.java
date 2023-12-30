@@ -313,19 +313,6 @@ public class ClientVisualHandler {
         }
     }
 
-    /*@SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-
-        if (player == null) return;
-
-        VisualData data = get(player);
-
-        if (data == null) return;
-
-        BlueFistsVisual.tick(data, player);
-    }*/
-
     @SubscribeEvent
     public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
         VisualData data = get(event.getEntity());

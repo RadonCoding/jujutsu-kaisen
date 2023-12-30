@@ -59,8 +59,9 @@ public class ClientAbilityHandler {
 
                     if (isHeld) {
                         if (!isChanneling) {
-                            ClientAbilityHandler.trigger(channeled);
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+                            if (ClientAbilityHandler.trigger(channeled) == Ability.Status.SUCCESS) {
+                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(channeled)));
+                            }
                         }
                         isChanneling = true;
                     } else if (isChanneling) {
@@ -114,8 +115,9 @@ public class ClientAbilityHandler {
                             channeled = ability;
                             current = JJKKeys.ACTIVATE_ABILITY;
                         } else {
-                            ClientAbilityHandler.trigger(ability);
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                            if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
+                                PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                            }
                         }
                     }
                 }
@@ -138,8 +140,9 @@ public class ClientAbilityHandler {
                 }
 
                 if (JJKKeys.DASH.isDown()) {
-                    ClientAbilityHandler.trigger(JJKAbilities.DASH.get());
-                    PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
+                    if (ClientAbilityHandler.trigger(JJKAbilities.DASH.get()) == Ability.Status.SUCCESS) {
+                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(JJKAbilities.DASH.get())));
+                    }
                 }
             } else if (event.getAction() == InputConstants.RELEASE) {
                 if (current != null) {
