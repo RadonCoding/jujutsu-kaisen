@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -291,6 +292,8 @@ public class JJKEventHandler {
                     }
                 }
             }
+
+            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 

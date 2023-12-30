@@ -5,14 +5,19 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
+import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class IdleTransfigurationVisual {
@@ -46,8 +51,34 @@ public class IdleTransfigurationVisual {
     }
 
     public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.level == null || mc.player == null) return;
+
         if (data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             run(entity);
+        }
+
+        MobEffectInstance instance = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+
+        if (instance != null) {
+            int amplifier = instance.getAmplifier();
+
+            float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
+            float victimStrength = IdleTransfiguration.calculateStrength(entity);
+
+            int required = Math.round((victimStrength / attackerStrength) * 2);
+
+            if (amplifier >= required) {
+                int count = (int) (entity.getBbWidth() * entity.getBbHeight()) / 2;
+
+                for (int i = 0; i < count; i++) {
+                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - entity.getLookAngle().scale(0.35D).x;
+                    double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
+                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - entity.getLookAngle().scale(0.35D).z;
+                    mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
+                }
+            }
         }
     }
 

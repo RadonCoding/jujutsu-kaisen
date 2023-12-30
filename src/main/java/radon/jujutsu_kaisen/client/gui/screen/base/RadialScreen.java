@@ -165,11 +165,12 @@ public abstract class RadialScreen extends Screen {
                     Ability ability = item.ability;
 
                     if (cap.hasToggled(ability) || cap.isChanneling(ability)) {
-                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                         AbilityHandler.untrigger(this.minecraft.player, ability);
+                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                     } else {
-                        PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                        ClientAbilityHandler.trigger(ability);
+                        if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
+                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
+                        }
                     }
                 }
                 case CURSE -> {
