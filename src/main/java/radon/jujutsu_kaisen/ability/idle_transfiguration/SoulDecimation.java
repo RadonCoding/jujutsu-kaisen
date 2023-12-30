@@ -27,6 +27,11 @@ public class SoulDecimation extends Ability {
         return ActivationType.INSTANT;
     }
 
+    @Override
+    public boolean isScalable(LivingEntity owner) {
+        return false;
+    }
+
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             if (!owner.canAttack(target)) return null;

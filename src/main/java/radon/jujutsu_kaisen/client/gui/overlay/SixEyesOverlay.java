@@ -28,7 +28,7 @@ public class SixEyesOverlay {
         if (!(HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
         if (!(hit.getEntity() instanceof LivingEntity target)) return;
 
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(target);
 
         if (data == null) return;
 

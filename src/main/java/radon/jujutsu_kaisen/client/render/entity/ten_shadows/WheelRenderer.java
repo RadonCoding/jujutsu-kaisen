@@ -8,21 +8,15 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.GeoRenderer;
 
 public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
     public WheelRenderer(EntityRendererProvider.Context renderManager) {
@@ -52,7 +46,7 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
 
         if (owner == null) return;
 
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get(owner.getUUID());
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(owner.getUUID());
 
         if (data != null && data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
             red = 0.0F;

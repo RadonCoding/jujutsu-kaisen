@@ -263,7 +263,7 @@ public class JJKClientEventHandler {
 
             LivingEntity target = event.getEntity();
 
-            ClientVisualHandler.VisualData data = ClientVisualHandler.get(target);
+            ClientVisualHandler.ClientData data = ClientVisualHandler.get(target);
 
             if (data == null) return;
 

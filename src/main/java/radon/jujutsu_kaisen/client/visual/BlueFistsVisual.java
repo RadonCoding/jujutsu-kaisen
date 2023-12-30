@@ -44,7 +44,7 @@ public class BlueFistsVisual {
                         Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
+    public static void tick(ClientVisualHandler.ClientData data, LivingEntity entity) {
         if (data.toggled.contains(JJKAbilities.BLUE_FISTS.get())) {
             run(entity);
         }

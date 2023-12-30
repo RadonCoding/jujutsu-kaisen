@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
@@ -36,7 +35,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
             float experience;
 
             if (owner.level().isClientSide) {
-                ClientVisualHandler.VisualData data = ClientVisualHandler.get(curse);
+                ClientVisualHandler.ClientData data = ClientVisualHandler.get(curse);
 
                 if (data == null) return null;
 

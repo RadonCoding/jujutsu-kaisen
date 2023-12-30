@@ -21,7 +21,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
     public void getTeamColor(CallbackInfoReturnable<Integer> cir) {
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get((Entity) (Object) this);
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get((Entity) (Object) this);
 
         if (data == null || !data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 

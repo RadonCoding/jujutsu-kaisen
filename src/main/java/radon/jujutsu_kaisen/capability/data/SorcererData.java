@@ -172,7 +172,7 @@ public class SorcererData implements ISorcererData {
 
     private void sync() {
         if (!this.owner.level().isClientSide) {
-            ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getTechnique(), this.getType(),
+            ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(this.getToggled(), this.getTraits(), this.getTechniques(), this.getTechnique(), this.getType(),
                     this.getExperience(), this.getEnergy(), this.getMaxEnergy(), this.getCursedEnergyColor());
             PacketHandler.broadcast(new SyncVisualDataS2CPacket(this.owner.getUUID(), data.serializeNBT()));
         }
