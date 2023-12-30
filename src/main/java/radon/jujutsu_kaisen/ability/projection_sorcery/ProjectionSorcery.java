@@ -99,7 +99,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
         float nextYaw;
 
-        if (index > 0) {
+        if (index > 0 && index <= frames.size()) {
             AbstractMap.SimpleEntry<Vec3, Float> entry = frames.get(index - 1);
 
             Vec3 current = entry.getKey();
