@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -64,7 +65,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null;
+        return target != null || owner.isInFluidType();
     }
 
     @Override
