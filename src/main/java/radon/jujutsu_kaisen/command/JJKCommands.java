@@ -23,5 +23,6 @@ public class JJKCommands {
         AddPointsCommand.register(event.getDispatcher());
         PactRemovalAcceptCommand.register(event.getDispatcher());
         PactRemovalDeclineCommand.register(event.getDispatcher());
+        RefillCommand.register(event.getDispatcher());
     }
 }
