@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -12,19 +11,19 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
-public class SetExperienceCommand {
+public class RefillCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("setexperience")
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(Commands.literal("refill")
                 .requires((player) -> player.hasPermission(2))
-                .then(Commands.argument("player", EntityArgument.entity()).then(Commands.argument("experience", FloatArgumentType.floatArg())
-                        .executes(ctx -> setExperience(EntityArgument.getPlayer(ctx, "player"), FloatArgumentType.getFloat(ctx, "experience"))))));
+                .then(Commands.argument("player", EntityArgument.entity()).executes((ctx) ->
+                        refill(EntityArgument.getPlayer(ctx, "player")))));
 
-        dispatcher.register(Commands.literal("setexperience").requires((player) -> player.hasPermission(2)).redirect(node));
+        dispatcher.register(Commands.literal("refill").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    public static int setExperience(ServerPlayer player, float experience) {
+    public static int refill(ServerPlayer player) {
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setExperience(experience);
+        cap.setEnergy(cap.getMaxEnergy());
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         return 1;
     }

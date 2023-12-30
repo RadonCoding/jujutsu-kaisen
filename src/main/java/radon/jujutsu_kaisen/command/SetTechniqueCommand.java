@@ -7,6 +7,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.server.command.EnumArgument;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -23,11 +24,10 @@ public class SetTechniqueCommand {
     }
 
     public static int setTechnique(ServerPlayer player, CursedTechnique technique) {
-        player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            cap.setTechnique(technique);
-            cap.clearToggled();
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-        });
+        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.setTechnique(technique);
+        cap.clearToggled();
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         return 1;
     }
 }
