@@ -1,18 +1,14 @@
 package radon.jujutsu_kaisen.network.packet.c2s;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ReceiveVisualDataS2CPacket;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -43,7 +39,7 @@ public class RequestVisualDataC2SPacket {
 
             if (target != null) {
                 target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    ClientVisualHandler.VisualData data = new ClientVisualHandler.VisualData(cap.getToggled(), cap.getTraits(), cap.getTechniques(), cap.getTechnique(), cap.getType(),
+                    ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(cap.getToggled(), cap.getTraits(), cap.getTechniques(), cap.getTechnique(), cap.getType(),
                             cap.getExperience(), cap.getEnergy(), cap.getMaxEnergy(), cap.getCursedEnergyColor());
                     PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
                 });

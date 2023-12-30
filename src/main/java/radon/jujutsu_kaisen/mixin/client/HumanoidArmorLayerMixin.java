@@ -50,7 +50,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"))
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch, CallbackInfo ci) {
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(pLivingEntity);
 
         if (data == null) return;
 
@@ -109,7 +109,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
     @Inject(method = "renderArmorPiece", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/layers/HumanoidArmorLayer;setPartVisibility(Lnet/minecraft/client/model/HumanoidModel;Lnet/minecraft/world/entity/EquipmentSlot;)V", shift = At.Shift.AFTER))
     public void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci) {
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get(pLivingEntity);
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(pLivingEntity);
 
         if (data == null) return;
 

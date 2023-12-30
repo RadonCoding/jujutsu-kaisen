@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +49,7 @@ public class IdleTransfigurationVisual {
                         Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    public static void tick(ClientVisualHandler.VisualData data, LivingEntity entity) {
+    public static void tick(ClientVisualHandler.ClientData data, LivingEntity entity) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null || mc.player == null) return;

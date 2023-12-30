@@ -10,7 +10,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
@@ -21,7 +20,7 @@ public class HeianSukunaMouthLayer extends GeoRenderLayer<HeianSukunaEntity> {
 
     @Override
     public void render(PoseStack poseStack, HeianSukunaEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        ClientVisualHandler.VisualData data = ClientVisualHandler.get(animatable);
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(animatable);
 
         if (data == null) return;
 

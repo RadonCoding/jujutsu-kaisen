@@ -27,7 +27,7 @@ public class ParticleColors {
 
     public static Vector3f getCursedEnergyColor(LivingEntity entity) {
         if (entity.level().isClientSide) {
-            ClientVisualHandler.VisualData data = ClientVisualHandler.get(entity);
+            ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
 
             if (data == null) {
                 return Vec3.ZERO.toVector3f();

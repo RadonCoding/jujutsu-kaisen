@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -22,20 +20,16 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.IArmPoseTransformer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -48,8 +42,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.entity.sorcerer.HeianSukunaEntity;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.mixin.client.ILivingEntityRendererAccessor;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.RequestVisualDataC2SPacket;
@@ -66,9 +58,9 @@ public class ClientVisualHandler {
 
     private static final int MAX_MOUTH_FRAMES = 4;
 
-    private static final Map<UUID, VisualData> synced = new HashMap<>();
+    private static final Map<UUID, ClientData> synced = new HashMap<>();
 
-    public static void receive(UUID identifier, VisualData data) {
+    public static void receive(UUID identifier, ClientData data) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null) return;
@@ -77,7 +69,7 @@ public class ClientVisualHandler {
     }
 
     public static void onChant(UUID identifier) {
-        VisualData data = get(identifier);
+        ClientData data = get(identifier);
 
         if (data == null) return;
 
@@ -85,12 +77,12 @@ public class ClientVisualHandler {
     }
 
     @Nullable
-    public static VisualData get(UUID identifier) {
+    public static ClientVisualHandler.ClientData get(UUID identifier) {
         return synced.get(identifier);
     }
 
     @Nullable
-    public static VisualData get(Entity entity) {
+    public static ClientVisualHandler.ClientData get(Entity entity) {
         if (!entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 
         Minecraft mc = Minecraft.getInstance();
@@ -110,7 +102,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new VisualData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getEnergy(), cap.getMaxEnergy(), cap.getCursedEnergyColor());
+                return new ClientData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getEnergy(), cap.getMaxEnergy(), cap.getCursedEnergyColor());
             }
         }
         return null;
@@ -159,7 +151,7 @@ public class ClientVisualHandler {
         }
     }
 
-    public static boolean shouldRenderExtraArms(LivingEntity entity, VisualData data) {
+    public static boolean shouldRenderExtraArms(LivingEntity entity, ClientData data) {
         if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
 
         for (Ability ability : data.toggled) {
@@ -171,7 +163,7 @@ public class ClientVisualHandler {
     }
 
     public static <T extends LivingEntity> void renderOverlay(T entity, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
-        VisualData data = get(entity);
+        ClientData data = get(entity);
 
         if (data == null) return;
 
@@ -297,7 +289,7 @@ public class ClientVisualHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
 
-        VisualData data = get(entity);
+        ClientData data = get(entity);
 
         if (data == null) return;
 
@@ -315,7 +307,7 @@ public class ClientVisualHandler {
 
     @SubscribeEvent
     public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
-        VisualData data = get(event.getEntity());
+        ClientData data = get(event.getEntity());
 
         if (data == null) return;
 
@@ -360,7 +352,7 @@ public class ClientVisualHandler {
         }
     }
 
-    public static class VisualData {
+    public static class ClientData {
         public final Set<Ability> toggled;
         public final Set<Trait> traits;
         public final Set<CursedTechnique> techniques;
@@ -374,7 +366,7 @@ public class ClientVisualHandler {
 
         public int mouth;
 
-        public VisualData(CompoundTag nbt) {
+        public ClientData(CompoundTag nbt) {
             this.toggled = new HashSet<>();
             this.traits = new HashSet<>();
             this.techniques = new HashSet<>();
@@ -404,7 +396,7 @@ public class ClientVisualHandler {
             this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
         }
 
-        public VisualData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, float energy, float maxEnergy, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, float energy, float maxEnergy, int cursedEnergyColor) {
             this.toggled = toggled;
             this.traits = traits;
             this.techniques = techniques;
