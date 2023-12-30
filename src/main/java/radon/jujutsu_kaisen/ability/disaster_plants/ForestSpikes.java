@@ -24,8 +24,6 @@ public class ForestSpikes extends Ability {
     private static final double RANGE = 30.0D;
     private static final float SPREAD = 5.0F;
 
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
@@ -107,8 +105,6 @@ public class ForestSpikes extends Ability {
     public int getCooldown() {
         return 10 * 20;
     }
-
-
 
     @Override
     public MenuType getMenuType() {
