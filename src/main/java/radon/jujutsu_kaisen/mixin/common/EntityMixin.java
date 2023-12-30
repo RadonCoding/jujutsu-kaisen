@@ -15,8 +15,6 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow private Level level;
-
     @Shadow public abstract AABB getBoundingBox();
 
     @Inject(method = "getTeamColor", at = @At("TAIL"), cancellable = true)
@@ -25,7 +23,7 @@ public abstract class EntityMixin {
 
         if (data == null || !data.toggled.contains(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
-        Vector3f color = ParticleColors.getCursedEnergyColor(data.type);
+        Vector3f color = ParticleColors.getCursedEnergyColor((Entity) (Object) this);
 
         int r = (int) (color.x * 255.0D);
         int g = (int) (color.y * 255.0D);
