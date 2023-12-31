@@ -103,7 +103,7 @@ public class ServerConfig {
                         .map(x -> String.format(Locale.ROOT, "%s=%f", x.getKey().toString(), x.getValue()))
                         .toList(), obj -> obj instanceof String);
         this.cursedEnergyAmount = builder.comment("Cursed energy amount (scales with experience)")
-                .defineInRange("maxCursedEnergyDefault", 500.0F, 0.0F, 100000.0F);
+                .defineInRange("cursedEnergyAmount", 500.0F, 0.0F, 100000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.requiredExperience = builder.comment("Required experience for grade")
