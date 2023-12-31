@@ -316,7 +316,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                         total++;
 
-                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity || state.is(Blocks.BEDROCK)) count++;
+                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity || state.is(Blocks.BEDROCK) || pos.getY() < this.level().dimensionType().minY()) count++;
                     }
                 }
             }
