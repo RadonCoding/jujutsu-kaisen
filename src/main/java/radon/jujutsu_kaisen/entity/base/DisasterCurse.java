@@ -23,7 +23,7 @@ public abstract class DisasterCurse extends CursedSpirit {
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getGrade().getRequiredExperience()) *
+            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()) *
                     (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
         }
 
