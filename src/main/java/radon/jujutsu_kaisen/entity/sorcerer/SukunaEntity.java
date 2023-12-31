@@ -58,8 +58,8 @@ public class SukunaEntity extends SorcererEntity {
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
 
-        Arrays.fill(this.armorDropChances, 1.0F);
-        Arrays.fill(this.handDropChances, 1.0F);
+        Arrays.fill(this.armorDropChances, 0.0F);
+        Arrays.fill(this.handDropChances, 0.0F);
     }
 
     public SukunaEntity(LivingEntity owner, int fingers, boolean vessel) {
