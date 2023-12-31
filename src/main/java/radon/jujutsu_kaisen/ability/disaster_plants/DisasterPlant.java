@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class DisasterPlant extends Ability {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 32.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
