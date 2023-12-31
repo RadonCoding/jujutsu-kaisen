@@ -33,8 +33,6 @@ public class SoulRestoration extends Ability {
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             if (!owner.canAttack(target)) return null;
 
-            if (owner.getHealth() == owner.getMaxHealth()) return null;
-
             return target;
         }
         return null;
@@ -84,6 +82,6 @@ public class SoulRestoration extends Ability {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 }

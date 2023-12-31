@@ -45,9 +45,9 @@ public abstract class RadialScreen extends Screen {
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
     private final List<List<DisplayItem>> pages = new ArrayList<>();
-    private final Map<EntityType<?>, Integer> curses = new HashMap<>();
+    protected final Map<EntityType<?>, Integer> curses = new HashMap<>();
 
-    private int hovered = -1;
+    protected int hovered = -1;
     private int hover;
     private static int page;
 
@@ -151,46 +151,6 @@ public abstract class RadialScreen extends Screen {
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    @Override
-    public void onClose() {
-        if (this.hovered != -1) {
-            if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            DisplayItem item = this.getCurrent().get(this.hovered);
-
-            switch (item.type) {
-                case ABILITY -> {
-                    Ability ability = item.ability;
-
-                    if (cap.hasToggled(ability) || cap.isChanneling(ability)) {
-                        AbilityHandler.untrigger(this.minecraft.player, ability);
-                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                    } else {
-                        if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                        }
-                    }
-                }
-                case CURSE -> {
-                    EntityType<?> type = item.curse.getKey();
-                    Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type), this.curses.getOrDefault(type, 1)));
-                }
-                case COPIED -> {
-                    PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
-                    cap.setCurrentCopied(item.copied);
-                }
-                case ABSORBED -> {
-                    PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
-                    cap.setCurrentAbsorbed(item.absorbed);
-                }
-            }
-        }
-        super.onClose();
-    }
-
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
         Quaternionf quaternionf = (new Quaternionf()).rotateZ((float) Math.PI);
         Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * ((float) Math.PI / 180.0F));
@@ -237,14 +197,21 @@ public abstract class RadialScreen extends Screen {
         RenderSystem.applyModelViewMatrix();
     }
 
+    protected boolean isActive(DisplayItem item) {
+        if (this.minecraft == null || this.minecraft.player == null) return false;
+
+        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
+                item.type == DisplayItem.Type.COPIED && cap.getCurrentCopied() == item.copied ||
+                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentCopied() == item.absorbed;
+    }
+
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;
@@ -270,9 +237,7 @@ public abstract class RadialScreen extends Screen {
 
             int color;
 
-            if (item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
-                    item.type == DisplayItem.Type.COPIED && cap.getCurrentCopied() == item.copied ||
-                    item.type == DisplayItem.Type.ABSORBED && cap.getCurrentCopied() == item.absorbed) {
+            if (this.isActive(item)) {
                 color = this.hovered == i ? black : white;
             } else {
                 color = this.hovered == i ? white : black;
@@ -288,7 +253,7 @@ public abstract class RadialScreen extends Screen {
             if (this.pages.size() - 1 > page) {
                 String symbol = ">";
 
-                int x = centerX + Math.round(RADIUS_OUT) + 20;
+                int x = centerX + RADIUS_OUT + 20;
                 int y = centerY - this.minecraft.font.lineHeight;
 
                 pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);
@@ -296,7 +261,7 @@ public abstract class RadialScreen extends Screen {
             if (page > 0) {
                 String symbol = "<";
 
-                int x = centerX - Math.round(RADIUS_OUT) - 20;
+                int x = centerX - RADIUS_OUT - 20;
                 int y = centerY - this.minecraft.font.lineHeight;
 
                 pGuiGraphics.drawCenteredString(this.font, symbol, x, y, 16777215);

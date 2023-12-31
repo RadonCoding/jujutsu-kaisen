@@ -83,6 +83,6 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 }

@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.ability.disaster_plants;
 
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
@@ -9,7 +8,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
-import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestDash extends Ability implements Ability.IChannelened {
@@ -48,6 +46,6 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 }

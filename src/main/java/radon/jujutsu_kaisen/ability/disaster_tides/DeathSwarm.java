@@ -75,7 +75,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 
     @Override

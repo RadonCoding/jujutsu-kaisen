@@ -6,14 +6,10 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 
 public class JJKKeys {
     public static String KEY_CATEGORY_JUJUTSU_KAISEN = String.format("key.category.%s", JujutsuKaisen.MOD_ID);
-    public static KeyMapping ABILITY_SCROLL = createKeyMapping("ability_scroll",
+    public static KeyMapping ACTIVATE_MELEE_MENU = createKeyMapping("activate_melee_menu",
             InputConstants.KEY_LALT);
     public static KeyMapping ACTIVATE_ABILITY = createKeyMapping("activate_ability",
             InputConstants.KEY_R);
-    public static KeyMapping ABILITY_UP = createKeyMapping("ability_up",
-            -1);
-    public static KeyMapping ABILITY_DOWN = createKeyMapping("ability_down",
-            -1);
     public static KeyMapping ACTIVATE_RCT_OR_HEAL = createKeyMapping("activate_rct_or_heal",
             InputConstants.KEY_X);
     public static KeyMapping OPEN_INVENTORY_CURSE = createKeyMapping("open_inventory_curse",

@@ -9,7 +9,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.AirFrameEntity;
-import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class AirFrame extends Ability implements Ability.IChannelened, Ability.IDurationable {
@@ -59,6 +58,6 @@ public class AirFrame extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 }

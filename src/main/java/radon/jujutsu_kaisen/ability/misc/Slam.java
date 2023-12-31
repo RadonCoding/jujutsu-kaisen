@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -98,7 +97,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 
     public static void onHitGround(LivingEntity owner, float distance) {
