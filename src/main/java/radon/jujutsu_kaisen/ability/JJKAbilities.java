@@ -349,10 +349,6 @@ public class JJKAbilities {
         }
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            for (Trait trait : cap.getTraits()) {
-                abilities.addAll(Arrays.asList(trait.getAbilities()));
-            }
-
             for (CursedTechnique technique : cap.getTechniques()) {
                 abilities.addAll(Arrays.asList(technique.getAbilities()));
             }

@@ -61,7 +61,7 @@ public class Switch extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getFingers() > 0;
+        return cap.hasTrait(Trait.VESSEL) && cap.getFingers() > 0;
     }
 
     @Override
