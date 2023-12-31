@@ -9,18 +9,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 public enum Trait {
     SIX_EYES,
     HEAVENLY_RESTRICTION,
-    VESSEL(JJKAbilities.SWITCH.get()),
+    VESSEL,
     PERFECT_BODY;
-
-    private final Ability[] abilities;
-
-    Trait(Ability... abilities) {
-        this.abilities = abilities;
-    }
-
-    public Ability[] getAbilities() {
-        return this.abilities;
-    }
 
     public Component getName() {
         return Component.translatable(String.format("trait.%s.%s", JujutsuKaisen.MOD_ID, this.name().toLowerCase()));
