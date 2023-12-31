@@ -31,6 +31,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
 import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
@@ -231,16 +233,14 @@ public class JJKClientEventHandler {
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
                     mc.setScreen(new JujutsuScreen());
                 }
-                if (JJKKeys.ABILITY_UP.consumeClick()) {
-                    AbilityOverlay.scroll(1);
-                } else if (JJKKeys.ABILITY_DOWN.consumeClick()) {
-                    AbilityOverlay.scroll(-1);
-                }
                 if (JJKKeys.SHOW_ABILITY_MENU.isDown()) {
                     mc.setScreen(new AbilityScreen());
                 }
                 if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
                     mc.setScreen(new DomainScreen());
+                }
+                if (ConfigHolder.CLIENT.meleeMenuType.get() == 2 && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
+                    mc.setScreen(new MeleeScreen());
                 }
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {
                     ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -332,10 +332,8 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-            event.register(JJKKeys.ABILITY_SCROLL);
+            event.register(JJKKeys.ACTIVATE_MELEE_MENU);
             event.register(JJKKeys.ACTIVATE_ABILITY);
-            event.register(JJKKeys.ABILITY_UP);
-            event.register(JJKKeys.ABILITY_DOWN);
             event.register(JJKKeys.ACTIVATE_RCT_OR_HEAL);
             event.register(JJKKeys.OPEN_INVENTORY_CURSE);
             event.register(JJKKeys.ACTIVATE_CURSED_ENERGY_SHIELD);

@@ -40,7 +40,7 @@ public class OutputRCT extends Ability {
 
     @Override
     public MenuType getMenuType() {
-        return MenuType.SCROLL;
+        return MenuType.MELEE;
     }
 
     @Nullable

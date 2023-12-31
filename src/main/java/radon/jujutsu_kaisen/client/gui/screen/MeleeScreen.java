@@ -1,28 +1,36 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
-import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.c2s.*;
 
 import java.util.*;
 
-public class AbilityScreen extends RadialScreen {
+public class MeleeScreen extends RadialScreen {
+    @Nullable
+    private static Ability selected;
+
+    public static @Nullable Ability getSelected() {
+        return selected;
+    }
+
+    @Override
+    protected boolean isActive(DisplayItem item) {
+        return MeleeScreen.getSelected() == item.ability || super.isActive(item);
+    }
+
     @Override
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
@@ -30,7 +38,7 @@ public class AbilityScreen extends RadialScreen {
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
-        abilities.removeIf(ability -> ability.getMenuType() != MenuType.RADIAL);
+        abilities.removeIf(ability -> ability.getMenuType() != MenuType.MELEE);
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
@@ -53,37 +61,9 @@ public class AbilityScreen extends RadialScreen {
         if (this.hovered != -1) {
             if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             DisplayItem item = this.getCurrent().get(this.hovered);
 
-            switch (item.type) {
-                case ABILITY -> {
-                    Ability ability = item.ability;
-
-                    if (cap.hasToggled(ability) || cap.isChanneling(ability)) {
-                        AbilityHandler.untrigger(this.minecraft.player, ability);
-                        PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                    } else {
-                        if (ClientAbilityHandler.trigger(ability) == Ability.Status.SUCCESS) {
-                            PacketHandler.sendToServer(new TriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
-                        }
-                    }
-                }
-                case CURSE -> {
-                    EntityType<?> type = item.curse.getKey();
-                    Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type), this.curses.getOrDefault(type, 1)));
-                }
-                case COPIED -> {
-                    PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
-                    cap.setCurrentCopied(item.copied);
-                }
-                case ABSORBED -> {
-                    PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
-                    cap.setCurrentAbsorbed(item.absorbed);
-                }
-            }
+            selected = item.ability;
         }
     }
 
@@ -108,7 +88,7 @@ public class AbilityScreen extends RadialScreen {
 
     @Override
     public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == JJKKeys.SHOW_ABILITY_MENU.getKey().getValue()) {
+        if (pKeyCode == JJKKeys.ACTIVATE_MELEE_MENU.getKey().getValue()) {
             this.onClose();
         }
         return super.keyReleased(pKeyCode, pScanCode, pModifiers);
