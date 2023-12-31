@@ -36,6 +36,8 @@ import java.util.Set;
 public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     private static final EntityDataAccessor<Integer> DATA_RADIUS = SynchedEntityData.defineId(ClosedDomainExpansionEntity.class, EntityDataSerializers.INT);
 
+    private int total;
+
     public ClosedDomainExpansionEntity(EntityType<? > pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -74,6 +76,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.readAdditionalSaveData(pCompound);
 
         this.entityData.set(DATA_RADIUS, pCompound.getInt("radius"));
+        this.total = pCompound.getInt("total");
     }
 
     @Override
@@ -81,6 +84,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("radius", this.getRadius());
+        pCompound.putInt("total", this.total);
     }
 
     public int getRadius() {
@@ -157,8 +161,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
             if (block == null) return;
 
-            owner.level().setBlock(pos, block.defaultBlockState(),
+            boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
                     Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+            if (success) this.total++;
 
             if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
                 be.create(this.uuid, state, saved);
@@ -167,6 +173,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     private void createBarrier(boolean instant) {
+        this.total = 0;
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -302,7 +310,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
-        int total = 0;
         int count = 0;
 
         for (int x = -radius; x <= radius; x++) {
@@ -312,17 +319,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     if (distance < radius && distance >= radius - 1) {
                         BlockPos pos = center.offset(x, y, z);
-                        BlockState state = this.level().getBlockState(pos);
 
-                        total++;
-
-                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity || state.is(Blocks.BEDROCK) || pos.getY() < this.level().dimensionType().minY()) count++;
+                        if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be && be.getIdentifier() != null && be.getIdentifier().equals(this.getUUID())) count++;
                     }
                 }
             }
         }
 
-        if ((float) count / total < 0.75F) {
+        if ((float) count / this.total < 0.75F) {
             this.discard();
         }
     }
