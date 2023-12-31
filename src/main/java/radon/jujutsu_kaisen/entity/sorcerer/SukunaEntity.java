@@ -38,10 +38,7 @@ import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class SukunaEntity extends SorcererEntity {
     private static final EntityDataAccessor<Optional<ResourceLocation>> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_RESOURCE_LOCATION.get());
@@ -60,10 +57,13 @@ public class SukunaEntity extends SorcererEntity {
 
     public SukunaEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
+
+        Arrays.fill(this.armorDropChances, 1.0F);
+        Arrays.fill(this.handDropChances, 1.0F);
     }
 
     public SukunaEntity(LivingEntity owner, int fingers, boolean vessel) {
-        super(JJKEntities.SUKUNA.get(), owner.level());
+        this(JJKEntities.SUKUNA.get(), owner.level());
 
         this.setOwner(owner);
 
