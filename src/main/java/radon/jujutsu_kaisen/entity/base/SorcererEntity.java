@@ -35,7 +35,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Arrays;
 
 public abstract class SorcererEntity extends PathfinderMob implements GeoEntity, ISorcerer {
-    private static final int RARITY = 3;
+    private static final int RARITY = 1;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
