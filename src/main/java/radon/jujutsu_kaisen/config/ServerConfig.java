@@ -46,6 +46,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> cursedEnergyAmounts;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> experienceMultipliers;
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
+    public final ForgeConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> requiredExperience;
     public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
     public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
@@ -103,6 +104,8 @@ public class ServerConfig {
                         .toList(), obj -> obj instanceof String);
         this.cursedEnergyAmount = builder.comment("Cursed energy amount (scales with experience)")
                 .defineInRange("maxCursedEnergyDefault", 500.0F, 0.0F, 100000.0F);
+        this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
+                .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.requiredExperience = builder.comment("Required experience for grade")
                 .defineList("requiredExperience", REQUIRED_EXPERIENCE
                         .entrySet()

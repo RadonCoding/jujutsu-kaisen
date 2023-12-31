@@ -117,7 +117,6 @@ public class SorcererData implements ISorcererData {
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
-    private static final float ENERGY_AMOUNT = 0.25F;
     private static final int REQUIRED_ADAPTATION = 60 * 20;
     private static final int ADAPTATION_STEP = 5 * 20;
     private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
@@ -433,7 +432,7 @@ public class SorcererData implements ISorcererData {
             this.burnout--;
         }
 
-        this.energy = Math.min(this.energy + (ENERGY_AMOUNT * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
+        this.energy = Math.min(this.energy + (ConfigHolder.SERVER.cursedEnergyRegenerationAmount.get().floatValue() * (this.owner instanceof Player player ? (player.getFoodData().getFoodLevel() / 20.0F) : 1.0F)), this.getMaxEnergy());
 
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
