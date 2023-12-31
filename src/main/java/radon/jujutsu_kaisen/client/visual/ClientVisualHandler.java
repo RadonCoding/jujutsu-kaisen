@@ -289,12 +289,12 @@ public class ClientVisualHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
 
-        ClientData data = get(entity);
+        BlueFistsVisual.tick(entity);
+        IdleTransfigurationVisual.tick(entity);
+
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
 
         if (data == null) return;
-
-        BlueFistsVisual.tick(data, entity);
-        IdleTransfigurationVisual.tick(data, entity);
 
         if (entity.level().getGameTime() % 5 == 0) {
             if (data.mouth > 0) {

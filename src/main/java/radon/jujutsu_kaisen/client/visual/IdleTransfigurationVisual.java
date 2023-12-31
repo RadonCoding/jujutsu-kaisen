@@ -49,14 +49,10 @@ public class IdleTransfigurationVisual {
                         Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    public static void tick(ClientVisualHandler.ClientData data, LivingEntity entity) {
+    public static void tick(LivingEntity entity) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null || mc.player == null) return;
-
-        if (data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            run(entity);
-        }
 
         MobEffectInstance instance = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
 
@@ -78,6 +74,14 @@ public class IdleTransfigurationVisual {
                     mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
                 }
             }
+        }
+
+        ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
+
+        if (data == null) return;
+
+        if (data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            run(entity);
         }
     }
 
