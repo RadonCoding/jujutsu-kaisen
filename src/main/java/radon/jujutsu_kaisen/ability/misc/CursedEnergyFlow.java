@@ -170,15 +170,10 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        double movement = cap.getExperience() * 0.0005D;
-        HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                Math.min(owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 1.25D,  movement), AttributeModifier.Operation.ADDITION);
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        HelperMethods.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 
     @Override
