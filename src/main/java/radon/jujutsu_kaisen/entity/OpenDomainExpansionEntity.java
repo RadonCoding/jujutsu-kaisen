@@ -49,6 +49,16 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     @Override
+    public void push(@NotNull Entity pEntity) {
+
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
+    @Override
     public boolean isAffected(BlockPos pos) {
         if (VeilHandler.isProtected(this.level(), pos)) return false;
 
