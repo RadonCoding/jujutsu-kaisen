@@ -96,7 +96,7 @@ public abstract class Ability {
     }
 
     public boolean isUnlockable(LivingEntity owner) {
-        if (this.isBlocked(owner)) return false;
+        if (this.getPointsCost() == 0 || this.isBlocked(owner)) return false;
 
         if (owner instanceof Player player && player.getAbilities().instabuild) {
             return true;
