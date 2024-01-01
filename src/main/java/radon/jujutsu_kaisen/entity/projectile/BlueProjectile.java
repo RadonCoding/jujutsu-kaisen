@@ -56,7 +56,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATA_MOTION, motion);
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -240,7 +240,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(owner.getLookAngle().scale(OFFSET));
+            Vec3 pos = center.add(HelperMethods.getLookAngle(owner).scale(OFFSET));
             this.setPos(pos.x, pos.y - (this.getBbHeight() / 2.0F), pos.z);
         }
     }
@@ -270,14 +270,14 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = owner.getLookAngle();
+                        Vec3 look = HelperMethods.getLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
-                        Vec3 look = owner.getLookAngle();
+                        Vec3 look = HelperMethods.getLookAngle(owner);
                         Vec3 end = start.add(look.scale(RANGE));
                         HitResult result = HelperMethods.getHitResult(owner, start, end);
 

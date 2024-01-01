@@ -34,7 +34,7 @@ public class DismantleNet extends Ability {
         int size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, (int) (SIZE * this.getPower(owner))));
         int count = size / 4;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
 
         Vec3 center = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 

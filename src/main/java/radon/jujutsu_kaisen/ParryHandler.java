@@ -39,7 +39,7 @@ public class ParryHandler {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) rng /= 2;
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
-                Vec3 look = victim.getLookAngle();
+                Vec3 look = HelperMethods.getLookAngle(victim);
                 Vec3 start = victim.getEyePosition();
                 Vec3 result = attacker.getEyePosition().subtract(start);
 

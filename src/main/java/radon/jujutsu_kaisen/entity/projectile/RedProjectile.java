@@ -48,7 +48,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         this.chanted = chanted;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -81,7 +81,7 @@ public class RedProjectile extends JujutsuProjectile {
             float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
-                entity.setDeltaMovement(this.getLookAngle().multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+                entity.setDeltaMovement(HelperMethods.getLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                 entity.hurtMarked = true;
             }
         }
@@ -115,7 +115,7 @@ public class RedProjectile extends JujutsuProjectile {
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = owner.getLookAngle();
+                    Vec3 look = HelperMethods.getLookAngle(owner);
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
@@ -148,7 +148,7 @@ public class RedProjectile extends JujutsuProjectile {
                 }
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                    this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
                 }
             }
         }

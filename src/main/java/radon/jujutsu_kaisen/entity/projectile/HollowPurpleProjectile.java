@@ -44,7 +44,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(LivingEntity owner, float power) {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(this.getRadius() * 0.5F));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
@@ -197,7 +197,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (owner == null) return;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         float yaw = owner.getYRot();
         Vec3 right = new Vec3(-Math.sin(Math.toRadians(yaw)), 0.0D, Math.cos(Math.toRadians(yaw)));
         Vec3 pos = look.cross(right).normalize().scale(offset);
@@ -276,7 +276,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = owner.getLookAngle();
+                        Vec3 look = HelperMethods.getLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                                 .add(look.scale(this.getRadius() * 0.5F));
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
@@ -288,7 +288,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     }
 
                     if (this.getTime() == DELAY) {
-                        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+                        this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     }
                 }

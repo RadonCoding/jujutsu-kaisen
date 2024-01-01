@@ -23,7 +23,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.NearestAttackableHumanGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -128,7 +127,6 @@ public class SuguruGetoEntity extends SorcererEntity {
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 

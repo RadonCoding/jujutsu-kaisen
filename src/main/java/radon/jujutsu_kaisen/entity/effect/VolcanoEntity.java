@@ -60,7 +60,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         if (this.getTime() >= DURATION) {
             this.discard();
         } else if (this.getTime() >= DELAY) {
-            Vec3 look = this.getLookAngle();
+            Vec3 look = HelperMethods.getLookAngle(this);
 
             for (int i = 0; i < 96; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;

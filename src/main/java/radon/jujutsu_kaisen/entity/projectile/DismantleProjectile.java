@@ -55,7 +55,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(owner.getLookAngle());
+                .add(HelperMethods.getLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
         this.entityData.set(DATE_ROLL, roll);

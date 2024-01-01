@@ -23,11 +23,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -58,8 +58,8 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.setOwner(owner);
 
         Vec3 pos = ritual ? owner.position() : owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                .add(owner.getLookAngle().yRot(90.0F).scale(this.getVariant() == Variant.WHITE ? -0.45D : 0.45D));
+                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                .add(HelperMethods.getLookAngle(owner).yRot(90.0F).scale(this.getVariant() == Variant.WHITE ? -0.45D : 0.45D));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -101,7 +101,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         double z = this.getZ();
 
         double distance = this.getBbWidth() * 2;
-        Vec3 look = this.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(this);
         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
@@ -191,7 +191,6 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 

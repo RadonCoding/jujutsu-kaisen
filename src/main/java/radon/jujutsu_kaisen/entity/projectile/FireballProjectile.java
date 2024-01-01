@@ -52,7 +52,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.FIREBALL.get(), owner.level(), owner, power);
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(owner.getLookAngle());
+                .add(HelperMethods.getLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
@@ -168,7 +168,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (int i = 0; i < 2; i++) {
-                Vec3 dir = owner.getLookAngle().reverse().scale(0.1D);
+                Vec3 dir = HelperMethods.getLookAngle(owner).reverse().scale(0.1D);
                 double dx = dir.x + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dy = dir.y + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z + ((this.random.nextDouble() - 0.5D) * 0.5D);
@@ -176,7 +176,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
             if (this.getTime() < DELAY) {
-                Vec3 look = owner.getLookAngle();
+                Vec3 look = HelperMethods.getLookAngle(owner);
                 double d0 = look.horizontalDistance();
                 this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
                 this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
@@ -190,11 +190,11 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                            .add(owner.getLookAngle());
+                            .add(HelperMethods.getLookAngle(owner));
                     this.setPos(spawn.x, spawn.y, spawn.z);
                 }
             } else if (this.getTime() == DELAY) {
-                this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
+                this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }

@@ -33,7 +33,7 @@ public class Volcano extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
         HitResult result = HelperMethods.getHitResult(owner, start, end);
 

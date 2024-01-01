@@ -28,7 +28,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -65,7 +64,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
+                .subtract(HelperMethods.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z);
 
@@ -111,7 +110,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
@@ -179,8 +177,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
             if (owner != null && this.isOpen()) {
                 Vec3 pos = owner.position()
-                        .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                        .add(owner.getLookAngle().yRot(90.0F).scale(-0.45D));
+                        .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                        .add(HelperMethods.getLookAngle(owner).yRot(90.0F).scale(-0.45D));
                 this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
                 this.yHeadRot = this.getYRot();

@@ -327,7 +327,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (owner == null) return;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getSize() * 2, this.getBbWidth() * 2)));
     }
 
@@ -366,7 +366,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 this.hurtEntities();
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(owner.getLookAngle().scale(SPEED));
+                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
                 }
 
                 int duration = this.getSize() * 5;

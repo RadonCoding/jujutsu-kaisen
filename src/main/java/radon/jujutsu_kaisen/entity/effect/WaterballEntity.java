@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -47,7 +48,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(owner.getLookAngle());
+                .add(HelperMethods.getLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
@@ -121,7 +122,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                     this.createWave(owner);
                 }
                 Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                        .add(owner.getLookAngle());
+                        .add(HelperMethods.getLookAngle(owner));
                 this.setPos(spawn.x, spawn.y, spawn.z);
             }
         } else {

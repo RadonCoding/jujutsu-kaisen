@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
@@ -56,7 +55,7 @@ public class ToadEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = ritual ? owner.position() : owner.position()
-                .subtract(owner.getLookAngle().multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -90,7 +89,6 @@ public class ToadEntity extends TenShadowsSummon {
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
@@ -119,7 +117,7 @@ public class ToadEntity extends TenShadowsSummon {
         double z = this.getZ();
 
         double distance = this.getBbWidth() * 2;
-        Vec3 look = this.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(this);
         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))

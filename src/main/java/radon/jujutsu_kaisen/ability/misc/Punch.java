@@ -96,7 +96,7 @@ public class Punch extends Ability implements Ability.ICharged {
 
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

@@ -36,7 +36,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
-import radon.jujutsu_kaisen.entity.ai.goal.LookAtTargetGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -92,8 +91,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         if (this.hasMeleeAttack()) {
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
-
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
 
         if (this.canPerformSorcery() || !this.getCustom().isEmpty()) {
             this.goalSelector.addGoal(goal++, new SorcererGoal(this));

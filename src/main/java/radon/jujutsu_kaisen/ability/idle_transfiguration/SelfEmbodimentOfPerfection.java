@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         SelfEmbodimentOfPerfectionEntity entity = new SelfEmbodimentOfPerfectionEntity(domain);
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
 
         Vec3 pos = owner.position()
                 .add(owner.getUpVector(1.0F).scale(entity.getBbHeight()))

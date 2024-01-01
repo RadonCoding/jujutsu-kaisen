@@ -272,7 +272,7 @@ public class JJKClientEventHandler {
                 if (JJKAbilities.hasTrait(viewer, Trait.HEAVENLY_RESTRICTION)) return;
 
                 if (target != viewer) {
-                    Vec3 look = viewer.getLookAngle();
+                    Vec3 look = HelperMethods.getLookAngle(viewer);
                     Vec3 start = viewer.getEyePosition();
                     Vec3 result = target.getEyePosition().subtract(start);
 

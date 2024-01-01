@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -100,7 +101,7 @@ public class MahoragaEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
+                .subtract(HelperMethods.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
@@ -200,10 +201,10 @@ public class MahoragaEntity extends TenShadowsSummon {
                 if (this.onGround() && this.distanceTo(target) < 3.0D) {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    target.setDeltaMovement(this.getLookAngle().scale(SWING_LAUNCH));
+                    target.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SWING_LAUNCH));
                     target.hurtMarked = true;
 
-                    Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(this.getLookAngle());
+                    Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(HelperMethods.getLookAngle(this));
                     this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }

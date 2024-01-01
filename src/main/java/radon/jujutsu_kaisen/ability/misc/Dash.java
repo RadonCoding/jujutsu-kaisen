@@ -42,7 +42,7 @@ public class Dash extends Ability {
         if (target == null) return false;
         if (!owner.hasLineOfSight(target)) return false;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
@@ -82,7 +82,7 @@ public class Dash extends Ability {
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
 
         if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
