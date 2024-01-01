@@ -866,6 +866,7 @@ public class SorcererData implements ISorcererData {
                 }
             }
         }
+
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
             ((Ability.IToggled) ability).onDisabled(this.owner);
