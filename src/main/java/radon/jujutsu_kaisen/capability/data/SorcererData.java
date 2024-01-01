@@ -1524,13 +1524,13 @@ public class SorcererData implements ISorcererData {
             }
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.VESSEL)) && this.type == JujutsuType.SORCERER) {
-                if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
-                    this.addTrait(Trait.VESSEL);
-                }
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.VESSEL)) && this.type == JujutsuType.SORCERER &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
+                this.addTrait(Trait.VESSEL);
             }
 
-            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.SIX_EYES)) && HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.SIX_EYES)) &&
+                    HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
 
