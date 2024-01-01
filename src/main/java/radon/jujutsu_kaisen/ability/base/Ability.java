@@ -77,7 +77,7 @@ public abstract class Ability {
         return this.getPointsCost() > 0;
     }
 
-    public int getPointsCost() {
+    protected int getPointsCost() {
         return 0;
     }
 
@@ -143,7 +143,7 @@ public abstract class Ability {
         return List.of();
     }
 
-    public int getCooldown() {
+    protected int getCooldown() {
         return 0;
     }
 

@@ -146,7 +146,7 @@ public class Dash extends Ability {
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             return 0;
         }
-        return this.getCooldown() / (cap.hasTrait(Trait.SIX_EYES) ? 2 : 1);
+        return super.getRealCooldown(owner);
     }
 
     @Override
