@@ -365,7 +365,7 @@ public class HelperMethods {
 
     public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
         Vec3 start = entity.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(entity);
+        Vec3 look = getLookAngle(entity);
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end, filter);
     }
