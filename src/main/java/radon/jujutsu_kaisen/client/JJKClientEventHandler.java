@@ -53,7 +53,6 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
 import radon.jujutsu_kaisen.client.model.base.SkinModel;
 import radon.jujutsu_kaisen.client.model.entity.*;
-import radon.jujutsu_kaisen.client.model.item.armor.InstantSpiritBodyOfDistortedKillingModel;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
@@ -387,8 +386,6 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(NaoyaZeninModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(NaoyaZeninModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(NaoyaZeninModel.OUTER_LAYER, SkinModel::createOuterLayer);
-
-            event.registerLayerDefinition(InstantSpiritBodyOfDistortedKillingModel.LAYER_LOCATION, InstantSpiritBodyOfDistortedKillingModel::createBodyLayer);
         }
 
         @SubscribeEvent
