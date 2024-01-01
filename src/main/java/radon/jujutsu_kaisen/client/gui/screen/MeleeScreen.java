@@ -35,23 +35,10 @@ public class MeleeScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType() != MenuType.MELEE);
 
-        List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
-
-        Map<EntityType<?>, Integer> curses = cap.getCurses(this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE));
-        items.addAll(curses.entrySet().stream().map(entry -> new DisplayItem(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()))).toList());
-
-        Set<CursedTechnique> copied = cap.getCopied();
-        items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
-
-        Set<CursedTechnique> absorbed = cap.getAbsorbed();
-        items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
-
-        return items;
+        return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
     }
 
     @Override
