@@ -66,7 +66,7 @@ public class HelperMethods {
 
             if (target != null) {
                 Vec3 start = entity.getEyePosition();
-                Vec3 end = target.getEyePosition();
+                Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 double d0 = end.x - start.x;
                 double d1 = end.y - start.y;
                 double d2 = end.z - start.z;
