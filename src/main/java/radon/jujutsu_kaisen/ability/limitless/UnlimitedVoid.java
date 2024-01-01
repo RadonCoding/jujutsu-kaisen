@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -26,8 +27,10 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         super.onHitEntity(domain, owner, entity, instant);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), 0, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * (1.6F - cap.getDomainSize())), 4, false, false, false));
+        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize())),
+                0, false, false, false));
+        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize())),
+                4, false, false, false));
     }
 
     @Override

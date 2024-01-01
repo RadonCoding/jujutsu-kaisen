@@ -65,6 +65,8 @@ public class ServerConfig {
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
+    public final ForgeConfigSpec.DoubleValue minimumDomainSize;
+    public final ForgeConfigSpec.DoubleValue maximumDomainSize;
 
     public final ForgeConfigSpec.IntValue maximumChantCount;
     public final ForgeConfigSpec.IntValue maximumChantLength;
@@ -147,6 +149,13 @@ public class ServerConfig {
                 .defineInRange("minimumVeilSize", 4, 4, 64);
         this.maximumVeilSize = builder.comment("Maximum size for a veil")
                 .defineInRange("maximumVeilSize", 64, 64, 256);
+        builder.pop();
+
+        builder.comment("Domains").push("domains");
+        this.minimumDomainSize = builder.comment("Minimum size for a domain")
+                .defineInRange("minimumDomainSize", 0.5F, 0.1F, 1.0F);
+        this.maximumDomainSize = builder.comment("Maximum size for a domain")
+                .defineInRange("maximumDomainSize", 1.5F, 1.0F, 100.0F);
         builder.pop();
 
         builder.comment("Chants").push("chants");

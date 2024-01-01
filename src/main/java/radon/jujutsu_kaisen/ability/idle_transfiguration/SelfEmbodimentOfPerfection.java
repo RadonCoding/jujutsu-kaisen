@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
@@ -46,7 +47,8 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
-        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * (1.6F - cap.getDomainSize())), required, false, true, true);
+        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), Math.round(10 * 20 * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize())),
+                required, false, true, true);
         entity.addEffect(instance);
 
         if (!owner.level().isClientSide) {

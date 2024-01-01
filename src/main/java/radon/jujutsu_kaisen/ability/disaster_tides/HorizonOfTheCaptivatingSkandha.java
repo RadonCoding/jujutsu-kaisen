@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -40,7 +41,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.DEATH_SWARM.get()),
-                    DAMAGE * this.getPower(owner) * (1.6F - cap.getDomainSize()));
+                    DAMAGE * this.getPower(owner) * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize()));
 
             if (instant || owner.level().getGameTime() % 3 * 20 == 0) {
                 Ability fish = JJKAbilities.DEATH_SWARM.get();
