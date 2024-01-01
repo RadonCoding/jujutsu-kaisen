@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -139,7 +140,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
             float damage = this.calculateDamage(source, owner, target);
 
             if (domain != null) {
-                damage *= (1.6F - cap.getDomainSize());
+                damage *= ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize());
             }
 
             boolean success = target.hurt(source, damage);

@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 
 import java.util.function.Supplier;
 
@@ -33,7 +34,7 @@ public class SetDomainSizeC2SPacket {
             assert sender != null;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.setDomainSize(Mth.clamp(this.domainSize, 0.5F, 1.5F));
+            cap.setDomainSize(Mth.clamp(this.domainSize, ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue()));
         });
         ctx.setPacketHandled(true);
     }
