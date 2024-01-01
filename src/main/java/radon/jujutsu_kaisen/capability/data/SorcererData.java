@@ -716,7 +716,7 @@ public class SorcererData implements ISorcererData {
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
 
-            if (domain != null && JJKAbilities.hasToggled(this.owner, domain)) {
+            if (domain != null && this.toggled.contains(domain)) {
                 power *= 2.0F;
             }
         }
