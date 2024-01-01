@@ -47,7 +47,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
             EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)
-                    .sized(8.4F, 7.2F)
+                    .sized(8.4F, 9.6F)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "malevolent_shrine")
                             .toString()));

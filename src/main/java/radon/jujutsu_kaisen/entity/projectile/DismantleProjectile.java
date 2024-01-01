@@ -80,6 +80,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     }
 
     @Override
+    protected boolean isProjectile() {
+        return !this.instant;
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
 
