@@ -19,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -872,6 +873,7 @@ public class SorcererData implements ISorcererData {
             if (ability instanceof ITransformation transformation) {
                 transformation.removeModifiers(this.owner);
             }
+            MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
             this.toggled.add(ability);
             ((Ability.IToggled) ability).onEnabled(this.owner);
@@ -1098,6 +1100,7 @@ public class SorcererData implements ISorcererData {
             if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                 this.owner.sendSystemMessage(this.channeled.getDisableMessage());
             }
+            MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         }
 
         if (this.channeled == ability) {
