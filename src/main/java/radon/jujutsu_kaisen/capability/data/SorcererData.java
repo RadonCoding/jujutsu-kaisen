@@ -711,7 +711,16 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getRealPower() {
-        return HelperMethods.getPower(this.experience);
+        float power = HelperMethods.getPower(this.experience);
+
+        if (this.technique != null) {
+            Ability domain = this.technique.getDomain();
+
+            if (domain != null && JJKAbilities.hasToggled(this.owner, domain)) {
+                power *= 2.0F;
+            }
+        }
+        return power;
     }
 
     @Override
