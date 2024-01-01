@@ -29,9 +29,6 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
     private final PlayerModel<SukunaEntity> normal;
     private final PlayerModel<SukunaEntity> slim;
 
-    @Nullable
-    private ResourceLocation texture;
-
     public SukunaRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 

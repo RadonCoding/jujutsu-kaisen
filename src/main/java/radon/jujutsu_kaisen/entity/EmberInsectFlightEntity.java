@@ -59,7 +59,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                !JJKAbilities.hasToggled(owner, JJKAbilities.EMBER_INSECT_FLIGHT.get()))) {
+                !JJKAbilities.hasToggled(owner, JJKAbilities.EMBER_INSECT_FLIGHT.get()) || !this.isPassenger())) {
             this.discard();
         } else {
             super.tick();
