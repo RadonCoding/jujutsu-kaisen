@@ -200,6 +200,7 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
+        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
