@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -1459,6 +1460,23 @@ public class SorcererData implements ISorcererData {
         this.frames.clear();
     }
 
+    private boolean isTraitAvailable(MinecraftServer server, Trait trait) {
+        for (String name : server.getPlayerNames()) {
+            ServerPlayer player;
+
+            if ((player = server.getPlayerList().getPlayerByName(name)) == null) {
+                player = server.getPlayerList().getPlayerForLogin(new GameProfile(null, name));
+                server.getPlayerList().load(player);
+            }
+            if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
+
+            ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (cap.hasTrait(trait)) return false;
+        }
+        return true;
+    }
+
     @Override
     public void generate(ServerPlayer owner) {
         this.initialized = true;
@@ -1471,7 +1489,8 @@ public class SorcererData implements ISorcererData {
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
 
-        if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
+        if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.HEAVENLY_RESTRICTION)) &&
+                HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
@@ -1505,13 +1524,13 @@ public class SorcererData implements ISorcererData {
             }
             this.type = HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseRarity.get()) == 0 ? JujutsuType.CURSE : JujutsuType.SORCERER;
 
-            if (this.type == JujutsuType.SORCERER) {
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.VESSEL)) && this.type == JujutsuType.SORCERER) {
                 if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.vesselRarity.get()) == 0) {
                     this.addTrait(Trait.VESSEL);
                 }
             }
 
-            if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
+            if ((!ConfigHolder.SERVER.uniqueTraits.get() || this.isTraitAvailable(owner.server, Trait.SIX_EYES)) && HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sixEyesRarity.get()) == 0) {
                 this.addTrait(Trait.SIX_EYES);
             }
 
