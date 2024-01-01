@@ -706,12 +706,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAbilityPower() {
-        return HelperMethods.getPower(this.experience) * this.getOutput();
-    }
-
-    @Override
-    public float getRealPower() {
-        float power = HelperMethods.getPower(this.experience);
+        float power = this.getRealPower() * this.getOutput();
 
         if (this.technique != null) {
             Ability domain = this.technique.getDomain();
@@ -721,6 +716,11 @@ public class SorcererData implements ISorcererData {
             }
         }
         return power;
+    }
+
+    @Override
+    public float getRealPower() {
+        return HelperMethods.getPower(this.experience);
     }
 
     @Override
