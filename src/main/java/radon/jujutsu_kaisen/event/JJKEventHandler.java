@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -383,7 +384,7 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
+        public static void onAbilityStop(AbilityStopEvent event) {
             Ability ability = event.getAbility();
 
             CursedTechnique technique = JJKAbilities.getTechnique(ability);
@@ -395,6 +396,24 @@ public class JJKEventHandler {
             // Handling removal of absorbed techniques from curse manipulation
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
+            Ability ability = event.getAbility();
+
+            CursedTechnique technique = JJKAbilities.getTechnique(ability);
+
+            LivingEntity owner = event.getEntity();
+
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+                // Handling removal of absorbed techniques from curse manipulation
+                if (technique != null && cap.getAbsorbed().contains(technique)) {
+                    cap.unabsorb(technique);
+                }
             }
 
             // Sukuna has multiple arms
