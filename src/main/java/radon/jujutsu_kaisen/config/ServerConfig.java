@@ -62,6 +62,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
+    public final ForgeConfigSpec.BooleanValue uniqueTraits;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
@@ -142,6 +143,8 @@ public class ServerConfig {
                 .defineInRange("curseHealingAmount", 0.2F, 0.0F, 100.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
+        this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
+                .define("uniqueTraits", true);
         builder.pop();
 
         builder.comment("Veils").push("veils");
