@@ -17,6 +17,7 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -141,7 +142,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         if (this.hasMeleeAttack()) {
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
-        this.goalSelector.addGoal(goal++, new LookAtTargetGoal(this));
         this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
 
         if (this.isTame()) {

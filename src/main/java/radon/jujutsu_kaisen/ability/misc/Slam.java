@@ -36,7 +36,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (target == null) return false;
         if (!owner.hasLineOfSight(target)) return false;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
@@ -55,7 +55,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     private Vec3 getTarget(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
         HitResult result = HelperMethods.getHitResult(owner, start, end);
         return result.getType() == HitResult.Type.MISS ? end : result.getLocation();

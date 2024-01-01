@@ -36,7 +36,7 @@ public class Wings extends Transformation {
     @Override
     public void run(LivingEntity owner) {
         Vec3 movement = owner.getDeltaMovement();
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         owner.setDeltaMovement(movement.x, look.y, movement.z);
 
         float f = owner.xxa * 0.5F;

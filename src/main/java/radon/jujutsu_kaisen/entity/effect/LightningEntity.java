@@ -174,7 +174,7 @@ public class LightningEntity extends JujutsuProjectile {
 
         if (owner == null) return Vec3.ZERO;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
     }
 

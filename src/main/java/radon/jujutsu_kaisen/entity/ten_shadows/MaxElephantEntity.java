@@ -30,6 +30,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -84,7 +85,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(owner.getLookAngle()
+                .subtract(HelperMethods.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 

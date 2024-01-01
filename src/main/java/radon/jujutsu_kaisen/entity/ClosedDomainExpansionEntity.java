@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public ClosedDomainExpansionEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), owner, ability);
 
-        Vec3 direction = owner.getLookAngle();
+        Vec3 direction = HelperMethods.getLookAngle(owner);
         Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
         this.moveTo(behind.x, behind.y, behind.z, owner.getYRot(), owner.getXRot());
 
@@ -181,7 +182,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         int radius = this.getRadius();
 
-        Vec3 direction = this.getLookAngle();
+        Vec3 direction = HelperMethods.getLookAngle(this);
         Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 

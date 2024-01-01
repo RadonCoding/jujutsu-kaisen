@@ -16,6 +16,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.effect.ForestSpikeEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/forest_spike.png");
@@ -29,8 +30,8 @@ public class ForestSpikeRenderer extends EntityRenderer<ForestSpikeEntity> {
     }
 
     @Override
-    public void render(ForestSpikeEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        Vec3 trans = pEntity.getLookAngle().scale(pEntity.getBbHeight() * 2.0F);
+    public void render(@NotNull ForestSpikeEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        Vec3 trans = HelperMethods.getLookAngle(pEntity).scale(pEntity.getBbHeight() * 2.0F);
 
         pPoseStack.pushPose();
         pPoseStack.translate(trans.x, trans.y, trans.z);

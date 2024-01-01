@@ -34,7 +34,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
 
         if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 96; i++) {

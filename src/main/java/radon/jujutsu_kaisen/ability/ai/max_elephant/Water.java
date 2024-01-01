@@ -105,7 +105,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Vec3 look = owner.getLookAngle();
+        Vec3 look = HelperMethods.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);
