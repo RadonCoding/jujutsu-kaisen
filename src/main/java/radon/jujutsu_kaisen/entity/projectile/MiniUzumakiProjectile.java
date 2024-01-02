@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -91,22 +92,20 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-
-        Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
-
         CursedSpirit current = null;
 
-        for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
-            Entity entity = entry.getKey().create(this.level());
+        for (Entity entity : cap.getSummons()) {
             if (!(entity instanceof CursedSpirit curse)) continue;
+
             if (current == null || curse.getGrade().ordinal() < current.getGrade().ordinal()) current = curse;
         }
 
         if (current != null) {
             this.power = HelperMethods.getPower(current.getExperience());
+
             if (current.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && current.getTechnique() != null) cap.absorb(current.getTechnique());
-            cap.removeCurse(registry, current.getType());
+
+            current.discard();
         }
     }
 

@@ -155,10 +155,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public Status isTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level() instanceof ServerLevel level) {
-            if (cap.hasSummonOfClass(level, this.clazz)) {
-                return Status.FAILURE;
-            }
+        if (cap.hasSummonOfClass(this.clazz)) {
+            return Status.FAILURE;
         }
         return super.isTriggerable(owner);
     }
@@ -167,10 +165,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public Status isStillUsable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level() instanceof ServerLevel level) {
-            if (!cap.hasSummonOfClass(level, this.clazz)) {
-                return Status.FAILURE;
-            }
+        if (!cap.hasSummonOfClass(this.clazz)) {
+            return Status.FAILURE;
         }
         return super.isStillUsable(owner);
     }
@@ -202,9 +198,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (this.shouldRemove()) {
-                cap.unsummonByClass((ServerLevel) owner.level(), this.clazz);
+                cap.unsummonByClass(this.clazz);
             } else {
-                cap.removeSummonByClass((ServerLevel) owner.level(), this.clazz);
+                cap.removeSummonByClass(this.clazz);
             }
 
             if (owner instanceof ServerPlayer player) {

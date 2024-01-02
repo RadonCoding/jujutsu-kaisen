@@ -89,8 +89,8 @@ public class DivineDogs extends Summon<DivineDogEntity> {
         if (!owner.level().isClientSide) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            cap.unsummonByClass((ServerLevel) owner.level(), DivineDogWhiteEntity.class);
-            cap.unsummonByClass((ServerLevel) owner.level(), DivineDogBlackEntity.class);
+            cap.unsummonByClass(DivineDogWhiteEntity.class);
+            cap.unsummonByClass(DivineDogBlackEntity.class);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

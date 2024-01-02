@@ -132,14 +132,11 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
 
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get()))
-                return;
-
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.SIMPLE_DOMAIN.get())) return;
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            SimpleDomainEntity domain = cap.getSummonByClass((ServerLevel) victim.level(), SimpleDomainEntity.class);
+            SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
 
             if (domain != null) {
                 domain.hurt(event.getSource(), event.getAmount());

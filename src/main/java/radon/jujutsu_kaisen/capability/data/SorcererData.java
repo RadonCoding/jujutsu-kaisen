@@ -36,7 +36,6 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.PlayerUtil;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -86,7 +85,7 @@ public class SorcererData implements ISorcererData {
     private final List<DelayedTickEvent> delayedTickEvents;
     private final Map<Ability, Integer> cooldowns;
     private final Map<Ability, Integer> durations;
-    private final Set<UUID> summons;
+    private final Set<Integer> summons;
     private final Map<UUID, Set<Pact>> acceptedPacts;
     private final Map<UUID, Set<Pact>> requestedPactsCreations;
     private final Map<UUID, Integer> createRequestExpirations;
@@ -283,10 +282,10 @@ public class SorcererData implements ISorcererData {
         if (!this.owner.level().isLoaded(this.owner.blockPosition())) return;
 
         if (this.owner.level() instanceof ServerLevel level) {
-            Iterator<UUID> iter = this.summons.iterator();
+            Iterator<Integer> iter = this.summons.iterator();
 
             while (iter.hasNext()) {
-                UUID identifier = iter.next();
+                Integer identifier = iter.next();
 
                 Entity entity = level.getEntity(identifier);
 
@@ -297,7 +296,7 @@ public class SorcererData implements ISorcererData {
         }
     }
 
-    private void updateAdaptation(ServerLevel level) {
+    private void updateAdaptation() {
         if (this.toggled.contains(JJKAbilities.WHEEL.get())) {
             Iterator<Map.Entry<Ability, Integer>> iter = this.adapting.entrySet().iterator();
 
@@ -311,7 +310,7 @@ public class SorcererData implements ISorcererData {
 
                     this.adapted.add(entry.getKey());
 
-                    WheelEntity wheel = this.getSummonByClass(level, WheelEntity.class);
+                    WheelEntity wheel = this.getSummonByClass(WheelEntity.class);
 
                     if (wheel != null) {
                         wheel.spin();
@@ -419,18 +418,16 @@ public class SorcererData implements ISorcererData {
                 EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
                 EntityUtil.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
             }
-        }
 
-        if (this.owner.level() instanceof ServerLevel level) {
-            this.updateAdaptation(level);
-        }
+            this.updateAdaptation();
 
-        if (this.owner instanceof ServerPlayer player) {
-            if (!this.initialized) {
-                this.initialized = true;
-                this.generate(player);
+            if (this.owner instanceof ServerPlayer player) {
+                if (!this.initialized) {
+                    this.initialized = true;
+                    this.generate(player);
+                }
+                this.checkAdvancements(player);
             }
-            this.checkAdvancements(player);
         }
 
         if (this.burnout > 0) {
@@ -1132,20 +1129,20 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addSummon(Entity entity) {
-        this.summons.add(entity.getUUID());
+        this.summons.add(entity.getId());
     }
 
     @Override
     public void removeSummon(Entity entity) {
-        this.summons.remove(entity.getUUID());
+        this.summons.remove(entity.getId());
     }
 
     @Override
-    public List<Entity> getSummons(ServerLevel level) {
+    public List<Entity> getSummons() {
         List<Entity> entities = new ArrayList<>();
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (Integer identifier : this.summons) {
+            Entity entity = this.owner.level().getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -1155,11 +1152,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends Entity> @Nullable T getSummonByClass(ServerLevel level, Class<T> clazz) {
+    public <T extends Entity> @Nullable T getSummonByClass(Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (Integer identifier : this.summons) {
+            Entity entity = this.owner.level().getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -1173,15 +1170,15 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends Entity> void unsummonByClass(ServerLevel level, Class<T> clazz) {
+    public <T extends Entity> void unsummonByClass(Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<UUID> iter = this.summons.iterator();
+        Iterator<Integer> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            UUID identifier = iter.next();
+            Integer identifier = iter.next();
 
-            Entity entity = level.getEntity(identifier);
+            Entity entity = this.owner.level().getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -1195,15 +1192,15 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends Entity> void removeSummonByClass(ServerLevel level, Class<T> clazz) {
+    public <T extends Entity> void removeSummonByClass(Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        Iterator<UUID> iter = this.summons.iterator();
+        Iterator<Integer> iter = this.summons.iterator();
 
         while (iter.hasNext()) {
-            UUID identifier = iter.next();
+            Integer identifier = iter.next();
 
-            Entity entity = level.getEntity(identifier);
+            Entity entity = this.owner.level().getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -1216,11 +1213,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public <T extends Entity> boolean hasSummonOfClass(ServerLevel level, Class<T> clazz) {
+    public <T extends Entity> boolean hasSummonOfClass(Class<T> clazz) {
         EntityTypeTest<Entity, T> test = EntityTypeTest.forClass(clazz);
 
-        for (UUID identifier : this.summons) {
-            Entity entity = level.getEntity(identifier);
+        for (Integer identifier : this.summons) {
+            Entity entity = this.owner.level().getEntity(identifier);
 
             if (entity == null) continue;
 
@@ -1697,9 +1694,8 @@ public class SorcererData implements ISorcererData {
 
         ListTag summonsTag = new ListTag();
 
-        for (UUID identifier : this.summons) {
-            summonsTag.add(LongTag.valueOf(identifier.getLeastSignificantBits()));
-            summonsTag.add(LongTag.valueOf(identifier.getMostSignificantBits()));
+        for (Integer identifier : this.summons) {
+            summonsTag.add(IntTag.valueOf(identifier));
         }
         nbt.put("summons", summonsTag);
 
@@ -1891,12 +1887,10 @@ public class SorcererData implements ISorcererData {
 
         this.summons.clear();
 
-        ListTag summonsTag = nbt.getList("summons", Tag.TAG_LONG);
+        ListTag summonsTag = nbt.getList("summons", Tag.TAG_INT);
 
-        for (int i = 0; i < summonsTag.size(); i += 2) {
-            if (summonsTag.get(i) instanceof LongTag least && summonsTag.get(i + 1) instanceof LongTag most) {
-                this.summons.add(new UUID(least.getAsLong(), most.getAsLong()));
-            }
+        for (int i = 0; i < summonsTag.size(); i++) {
+            this.summons.add(summonsTag.getInt(i));
         }
 
         this.acceptedPacts.clear();

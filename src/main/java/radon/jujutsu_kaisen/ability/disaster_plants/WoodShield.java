@@ -82,7 +82,7 @@ public class WoodShield extends Summon<WoodShieldEntity> {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            WoodShieldEntity shield = cap.getSummonByClass((ServerLevel) victim.level(), WoodShieldEntity.class);
+            WoodShieldEntity shield = cap.getSummonByClass(WoodShieldEntity.class);
 
             if (shield != null) {
                 shield.hurt(event.getSource(), event.getAmount());

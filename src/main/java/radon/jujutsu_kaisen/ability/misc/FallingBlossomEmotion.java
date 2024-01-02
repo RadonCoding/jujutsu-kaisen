@@ -80,7 +80,7 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
 
             ISorcererData cap = living.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            DomainExpansionEntity domain = cap.getSummonByClass(level, DomainExpansionEntity.class);
+            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
 
             if (domain == null || !domain.isAffected(owner)) continue;
 

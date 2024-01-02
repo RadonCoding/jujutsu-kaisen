@@ -29,11 +29,11 @@ public class CommandPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (owner.level().isClientSide) return;
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        RikaEntity rika = ownerCap.getSummonByClass(level, RikaEntity.class);
+        RikaEntity rika = cap.getSummonByClass(RikaEntity.class);
 
         if (rika == null) return;
 

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.curse_manipulation;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.MaximumUzumakiProjectile;
 
 import java.util.Map;
@@ -39,11 +41,12 @@ public class MaximumUzumaki extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
-        return !curses.isEmpty() && super.isValid(owner);
+
+        if (!cap.hasSummonOfClass(CursedSpirit.class)) {
+            return false;
+        }
+        return super.isValid(owner);
     }
 
     @Override

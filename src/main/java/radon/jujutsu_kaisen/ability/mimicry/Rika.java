@@ -52,23 +52,21 @@ public class Rika extends Summon<RikaEntity> {
     public void run(LivingEntity owner) {
         if (owner.level().getGameTime() % INTERVAL != 0) return;
 
-        if (owner.level() instanceof ServerLevel level) {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(ownerCap -> {
-                RikaEntity rika = ownerCap.getSummonByClass(level, RikaEntity.class);
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (rika == null) return;
+        RikaEntity rika = ownerCap.getSummonByClass(RikaEntity.class);
 
-                rika.getCapability(SorcererDataHandler.INSTANCE).ifPresent(summonCap -> {
-                    if (summonCap.getEnergy() > AMOUNT && ownerCap.getEnergy() < ownerCap.getMaxEnergy()) {
-                        ownerCap.addEnergy(AMOUNT);
-                        summonCap.useEnergy(AMOUNT);
+        if (rika == null) return;
 
-                        if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
-                        }
-                    }
-                });
-            });
+        ISorcererData summonCap = rika.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (summonCap.getEnergy() > AMOUNT && ownerCap.getEnergy() < ownerCap.getMaxEnergy()) {
+            ownerCap.addEnergy(AMOUNT);
+            summonCap.useEnergy(AMOUNT);
+
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+            }
         }
     }
 
