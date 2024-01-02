@@ -215,6 +215,8 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         super.tickRidden(pPlayer, pTravelVector);
 
+        this.setTarget(null);
+
         Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
