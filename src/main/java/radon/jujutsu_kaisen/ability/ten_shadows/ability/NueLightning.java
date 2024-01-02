@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -84,7 +85,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class NueLightningForgeEvents {
         @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
+        public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
@@ -98,8 +99,7 @@ public class NueLightning extends Ability implements Ability.IToggled {
 
             victim.invulnerableTime = 0;
 
-            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker)) &&
-                    !victim.isDeadOrDying()) {
+            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker))) {
                 victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
 
                 attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
