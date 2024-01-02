@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -41,7 +42,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     public CursedBudProjectile(LivingEntity owner, float power) {
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -49,7 +50,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
         super(JJKEntities.CURSED_BUD.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(plant);
+        Vec3 look = RotationUtil.getLookAngle(plant);
         Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, plant.getYRot(), plant.getXRot());
 
@@ -99,7 +100,7 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = HelperMethods.getLookAngle(owner);
+                    Vec3 look = RotationUtil.getLookAngle(owner);
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
@@ -107,10 +108,10 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                 this.discard();
             } else if (this.plant) {
                 if (this.getTime() - 1 == 0) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getLookAngle(this).scale(SPEED));
                 }
             } else if (this.getTime() == DELAY) {
-                this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
             }
         }
     }

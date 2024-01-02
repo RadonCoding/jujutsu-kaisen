@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class OutputRCT extends Ability {
     public static final float RANGE = 5.0F;
@@ -65,7 +66,7 @@ public class OutputRCT extends Ability {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             return target;
         }
         return null;
@@ -86,9 +87,9 @@ public class OutputRCT extends Ability {
         for (int i = 0; i < 8; i++) {
             ownerCap.delayTickEvent(() -> {
                 for (int j = 0; j < 8; j++) {
-                    double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - HelperMethods.getLookAngle(target).scale(0.35D).x;
+                    double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - RotationUtil.getLookAngle(target).scale(0.35D).x;
                     double y = target.getY() + HelperMethods.RANDOM.nextDouble() * (target.getBbHeight());
-                    double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - HelperMethods.getLookAngle(target).scale(0.35D).z;
+                    double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 1.25F) - RotationUtil.getLookAngle(target).scale(0.35D).z;
                     double speed = (target.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
                     level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.RCT, target.getBbWidth() * 0.5F,
                             0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);

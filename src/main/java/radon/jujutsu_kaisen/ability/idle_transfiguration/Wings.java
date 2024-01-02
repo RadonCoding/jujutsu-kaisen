@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class Wings extends Transformation {
     @Override
     public void run(LivingEntity owner) {
         Vec3 movement = owner.getDeltaMovement();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         owner.setDeltaMovement(movement.x, look.y, movement.z);
 
         float f = owner.xxa * 0.5F;

@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class RerollCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -24,29 +25,12 @@ public class RerollCommand {
         dispatcher.register(Commands.literal("reroll").requires((player) -> player.hasPermission(2)).redirect(node));
     }
 
-    private static void removeAdvancement(ServerPlayer player, String name) {
-        MinecraftServer server = player.getServer();
-        assert server != null;
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
-                String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
-
-        if (advancement != null) {
-            AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
-
-            if (progress.isDone()) {
-                for (String criterion : progress.getCompletedCriteria()) {
-                    player.getAdvancements().revoke(advancement, criterion);
-                }
-            }
-        }
-    }
-
     public static int reroll(ServerPlayer player) {
         ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        removeAdvancement(player, "six_eyes");
-        removeAdvancement(player, "heavenly_restriction");
-        removeAdvancement(player, "vessel");
+        PlayerUtil.removeAdvancement(player, "six_eyes");
+        PlayerUtil.removeAdvancement(player, "heavenly_restriction");
+        PlayerUtil.removeAdvancement(player, "vessel");
 
         cap.generate(player);
 

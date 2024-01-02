@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
@@ -42,7 +43,7 @@ public class Dash extends Ability {
         if (target == null) return false;
         if (!owner.hasLineOfSight(target)) return false;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
@@ -63,7 +64,7 @@ public class Dash extends Ability {
     }
 
     private static boolean canDash(LivingEntity owner) {
-        return !owner.hasEffect(JJKEffects.STUN.get()) && HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
+        return !owner.hasEffect(JJKEffects.STUN.get()) && RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
                 owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty();
     }
 
@@ -82,9 +83,9 @@ public class Dash extends Ability {
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
 
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
             double distanceX = target.getX() - owner.getX();

@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class SwapOthers extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
+        if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
             if (!target.isPickable() && !(target instanceof ItemEntity) && !(target instanceof Projectile) || (target instanceof LivingEntity living &&

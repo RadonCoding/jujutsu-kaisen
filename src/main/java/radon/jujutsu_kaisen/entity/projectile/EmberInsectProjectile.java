@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -126,10 +127,10 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float xOffset = this.entityData.get(DATA_OFFSET_X);
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = RotationUtil.getLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                    .add(HelperMethods.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
-                    .add(HelperMethods.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
+                    .add(RotationUtil.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
+                    .add(RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
                     .add(look);
             this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
         }
@@ -151,7 +152,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
                 }
             }
         }

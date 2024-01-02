@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class CursedBud extends Ability {
 
@@ -46,7 +47,7 @@ public class CursedBud extends Ability {
 
         CursedBudProjectile bud = new CursedBudProjectile(owner, this.getPower(owner));
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (bud.getBbHeight() / 2.0F), owner.getZ()).add(look);
         bud.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 

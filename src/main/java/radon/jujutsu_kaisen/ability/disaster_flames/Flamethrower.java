@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Flamethrower extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final float DAMAGE = 7.5F;
@@ -34,7 +35,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
 
         if (owner.level() instanceof ServerLevel level) {
             for (int i = 0; i < 96; i++) {

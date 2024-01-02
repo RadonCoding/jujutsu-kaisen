@@ -24,6 +24,7 @@ import org.joml.Vector4f;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltEffect;
 import radon.jujutsu_kaisen.client.render.entity.effect.BoltRenderer;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.Locale;
 
@@ -53,7 +54,7 @@ public class EmittingLightningParticle extends TextureSheetParticle {
         PoseStack pose = new PoseStack();
 
         Vec3 offset = this.getPos()
-                .add(HelperMethods.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
+                .add(RotationUtil.calculateViewVector((this.random.nextFloat() - 0.5F) * 360.0F, (this.random.nextFloat() - 0.5F) * 360.0F)
                 .scale(this.random.nextFloat() * this.quadSize));
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);

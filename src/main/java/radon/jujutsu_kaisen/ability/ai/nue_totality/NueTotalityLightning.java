@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
 import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.NueTotalityEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class NueTotalityLightning extends Ability {
     private static final float DAMAGE = 5.0F;

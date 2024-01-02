@@ -63,6 +63,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -247,7 +248,7 @@ public class JJKAbilities {
                     ownerCap.useEnergy(cost);
                 }
 
-                Vec3 pos = owner.position().subtract(HelperMethods.getLookAngle(owner)
+                Vec3 pos = owner.position().subtract(RotationUtil.getLookAngle(owner)
                         .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
                 curse.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 curse.setTame(true);

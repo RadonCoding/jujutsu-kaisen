@@ -55,6 +55,8 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.PlayerUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -338,7 +340,7 @@ public class JJKEventHandler {
             if (event.getSource().getEntity() instanceof LivingEntity attacker) {
                 if (attacker instanceof ServerPlayer player) {
                     if (victim instanceof HeianSukunaEntity && victimCap.getFingers() == 20) {
-                        HelperMethods.giveAdvancement(player, "the_strongest_of_all_time");
+                        PlayerUtil.giveAdvancement(player, "the_strongest_of_all_time");
                     }
                 }
 

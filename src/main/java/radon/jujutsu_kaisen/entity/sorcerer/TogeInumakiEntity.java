@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class TogeInumakiEntity extends SorcererEntity {
     public TogeInumakiEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {

@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ShadowTravel extends Ability {
     private static final double RANGE = 100.0D;
@@ -39,7 +40,7 @@ public class ShadowTravel extends Ability {
     }
 
     private @Nullable HitResult getTarget(LivingEntity owner) {
-        HitResult hit = HelperMethods.getLookAtHit(owner, RANGE);
+        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
         if (hit.getType() == HitResult.Type.BLOCK && (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
                 ((BlockHitResult) hit).getDirection() != Direction.UP)) return null;

@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ParryHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -39,7 +40,7 @@ public class ParryHandler {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) rng /= 2;
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
-                Vec3 look = HelperMethods.getLookAngle(victim);
+                Vec3 look = RotationUtil.getLookAngle(victim);
                 Vec3 start = victim.getEyePosition();
                 Vec3 result = attacker.getEyePosition().subtract(start);
 

@@ -26,6 +26,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.ParticleUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FireArrowProjectile extends JujutsuProjectile {
     private static final float DAMAGE = 25.0F;
@@ -46,7 +48,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
     public FireArrowProjectile(LivingEntity owner, float power) {
         super(JJKEntities.FIRE_ARROW.get(), owner.level(), owner, power);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -99,11 +101,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
                 switch (j) {
                     case 0:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
@@ -131,11 +133,11 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
                 switch (j) {
                     case 0:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new FireParticle.FireParticleOptions(this.getFlamePillarRadius() * 0.3F, true, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                     case 1:
-                        HelperMethods.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
+                        ParticleUtil.sendParticles((ServerLevel) this.level(), new BetterSmokeParticle.BetterSmokeParticleOptions(this.getFlamePillarRadius() * 0.3F, lifetime), true,
                                 start.x, start.y, start.z, speed.x, speed.y, speed.z);
                         break;
                 }
@@ -177,7 +179,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (int i = 0; i < 2; i++) {
-                Vec3 dir = HelperMethods.getLookAngle(owner).reverse().scale(0.1D);
+                Vec3 dir = RotationUtil.getLookAngle(owner).reverse().scale(0.1D);
                 double dx = dir.x + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dy = dir.y + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z + ((this.random.nextDouble() - 0.5D) * 0.5D);
@@ -186,7 +188,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
             }
 
             if (this.getTime() < DELAY) {
-                Vec3 look = HelperMethods.getLookAngle(owner);
+                Vec3 look = RotationUtil.getLookAngle(owner);
                 double d0 = look.horizontalDistance();
                 this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
                 this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
@@ -203,7 +205,7 @@ public class FireArrowProjectile extends JujutsuProjectile {
                     this.setPos(spawn.x, spawn.y, spawn.z);
                 }
             } else if (this.getTime() == DELAY) {
-                this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }

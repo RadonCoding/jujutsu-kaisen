@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class RedProjectile extends JujutsuProjectile {
     private static final double LAUNCH_POWER = 10.0D;
@@ -48,7 +49,7 @@ public class RedProjectile extends JujutsuProjectile {
 
         this.chanted = chanted;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -81,7 +82,7 @@ public class RedProjectile extends JujutsuProjectile {
             float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
-                entity.setDeltaMovement(HelperMethods.getLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+                entity.setDeltaMovement(RotationUtil.getLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
                 entity.hurtMarked = true;
             }
         }
@@ -115,7 +116,7 @@ public class RedProjectile extends JujutsuProjectile {
                     if (this.getTime() % 5 == 0) {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
-                    Vec3 look = HelperMethods.getLookAngle(owner);
+                    Vec3 look = RotationUtil.getLookAngle(owner);
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                     this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                 }
@@ -148,7 +149,7 @@ public class RedProjectile extends JujutsuProjectile {
                 }
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(this).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getLookAngle(this).scale(SPEED));
                 }
             }
         }

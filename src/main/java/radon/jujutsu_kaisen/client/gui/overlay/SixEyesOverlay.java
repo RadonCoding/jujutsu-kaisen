@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class SixEyesOverlay {
         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!cap.hasTrait(Trait.SIX_EYES)) return;
-        if (!(HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
+        if (!(RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
         if (!(hit.getEntity() instanceof LivingEntity target)) return;
 
         ClientVisualHandler.ClientData data = ClientVisualHandler.get(target);

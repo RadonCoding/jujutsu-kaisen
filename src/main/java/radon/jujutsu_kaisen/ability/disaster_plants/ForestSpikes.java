@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.ForestSpikeEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestSpikes extends Ability {
     private static final double RANGE = 30.0D;
@@ -36,9 +37,9 @@ public class ForestSpikes extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = HelperMethods.getHitResult(owner, start, end);
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
         if (result.getType() == HitResult.Type.BLOCK) {
             return (BlockHitResult) result;
@@ -88,7 +89,7 @@ public class ForestSpikes extends Ability {
                 Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD, 0.0D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * SPREAD);
                 spike.moveTo(offset.x, offset.y - spike.getBbHeight() / 2.0F, offset.z, yRot, xRot);
 
-                if (owner.level().getBlockState(BlockPos.containing(offset.subtract(HelperMethods.getLookAngle(spike)))).isAir()) {
+                if (owner.level().getBlockState(BlockPos.containing(offset.subtract(RotationUtil.getLookAngle(spike)))).isAir()) {
                     spike.setPos(center);
                 }
                 owner.level().addFreshEntity(spike);

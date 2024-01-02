@@ -38,6 +38,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.ParticleUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,7 +189,7 @@ public class ExplosionHandler {
                                         block.onBlockExploded(event.level, pos, current);
 
                                         if (HelperMethods.RANDOM.nextInt(10) == 0) {
-                                            HelperMethods.sendParticles((ServerLevel) event.level, ParticleTypes.EXPLOSION, true, x, y, z,
+                                            ParticleUtil.sendParticles((ServerLevel) event.level, ParticleTypes.EXPLOSION, true, x, y, z,
                                                     0.0D, 0.0D, 0.0D);
                                         }
 

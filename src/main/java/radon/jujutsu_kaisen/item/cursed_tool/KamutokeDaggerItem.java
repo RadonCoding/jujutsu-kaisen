@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -98,9 +99,9 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = HelperMethods.getHitResult(owner, start, end);
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
         if (result.getType() == HitResult.Type.BLOCK) {
             return (BlockHitResult) result;

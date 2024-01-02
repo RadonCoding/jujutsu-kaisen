@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
@@ -56,7 +57,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATA_MOTION, motion);
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -240,7 +241,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(HelperMethods.getLookAngle(owner).scale(OFFSET));
+            Vec3 pos = center.add(RotationUtil.getLookAngle(owner).scale(OFFSET));
             this.setPos(pos.x, pos.y - (this.getBbHeight() / 2.0F), pos.z);
         }
     }
@@ -270,16 +271,16 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = HelperMethods.getLookAngle(owner);
+                        Vec3 look = RotationUtil.getLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
-                        Vec3 look = HelperMethods.getLookAngle(owner);
+                        Vec3 look = RotationUtil.getLookAngle(owner);
                         Vec3 end = start.add(look.scale(RANGE));
-                        HitResult result = HelperMethods.getHitResult(owner, start, end);
+                        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
                         Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                         this.setPos(pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));

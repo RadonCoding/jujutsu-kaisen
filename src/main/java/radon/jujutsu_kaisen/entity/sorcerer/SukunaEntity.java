@@ -36,7 +36,9 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
 
@@ -312,7 +314,7 @@ public class SukunaEntity extends SorcererEntity {
 
         if (!(this instanceof HeianSukunaEntity)) {
             if (!this.vessel) {
-                HelperMethods.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+                EntityUtil.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
             }
         }
     }

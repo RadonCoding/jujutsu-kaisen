@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +107,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);

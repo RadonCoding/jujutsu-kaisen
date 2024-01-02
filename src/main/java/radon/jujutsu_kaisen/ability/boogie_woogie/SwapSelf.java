@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SwapSelf extends Ability {
     public static final double RANGE = 30.0D;
@@ -37,7 +38,7 @@ public class SwapSelf extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
+        if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
 
             if (!target.isPickable() && !(target instanceof ItemEntity) && !(target instanceof Projectile) || (target instanceof LivingEntity living &&

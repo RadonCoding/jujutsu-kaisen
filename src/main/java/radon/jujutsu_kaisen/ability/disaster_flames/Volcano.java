@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.entity.effect.VolcanoEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Volcano extends Ability {
     private static final double RANGE = 30.0D;
@@ -33,9 +34,9 @@ public class Volcano extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = HelperMethods.getHitResult(owner, start, end);
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
         if (result.getType() == HitResult.Type.BLOCK) {
             return (BlockHitResult) result;
