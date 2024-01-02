@@ -59,6 +59,12 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.isInZone() && super.isValid(owner);
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 1.0F;
     }
