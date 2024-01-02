@@ -35,7 +35,7 @@ public class Spiderweb extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
         HitResult result = RotationUtil.getHitResult(owner, start, end);
 
@@ -63,7 +63,7 @@ public class Spiderweb extends Ability {
             float radius = EXPLOSIVE_POWER * this.getPower(owner);
             float real = (radius % 2 == 0) ? radius + 1 : radius;
 
-            Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getLookAngle(owner).scale(real * 0.5F));
+            Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(real * 0.5F));
 
             AABB bounds = AABB.ofSize(center, real, real, real);
 

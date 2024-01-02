@@ -11,7 +11,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SoulRestoration extends Ability {
     public static final float RANGE = 5.0F;
@@ -55,9 +54,9 @@ public class SoulRestoration extends Ability {
         int count = 8 + (int) (target.getBbWidth() * target.getBbHeight()) * 16;
 
         for (int i = 0; i < count; i++) {
-            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - RotationUtil.getLookAngle(target).scale(0.35D).x;
+            double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(target).scale(0.35D).x;
             double y = target.getY() + HelperMethods.RANDOM.nextDouble() * target.getBbHeight();
-            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - RotationUtil.getLookAngle(target).scale(0.35D).z;
+            double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (target.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(target).scale(0.35D).z;
             level.sendParticles(ParticleTypes.SOUL, x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D, 1.0D);
         }
     }

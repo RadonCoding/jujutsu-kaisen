@@ -13,7 +13,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
@@ -61,7 +60,7 @@ public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
         if (this.getTime() >= DURATION) {
             this.discard();
         } else if (this.getTime() >= DELAY) {
-            Vec3 look = RotationUtil.getLookAngle(this);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(this);
 
             for (int i = 0; i < 96; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;

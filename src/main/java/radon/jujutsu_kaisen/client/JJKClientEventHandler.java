@@ -71,7 +71,6 @@ import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
@@ -273,7 +272,7 @@ public class JJKClientEventHandler {
                 if (JJKAbilities.hasTrait(viewer, Trait.HEAVENLY_RESTRICTION)) return;
 
                 if (target != viewer) {
-                    Vec3 look = RotationUtil.getLookAngle(viewer);
+                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(viewer);
                     Vec3 start = viewer.getEyePosition();
                     Vec3 result = target.getEyePosition().subtract(start);
 

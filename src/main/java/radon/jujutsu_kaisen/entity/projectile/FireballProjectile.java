@@ -19,13 +19,10 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.BetterSmokeParticle;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
-import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -54,7 +51,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.FIREBALL.get(), owner.level(), owner, power);
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getLookAngle(owner));
+                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
@@ -170,7 +167,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (int i = 0; i < 2; i++) {
-                Vec3 dir = RotationUtil.getLookAngle(owner).reverse().scale(0.1D);
+                Vec3 dir = RotationUtil.getTargetAdjustedLookAngle(owner).reverse().scale(0.1D);
                 double dx = dir.x + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dy = dir.y + ((this.random.nextDouble() - 0.5D) * 0.5D);
                 double dz = dir.z + ((this.random.nextDouble() - 0.5D) * 0.5D);
@@ -178,7 +175,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
             if (this.getTime() < DELAY) {
-                Vec3 look = RotationUtil.getLookAngle(owner);
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                 double d0 = look.horizontalDistance();
                 this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
                 this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
@@ -192,11 +189,11 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                            .add(RotationUtil.getLookAngle(owner));
+                            .add(RotationUtil.getTargetAdjustedLookAngle(owner));
                     this.setPos(spawn.x, spawn.y, spawn.z);
                 }
             } else if (this.getTime() == DELAY) {
-                this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
+                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }

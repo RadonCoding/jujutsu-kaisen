@@ -48,11 +48,11 @@ public class Barrage extends Ability {
                 cap.delayTickEvent(() -> {
                     owner.swing(InteractionHand.MAIN_HAND, true);
 
-                    Vec3 look = RotationUtil.getLookAngle(owner);
+                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                     Vec3 pos = owner.getEyePosition().add(look);
 
                     for (int j = 0; j < 4; j++) {
-                        Vec3 offset = owner.getEyePosition().add(RotationUtil.getLookAngle(owner).scale(2.5D));
+                        Vec3 offset = owner.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(2.5D));
                         level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
                                 offset.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 offset.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -60,7 +60,7 @@ public class Barrage extends Ability {
                                 0, 0.0D, 0.0D, 0.0D, 1.0D);
                     }
                     for (int j = 0; j < 4; j++) {
-                        Vec3 offset = owner.getEyePosition().add(RotationUtil.getLookAngle(owner).scale(2.5D));
+                        Vec3 offset = owner.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(2.5D));
                         level.sendParticles(ParticleTypes.CRIT,
                                 offset.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
                                 offset.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
@@ -69,7 +69,7 @@ public class Barrage extends Ability {
                     }
                     owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
-                    Vec3 offset = owner.getEyePosition().add(RotationUtil.getLookAngle(owner).scale(RANGE / 2));
+                    Vec3 offset = owner.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(RANGE / 2));
 
                     for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(offset, RANGE, RANGE, RANGE))) {
                         if (owner instanceof Player player) {

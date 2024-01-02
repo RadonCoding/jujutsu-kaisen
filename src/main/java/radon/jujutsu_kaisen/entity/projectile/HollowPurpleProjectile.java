@@ -1,14 +1,12 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -18,16 +16,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.UUID;
 
 public class HollowPurpleProjectile extends JujutsuProjectile {
     private static final int DELAY = 2 * 20;
@@ -45,7 +39,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     public HollowPurpleProjectile(LivingEntity owner, float power) {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(this.getRadius() * 0.5F));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
@@ -198,7 +192,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (owner == null) return;
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         float yaw = owner.getYRot();
         Vec3 right = new Vec3(-Math.sin(Math.toRadians(yaw)), 0.0D, Math.cos(Math.toRadians(yaw)));
         Vec3 pos = look.cross(right).normalize().scale(offset);
@@ -277,7 +271,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = RotationUtil.getLookAngle(owner);
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                                 .add(look.scale(this.getRadius() * 0.5F));
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
@@ -289,7 +283,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                     }
 
                     if (this.getTime() == DELAY) {
-                        this.setDeltaMovement(RotationUtil.getLookAngle(this).scale(SPEED));
+                        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SPEED));
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
                     }
                 }

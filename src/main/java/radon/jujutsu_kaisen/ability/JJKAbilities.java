@@ -248,7 +248,7 @@ public class JJKAbilities {
                     ownerCap.useEnergy(cost);
                 }
 
-                Vec3 pos = owner.position().subtract(RotationUtil.getLookAngle(owner)
+                Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
                 curse.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 curse.setTame(true);

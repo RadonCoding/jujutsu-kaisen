@@ -10,14 +10,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
@@ -55,10 +52,10 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
 
         TimeCellMoonPalaceEntity entity = new TimeCellMoonPalaceEntity(domain);
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner).multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
         entity.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
         entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));

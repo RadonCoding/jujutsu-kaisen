@@ -12,7 +12,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -328,7 +327,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (owner == null) return;
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getSize() * 2, this.getBbWidth() * 2)));
     }
 
@@ -367,7 +366,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 this.hurtEntities();
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 }
 
                 int duration = this.getSize() * 5;

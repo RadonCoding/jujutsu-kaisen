@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
@@ -37,7 +36,7 @@ public class Slam extends Ability implements Ability.ICharged {
         if (target == null) return false;
         if (!owner.hasLineOfSight(target)) return false;
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
@@ -56,7 +55,7 @@ public class Slam extends Ability implements Ability.ICharged {
 
     private Vec3 getTarget(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
         HitResult result = RotationUtil.getHitResult(owner, start, end);
         return result.getType() == HitResult.Type.MISS ? end : result.getLocation();

@@ -5,14 +5,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestSpikeEntity extends JujutsuProjectile {
@@ -38,7 +34,7 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
             if (this.level().isClientSide) return;
 
-            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(RotationUtil.getLookAngle(this).scale(3.0D)))) {
+            for (Entity entity : this.level().getEntities(owner, this.getBoundingBox().expandTowards(RotationUtil.getTargetAdjustedLookAngle(this).scale(3.0D)))) {
                 entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FOREST_SPIKES.get()), DAMAGE * this.getPower());
             }
         }

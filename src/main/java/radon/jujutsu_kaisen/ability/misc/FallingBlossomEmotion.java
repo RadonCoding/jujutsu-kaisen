@@ -1,28 +1,20 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.Ability.IDurationable;
-import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.limitless.Infinity;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
@@ -30,14 +22,9 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.List;
 
 public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
     @Override
@@ -66,9 +53,9 @@ public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
 
         for (int i = 0; i < 16; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - RotationUtil.getLookAngle(owner).scale(0.35D).x;
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).x;
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight());
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - RotationUtil.getLookAngle(owner).scale(0.35D).z;
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.25F) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.1F) * HelperMethods.RANDOM.nextDouble();
             level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.FALLING_BLOSSOM_EMOTION, owner.getBbWidth() * 0.5F,
                     0.2F, 16), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);

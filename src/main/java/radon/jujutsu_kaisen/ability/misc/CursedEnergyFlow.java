@@ -9,22 +9,17 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -108,9 +103,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
         float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
         for (int i = 0; i < 12 * scale; i++) {
-            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - RotationUtil.getLookAngle(owner).scale(0.35D).x;
+            double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).x;
             double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - RotationUtil.getLookAngle(owner).scale(0.35D).z;
+            double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).z;
             double speed = (owner.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
             level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.5F * scale,
                             0.2F * scale, 6), x, y, z, 0, 0.0D, speed * scale, 0.0D, 1.0D);
@@ -205,7 +200,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                             case ROUGH -> increase *= 1.5F;
                             case LIGHTNING -> increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
                             case DIVERGENT -> {
-                                Vec3 look = RotationUtil.getLookAngle(attacker);
+                                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 
                                 attackerCap.delayTickEvent(() -> {
                                     victim.invulnerableTime = 0;

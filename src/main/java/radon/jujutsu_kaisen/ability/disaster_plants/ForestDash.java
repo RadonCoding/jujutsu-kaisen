@@ -26,7 +26,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE));
 

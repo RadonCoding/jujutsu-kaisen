@@ -10,28 +10,21 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.UUID;
 
 public class BlueProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -57,7 +50,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         this.entityData.set(DATA_MOTION, motion);
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
@@ -241,7 +234,7 @@ public class BlueProjectile extends JujutsuProjectile {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
             Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(RotationUtil.getLookAngle(owner).scale(OFFSET));
+            Vec3 pos = center.add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(OFFSET));
             this.setPos(pos.x, pos.y - (this.getBbHeight() / 2.0F), pos.z);
         }
     }
@@ -271,14 +264,14 @@ public class BlueProjectile extends JujutsuProjectile {
                         if (this.getTime() % 5 == 0) {
                             owner.swing(InteractionHand.MAIN_HAND);
                         }
-                        Vec3 look = RotationUtil.getLookAngle(owner);
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
                         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
                     }
                 } else {
                     if (this.getTime() == DELAY) {
                         Vec3 start = owner.getEyePosition();
-                        Vec3 look = RotationUtil.getLookAngle(owner);
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         Vec3 end = start.add(look.scale(RANGE));
                         HitResult result = RotationUtil.getHitResult(owner, start, end);
 

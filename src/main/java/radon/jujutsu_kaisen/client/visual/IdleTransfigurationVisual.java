@@ -69,9 +69,9 @@ public class IdleTransfigurationVisual {
                 int count = (int) (entity.getBbWidth() * entity.getBbHeight());
 
                 for (int i = 0; i < count; i++) {
-                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getLookAngle(entity).scale(0.35D).x;
+                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).x;
                     double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getLookAngle(entity).scale(0.35D).z;
+                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).z;
                     mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
                 }
             }

@@ -90,7 +90,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         int charge = this.getCharge(owner) + 1;
 
         Vec3 start = owner.getEyePosition();
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 end = start.add(look.scale(charge * 4));
         HitResult result = RotationUtil.getHitResult(owner, start, end);
 
@@ -234,7 +234,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-            Vec3 look = RotationUtil.getLookAngle(attacker);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 
             victim.setDeltaMovement(look.scale(LAUNCH_POWER * speed));
             victim.hurtMarked = true;

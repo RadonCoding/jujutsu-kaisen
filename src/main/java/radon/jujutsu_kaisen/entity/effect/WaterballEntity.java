@@ -8,8 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -21,7 +19,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -49,7 +46,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getLookAngle(owner));
+                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
     }
 
@@ -123,7 +120,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                     this.createWave(owner);
                 }
                 Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                        .add(RotationUtil.getLookAngle(owner));
+                        .add(RotationUtil.getTargetAdjustedLookAngle(owner));
                 this.setPos(spawn.x, spawn.y, spawn.z);
             }
         } else {
