@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -64,7 +65,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(RotationUtil.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z);
 
@@ -177,8 +178,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
             if (owner != null && this.isOpen()) {
                 Vec3 pos = owner.position()
-                        .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                        .add(HelperMethods.getLookAngle(owner).yRot(90.0F).scale(-0.45D));
+                        .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                        .add(RotationUtil.getLookAngle(owner).yRot(90.0F).scale(-0.45D));
                 this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
                 this.yHeadRot = this.getYRot();

@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         this.setTarget(target);
 
-        Vec3 look = HelperMethods.getLookAngle(center);
+        Vec3 look = RotationUtil.getLookAngle(center);
         Vec3 spawn = new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, center.getYRot(), center.getXRot());
 

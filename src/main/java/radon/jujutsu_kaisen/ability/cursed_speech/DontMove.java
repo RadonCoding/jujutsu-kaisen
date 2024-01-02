@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class DontMove extends Ability {
     }
 
     private static List<Entity> getEntities(LivingEntity owner) {
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
@@ -48,7 +49,7 @@ public class DontMove extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
 
         Vec3 src = owner.getEyePosition();
 

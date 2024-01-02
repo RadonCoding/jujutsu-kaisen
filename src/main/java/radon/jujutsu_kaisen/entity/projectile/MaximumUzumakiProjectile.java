@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -47,7 +48,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner, power);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
@@ -99,7 +100,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     this.discard();
                 } else {
                     Vec3 pos = owner.position()
-                            .subtract(HelperMethods.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                            .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                             .add(0.0D, this.getBbHeight(), 0.0D);
                     this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 }
@@ -107,9 +108,9 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.discard();
             } else if (this.getTime() == DELAY) {
                 Vec3 start = owner.getEyePosition();
-                Vec3 look = HelperMethods.getLookAngle(owner);
+                Vec3 look = RotationUtil.getLookAngle(owner);
                 Vec3 end = start.add(look.scale(RANGE));
-                HitResult result = HelperMethods.getHitResult(owner, start, end);
+                HitResult result = RotationUtil.getHitResult(owner, start, end);
 
                 Vec3 pos = result.getType() == HitResult.Type.MISS ? end : result.getLocation();
                 this.setPos(pos);

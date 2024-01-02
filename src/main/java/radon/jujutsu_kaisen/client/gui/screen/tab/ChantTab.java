@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.AddChantC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.RemoveChantC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestWave extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final int DELAY = 3;
@@ -39,7 +40,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
 
         for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
             ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
-            Vec3 look = HelperMethods.getLookAngle(owner);
+            Vec3 look = RotationUtil.getLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth()))
                     .add(look.scale(charge + i));

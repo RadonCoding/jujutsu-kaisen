@@ -9,7 +9,9 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
@@ -66,12 +68,12 @@ public class HorseLegs extends Transformation {
 
     @Override
     public void applyModifiers(LivingEntity owner) {
-        HelperMethods.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.3D, AttributeModifier.Operation.ADDITION);
+        EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 0.3D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
     public void removeModifiers(LivingEntity owner) {
-        HelperMethods.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
+        EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 
     @Override

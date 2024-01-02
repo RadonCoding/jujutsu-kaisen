@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import radon.jujutsu_kaisen.entity.effect.LightningEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class BlackFlashRenderer extends EntityRenderer<BlackFlashEntity> {
     private static final double RANGE = 3.0D;

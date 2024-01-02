@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Spiderweb extends Ability {
     private static final int RANGE = 3;
@@ -34,9 +35,9 @@ public class Spiderweb extends Ability {
 
     private @Nullable BlockHitResult getBlockHit(LivingEntity owner) {
         Vec3 start = owner.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 end = start.add(look.scale(RANGE));
-        HitResult result = HelperMethods.getHitResult(owner, start, end);
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
         if (result.getType() == HitResult.Type.BLOCK) {
             return (BlockHitResult) result;
@@ -62,7 +63,7 @@ public class Spiderweb extends Ability {
             float radius = EXPLOSIVE_POWER * this.getPower(owner);
             float real = (radius % 2 == 0) ? radius + 1 : radius;
 
-            Vec3 center = hit.getBlockPos().getCenter().add(HelperMethods.getLookAngle(owner).scale(real * 0.5F));
+            Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getLookAngle(owner).scale(real * 0.5F));
 
             AABB bounds = AABB.ofSize(center, real, real, real);
 

@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.SharkShikigamiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FishShikigami extends Ability {
     public static final double RANGE = 30.0D;
@@ -32,7 +33,7 @@ public class FishShikigami extends Ability {
         LivingEntity result = null;
 
         if (owner instanceof Player) {
-            if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+            if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
                 if (owner.canAttack(target)) {
                     result = target;
                 }

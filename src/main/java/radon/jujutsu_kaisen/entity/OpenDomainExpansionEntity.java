@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pType, owner, ability);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(RotationUtil.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
 

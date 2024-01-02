@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ReleaseCurse extends Ability {
     private static final double RANGE = 32.0D;
@@ -40,7 +41,7 @@ public class ReleaseCurse extends Ability {
     }
 
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
             return hit.getEntity();
         }
         return null;

@@ -35,6 +35,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,6 +9,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestDash extends Ability implements Ability.IChannelened {
     private static final double SPEED = 2.0D;
@@ -25,7 +26,7 @@ public class ForestDash extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
 
         Vec3 start = owner.position().subtract(owner.getUpVector(1.0F).scale(ForestDashEntity.SIZE));
 

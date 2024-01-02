@@ -33,7 +33,10 @@ import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.PlayerUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -355,13 +358,13 @@ public class SorcererData implements ISorcererData {
     }
 
     private void checkAdvancements(ServerPlayer player) {
-        if (this.traits.contains(Trait.SIX_EYES)) HelperMethods.giveAdvancement(player, "six_eyes");
-        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) HelperMethods.giveAdvancement(player, "heavenly_restriction");
-        if (this.traits.contains(Trait.VESSEL)) HelperMethods.giveAdvancement(player, "vessel");
+        if (this.traits.contains(Trait.SIX_EYES)) PlayerUtil.giveAdvancement(player, "six_eyes");
+        if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
+        if (this.traits.contains(Trait.VESSEL)) PlayerUtil.giveAdvancement(player, "vessel");
         if (this.unlocked.contains(JJKAbilities.RCT1.get()))
-            HelperMethods.giveAdvancement(player, "reverse_cursed_technique");
+            PlayerUtil.giveAdvancement(player, "reverse_cursed_technique");
         if (this.traits.contains(Trait.PERFECT_BODY))
-            HelperMethods.giveAdvancement(player, "perfect_body");
+            PlayerUtil.giveAdvancement(player, "perfect_body");
     }
 
     @Override
@@ -398,9 +401,9 @@ public class SorcererData implements ISorcererData {
 
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
-                HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                HelperMethods.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                HelperMethods.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
+                EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
 
                 if (this.owner.walkDist == this.owner.walkDistO) {
                     this.noMotionTime++;
@@ -412,9 +415,9 @@ public class SorcererData implements ISorcererData {
                     this.resetSpeedStacks();
                 }
             } else {
-                HelperMethods.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-                HelperMethods.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                HelperMethods.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
+                EntityUtil.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
+                EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
+                EntityUtil.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
             }
         }
 
@@ -439,18 +442,18 @@ public class SorcererData implements ISorcererData {
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 30.0D) / 20) * 20;
 
-            if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
 
             double damage = this.getRealPower() * 2.5D;
-            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", damage, AttributeModifier.Operation.ADDITION);
 
             double attack = this.getRealPower() * 0.5D;
-            HelperMethods.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, ATTACK_SPEED_UUID, "Attack speed", attack, AttributeModifier.Operation.ADDITION);
 
             double movement = this.getRealPower() * 0.05D;
-            HelperMethods.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
+            EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", Math.min(this.owner.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 2,  movement), AttributeModifier.Operation.ADDITION);
 
             if (this.owner.getHealth() < this.owner.getMaxHealth()) {
                 this.owner.heal(1.5F / 20);
@@ -458,7 +461,7 @@ public class SorcererData implements ISorcererData {
         } else {
             double health = Math.ceil(((this.getRealPower() - 1.0F) * 20.0D) / 20) * 20;
 
-            if (HelperMethods.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
+            if (EntityUtil.applyModifier(this.owner, Attributes.MAX_HEALTH, MAX_HEALTH_UUID, "Max health", health, AttributeModifier.Operation.ADDITION)) {
                 this.owner.setHealth(this.owner.getMaxHealth());
             }
         }
@@ -993,7 +996,7 @@ public class SorcererData implements ISorcererData {
         this.output = this.getMaximumOutput();
 
         if (this.owner instanceof ServerPlayer player) {
-            HelperMethods.giveAdvancement(player, "black_flash");
+            PlayerUtil.giveAdvancement(player, "black_flash");
         }
     }
 

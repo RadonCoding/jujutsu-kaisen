@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Gun extends Transformation {
     @Override

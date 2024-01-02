@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Dismantle extends Ability implements Ability.IChannelened, Ability.IDurationable, Ability.IDomainAttack {
     public static final float SPEED = 5.0F;
@@ -33,7 +35,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
             owner.swing(InteractionHand.MAIN_HAND);
 
             DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
-            dismantle.setDeltaMovement(HelperMethods.getLookAngle(dismantle).scale(SPEED));
+            dismantle.setDeltaMovement(RotationUtil.getLookAngle(dismantle).scale(SPEED));
             owner.level().addFreshEntity(dismantle);
 
             if (!owner.level().isClientSide) {

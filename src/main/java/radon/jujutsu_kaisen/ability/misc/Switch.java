@@ -12,7 +12,9 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Switch extends Ability {
     @Override
@@ -52,7 +54,7 @@ public class Switch extends Ability {
             sukuna.discard();
         } else {
             sukuna = new SukunaEntity(owner, cap.getFingers(), true);
-            HelperMethods.convertTo(owner, sukuna, true, false);
+            EntityUtil.convertTo(owner, sukuna, true, false);
 
             cap.addSummon(sukuna);
         }

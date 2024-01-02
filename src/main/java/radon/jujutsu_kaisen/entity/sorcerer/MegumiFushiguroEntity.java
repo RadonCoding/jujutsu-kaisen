@@ -20,7 +20,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class MegumiFushiguroEntity extends SorcererEntity {
             int count = stack.getCount();
 
             stack.shrink(count);
-            HelperMethods.convertTo(this, new SukunaEntity(this, count, false), true, false);
+            EntityUtil.convertTo(this, new SukunaEntity(this, count, false), true, false);
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);

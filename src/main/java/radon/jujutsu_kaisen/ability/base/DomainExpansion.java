@@ -27,6 +27,7 @@ import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
             if (this instanceof DomainExpansion.IClosedDomain closed) {
                 int radius = Math.round(closed.getRadius(owner));
-                Vec3 direction = HelperMethods.getLookAngle(owner);
+                Vec3 direction = RotationUtil.getLookAngle(owner);
                 Vec3 behind = owner.position().add(direction.scale(radius - DomainExpansionEntity.OFFSET));
                 BlockPos center = BlockPos.containing(behind.x, behind.y - (double) (radius / 2), behind.z)
                         .offset(0, radius / 2, 0);

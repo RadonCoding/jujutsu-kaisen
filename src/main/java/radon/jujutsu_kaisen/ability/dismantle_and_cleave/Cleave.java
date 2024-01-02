@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Cleave extends Ability implements Ability.IDomainAttack {
     public static final double RANGE = 30.0D;
@@ -42,7 +43,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
             if (!owner.canAttack(target)) return null;
             
             return target;

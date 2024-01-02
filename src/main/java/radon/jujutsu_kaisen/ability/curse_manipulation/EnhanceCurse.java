@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class EnhanceCurse extends Ability implements Ability.IChannelened {
     private static final double RANGE = 32.0D;
@@ -28,7 +29,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     }
 
     private @Nullable CursedSpirit getTarget(LivingEntity owner) {
-        if (HelperMethods.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
             if (!curse.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 

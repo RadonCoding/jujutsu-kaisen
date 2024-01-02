@@ -15,7 +15,9 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SukunaFingerItem extends CursedObjectItem {
     public SukunaFingerItem(Properties pProperties) {
@@ -60,7 +62,7 @@ public class SukunaFingerItem extends CursedObjectItem {
             }
         }
         pStack.shrink(pStack.getCount());
-        HelperMethods.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
+        EntityUtil.convertTo(pEntityLiving, new SukunaEntity(pEntityLiving, pStack.getCount(), false), true, false);
         return ItemStack.EMPTY;
     }
 }

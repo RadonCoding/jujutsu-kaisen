@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
@@ -327,7 +328,7 @@ public class MeteorEntity extends JujutsuProjectile {
 
         if (owner == null) return;
 
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         this.setPos(owner.position().subtract(look.multiply(this.getBbWidth() * 2, this.getSize() * 2, this.getBbWidth() * 2)));
     }
 
@@ -366,7 +367,7 @@ public class MeteorEntity extends JujutsuProjectile {
                 this.hurtEntities();
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(HelperMethods.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
                 }
 
                 int duration = this.getSize() * 5;

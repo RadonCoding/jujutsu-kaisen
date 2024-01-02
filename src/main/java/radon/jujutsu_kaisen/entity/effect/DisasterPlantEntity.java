@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.effect;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,6 +17,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -45,7 +47,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         this.setTarget(target);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(RotationUtil.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
     }
@@ -121,11 +123,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
             return;
         }
 
-        this.setXRot(HelperMethods.getXRotD(this, target.getEyePosition()));
-        this.xRotO = this.getXRot();
-
-        this.setYRot(HelperMethods.getYRotD(this, target.getEyePosition()));
-        this.yRotO = this.getYRot();
+        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 

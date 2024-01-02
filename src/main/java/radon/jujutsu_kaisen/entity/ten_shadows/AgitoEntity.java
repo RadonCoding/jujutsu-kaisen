@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,6 +29,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -73,7 +75,7 @@ public class AgitoEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(HelperMethods.getLookAngle(owner)
+                .subtract(RotationUtil.getLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
@@ -86,11 +88,7 @@ public class AgitoEntity extends TenShadowsSummon {
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
-            this.yHeadRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
-            this.yBodyRot = HelperMethods.getYRotD(this, pPlayer.getEyePosition());
-
-            this.setXRot(HelperMethods.getXRotD(this, pPlayer.getEyePosition()));
-            this.setYRot(HelperMethods.getYRotD(this, pPlayer.getEyePosition()));
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, pPlayer.position().add(0.0D, pPlayer.getBbHeight() / 2.0F, 0.0D));
 
             if (AbilityHandler.trigger(this, JJKAbilities.OUTPUT_RCT.get()) == Ability.Status.SUCCESS) {
                 return InteractionResult.sidedSuccess(this.level().isClientSide);

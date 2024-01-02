@@ -72,6 +72,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
@@ -189,13 +190,13 @@ public class JJKClientEventHandler {
                     event.setSwingHand(false);
                 } else if (event.isUseItem()) {
                     if (mc.options.keyShift.isDown()) {
-                        if (HelperMethods.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
+                        if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                             if (hit.getEntity() instanceof LivingEntity target) {
                                 PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
                             }
                         }
                     } else {
-                        if (HelperMethods.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
+                        if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
                             PacketHandler.sendToServer(new NyoiStaffSummonLightningC2SPacket(hit.getEntity().getUUID()));
                         } else {
                             ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -272,7 +273,7 @@ public class JJKClientEventHandler {
                 if (JJKAbilities.hasTrait(viewer, Trait.HEAVENLY_RESTRICTION)) return;
 
                 if (target != viewer) {
-                    Vec3 look = HelperMethods.getLookAngle(viewer);
+                    Vec3 look = RotationUtil.getLookAngle(viewer);
                     Vec3 start = viewer.getEyePosition();
                     Vec3 result = target.getEyePosition().subtract(start);
 

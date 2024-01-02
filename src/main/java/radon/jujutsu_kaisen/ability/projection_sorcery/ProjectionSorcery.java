@@ -32,6 +32,8 @@ import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.ParticleUtil;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -88,9 +90,9 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         int charge = this.getCharge(owner) + 1;
 
         Vec3 start = owner.getEyePosition();
-        Vec3 look = HelperMethods.getLookAngle(owner);
+        Vec3 look = RotationUtil.getLookAngle(owner);
         Vec3 end = start.add(look.scale(charge * 4));
-        HitResult result = HelperMethods.getHitResult(owner, start, end);
+        HitResult result = RotationUtil.getHitResult(owner, start, end);
 
         Vec3 next = result.getType() == HitResult.Type.MISS ? end : result instanceof BlockHitResult block ?
                 block.getBlockPos().getCenter().add(0.0D, 0.5D, 0.0D) : result.getLocation();
@@ -112,7 +114,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 cap.addFrame(middle, middleYaw);
 
                 if (owner instanceof ServerPlayer player) {
-                    HelperMethods.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
+                    ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), middleYaw), false, middle.x, middle.y, middle.z,
                             0.0D, 0.0D, 0.0D);
                 }
             }
@@ -122,7 +124,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
         cap.addFrame(next, nextYaw);
 
         if (owner instanceof ServerPlayer player) {
-            HelperMethods.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), false, next.x, next.y, next.z,
+            ParticleUtil.sendParticle(player, new ProjectionParticle.ProjectionParticleOptions(owner.getId(), nextYaw), false, next.x, next.y, next.z,
                     0.0D, 0.0D, 0.0D);
         }
     }
@@ -232,7 +234,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
-            Vec3 look = HelperMethods.getLookAngle(attacker);
+            Vec3 look = RotationUtil.getLookAngle(attacker);
 
             victim.setDeltaMovement(look.scale(LAUNCH_POWER * speed));
             victim.hurtMarked = true;

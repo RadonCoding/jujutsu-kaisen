@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -82,7 +83,7 @@ public class HeianSukunaEntity extends SukunaEntity {
             if (target != null) {
                 this.startUsingItem(InteractionHand.OFF_HAND);
 
-                if (HelperMethods.getLookAtHit(this, KamutokeDaggerItem.RANGE) instanceof EntityHitResult hit && hit.getEntity() == target) {
+                if (RotationUtil.getLookAtHit(this, KamutokeDaggerItem.RANGE) instanceof EntityHitResult hit && hit.getEntity() == target) {
                     this.stopUsingItem();
                 }
             }

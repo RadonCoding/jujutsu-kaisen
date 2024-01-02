@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.item.veil.VeilRodItem;
 import radon.jujutsu_kaisen.item.veil.modifier.*;
 import radon.jujutsu_kaisen.tags.JJKItemTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 

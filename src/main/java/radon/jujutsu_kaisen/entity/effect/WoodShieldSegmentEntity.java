@@ -9,6 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -126,7 +127,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                 if (!this.level().isClientSide && this.getIndex() == 0 && this.getTime() - 1 == 0) {
                     for (int i = 0; i < (int) Mth.clamp(owner.getBbWidth() * 5.0F, 6.0F, 22.0F); i++) {
                         Vec3 pos = new Vec3((this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D, 0.0D, (this.random.nextDouble() - 0.5D) * owner.getBbWidth() * 2.5D);
-                        float f = HelperMethods.getYaw(this.pos.subtract(this.position().add(pos)));
+                        float f = RotationUtil.getYaw(this.pos.subtract(this.position().add(pos)));
                         WoodShieldSegmentEntity segment = new WoodShieldSegmentEntity(this, pos.x, pos.y, pos.z, f + ((this.random.nextFloat() - 0.5F) * 160.0F), 80.0F);
                         segment.prevSegment = segment;
                         this.level().addFreshEntity(segment);
@@ -137,7 +138,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
                     int i = this.prevSegment.getIndex();
 
                     if (i > 1) {
-                        yaw = Mth.wrapDegrees(HelperMethods.getYaw(this.pos
+                        yaw = Mth.wrapDegrees(RotationUtil.getYaw(this.pos
                                 .subtract(this.prevSegment.position())) - this.prevSegment.getYRot());
                         yaw /= owner.getBbWidth() + Math.max(4.4F - (float) i * 0.075F, 1.0F);
                     }
