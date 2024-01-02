@@ -29,6 +29,8 @@ public class Wings extends Transformation {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.resetFallDistance();
+
         Vec3 movement = owner.getDeltaMovement();
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         owner.setDeltaMovement(movement.x, look.y, movement.z);
