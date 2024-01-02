@@ -60,6 +60,8 @@ public class MeleeScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
+        // DO NOT REMOVE
+        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!cap.hasTechnique(CursedTechnique.MIMICRY)) return;
