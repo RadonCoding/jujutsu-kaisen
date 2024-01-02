@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -85,7 +86,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? 0.15F : 2.0F;
+        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 2.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -212,6 +213,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
+    public boolean isNoGravity() {
+        return !this.isVehicle() && super.isNoGravity();
+    }
+
+    @Override
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         super.tickRidden(pPlayer, pTravelVector);
 
@@ -219,10 +225,10 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
+        Vec3 movement = this.getDeltaMovement();
+
         if (this.jump) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
-        } else if (!this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, -0.01D, 0.0D));
+            this.setDeltaMovement(movement.add(0.0D, this.getFlyingSpeed(), 0.0D));
         }
     }
 

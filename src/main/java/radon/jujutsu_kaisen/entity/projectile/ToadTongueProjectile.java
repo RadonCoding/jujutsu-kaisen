@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
@@ -41,7 +42,8 @@ public class ToadTongueProjectile extends JujutsuProjectile {
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, owner.getZ());
         this.setPos(spawn);
 
-        this.setDeltaMovement(owner.getLookAngle().scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
+        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner)
+                .scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
 
         this.target = target;
         this.range = range;
