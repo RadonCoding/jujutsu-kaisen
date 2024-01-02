@@ -130,7 +130,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.25F : 1.0F;
+        return this.getTarget() == null || this.isVehicle() ? 0.25F : 1.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -263,8 +263,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         super.tickRidden(pPlayer, pTravelVector);
-
-        this.setTarget(null);
 
         Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);

@@ -85,7 +85,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 2.0F;
+        return this.getTarget() == null || this.isVehicle() ? 0.15F : 2.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -214,8 +214,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     @Override
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         super.tickRidden(pPlayer, pTravelVector);
-
-        this.setTarget(null);
 
         Vec2 vec2 = this.getRiddenRotation(pPlayer);
         this.setRot(vec2.y, vec2.x);

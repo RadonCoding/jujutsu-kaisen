@@ -79,8 +79,10 @@ public class AgitoEntity extends TenShadowsSummon {
 
     @Override
     public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (pPlayer == this.getOwner() && this.isTame() && !this.isVehicle()) {
+        if (pPlayer == this.getOwner() && this.isTame()) {
             this.lookAt(EntityAnchorArgument.Anchor.EYES, pPlayer.position().add(0.0D, pPlayer.getBbHeight() / 2.0F, 0.0D));
+
+            this.setTarget(null);
 
             if (AbilityHandler.trigger(this, JJKAbilities.OUTPUT_RCT.get()) == Ability.Status.SUCCESS) {
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
