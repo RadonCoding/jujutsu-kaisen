@@ -26,7 +26,6 @@ import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -57,7 +56,7 @@ public class ToadEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = ritual ? owner.position() : owner.position()
-                .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         this.yHeadRot = this.getYRot();
@@ -119,7 +118,7 @@ public class ToadEntity extends TenShadowsSummon {
         double z = this.getZ();
 
         double distance = this.getBbWidth() * 2;
-        Vec3 look = RotationUtil.getLookAngle(this);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(this);
         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))

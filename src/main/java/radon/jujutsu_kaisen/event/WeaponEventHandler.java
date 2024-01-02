@@ -101,7 +101,7 @@ public class WeaponEventHandler {
                     victim.invulnerableTime = 0;
                     victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
                 } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
-                    Vec3 pos = attacker.getEyePosition().add(RotationUtil.getLookAngle(attacker));
+                    Vec3 pos = attacker.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(attacker));
                     attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
                 } else if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                     victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {

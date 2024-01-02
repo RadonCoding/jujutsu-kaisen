@@ -1,20 +1,17 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -22,12 +19,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
-import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
@@ -72,7 +64,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
         SelfEmbodimentOfPerfectionEntity entity = new SelfEmbodimentOfPerfectionEntity(domain);
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         Vec3 pos = owner.position()
                 .add(owner.getUpVector(1.0F).scale(entity.getBbHeight()))

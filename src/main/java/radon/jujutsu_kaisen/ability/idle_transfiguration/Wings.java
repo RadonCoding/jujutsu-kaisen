@@ -1,20 +1,13 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.UUID;
 
 public class Wings extends Transformation {
     private static final float SPEED = 0.1F;
@@ -37,7 +30,7 @@ public class Wings extends Transformation {
     @Override
     public void run(LivingEntity owner) {
         Vec3 movement = owner.getDeltaMovement();
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         owner.setDeltaMovement(movement.x, look.y, movement.z);
 
         float f = owner.xxa * 0.5F;

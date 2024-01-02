@@ -1,15 +1,10 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -17,17 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.entity.curse.FishCurseEntity;
-import radon.jujutsu_kaisen.entity.curse.HanamiEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -61,11 +48,11 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
         this.setTame(tame);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner)
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         this.setDeltaMovement(look.x * (this.random.nextDouble() * 2.0D + 1.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),
                 look.y * (this.random.nextDouble() * 4.0D + 2.0D) + (this.random.nextDouble() * (this.random.nextBoolean() ? 1 : -1) * 0.5D),

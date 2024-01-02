@@ -21,7 +21,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Punch extends Ability implements Ability.ICharged {
@@ -97,7 +96,7 @@ public class Punch extends Ability implements Ability.ICharged {
 
         float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

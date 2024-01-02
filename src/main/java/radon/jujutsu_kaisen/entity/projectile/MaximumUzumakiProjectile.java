@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -9,11 +7,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -22,7 +18,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -30,8 +25,6 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.Map;
 
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
@@ -50,7 +43,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         super(JJKEntities.MAXIMUM_UZUMAKI.get(), owner.level(), owner, power);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
@@ -97,7 +90,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     this.discard();
                 } else {
                     Vec3 pos = owner.position()
-                            .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                            .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                             .add(0.0D, this.getBbHeight(), 0.0D);
                     this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
                 }
@@ -105,7 +98,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 this.discard();
             } else if (this.getTime() == DELAY) {
                 Vec3 start = owner.getEyePosition();
-                Vec3 look = RotationUtil.getLookAngle(owner);
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                 Vec3 end = start.add(look.scale(RANGE));
                 HitResult result = RotationUtil.getHitResult(owner, start, end);
 

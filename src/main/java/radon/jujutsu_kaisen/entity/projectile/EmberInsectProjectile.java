@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,7 +21,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -127,7 +125,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
             float xOffset = this.entityData.get(DATA_OFFSET_X);
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            Vec3 look = RotationUtil.getLookAngle(owner);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                     .add(RotationUtil.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
                     .add(RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
@@ -152,7 +150,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                 }
             } else if (this.getTime() >= DELAY) {
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(RotationUtil.getLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 }
             }
         }

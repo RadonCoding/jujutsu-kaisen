@@ -2,23 +2,17 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -42,7 +36,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
@@ -86,7 +79,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         this.setOwner(owner);
         this.setPower(power);
 
-        Vec3 look = RotationUtil.getLookAngle(owner);
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
 
@@ -288,7 +281,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         if (this.getOwner() instanceof LivingEntity owner) {
             this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
             this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
-            Vec3 look = RotationUtil.getLookAngle(owner);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.setPos(spawn.x, spawn.y, spawn.z);
         }

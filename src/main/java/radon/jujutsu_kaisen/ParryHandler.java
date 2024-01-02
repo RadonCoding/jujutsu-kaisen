@@ -9,7 +9,6 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -40,7 +39,7 @@ public class ParryHandler {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) rng /= 2;
                 if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
 
-                Vec3 look = RotationUtil.getLookAngle(victim);
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(victim);
                 Vec3 start = victim.getEyePosition();
                 Vec3 result = attacker.getEyePosition().subtract(start);
 

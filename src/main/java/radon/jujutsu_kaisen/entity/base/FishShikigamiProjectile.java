@@ -20,7 +20,6 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -141,7 +140,7 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
             float xOffset = this.entityData.get(DATA_OFFSET_X);
             float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            Vec3 look = RotationUtil.getLookAngle(owner);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
             this.applyRotation();
 

@@ -1,22 +1,16 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -24,11 +18,9 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -75,7 +67,7 @@ public class AgitoEntity extends TenShadowsSummon {
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner)
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 

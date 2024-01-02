@@ -8,25 +8,17 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
@@ -41,7 +33,7 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
         super(pType, owner, ability);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner)
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
 

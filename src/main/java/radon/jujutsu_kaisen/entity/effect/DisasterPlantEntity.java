@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -47,7 +46,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         this.setTarget(target);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner)
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z, owner.getXRot(), owner.getYRot());
     }

@@ -13,29 +13,23 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Predicate;
 
 public class RotationUtil {
-    public static Vec3 getLookAngle(Entity entity, boolean aimbot) {
-        if (aimbot) {
-            if (entity instanceof Targeting targeting) {
-                LivingEntity target = targeting.getTarget();
+    public static Vec3 getTargetAdjustedLookAngle(Entity entity) {
+        if (entity instanceof Targeting targeting) {
+            LivingEntity target = targeting.getTarget();
 
-                if (target != null) {
-                    Vec3 start = entity.getEyePosition();
-                    Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-                    double d0 = end.x - start.x;
-                    double d1 = end.y - start.y;
-                    double d2 = end.z - start.z;
-                    double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-                    float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
-                    float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
-                    return calculateViewVector(yaw, pitch);
-                }
+            if (target != null) {
+                Vec3 start = entity.getEyePosition();
+                Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                double d0 = end.x - start.x;
+                double d1 = end.y - start.y;
+                double d2 = end.z - start.z;
+                double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+                float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
+                float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
+                return calculateViewVector(yaw, pitch);
             }
         }
         return entity.getLookAngle();
-    }
-
-    public static Vec3 getLookAngle(Entity entity) {
-        return getLookAngle(entity, true);
     }
 
     public static Vec3 calculateViewVector(float yaw, float pitch) {
@@ -76,7 +70,7 @@ public class RotationUtil {
 
     public static HitResult getLookAtHit(Entity entity, double range, Predicate<Entity> filter) {
         Vec3 start = entity.getEyePosition();
-        Vec3 look = getLookAngle(entity);
+        Vec3 look = getTargetAdjustedLookAngle(entity);
         Vec3 end = start.add(look.scale(range));
         return getHitResult(entity, start, end, filter);
     }

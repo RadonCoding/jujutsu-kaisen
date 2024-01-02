@@ -65,7 +65,7 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         this.setOwner(owner);
 
         Vec3 pos = owner.position()
-                .subtract(RotationUtil.getLookAngle(owner)
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.moveTo(pos.x, pos.y, pos.z);
 
@@ -178,8 +178,8 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
             if (owner != null && this.isOpen()) {
                 Vec3 pos = owner.position()
-                        .subtract(RotationUtil.getLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
-                        .add(RotationUtil.getLookAngle(owner).yRot(90.0F).scale(-0.45D));
+                        .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
+                        .add(RotationUtil.getTargetAdjustedLookAngle(owner).yRot(90.0F).scale(-0.45D));
                 this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
                 this.yHeadRot = this.getYRot();
