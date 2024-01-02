@@ -51,6 +51,7 @@ public abstract class RadialScreen extends Screen {
     protected int hovered = -1;
     private int hover;
     private static int page;
+    private boolean isLeftClickDown;
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));
@@ -131,17 +132,15 @@ public abstract class RadialScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        this.isLeftClickDown = !this.isLeftClickDown && pButton == InputConstants.MOUSE_BUTTON_LEFT;
+
         if (this.minecraft != null && this.minecraft.player != null) {
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
                 DisplayItem item = this.getCurrent().get(this.hovered);
 
-                if (pButton == InputConstants.MOUSE_BUTTON_LEFT) {
-                    if (item.type == DisplayItem.Type.CURSE) {
-                        this.curses.put(item.curse.getKey(), Math.min(item.curse.getValue(), this.curses.getOrDefault(item.curse.getKey(), 0) + 1));
-                    }
-                } else if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
+                if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
                     if (item.type == DisplayItem.Type.COPIED) {
                         PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
                         cap.uncopy(item.copied);
@@ -150,6 +149,13 @@ public abstract class RadialScreen extends Screen {
             }
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        this.isLeftClickDown = this.isLeftClickDown && pButton == InputConstants.MOUSE_BUTTON_LEFT;
+
+        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
@@ -413,9 +419,22 @@ public abstract class RadialScreen extends Screen {
     }
 
     private float getAngleFor(double i) {
-        if (this.getCurrent().size() == 0) {
+        if (this.getCurrent().isEmpty()) {
             return 0;
         }
         return (float) (((i / this.getCurrent().size()) + 0.25D) * Mth.TWO_PI + Math.PI);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.isLeftClickDown && this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
+            DisplayItem item = this.getCurrent().get(this.hovered);
+
+            if (item.type == DisplayItem.Type.CURSE) {
+                this.curses.put(item.curse.getKey(), Math.min(item.curse.getValue(), this.curses.getOrDefault(item.curse.getKey(), 0) + 1));
+            }
+        }
     }
 }
