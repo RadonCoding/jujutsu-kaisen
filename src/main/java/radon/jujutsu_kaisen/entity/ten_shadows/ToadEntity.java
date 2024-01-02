@@ -225,10 +225,11 @@ public class ToadEntity extends TenShadowsSummon {
         LivingEntity owner = this.getOwner();
 
         if (this.isTame() && owner != null && this.hasWings()) {
-            for (Projectile projectile : this.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
-                if (projectile instanceof AbstractArrow && projectile.getOwner() != this.getOwner()) {
-                    this.shoot(projectile);
-                    projectile.discard();
+            for (AbstractArrow arrow : this.level().getEntitiesOfClass(AbstractArrow.class, owner.getBoundingBox().inflate(1.0D))) {
+                if (arrow.getOwner() != this.getOwner()) {
+                    this.setTarget(null);
+                    this.shoot(arrow);
+                    arrow.discard();
                 }
             }
         }
