@@ -42,9 +42,6 @@ public class ToadTongueProjectile extends JujutsuProjectile {
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F) - 0.1D, owner.getZ());
         this.setPos(spawn);
 
-        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner)
-                .scale(SPEED * (((ToadEntity) owner).hasWings() ? 5.0D : 1.0D)));
-
         this.target = target;
         this.range = range;
     }

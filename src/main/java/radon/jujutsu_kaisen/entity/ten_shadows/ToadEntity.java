@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -227,7 +228,6 @@ public class ToadEntity extends TenShadowsSummon {
         if (this.isTame() && owner != null && this.hasWings()) {
             for (AbstractArrow arrow : this.level().getEntitiesOfClass(AbstractArrow.class, owner.getBoundingBox().inflate(1.0D))) {
                 if (arrow.getOwner() != this.getOwner()) {
-                    this.setTarget(null);
                     this.shoot(arrow);
                     arrow.discard();
                 }
@@ -267,7 +267,19 @@ public class ToadEntity extends TenShadowsSummon {
 
         this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
 
+        Vec3 start = this.getEyePosition();
+        Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+        double d0 = end.x - start.x;
+        double d1 = end.y - start.y;
+        double d2 = end.z - start.z;
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
+        float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
+
+        Vec3 speed = calculateViewVector(yaw, pitch).scale(ToadTongueProjectile.SPEED * (this.hasWings() ? 5.0D : 1.0D));
+
         ToadTongueProjectile tongue = new ToadTongueProjectile(this, RANGE, target.getUUID());
+        tongue.setDeltaMovement(speed);
         this.level().addFreshEntity(tongue);
 
         this.entityData.set(DATA_CAN_SHOOT, false);
