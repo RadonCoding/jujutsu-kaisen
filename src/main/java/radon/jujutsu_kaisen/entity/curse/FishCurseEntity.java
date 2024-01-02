@@ -69,6 +69,7 @@ public class FishCurseEntity extends PackCursedSpirit {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
+                .add(Attributes.MAX_HEALTH, 5.0D)
                 .add(Attributes.FLYING_SPEED);
     }
 

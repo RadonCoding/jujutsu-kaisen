@@ -98,7 +98,8 @@ public class NueLightning extends Ability implements Ability.IToggled {
 
             victim.invulnerableTime = 0;
 
-            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker))) {
+            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker)) &&
+                    !victim.isDeadOrDying()) {
                 victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
 
                 attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
