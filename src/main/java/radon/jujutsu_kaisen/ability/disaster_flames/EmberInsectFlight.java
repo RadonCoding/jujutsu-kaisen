@@ -21,6 +21,13 @@ public class EmberInsectFlight extends Summon<EmberInsectFlightEntity> {
     }
 
     @Override
+    public void run(LivingEntity owner) {
+        super.run(owner);
+
+        owner.resetFallDistance();
+    }
+
+    @Override
     public List<EntityType<?>> getTypes() {
         return List.of(JJKEntities.EMBER_INSECT_FLIGHT.get());
     }
