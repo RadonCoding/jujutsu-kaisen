@@ -199,7 +199,7 @@ public abstract class DomainExpansionEntity extends Entity {
             if (victimCap.isAdaptedTo(this.ability) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
 
             if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                SimpleDomainEntity simple = victimCap.getSummonByClass((ServerLevel) this.level(), SimpleDomainEntity.class);
+                SimpleDomainEntity simple = victimCap.getSummonByClass(SimpleDomainEntity.class);
 
                 if (simple != null) {
                     ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

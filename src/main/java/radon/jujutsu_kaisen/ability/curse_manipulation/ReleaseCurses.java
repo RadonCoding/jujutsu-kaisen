@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -46,33 +47,31 @@ public class ReleaseCurses extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (owner.level().isClientSide) return;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            for (Entity summon : cap.getSummons(level)) {
-                if (!(summon instanceof CursedSpirit curse)) continue;
+        for (Entity summon : cap.getSummons()) {
+            if (!(summon instanceof CursedSpirit curse)) continue;
 
-                cap.removeSummon(curse);
-                cap.addCurse(registry, curse.getType());
+            cap.removeSummon(curse);
+            cap.addCurse(registry, curse.getType());
 
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
-
-                if (!owner.level().isClientSide) {
-                    makePoofParticles(curse);
-                }
-                curse.discard();
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
             }
-        });
+
+            if (!owner.level().isClientSide) {
+                makePoofParticles(curse);
+            }
+            curse.discard();
+        }
     }
 
     @Override
     public float getCost(LivingEntity owner) {
         return 0;
     }
-
-
 }

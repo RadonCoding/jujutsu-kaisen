@@ -39,13 +39,13 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (owner.level().isClientSide) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!POSITIONS.containsKey(owner.getUUID())) return;
 
-        SimpleDomainEntity domain = cap.getSummonByClass(level, SimpleDomainEntity.class);
+        SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
 
         if (domain == null) return;
 

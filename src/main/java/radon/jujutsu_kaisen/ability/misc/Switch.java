@@ -43,13 +43,13 @@ public class Switch extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (owner.level().isClientSide) return;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         SukunaEntity sukuna;
 
-        if ((sukuna = cap.getSummonByClass(level, SukunaEntity.class)) != null) {
+        if ((sukuna = cap.getSummonByClass(SukunaEntity.class)) != null) {
             cap.removeSummon(sukuna);
             sukuna.discard();
         } else {

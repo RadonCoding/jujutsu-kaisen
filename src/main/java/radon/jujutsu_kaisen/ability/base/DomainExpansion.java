@@ -45,7 +45,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
         if (cap.hasToggled(this)) {
             if (target != null) {
-                DomainExpansionEntity domain = cap.getSummonByClass((ServerLevel) owner.level(), DomainExpansionEntity.class);
+                DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
                 return domain != null && domain.isInsideBarrier(target.blockPosition());
             }
         } else {
@@ -86,11 +86,10 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (owner.level() instanceof ServerLevel level) {
-            if (cap.getSummonByClass(level, DomainExpansionEntity.class) == null) return Status.FAILURE;
+        if (!cap.hasSummonOfClass(DomainExpansionEntity.class)) {
+            return Status.FAILURE;
         }
         return super.isStillUsable(owner);
     }
@@ -111,7 +110,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     public void onDisabled(LivingEntity owner) {
         if (!owner.level().isClientSide) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.unsummonByClass((ServerLevel) owner.level(), DomainExpansionEntity.class);
+            cap.unsummonByClass(DomainExpansionEntity.class);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);

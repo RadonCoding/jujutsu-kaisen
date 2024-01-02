@@ -102,7 +102,7 @@ public class SukunaEntity extends SorcererEntity {
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
-            for (Entity entity : cap.getSummons(((ServerLevel) this.level()))) {
+            for (Entity entity : cap.getSummons()) {
                 if (entity instanceof TenShadowsSummon) return;
             }
 

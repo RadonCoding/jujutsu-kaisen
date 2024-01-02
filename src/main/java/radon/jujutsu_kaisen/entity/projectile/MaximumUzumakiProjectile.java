@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +21,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -56,20 +58,15 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        Map<EntityType<?>, Integer> curses = cap.getCurses(registry);
-
-        for (Map.Entry<EntityType<?>, Integer> entry : curses.entrySet()) {
-            if (this.power == MAX_POWER) break;
-
-            Entity entity = entry.getKey().create(this.level());
-            if (!(entity instanceof ISorcerer curse)) continue;
-
-            for (int i = 0; i < entry.getValue(); i++) {
+        if (this.level() instanceof ServerLevel level) {
+            for (Entity entity : cap.getSummons()) {
                 if (this.power == MAX_POWER) break;
+                if (!(entity instanceof CursedSpirit curse)) continue;
+
                 if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
+
                 this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getExperience()));
-                cap.removeCurse(registry, entity.getType());
+                curse.discard();
             }
         }
     }

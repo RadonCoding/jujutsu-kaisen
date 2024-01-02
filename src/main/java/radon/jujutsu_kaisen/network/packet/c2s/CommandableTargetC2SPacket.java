@@ -46,7 +46,7 @@ public class CommandableTargetC2SPacket {
 
                 if (target == null) return;
 
-                for (Entity entity : cap.getSummons(level)) {
+                for (Entity entity : cap.getSummons()) {
                     if (entity instanceof ICommandable commandable) {
                         if (target == entity || (target instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == sender))
                             continue;

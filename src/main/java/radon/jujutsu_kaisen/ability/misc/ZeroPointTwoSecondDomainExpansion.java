@@ -78,8 +78,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         CursedTechnique technique = cap.getTechnique();
 
@@ -87,7 +85,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         AbilityHandler.trigger(owner, ability);
 
-        DomainExpansionEntity domain = cap.getSummonByClass(level, DomainExpansionEntity.class);
+        DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
 
         if (domain == null) return;
 
@@ -100,10 +98,6 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
             cap.addCooldown(ability);
-        }
-
-        if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
         }
     }
 
