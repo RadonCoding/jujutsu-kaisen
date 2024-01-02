@@ -375,7 +375,7 @@ public abstract class RadialScreen extends Screen {
         double mouseAngle = Math.atan2(pMouseY - centerY, pMouseX - centerX);
         double mousePos = Math.sqrt(Math.pow(pMouseX - centerX, 2.0D) + Math.pow(pMouseY - centerY, 2.0D));
 
-        if (this.getCurrent().size() > 0) {
+        if (!this.getCurrent().isEmpty()) {
             float startAngle = this.getAngleFor(-0.5F);
             float endAngle = this.getAngleFor(this.getCurrent().size() - 0.5F);
 
