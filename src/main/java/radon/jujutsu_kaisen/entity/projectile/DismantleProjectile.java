@@ -61,7 +61,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
-        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         this.entityData.set(DATE_ROLL, roll);
         this.entityData.set(DATA_LENGTH, length);

@@ -250,7 +250,7 @@ public class JJKAbilities {
 
                 Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
                         .multiply(curse.getBbWidth(), 0.0D, curse.getBbWidth()));
-                curse.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+                curse.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
                 curse.setTame(true);
                 curse.setOwner(owner);
 

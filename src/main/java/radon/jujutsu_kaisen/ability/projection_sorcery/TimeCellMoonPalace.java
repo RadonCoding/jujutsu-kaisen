@@ -53,7 +53,7 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
         TimeCellMoonPalaceEntity entity = new TimeCellMoonPalaceEntity(domain);
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         double d0 = look.horizontalDistance();

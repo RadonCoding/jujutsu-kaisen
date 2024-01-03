@@ -48,7 +48,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 behind = owner.position().subtract(0.0D, radius, 0.0D).add(direction.scale(radius - OFFSET));
-        this.moveTo(behind.x, behind.y, behind.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(behind.x, behind.y, behind.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         this.entityData.set(DATA_RADIUS, radius);
     }
