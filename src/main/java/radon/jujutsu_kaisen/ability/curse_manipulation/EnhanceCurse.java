@@ -1,10 +1,13 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -12,6 +15,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -41,6 +46,8 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
                 if (data == null) return null;
 
                 experience = data.experience;
+
+                System.out.println(experience);
             } else {
                 ISorcererData cap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 experience = cap.getExperience();
@@ -64,6 +71,16 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
     }
 
     @Override
+    public Status isStillUsable(LivingEntity owner) {
+        CursedSpirit target = this.getTarget(owner);
+
+        if (target == null) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
@@ -75,6 +92,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.addExperience(20.0F);
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SetOverlayMessageS2CPacket(Component.translatable(String.format("chat.%s.enhance_curse", JujutsuKaisen.MOD_ID),
+                    cap.getExperience(), ConfigHolder.SERVER.maximumExperienceAmount.get()), false), player);
+        }
     }
 
     @Override
