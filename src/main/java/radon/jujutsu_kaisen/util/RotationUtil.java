@@ -27,6 +27,20 @@ public class RotationUtil {
                 double d3 = Math.sqrt(d0 * d0 + d2 * d2);
                 float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
                 float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
+
+                entity.setYRot(yaw);
+                entity.yRotO = yaw;
+
+                entity.setXRot(pitch);
+                entity.xRotO = pitch;
+
+                if (entity instanceof LivingEntity living) {
+                    living.yHeadRot = yaw;
+                    living.yHeadRotO = yaw;
+
+                    living.yBodyRot = yaw;
+                    living.yBodyRotO = yaw;
+                }
                 return new Vec2(pitch, yaw);
             }
         }
