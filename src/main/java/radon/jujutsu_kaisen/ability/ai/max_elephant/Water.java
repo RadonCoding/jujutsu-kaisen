@@ -106,7 +106,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
 
         float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);
-        float pitch = (float) (-owner.getXRot() * Math.PI / 180.0F);
+        float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0F);
 
         double endPosX = spawn.x + RANGE * Math.cos(yaw) * Math.cos(pitch);
         double endPosY = spawn.y + RANGE * Math.sin(pitch);

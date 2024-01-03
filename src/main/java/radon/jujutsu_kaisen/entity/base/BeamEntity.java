@@ -270,10 +270,10 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
     private void update() {
         if (this.getOwner() instanceof LivingEntity owner) {
-            this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
-            this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
-            this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
+            this.renderYaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0D) * Math.PI / 180.0D);
+            this.renderPitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D);
+            this.setYaw((float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0D));
+            this.setPitch((float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D));
             Vec3 spawn = this.calculateSpawnPos(owner);
             this.setPos(spawn.x, spawn.y, spawn.z);
         }
