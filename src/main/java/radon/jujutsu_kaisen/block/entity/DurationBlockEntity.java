@@ -30,7 +30,7 @@ public class DurationBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DurationBlockEntity pBlockEntity) {
-        if (--pBlockEntity.duration == 0) {
+        if (--pBlockEntity.duration <= 0) {
             BlockState original = pBlockEntity.getOriginal();
 
             if (original != null) {
