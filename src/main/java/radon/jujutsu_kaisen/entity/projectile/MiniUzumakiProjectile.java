@@ -81,7 +81,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

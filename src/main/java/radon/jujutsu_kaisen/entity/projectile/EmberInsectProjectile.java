@@ -130,7 +130,7 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
                     .add(RotationUtil.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
                     .add(RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
                     .add(look);
-            this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+            this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
         }
     }
 

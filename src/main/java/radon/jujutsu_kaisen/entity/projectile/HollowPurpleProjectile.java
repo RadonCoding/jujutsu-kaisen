@@ -42,7 +42,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(look.scale(this.getRadius() * 0.5F));
-        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
     }
 
     public float getRadius() {
@@ -274,7 +274,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                                 .add(look.scale(this.getRadius() * 0.5F));
-                        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+                        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
                     }
                 } else {
                     if (!this.level().isClientSide) {

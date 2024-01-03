@@ -52,7 +52,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
     }
 
     @Override
@@ -266,7 +266,7 @@ public class BlueProjectile extends JujutsuProjectile {
                         }
                         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                        this.moveTo(spawn.x, spawn.y, spawn.z, owner.getYRot(), owner.getXRot());
+                        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
                     }
                 } else {
                     if (this.getTime() == DELAY) {

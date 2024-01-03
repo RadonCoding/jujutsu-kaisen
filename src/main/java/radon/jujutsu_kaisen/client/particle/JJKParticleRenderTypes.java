@@ -56,9 +56,8 @@ public class JJKParticleRenderTypes {
     public static ParticleRenderType TRANSLUCENT = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
-            RenderSystem.depthMask(false);
+            RenderSystem.depthMask(true);
             RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
