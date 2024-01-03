@@ -64,7 +64,7 @@ public class FireParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
-        PoseStack pose = new PoseStack();
+        PoseStack stack = new PoseStack();
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
         double d1 = Mth.lerp(pPartialTicks, this.yo, this.y);
@@ -72,23 +72,23 @@ public class FireParticle extends TextureSheetParticle {
 
         Vec3 cam = pRenderInfo.getPosition();
 
-        pose.pushPose();
-        pose.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
+        stack.pushPose();
+        stack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
 
         TextureAtlasSprite fire0 = ModelBakery.FIRE_0.sprite();
         TextureAtlasSprite fire1 = ModelBakery.FIRE_1.sprite();
         float f = this.quadSize * 1.4F;
-        pose.scale(f, f, f);
+        stack.scale(f, f, f);
         float f1 = 0.5F;
         float f3 = this.quadSize / f;
         float f4 = 0.0F;
-        pose.mulPose(Axis.YP.rotationDegrees(-pRenderInfo.getYRot()));
-        pose.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
+        stack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
+        stack.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
         float f5 = 0.0F;
         int i = 0;
         VertexConsumer consumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
 
-        for (PoseStack.Pose posestack$pose = pose.last(); f3 > 0.0F; ++i) {
+        for (PoseStack.Pose posestack$pose = stack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite sprite = i % 2 == 0 ? fire0 : fire1;
             float f6 = sprite.getU0();
             float f7 = sprite.getV0();
@@ -110,7 +110,7 @@ public class FireParticle extends TextureSheetParticle {
             f1 *= 0.9F;
             f5 += 0.03F;
         }
-        pose.popPose();
+        stack.popPose();
 
         Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
     }
