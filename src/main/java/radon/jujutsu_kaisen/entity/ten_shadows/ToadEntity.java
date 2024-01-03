@@ -276,7 +276,7 @@ public class ToadEntity extends TenShadowsSummon {
         float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
         float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
 
-        Vec3 speed = calculateViewVector(yaw, pitch).scale(ToadTongueProjectile.SPEED * (this.hasWings() ? 5.0D : 1.0D));
+        Vec3 speed = calculateViewVector(pitch, yaw).scale(ToadTongueProjectile.SPEED * (this.hasWings() ? 5.0D : 1.0D));
 
         ToadTongueProjectile tongue = new ToadTongueProjectile(this, RANGE, target.getUUID());
         tongue.setDeltaMovement(speed);
