@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -155,7 +156,7 @@ public class SukunaEntity extends SorcererEntity {
         } else {
             super.tick();
 
-            if (this.level().isClientSide) return;
+            if (this.level().isClientSide || this.isRemoved()) return;
 
             if (owner instanceof ServerPlayer player) {
                 if (this.original == null) {
@@ -285,7 +286,9 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public void remove(@NotNull RemovalReason pReason) {
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
@@ -295,13 +298,19 @@ public class SukunaEntity extends SorcererEntity {
             dst.setTamed(src.getTamed());
             dst.setDead(src.getDead());
 
-            if (owner instanceof ServerPlayer player) {
-                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
-            }
             owner.kill();
         }
+    }
 
+    @Override
+    public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner instanceof ServerPlayer player) {
+            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
+        }
 
         if (pReason == RemovalReason.KILLED) {
             if (!(this instanceof HeianSukunaEntity)) {
