@@ -162,7 +162,7 @@ public class ThrownChainProjectile extends AbstractArrow {
             if (!this.released) {
                 double angle = Math.toRadians(this.getTime() * this.getTime());
                 double radius = 2.0D;
-                float yaw = (float) Math.toRadians(RotationUtil.getTargetAdjustedYRot(owner));
+                float yaw = (float) Math.toRadians(owner.getYRot());
                 float pitch = (float) Math.toRadians(90.0F);
 
                 Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)

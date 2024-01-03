@@ -193,7 +193,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         if (owner == null) return;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        float yaw = RotationUtil.getTargetAdjustedYRot(owner);
+        float yaw = owner.getYRot();
         Vec3 right = new Vec3(-Math.sin(Math.toRadians(yaw)), 0.0D, Math.cos(Math.toRadians(yaw)));
         Vec3 pos = look.cross(right).normalize().scale(offset);
 

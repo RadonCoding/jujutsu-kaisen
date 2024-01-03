@@ -41,7 +41,7 @@ public class WoodShieldSegmentEntity extends WoodSegmentEntity {
 
         this.setParent(this);
 
-        this.moveTo(owner.getX(), owner.getY(), owner.getZ(), RotationUtil.getTargetAdjustedXRot(owner), RotationUtil.getTargetAdjustedYRot(owner));
+        this.moveTo(owner.getX(), owner.getY(), owner.getZ(), owner.getXRot(), owner.getYRot());
     }
 
     public WoodShieldSegmentEntity(WoodShieldSegmentEntity segment, float yawOffset, float pitchOffset) {
