@@ -170,6 +170,11 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
+    @Override
     public float getExperience() {
         Map<ResourceLocation, Float> experience = ConfigHolder.SERVER.getExperienceMultipliers();
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(this.getType());
@@ -280,41 +285,29 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public void onRemovedFromWorld() {
-        super.onRemovedFromWorld();
-
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return;
-
-        if (owner instanceof ServerPlayer player) {
-            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
-        }
-
-        this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(src -> {
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dst -> {
-                dst.setTamed(src.getTamed());
-                dst.setDead(src.getDead());
-            });
-        });
-    }
-
-    @Override
-    public void die(@NotNull DamageSource pDamageSource) {
-        super.die(pDamageSource);
-
+    public void remove(@NotNull RemovalReason pReason) {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
+            ISorcererData src = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData dst = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            dst.setTamed(src.getTamed());
+            dst.setDead(src.getDead());
+
             if (owner instanceof ServerPlayer player) {
                 player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
             owner.kill();
         }
 
-        if (!(this instanceof HeianSukunaEntity)) {
-            if (!this.vessel) {
-                EntityUtil.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+        super.remove(pReason);
+
+        if (pReason == RemovalReason.KILLED) {
+            if (!(this instanceof HeianSukunaEntity)) {
+                if (!this.vessel) {
+                    EntityUtil.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
+                }
             }
         }
     }
