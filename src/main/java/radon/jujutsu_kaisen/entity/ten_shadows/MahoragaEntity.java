@@ -4,7 +4,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,6 +57,11 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     public MahoragaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerable();
     }
 
     @Override
@@ -169,14 +173,6 @@ public class MahoragaEntity extends TenShadowsSummon {
             }
         }
         return result;
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        if ((!this.isTame() && this.getTime() <= RITUAL_DURATION)) {
-            return false;
-        }
-        return super.hurt(pSource, pAmount);
     }
 
     @Override
