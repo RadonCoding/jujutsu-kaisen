@@ -25,10 +25,12 @@ public class Agito extends Summon<AgitoEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
+        if (target == null) return false;
+
         if (JJKAbilities.hasToggled(owner, this)) {
-            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
+            return HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

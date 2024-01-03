@@ -8,8 +8,10 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
@@ -31,23 +33,18 @@ public class Mahoraga extends Summon<MahoragaEntity> {
 
         if (this.isTamed(owner)) {
             if (JJKAbilities.hasToggled(owner, this)) {
-                return true;
+                return HelperMethods.RANDOM.nextInt(20) != 0;
             } else {
                 if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                        if (ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get())) {
+                    for (CursedTechnique technique : targetCap.getTechniques()) {
+                        if (!ownerCap.isAdaptedTo(technique)) {
                             return true;
                         }
-                    } else if (targetCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                        if (ownerCap.isAdaptedTo(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                            return true;
-                        }
-                    } else if (targetCap.getTechnique() != null && ownerCap.isAdaptedTo(targetCap.getTechnique())) {
-                        return true;
                     }
                 }
+                return HelperMethods.RANDOM.nextInt(10) == 0;
             }
         }
         return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
