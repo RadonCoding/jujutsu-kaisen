@@ -119,7 +119,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 }
             }
         } else {
-            nextYaw = RotationUtil.getTargetAdjustedYRot(owner);
+            nextYaw = owner.getYRot();
         }
         cap.addFrame(next, nextYaw);
 

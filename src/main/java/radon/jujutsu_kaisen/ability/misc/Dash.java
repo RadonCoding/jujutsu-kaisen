@@ -102,8 +102,8 @@ public class Dash extends Ability {
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
             float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
-            float f7 = RotationUtil.getTargetAdjustedYRot(owner);
-            float f = RotationUtil.getTargetAdjustedXRot(owner);
+            float f7 = owner.getYRot();
+            float f = owner.getXRot();
             float f1 = -Mth.sin(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));
             float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F));
             float f3 = Mth.cos(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));

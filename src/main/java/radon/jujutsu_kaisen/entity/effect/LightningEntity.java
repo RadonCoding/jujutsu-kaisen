@@ -74,8 +74,8 @@ public class LightningEntity extends JujutsuProjectile {
         super.onAddedToWorld();
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            this.setYaw((float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D));
+            this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
+            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
 
             Vec3 spawn = this.calculateStartPos();
             this.setPos(spawn.x, spawn.y, spawn.z);
