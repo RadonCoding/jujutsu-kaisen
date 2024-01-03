@@ -127,8 +127,8 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
 
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                    .add(RotationUtil.calculateViewVector(0.0F, owner.getYRot() + 90.0F).scale(xOffset))
-                    .add(RotationUtil.calculateViewVector(owner.getXRot() - 90.0F, owner.getYRot()).scale(yOffset))
+                    .add(RotationUtil.calculateViewVector(0.0F, RotationUtil.getTargetAdjustedYRot(owner) + 90.0F).scale(xOffset))
+                    .add(RotationUtil.calculateViewVector(RotationUtil.getTargetAdjustedXRot(owner) - 90.0F, RotationUtil.getTargetAdjustedYRot(owner)).scale(yOffset))
                     .add(look);
             this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
         }

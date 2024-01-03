@@ -137,8 +137,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
             if (this.getTime() % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
-            this.renderYaw = (float) ((owner.getYRot() + 90.0D) * Math.PI / 180.0D);
-            this.renderPitch = (float) (-owner.getXRot() * Math.PI / 180.0D);
+            this.renderYaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0D) * Math.PI / 180.0D);
+            this.renderPitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D);
 
             if (!this.on && this.animation == 0) {
                 this.discard();
@@ -279,8 +279,8 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
     private void update() {
         if (this.getOwner() instanceof LivingEntity owner) {
-            this.setYaw((float) ((owner.getYRot() + 90.0F) * Math.PI / 180.0D));
-            this.setPitch((float) (-owner.getXRot() * Math.PI / 180.0D));
+            this.setYaw((float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0D));
+            this.setPitch((float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0D));
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
             this.setPos(spawn.x, spawn.y, spawn.z);
