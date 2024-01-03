@@ -22,7 +22,6 @@ public class JJKParticleRenderTypes {
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
-            RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
@@ -40,7 +39,6 @@ public class JJKParticleRenderTypes {
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
             RenderSystem.depthMask(true);
             RenderSystem.enableBlend();
-            RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
@@ -58,8 +56,8 @@ public class JJKParticleRenderTypes {
         public void begin(BufferBuilder buffer, @NotNull TextureManager manager) {
             RenderSystem.depthMask(true);
             RenderSystem.enableBlend();
-            RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
+            RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
