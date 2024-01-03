@@ -28,27 +28,23 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class Cleave extends Ability implements Ability.IDomainAttack {
+public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IAttack, Ability.IToggled {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 16.0F;
+    private static final float MAX_DAMAGE = 25.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        return target != null;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.TOGGLED;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-            
-            return target;
-        }
-        return null;
+    @Override
+    public void run(LivingEntity owner) {
+
     }
 
     private DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
@@ -92,34 +88,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
-
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) return;
-
-        this.performEntity(owner, null, target);
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target != null && target.isAlive()) {
-            return this.calculateDamage(this.getSource(owner, null), owner, target);
-        }
-        return 0.0F;
-    }
-
-    @Override
-    public Status isTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
+        return 100.0F;
     }
 
     @Override
@@ -128,13 +98,21 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        float padding = 0.5F;
-        int count = Math.round(target.getBbHeight() / padding);
+        level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(), 0.0D, 0.0D, 1.0D);
 
-        level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), target.getY() + (target.getBbHeight() / 2.0F), target.getZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
-        owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
+                1.0F, 1.0F);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        for (int i = 1; i <= 10; i++) {
+            cap.delayTickEvent(() -> {
+                if (!target.isDeadOrDying()) {
+                    owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
+                            1.0F, 1.0F);
+                }
+            }, i * 2);
+        }
 
         cap.delayTickEvent(() -> {
             DamageSource source = this.getSource(owner, domain);
@@ -146,35 +124,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
 
             boolean success = target.hurt(source, damage);
 
-            for (int i = 0; i < count; i++) {
-                float offset = (i * padding);
-                double width = target.getBbWidth();
-                double x = target.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
-                double y = target.getY() + offset;
-                double z = target.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * width * 2.0D;
-                level.sendParticles(ParticleTypes.EXPLOSION, x, y, z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            }
-
             if (!success || !(target instanceof Mob) && !(target instanceof Player)) return;
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-            for (int i = 0; i < 12; i++) {
-                for (int j = 0; j < 16; j++) {
-                    double d0 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
-                    double d1 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
-                    double d2 = HelperMethods.RANDOM.nextFloat() * 2.0F - 1.0F;
-
-                    if (!(d0 * d0 + d1 * d1 + d2 * d2 > 1.0D)) {
-                        double d3 = target.getX(d0 / 4.0D);
-                        double d4 = target.getY(0.5D + d1 / 4.0D);
-                        double d5 = target.getZ(d2 / 4.0D);
-                        ((ServerLevel) target.level()).sendParticles(JJKParticles.BLOOD.get(), d3, d4, d5,
-                                0, d0, d1 + 0.2D, d2, 1.0D);
-                    }
-                }
-            }
-        }, count * 2);
+        }, 20);
     }
 
     @Override
@@ -183,12 +136,24 @@ public class Cleave extends Ability implements Ability.IDomainAttack {
     }
 
     @Override
-    public MenuType getMenuType() {
-        return MenuType.MELEE;
+    public Classification getClassification() {
+        return Classification.SLASHING;
     }
 
     @Override
-    public Classification getClassification() {
-        return Classification.SLASHING;
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return false;
+        this.performEntity(owner, null, target);
+        return true;
+    }
+
+    @Override
+    public void onEnabled(LivingEntity owner) {
+
+    }
+
+    @Override
+    public void onDisabled(LivingEntity owner) {
+
     }
 }

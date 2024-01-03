@@ -491,7 +491,7 @@ public class JJKClientEventHandler {
             event.registerSpriteSet(JJKParticles.PROJECTION.get(), ProjectionParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.LIGHTNING.get(), LightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.CURSED_SPEECH.get(), CursedSpeechParticle.Provider::new);
-            event.registerSpriteSet(JJKParticles.BLOOD.get(), BloodParticle.Provider::new);
+            event.registerSpriteSet(JJKParticles.SLASH.get(), SlashParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.EMITTING_LIGHTNING.get(), EmittingLightningParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.FIRE.get(), FireParticle.Provider::new);
             event.registerSpriteSet(JJKParticles.SMOKE.get(), BetterSmokeParticle.Provider::new);

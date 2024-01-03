@@ -80,6 +80,6 @@ public class JJKParticles {
             });
     public static RegistryObject<SimpleParticleType> CURSED_SPEECH = PARTICLES.register("cursed_speech", () ->
             new SimpleParticleType(true));
-    public static RegistryObject<SimpleParticleType> BLOOD = PARTICLES.register("blood", () ->
+    public static RegistryObject<SimpleParticleType> SLASH = PARTICLES.register("slash", () ->
             new SimpleParticleType(true));
 }
