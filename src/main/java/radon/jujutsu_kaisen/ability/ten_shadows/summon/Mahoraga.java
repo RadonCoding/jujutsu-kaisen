@@ -39,7 +39,7 @@ public class Mahoraga extends Summon<MahoragaEntity> {
                     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     for (CursedTechnique technique : targetCap.getTechniques()) {
-                        if (!ownerCap.isAdaptedTo(technique)) {
+                        if (ownerCap.isAdaptedTo(technique)) {
                             return true;
                         }
                     }
