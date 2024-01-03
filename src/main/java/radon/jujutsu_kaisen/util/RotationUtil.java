@@ -8,12 +8,13 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Predicate;
 
 public class RotationUtil {
-    public static Vec3 getTargetAdjustedLookAngle(Entity entity) {
+    public static Vec2 getTargetAdjustedRotation(Entity entity) {
         if (entity instanceof Targeting targeting) {
             LivingEntity target = targeting.getTarget();
 
@@ -26,10 +27,25 @@ public class RotationUtil {
                 double d3 = Math.sqrt(d0 * d0 + d2 * d2);
                 float yaw = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)) - 90.0F);
                 float pitch = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI))));
-                return calculateViewVector(yaw, pitch);
+                return new Vec2(pitch, yaw);
             }
         }
-        return entity.getLookAngle();
+        return new Vec2(entity.getXRot(), entity.getYRot());
+    }
+
+    public static float getTargetAdjustedYRot(Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(entity);
+        return rot.y;
+    }
+
+    public static float getTargetAdjustedXRot(Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(entity);
+        return rot.x;
+    }
+
+    public static Vec3 getTargetAdjustedLookAngle(Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(entity);
+        return calculateViewVector(rot.y, rot.x);
     }
 
     public static Vec3 calculateViewVector(float yaw, float pitch) {
