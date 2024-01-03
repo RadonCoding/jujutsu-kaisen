@@ -292,6 +292,10 @@ public class SukunaEntity extends SorcererEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
+            if (owner instanceof ServerPlayer player) {
+                player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
+            }
+
             ISorcererData src = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             ISorcererData dst = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -303,20 +307,12 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public void remove(@NotNull RemovalReason pReason) {
-        super.remove(pReason);
+    public void die(@NotNull DamageSource pDamageSource) {
+        super.die(pDamageSource);
 
-        LivingEntity owner = this.getOwner();
-
-        if (owner instanceof ServerPlayer player) {
-            player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
-        }
-
-        if (pReason == RemovalReason.KILLED) {
-            if (!(this instanceof HeianSukunaEntity)) {
-                if (!this.vessel) {
-                    EntityUtil.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
-                }
+        if (!(this instanceof HeianSukunaEntity)) {
+            if (!this.vessel) {
+                EntityUtil.convertTo(this, new HeianSukunaEntity(this.level(), this.fingers), true, false);
             }
         }
     }
