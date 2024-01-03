@@ -45,7 +45,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
         Vec3 pos = owner.position()
                 .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                 .add(0.0D, this.getBbHeight(), 0.0D);
-        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
@@ -92,7 +92,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                     Vec3 pos = owner.position()
                             .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()))
                             .add(0.0D, this.getBbHeight(), 0.0D);
-                    this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+                    this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
                 }
             } else if (this.getTime() - 20 >= DELAY) {
                 this.discard();

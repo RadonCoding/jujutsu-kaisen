@@ -58,7 +58,7 @@ public class ToadEntity extends TenShadowsSummon {
 
         Vec3 pos = ritual ? owner.position() : owner.position()
                 .subtract(RotationUtil.getTargetAdjustedLookAngle(owner).multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;

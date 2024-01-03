@@ -181,7 +181,7 @@ public class ThrownChainProjectile extends AbstractArrow {
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                             .add(RotationUtil.getTargetAdjustedLookAngle(owner));
                     this.setPos(spawn.x, spawn.y, spawn.z);
-                    this.setRot(-owner.getYRot(), owner.getXRot());
+                    this.setRot(-RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
                     this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
                     this.released = true;
