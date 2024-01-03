@@ -10,6 +10,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
@@ -37,10 +38,11 @@ public class Wheel extends Summon<WheelEntity> {
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());
+            for (CursedTechnique technique : targetCap.getTechniques()) {
+                if (!ownerCap.isAdaptedTo(technique)) {
+                    return true;
+                }
             }
-            return targetCap.getTechnique() != null && !ownerCap.isAdaptedTo(targetCap.getTechnique());
         }
         return false;
     }
