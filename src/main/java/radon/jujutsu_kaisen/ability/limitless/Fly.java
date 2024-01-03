@@ -20,10 +20,7 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (JJKAbilities.isChanneling(owner, this)) {
-            return HelperMethods.RANDOM.nextInt(5) != 0;
-        }
-        return owner.fallDistance > 5.0F;
+        return owner.fallDistance > 1.0F;
     }
 
     @Override
@@ -43,6 +40,8 @@ public class Fly extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.resetFallDistance();
+
         Vec3 movement = owner.getDeltaMovement();
         owner.setDeltaMovement(movement.x, SPEED * 2, movement.z);
 
