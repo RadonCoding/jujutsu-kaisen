@@ -267,7 +267,7 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
         int result = PLAYFUL_CLOUD;
 
-        if (JJKAbilities.hasToggled(target, JJKAbilities.SOUL_REINFORCEMENT.get()) || target.getArmorCoverPercentage() > 0 || target.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent() || target.getArmorCoverPercentage() > 0) {
             result = SPLIT_SOUL_KATANA;
         }
 

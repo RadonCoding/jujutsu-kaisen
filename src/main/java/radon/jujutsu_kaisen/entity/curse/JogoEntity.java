@@ -57,7 +57,7 @@ public class JogoEntity extends DisasterCurse {
         return JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get();
     }
 
-    private PlayState walkRunPredicate(AnimationState<JogoEntity> animationState) {
+    /*private PlayState walkRunPredicate(AnimationState<JogoEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         }
@@ -76,5 +76,5 @@ public class JogoEntity extends DisasterCurse {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
-    }
+    }*/
 }
