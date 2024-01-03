@@ -740,7 +740,11 @@ public class SorcererData implements ISorcererData {
     public boolean addExperience(float amount) {
         SorcererGrade previous = HelperMethods.getGrade(this.experience);
 
-        this.experience += amount;
+        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
+            return false;
+        }
+
+        this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), this.experience + amount);
 
         SorcererGrade current = HelperMethods.getGrade(this.experience);
 
@@ -748,11 +752,6 @@ public class SorcererData implements ISorcererData {
             if (previous != current) {
                 this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
             }
-        }
-
-        if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
-            this.experience = ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue();
-            return false;
         }
         this.sync();
         return true;
