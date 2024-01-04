@@ -8,7 +8,7 @@ public class ClientConfig {
     public ClientConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Settings").push("settings");
         this.meleeMenuType = builder.comment("The melee menu type (1 = scroll, 2 = toggled)")
-                .defineInRange("meleeMenuType", 1, 1, 2);
+                .defineInRange("meleeMenuType", 2, 1, 2);
         builder.pop();
     }
 }
