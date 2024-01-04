@@ -46,6 +46,11 @@ public class SlashParticle extends TextureSheetParticle {
     }
 
     @Override
+    public boolean shouldCull() {
+        return false;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
