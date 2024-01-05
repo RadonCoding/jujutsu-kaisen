@@ -71,7 +71,10 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             if (victim.level().isClientSide) return;
 
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.hasTrait(Trait.VESSEL) && !cap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 if (HelperMethods.isMelee(source)) {
@@ -86,8 +89,6 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) victim.level()), victim.blockPosition())) {
                 if (domain.getOwner() == source.getEntity()) return;
             }
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             float cost = event.getAmount() * 2.0F * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
             if (cap.getEnergy() < cost) return;
