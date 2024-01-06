@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -170,7 +171,8 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && HelperMethods.isExperienced(cap.getExperience()))) && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
+        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && SorcererUtil.isExperienced(cap.getExperience()))) &&
+                cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
             return false;
 
         for (Ability ability : this.getRequirements()) {
@@ -213,7 +215,7 @@ public abstract class Ability {
                 return Status.BURNOUT;
             }
 
-            if ((this.isTechnique() && !(this instanceof DomainExpansion && HelperMethods.isExperienced(cap.getExperience()))) &&
+            if ((this.isTechnique() && !(this instanceof DomainExpansion && SorcererUtil.isExperienced(cap.getExperience()))) &&
                     cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                 return Status.DOMAIN_AMPLIFICATION;
             }

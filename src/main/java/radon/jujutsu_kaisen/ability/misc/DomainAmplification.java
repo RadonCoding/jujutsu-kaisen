@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
@@ -35,7 +36,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         Ability domain = ((ISorcerer) owner).getDomain();
 
-        if (!HelperMethods.isExperienced(cap.getExperience()) && JJKAbilities.hasToggled(owner, domain)) return false;
+        if (!SorcererUtil.isExperienced(cap.getExperience()) && JJKAbilities.hasToggled(owner, domain)) return false;
 
         if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && (owner.level().getEntitiesOfClass(Projectile.class,
                 owner.getBoundingBox().inflate(1.0D)).stream().anyMatch(entity -> entity.getOwner() != owner))) {
