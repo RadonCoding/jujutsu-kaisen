@@ -102,17 +102,6 @@ public class HelperMethods {
         return result;
     }
 
-    public static SorcererGrade getGrade(float experience) {
-        SorcererGrade result = SorcererGrade.GRADE_4;
-
-        for (SorcererGrade grade : SorcererGrade.values()) {
-            if (experience < grade.getRequiredExperience()) break;
-
-            result = grade;
-        }
-        return result;
-    }
-
     public static int getLevenshteinDistance(String x, String y) {
         int m = x.length();
         int n = y.length();
@@ -161,14 +150,6 @@ public class HelperMethods {
             }
         }
         return clazz.getEnumConstants()[RANDOM.nextInt(clazz.getEnumConstants().length)];
-    }
-
-    public static boolean isExperienced(float experience) {
-        return experience >= ConfigHolder.SERVER.requiredExperienceForExperienced.get().floatValue();
-    }
-
-    public static float getPower(float experience) {
-        return 1.0F + experience / 1500.0F;
     }
 
     public static int toRGB24(int r, int g, int b, int a) {
