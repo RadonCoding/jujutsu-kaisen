@@ -362,7 +362,7 @@ public class SorcererData implements ISorcererData {
         if (this.brainDamage == 0) return;
 
         if (!this.owner.level().isClientSide) {
-            this.owner.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 2, this.brainDamage - 1, false, false, false));
+            this.owner.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 61, this.brainDamage - 1, false, false, false));
         }
 
         this.brainDamageTimer++;
