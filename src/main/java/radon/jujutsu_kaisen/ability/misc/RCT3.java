@@ -39,6 +39,7 @@ public class RCT3 extends RCT2 {
 
         if (burnout > 0) {
             cap.setBurnout(Math.max(0, burnout - 10));
+            cap.increaseBrainDamage();
         }
     }
 

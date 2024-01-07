@@ -9,6 +9,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
@@ -74,6 +77,7 @@ public class SorcererData implements ISorcererData {
     private JujutsuType type;
 
     private int burnout;
+    private int brainDamage;
 
     private long lastBlackFlashTime;
 
@@ -121,10 +125,6 @@ public class SorcererData implements ISorcererData {
     private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
-
-    private static final int REQUIRED_ADAPTATION = 60 * 20;
-    private static final int ADAPTATION_STEP = 5 * 20;
-    private static final int MAX_PROJECTION_SORCERY_STACKS = 3;
 
     private LivingEntity owner;
 
@@ -306,7 +306,7 @@ public class SorcererData implements ISorcererData {
 
                 int timer = entry.getValue();
 
-                if (++timer >= REQUIRED_ADAPTATION) {
+                if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
                     iter.remove();
 
                     this.adapted.add(entry.getKey());
@@ -429,6 +429,10 @@ public class SorcererData implements ISorcererData {
                 }
                 this.checkAdvancements(player);
             }
+
+            if (this.brainDamage > 0) {
+                owner.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 2, this.getBrainDamage() - 1, false, false, false));
+            }
         }
 
         if (this.burnout > 0) {
@@ -483,7 +487,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getMaximumOutput() {
-        return this.isInZone() ? 1.2F : 1.0F;
+        return (this.isInZone() ? 1.2F : 1.0F) * ((float) this.brainDamage / JJKConstants.MAX_BRAIN_DAMAGE);
     }
 
     @Override
@@ -911,7 +915,17 @@ public class SorcererData implements ISorcererData {
     public void addDuration(Ability ability) {
         this.durations.put(ability, ((Ability.IDurationable) ability).getRealDuration(this.owner));
     }
-    
+
+    @Override
+    public void increaseBrainDamage() {
+        this.brainDamage = Math.min(JJKConstants.MAX_BRAIN_DAMAGE, this.brainDamage + 1);
+    }
+
+    @Override
+    public int getBrainDamage() {
+        return this.brainDamage;
+    }
+
     @Override
     public void setBurnout(int duration) {
         this.burnout = duration;
@@ -1329,7 +1343,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAdaptation(Ability ability) {
-        return this.isAdaptedTo(ability) ? 1.0F : (float) this.adapting.get(ability) / REQUIRED_ADAPTATION;
+        return this.isAdaptedTo(ability) ? 1.0F : (float) this.adapting.get(ability) / JJKConstants.REQUIRED_ADAPTATION;
     }
 
     private @Nullable Ability getAbility(DamageSource source) {
@@ -1374,7 +1388,7 @@ public class SorcererData implements ISorcererData {
             this.adapting.put(ability, 0);
         } else {
             int timer = this.adapting.get(ability);
-            timer += ADAPTATION_STEP;
+            timer += JJKConstants.ADAPTATION_STEP;
             this.adapting.put(ability, timer);
         }
     }
@@ -1560,7 +1574,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void addSpeedStack() {
-        this.speedStacks = Math.min(MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
+        this.speedStacks = Math.min(JJKConstants.MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
     }
 
     @Override
@@ -1629,6 +1643,7 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("extra_energy", this.extraEnergy);
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
+        nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
@@ -1841,6 +1856,7 @@ public class SorcererData implements ISorcererData {
         this.extraEnergy = nbt.getFloat("extra_energy");
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
+        this.brainDamage = nbt.getInt("brain_damage");
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
