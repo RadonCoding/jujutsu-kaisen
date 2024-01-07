@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -58,7 +59,7 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
                 if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
 
-                this.power = Math.min(MAX_POWER, this.power + HelperMethods.getPower(curse.getExperience()));
+                this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curse.getExperience()));
                 curse.discard();
             }
         }

@@ -12,6 +12,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.*;
 
@@ -44,7 +45,7 @@ public class SixEyesOverlay {
         }
 
         Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                HelperMethods.getGrade(data.experience).getName());
+                SorcererUtil.getGrade(data.experience).getName());
         lines.add(gradeText);
 
         int offset = 0;

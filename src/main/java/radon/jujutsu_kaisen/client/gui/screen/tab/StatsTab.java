@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityWidget;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class StatsTab extends JJKTab {
         
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        SorcererGrade grade = HelperMethods.getGrade(cap.getExperience());
+        SorcererGrade grade = SorcererUtil.getGrade(cap.getExperience());
         SorcererGrade next = SorcererGrade.values()[Math.min(SorcererGrade.values().length - 1, grade.ordinal() + 1)];
 
         MutableComponent component = Component.empty();

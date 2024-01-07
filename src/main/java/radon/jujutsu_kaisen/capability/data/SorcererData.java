@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.PlayerUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -722,7 +723,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getRealPower() {
-        return HelperMethods.getPower(this.experience);
+        return SorcererUtil.getPower(this.experience);
     }
 
     @Override
@@ -738,7 +739,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public boolean addExperience(float amount) {
-        SorcererGrade previous = HelperMethods.getGrade(this.experience);
+        SorcererGrade previous = SorcererUtil.getGrade(this.experience);
 
         if (this.experience >= ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue()) {
             return false;
@@ -746,7 +747,7 @@ public class SorcererData implements ISorcererData {
 
         this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), this.experience + amount);
 
-        SorcererGrade current = HelperMethods.getGrade(this.experience);
+        SorcererGrade current = SorcererUtil.getGrade(this.experience);
 
         if (!this.owner.level().isClientSide && this.owner instanceof Player) {
             if (previous != current) {

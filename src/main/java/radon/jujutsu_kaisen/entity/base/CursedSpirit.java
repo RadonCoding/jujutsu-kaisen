@@ -44,6 +44,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -91,7 +92,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.isInVillage()) {
-                if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
+                if (this.random.nextInt(Mth.floor(RARITY * SorcererUtil.getPower(this.getExperience()) * (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
                 if (this.getGrade().ordinal() == SorcererGrade.SPECIAL_GRADE.ordinal()) return false;
             } else if (!this.isInFortress()) {
                 return false;
@@ -123,10 +124,10 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public SorcererGrade getGrade() {
         if (!this.isAddedToWorld()) {
-            return HelperMethods.getGrade(this.getExperience());
+            return SorcererUtil.getGrade(this.getExperience());
         }
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return HelperMethods.getGrade(cap.getExperience());
+        return SorcererUtil.getGrade(cap.getExperience());
     }
 
     protected abstract boolean isCustom();

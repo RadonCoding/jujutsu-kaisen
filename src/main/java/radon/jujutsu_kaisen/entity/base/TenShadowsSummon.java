@@ -41,6 +41,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -313,10 +314,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
     @Override
     public SorcererGrade getGrade() {
         if (!this.isAddedToWorld()) {
-            return HelperMethods.getGrade(this.getExperience());
+            return SorcererUtil.getGrade(this.getExperience());
         }
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return HelperMethods.getGrade(cap.getExperience());
+        return SorcererUtil.getGrade(cap.getExperience());
     }
 
     @Override

@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.tags.JJKEntityTypeTags;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
 
         for (EntityType<?> type : level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE)) {
             if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
-                    HelperMethods.getPower(sorcerer.getExperience()) <= energy) {
+                    SorcererUtil.getPower(sorcerer.getExperience()) <= energy) {
                 pool.add(entity);
             }
         }
@@ -69,7 +70,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
     public float getEnergy() {
         if (this.stack.getItem() instanceof CursedObjectItem obj) {
             int index = Mth.clamp(obj.getGrade().ordinal() - 1, 0, SorcererGrade.values().length - 1);
-            return HelperMethods.getPower(SorcererGrade.values()[index].getRequiredExperience());
+            return SorcererUtil.getPower(SorcererGrade.values()[index].getRequiredExperience());
         }
         return 0.0F;
     }

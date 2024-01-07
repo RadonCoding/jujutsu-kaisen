@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public abstract class DisasterCurse extends CursedSpirit {
     private static final int RARITY = 1;
@@ -24,7 +25,7 @@ public abstract class DisasterCurse extends CursedSpirit {
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()) *
+            if (this.random.nextInt(Mth.floor(RARITY * SorcererUtil.getPower(this.getExperience()) *
                     (this.level().isNight() ? 0.5F : 1.0F))) != 0) return false;
         }
 

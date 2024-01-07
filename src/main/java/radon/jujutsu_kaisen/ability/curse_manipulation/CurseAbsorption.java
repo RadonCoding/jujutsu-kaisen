@@ -31,6 +31,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class CurseAbsorption extends Ability implements Ability.IToggled {
     @Override
@@ -64,7 +65,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     public static boolean canAbsorb(LivingEntity owner, LivingEntity entity) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return entity instanceof CursedSpirit curse && !curse.isTame() &&
-                (HelperMethods.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.isDeadOrDying());
+                (SorcererUtil.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.isDeadOrDying());
     }
 
     @Override

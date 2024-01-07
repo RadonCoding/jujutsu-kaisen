@@ -28,6 +28,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -91,15 +92,10 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public SorcererGrade getGrade() {
         if (!this.isAddedToWorld()) {
-            return HelperMethods.getGrade(this.getExperience());
+            return SorcererUtil.getGrade(this.getExperience());
         }
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return HelperMethods.getGrade(cap.getExperience());
-    }
-
-    @Override
-    public AnimatableInstanceCache animatableCacheOverride() {
-        return null;
+        return SorcererUtil.getGrade(cap.getExperience());
     }
 
     @Override
@@ -128,7 +124,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
-            if (this.random.nextInt(Mth.floor(RARITY * HelperMethods.getPower(this.getExperience()))) != 0) return false;
+            if (this.random.nextInt(Mth.floor(RARITY * SorcererUtil.getPower(this.getExperience()))) != 0) return false;
 
             if (!this.isInVillage()) return false;
         }
