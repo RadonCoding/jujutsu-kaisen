@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -94,7 +95,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         }
 
         if (current != null) {
-            this.power = HelperMethods.getPower(current.getExperience());
+            this.power = SorcererUtil.getPower(current.getExperience());
 
             if (current.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && current.getTechnique() != null) cap.absorb(current.getTechnique());
 

@@ -24,8 +24,10 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
 
@@ -106,7 +108,7 @@ public class Die extends Ability {
             living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
 
             living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                if (HelperMethods.getGrade(ownerCap.getExperience()).ordinal() - HelperMethods.getGrade(targetCap.getExperience()).ordinal() >= 2) {
+                if (SorcererUtil.getGrade(ownerCap.getExperience()).ordinal() - SorcererUtil.getGrade(targetCap.getExperience()).ordinal() >= 2) {
                     DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
                     entity.hurt(source, calculateDamage(source, owner, living));
                 }

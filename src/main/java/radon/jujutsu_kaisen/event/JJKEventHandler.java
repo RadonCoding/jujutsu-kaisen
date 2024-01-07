@@ -54,10 +54,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.CuriosUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.PlayerUtil;
-import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -325,14 +322,14 @@ public class JJKEventHandler {
                 case SORCERER -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.sorcererFleshRarity.get()) == 0) {
                         ItemStack stack = new ItemStack(JJKItems.SORCERER_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, HelperMethods.getGrade(victimCap.getExperience()));
+                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(victimCap.getExperience()));
                         victim.spawnAtLocation(stack);
                     }
                 }
                 case CURSE -> {
                     if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.curseFleshRarity.get()) == 0) {
                         ItemStack stack = new ItemStack(JJKItems.CURSE_FLESH.get());
-                        CursedEnergyFleshItem.setGrade(stack, HelperMethods.getGrade(victimCap.getExperience()));
+                        CursedEnergyFleshItem.setGrade(stack, SorcererUtil.getGrade(victimCap.getExperience()));
                         victim.spawnAtLocation(stack);
                     }
                 }
@@ -362,7 +359,7 @@ public class JJKEventHandler {
                 }
 
                 if (HelperMethods.RANDOM.nextInt(chance) == 0) {
-                    if (victimCap.getType() == JujutsuType.SORCERER && HelperMethods.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal() &&
+                    if (victimCap.getType() == JujutsuType.SORCERER && SorcererUtil.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal() &&
                             !victimCap.isUnlocked(JJKAbilities.RCT1.get())) {
                         victim.setHealth(victim.getMaxHealth() / 2);
                         victimCap.unlock(JJKAbilities.RCT1.get());

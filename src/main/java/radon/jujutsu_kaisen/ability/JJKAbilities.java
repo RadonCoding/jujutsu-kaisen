@@ -64,6 +64,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -225,7 +226,7 @@ public class JJKAbilities {
     }
 
     public static float getCurseCost(SorcererGrade grade) {
-        return 50.0F * HelperMethods.getPower(grade.getRequiredExperience());
+        return 50.0F * SorcererUtil.getPower(grade.getRequiredExperience());
     }
 
     public static void summonCurse(LivingEntity owner, EntityType<?> type, int count) {

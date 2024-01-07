@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
@@ -283,6 +285,35 @@ public class MeteorEntity extends JujutsuProjectile {
         }
     }
 
+    private void evaporateWater() {
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        float radius = this.getSize();
+        AABB bounds = AABB.ofSize(this.position(), radius * 2, radius * 2, radius * 2);
+        double centerX = bounds.getCenter().x;
+        double centerY = bounds.getCenter().y;
+        double centerZ = bounds.getCenter().z;
+
+        for (int x = (int) bounds.minX; x <= bounds.maxX; x++) {
+            for (int y = (int) bounds.minY; y <= bounds.maxY; y++) {
+                for (int z = (int) bounds.minZ; z <= bounds.maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = this.level().getBlockState(pos);
+
+                    double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
+
+                    if (distance > radius) continue;
+                    if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+
+                    if (!state.getFluidState().isEmpty()) {
+                        this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                        this.level().levelEvent(LevelEvent.LAVA_FIZZ, pos, 0);
+                    }
+                }
+            }
+        }
+    }
+
     private void breakBlocks() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
@@ -300,14 +331,11 @@ public class MeteorEntity extends JujutsuProjectile {
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= radius) {
-                        if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                            if (state.getFluidState().isEmpty()) {
-                                this.level().destroyBlock(pos, false);
-                            } else {
-                                this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                            }
-                        }
+                    if (distance > radius) continue;
+                    if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+
+                    if (state.getFluidState().isEmpty()) {
+                        this.level().destroyBlock(pos, false);
                     }
                 }
             }
@@ -393,6 +421,7 @@ public class MeteorEntity extends JujutsuProjectile {
                     }
                     this.breakBlocks();
                 }
+                this.evaporateWater();
             }
         }
     }
