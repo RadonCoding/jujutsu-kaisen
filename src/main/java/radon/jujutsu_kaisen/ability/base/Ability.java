@@ -41,8 +41,7 @@ public abstract class Ability {
         SUCCESS,
         ENERGY,
         COOLDOWN,
-        BURNOUT,
-        DOMAIN_AMPLIFICATION
+        BURNOUT
     }
 
     public enum Classification {
@@ -213,11 +212,6 @@ public abstract class Ability {
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             if (this.isTechnique() && cap.hasBurnout()) {
                 return Status.BURNOUT;
-            }
-
-            if ((this.isTechnique() && !(this instanceof DomainExpansion && SorcererUtil.isExperienced(cap.getExperience()))) &&
-                    cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                return Status.DOMAIN_AMPLIFICATION;
             }
 
             if (!cap.isCooldownDone(this)) {

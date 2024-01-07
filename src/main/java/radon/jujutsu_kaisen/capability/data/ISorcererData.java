@@ -163,6 +163,9 @@ public interface ISorcererData {
     boolean isCooldownDone(Ability ability);
 
     void addDuration(Ability ability);
+
+    void increaseBrainDamage();
+    int getBrainDamage();
     
     void setBurnout(int duration);
 

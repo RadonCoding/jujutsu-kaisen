@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -73,7 +74,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
             Status status = this.getStatus(owner);
 
-            if (result && (status == Status.DOMAIN_AMPLIFICATION)) {
+            if (result && (status == Status.SUCCESS)) {
                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                     cap.toggle(JJKAbilities.DOMAIN_AMPLIFICATION.get());
                 }
@@ -81,6 +82,12 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
             return result;
         }
         return false;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.getBrainDamage() < JJKConstants.MAX_BRAIN_DAMAGE && super.isValid(owner);
     }
 
     @Override

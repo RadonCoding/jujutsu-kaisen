@@ -189,8 +189,6 @@ public class ClientAbilityHandler {
                             cap.getBurnout() / 20), false);
             case FAILURE ->
                     mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.failure", JujutsuKaisen.MOD_ID)), false);
-            case DOMAIN_AMPLIFICATION ->
-                    mc.gui.setOverlayMessage(Component.translatable(String.format("ability.%s.fail.domain_amplification", JujutsuKaisen.MOD_ID)), false);
         }
         return status == Ability.Status.SUCCESS;
     }
