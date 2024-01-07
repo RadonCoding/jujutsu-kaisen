@@ -78,6 +78,7 @@ public class SorcererData implements ISorcererData {
 
     private int burnout;
     private int brainDamage;
+    private int brainDamageTimer;
 
     private long lastBlackFlashTime;
 
@@ -357,6 +358,21 @@ public class SorcererData implements ISorcererData {
         }
     }
 
+    private void updateBrainDamage() {
+        if (this.brainDamage == 0) return;
+
+        if (!this.owner.level().isClientSide) {
+            this.owner.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 2, this.brainDamage - 1, false, false, false));
+        }
+
+        this.brainDamageTimer++;
+
+        if (this.brainDamageTimer >= JJKConstants.DECREASE_BRAIN_DAMAGE_INTERVAL) {
+            this.brainDamageTimer = 0;
+            this.brainDamage--;
+        }
+    }
+
     private void checkAdvancements(ServerPlayer player) {
         if (this.traits.contains(Trait.SIX_EYES)) PlayerUtil.giveAdvancement(player, "six_eyes");
         if (this.traits.contains(Trait.HEAVENLY_RESTRICTION)) PlayerUtil.giveAdvancement(player, "heavenly_restriction");
@@ -399,6 +415,8 @@ public class SorcererData implements ISorcererData {
         this.updateRequestExpirations();
         this.updateBindingVowCooldowns();
 
+        this.updateBrainDamage();
+
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
                 EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -428,10 +446,6 @@ public class SorcererData implements ISorcererData {
                     this.generate(player);
                 }
                 this.checkAdvancements(player);
-            }
-
-            if (this.brainDamage > 0) {
-                owner.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 2, this.getBrainDamage() - 1, false, false, false));
             }
         }
 
@@ -1644,6 +1658,7 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("type", this.type.ordinal());
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("brain_damage", this.brainDamage);
+        nbt.putInt("brain_damage_timer", this.brainDamageTimer);
         nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
@@ -1857,6 +1872,7 @@ public class SorcererData implements ISorcererData {
         this.type = JujutsuType.values()[nbt.getInt("type")];
         this.burnout = nbt.getInt("burnout");
         this.brainDamage = nbt.getInt("brain_damage");
+        this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
