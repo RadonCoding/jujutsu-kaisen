@@ -81,7 +81,8 @@ public abstract class BeamEntity extends JujutsuProjectile {
     }
 
     protected Vec3 calculateSpawnPos(LivingEntity owner) {
-        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ());
+        return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
     }
 
     @Override
