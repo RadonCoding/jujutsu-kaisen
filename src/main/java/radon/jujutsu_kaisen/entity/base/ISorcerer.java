@@ -9,10 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -26,6 +23,10 @@ public interface ISorcerer {
 
     float getExperience();
 
+    default float getMaxEnergy() {
+        return 0.0F;
+    }
+
     SorcererGrade getGrade();
 
     @Nullable CursedTechnique getTechnique();
@@ -36,6 +37,10 @@ public interface ISorcerer {
 
     default @NotNull List<Trait> getTraits() {
         return List.of();
+    }
+
+    default @Nullable CursedEnergyNature getNature() {
+        return CursedEnergyNature.BASIC;
     }
 
     default @NotNull List<Ability> getCustom() {
@@ -54,20 +59,13 @@ public interface ISorcerer {
         data.setExperience(this.getExperience());
         data.setTechnique(this.getTechnique());
         data.setAdditional(this.getAdditional());
+        data.setNature(this.getNature());
         data.addTraits(this.getTraits());
         data.setType(this.getJujutsuType());
         data.unlockAll(this.getUnlocked());
 
-        Map<ResourceLocation, Float> energy = ConfigHolder.SERVER.getCursedEnergyAmounts();
-        Map<ResourceLocation, Float> experience = ConfigHolder.SERVER.getExperienceMultipliers();
-        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(((Entity) this).getType());
-
-        if (energy.containsKey(key)) {
-            data.setMaxEnergy(energy.get(key));
-        }
-
-        if (experience.containsKey(key)) {
-            data.setExperience(data.getExperience() * experience.get(key));
+        if (this.getMaxEnergy() > 0.0F) {
+            data.setMaxEnergy(this.getMaxEnergy());
         }
         data.setEnergy(data.getMaxEnergy());
 

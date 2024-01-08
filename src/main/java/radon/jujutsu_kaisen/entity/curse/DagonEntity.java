@@ -37,11 +37,6 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
-    }
-
-    @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.DISASTER_TIDES;
     }

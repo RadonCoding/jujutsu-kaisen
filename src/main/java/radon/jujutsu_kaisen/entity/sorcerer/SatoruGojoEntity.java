@@ -35,7 +35,7 @@ public class SatoruGojoEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 3.0F;
     }
 
     @Override

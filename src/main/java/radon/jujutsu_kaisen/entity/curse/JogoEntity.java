@@ -38,11 +38,6 @@ public class JogoEntity extends DisasterCurse {
     }
 
     @Override
-    public float getExperience() {
-        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience();
-    }
-
-    @Override
     public @Nullable CursedTechnique getTechnique() {
         return CursedTechnique.DISASTER_FLAMES;
     }

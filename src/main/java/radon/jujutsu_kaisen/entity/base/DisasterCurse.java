@@ -23,6 +23,11 @@ public abstract class DisasterCurse extends CursedSpirit {
     }
 
     @Override
+    public float getExperience() {
+        return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
+    }
+
+    @Override
     public boolean checkSpawnRules(@NotNull LevelAccessor pLevel, @NotNull MobSpawnType pSpawnReason) {
         if (pSpawnReason == MobSpawnType.NATURAL || pSpawnReason == MobSpawnType.CHUNK_GENERATION) {
             if (this.random.nextInt(Mth.floor(RARITY * SorcererUtil.getPower(this.getExperience()) *

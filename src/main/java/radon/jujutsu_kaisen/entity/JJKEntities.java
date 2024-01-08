@@ -147,6 +147,14 @@ public class JJKEntities {
             EntityType.Builder.<SuguruGetoEntity>of(SuguruGetoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "suguru_geto")
                             .toString()));
+    public static RegistryObject<EntityType<HajimeKashimoEntity>> HAJIME_KASHIMO = ENTITIES.register("hajime_kashimo", () ->
+            EntityType.Builder.<HajimeKashimoEntity>of(HajimeKashimoEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hajime_kashimo")
+                            .toString()));
+    public static RegistryObject<EntityType<MakiZeninEntity>> MAKI_ZENIN = ENTITIES.register("maki_zenin", () ->
+            EntityType.Builder.<MakiZeninEntity>of(MakiZeninEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maki_zenin")
+                            .toString()));
 
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -455,6 +463,8 @@ public class JJKEntities {
         event.put(SUGURU_GETO.get(), SorcererEntity.createAttributes().build());
         event.put(HEIAN_SUKUNA.get(), SorcererEntity.createAttributes().build());
         event.put(NAOYA_ZENIN.get(), SorcererEntity.createAttributes().build());
+        event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
+        event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

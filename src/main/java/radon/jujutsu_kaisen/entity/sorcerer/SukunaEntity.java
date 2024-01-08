@@ -177,10 +177,7 @@ public class SukunaEntity extends SorcererEntity {
 
     @Override
     public float getExperience() {
-        Map<ResourceLocation, Float> experience = ConfigHolder.SERVER.getExperienceMultipliers();
-        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(this.getType());
-        float max = SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * experience.getOrDefault(key, 1.0F);
-        return this.fingers * (max / 20);
+        return this.fingers * ((SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 4.0F) / 20);
     }
 
     @Override
