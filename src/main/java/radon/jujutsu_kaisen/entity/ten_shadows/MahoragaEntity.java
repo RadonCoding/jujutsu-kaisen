@@ -204,14 +204,6 @@ public class MahoragaEntity extends TenShadowsSummon {
                 }
             }
         }
-
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) this.level()), this.blockPosition())) {
-            if (!(domain instanceof ClosedDomainExpansionEntity closed) || closed.getTime() < closed.getRadius() * 2)
-                continue;
-            if (cap.isAdaptedTo(domain.getAbility())) domain.discard();
-        }
      }
 
     @Override
