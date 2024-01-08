@@ -40,6 +40,8 @@ public class JJKItems {
             () -> new HitenStaffItem(JJKTiers.CURSED_TOOL, 4, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> POLEARM_STAFF = ITEMS.register("polearm_staff",
             () -> new PolearmStaffItem(JJKTiers.CURSED_TOOL, 4, -2.4F, new Item.Properties()));
+    public static RegistryObject<Item> STEEL_GAUNTLET = ITEMS.register("steel_gauntlet",
+            () -> new SteelGauntletItem(JJKTiers.CURSED_TOOL, 4, 0.0F, new Item.Properties()));
 
     public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
             () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
