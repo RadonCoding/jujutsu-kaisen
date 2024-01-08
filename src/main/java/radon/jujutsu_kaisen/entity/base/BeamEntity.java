@@ -169,17 +169,17 @@ public abstract class BeamEntity extends JujutsuProjectile {
 
                                 double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                                if (distance <= radius) {
-                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                                        this.level().destroyBlock(pos, false);
+                                if (distance > radius) continue;
 
-                                        if (this.causesFire()) {
-                                            if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
-                                                    this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
-                                                this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
-                                            }
-                                        }
-                                    }
+                                if (!HelperMethods.isDestroyable(this.level(), owner, pos)) continue;
+
+                                this.level().destroyBlock(pos, false);
+
+                                if (!this.causesFire()) continue;
+
+                                if (this.random.nextInt(3) == 0 && this.level().getBlockState(pos).isAir() &&
+                                        this.level().getBlockState(pos.below()).isSolidRender(this.level(), pos.below())) {
+                                    this.level().setBlockAndUpdate(pos, BaseFireBlock.getState(this.level(), pos));
                                 }
                             }
                         }
