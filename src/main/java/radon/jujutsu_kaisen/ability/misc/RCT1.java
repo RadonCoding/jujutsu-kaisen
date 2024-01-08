@@ -1,10 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -13,14 +10,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
-import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.List;
 
 
 public class RCT1 extends Ability implements Ability.IChannelened {
@@ -63,9 +53,14 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     @Override
-    public boolean isUnlockable(LivingEntity owner) {
+    public boolean canUnlock(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.SORCERER && super.isUnlockable(owner);
+        return cap.getType() == JujutsuType.SORCERER && super.canUnlock(owner);
+    }
+
+    @Override
+    public boolean isUnlockable() {
+        return this == JJKAbilities.RCT1.get() || super.isUnlockable();
     }
 
     @Nullable
