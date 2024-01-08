@@ -49,31 +49,7 @@ public class MakiZeninEntity extends SorcererEntity {
 
     @Override
     protected boolean isCustom() {
-        return true;
-    }
-
-    @Override
-    protected void registerGoals() {
-        int target = 1;
-        int goal = 1;
-
-        this.goalSelector.addGoal(goal++, new AvoidDomainsGoal(this, 1.1D, 1.1D));
-        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-
-        if (this.hasMeleeAttack()) {
-            this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        }
-        this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-
-        if (this.targetsSorcerers()) {
-            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
-        }
-        if (this.targetsCurses()) {
-            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
-        }
+        return false;
     }
 
     @Override
