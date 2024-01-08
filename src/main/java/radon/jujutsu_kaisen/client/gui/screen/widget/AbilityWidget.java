@@ -81,7 +81,7 @@ public class AbilityWidget {
     public void update() {
         if (this.minecraft.player == null) return;
 
-        this.unlockable = this.ability.isUnlockable(this.minecraft.player);
+        this.unlockable = this.ability.canUnlock(this.minecraft.player);
         this.unlocked = this.ability.isUnlocked(this.minecraft.player);
         this.blocked = this.ability.isBlocked(this.minecraft.player);
 

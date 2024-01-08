@@ -19,8 +19,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import javax.annotation.Nullable;
@@ -96,12 +94,16 @@ public abstract class Ability {
         return cap.isUnlocked(this);
     }
 
-    public boolean isUnlockable(LivingEntity owner) {
+    public boolean canUnlock(LivingEntity owner) {
         if (owner instanceof Player player && player.getAbilities().instabuild) return true;
-        if (this.getPointsCost() == 0 || this.isBlocked(owner)) return false;
+        if (this.isBlocked(owner)) return false;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getPoints() >= this.getRealPointsCost(owner);
+    }
+
+    public boolean isUnlockable() {
+        return this.getPointsCost() > 0;
     }
 
     public boolean isBlocked(LivingEntity owner) {
@@ -166,7 +168,7 @@ public abstract class Ability {
     public boolean isValid(LivingEntity owner) {
         if (owner instanceof Player player && player.isSpectator()) return false;
 
-        if (this.isUnlockable(owner) && !this.isUnlocked(owner)) return false;
+        if (this.isUnlockable() && !this.isUnlocked(owner)) return false;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
