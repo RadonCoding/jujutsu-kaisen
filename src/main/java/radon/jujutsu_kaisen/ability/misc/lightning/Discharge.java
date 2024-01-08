@@ -38,13 +38,17 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && owner.distanceTo(target) <= 5.0D && owner.hasLineOfSight(target) && !JJKAbilities.hasToggled(owner, JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get()) &&
-                owner.onGround() && cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F;
+        return target != null && owner.distanceTo(target) <= this.getRadius(owner) && owner.hasLineOfSight(target) &&
+                cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F;
     }
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.CHANNELED;
+    }
+
+    private float getRadius(LivingEntity owner) {
+        return this.getPower(owner) * 2.0F;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.ELECTRICITY.get(), SoundSource.MASTER, 3.0F, 1.0F);
 
-        float radius = this.getPower(owner) * 2.0F;
+        float radius = this.getRadius(owner);
 
         for (int i = 0; i < 4; i++) {
             level.sendParticles(new EmittingLightningParticle.EmittingLightningParticleOptions(ParticleColors.getCursedEnergyColorBright(owner), radius, 1),
