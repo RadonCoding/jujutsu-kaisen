@@ -84,7 +84,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                 }
             }
 
-            if (source.is(JJKDamageSources.SOUL)) return;
+            if (source.is(JJKDamageSources.SOUL) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == JJKAbilities.OUTPUT_RCT.get())) return;
 
             for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) victim.level()), victim.blockPosition())) {
                 if (domain.getOwner() == source.getEntity()) return;
