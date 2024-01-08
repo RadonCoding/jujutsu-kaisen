@@ -32,6 +32,8 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
+
+            RenderSystem.defaultBlendFunc();
         }
     };
 
@@ -50,6 +52,8 @@ public class JJKParticleRenderTypes {
         @Override
         public void end(Tesselator tesselator) {
             tesselator.end();
+
+            RenderSystem.defaultBlendFunc();
         }
     };
 
