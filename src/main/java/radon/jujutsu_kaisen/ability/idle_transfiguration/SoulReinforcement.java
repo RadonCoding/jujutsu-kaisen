@@ -74,11 +74,11 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasTrait(Trait.VESSEL) && !cap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+            if (!cap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 if (HelperMethods.isMelee(source)) {
-                    if (JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    if (JJKAbilities.hasTrait(attacker, Trait.VESSEL) || JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                         return;
                     }
                 }
