@@ -68,6 +68,11 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
         nbt.putFloat("energy", energy);
     }
 
+    public static void resetEnergy(ItemStack stack) {
+        CompoundTag nbt = stack.getOrCreateTag();
+        nbt.putFloat("energy", 0.0F);
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
@@ -88,6 +93,8 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
                 entity.hurt(JJKDamageSources.jujutsuAttack(pPlayer, null), this.getDamage() * cap.getRealPower() * charge);
 
                 pPlayer.swing(InteractionHand.MAIN_HAND);
+
+                resetEnergy(stack);
             }
         }
         return super.use(pLevel, pPlayer, pUsedHand);
