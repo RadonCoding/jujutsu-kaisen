@@ -88,13 +88,13 @@ public class JJKItems {
             () -> new BlockItem(JJKBlocks.ALTAR.get(), new Item.Properties()));
 
     public static RegistryObject<ForgeSpawnEggItem> TOJI_FUSHIGURO_SPAWN_EGG = ITEMS.register("toji_fushiguro_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 0x2c2e38, 0x284332, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.TOJI_FUSHIGURO, 0x2d2d2d, 0xfefefe, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SATORU_GOJO_SPAWN_EGG = ITEMS.register("satoru_gojo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.SATORU_GOJO, 0xffffff, 0x00d0ff, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> YUTA_OKKOTSU_SPAWN_EGG = ITEMS.register("yuta_okkotsu_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.YUTA_OKKOTSU, 0xffffff, 0x1e1e1e, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> MEGUMI_FUSHIGURO_SPAWN_EGG = ITEMS.register("megumi_fushiguro_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.MEGUMI_FUSHIGURO, 0x2a2d3d, 0x284332, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.MEGUMI_FUSHIGURO, 0x2a2d3d, 0x655834, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> YUJI_IDATORI_SPAWN_EGG = ITEMS.register("yuji_itadori_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.YUJI_ITADORI, 0xd59d9b, 0x704629, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> TOGE_INUMAKI_SPAWN_EGG = ITEMS.register("toge_inumaki_spawn_egg",
