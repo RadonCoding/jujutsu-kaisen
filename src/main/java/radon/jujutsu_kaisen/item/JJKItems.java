@@ -111,7 +111,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xb4b544, 0x0e0e10, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> DAGON_SPAWN_EGG = ITEMS.register("dagon_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.DAGON, 0x8e2d33, 0xd6c0a3, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.DAGON, 0x9e3b41, 0xd6c0a3, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> HANAMI_SPAWN_EGG = ITEMS.register("hanami_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xfdfcfb, 0x790510, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
