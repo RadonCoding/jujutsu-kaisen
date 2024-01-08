@@ -97,7 +97,8 @@ public class WeaponEventHandler {
                     .stream().map(ItemStack::getItem).toList());
 
             if (HelperMethods.isMelee(source)) {
-                if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) &&
+                        (stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get()) || stacks.contains(JJKItems.DRAGON_BONE_SWORD.get()))) {
                     victim.invulnerableTime = 0;
                     victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
                 } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
