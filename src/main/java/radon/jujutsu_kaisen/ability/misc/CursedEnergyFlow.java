@@ -177,6 +177,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public void onDisabled(LivingEntity owner) {
+        EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 
     @Override
