@@ -17,7 +17,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get());
                         pOutput.accept(JJKItems.PLAYFUL_CLOUD.get());
                         pOutput.accept(JJKItems.SPLIT_SOUL_KATANA.get());
-                        pOutput.accept(JJKItems.DRAGON_BONE_SWORD.get());
+                        pOutput.accept(JJKItems.DRAGON_BONE.get());
                         pOutput.accept(JJKItems.CHAIN_OF_A_THOUSAND_MILES.get());
                         pOutput.accept(JJKItems.NYOI_STAFF.get());
                         pOutput.accept(JJKItems.SLAUGHTER_DEMON.get());
