@@ -373,69 +373,70 @@ public class JJKEventHandler {
             }
         }
 
-    @SubscribeEvent
-    public static void onCursedEnergyCost(CursedEnergyCostEvent event) {
-        LivingEntity owner = event.getEntity();
+        @SubscribeEvent
+        public static void onCursedEnergyCost(CursedEnergyCostEvent event) {
+            LivingEntity owner = event.getEntity();
 
-        if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
-            owner.hurt(owner.level().damageSources().generic(), event.getCost() * 0.5F);
+            if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
+                owner.hurt(owner.level().damageSources().generic(), event.getCost() * 0.5F);
+            }
         }
-    }
 
-    @SubscribeEvent
-    public static void onAbilityStop(AbilityStopEvent event) {
-        Ability ability = event.getAbility();
+        @SubscribeEvent
+        public static void onAbilityStop(AbilityStopEvent event) {
+            Ability ability = event.getAbility();
 
-        CursedTechnique technique = JJKAbilities.getTechnique(ability);
+            CursedTechnique technique = JJKAbilities.getTechnique(ability);
 
-        LivingEntity owner = event.getEntity();
+            LivingEntity owner = event.getEntity();
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        // Handling removal of absorbed techniques from curse manipulation
-        if (technique != null && cap.getAbsorbed().contains(technique)) {
-            cap.unabsorb(technique);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
-        Ability ability = event.getAbility();
-
-        CursedTechnique technique = JJKAbilities.getTechnique(ability);
-
-        LivingEntity owner = event.getEntity();
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
             // Handling removal of absorbed techniques from curse manipulation
             if (technique != null && cap.getAbsorbed().contains(technique)) {
                 cap.unabsorb(technique);
             }
         }
 
-        // Sukuna has multiple arms
-        if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
-            entity.setBarrage(Barrage.DURATION * 2);
-        }
+        @SubscribeEvent
+        public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
+            Ability ability = event.getAbility();
 
-        // Making mobs use chants
-        if (owner.level() instanceof ServerLevel level) {
-            if (owner instanceof Mob) {
-                List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+            CursedTechnique technique = JJKAbilities.getTechnique(ability);
 
-                if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy())))) == 0) {
-                    for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
-                        ChantHandler.onChant(owner, chants.get(i));
+            LivingEntity owner = event.getEntity();
 
-                        for (ServerPlayer player : level.players()) {
-                            if (player.distanceTo(owner) > 32.0D) continue;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                            ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
+            if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
+                // Handling removal of absorbed techniques from curse manipulation
+                if (technique != null && cap.getAbsorbed().contains(technique)) {
+                    cap.unabsorb(technique);
+                }
+            }
 
-                            if (key != null) {
-                                player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
+            // Sukuna has multiple arms
+            if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
+                entity.setBarrage(Barrage.DURATION * 2);
+            }
+
+            // Making mobs use chants
+            if (owner.level() instanceof ServerLevel level) {
+                if (owner instanceof Mob) {
+                    List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy()) * cap.getMaximumOutput()))) == 0) {
+                        for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
+                            ChantHandler.onChant(owner, chants.get(i));
+
+                            for (ServerPlayer player : level.players()) {
+                                if (player.distanceTo(owner) > 32.0D) continue;
+
+                                ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
+
+                                if (key != null) {
+                                    player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
+                                }
                             }
                         }
                     }
@@ -443,5 +444,4 @@ public class JJKEventHandler {
             }
         }
     }
-}
 }
