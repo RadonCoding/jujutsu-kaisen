@@ -100,7 +100,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> TOGE_INUMAKI_SPAWN_EGG = ITEMS.register("toge_inumaki_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.TOGE_INUMAKI, 0xe2dccc, 0x776b90, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> SUGURU_GETO_SPAWN_EGG = ITEMS.register("suguru_geto_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.SUGURU_GETO, 0x28343c, 0x3b2511, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.SUGURU_GETO, 0x20203b, 0xad9444, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> NAOYA_ZENIN_SPAWN_EGG = ITEMS.register("naoya_zenin_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.NAOYA_ZENIN, 0xceb97b, 0xa27b50, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> HAJIME_KASHIMO_SPAWN_EGG = ITEMS.register("hajime_kashimo_spawn_egg",
