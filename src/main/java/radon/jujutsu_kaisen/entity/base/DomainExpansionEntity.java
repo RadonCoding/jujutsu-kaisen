@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -196,7 +197,7 @@ public abstract class DomainExpansionEntity extends Entity {
         if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (victimCap.isAdaptedTo(this.ability) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
+            if ((victim instanceof MahoragaEntity && victimCap.isAdaptedTo(this.ability)) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
 
             if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 SimpleDomainEntity simple = victimCap.getSummonByClass(SimpleDomainEntity.class);
