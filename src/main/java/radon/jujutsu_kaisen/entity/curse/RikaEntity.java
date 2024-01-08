@@ -222,6 +222,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
+    public float getMaxEnergy() {
+        return Float.POSITIVE_INFINITY;
+    }
+
+    @Override
     public SorcererGrade getGrade() {
         if (!this.isAddedToWorld()) {
             return SorcererUtil.getGrade(this.getExperience());

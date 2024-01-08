@@ -6,17 +6,23 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public enum SorcererGrade {
-    GRADE_4,
-    GRADE_3,
-    SEMI_GRADE_2,
-    GRADE_2,
-    SEMI_GRADE_1,
-    GRADE_1,
-    SPECIAL_GRADE_1,
-    SPECIAL_GRADE;
+    GRADE_4(0.0F),
+    GRADE_3(100.0F),
+    SEMI_GRADE_2(300.0F),
+    GRADE_2(500.0F),
+    SEMI_GRADE_1(1000.0F),
+    GRADE_1(1500.0F),
+    SPECIAL_GRADE_1(2000.0F),
+    SPECIAL_GRADE(2500.0F);
+
+    private final float required;
+
+    SorcererGrade(float required) {
+        this.required = required;
+    }
 
     public float getRequiredExperience() {
-        return ConfigHolder.SERVER.getRequiredExperience().get(this);
+        return this.required;
     }
 
     public Component getName() {

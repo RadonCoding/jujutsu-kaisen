@@ -270,6 +270,11 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
+    public float getMaxEnergy() {
+        return Float.POSITIVE_INFINITY;
+    }
+
+    @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.WHEEL.get());
     }

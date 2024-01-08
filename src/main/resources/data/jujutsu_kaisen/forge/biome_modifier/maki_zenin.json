@@ -1,0 +1,19 @@
+{
+  "type": "jujutsu_kaisen:mob_spawn",
+  "biomes": {
+    "excluding": [
+      "#forge:no_mob_spawns"
+    ],
+    "if_any": [
+      "#jujutsu_kaisen:has_mobs"
+    ]
+  },
+  "spawners": [
+    {
+      "type": "jujutsu_kaisen:maki_zenin",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}
