@@ -105,7 +105,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        float scale = Math.max(1.0F, Math.min(3.0F, cap.getEnergy() * 0.00025F)) * (cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F);
+        float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
         for (int i = 0; i < 12 * scale; i++) {
             double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 1.5F * scale) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).x;
