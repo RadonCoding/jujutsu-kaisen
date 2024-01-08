@@ -81,6 +81,6 @@ public class MakiZeninEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.SPLIT_SOUL_KATANA.get()));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.DRAGON_BONE_SWORD.get()));
     }
 }
