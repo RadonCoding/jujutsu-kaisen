@@ -166,7 +166,7 @@ public abstract class Ability {
     public boolean isValid(LivingEntity owner) {
         if (owner instanceof Player player && player.isSpectator()) return false;
 
-        if (this.getPointsCost() > 0 && !this.isUnlocked(owner)) return false;
+        if (this.isUnlockable(owner) && !this.isUnlocked(owner)) return false;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
