@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -37,6 +38,25 @@ public class QuickDraw extends Ability implements Ability.IToggled {
         return ActivationType.TOGGLED;
     }
 
+    private static void attack(LivingEntity owner, Entity entity) {
+        if (entity instanceof AbstractArrow || entity instanceof ThrowableItemProjectile) {
+            owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
+            owner.swing(InteractionHand.MAIN_HAND, true);
+            entity.discard();
+        } else if (entity instanceof LivingEntity) {
+            if (entity.invulnerableTime > 0) return;
+
+            owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
+            owner.swing(InteractionHand.MAIN_HAND, true);
+
+            if (owner instanceof Player player) {
+                player.attack(entity);
+            } else {
+                owner.doHurtTarget(entity);
+            }
+        }
+    }
+
     @Override
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
@@ -45,25 +65,19 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
         if (!POSITIONS.containsKey(owner.getUUID())) return;
 
-        SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
+        if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) {
+            SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
 
-        if (domain == null) return;
+            if (domain == null) return;
 
-        for (Entity entity : owner.level().getEntities(owner, domain.getBoundingBox())) {
-            if (entity == domain || entity.distanceTo(domain) > domain.getRadius()) continue;
+            for (Entity entity : owner.level().getEntities(owner, domain.getBoundingBox())) {
+                if (entity == domain || entity.distanceTo(domain) > domain.getRadius()) continue;
 
-            if (entity instanceof AbstractArrow || entity instanceof ThrowableItemProjectile) {
-                entity.discard();
-            } else if (entity instanceof LivingEntity) {
-                if (entity.invulnerableTime > 0) continue;
-
-                owner.swing(InteractionHand.MAIN_HAND, true);
-
-                if (owner instanceof Player player) {
-                    player.attack(entity);
-                } else {
-                    owner.doHurtTarget(entity);
-                }
+                attack(owner, entity);
+            }
+        } else if (JJKAbilities.hasToggled(owner, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
+            for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(1.0D))) {
+                attack(owner, entity);
             }
         }
     }
@@ -109,7 +123,7 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) && super.isValid(owner);
+        return (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) && super.isValid(owner);
     }
 
     @Nullable
