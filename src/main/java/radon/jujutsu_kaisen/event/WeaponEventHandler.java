@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +30,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_tool.DragonBoneItem;
 import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -80,6 +82,29 @@ public class WeaponEventHandler {
         }
 
         @SubscribeEvent
+        public static void onLivingDamage(LivingDamageEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
+
+            if (stacks.contains(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
+                    JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
+                DragonBoneItem.addEnergy(stack, 10.0F);
+            }
+        }
+
+        @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             DamageSource source = event.getSource();
 
@@ -100,11 +125,6 @@ public class WeaponEventHandler {
                 if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     victim.invulnerableTime = 0;
                     victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
-                }
-
-                if (stacks.contains(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
-                        JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
-                    event.setAmount(event.getAmount() * 2);
                 }
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
