@@ -100,10 +100,18 @@ public class WeaponEventHandler {
                 if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     victim.invulnerableTime = 0;
                     victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
-                } else if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
+                }
+
+                if (stacks.contains(JJKItems.DRAGON_BONE.get()) && JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                    event.setAmount(event.getAmount() * 2);
+                }
+
+                if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
                     Vec3 pos = attacker.getEyePosition().add(RotationUtil.getTargetAdjustedLookAngle(attacker));
                     attacker.level().explode(attacker, attacker.damageSources().explosion(attacker, null), null, pos.x, pos.y, pos.z, 1.0F, false, Level.ExplosionInteraction.NONE);
-                } else if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
+                }
+
+                if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
                     victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                         List<Ability> remove = new ArrayList<>();
 
@@ -118,7 +126,9 @@ public class WeaponEventHandler {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
                         }
                     });
-                } else if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
+                }
+
+                if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
                     attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
                             float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
