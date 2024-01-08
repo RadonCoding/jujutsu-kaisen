@@ -29,14 +29,9 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class FallingBlossomEmotion extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!owner.level().isClientSide) {
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-                if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
-                return true;
-            }
+        for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
+            if (!domain.hasSureHitEffect() || !domain.checkSureHitEffect()) continue;
+            return true;
         }
         return false;
     }

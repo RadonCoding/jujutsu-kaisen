@@ -102,7 +102,8 @@ public class WeaponEventHandler {
                     victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
                 }
 
-                if (stacks.contains(JJKItems.DRAGON_BONE.get()) && JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                if (stacks.contains(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
+                        JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                     event.setAmount(event.getAmount() * 2);
                 }
 
