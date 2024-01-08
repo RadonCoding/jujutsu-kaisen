@@ -191,7 +191,10 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
                 int remaining = this.getOpen();
 
                 if (remaining > 0) {
-                    this.setOpen(--remaining);
+                    if (--remaining == 0) {
+                        this.discard();
+                    }
+                    this.setOpen(remaining);
                 }
 
                 if (this.getTime() >= DURATION) {
