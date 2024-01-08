@@ -1,14 +1,31 @@
 package radon.jujutsu_kaisen.entity.ai.goal;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SorcererGoal extends Goal {
+    private static final int CHANGE_COPIED_TECHNIQUE_INTERVAL = 10 * 20;
+
     private final PathfinderMob mob;
     private long lastCanUseCheck;
 
@@ -19,6 +36,42 @@ public class SorcererGoal extends Goal {
     @Override
     public void tick() {
         List<Ability> abilities = JJKAbilities.getAbilities(this.mob);
+
+        ISorcererData cap = this.mob.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasToggled(JJKAbilities.RIKA.get())) {
+            if (cap.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
+                List<CursedTechnique> copied = new ArrayList<>(cap.getCopied());
+
+                if (!copied.isEmpty()) {
+                    cap.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
+                }
+            }
+        }
+
+        if (cap.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+            LivingEntity target = this.mob.getTarget();
+
+            if (target != null && HelperMethods.RANDOM.nextInt(20) == 0) {
+                Registry<EntityType<?>> registry = this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+                List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
+
+                if (!curses.isEmpty()) {
+                    EntityType<?> curse = curses.get(HelperMethods.RANDOM.nextInt(curses.size()));
+                    JJKAbilities.summonCurse(this.mob, curse, Math.min(1, HelperMethods.RANDOM.nextInt(cap.getCurseCount(registry, curse))));
+                }
+            }
+
+            ItemStack stack = this.mob.getItemInHand(InteractionHand.MAIN_HAND);
+
+            if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
+                this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
+
+                Registry<EntityType<?>> registry = this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+                cap.addCurse(this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), CursedSpiritOrbItem.getCurse(registry, stack));
+                this.mob.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20));
+            }
+        }
 
         for (Ability ability : abilities) {
             boolean success = ability.shouldTrigger(this.mob, this.mob.getTarget());

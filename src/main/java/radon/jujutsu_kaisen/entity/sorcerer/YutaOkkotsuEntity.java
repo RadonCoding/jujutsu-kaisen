@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YutaOkkotsuEntity extends SorcererEntity {
-    private static final int CHANGE_INTERVAL = 10 * 20;
-
     public YutaOkkotsuEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -70,21 +68,6 @@ public class YutaOkkotsuEntity extends SorcererEntity {
         super.init(data);
 
         data.copy(CursedTechnique.CURSED_SPEECH);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getCurrentCopied() == null || this.tickCount % CHANGE_INTERVAL == 0) {
-            List<CursedTechnique> copied = new ArrayList<>(cap.getCopied());
-
-            if (!copied.isEmpty()) {
-                cap.setCurrentCopied(copied.get(this.random.nextInt(copied.size())));
-            }
-        }
     }
 
     @Override

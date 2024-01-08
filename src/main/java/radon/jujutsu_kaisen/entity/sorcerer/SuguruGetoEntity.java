@@ -87,35 +87,6 @@ public class SuguruGetoEntity extends SorcererEntity {
     }
 
     @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        LivingEntity target = this.getTarget();
-
-        if (target != null && this.random.nextInt(20) == 0) {
-            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
-
-            if (!curses.isEmpty()) {
-                EntityType<?> curse = curses.get(this.random.nextInt(curses.size()));
-                JJKAbilities.summonCurse(this, curse, Math.min(1, this.random.nextInt(cap.getCurseCount(registry, curse))));
-            }
-        }
-
-        ItemStack stack = this.getItemInHand(InteractionHand.MAIN_HAND);
-
-        if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
-            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
-            Registry<EntityType<?>> registry = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-            cap.addCurse(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), CursedSpiritOrbItem.getCurse(registry, stack));
-            this.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20));
-        }
-    }
-
-    @Override
     protected boolean isCustom() {
         return true;
     }
