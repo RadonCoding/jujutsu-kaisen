@@ -227,13 +227,13 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
 
     private void calculateEndPos() {
         if (this.level().isClientSide) {
-            this.endPosX = this.getX() + RADIUS * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosZ = this.getZ() + RADIUS * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
-            this.endPosY = this.getY() + RADIUS * Math.sin(this.renderPitch);
+            this.endPosX = this.getX() + RANGE * Math.cos(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosZ = this.getZ() + RANGE * Math.sin(this.renderYaw) * Math.cos(this.renderPitch);
+            this.endPosY = this.getY() + RANGE * Math.sin(this.renderPitch);
         } else {
-            this.endPosX = this.getX() + RADIUS * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosZ = this.getZ() + RADIUS * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
-            this.endPosY = this.getY() + RADIUS * Math.sin(this.getPitch());
+            this.endPosX = this.getX() + RANGE * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosZ = this.getZ() + RANGE * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+            this.endPosY = this.getY() + RANGE * Math.sin(this.getPitch());
         }
     }
 
