@@ -104,4 +104,14 @@ public class Shuffle extends Ability implements Ability.IChannelened {
         }
         return super.isTriggerable(owner);
     }
+
+    @Override
+    public Status isStillUsable(LivingEntity owner) {
+        List<Entity> targets = this.getTargets(owner);
+
+        if (targets.size() < 2) {
+            return Status.FAILURE;
+        }
+        return super.isStillUsable(owner);
+    }
 }
