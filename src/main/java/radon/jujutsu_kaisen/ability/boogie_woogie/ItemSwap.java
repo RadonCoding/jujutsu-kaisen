@@ -1,30 +1,27 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyImbuedItem;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class SwapSelf extends Ability {
+public class ItemSwap extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
@@ -34,7 +31,7 @@ public class SwapSelf extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return this.getTarget(owner) == target && HelperMethods.RANDOM.nextInt(3) == 0;
+        return false;
     }
 
     @Override
@@ -42,17 +39,15 @@ public class SwapSelf extends Ability {
         return ActivationType.INSTANT;
     }
 
-    public static boolean canSwap(Entity target) {
-        return (target.isPickable() || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem || target instanceof CursedEnergyImbuedItem
-                || target instanceof JujutsuProjectile) && (!(target instanceof LivingEntity living) || !JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION));
-    }
-
     private @Nullable Entity getTarget(LivingEntity owner) {
-        if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
-            Entity target = hit.getEntity();
-            return canSwap(target) ? target : null;
+        Entity target = null;
+
+        for (Entity entity : owner.level().getEntitiesOfClass(CursedEnergyImbuedItem.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+            if (target == null || entity.distanceTo(owner) < target.distanceTo(owner)) {
+                target = entity;
+            }
         }
-        return null;
+        return target;
     }
 
     @Override
@@ -96,10 +91,5 @@ public class SwapSelf extends Ability {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
-    }
-
-    @Override
-    public MenuType getMenuType() {
-        return MenuType.MELEE;
     }
 }

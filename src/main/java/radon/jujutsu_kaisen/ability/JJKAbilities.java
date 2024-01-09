@@ -21,11 +21,9 @@ import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.ability.boogie_woogie.SwapOthers;
+import radon.jujutsu_kaisen.ability.boogie_woogie.*;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
-import radon.jujutsu_kaisen.ability.boogie_woogie.SwapSelf;
-import radon.jujutsu_kaisen.ability.boogie_woogie.Feint;
 import radon.jujutsu_kaisen.ability.curse_manipulation.*;
 import radon.jujutsu_kaisen.ability.cursed_speech.*;
 import radon.jujutsu_kaisen.ability.disaster_flames.*;
@@ -201,6 +199,9 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SWAP_SELF = ABILITIES.register("swap_self", SwapSelf::new);
     public static RegistryObject<Ability> SWAP_OTHERS = ABILITIES.register("swap_others", SwapOthers::new);
     public static RegistryObject<Ability> FEINT = ABILITIES.register("feint", Feint::new);
+    public static RegistryObject<Ability> CE_THROW = ABILITIES.register("ce_throw", CEThrow::new);
+    public static RegistryObject<Ability> ITEM_SWAP = ABILITIES.register("item_swap", ItemSwap::new);
+    public static RegistryObject<Ability> SHUFFLE = ABILITIES.register("shuffle", Shuffle::new);
 
     public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);

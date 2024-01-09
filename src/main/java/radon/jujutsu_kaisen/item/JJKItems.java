@@ -111,6 +111,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.HAJIME_KASHIMO, 0xc3ebdd, 0x54a38a, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> MAKI_ZENIN_SPAWN_EGG = ITEMS.register("maki_zenin_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.MAKI_ZENIN, 0x233c3f, 0x8f856d, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> AOI_TODO_SPAWN_EGG = ITEMS.register("aoi_todo_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.AOI_TODO, 0xe1a066, 0x8c6e40, new Item.Properties()));
 
     public static RegistryObject<ForgeSpawnEggItem> JOGO_SPAWN_EGG = ITEMS.register("jogo_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.JOGO, 0xb4b544, 0x0e0e10, new Item.Properties()));

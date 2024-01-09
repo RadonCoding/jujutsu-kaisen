@@ -20,7 +20,12 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && (JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(3) == 0 && owner.hasLineOfSight(target));
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+
+        if (JJKAbilities.isChanneling(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
@@ -34,7 +39,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
             owner.swing(InteractionHand.MAIN_HAND);
 
             DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
-            dismantle.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(dismantle).scale(SPEED));
+            dismantle.setDeltaMovement(dismantle.getLookAngle().scale(SPEED));
             owner.level().addFreshEntity(dismantle);
 
             if (!owner.level().isClientSide) {

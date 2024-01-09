@@ -43,7 +43,10 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.isVehicle() ? JJKAbilities.isChanneling(owner, this) : target != null && (JJKAbilities.isChanneling(owner, this) || owner.distanceTo(target) <= RANGE);
+        if (owner.isVehicle() && JJKAbilities.isChanneling(owner, this)) {
+            return true;
+        }
+        return target != null && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
     }
 
     @Override

@@ -15,7 +15,12 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class AirFrame extends Ability implements Ability.IChannelened, Ability.IDurationable {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return JJKAbilities.isChanneling(owner, this) ? target != null : HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+
+        if (JJKAbilities.isChanneling(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
