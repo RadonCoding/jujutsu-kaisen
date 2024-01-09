@@ -1,15 +1,15 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.entity.effect.CursedEnergyImbuedItem;
 
-public class Feint extends Ability {
+public class CEThrow extends Ability {
     @Override
     public boolean isScalable(LivingEntity owner) {
         return false;
@@ -17,8 +17,7 @@ public class Feint extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        return HelperMethods.RANDOM.nextInt(3) == 0;
+        return false;
     }
 
     @Override
@@ -28,13 +27,23 @@ public class Feint extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+        ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND).copy();
+        owner.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
+        CursedEnergyImbuedItem item = new CursedEnergyImbuedItem(owner, stack);
+        owner.level().addFreshEntity(item);
+    }
+
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        if (owner.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
     }
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0;
+        return 10.0F;
     }
 }

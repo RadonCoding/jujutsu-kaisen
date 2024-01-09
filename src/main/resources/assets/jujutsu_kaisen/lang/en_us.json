@@ -129,6 +129,7 @@
   "item.jujutsu_kaisen.naoya_zenin_spawn_egg": "Spawn Naoya Zenin",
   "item.jujutsu_kaisen.hajime_kashimo_spawn_egg": "Spawn Hajime Kashimo",
   "item.jujutsu_kaisen.maki_zenin_spawn_egg": "Spawn Maki Zenin",
+  "item.jujutsu_kaisen.aoi_todo_spawn_egg": "Spawn Aoi Todo",
 
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
   "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
@@ -402,6 +403,9 @@
   "ability.jujutsu_kaisen.swap_self": "Swap Self",
   "ability.jujutsu_kaisen.swap_others": "Swap Others",
   "ability.jujutsu_kaisen.feint": "Feint",
+  "ability.jujutsu_kaisen.ce_throw": "CE Throw",
+  "ability.jujutsu_kaisen.item_swap": "Item Swap",
+  "ability.jujutsu_kaisen.shuffle": "Shuffle",
 
   "ability.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
   "ability.jujutsu_kaisen.twenty_four_frame_rule": "Twenty Four Frame Rule",
@@ -538,6 +542,7 @@
   "entity.jujutsu_kaisen.naoya_zenin": "Naoya Zenin",
   "entity.jujutsu_kaisen.hajime_kashimo": "Hajime Kashimo",
   "entity.jujutsu_kaisen.maki_zenin": "Maki Zenin",
+  "entity.jujutsu_kaisen.aoi_todo": "Aoi Todo",
 
   "entity.jujutsu_kaisen.sukuna": "Sukuna",
 

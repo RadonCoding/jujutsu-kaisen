@@ -155,6 +155,10 @@ public class JJKEntities {
             EntityType.Builder.<MakiZeninEntity>of(MakiZeninEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "maki_zenin")
                             .toString()));
+    public static RegistryObject<EntityType<AoiTodoEntity>> AOI_TODO = ENTITIES.register("aoi_todo", () ->
+            EntityType.Builder.<AoiTodoEntity>of(AoiTodoEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "aoi_todo")
+                            .toString()));
 
     public static RegistryObject<EntityType<RikaEntity>> RIKA = ENTITIES.register("rika", () ->
             EntityType.Builder.<RikaEntity>of(RikaEntity::new, MobCategory.MISC)
@@ -368,7 +372,11 @@ public class JJKEntities {
                     .sized(ForestDashEntity.SIZE, ForestDashEntity.SIZE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_dash")
                             .toString()));
-
+    public static RegistryObject<EntityType<CursedEnergyImbuedItem>> CURSED_ENERGY_IMBUED_ITEM = ENTITIES.register("cursed_energy_imbued_item", () ->
+            EntityType.Builder.<CursedEnergyImbuedItem>of(CursedEnergyImbuedItem::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_imbued_item")
+                            .toString()));
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
@@ -465,6 +473,7 @@ public class JJKEntities {
         event.put(NAOYA_ZENIN.get(), SorcererEntity.createAttributes().build());
         event.put(HAJIME_KASHIMO.get(), SorcererEntity.createAttributes().build());
         event.put(MAKI_ZENIN.get(), SorcererEntity.createAttributes().build());
+        event.put(AOI_TODO.get(), SorcererEntity.createAttributes().build());
 
         event.put(RIKA.get(), RikaEntity.createAttributes().build());
 

@@ -49,7 +49,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && (JJKAbilities.isChanneling(owner, this) || HelperMethods.RANDOM.nextInt(5) == 0);
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+
+        if (JJKAbilities.isChanneling(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(5) != 0;
+        }
+        return HelperMethods.RANDOM.nextInt(5) == 0;
     }
 
     @Override

@@ -8,7 +8,10 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -394,6 +397,10 @@ public class JJKClientEventHandler {
             event.registerLayerDefinition(MakiZeninModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(MakiZeninModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(MakiZeninModel.OUTER_LAYER, SkinModel::createOuterLayer);
+
+            event.registerLayerDefinition(AoiTodoModel.LAYER, SkinModel::createBodyLayer);
+            event.registerLayerDefinition(AoiTodoModel.INNER_LAYER, SkinModel::createInnerLayer);
+            event.registerLayerDefinition(AoiTodoModel.OUTER_LAYER, SkinModel::createOuterLayer);
         }
 
         @SubscribeEvent
@@ -402,12 +409,13 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
             event.registerEntityRenderer(JJKEntities.SUGURU_GETO.get(), SuguruGetoRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUTA_OKKOTSU.get(), YutaOkkotsuRenderer::new);
-            event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MAKI_ZENIN.get(), MakiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.MEGUMI_FUSHIGURO.get(), MegumiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.NAOYA_ZENIN.get(), NaoyaZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.YUJI_ITADORI.get(), YujiItadoriRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOGE_INUMAKI.get(), TogeInumakiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MAKI_ZENIN.get(), MakiZeninRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.AOI_TODO.get(), AoiTodoRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
@@ -496,6 +504,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_BEAM.get(), FireBeamRenderer::new);
             event.registerEntityRenderer(JJKEntities.FOREST_DASH.get(), ForestDashRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), ItemEntityRenderer::new);
         }
 
         @SubscribeEvent

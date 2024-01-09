@@ -35,7 +35,8 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return JJKAbilities.isChanneling(owner, this) ? this.getTarget(owner) == target : target != null && owner.distanceTo(target) <= 5.0D;
+        if (target == null || !owner.hasLineOfSight(target)) return false;
+        return JJKAbilities.isChanneling(owner, this) ? this.getTarget(owner) == target : owner.distanceTo(target) <= 5.0D;
     }
 
     @Override

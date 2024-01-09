@@ -40,6 +40,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.NAOYA_ZENIN_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.HAJIME_KASHIMO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.MAKI_ZENIN_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.AOI_TODO_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.JOGO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.DAGON_SPAWN_EGG.get());
