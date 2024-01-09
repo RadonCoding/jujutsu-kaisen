@@ -35,7 +35,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
         if (JJKAbilities.isChanneling(owner, this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
-        return this.getTargets(owner).contains(target);
+        return this.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
