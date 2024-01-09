@@ -52,10 +52,6 @@ public class BlueStill extends Ability {
         return 10 * 20;
     }
 
-
-
-
-
     @Override
     public Classification getClassification() {
         return Classification.BLUE;
