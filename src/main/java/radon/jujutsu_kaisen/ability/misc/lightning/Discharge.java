@@ -38,8 +38,8 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && owner.distanceTo(target) <= this.getRadius(owner) / 2 && owner.hasLineOfSight(target) &&
-                cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F;
+        return target != null && owner.distanceTo(target) <= this.getRadius(owner) / 2 && owner.hasLineOfSight(target) && cap.getType() == JujutsuType.CURSE ||
+                cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F;
     }
 
     @Override
