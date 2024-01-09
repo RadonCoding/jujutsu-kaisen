@@ -29,7 +29,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class BlueProjectile extends JujutsuProjectile {
     private static final EntityDataAccessor<Boolean> DATA_MOTION = SynchedEntityData.defineId(BlueProjectile.class, EntityDataSerializers.BOOLEAN);
 
-    private static final double RANGE = 15.0D;
+    public static final double RANGE = 15.0D;
     private static final int DELAY = 20;
     private static final float DAMAGE = 3.0F;
     private static final int DURATION = 5 * 20;
