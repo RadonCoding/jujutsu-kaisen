@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class FireBeamEntity extends BeamEntity {
+    public static final double RANGE = 32.0D;
+
     public FireBeamEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -50,7 +52,7 @@ public class FireBeamEntity extends BeamEntity {
 
     @Override
     protected double getRange() {
-        return 32.0D;
+        return RANGE;
     }
 
     @Override

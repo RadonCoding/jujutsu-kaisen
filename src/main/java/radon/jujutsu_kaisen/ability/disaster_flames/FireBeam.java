@@ -13,7 +13,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class FireBeam extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null) return false;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= FireBeamEntity.RANGE;
     }
 
     @Override
