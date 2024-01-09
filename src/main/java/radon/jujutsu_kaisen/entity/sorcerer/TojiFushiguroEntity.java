@@ -169,7 +169,9 @@ public class TojiFushiguroEntity extends SorcererEntity {
 
     @Override
     protected @NotNull InteractionResult mobInteract(Player pPlayer, @NotNull InteractionHand pHand) {
-        if (!pPlayer.isSecondaryUseActive() && pHand == InteractionHand.MAIN_HAND) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+
+        if (!pPlayer.isSecondaryUseActive() && stack.isEmpty()) {
             this.setCurrentCustomer(pPlayer);
             pPlayer.openMenu(new SimpleMenuProvider((pContainerId, pPlayerInventory, ignored) ->
                     new BountyMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pPlayer.level(), this.blockPosition()), this), Component.empty()));
