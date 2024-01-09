@@ -51,7 +51,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        if (this.getCharge(owner) % 5 != 0) return;
+        if (this.getCharge(owner) % 2 != 0) return;
 
         if (owner.level().isClientSide) return;
 
