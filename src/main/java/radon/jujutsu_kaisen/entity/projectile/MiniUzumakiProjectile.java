@@ -43,7 +43,7 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
     public static final int DELAY = 20;
     public static final int FRAMES = 3;
     public static final float SCALE = 1.0F;
-    private static final double RADIUS = 20;
+    private static final double RANGE = 20;
     private static final float DAMAGE = 15.0F;
     public static final int DURATION = 10;
 

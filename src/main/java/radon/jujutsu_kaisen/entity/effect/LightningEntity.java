@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class LightningEntity extends JujutsuProjectile {
     public static final float SCALE = 1.0F;
-    private static final double RADIUS = 20;
+    public static final double RANGE = 20;
 
     public double endPosX, endPosY, endPosZ;
     public double collidePosX, collidePosY, collidePosZ;
@@ -176,9 +176,9 @@ public class LightningEntity extends JujutsuProjectile {
     }
 
     protected void calculateEndPos() {
-        this.endPosX = this.getX() + RADIUS * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
-        this.endPosZ = this.getZ() + RADIUS * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
-        this.endPosY = this.getY() + RADIUS * Math.sin(this.getPitch());
+        this.endPosX = this.getX() + RANGE * Math.cos(this.getYaw()) * Math.cos(this.getPitch());
+        this.endPosZ = this.getZ() + RANGE * Math.sin(this.getYaw()) * Math.cos(this.getPitch());
+        this.endPosY = this.getY() + RANGE * Math.sin(this.getPitch());
     }
 
     public List<Entity> checkCollisions(Vec3 from, Vec3 to) {
