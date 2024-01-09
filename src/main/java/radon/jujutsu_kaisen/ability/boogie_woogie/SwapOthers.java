@@ -57,6 +57,10 @@ public class SwapOthers extends Ability {
         }
         return null;
     }
+
+    public static void setTarget(LivingEntity owner, Entity target) {
+        TARGETS.put(owner.getUUID(), new AbstractMap.SimpleEntry<>(target.getUUID(), owner.level().getGameTime()));
+    }
     
     @Override
     public void run(LivingEntity owner) {
