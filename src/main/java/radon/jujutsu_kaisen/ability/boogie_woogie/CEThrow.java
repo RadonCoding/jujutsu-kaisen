@@ -27,11 +27,17 @@ public class CEThrow extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
+        if (owner.level().isClientSide) return;
+
         ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND).copy();
         owner.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
         CursedEnergyImbuedItem item = new CursedEnergyImbuedItem(owner, stack);
         owner.level().addFreshEntity(item);
+
+        SwapOthers.setTarget(owner, item);
     }
 
     @Override
