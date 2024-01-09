@@ -19,11 +19,10 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.Map;
 
 public class MiniUzumaki extends Ability {
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(10) == 0 && target != null && owner.hasLineOfSight(target);
+        if (target == null) return false;
+        return HelperMethods.RANDOM.nextInt(10) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= MiniUzumakiProjectile.RANGE;
     }
 
     @Override
