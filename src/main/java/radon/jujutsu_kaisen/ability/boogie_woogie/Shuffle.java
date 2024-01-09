@@ -40,7 +40,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+        return ActivationType.CHANNELED;
     }
 
     private List<Entity> getTargets(LivingEntity owner) {
