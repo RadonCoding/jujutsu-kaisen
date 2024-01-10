@@ -50,9 +50,6 @@ import java.util.UUID;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final float LIGHTNING_DAMAGE = 5.0F;
-    private static final double MAX_SPEED = 0.2D;
-
-    private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("f8067e42-8642-46f5-88d3-3d8d060df1d4");
 
     @Override
     public boolean isScalable(LivingEntity owner) {
