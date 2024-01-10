@@ -68,7 +68,9 @@ public class IdleTransfigurationVisual {
                 int required = Math.round((victimStrength / attackerStrength) * 2);
 
                 if (amplifier >= required) {
-                    for (int i = 0; i < 2; i++) {
+                    int count = Math.round(entity.getBbWidth() + entity.getBbHeight());
+
+                    for (int i = 0; i < count; i++) {
                         double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
                         double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
                         double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
