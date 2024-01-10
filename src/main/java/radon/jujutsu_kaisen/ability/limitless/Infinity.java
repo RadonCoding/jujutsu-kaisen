@@ -131,7 +131,8 @@ public class Infinity extends Ability implements Ability.IToggled {
 
                 if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity source)) {
                     if (target != null) {
-                        target.discard();
+                        target.setDeltaMovement(nbt.getMovement());
+                        target.setNoGravity(nbt.isNoGravity());
                     }
                     iter.remove();
                     this.setDirty();
