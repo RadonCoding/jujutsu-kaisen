@@ -147,6 +147,10 @@ public class JJKEntities {
             EntityType.Builder.<SuguruGetoEntity>of(SuguruGetoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "suguru_geto")
                             .toString()));
+    public static RegistryObject<EntityType<NaoyaZeninEntity>> NAOYA_ZENIN = ENTITIES.register("naoya_zenin", () ->
+            EntityType.Builder.<NaoyaZeninEntity>of(NaoyaZeninEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "naoya_zenin")
+                            .toString()));
     public static RegistryObject<EntityType<HajimeKashimoEntity>> HAJIME_KASHIMO = ENTITIES.register("hajime_kashimo", () ->
             EntityType.Builder.<HajimeKashimoEntity>of(HajimeKashimoEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hajime_kashimo")
@@ -169,10 +173,6 @@ public class JJKEntities {
             EntityType.Builder.<HeianSukunaEntity>of(HeianSukunaEntity::new, MobCategory.MISC)
                     .sized(1.0F, 2.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
-                            .toString()));
-    public static RegistryObject<EntityType<NaoyaZeninEntity>> NAOYA_ZENIN = ENTITIES.register("naoya_zenin", () ->
-            EntityType.Builder.<NaoyaZeninEntity>of(NaoyaZeninEntity::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "naoya_zenin")
                             .toString()));
 
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
