@@ -14,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -55,24 +56,24 @@ public class IdleTransfigurationVisual {
 
         if (mc.level == null || mc.player == null) return;
 
-        MobEffectInstance instance = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
+        if (JJKAbilities.getTechniques(mc.player).contains(CursedTechnique.IDLE_TRANSFIGURATION)) {
+            MobEffectInstance instance = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
 
-        if (instance != null) {
-            int amplifier = instance.getAmplifier();
+            if (instance != null) {
+                int amplifier = instance.getAmplifier();
 
-            float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
-            float victimStrength = IdleTransfiguration.calculateStrength(entity);
+                float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
+                float victimStrength = IdleTransfiguration.calculateStrength(entity);
 
-            int required = Math.round((victimStrength / attackerStrength) * 2);
+                int required = Math.round((victimStrength / attackerStrength) * 2);
 
-            if (amplifier >= required) {
-                int count = (int) (entity.getBbWidth() * entity.getBbHeight());
-
-                for (int i = 0; i < count; i++) {
-                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).x;
-                    double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).z;
-                    mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
+                if (amplifier >= required) {
+                    for (int i = 0; i < 12; i++) {
+                        double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).x;
+                        double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
+                        double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).z;
+                        mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
+                    }
                 }
             }
         }

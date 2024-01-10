@@ -272,11 +272,10 @@ public class JJKAbilities {
         }
     }
 
-    @Nullable
-    public static CursedTechnique getTechnique(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
+    public static Set<CursedTechnique> getTechniques(LivingEntity owner) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Set.of();
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique();
+        return cap.getTechniques();
     }
 
     @Nullable
