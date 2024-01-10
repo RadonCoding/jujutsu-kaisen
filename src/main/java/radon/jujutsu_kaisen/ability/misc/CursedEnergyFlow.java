@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -63,7 +64,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null || owner.isInFluidType();
+        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(3.0D))
+                .stream().anyMatch(entity -> entity.getOwner() != owner)) {
+            return true;
+        }
+        return owner.isInFluidType() || target != null;
     }
 
     @Override
