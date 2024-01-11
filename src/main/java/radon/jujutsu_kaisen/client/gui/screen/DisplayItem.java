@@ -2,14 +2,16 @@ package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.world.entity.EntityType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 
 import java.util.AbstractMap;
+import java.util.List;
 
 public class DisplayItem {
     public final Type type;
     public Ability ability;
-    public AbstractMap.SimpleEntry<EntityType<?>, Integer> curse;
+    public AbsorbedCurse curse;
     public CursedTechnique copied;
     public CursedTechnique absorbed;
 
@@ -23,7 +25,7 @@ public class DisplayItem {
         this.ability = ability;
     }
 
-    public DisplayItem(AbstractMap.SimpleEntry<EntityType<?>, Integer> curse) {
+    public DisplayItem(AbsorbedCurse curse) {
         this(Type.CURSE);
 
         this.curse = curse;

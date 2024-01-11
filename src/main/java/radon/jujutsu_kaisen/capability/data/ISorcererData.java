@@ -293,15 +293,13 @@ public interface ISorcererData {
 
     void setMode(TenShadowsMode mode);
 
-    void addCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+    void addCurse(AbsorbedCurse curse);
 
-    void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type);
+    void removeCurse(AbsorbedCurse curse);
 
-    Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry);
+    List<AbsorbedCurse> getCurses();
 
-    boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type);
-
-    int getCurseCount(Registry<EntityType<?>> registry, EntityType<?> type);
+    boolean hasCurse(AbsorbedCurse curse);
 
     List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
     void addFrame(Vec3 frame, float yaw);

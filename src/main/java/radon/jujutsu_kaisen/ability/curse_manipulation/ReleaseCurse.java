@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -64,23 +65,21 @@ public class ReleaseCurse extends Ability {
         if (this.getTarget(owner) instanceof CursedSpirit curse && curse.isTame() && curse.getOwner() == owner) {
             owner.swing(InteractionHand.MAIN_HAND);
 
-            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (curse.isTame() && curse.getOwner() == owner) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ownerCap.removeSummon(curse);
 
-                cap.removeSummon(curse);
-                cap.addCurse(registry, curse.getType());
+            ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ownerCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT()));
 
-                if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                }
-
-                if (!owner.level().isClientSide) {
-                    makePoofParticles(curse);
-                }
-                curse.discard();
+            if (owner instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
             }
+
+            if (!owner.level().isClientSide) {
+                makePoofParticles(curse);
+            }
+            curse.discard();
         }
     }
 

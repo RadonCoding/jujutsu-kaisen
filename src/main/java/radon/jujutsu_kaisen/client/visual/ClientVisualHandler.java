@@ -61,10 +61,6 @@ public class ClientVisualHandler {
     private static final Map<UUID, ClientData> synced = new HashMap<>();
 
     public static void receive(UUID identifier, ClientData data) {
-        Minecraft mc = Minecraft.getInstance();
-
-        if (mc.level == null) return;
-
         synced.put(identifier, data);
     }
 
@@ -87,7 +83,7 @@ public class ClientVisualHandler {
 
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.level == null || mc.player == null) return null;
+        assert mc.level != null && mc.player != null;
 
         if (synced.containsKey(entity.getUUID())) {
             return synced.get(entity.getUUID());

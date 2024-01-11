@@ -432,6 +432,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.ABSORBED_CURSE.get(), AbsorbedCurseRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
 

@@ -38,6 +38,8 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
             if (curse.getOwner() != owner) return null;
             if (!curse.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
 
+            ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             float experience;
 
             if (owner.level().isClientSide) {
@@ -46,14 +48,12 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
                 if (data == null) return null;
 
                 experience = data.experience;
-
-                System.out.println(experience);
             } else {
-                ISorcererData cap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                experience = cap.getExperience();
+                ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                experience = curseCap.getExperience();
             }
 
-            if (experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
+            if (experience >= ownerCap.getExperience() || experience == ConfigHolder.SERVER.maximumExperienceAmount.get()) return null;
 
             return curse;
         }

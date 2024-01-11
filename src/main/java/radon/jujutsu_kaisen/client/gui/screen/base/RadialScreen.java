@@ -27,8 +27,10 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
+import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
@@ -46,12 +48,10 @@ public abstract class RadialScreen extends Screen {
     protected static final int RADIUS_OUT = RADIUS_IN * 2;
 
     private final List<List<DisplayItem>> pages = new ArrayList<>();
-    protected final Map<EntityType<?>, Integer> curses = new HashMap<>();
 
     protected int hovered = -1;
-    private int hover;
     private static int page;
-    private boolean isLeftClickDown;
+    private int hover;
 
     public RadialScreen() {
         super(Component.nullToEmpty(null));
@@ -132,8 +132,6 @@ public abstract class RadialScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        this.isLeftClickDown = !this.isLeftClickDown && pButton == InputConstants.MOUSE_BUTTON_LEFT;
-
         if (this.minecraft != null && this.minecraft.player != null) {
             ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -149,13 +147,6 @@ public abstract class RadialScreen extends Screen {
             }
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
-    }
-
-    @Override
-    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        this.isLeftClickDown = this.isLeftClickDown && pButton == InputConstants.MOUSE_BUTTON_LEFT;
-
-        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
     private static void renderEntityInInventoryFollowsAngle(PoseStack pPoseStack, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, Entity pEntity) {
@@ -312,17 +303,12 @@ public abstract class RadialScreen extends Screen {
                         }
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
-                    Component totalText = Component.translatable(String.format("gui.%s.ability_overlay.total", JujutsuKaisen.MOD_ID), item.curse.getValue());
-                    lines.add(totalText);
+                    CursedSpirit curse = JJKAbilities.createCurse(this.minecraft.player, item.curse);
 
-                    if (item.curse.getKey().create(this.minecraft.level) instanceof ISorcerer curse) {
+                    if (curse != null) {
                         Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                                JJKAbilities.getCurseCost(curse.getGrade()) * this.curses.getOrDefault(item.curse.getKey(), 1));
+                                JJKAbilities.getCurseCost(this.minecraft.player, curse));
                         lines.add(costText);
-
-                        Component countText = Component.translatable(String.format("gui.%s.ability_overlay.count", JujutsuKaisen.MOD_ID),
-                                this.curses.getOrDefault(item.curse.getKey(), 1));
-                        lines.add(countText);
                     }
                 }
 
@@ -336,9 +322,8 @@ public abstract class RadialScreen extends Screen {
             }
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
-                EntityType<?> type = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0) : item.curse.getKey();
-
-                Entity entity = type.create(this.minecraft.level);
+                Entity entity = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
+                        JJKAbilities.createCurse(this.minecraft.player, item.curse);
 
                 if (entity == null) continue;
 
@@ -423,18 +408,5 @@ public abstract class RadialScreen extends Screen {
             return 0;
         }
         return (float) (((i / this.getCurrent().size()) + 0.25D) * Mth.TWO_PI + Math.PI);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (this.isLeftClickDown && this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
-            DisplayItem item = this.getCurrent().get(this.hovered);
-
-            if (item.type == DisplayItem.Type.CURSE) {
-                this.curses.put(item.curse.getKey(), Math.min(item.curse.getValue(), this.curses.getOrDefault(item.curse.getKey(), 0) + 1));
-            }
-        }
     }
 }

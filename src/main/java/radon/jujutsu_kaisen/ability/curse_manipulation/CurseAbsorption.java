@@ -5,10 +5,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,16 +20,11 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
-import radon.jujutsu_kaisen.util.SorcererUtil;
 
 public class CurseAbsorption extends Ability implements Ability.IToggled {
     @Override
@@ -62,10 +55,15 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         }
     }
 
-    public static boolean canAbsorb(LivingEntity owner, LivingEntity entity) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return entity instanceof CursedSpirit curse && !curse.isTame() &&
-                (SorcererUtil.getGrade(cap.getExperience()).ordinal() - curse.getGrade().ordinal() >= 2 || curse.isDeadOrDying());
+    private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+        if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
+
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        return (targetCap.getType() == JujutsuType.CURSE && (!(target instanceof TamableAnimal tamable) || !tamable.isTame())) &&
+                (ownerCap.getExperience() / targetCap.getExperience() >= 2 || target.isDeadOrDying());
     }
 
     @Override
@@ -93,29 +91,21 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-        if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-        ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         if (!canAbsorb(attacker, victim)) return;
 
-        if (!attackerCap.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
-
-        if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        if (!JJKAbilities.hasToggled(attacker, JJKAbilities.CURSE_ABSORPTION.get())) return;
 
         ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (victimCap.getType() != JujutsuType.CURSE) return;
-
         attacker.swing(InteractionHand.MAIN_HAND, true);
 
-        Registry<EntityType<?>> registry = attacker.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        ResourceLocation key = registry.getKey(victim.getType());
-
-        if (key == null) return;
-
         ItemStack stack = new ItemStack(JJKItems.CURSED_SPIRIT_ORB.get());
-        CursedSpiritOrbItem.setKey(stack, key);
+
+        if (victim instanceof Player player) {
+            CursedSpiritOrbItem.setAbsorbed(stack, new AbsorbedCurse(victim.getName(), victim.getType(), victimCap.serializeNBT(), player.getGameProfile()));
+        } else {
+            CursedSpiritOrbItem.setAbsorbed(stack, new AbsorbedCurse(victim.getName(), victim.getType(), victimCap.serializeNBT()));
+        }
 
         if (attacker instanceof Player player) {
             player.addItem(stack);
@@ -124,10 +114,6 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         }
         makePoofParticles(victim);
         victim.discard();
-
-        if (attacker instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

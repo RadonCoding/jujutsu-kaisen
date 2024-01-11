@@ -11,8 +11,6 @@
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.cooldown": "Cooldown: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
-  "gui.jujutsu_kaisen.ability_overlay.total": "Total: %1$d",
-  "gui.jujutsu_kaisen.ability_overlay.count": "Count: %1$d",
 
   "gui.jujutsu_kaisen.six_eyes_overlay.cursed_technique": "Cursed Technique: %1$s",
   "gui.jujutsu_kaisen.six_eyes_overlay.grade": "Grade: %1$s",

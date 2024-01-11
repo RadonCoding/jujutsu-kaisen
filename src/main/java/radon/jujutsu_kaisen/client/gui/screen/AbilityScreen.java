@@ -13,6 +13,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
@@ -34,8 +35,8 @@ public class AbilityScreen extends RadialScreen {
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
-        Map<EntityType<?>, Integer> curses = cap.getCurses(this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE));
-        items.addAll(curses.entrySet().stream().map(entry -> new DisplayItem(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()))).toList());
+        List<AbsorbedCurse> curses = cap.getCurses();
+        items.addAll(curses.stream().map(DisplayItem::new).toList());
 
         Set<CursedTechnique> copied = cap.getCopied();
         items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
@@ -71,9 +72,7 @@ public class AbilityScreen extends RadialScreen {
                     }
                 }
                 case CURSE -> {
-                    EntityType<?> type = item.curse.getKey();
-                    Registry<EntityType<?>> registry = this.minecraft.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                    PacketHandler.sendToServer(new CurseSummonC2SPacket(registry.getKey(type), this.curses.getOrDefault(type, 1)));
+                    PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.serializeNBT()));
                 }
                 case COPIED -> {
                     PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
