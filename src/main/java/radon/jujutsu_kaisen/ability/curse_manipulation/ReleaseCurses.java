@@ -56,8 +56,8 @@ public class ReleaseCurses extends Ability {
 
             ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (curse instanceof AbsorbedPlayerEntity player) {
-                ownerCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT(), player.getPlayer()));
+            if (curse instanceof AbsorbedPlayerEntity absorbed) {
+                ownerCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT(), absorbed.getPlayer()));
             } else {
                 ownerCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT()));
             }

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -227,9 +228,9 @@ public class JJKAbilities {
         return cap.hasToggled(ability);
     }
 
-    public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
-        return curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
-                (CursedSpirit) curse.getType().create(owner.level());
+    public static CursedSpirit createCurse(Level level, AbsorbedCurse curse) {
+        return curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(level) :
+                (CursedSpirit) curse.getType().create(level);
     }
 
     public static float getCurseExperience(AbsorbedCurse curse) {
@@ -263,15 +264,15 @@ public class JJKAbilities {
             ownerCap.useEnergy(cost);
         }
 
-        CursedSpirit entity = createCurse(owner, curse);
+        CursedSpirit entity = createCurse(owner.level(), curse);
 
         if (entity == null) return;
 
         entity.setTame(true);
         entity.setOwner(owner);
 
-        if (owner instanceof Player player) {
-            ((AbsorbedPlayerEntity) entity).setPlayer(player.getGameProfile());
+        if (owner instanceof Player player && entity instanceof AbsorbedPlayerEntity absorbed) {
+            absorbed.setPlayer(player.getGameProfile());
         }
 
         Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
