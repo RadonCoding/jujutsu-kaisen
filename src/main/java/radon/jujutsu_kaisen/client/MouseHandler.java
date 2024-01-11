@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
@@ -12,7 +13,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 public class MouseHandler {
     @SubscribeEvent
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
-        if (ConfigHolder.CLIENT.meleeMenuType.get() != 1) return;
+        if (ConfigHolder.CLIENT.meleeMenuType.get() != MeleeMenuType.SCROLL) return;
 
         double delta = event.getScrollDelta();
 

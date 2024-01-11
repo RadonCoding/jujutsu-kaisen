@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ClientConfig;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -44,7 +45,7 @@ public class AbilityOverlay {
 
     @Nullable
     public static Ability getSelected() {
-        if (ConfigHolder.CLIENT.meleeMenuType.get() == 1) {
+        if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
             if (abilities.isEmpty()) return null;
 
             int index = getIndex();
@@ -52,7 +53,7 @@ public class AbilityOverlay {
             if (abilities.size() > index) {
                 return abilities.get(index);
             }
-        } else {
+        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLED) {
             return MeleeScreen.getSelected();
         }
         return null;
@@ -128,7 +129,7 @@ public class AbilityOverlay {
 
         if (player == null) return;
 
-        if (ConfigHolder.CLIENT.meleeMenuType.get() == 1) {
+        if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
             abilities = JJKAbilities.getAbilities(player);
             abilities.removeIf(ability -> ability.getMenuType() != MenuType.MELEE);
 
