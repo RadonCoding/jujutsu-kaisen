@@ -210,6 +210,11 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
+    public boolean isNoGravity() {
+        return !this.isVehicle() && super.isNoGravity();
+    }
+
+    @Override
     protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
         super.tickRidden(pPlayer, pTravelVector);
 
@@ -217,10 +222,10 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
 
+        Vec3 movement = this.getDeltaMovement();
+
         if (this.jump) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.getFlyingSpeed(), 0.0D));
-        } else if (!this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, -0.01D, 0.0D));
+            this.setDeltaMovement(movement.add(0.0D, this.getFlyingSpeed(), 0.0D));
         }
     }
 
