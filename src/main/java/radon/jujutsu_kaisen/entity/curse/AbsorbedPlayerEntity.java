@@ -29,24 +29,13 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
         super(pType, pLevel);
     }
 
-    public AbsorbedPlayerEntity(LivingEntity owner, @Nullable GameProfile profile) {
-        super(JJKEntities.ABSORBED_PLAYER.get(), owner.level());
-
-        this.setTame(true);
-        this.setOwner(owner);
-
-        if (profile != null) {
-            this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
-        }
-
-        Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
-    }
-
     @Override
     public @NotNull Component getName() {
         return Component.literal(this.getPlayer().getName());
+    }
+
+    public void setPlayer(GameProfile profile) {
+        this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), profile)));
     }
 
     public GameProfile getPlayer() {

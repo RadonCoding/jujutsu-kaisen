@@ -2,11 +2,14 @@ package radon.jujutsu_kaisen.ability;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -53,12 +56,14 @@ import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -223,7 +228,7 @@ public class JJKAbilities {
     }
 
     public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
-        return curse.getType() == EntityType.PLAYER ? new AbsorbedPlayerEntity(owner, curse.getProfile()) :
+        return curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
                 (CursedSpirit) curse.getType().create(owner.level());
     }
 
@@ -235,7 +240,7 @@ public class JJKAbilities {
 
     public static float getCurseCost(LivingEntity owner, AbsorbedCurse curse) {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (getCurseExperience(curse) * 0.1F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+        return (getCurseExperience(curse) * 0.01F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
     public static void summonCurse(LivingEntity owner, int index) {
@@ -261,6 +266,17 @@ public class JJKAbilities {
         CursedSpirit entity = createCurse(owner, curse);
 
         if (entity == null) return;
+
+        entity.setTame(true);
+        entity.setOwner(owner);
+
+        if (owner instanceof Player player) {
+            ((AbsorbedPlayerEntity) entity).setPlayer(player.getGameProfile());
+        }
+
+        Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
+                .multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         curseCap.deserializeNBT(curse.getData());
