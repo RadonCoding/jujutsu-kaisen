@@ -1452,11 +1452,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasCurse(AbsorbedCurse curse) {
-        return this.curses.contains(curse);
-    }
-
-    @Override
     public List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames() {
         return this.frames;
     }
