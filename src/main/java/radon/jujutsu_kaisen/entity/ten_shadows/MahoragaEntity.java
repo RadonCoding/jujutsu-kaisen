@@ -3,19 +3,16 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -23,9 +20,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -49,8 +44,8 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation SLASH = RawAnimation.begin().thenPlay("attack.slash");
 
-    private static final double SWING_LAUNCH = 5.0D;
-    private static final float SWING_EXPLOSION = 2.5F;
+    private static final double SLASH_LAUNCH = 5.0D;
+    private static final float SLASH_EXPLOSION = 2.5F;
 
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
@@ -185,7 +180,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         LivingEntity target = this.getTarget();
 
-        this.entityData.set(DATA_BATTLE, target != null && target.getMaxHealth() >= Player.MAX_HEALTH * 3);
+        this.entityData.set(DATA_BATTLE, target != null);
 
         int slash = this.entityData.get(DATA_SLASH);
 
@@ -196,11 +191,11 @@ public class MahoragaEntity extends TenShadowsSummon {
                 if (this.onGround() && this.distanceTo(target) < 3.0D) {
                     this.entityData.set(DATA_SLASH, SLASH_DURATION);
 
-                    target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SWING_LAUNCH));
+                    target.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SLASH_LAUNCH));
                     target.hurtMarked = true;
 
                     Vec3 explosionPos = new Vec3(this.getX(), this.getEyeY() - 0.2D, this.getZ()).add(RotationUtil.getTargetAdjustedLookAngle(this));
-                    this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SWING_EXPLOSION, false, Level.ExplosionInteraction.NONE);
+                    this.level().explode(this, explosionPos.x, explosionPos.y, explosionPos.z, SLASH_EXPLOSION, false, Level.ExplosionInteraction.NONE);
                 }
             }
         }

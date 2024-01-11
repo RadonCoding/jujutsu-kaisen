@@ -132,6 +132,7 @@
   "item.jujutsu_kaisen.aoi_todo_spawn_egg": "Spawn Aoi Todo",
 
   "item.jujutsu_kaisen.jogo_spawn_egg": "Spawn Jogo",
+  "item.jujutsu_kaisen.jogoat_spawn_egg": "Spawn Jogoat",
   "item.jujutsu_kaisen.dagon_spawn_egg": "Spawn Dagon",
   "item.jujutsu_kaisen.hanami_spawn_egg": "Spawn Hanami",
 
@@ -516,6 +517,7 @@
   "entity.jujutsu_kaisen.rugby_field_curse": "Rugby Field Curse",
   "entity.jujutsu_kaisen.rika": "Rika",
   "entity.jujutsu_kaisen.jogo": "Jogo",
+  "entity.jujutsu_kaisen.jogoat": "Jogoat",
   "entity.jujutsu_kaisen.dagon": "Dagon",
   "entity.jujutsu_kaisen.mahoraga": "Mahoraga",
   "entity.jujutsu_kaisen.divine_dog_white": "Divine Dog White",

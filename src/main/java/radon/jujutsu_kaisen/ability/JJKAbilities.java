@@ -331,11 +331,20 @@ public class JJKAbilities {
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
-        if (owner instanceof JogoatEntity) {
-            return new ArrayList<>(ABILITY_REGISTRY.get().getValues());
-        }
-
         Set<Ability> abilities = new LinkedHashSet<>(List.of(JJKAbilities.HEAL.get(), JJKAbilities.RCT1.get(), JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get()));
+
+        if (owner instanceof JogoatEntity) {
+            for (CursedTechnique technique : CursedTechnique.values()) {
+                abilities.addAll(Arrays.asList(technique.getAbilities()));
+
+                Ability domain = technique.getDomain();
+
+                if (domain != null) {
+                    abilities.add(domain);
+                }
+            }
+            return new ArrayList<>(abilities);
+        }
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
