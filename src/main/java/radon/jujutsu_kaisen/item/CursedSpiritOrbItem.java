@@ -48,7 +48,8 @@ public class CursedSpiritOrbItem extends Item {
         AbsorbedCurse curse = getAbsorbed(pStack);
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.getName())
                 .withStyle(ChatFormatting.DARK_RED));
-        pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID), JJKAbilities.getCurseExperience(curse)));
+        pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID), JJKAbilities.getCurseExperience(curse))
+                .withStyle(ChatFormatting.GREEN));
     }
 
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
