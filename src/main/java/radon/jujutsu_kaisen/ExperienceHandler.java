@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -61,7 +62,7 @@ public class ExperienceHandler {
                     }
                 }
 
-                if (!existing) {
+                if (!existing && !(attacker instanceof TamableAnimal tamable && tamable.isTame())) {
                     BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
                     addBattle(attacker.getUUID(), battle);
                     battle.attack(attacker.getUUID(), event.getAmount());
