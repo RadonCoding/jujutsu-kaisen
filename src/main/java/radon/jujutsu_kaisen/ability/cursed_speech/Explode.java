@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -26,6 +27,7 @@ public class Explode extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
     private static final float EXPLOSIVE_POWER = 1.5F;
+    private static final float MAX_EXPLOSIVE_POWER = 20.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -62,8 +64,8 @@ public class Explode extends Ability {
         for (Entity entity : getEntities(owner)) {
             if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
 
-            owner.level().explode(owner, JJKDamageSources.jujutsuAttack(owner, this), null,
-                    entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), EXPLOSIVE_POWER * this.getPower(owner), false, Level.ExplosionInteraction.NONE);
+            ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)),
+                    20, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.explode", JujutsuKaisen.MOD_ID), owner.getName()));
