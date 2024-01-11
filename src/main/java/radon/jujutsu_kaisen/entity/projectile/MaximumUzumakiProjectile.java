@@ -52,16 +52,14 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (this.level() instanceof ServerLevel level) {
-            for (Entity entity : cap.getSummons()) {
-                if (this.power == MAX_POWER) break;
-                if (!(entity instanceof CursedSpirit curse)) continue;
+        for (Entity entity : cap.getSummons()) {
+            if (this.power == MAX_POWER) break;
+            if (!(entity instanceof CursedSpirit curse)) continue;
 
-                if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
+            if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
 
-                this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curse.getExperience()));
-                curse.discard();
-            }
+            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curse.getExperience()));
+            curse.discard();
         }
     }
 
