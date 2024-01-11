@@ -28,10 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.AbilityStopEvent;
-import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
-import radon.jujutsu_kaisen.ability.CursedEnergyCostEvent;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.ability.misc.Slam;
@@ -278,6 +275,20 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
+
+            if (victim instanceof ISorcerer) {
+                if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+                    if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
+                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+                    }
+
+                    if (source instanceof JJKDamageSources.JujutsuDamageSource) {
+                        if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                            AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
+                        }
+                    }
+                }
+            }
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {

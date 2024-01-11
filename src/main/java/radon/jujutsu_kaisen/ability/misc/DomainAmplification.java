@@ -38,10 +38,6 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         if (!SorcererUtil.isExperienced(cap.getExperience()) && domain != null && JJKAbilities.hasToggled(owner, domain)) return false;
 
-        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.level().getEntitiesOfClass(Projectile.class,
-                owner.getBoundingBox().inflate(3.0D)).stream().anyMatch(entity -> entity.getOwner() != owner)) {
-            return true;
-        }
         return target != null && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
 
