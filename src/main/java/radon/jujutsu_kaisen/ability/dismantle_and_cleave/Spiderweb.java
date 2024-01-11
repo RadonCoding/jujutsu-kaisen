@@ -22,6 +22,7 @@ public class Spiderweb extends Ability {
     private static final int RANGE = 3;
     private static final int DELAY = 20;
     private static final float EXPLOSIVE_POWER = 2.0F;
+    private static final float MAX_EXPLOSIVE_POWER = 20.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -60,7 +61,7 @@ public class Spiderweb extends Ability {
         if (hit != null) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            float radius = EXPLOSIVE_POWER * this.getPower(owner);
+            float radius = Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner));
             float real = (radius % 2 == 0) ? radius + 1 : radius;
 
             Vec3 center = hit.getBlockPos().getCenter().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(real * 0.5F));
