@@ -159,15 +159,15 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
             this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
             this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
             this.targetSelector.addGoal(target++, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+
+            if (this.targetsSorcerers()) {
+                this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
+            }
+            if (this.targetsCurses()) {
+                this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
+            }
         }
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        if (this.targetsSorcerers()) {
-            this.targetSelector.addGoal(target++, new NearestAttackableSorcererGoal(this, true));
-        }
-        if (this.targetsCurses()) {
-            this.targetSelector.addGoal(target, new NearestAttackableCurseGoal(this, true));
-        }
     }
 
     @Override
