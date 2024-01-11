@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -271,8 +272,10 @@ public class JJKAbilities {
         entity.setTame(true);
         entity.setOwner(owner);
 
-        if (owner instanceof Player player && entity instanceof AbsorbedPlayerEntity absorbed) {
-            absorbed.setPlayer(player.getGameProfile());
+        GameProfile profile = curse.getProfile();
+
+        if (profile != null && entity instanceof AbsorbedPlayerEntity absorbed) {
+            absorbed.setPlayer(profile);
         }
 
         Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
