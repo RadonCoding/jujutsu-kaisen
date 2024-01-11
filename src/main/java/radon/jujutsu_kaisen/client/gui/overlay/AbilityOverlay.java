@@ -53,7 +53,7 @@ public class AbilityOverlay {
             if (abilities.size() > index) {
                 return abilities.get(index);
             }
-        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLED) {
+        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
             return MeleeScreen.getSelected();
         }
         return null;

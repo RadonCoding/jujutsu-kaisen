@@ -240,7 +240,7 @@ public class JJKClientEventHandler {
                 if (JJKKeys.SHOW_DOMAIN_MENU.isDown()) {
                     mc.setScreen(new DomainScreen());
                 }
-                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLED && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
+                if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE && JJKKeys.ACTIVATE_MELEE_MENU.isDown()) {
                     mc.setScreen(new MeleeScreen());
                 }
                 if (JJKKeys.INCREASE_OUTPUT.isDown()) {
