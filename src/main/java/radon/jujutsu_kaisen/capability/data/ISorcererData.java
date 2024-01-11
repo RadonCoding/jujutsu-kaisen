@@ -295,7 +295,7 @@ public interface ISorcererData {
 
     void removeCurse(AbsorbedCurse curse);
 
-    Object getCurses();
+    List<AbsorbedCurse> getCurses();
 
     boolean hasCurse(AbsorbedCurse curse);
 
