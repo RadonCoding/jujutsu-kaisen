@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.DisasterCurse;
@@ -76,6 +77,11 @@ public class JogoatEntity extends CursedSpirit {
     @Override
     public float getMaxEnergy() {
         return Float.POSITIVE_INFINITY;
+    }
+
+    @Override
+    public @Nullable CursedEnergyNature getNature() {
+        return CursedEnergyNature.LIGHTNING;
     }
 
     @Override
