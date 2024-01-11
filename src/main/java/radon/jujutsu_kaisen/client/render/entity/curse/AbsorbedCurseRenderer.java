@@ -34,7 +34,6 @@ public class AbsorbedCurseRenderer extends HumanoidMobRenderer<AbsorbedCurseEnti
 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
                 new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), pContext.getModelManager()));
-        this.addLayer(new SukunaMarkingsLayer<>(this));
         this.addLayer(new JJKOverlayLayer<>(this));
 
         this.normal = new PlayerModel<>(pContext.bakeLayer(ModelLayers.PLAYER), false);
