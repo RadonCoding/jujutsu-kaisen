@@ -241,7 +241,11 @@ public class JJKAbilities {
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        AbsorbedCurse curse = ownerCap.getCurses().get(index);
+        List<AbsorbedCurse> curses = ownerCap.getCurses();
+
+        if (index >= curses.size() - 1) return;
+
+        AbsorbedCurse curse = curses.get(index);
 
         float cost = getCurseCost(owner, curse);
 
