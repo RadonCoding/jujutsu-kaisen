@@ -31,10 +31,10 @@ public class CEThrow extends Ability {
 
         if (owner.level().isClientSide) return;
 
-        ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND).copy();
-        owner.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
+        stack.shrink(1);
 
-        CursedEnergyImbuedItem item = new CursedEnergyImbuedItem(owner, stack);
+        CursedEnergyImbuedItem item = new CursedEnergyImbuedItem(owner, stack.copyWithCount(1));
         owner.level().addFreshEntity(item);
 
         SwapOthers.setTarget(owner, item);

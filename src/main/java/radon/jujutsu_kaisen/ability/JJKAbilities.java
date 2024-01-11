@@ -58,6 +58,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -330,6 +331,10 @@ public class JJKAbilities {
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
+        if (owner instanceof JogoatEntity) {
+            return new ArrayList<>(ABILITY_REGISTRY.get().getValues());
+        }
+
         Set<Ability> abilities = new LinkedHashSet<>(List.of(JJKAbilities.HEAL.get(), JJKAbilities.RCT1.get(), JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get()));
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
