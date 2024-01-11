@@ -5,11 +5,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererData;
 
 public class AbsorbedCurse {
     private final Component name;
@@ -25,7 +22,7 @@ public class AbsorbedCurse {
         this.data = data;
     }
 
-    public AbsorbedCurse(Component name, EntityType<?> type, CompoundTag data, GameProfile profile) {
+    public AbsorbedCurse(Component name, EntityType<?> type, CompoundTag data, @Nullable GameProfile profile) {
         this(name, type, data);
 
         this.profile = profile;
