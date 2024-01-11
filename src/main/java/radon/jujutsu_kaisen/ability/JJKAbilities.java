@@ -49,6 +49,7 @@ import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -226,18 +227,30 @@ public class JJKAbilities {
                 (CursedSpirit) curse.getType().create(owner.level());
     }
 
-    public static float getCurseCost(LivingEntity owner, CursedSpirit curse) {
+    public static float getCurseCost(LivingEntity owner, AbsorbedCurse curse) {
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        ISorcererData curseCap = new SorcererData();
+        curseCap.deserializeNBT(curse.getData());
+
         return (curseCap.getExperience() * 0.1F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
-    public static void summonCurse(LivingEntity owner, AbsorbedCurse curse) {
+    public static void summonCurse(LivingEntity owner, int index) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!ownerCap.hasCurse(curse)) return;
+        AbsorbedCurse curse = ownerCap.getCurses().get(index);
+
+        float cost = getCurseCost(owner, curse);
+
+        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+            if (ownerCap.getEnergy() < cost) {
+                return;
+            }
+            ownerCap.useEnergy(cost);
+        }
 
         CursedSpirit entity = createCurse(owner, curse);
 
@@ -246,14 +259,6 @@ public class JJKAbilities {
         ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         curseCap.deserializeNBT(curse.getData());
 
-        float cost = getCurseCost(owner, entity);
-
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            if (ownerCap.getEnergy() < cost) {
-                return;
-            }
-            ownerCap.useEnergy(cost);
-        }
         owner.level().addFreshEntity(entity);
 
         ownerCap.addSummon(entity);
