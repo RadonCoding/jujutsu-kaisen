@@ -9,6 +9,7 @@
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
+  "gui.jujutsu_kaisen.ability_overlay.experience": "Experience: %1$f",
   "gui.jujutsu_kaisen.ability_overlay.cooldown": "Cooldown: %1$fs",
   "gui.jujutsu_kaisen.ability_overlay.duration": "Duration: %1$fs",
 
@@ -72,6 +73,7 @@
 
   "item.jujutsu_kaisen.grade": "Grade: %1$s",
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
+  "item.jujutsu_kaisen.experience": "Experience: %1$f",
 
   "item.jujutsu_kaisen.inverted_spear_of_heaven": "Inverted Spear of Heaven",
   "item.jujutsu_kaisen.inverted_spear_of_heaven.desc": "Nullifies all cursed techniques on contact.",
