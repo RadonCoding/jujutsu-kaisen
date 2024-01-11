@@ -64,11 +64,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(3.0D))
-                .stream().anyMatch(entity -> entity.getOwner() != owner)) {
-            return true;
-        }
-        return owner.isInFluidType() || target != null;
+        return false;
     }
 
     @Override
