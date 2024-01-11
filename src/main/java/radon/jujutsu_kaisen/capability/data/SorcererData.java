@@ -111,7 +111,7 @@ public class SorcererData implements ISorcererData {
     private TenShadowsMode mode;
 
     // Curse Manipulation
-    private final Map<ResourceLocation, Integer> curses;
+    private final List<AbsorbedCurse> curses;
 
     // Projection Sorcery
     private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
@@ -169,7 +169,7 @@ public class SorcererData implements ISorcererData {
         this.adapted = new HashSet<>();
         this.adapting = new HashMap<>();
 
-        this.curses = new LinkedHashMap<>();
+        this.curses = new ArrayList<>();
 
         this.frames = new ArrayList<>();
 
@@ -1433,44 +1433,24 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
-        ResourceLocation key = registry.getKey(type);
-        this.curses.put(key, this.curses.getOrDefault(key, 0) + 1);
+    public void addCurse(AbsorbedCurse curse) {
+        this.curses.add(curse);
     }
 
     @Override
-    public void removeCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
-        ResourceLocation key = registry.getKey(type);
-
-        int count = this.curses.get(key) - 1;
-
-        if (count == 0) {
-            this.curses.remove(key);
-        } else {
-            this.curses.put(key, count);
-        }
+    public void removeCurse(AbsorbedCurse curse) {
+        this.curses.remove(curse);
     }
 
     @Override
-    public Map<EntityType<?>, Integer> getCurses(Registry<EntityType<?>> registry) {
-        Map<EntityType<?>, Integer> curses = new HashMap<>();
-
-        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return curses;
-
-        for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
-            curses.put(registry.get(entry.getKey()), entry.getValue());
-        }
-        return curses;
+    public List<AbsorbedCurse> getCurses() {
+        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return List.of();
+        return this.curses;
     }
 
     @Override
-    public boolean hasCurse(Registry<EntityType<?>> registry, EntityType<?> type) {
-        return this.curses.containsKey(registry.getKey(type));
-    }
-
-    @Override
-    public int getCurseCount(Registry<EntityType<?>> registry, EntityType<?> type) {
-        return this.curses.get(registry.getKey(type));
+    public boolean hasCurse(AbsorbedCurse curse) {
+        return this.curses.contains(curse);
     }
 
     @Override
@@ -1832,11 +1812,8 @@ public class SorcererData implements ISorcererData {
 
         ListTag cursesTag = new ListTag();
 
-        for (Map.Entry<ResourceLocation, Integer> entry : this.curses.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.putString("key", entry.getKey().toString());
-            data.putInt("count", entry.getValue());
-            cursesTag.add(data);
+        for (AbsorbedCurse curse : this.curses) {
+            cursesTag.add(curse.serializeNBT());
         }
         nbt.put("curses", cursesTag);
 
@@ -2000,7 +1977,7 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("curses", Tag.TAG_COMPOUND)) {
             CompoundTag curse = (CompoundTag) key;
-            this.curses.put(new ResourceLocation(curse.getString("key")), curse.getInt("count"));
+            this.curses.add(new AbsorbedCurse(curse));
         }
     }
 }

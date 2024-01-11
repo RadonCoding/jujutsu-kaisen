@@ -110,9 +110,7 @@ public class SkyHandler {
     public static void renderActualSky(PoseStack poseStack, float partialTick, Matrix4f projection) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.level == null || mc.player == null) {
-            return;
-        }
+        assert mc.level != null && mc.player != null;
 
         if (overworld == null) {
             ClientPacketListener conn = mc.getConnection();

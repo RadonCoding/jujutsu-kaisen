@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -53,12 +54,11 @@ public class SorcererGoal extends Goal {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(20) == 0) {
-                Registry<EntityType<?>> registry = this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                List<EntityType<?>> curses = new ArrayList<>(cap.getCurses(registry).keySet());
+                List<AbsorbedCurse> curses = cap.getCurses();
 
                 if (!curses.isEmpty()) {
-                    EntityType<?> curse = curses.get(HelperMethods.RANDOM.nextInt(curses.size()));
-                    JJKAbilities.summonCurse(this.mob, curse, Math.min(1, HelperMethods.RANDOM.nextInt(cap.getCurseCount(registry, curse))));
+                    AbsorbedCurse curse = curses.get(HelperMethods.RANDOM.nextInt(curses.size()));
+                    JJKAbilities.summonCurse(this.mob, curse);
                 }
             }
 
@@ -66,10 +66,8 @@ public class SorcererGoal extends Goal {
 
             if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
                 this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
-
-                Registry<EntityType<?>> registry = this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-                cap.addCurse(this.mob.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), CursedSpiritOrbItem.getCurse(registry, stack));
-                this.mob.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20));
+                cap.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
+                this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             }
         }
 

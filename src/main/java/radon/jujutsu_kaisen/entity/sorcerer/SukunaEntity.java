@@ -44,7 +44,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.*;
 
 public class SukunaEntity extends SorcererEntity {
-    private static final EntityDataAccessor<Optional<ResourceLocation>> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_RESOURCE_LOCATION.get());
+    private static final EntityDataAccessor<String> DATA_ENTITY = SynchedEntityData.defineId(SukunaEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(SukunaEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
 
     @Nullable
@@ -73,16 +73,10 @@ public class SukunaEntity extends SorcererEntity {
         this.fingers = fingers;
         this.vessel = vessel;
 
-        ResourceLocation key = this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
-
-        if (key != null) {
-            this.entityData.set(DATA_ENTITY, Optional.of(key));
-        }
+        this.entityData.set(DATA_ENTITY, EntityType.getKey(owner.getType()).toString());
 
         if (owner instanceof Player player) {
-            CompoundTag nbt = new CompoundTag();
-            NbtUtils.writeGameProfile(nbt, player.getGameProfile());
-            this.entityData.set(DATA_PLAYER, Optional.of(nbt));
+            this.entityData.set(DATA_PLAYER, Optional.of(NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile())));
         }
     }
 
@@ -123,7 +117,7 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     public EntityType<?> getKey() {
-        return this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).get(this.entityData.get(DATA_ENTITY).orElseThrow());
+        return EntityType.byString(this.entityData.get(DATA_ENTITY)).orElseThrow();
     }
 
     public GameProfile getPlayer() {
@@ -138,7 +132,7 @@ public class SukunaEntity extends SorcererEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_ENTITY, Optional.empty());
+        this.entityData.define(DATA_ENTITY, "");
         this.entityData.define(DATA_PLAYER, Optional.empty());
     }
 
@@ -216,10 +210,8 @@ public class SukunaEntity extends SorcererEntity {
             pCompound.putInt("original", this.original.ordinal());
         }
 
-        this.entityData.get(DATA_ENTITY).ifPresent(entity ->
-                pCompound.putString("entity", entity.toString()));
-        this.entityData.get(DATA_PLAYER).ifPresent(player ->
-                pCompound.put("player", player));
+        pCompound.putString("entity",  this.entityData.get(DATA_ENTITY));
+        this.entityData.get(DATA_PLAYER).ifPresent(player -> pCompound.put("player", player));
     }
 
     @Override
@@ -237,9 +229,8 @@ public class SukunaEntity extends SorcererEntity {
             this.original = GameType.values()[pCompound.getInt("original")];
         }
 
-        if (pCompound.contains("entity")) {
-            this.entityData.set(DATA_ENTITY, Optional.of(new ResourceLocation(pCompound.getString("entity"))));
-        }
+        this.entityData.set(DATA_ENTITY, pCompound.getString("entity"));
+
         if (pCompound.contains("player")) {
             this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
         }
