@@ -1445,7 +1445,10 @@ public class SorcererData implements ISorcererData {
     @Override
     public List<AbsorbedCurse> getCurses() {
         if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return List.of();
-        return this.curses;
+
+        List<AbsorbedCurse> sorted = new ArrayList<>(this.curses);
+        sorted.sort((o1, o2) -> (int) (JJKAbilities.getCurseExperience(o2) - JJKAbilities.getCurseExperience(o1)));
+        return sorted;
     }
 
     @Override

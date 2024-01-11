@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.capability.data;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +14,6 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.*;
 
@@ -297,7 +295,7 @@ public interface ISorcererData {
 
     void removeCurse(AbsorbedCurse curse);
 
-    List<AbsorbedCurse> getCurses();
+    Object getCurses();
 
     boolean hasCurse(AbsorbedCurse curse);
 
