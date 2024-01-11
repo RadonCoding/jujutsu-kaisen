@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
@@ -306,6 +307,10 @@ public abstract class RadialScreen extends Screen {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
                             JJKAbilities.getCurseCost(this.minecraft.player, item.curse.getKey()));
                     lines.add(costText);
+
+                    Component experienceText = Component.translatable(String.format("gui.%s.ability_overlay.experience", JujutsuKaisen.MOD_ID),
+                            JJKAbilities.getCurseExperience(item.curse.getKey()));
+                    lines.add(experienceText);
                 }
 
                 int x = this.width / 2;

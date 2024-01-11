@@ -227,13 +227,15 @@ public class JJKAbilities {
                 (CursedSpirit) curse.getType().create(owner.level());
     }
 
-    public static float getCurseCost(LivingEntity owner, AbsorbedCurse curse) {
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
+    public static float getCurseExperience(AbsorbedCurse curse) {
         ISorcererData curseCap = new SorcererData();
         curseCap.deserializeNBT(curse.getData());
+        return curseCap.getExperience();
+    }
 
-        return (curseCap.getExperience() * 0.1F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+    public static float getCurseCost(LivingEntity owner, AbsorbedCurse curse) {
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return (getCurseExperience(curse) * 0.1F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
     }
 
     public static void summonCurse(LivingEntity owner, int index) {
