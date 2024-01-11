@@ -189,6 +189,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
     public static RegistryObject<Ability> RELEASE_CURSES = ABILITIES.register("release_curses", ReleaseCurses::new);
+    public static RegistryObject<Ability> SUMMON_ALL = ABILITIES.register("summon_all", SummonAll::new);
     public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
@@ -240,12 +241,11 @@ public class JJKAbilities {
         return curseCap.getExperience();
     }
 
-    public static float getCurseCost(LivingEntity owner, AbsorbedCurse curse) {
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return (getCurseExperience(curse) * 0.01F) * (ownerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+    public static float getCurseCost(AbsorbedCurse curse) {
+        return getCurseExperience(curse) * 0.01F;
     }
 
-    public static void summonCurse(LivingEntity owner, int index) {
+    public static void summonCurse(LivingEntity owner, int index, boolean charge) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -256,13 +256,15 @@ public class JJKAbilities {
 
         AbsorbedCurse curse = curses.get(index);
 
-        float cost = getCurseCost(owner, curse);
+        if (charge) {
+            float cost = getCurseCost(curse);
 
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            if (ownerCap.getEnergy() < cost) {
-                return;
+            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                if (ownerCap.getEnergy() < cost) {
+                    return;
+                }
+                ownerCap.useEnergy(cost);
             }
-            ownerCap.useEnergy(cost);
         }
 
         CursedSpirit entity = createCurse(owner.level(), curse);

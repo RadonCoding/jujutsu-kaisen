@@ -305,7 +305,7 @@ public abstract class RadialScreen extends Screen {
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                            JJKAbilities.getCurseCost(this.minecraft.player, item.curse.getKey()));
+                            JJKAbilities.getCurseCost(item.curse.getKey()));
                     lines.add(costText);
 
                     Component experienceText = Component.translatable(String.format("gui.%s.ability_overlay.experience", JujutsuKaisen.MOD_ID),

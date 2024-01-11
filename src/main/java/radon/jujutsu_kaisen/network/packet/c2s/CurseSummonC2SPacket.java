@@ -31,7 +31,7 @@ public class CurseSummonC2SPacket {
 
             assert sender != null;
 
-            JJKAbilities.summonCurse(sender, this.index);
+            JJKAbilities.summonCurse(sender, this.index, true);
         });
         ctx.setPacketHandled(true);
     }
