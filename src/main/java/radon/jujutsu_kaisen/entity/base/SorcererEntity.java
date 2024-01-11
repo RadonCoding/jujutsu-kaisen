@@ -13,9 +13,11 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -66,6 +68,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         int target = 1;
         int goal = 1;
 
+        this.goalSelector.addGoal(goal++, new AvoidProjectilesGoal(this, 16.0F, 1.0D, 1.1D));
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
 
         if (this.hasMeleeAttack()) {

@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.ai.goal.AvoidProjectilesGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
@@ -100,20 +101,6 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
                 this.moveControl.setWantedPosition(target.getX(), target.getY() + (this.getBbHeight() * 3.0F), target.getZ(), this.getFlyingSpeed());
             }
         }
-    }
-
-    @Override
-    protected void registerGoals() {
-        int goal = 1;
-        int target = 1;
-
-        this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
-        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 12.5F, true));
-        this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
     }
 
     @Override

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.entity.ai.goal.AvoidProjectilesGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
@@ -188,6 +189,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         int goal = 1;
         int target = 1;
 
+        this.goalSelector.addGoal(goal++, new AvoidProjectilesGoal(this, 16.0F, 1.0D, 1.1D));
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));

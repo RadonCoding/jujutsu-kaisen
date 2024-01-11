@@ -85,13 +85,6 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
-            if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
-                event.setSpawnCancelled(true);
-            }
-        }
-
-        @SubscribeEvent
         public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
             if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
@@ -246,24 +239,6 @@ public class JJKEventHandler {
 
                 if (!cursed) {
                     event.setCanceled(true);
-                    return;
-                }
-            }
-
-            // Checks to prevent tamed creatures from attacking their owners and owners from attacking their tames
-            if (attacker instanceof TamableAnimal tamable1 && attacker instanceof ISorcerer) {
-                if (tamable1.isTame() && tamable1.getOwner() == victim) {
-                    event.setCanceled(true);
-                } else if (victim instanceof TamableAnimal tamable2 && victim instanceof ISorcerer) {
-                    // Prevent tames with the same owner from attacking each other
-                    if (!tamable1.is(tamable2) && tamable1.isTame() && tamable2.isTame() && tamable1.getOwner() == tamable2.getOwner()) {
-                        event.setCanceled(true);
-                    }
-                }
-            } else if (victim instanceof TamableAnimal tamable && victim instanceof ISorcerer) {
-                // Prevent the owner from attacking the tame
-                if (tamable.isTame() && tamable.getOwner() == attacker) {
-                    event.setCanceled(true);
                 }
             }
         }
@@ -275,24 +250,6 @@ public class JJKEventHandler {
             if (victim.level().isClientSide) return;
 
             DamageSource source = event.getSource();
-
-            if (victim instanceof ISorcerer sorcerer && sorcerer.canPerformSorcery()) {
-                if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                    if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
-                    }
-
-                    if (!JJKAbilities.isChanneling(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
-                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
-                    }
-
-                    if (source instanceof JJKDamageSources.JujutsuDamageSource) {
-                        if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            AbilityHandler.trigger(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get());
-                        }
-                    }
-                }
-            }
 
             // Your own cursed energy doesn't do as much damage
             if (source instanceof JJKDamageSources.JujutsuDamageSource) {
@@ -427,34 +384,6 @@ public class JJKEventHandler {
                 // Handling removal of absorbed techniques from curse manipulation
                 if (technique != null && cap.getAbsorbed().contains(technique)) {
                     cap.unabsorb(technique);
-                }
-            }
-
-            // Sukuna has multiple arms
-            if (owner instanceof HeianSukunaEntity entity && ability == JJKAbilities.BARRAGE.get()) {
-                entity.setBarrage(Barrage.DURATION * 2);
-            }
-
-            // Making mobs use chants
-            if (owner.level() instanceof ServerLevel level) {
-                if (owner instanceof Mob) {
-                    List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
-
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy()) * cap.getMaximumOutput()))) == 0) {
-                        for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
-                            ChantHandler.onChant(owner, chants.get(i));
-
-                            for (ServerPlayer player : level.players()) {
-                                if (player.distanceTo(owner) > 32.0D) continue;
-
-                                ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
-
-                                if (key != null) {
-                                    player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
