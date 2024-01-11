@@ -11,7 +11,7 @@ import java.util.List;
 public class DisplayItem {
     public final Type type;
     public Ability ability;
-    public AbsorbedCurse curse;
+    public AbstractMap.SimpleEntry<AbsorbedCurse, Integer> curse;
     public CursedTechnique copied;
     public CursedTechnique absorbed;
 
@@ -25,10 +25,10 @@ public class DisplayItem {
         this.ability = ability;
     }
 
-    public DisplayItem(AbsorbedCurse curse) {
+    public DisplayItem(AbsorbedCurse curse, int index) {
         this(Type.CURSE);
 
-        this.curse = curse;
+        this.curse = new AbstractMap.SimpleEntry<>(curse, index);
     }
 
     public DisplayItem(Type type, CursedTechnique technique) {

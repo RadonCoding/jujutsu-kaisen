@@ -36,7 +36,7 @@ public class AbilityScreen extends RadialScreen {
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
         List<AbsorbedCurse> curses = cap.getCurses();
-        items.addAll(curses.stream().map(DisplayItem::new).toList());
+        items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
 
         Set<CursedTechnique> copied = cap.getCopied();
         items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
@@ -71,9 +71,7 @@ public class AbilityScreen extends RadialScreen {
                         }
                     }
                 }
-                case CURSE -> {
-                    PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.serializeNBT()));
-                }
+                case CURSE -> PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
                 case COPIED -> {
                     PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
                     cap.setCurrentCopied(item.copied);

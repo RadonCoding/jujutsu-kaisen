@@ -303,13 +303,9 @@ public abstract class RadialScreen extends Screen {
                         }
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
-                    CursedSpirit curse = JJKAbilities.createCurse(this.minecraft.player, item.curse);
-
-                    if (curse != null) {
-                        Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                                JJKAbilities.getCurseCost(this.minecraft.player, curse));
-                        lines.add(costText);
-                    }
+                    Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
+                            JJKAbilities.getCurseCost(this.minecraft.player, item.curse));
+                    lines.add(costText);
                 }
 
                 int x = this.width / 2;
