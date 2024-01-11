@@ -118,9 +118,9 @@ public class JJKEntities {
                     .sized(1.6F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
                             .toString()));
-    public static RegistryObject<EntityType<AbsorbedCurseEntity>> ABSORBED_CURSE = ENTITIES.register("absorbed_curse", () ->
-            EntityType.Builder.<AbsorbedCurseEntity>of(AbsorbedCurseEntity::new, MobCategory.AMBIENT)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_curse")
+    public static RegistryObject<EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
+            EntityType.Builder.<AbsorbedPlayerEntity>of(AbsorbedPlayerEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
                             .toString()));
 
     public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
@@ -513,7 +513,7 @@ public class JJKEntities {
         event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
-        event.put(ABSORBED_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 
         event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());

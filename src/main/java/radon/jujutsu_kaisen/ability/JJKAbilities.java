@@ -55,7 +55,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.curse.AbsorbedCurseEntity;
+import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -223,7 +223,7 @@ public class JJKAbilities {
     }
 
     public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
-        return curse.getType() == EntityType.PLAYER ? new AbsorbedCurseEntity(owner, curse.getProfile()) :
+        return curse.getType() == EntityType.PLAYER ? new AbsorbedPlayerEntity(owner, curse.getProfile()) :
                 (CursedSpirit) curse.getType().create(owner.level());
     }
 

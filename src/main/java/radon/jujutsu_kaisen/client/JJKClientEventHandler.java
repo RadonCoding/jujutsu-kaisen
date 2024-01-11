@@ -9,9 +9,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -432,7 +430,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.ABSORBED_CURSE.get(), AbsorbedCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntity::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
 

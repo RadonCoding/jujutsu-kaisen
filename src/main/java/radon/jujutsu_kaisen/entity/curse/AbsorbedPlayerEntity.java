@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,15 +22,15 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.Optional;
 
-public class AbsorbedCurseEntity extends CursedSpirit {
-    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(AbsorbedCurseEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
+public class AbsorbedPlayerEntity extends CursedSpirit {
+    private static final EntityDataAccessor<Optional<CompoundTag>> DATA_PLAYER = SynchedEntityData.defineId(AbsorbedPlayerEntity.class, JJKEntityDataSerializers.OPTIONAL_COMPOUND_TAG.get());
 
-    public AbsorbedCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
+    public AbsorbedPlayerEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public AbsorbedCurseEntity(LivingEntity owner, @Nullable GameProfile profile) {
-        super(JJKEntities.ABSORBED_CURSE.get(), owner.level());
+    public AbsorbedPlayerEntity(LivingEntity owner, @Nullable GameProfile profile) {
+        super(JJKEntities.ABSORBED_PLAYER.get(), owner.level());
 
         this.setTame(true);
         this.setOwner(owner);
