@@ -11,25 +11,17 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
-import radon.jujutsu_kaisen.client.layer.SukunaMarkingsLayer;
-import radon.jujutsu_kaisen.entity.curse.AbsorbedCurseEntity;
-import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
-import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
 
-public class AbsorbedCurseRenderer extends HumanoidMobRenderer<AbsorbedCurseEntity, PlayerModel<AbsorbedCurseEntity>> {
-    private final PlayerModel<AbsorbedCurseEntity> normal;
-    private final PlayerModel<AbsorbedCurseEntity> slim;
+public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity, PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity>> {
+    private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> normal;
+    private final PlayerModel<radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity> slim;
 
-    public AbsorbedCurseRenderer(EntityRendererProvider.Context pContext) {
+    public AbsorbedPlayerEntity(EntityRendererProvider.Context pContext) {
         super(pContext, null, 0.5F);
 
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(pContext.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
@@ -41,7 +33,7 @@ public class AbsorbedCurseRenderer extends HumanoidMobRenderer<AbsorbedCurseEnti
     }
 
     @Override
-    public void render(@NotNull AbsorbedCurseEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(@NotNull radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         Minecraft mc = Minecraft.getInstance();
 
         assert mc.level != null;
@@ -55,7 +47,7 @@ public class AbsorbedCurseRenderer extends HumanoidMobRenderer<AbsorbedCurseEnti
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull AbsorbedCurseEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity pEntity) {
         GameProfile profile = pEntity.getPlayer();
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
         PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
