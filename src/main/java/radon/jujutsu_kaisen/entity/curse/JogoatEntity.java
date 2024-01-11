@@ -60,7 +60,7 @@ public class JogoatEntity extends CursedSpirit {
 
     @Override
     public float getExperience() {
-        return Float.POSITIVE_INFINITY;
+        return 1000000.0F;
     }
 
     @Override
