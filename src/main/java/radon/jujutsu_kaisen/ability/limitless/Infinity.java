@@ -288,7 +288,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                             KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
                         Optional<UUID> identifier = curse.getCurrent();
                         if (identifier.isEmpty()) continue;
-                        if (identifier.get().equals(target.getUUID())) return;
+                        if (identifier.get() == target.getUUID()) return;
                     }
                 }
 
