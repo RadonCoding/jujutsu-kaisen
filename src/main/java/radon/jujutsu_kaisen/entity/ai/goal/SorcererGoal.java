@@ -57,8 +57,7 @@ public class SorcererGoal extends Goal {
                 List<AbsorbedCurse> curses = cap.getCurses();
 
                 if (!curses.isEmpty()) {
-                    AbsorbedCurse curse = curses.get(HelperMethods.RANDOM.nextInt(curses.size()));
-                    JJKAbilities.summonCurse(this.mob, curse);
+                    JJKAbilities.summonCurse(this.mob, HelperMethods.RANDOM.nextInt(curses.size()));
                 }
             }
 
