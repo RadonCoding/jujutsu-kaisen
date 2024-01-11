@@ -304,7 +304,7 @@ public abstract class RadialScreen extends Screen {
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                            JJKAbilities.getCurseCost(this.minecraft.player, item.curse));
+                            JJKAbilities.getCurseCost(this.minecraft.player, item.curse.getKey()));
                     lines.add(costText);
                 }
 
@@ -319,7 +319,7 @@ public abstract class RadialScreen extends Screen {
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
                 Entity entity = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
-                        JJKAbilities.createCurse(this.minecraft.player, item.curse);
+                        JJKAbilities.createCurse(this.minecraft.player, item.curse.getKey());
 
                 if (entity == null) continue;
 
