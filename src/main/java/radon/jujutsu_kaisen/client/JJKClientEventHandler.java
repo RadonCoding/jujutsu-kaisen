@@ -421,6 +421,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
             event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
             event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
             event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);

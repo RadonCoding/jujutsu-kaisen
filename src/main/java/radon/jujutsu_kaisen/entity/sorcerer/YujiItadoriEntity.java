@@ -38,11 +38,17 @@ public class YujiItadoriEntity extends SorcererEntity {
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
             ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-
             int count = stack.getCount();
-            stack.shrink(cap.addFingers(count));
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            int eaten = cap.addFingers(count);
+
+            if (eaten > 0) {
+                this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+                stack.shrink(eaten);
+
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
+            }
+            return InteractionResult.FAIL;
         } else {
             return super.mobInteract(pPlayer, pHand);
         }

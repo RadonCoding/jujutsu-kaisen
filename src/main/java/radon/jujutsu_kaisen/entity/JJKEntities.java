@@ -64,6 +64,10 @@ public class JJKEntities {
                     .sized(0.9F, 1.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
                             .toString()));
+    public static RegistryObject<EntityType<JogoatEntity>> JOGOAT = ENTITIES.register("jogoat", () ->
+            EntityType.Builder.<JogoatEntity>of(JogoatEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogoat")
+                            .toString()));
     public static RegistryObject<EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
             EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.AMBIENT)
                     .sized(1.4F, 3.0F)
@@ -493,6 +497,7 @@ public class JJKEntities {
         event.put(AGITO.get(), AgitoEntity.createAttributes().build());
 
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
+        event.put(JOGOAT.get(), SorcererEntity.createAttributes().build());
         event.put(DAGON.get(), SorcererEntity.createAttributes().build());
         event.put(HANAMI.get(), SorcererEntity.createAttributes().build());
 

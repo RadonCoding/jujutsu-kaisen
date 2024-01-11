@@ -32,6 +32,7 @@ import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -751,7 +752,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void setExperience(float experience) {
-        this.experience = Math.min(ConfigHolder.SERVER.maximumExperienceAmount.get().floatValue(), experience);
+        this.experience = experience;
         this.sync();
     }
 
