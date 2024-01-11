@@ -72,13 +72,16 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             if (victim.level().isClientSide) return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+            if (!victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
 
             if (source.getEntity() instanceof LivingEntity attacker) {
+                if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
                 if (HelperMethods.isMelee(source)) {
-                    if (JJKAbilities.hasTrait(attacker, Trait.VESSEL) || JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    if ((attackerCap.hasTrait(Trait.VESSEL) && attackerCap.getFingers() > 0) || attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                         return;
                     }
                 }
@@ -90,9 +93,9 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                 if (domain.getOwner() == source.getEntity()) return;
             }
 
-            float cost = event.getAmount() * 2.0F * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-            if (cap.getEnergy() < cost) return;
-            cap.useEnergy(cost);
+            float cost = event.getAmount() * 2.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            if (victimCap.getEnergy() < cost) return;
+            victimCap.useEnergy(cost);
 
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
@@ -104,7 +107,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             }
 
             if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
             }
             event.setCanceled(true);
         }
