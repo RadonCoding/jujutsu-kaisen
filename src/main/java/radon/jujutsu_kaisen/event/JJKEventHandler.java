@@ -276,10 +276,14 @@ public class JJKEventHandler {
 
             DamageSource source = event.getSource();
 
-            if (victim instanceof ISorcerer) {
+            if (victim instanceof ISorcerer sorcerer && sorcerer.canPerformSorcery()) {
                 if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
                     if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                         AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());
+                    }
+
+                    if (!JJKAbilities.isChanneling(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get())) {
+                        AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get());
                     }
 
                     if (source instanceof JJKDamageSources.JujutsuDamageSource) {

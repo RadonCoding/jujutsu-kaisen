@@ -16,9 +16,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 public class CursedEnergyShield extends Ability implements Ability.IChannelened {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return !JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) &&
-                owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))
-                        .stream().anyMatch(entity -> entity.getOwner() != owner);
+        return false;
     }
 
     @Override
