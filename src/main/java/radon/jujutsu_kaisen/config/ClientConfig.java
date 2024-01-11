@@ -9,7 +9,7 @@ public class ClientConfig {
     public ClientConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Settings").push("settings");
         this.meleeMenuType = builder.comment("The melee menu type")
-                .defineEnum("meleeMenuType", MeleeMenuType.TOGGLED);
+                .defineEnum("meleeMenuType", MeleeMenuType.TOGGLE);
         builder.pop();
     }
 }
