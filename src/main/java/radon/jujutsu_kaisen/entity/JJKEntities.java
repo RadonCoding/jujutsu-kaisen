@@ -427,12 +427,12 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<NueEntity>> NUE = ENTITIES.register("nue", () ->
             EntityType.Builder.<NueEntity>of(NueEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 1.8F)
+                    .sized(0.875F, 2.625F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue")
                             .toString()));
     public static RegistryObject<EntityType<NueTotalityEntity>> NUE_TOTALITY = ENTITIES.register("nue_totality", () ->
             EntityType.Builder.<NueTotalityEntity>of(NueTotalityEntity::new, MobCategory.MISC)
-                    .sized(5.6F, 7.2F)
+                    .sized(3.5F, 10.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue_totality")
                             .toString()));
     public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
