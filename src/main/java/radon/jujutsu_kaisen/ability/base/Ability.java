@@ -96,6 +96,7 @@ public abstract class Ability {
 
     public boolean canUnlock(LivingEntity owner) {
         if (owner instanceof Player player && player.getAbilities().instabuild) return true;
+        if (!this.isUnlockable()) return false;
         if (this.isBlocked(owner)) return false;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
