@@ -105,7 +105,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<WormCurseEntity>> WORM_CURSE = ENTITIES.register("worm_curse", () ->
             EntityType.Builder.<WormCurseEntity>of(WormCurseEntity::new, MobCategory.AMBIENT)
-                    .sized(0.9375F, 1.0F)
+                    .sized(1.1875F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse")
                             .toString()));
     public static RegistryObject<EntityType<FelineCurseEntity>> FELINE_CURSE = ENTITIES.register("feline_curse", () ->
