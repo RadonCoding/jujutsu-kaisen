@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.curse.CyclopsCurseEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -42,6 +43,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     private static final RawAnimation FLY_1 = RawAnimation.begin().thenLoop("move.fly_1");
     private static final RawAnimation FLY_2 = RawAnimation.begin().thenLoop("move.fly_2");
     private static final RawAnimation FLY_3 = RawAnimation.begin().thenLoop("move.fly_3");
+    private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation FLIGHT_FEET = RawAnimation.begin().thenLoop("misc.flight_feet");
     private static final RawAnimation GRAB_FEET = RawAnimation.begin().thenLoop("misc.grab_feet");
 
@@ -145,13 +147,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.entityData.set(DATA_FLIGHT, flight.ordinal());
     }
 
-    private PlayState feetPredicate(AnimationState<NueEntity> animationState) {
-        if (this.isVehicle()) {
-            return animationState.setAndContinue(GRAB_FEET);
-        }
-        return animationState.setAndContinue(FLIGHT_FEET);
-    }
-
     private PlayState flyIdlePredicate(AnimationState<NueEntity> animationState) {
         if (animationState.isMoving()) {
             return switch (this.getFlight()) {
@@ -164,9 +159,25 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         }
     }
 
+    private PlayState swingPredicate(AnimationState<NueEntity> animationState) {
+        if (this.swinging) {
+            return animationState.setAndContinue(SWING);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
+    private PlayState feetPredicate(AnimationState<NueEntity> animationState) {
+        if (this.isVehicle()) {
+            return animationState.setAndContinue(GRAB_FEET);
+        }
+        return animationState.setAndContinue(FLIGHT_FEET);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", this::flyIdlePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 

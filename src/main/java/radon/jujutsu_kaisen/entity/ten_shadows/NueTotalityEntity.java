@@ -49,6 +49,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     private static final RawAnimation FLY_1 = RawAnimation.begin().thenLoop("move.fly_1");
     private static final RawAnimation FLY_2 = RawAnimation.begin().thenLoop("move.fly_2");
     private static final RawAnimation FLY_3 = RawAnimation.begin().thenLoop("move.fly_3");
+    private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation FLIGHT_FEET = RawAnimation.begin().thenLoop("misc.flight_feet");
     private static final RawAnimation GRAB_FEET = RawAnimation.begin().thenLoop("misc.grab_feet");
 
@@ -179,6 +180,14 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         return animationState.setAndContinue(FLIGHT_FEET);
     }
 
+    private PlayState swingPredicate(AnimationState<NueTotalityEntity> animationState) {
+        if (this.swinging) {
+            return animationState.setAndContinue(SWING);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
     private PlayState flyIdlePredicate(AnimationState<NueTotalityEntity> animationState) {
         if (animationState.isMoving()) {
             return switch (this.getFlight()) {
@@ -194,6 +203,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", this::flyIdlePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 
