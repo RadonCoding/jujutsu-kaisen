@@ -115,7 +115,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<RainbowDragonEntity>> RAINBOW_DRAGON = ENTITIES.register("rainbow_dragon", () ->
             EntityType.Builder.<RainbowDragonEntity>of(RainbowDragonEntity::new, MobCategory.AMBIENT)
-                    .sized(2.5F, 1.0625F)
+                    .sized(2.0625F, 1.0625F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
                             .toString()));
     public static RegistryObject<EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
