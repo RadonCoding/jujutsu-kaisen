@@ -12,12 +12,12 @@
 			},
 			"bones": [
 				{
-					"name": "dragon",
+					"name": "body",
 					"pivot": [0, -16, -18.48861]
 				},
 				{
 					"name": "head",
-					"parent": "dragon",
+					"parent": "body",
 					"pivot": [0, 10.35262, 9.75453],
 					"rotation": [0, 0, 0]
 				},
