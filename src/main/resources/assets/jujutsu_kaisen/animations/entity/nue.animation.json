@@ -976,6 +976,19 @@
 							"vector": [0, 0, 0]
 						}
 					}
+				},
+				"body": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		}
