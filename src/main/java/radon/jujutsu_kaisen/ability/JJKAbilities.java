@@ -261,7 +261,7 @@ public class JJKAbilities {
     }
 
     public static float getCurseCost(AbsorbedCurse curse) {
-        return getCurseExperience(curse) * 0.01F;
+        return Math.max(1.0F, getCurseExperience(curse) * 0.01F);
     }
 
     public static void summonCurse(LivingEntity owner, int index, boolean charge) {
