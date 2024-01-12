@@ -84,22 +84,32 @@ public class MiniUzumakiProjectile extends JujutsuProjectile implements GeoEntit
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        CursedSpirit current = null;
+        Entity weakest = null;
 
-        for (Entity entity : cap.getSummons()) {
-            if (!(entity instanceof CursedSpirit curse)) continue;
+        for (Entity current : ownerCap.getSummons()) {
+            if (!(current instanceof CursedSpirit)) continue;
 
-            if (current == null || curse.getGrade().ordinal() < current.getGrade().ordinal()) current = curse;
+            if (weakest == null) {
+                weakest = current;
+                continue;
+            }
+
+            ISorcererData weakestCap = weakest.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData currentCap = current.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (SorcererUtil.getGrade(currentCap.getExperience()).ordinal() < SorcererUtil.getGrade(weakestCap.getExperience()).ordinal()) weakest = current;
         }
 
-        if (current != null) {
-            this.power = SorcererUtil.getPower(current.getExperience());
+        if (weakest != null) {
+            ISorcererData weakestCap = weakest.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (current.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && current.getTechnique() != null) cap.absorb(current.getTechnique());
+            this.power = SorcererUtil.getPower(weakestCap.getExperience());
 
-            current.discard();
+            if (SorcererUtil.getGrade(weakestCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && weakestCap.getTechnique() != null) ownerCap.absorb(weakestCap.getTechnique());
+
+            weakest.discard();
         }
     }
 
