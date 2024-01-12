@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -50,16 +51,18 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (Entity entity : cap.getSummons()) {
+        for (Entity entity : ownerCap.getSummons()) {
             if (this.power == MAX_POWER) break;
-            if (!(entity instanceof CursedSpirit curse)) continue;
+            if (!(entity instanceof CursedSpirit)) continue;
 
-            if (curse.getGrade().ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curse.getTechnique() != null) cap.absorb(curse.getTechnique());
+            ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curse.getExperience()));
-            curse.discard();
+            if (SorcererUtil.getGrade(curseCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curseCap.getTechnique() != null) ownerCap.absorb(curseCap.getTechnique());
+
+            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curseCap.getExperience()));
+            entity.discard();
         }
     }
 
