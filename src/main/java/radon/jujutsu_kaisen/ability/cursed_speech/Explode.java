@@ -83,10 +83,6 @@ public class Explode extends Ability {
         return 20 * 20;
     }
 
-
-
-
-
     @Override
     public Classification getClassification() {
         return Classification.CURSED_SPEECH;
