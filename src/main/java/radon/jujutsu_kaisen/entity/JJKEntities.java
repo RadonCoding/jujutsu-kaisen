@@ -437,7 +437,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
             EntityType.Builder.<GreatSerpentEntity>of(GreatSerpentEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 0.8F)
+                    .sized(0.9375F, 0.8125F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
                             .toString()));
     public static RegistryObject<EntityType<MaxElephantEntity>> MAX_ELEPHANT = ENTITIES.register("max_elephant", () ->
