@@ -144,7 +144,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
 
             diff = diff.add(idealX, idealY, idealZ).normalize();
 
-            double f = i == 0 ? 1.271D : 0.9D;
+            double f = leader.getBbWidth();
 
             double destX = followX + f * diff.x;
             double destY = followY + f * diff.y;

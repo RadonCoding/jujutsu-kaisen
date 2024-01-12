@@ -25,7 +25,7 @@ public class RainbowDragonSegmentEntity extends JJKPartEntity<RainbowDragonEntit
     public RainbowDragonSegmentEntity(RainbowDragonEntity parent, int index) {
         super(parent);
 
-        this.setSize(EntityDimensions.fixed(1.2F, 1.0F));
+        this.setSize(EntityDimensions.fixed(1.0F, 1.0F));
 
         this.entityData.set(DATA_INDEX, index);
     }

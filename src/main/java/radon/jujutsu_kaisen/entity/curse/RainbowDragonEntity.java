@@ -153,7 +153,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
             diff = diff.add(idealX, idealY, idealZ).normalize();
 
-            double f = i == 0 ? 0.7D : 1.04D;
+            double f = leader.getBbWidth();
 
             double destX = followX + f * diff.x;
             double destY = followY + f * diff.y;
