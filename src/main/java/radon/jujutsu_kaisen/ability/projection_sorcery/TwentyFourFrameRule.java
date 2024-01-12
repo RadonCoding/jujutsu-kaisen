@@ -101,6 +101,11 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
         return true;
     }
 
+    @Override
+    public Classification getClassification() {
+        return Classification.PROJECTION;
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class TwentyFourFrameRuleForgeEvents {
         @SubscribeEvent

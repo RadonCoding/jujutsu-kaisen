@@ -54,6 +54,11 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
     }
 
+    @Override
+    public Classification getClassification() {
+        return Classification.BLUE;
+    }
+
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BlueFistsForgeEvents {
         @SubscribeEvent

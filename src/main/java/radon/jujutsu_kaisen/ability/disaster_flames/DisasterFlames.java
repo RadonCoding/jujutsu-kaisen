@@ -98,4 +98,9 @@ public class DisasterFlames extends Ability {
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.FLAMES;
+    }
 }

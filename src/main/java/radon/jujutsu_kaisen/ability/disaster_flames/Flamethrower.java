@@ -84,4 +84,9 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.FLAMES;
+    }
 }

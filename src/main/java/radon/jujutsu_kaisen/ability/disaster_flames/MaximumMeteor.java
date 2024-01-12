@@ -63,4 +63,9 @@ public class MaximumMeteor extends Ability {
         }
         return super.isTriggerable(owner);
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.FLAMES;
+    }
 }

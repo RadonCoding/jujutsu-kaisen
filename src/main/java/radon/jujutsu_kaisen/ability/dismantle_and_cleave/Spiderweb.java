@@ -106,8 +106,6 @@ public class Spiderweb extends Ability {
         return 5 * 20;
     }
 
-
-
     @Override
     public Classification getClassification() {
         return Classification.SLASHING;

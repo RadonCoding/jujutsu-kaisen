@@ -77,10 +77,6 @@ public class DismantleNet extends Ability {
         return 15 * 20;
     }
 
-
-
-
-
     @Override
     public Classification getClassification() {
         return Classification.SLASHING;

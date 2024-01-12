@@ -44,4 +44,9 @@ public class FireBeam extends Ability {
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.FLAMES;
+    }
 }

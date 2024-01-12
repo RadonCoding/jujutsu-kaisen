@@ -79,4 +79,9 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.PLANTS;
+    }
 }
