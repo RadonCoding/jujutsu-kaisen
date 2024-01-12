@@ -324,7 +324,7 @@ public abstract class RadialScreen extends Screen {
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
                 Entity entity = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
-                        JJKAbilities.createCurse(this.minecraft.level, item.curse.getKey());
+                        JJKAbilities.createCurse(this.minecraft.player, item.curse.getKey());
 
                 if (entity == null) continue;
 

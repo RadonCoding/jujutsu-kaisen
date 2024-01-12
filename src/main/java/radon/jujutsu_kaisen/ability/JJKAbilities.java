@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -230,9 +231,27 @@ public class JJKAbilities {
         return cap.hasToggled(ability);
     }
 
-    public static CursedSpirit createCurse(Level level, AbsorbedCurse curse) {
-        return curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(level) :
-                (CursedSpirit) curse.getType().create(level);
+    @Nullable
+    public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
+        CursedSpirit entity = curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
+                (CursedSpirit) curse.getType().create(owner.level());
+
+        if (entity == null) return null;
+
+        entity.setTame(true);
+        entity.setOwner(owner);
+
+        GameProfile profile = curse.getProfile();
+
+        if (profile != null && entity instanceof AbsorbedPlayerEntity absorbed) {
+            absorbed.setPlayer(profile);
+        }
+
+        Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
+                .multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+
+        return entity;
     }
 
     public static float getCurseExperience(AbsorbedCurse curse) {
@@ -267,22 +286,9 @@ public class JJKAbilities {
             }
         }
 
-        CursedSpirit entity = createCurse(owner.level(), curse);
+        CursedSpirit entity = createCurse(owner, curse);
 
         if (entity == null) return;
-
-        entity.setTame(true);
-        entity.setOwner(owner);
-
-        GameProfile profile = curse.getProfile();
-
-        if (profile != null && entity instanceof AbsorbedPlayerEntity absorbed) {
-            absorbed.setPlayer(profile);
-        }
-
-        Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                .multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
         ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         curseCap.deserializeNBT(curse.getData());
