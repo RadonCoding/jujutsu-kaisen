@@ -175,23 +175,12 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 this.level().addParticle(ParticleTypes.FLAME, this.getX(), this.getY() + (this.getBbHeight() / 2.0F), this.getZ(), dx, dy, dz);
             }
             if (this.getTime() < DELAY) {
-                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                double d0 = look.horizontalDistance();
-                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-                this.yRotO = this.getYRot();
-                this.xRotO = this.getXRot();
-
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
-                    }
-                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                            .add(RotationUtil.getTargetAdjustedLookAngle(owner));
-                    this.setPos(spawn.x, spawn.y, spawn.z);
+                if (this.getTime() % 5 == 0) {
+                    owner.swing(InteractionHand.MAIN_HAND);
                 }
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+                this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
             } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
