@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class ToadTongueProjectile extends JujutsuProjectile {
     public static final float SPEED = 2.0F;
-    private static final double PULL_STRENGTH = 0.5D;
+    private static final int DURATION = 3 * 20;
 
     private int range;
     private UUID target;
@@ -95,13 +95,17 @@ public class ToadTongueProjectile extends JujutsuProjectile {
 
         if (this.level().isClientSide || owner == null) return;
 
+        if (this.getTime() >= DURATION) {
+            this.discard();
+            return;
+        }
+
         if (this.grabbed) {
             if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
                 if (!(owner instanceof ToadEntity toad) || toad.getTarget() != living || living.isDeadOrDying() || living.isRemoved() || !owner.isAlive() || owner.isRemoved())
                     this.discard();
 
-                living.setDeltaMovement(this.pos.subtract(living.position()).normalize().scale(PULL_STRENGTH));
-                living.hurtMarked = true;
+                living.teleportTo(this.pos.x, this.pos.y, this.pos.z);
 
                 this.setPos(living.getX(), living.getY() + (living.getBbHeight() / 2.0F), living.getZ());
             } else {
