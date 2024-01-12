@@ -22,7 +22,6 @@ public class MalevolentShrineRenderer extends GeoEntityRenderer<MalevolentShrine
     @Override
     public void preRender(PoseStack poseStack, MalevolentShrineEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
-        float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
