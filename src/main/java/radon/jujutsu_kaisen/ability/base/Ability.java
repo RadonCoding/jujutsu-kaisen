@@ -47,10 +47,11 @@ public abstract class Ability {
         CURSED_SPEECH,
         SLASHING,
         FLAMES,
+        WATER,
+        PLANTS,
         BLUE,
-        RED,
-        PURPLE,
-        LIGHTNING
+        LIGHTNING,
+        PROJECTION
     }
 
     public static float getPower(Ability ability, LivingEntity owner) {

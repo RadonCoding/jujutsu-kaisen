@@ -104,4 +104,9 @@ public class Discharge extends Ability implements Ability.IChannelened, Ability.
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.LIGHTNING;
+    }
 }

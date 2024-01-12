@@ -71,4 +71,9 @@ public class DisasterPlant extends Ability {
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.PLANTS;
+    }
 }

@@ -37,5 +37,8 @@ public class Fireball extends Ability {
         return 30 * 20;
     }
 
-
+    @Override
+    public Classification getClassification() {
+        return Classification.FLAMES;
+    }
 }

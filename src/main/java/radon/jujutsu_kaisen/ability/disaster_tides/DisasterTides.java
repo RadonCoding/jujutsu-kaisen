@@ -37,5 +37,8 @@ public class DisasterTides extends Ability {
         return 100.0F;
     }
 
-
+    @Override
+    public Classification getClassification() {
+        return Classification.WATER;
+    }
 }

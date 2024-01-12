@@ -44,4 +44,9 @@ public class WaterTorrent extends Ability {
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
+
+    @Override
+    public Classification getClassification() {
+        return Classification.WATER;
+    }
 }
