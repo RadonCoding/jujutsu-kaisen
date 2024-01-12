@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -33,9 +36,14 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJumpInputListener {
+    private static final EntityDataAccessor<Integer> DATA_FLIGHT = SynchedEntityData.defineId(NueEntity.class, EntityDataSerializers.INT);
+
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
-    private static final RawAnimation SHOCK = RawAnimation.begin().thenPlay("attack.shock");
+    private static final RawAnimation FLY_1 = RawAnimation.begin().thenLoop("move.fly_1");
+    private static final RawAnimation FLY_2 = RawAnimation.begin().thenLoop("move.fly_2");
+    private static final RawAnimation FLY_3 = RawAnimation.begin().thenLoop("move.fly_3");
+    private static final RawAnimation FLIGHT_FEET = RawAnimation.begin().thenLoop("misc.flight_feet");
+    private static final RawAnimation GRAB_FEET = RawAnimation.begin().thenLoop("misc.grab_feet");
 
     private boolean jump;
 
@@ -57,6 +65,30 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_FLIGHT, 0);
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        LivingEntity passenger = this.getControllingPassenger();
+
+        Vec3 movement = passenger == null ? this.getDeltaMovement() : new Vec3(passenger.xxa, 0.0D, passenger.zza);
+
+        if (this.jump) {
+            this.setFlight(Flight.ASCEND);
+        } else if (movement.length() > 1.0D) {
+            this.setFlight(Flight.SPRINT);
+        } else {
+            this.setFlight(Flight.NORMAL);
+        }
     }
 
     @Override
@@ -86,7 +118,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isControlledByLocalInstance() ? 0.15F : 2.0F;
+        return this.getTarget() == null || this.isVehicle() ? 0.15F : 1.0F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -105,26 +137,37 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         return navigation;
     }
 
+    private Flight getFlight() {
+        return Flight.values()[this.entityData.get(DATA_FLIGHT)];
+    }
+
+    private void setFlight(Flight flight) {
+        this.entityData.set(DATA_FLIGHT, flight.ordinal());
+    }
+
+    private PlayState feetPredicate(AnimationState<NueEntity> animationState) {
+        if (this.isVehicle()) {
+            return animationState.setAndContinue(GRAB_FEET);
+        }
+        return animationState.setAndContinue(FLIGHT_FEET);
+    }
+
     private PlayState flyIdlePredicate(AnimationState<NueEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(FLY);
+            return switch (this.getFlight()) {
+                case ASCEND -> animationState.setAndContinue(FLY_1);
+                case SPRINT -> animationState.setAndContinue(FLY_2);
+                default -> animationState.setAndContinue(FLY_3);
+            };
         } else {
             return animationState.setAndContinue(IDLE);
         }
     }
 
-    private PlayState shockPredicate(AnimationState<NueEntity> animationState) {
-        if (this.swinging) {
-            return animationState.setAndContinue(SHOCK);
-        }
-        animationState.getController().forceAnimationReset();
-        return PlayState.STOP;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", this::flyIdlePredicate));
-        controllerRegistrar.add(new AnimationController<>(this, "Shock", this::shockPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
 
     @Override
@@ -242,5 +285,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         super.tick();
 
         this.refreshDimensions();
+    }
+
+    enum Flight {
+        ASCEND,
+        SPRINT,
+        NORMAL
     }
 }
