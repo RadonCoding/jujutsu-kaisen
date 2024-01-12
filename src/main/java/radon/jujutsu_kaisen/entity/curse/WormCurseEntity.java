@@ -125,7 +125,7 @@ public class WormCurseEntity extends CursedSpirit {
 
             diff = diff.add(idealX, idealY, idealZ).normalize();
 
-            double f = i == 0 ? 0.988D : 0.934D;
+            double f = leader.getBbWidth();
 
             double destX = followX + f * diff.x;
             double destY = followY + f * diff.y;

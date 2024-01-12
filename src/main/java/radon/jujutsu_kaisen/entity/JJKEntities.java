@@ -105,7 +105,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<WormCurseEntity>> WORM_CURSE = ENTITIES.register("worm_curse", () ->
             EntityType.Builder.<WormCurseEntity>of(WormCurseEntity::new, MobCategory.AMBIENT)
-                    .sized(1.0F, 0.8F)
+                    .sized(0.9375F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "worm_curse")
                             .toString()));
     public static RegistryObject<EntityType<FelineCurseEntity>> FELINE_CURSE = ENTITIES.register("feline_curse", () ->
@@ -115,7 +115,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<RainbowDragonEntity>> RAINBOW_DRAGON = ENTITIES.register("rainbow_dragon", () ->
             EntityType.Builder.<RainbowDragonEntity>of(RainbowDragonEntity::new, MobCategory.AMBIENT)
-                    .sized(1.6F, 1.0F)
+                    .sized(2.5F, 1.0625F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
                             .toString()));
     public static RegistryObject<EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
@@ -437,7 +437,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
             EntityType.Builder.<GreatSerpentEntity>of(GreatSerpentEntity::new, MobCategory.MISC)
-                    .sized(0.9375F, 0.8125F)
+                    .sized(1.4375F, 0.8125F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
                             .toString()));
     public static RegistryObject<EntityType<MaxElephantEntity>> MAX_ELEPHANT = ENTITIES.register("max_elephant", () ->
