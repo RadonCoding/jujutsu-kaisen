@@ -38,6 +38,8 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
+        if (HelperMethods.RANDOM.nextInt(10) != 0) return;
+
         Ability dismantle = JJKAbilities.DISMANTLE.get();
         ((IDomainAttack) dismantle).performBlock(owner, domain, pos);
     }
