@@ -314,34 +314,31 @@ public class JJKEventHandler {
                     }
                 }
 
+                if (victimCap.isUnlocked(JJKAbilities.RCT1.get())) return;
                 if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
-
                 if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
+                if (victimCap.getType() != JujutsuType.SORCERER) return;
+                if (SorcererUtil.getGrade(victimCap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) return;
 
                 int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
 
-                if (victimCap.getType() == JujutsuType.SORCERER) {
-                    for (InteractionHand hand : InteractionHand.values()) {
-                        ItemStack stack = victim.getItemInHand(hand);
+                for (InteractionHand hand : InteractionHand.values()) {
+                    ItemStack stack = victim.getItemInHand(hand);
 
-                        if (stack.is(Items.TOTEM_OF_UNDYING)) {
-                            chance /= 2;
-                        }
-                    }
-
-                    if (HelperMethods.RANDOM.nextInt(chance) == 0) {
-                        if (SorcererUtil.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal() &&
-                                !victimCap.isUnlocked(JJKAbilities.RCT1.get())) {
-                            victim.setHealth(victim.getMaxHealth() / 2);
-                            victimCap.unlock(JJKAbilities.RCT1.get());
-
-                            if (victim instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                            }
-                            event.setCanceled(true);
-                        }
+                    if (stack.is(Items.TOTEM_OF_UNDYING)) {
+                        chance /= 2;
                     }
                 }
+
+                if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
+
+                victim.setHealth(victim.getMaxHealth() / 2);
+                victimCap.unlock(JJKAbilities.RCT1.get());
+
+                if (victim instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                }
+                event.setCanceled(true);
             }
         }
 
