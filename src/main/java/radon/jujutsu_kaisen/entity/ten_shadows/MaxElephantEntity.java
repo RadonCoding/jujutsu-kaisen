@@ -216,7 +216,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            this.setSprinting(passenger.getDeltaMovement().lengthSqr() > 0.0D);
+            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
         } else {
             this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
         }
