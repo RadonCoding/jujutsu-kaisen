@@ -20,7 +20,7 @@ public class GreatSerpentSegmentEntity extends JJKPartEntity<GreatSerpentEntity>
     public GreatSerpentSegmentEntity(GreatSerpentEntity parent) {
         super(parent);
 
-        this.setSize(EntityDimensions.fixed(1.0F, 0.8F));
+        this.setSize(EntityDimensions.fixed(0.9375F, 0.8125F));
     }
 
     @Override
