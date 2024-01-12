@@ -328,18 +328,18 @@ public class JJKEventHandler {
                             chance /= 2;
                         }
                     }
-                }
 
-                if (HelperMethods.RANDOM.nextInt(chance) == 0) {
-                    if (victimCap.getType() == JujutsuType.SORCERER && SorcererUtil.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal() &&
-                            !victimCap.isUnlocked(JJKAbilities.RCT1.get())) {
-                        victim.setHealth(victim.getMaxHealth() / 2);
-                        victimCap.unlock(JJKAbilities.RCT1.get());
+                    if (HelperMethods.RANDOM.nextInt(chance) == 0) {
+                        if (SorcererUtil.getGrade(victimCap.getExperience()).ordinal() >= SorcererGrade.GRADE_1.ordinal() &&
+                                !victimCap.isUnlocked(JJKAbilities.RCT1.get())) {
+                            victim.setHealth(victim.getMaxHealth() / 2);
+                            victimCap.unlock(JJKAbilities.RCT1.get());
 
-                        if (victim instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                            if (victim instanceof ServerPlayer player) {
+                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                            }
+                            event.setCanceled(true);
                         }
-                        event.setCanceled(true);
                     }
                 }
             }
