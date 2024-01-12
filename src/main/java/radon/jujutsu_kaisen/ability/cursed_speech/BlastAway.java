@@ -91,10 +91,6 @@ public class BlastAway extends Ability {
         return 10 * 20;
     }
 
-
-
-
-
     @Override
     public Classification getClassification() {
         return Classification.CURSED_SPEECH;

@@ -24,7 +24,6 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -53,7 +52,7 @@ public class Die extends Ability {
         return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
     }
 
-    private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
+    private static float calculateDamage(DamageSource source, LivingEntity target) {
         float damage = target.getMaxHealth();
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
@@ -110,7 +109,7 @@ public class Die extends Ability {
             living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
                 if (SorcererUtil.getGrade(ownerCap.getExperience()).ordinal() - SorcererUtil.getGrade(targetCap.getExperience()).ordinal() >= 2) {
                     DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
-                    entity.hurt(source, calculateDamage(source, owner, living));
+                    entity.hurt(source, calculateDamage(source, living));
                 }
             });
 
@@ -129,8 +128,6 @@ public class Die extends Ability {
     public int getCooldown() {
         return 30 * 20;
     }
-
-
 
     @Override
     public Classification getClassification() {
