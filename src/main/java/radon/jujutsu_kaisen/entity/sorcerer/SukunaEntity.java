@@ -284,14 +284,18 @@ public class SukunaEntity extends SorcererEntity {
 
             dst.setTamed(src.getTamed());
             dst.setDead(src.getDead());
-
-            owner.kill();
         }
     }
 
     @Override
     public void die(@NotNull DamageSource pDamageSource) {
         super.die(pDamageSource);
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner != null) {
+            owner.kill();
+        }
 
         if (!(this instanceof HeianSukunaEntity)) {
             if (!this.vessel) {
