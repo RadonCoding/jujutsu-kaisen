@@ -24,7 +24,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class WingsItem extends ArmorItem implements GeoItem {
-    private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
+    private static final RawAnimation FLY_VERTICAL = RawAnimation.begin().thenLoop("move.fly_vertical");
+    private static final RawAnimation FLY_HORIZONTAL = RawAnimation.begin().thenLoop("move.fly_horizontal");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -50,7 +51,7 @@ public class WingsItem extends ArmorItem implements GeoItem {
         Entity entity = animationState.getData(DataTickets.ENTITY);
 
         if (!entity.onGround()) {
-            return animationState.setAndContinue(FLY);
+            return animationState.setAndContinue(Math.abs(entity.getXRot()) > 30.0F ? FLY_VERTICAL : FLY_HORIZONTAL);
         }
         return PlayState.STOP;
     }
