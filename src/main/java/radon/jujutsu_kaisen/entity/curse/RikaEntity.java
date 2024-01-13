@@ -251,11 +251,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
-
-    @Override
     public boolean canChangeTarget() {
         return true;
     }

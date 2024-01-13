@@ -52,10 +52,6 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
         return null;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     private PlayState walkRunPredicate(AnimationState<RugbyFieldCurseEntity> animationState) {
         if (animationState.isMoving()) {

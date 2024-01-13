@@ -325,8 +325,4 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         return null;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

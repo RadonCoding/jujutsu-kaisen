@@ -69,11 +69,6 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    public @Nullable Ability getDomain() {
-        return JJKAbilities.SHINING_SEA_OF_FLOWERS.get();
-    }
-
-    @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
 

@@ -179,10 +179,6 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
         return null;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     private PlayState walkRunIdlePredicate(AnimationState<FelineCurseEntity> animationState) {
         if (animationState.isMoving()) {

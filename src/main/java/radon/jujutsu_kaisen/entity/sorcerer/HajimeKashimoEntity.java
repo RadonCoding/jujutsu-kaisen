@@ -44,10 +44,6 @@ public class HajimeKashimoEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     @Override
     public void onAddedToWorld() {

@@ -46,11 +46,6 @@ public class DagonEntity extends DisasterCurse {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get());
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return JJKAbilities.HORIZON_OF_THE_CAPTIVATING_SKANDHA.get();
-    }
-
     private PlayState walkRunPredicate(AnimationState<DagonEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);

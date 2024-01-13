@@ -63,10 +63,6 @@ public class SuguruGetoEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     @Nullable
     private AbsorbedCurse createCurse(EntityType<?> type) {

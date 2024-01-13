@@ -51,11 +51,6 @@ public class ZombaCurseEntity extends CursedSpirit {
         return List.of(JJKAbilities.SKY_STRIKE.get());
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
-
     private PlayState swingPredicate(AnimationState<ZombaCurseEntity> animationState) {
         if (this.swinging) {
             return animationState.setAndContinue(SWING);

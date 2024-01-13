@@ -191,11 +191,6 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable Ability getDomain() {
-        return JJKAbilities.MALEVOLENT_SHRINE.get();
-    }
-
-    @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 

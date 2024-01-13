@@ -90,9 +90,4 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
-
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

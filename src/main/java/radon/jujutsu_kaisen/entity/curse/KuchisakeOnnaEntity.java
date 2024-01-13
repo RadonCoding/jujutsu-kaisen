@@ -166,10 +166,6 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         return List.of(JJKAbilities.SIMPLE_DOMAIN.get());
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     public void attack() {
         this.entityData.set(DATA_SNIP, SNIP_DURATION);

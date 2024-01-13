@@ -74,10 +74,6 @@ public class YujiItadoriEntity extends SorcererEntity {
         return List.of(Trait.VESSEL);
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     @Override
     public void init(ISorcererData data) {

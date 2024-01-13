@@ -58,9 +58,4 @@ public class SatoruGojoEntity extends SorcererEntity {
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }
-
-    @Override
-    public @Nullable Ability getDomain() {
-        return JJKAbilities.UNLIMITED_VOID.get();
-    }
 }

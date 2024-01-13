@@ -92,10 +92,6 @@ public class FishCurseEntity extends PackCursedSpirit {
         return null;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 
     private PlayState walkPredicate(AnimationState<FishCurseEntity> animationState) {
         if (animationState.isMoving()) {
