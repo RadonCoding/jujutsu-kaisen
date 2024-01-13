@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
@@ -110,6 +111,10 @@ public class WeaponEventHandler {
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
@@ -150,35 +155,33 @@ public class WeaponEventHandler {
                 }
 
                 if (stacks.contains(JJKItems.KAMUTOKE_DAGGER.get())) {
-                    attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                            if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(cost);
+                    if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+                        float cost = KamutokeDaggerItem.MELEE_COST * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                        if (attackerCap.getEnergy() < cost) return;
+                        attackerCap.useEnergy(cost);
+                    }
+
+                    victim.invulnerableTime = 0;
+
+                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                        victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
+
+                        attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
+                                SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+
+                        for (int i = 0; i < 32; i++) {
+                            double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                            double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                            double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                            ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(attacker), 0.5F, 1),
+                                    victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                                    0, 0.0D, 0.0D, 0.0D, 0.0D);
                         }
+                    }
 
-                        victim.invulnerableTime = 0;
-
-                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
-
-                            attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
-                                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                            for (int i = 0; i < 32; i++) {
-                                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColorBright(attacker), 0.5F, 1),
-                                        victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                                        0, 0.0D, 0.0D, 0.0D, 0.0D);
-                            }
-                        }
-
-                        if (attacker instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-                        }
-                    });
+                    if (attacker instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
+                    }
                 }
             }
         }
