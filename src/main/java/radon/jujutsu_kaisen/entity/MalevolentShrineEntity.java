@@ -27,6 +27,8 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.ability.dismantle_and_cleave.MalevolentShrine;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -66,10 +68,6 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-
-        LivingEntity owner = this.getOwner();
-
-        if (owner == null) return;
 
         for (LivingEntity entity : this.getAffected()) {
             if (!(entity instanceof ServerPlayer player)) continue;
@@ -141,6 +139,19 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
             if (!this.isAffected(pos)) continue;
 
             this.ability.onHitBlock(this, owner, pos);
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.getTime() >= MalevolentShrine.DELAY && this.getTime() % 10 == 0) {
+            for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds())) {
+                if (!(entity instanceof ServerPlayer player)) continue;
+
+                PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, 20), player);
+            }
         }
     }
 

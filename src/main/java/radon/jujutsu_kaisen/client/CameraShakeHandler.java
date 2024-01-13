@@ -3,12 +3,16 @@ package radon.jujutsu_kaisen.client;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 
+import javax.annotation.Nullable;
+
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class CameraShakeHandler {
+    @Nullable
     private static ShakeEvent current;
 
     @SubscribeEvent
@@ -20,6 +24,14 @@ public class CameraShakeHandler {
         float shakeY = Mth.sin(time * current.speed) * current.intensity;
         event.setPitch(event.getPitch() + shakeX);
         event.setYaw(event.getYaw() + shakeY);
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.type != TickEvent.Type.CLIENT) return;
+        if (event.phase == TickEvent.Phase.START) return;
+
+        if (current == null) return;
 
         current.duration--;
 
