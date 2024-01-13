@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.armor.WingsRenderer;
@@ -51,7 +52,8 @@ public class WingsItem extends ArmorItem implements GeoItem {
         Entity entity = animationState.getData(DataTickets.ENTITY);
 
         if (!entity.onGround()) {
-            return animationState.setAndContinue(Math.abs(entity.getXRot()) > 30.0F ? FLY_VERTICAL : FLY_HORIZONTAL);
+            Vec3 movement = entity.getDeltaMovement();
+            return animationState.setAndContinue(movement.y > 0.0D ? FLY_VERTICAL : FLY_HORIZONTAL);
         }
         return PlayState.STOP;
     }
