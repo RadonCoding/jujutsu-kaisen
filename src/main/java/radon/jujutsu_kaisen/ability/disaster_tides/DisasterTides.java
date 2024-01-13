@@ -9,8 +9,6 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class DisasterTides extends Ability {
-
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(5) == 0 && target != null && owner.distanceTo(target) <= 10.0D && owner.hasLineOfSight(target);
