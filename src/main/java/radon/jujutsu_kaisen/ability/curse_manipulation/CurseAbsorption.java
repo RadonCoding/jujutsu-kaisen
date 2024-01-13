@@ -113,7 +113,10 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
             attacker.setItemSlot(EquipmentSlot.MAINHAND, stack);
         }
         makePoofParticles(victim);
-        victim.discard();
+
+        if (!(victim instanceof Player)) {
+            victim.discard();
+        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
