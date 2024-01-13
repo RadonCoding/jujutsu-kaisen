@@ -49,8 +49,6 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (Entity entity : ownerCap.getSummons()) {

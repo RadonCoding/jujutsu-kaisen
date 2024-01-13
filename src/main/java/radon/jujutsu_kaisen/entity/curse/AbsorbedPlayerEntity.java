@@ -14,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
@@ -63,6 +64,11 @@ public class AbsorbedPlayerEntity extends CursedSpirit {
         if (pCompound.contains("player")) {
             this.entityData.set(DATA_PLAYER, Optional.of(pCompound.getCompound("player")));
         }
+    }
+
+    @Override
+    public void init(ISorcererData data) {
+
     }
 
     @Override
