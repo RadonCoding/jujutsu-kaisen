@@ -107,8 +107,7 @@ public abstract class DomainExpansionEntity extends Entity {
     }
 
     public List<LivingEntity> getAffected() {
-        AABB bounds = this.getBounds();
-        return this.level().getEntitiesOfClass(LivingEntity.class, bounds, this::isAffected);
+        return this.level().getEntitiesOfClass(LivingEntity.class, this.getBounds(), this::isAffected);
     }
 
     public boolean hasSureHitEffect() {
