@@ -269,9 +269,4 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
-
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

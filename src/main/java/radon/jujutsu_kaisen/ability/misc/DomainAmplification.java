@@ -34,10 +34,15 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        Ability domain = ((ISorcerer) owner).getDomain();
+        CursedTechnique technique = cap.getTechnique();
 
-        if (!SorcererUtil.isExperienced(cap.getExperience()) && domain != null && JJKAbilities.hasToggled(owner, domain)) return false;
+        if (technique != null) {
+            Ability domain = technique.getDomain();
 
+            if (domain != null) {
+                if (!SorcererUtil.isExperienced(cap.getExperience()) && !JJKAbilities.hasToggled(owner, technique.getDomain())) return false;
+            }
+        }
         return target != null && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
 

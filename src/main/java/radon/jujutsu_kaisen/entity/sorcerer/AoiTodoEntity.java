@@ -35,8 +35,4 @@ public class AoiTodoEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

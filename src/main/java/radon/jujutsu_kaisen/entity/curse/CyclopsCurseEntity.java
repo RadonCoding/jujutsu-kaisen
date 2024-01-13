@@ -84,11 +84,6 @@ public class CyclopsCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
-
-    @Override
     public float getStepHeight() {
         return 2.0F;
     }

@@ -38,8 +38,4 @@ public class NaoyaZeninEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

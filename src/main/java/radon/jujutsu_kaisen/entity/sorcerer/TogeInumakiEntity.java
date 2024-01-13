@@ -43,8 +43,4 @@ public class TogeInumakiEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-    @Override
-    public @Nullable Ability getDomain() {
-        return null;
-    }
 }

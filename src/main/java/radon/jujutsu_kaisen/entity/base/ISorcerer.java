@@ -53,8 +53,6 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
-    @Nullable Ability getDomain();
-
     default void init(ISorcererData data) {
         data.setExperience(this.getExperience());
         data.setTechnique(this.getTechnique());
