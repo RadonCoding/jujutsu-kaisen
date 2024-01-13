@@ -45,8 +45,8 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
     public WaterballEntity(LivingEntity owner, float power) {
         super(JJKEntities.WATERBALL.get(), owner.level(), owner, power);
 
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
         this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
     }
 
@@ -119,9 +119,9 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                 if (!this.level().isClientSide && this.getTime() % INTERVAL == 0) {
                     this.createWave(owner);
                 }
-                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                        .add(RotationUtil.getTargetAdjustedLookAngle(owner));
-                this.setPos(spawn.x, spawn.y, spawn.z);
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
+                this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
             }
         } else {
             this.discard();
