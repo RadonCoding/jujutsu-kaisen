@@ -116,6 +116,8 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!(victim instanceof Player)) {
             victim.discard();
+        } else {
+            victim.kill();
         }
     }
 
