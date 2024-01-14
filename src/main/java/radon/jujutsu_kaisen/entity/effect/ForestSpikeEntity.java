@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -21,6 +23,11 @@ public class ForestSpikeEntity extends JujutsuProjectile {
 
     public ForestSpikeEntity(LivingEntity owner, float power) {
         super(JJKEntities.FOREST_SPIKE.get(), owner.level(), owner, power);
+    }
+
+    @Override
+    public @NotNull Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
     }
 
     @Override
