@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class SlashParticle extends TextureSheetParticle {
     private final int entityId;
@@ -32,13 +33,14 @@ public class SlashParticle extends TextureSheetParticle {
     private Entity entity;
 
     private float roll;
+    private Vec3 offset;
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/dismantle.png");
 
     protected SlashParticle(ClientLevel pLevel, double pX, double pY, double pZ, int entityId) {
         super(pLevel, pX, pY, pZ);
 
-        this.lifetime = 20;
+        this.lifetime = 2;
 
         this.hasPhysics = false;
 
@@ -58,6 +60,13 @@ public class SlashParticle extends TextureSheetParticle {
 
         if (this.entity == null) {
             this.entity = this.level.getEntity(this.entityId);
+
+            if (this.entity != null) {
+                Vec3 center = this.entity.position().add(0.0D, this.entity.getBbHeight() / 2.0F, 0.0D);
+                this.offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth(),
+                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbHeight(),
+                        (HelperMethods.RANDOM.nextDouble() - 0.5D) * this.entity.getBbWidth());
+            }
         } else {
             this.quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * (this.entity.getBbWidth() + this.entity.getBbHeight()) * 10.0F;
         }
@@ -74,14 +83,10 @@ public class SlashParticle extends TextureSheetParticle {
 
         PoseStack stack = new PoseStack();
 
-        double d0 = this.entity.getX();
-        double d1 = this.entity.getY() + (this.entity.getBbHeight() / 2.0F);
-        double d2 = this.entity.getZ();
-
         Vec3 cam = pRenderInfo.getPosition();
 
         stack.pushPose();
-        stack.translate(d0 - cam.x, d1 - cam.y, d2 - cam.z);
+        stack.translate(this.offset.x - cam.x, this.offset.y - cam.y, this.offset.z - cam.z);
         stack.mulPose(Axis.YN.rotationDegrees(pRenderInfo.getYRot()));
         stack.mulPose(Axis.XP.rotationDegrees(pRenderInfo.getXRot() - 90.0F));
         stack.mulPose(Axis.YP.rotationDegrees(this.roll));
