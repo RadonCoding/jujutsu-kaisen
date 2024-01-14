@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +21,8 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -31,7 +34,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final int DELAY = 20;
     private static final double RANGE = 10.0D;
-    private static final float MAX_POWER = 7.5F;
+    private static final float MAX_POWER = 10.0F;
 
     private float power;
 
@@ -57,8 +60,13 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
 
             ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (SorcererUtil.getGrade(curseCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curseCap.getTechnique() != null) ownerCap.absorb(curseCap.getTechnique());
+            if (SorcererUtil.getGrade(curseCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curseCap.getTechnique() != null) {
+                ownerCap.absorb(curseCap.getTechnique());
 
+                if (owner instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                }
+            }
             this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curseCap.getExperience()));
             entity.discard();
         }

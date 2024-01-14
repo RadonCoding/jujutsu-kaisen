@@ -255,9 +255,9 @@ public class JJKAbilities {
     }
 
     public static float getCurseExperience(AbsorbedCurse curse) {
-        ISorcererData curseCap = new SorcererData();
-        curseCap.deserializeNBT(curse.getData());
-        return curseCap.getExperience();
+        ISorcererData data = new SorcererData();
+        data.deserializeNBT(curse.getData());
+        return data.getExperience();
     }
 
     public static float getCurseCost(AbsorbedCurse curse) {
@@ -290,10 +290,10 @@ public class JJKAbilities {
 
         if (entity == null) return;
 
+        owner.level().addFreshEntity(entity);
+
         ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         curseCap.deserializeNBT(curse.getData());
-
-        owner.level().addFreshEntity(entity);
 
         ownerCap.addSummon(entity);
         ownerCap.removeCurse(curse);
