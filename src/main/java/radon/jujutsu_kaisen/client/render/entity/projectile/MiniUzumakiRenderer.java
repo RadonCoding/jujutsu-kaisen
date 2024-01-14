@@ -40,7 +40,7 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
 
     @Override
     public void render(MiniUzumakiProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        if (pEntity.getTime() >= MiniUzumakiProjectile.DELAY) {
+        if (pEntity.getTime() > pEntity.getCharge()) {
             Entity owner = pEntity.getOwner();
             this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
                     Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
@@ -58,11 +58,11 @@ public class MiniUzumakiRenderer extends EntityRenderer<MiniUzumakiProjectile> {
             int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
             if (frame < 0) {
-                frame = MiniUzumakiProjectile.FRAMES * 2;
+                frame = pEntity.getFrames() * 2;
             }
 
             pPoseStack.pushPose();
-            pPoseStack.scale(MiniUzumakiProjectile.SCALE, MiniUzumakiProjectile.SCALE, MiniUzumakiProjectile.SCALE);
+            pPoseStack.scale(pEntity.getScale(), pEntity.getScale(), pEntity.getScale());
             pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
 
             VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.glow(BEAM));
