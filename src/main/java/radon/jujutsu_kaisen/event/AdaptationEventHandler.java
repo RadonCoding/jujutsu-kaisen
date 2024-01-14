@@ -94,7 +94,7 @@ public class AdaptationEventHandler {
             event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(source)));
         }
 
-        @SubscribeEvent
+        @SubscribeEvent(receiveCanceled = true)
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
@@ -110,15 +110,25 @@ public class AdaptationEventHandler {
 
             ISorcererData mahoragaCap = mahoraga.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+            if (!event.isCanceled()) {
+                Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
 
-            for (Ability ability : toggled) {
-                if (!mahoragaCap.isAdaptedTo(ability)) continue;
-                victimCap.toggle(ability);
-            }
+                for (Ability ability : toggled) {
+                    if (!mahoragaCap.isAdaptedTo(ability)) continue;
+                    victimCap.toggle(ability);
+                }
 
-            if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                if (victim instanceof ServerPlayer player) {
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                }
+            } else {
+                if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                    mahoragaCap.tryAdapt(JJKAbilities.INFINITY.get());
+                }
+
+                if (victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                    mahoragaCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                }
             }
         }
     }
