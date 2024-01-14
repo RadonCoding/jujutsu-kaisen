@@ -105,7 +105,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             for (int i = 0; i < fusions.size(); i++) {
                 if (this.isBottomlessWell()) {
-                    if (!JJKAbilities.hasTamed(owner, fusions.get(i))) {
+                    if (JJKAbilities.isDead(owner, fusions.get(i)) || !JJKAbilities.hasTamed(owner, fusions.get(i))) {
                         return false;
                     }
                 } else {
