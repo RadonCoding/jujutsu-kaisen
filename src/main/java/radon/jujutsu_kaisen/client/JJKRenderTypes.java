@@ -16,15 +16,6 @@ import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
 import java.util.function.Function;
 
 public class JJKRenderTypes extends RenderType {
-    private static final Function<ResourceLocation, RenderType> TRANSPARENT = Util.memoize((pLocation) ->
-            create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
-                    .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
-                    .setTextureState(new TextureStateShard(pLocation, false, false))
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setCullState(NO_CULL)
-                    .setLightmapState(LIGHTMAP)
-                    .setOverlayState(OVERLAY)
-                    .createCompositeState(false)));
     private static final Function<ResourceLocation, RenderType> GLOW = Util.memoize((pLocation) ->
             create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, false, CompositeState.builder()
                     .setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
@@ -68,10 +59,6 @@ public class JJKRenderTypes extends RenderType {
 
     public JJKRenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
-    }
-
-    public static RenderType transparent(ResourceLocation pLocation) {
-        return TRANSPARENT.apply(pLocation);
     }
 
     public static RenderType glow(ResourceLocation pLocation) {
