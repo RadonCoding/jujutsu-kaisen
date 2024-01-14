@@ -96,28 +96,30 @@ public class AdaptationEventHandler {
 
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
-            DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof MahoragaEntity attacker)) return;
-
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
+            
+            DamageSource source = event.getSource();
 
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(victimCap -> {
-                attacker.getCapability(SorcererDataHandler.INSTANCE).ifPresent(attackerCap -> {
-                    Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+            if (!(source.getEntity() instanceof MahoragaEntity mahoraga)) return;
 
-                    for (Ability ability : toggled) {
-                        if (!attackerCap.isAdaptedTo(ability)) continue;
-                        victimCap.toggle(ability);
-                    }
+            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-                    if (victim instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                    }
-                });
-            });
+            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            ISorcererData mahoragaCap = mahoraga.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+
+            for (Ability ability : toggled) {
+                if (!mahoragaCap.isAdaptedTo(ability)) continue;
+                victimCap.toggle(ability);
+            }
+
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+            }
         }
     }
 }

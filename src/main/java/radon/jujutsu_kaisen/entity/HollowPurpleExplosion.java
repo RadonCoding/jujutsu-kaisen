@@ -57,7 +57,10 @@ public class HollowPurpleExplosion extends JujutsuProjectile {
 
         if (this.getTime() >= DURATION) {
             this.discard();
-        } else if (this.getTime() - 1 == 0) {
+            return;
+        }
+
+        if (this.getTime() - 1 == 0) {
             if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
             this.playSound(JJKSounds.HOLLOW_PURPLE_EXPLOSION.get(), 3.0F, 1.0F);
