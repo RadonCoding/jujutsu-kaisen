@@ -116,28 +116,27 @@ public class AdaptationEventHandler {
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !attackerCap.hasToggled(JJKAbilities.WHEEL.get())) return;
-
-            if (event.isCanceled()) {
+            if (!attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerCap.hasToggled(JJKAbilities.WHEEL.get())) {
                 if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     attackerCap.tryAdapt(JJKAbilities.INFINITY.get());
                 }
                 if (victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
                     attackerCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
                 }
-                return;
             }
 
-            if (attacker instanceof MahoragaEntity) {
-                Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
+            if (!event.isCanceled()) {
+                if (attacker instanceof MahoragaEntity) {
+                    Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
 
-                for (Ability ability : toggled) {
-                    if (!attackerCap.isAdaptedTo(ability)) continue;
-                    victimCap.toggle(ability);
-                }
+                    for (Ability ability : toggled) {
+                        if (!attackerCap.isAdaptedTo(ability)) continue;
+                        victimCap.toggle(ability);
+                    }
 
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                    if (victim instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                    }
                 }
             }
         }
