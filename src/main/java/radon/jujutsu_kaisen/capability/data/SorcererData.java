@@ -1358,7 +1358,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public float getAdaptation(Ability ability) {
-        return this.isAdaptedTo(ability) ? 1.0F : (float) this.adapting.get(ability) / JJKConstants.REQUIRED_ADAPTATION;
+        return this.isAdaptedTo(ability) ? 1.0F : (float) this.adapting.getOrDefault(ability, 0) / JJKConstants.REQUIRED_ADAPTATION;
     }
 
     private @Nullable Ability getAbility(DamageSource source) {
