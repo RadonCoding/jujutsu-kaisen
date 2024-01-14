@@ -293,11 +293,9 @@ public class Infinity extends Ability implements Ability.IToggled {
                     }
                 }
 
-                if (source.getEntity() instanceof LivingEntity living) {
-                    if (HelperMethods.isMelee(source)) {
-                        if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                            return;
-                        }
+                if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
+                    if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                        return;
                     }
                 }
 
