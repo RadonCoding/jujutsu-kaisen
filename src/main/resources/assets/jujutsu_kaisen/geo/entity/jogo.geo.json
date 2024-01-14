@@ -54,7 +54,15 @@
 					"pivot": [-4.57685, 22.30716, 1.5],
 					"cubes": [
 						{"origin": [-8.75, 16.5, -2], "size": [9, 9, 9], "pivot": [-12, 24, 1], "rotation": [0, 0, 2.5], "uv": [0, 0], "mirror": true},
-						{"origin": [-9, 9, 0], "size": [3, 14, 3], "pivot": [0, -5, 0], "rotation": [0, 0, 2.5], "uv": [0, 46]}
+						{"origin": [-8, 15, 0], "size": [3, 8, 3], "uv": [0, 46]}
+					]
+				},
+				{
+					"name": "right_forearm",
+					"parent": "right_cape",
+					"pivot": [-6.75133, 15.31097, 1.5],
+					"cubes": [
+						{"origin": [-8, 9, 0], "size": [3, 6, 3], "uv": [12, 46]}
 					]
 				},
 				{
@@ -63,7 +71,15 @@
 					"pivot": [4.57685, 22.30716, 1.5],
 					"cubes": [
 						{"origin": [-0.25, 16.5, -2], "size": [9, 9, 9], "pivot": [12, 24, 1], "rotation": [0, 0, -2.5], "uv": [0, 0]},
-						{"origin": [6, 9, 0], "size": [3, 14, 3], "pivot": [0, -5, 0], "rotation": [0, 0, -2.5], "uv": [0, 46], "mirror": true}
+						{"origin": [5, 15, 0], "size": [3, 8, 3], "uv": [0, 46], "mirror": true}
+					]
+				},
+				{
+					"name": "left_forearm",
+					"parent": "left_cape",
+					"pivot": [6.75133, 15.31097, 1.5],
+					"cubes": [
+						{"origin": [5, 9, 0], "size": [3, 6, 3], "uv": [12, 46], "mirror": true}
 					]
 				},
 				{
@@ -79,7 +95,7 @@
 					"parent": "left_leg",
 					"pivot": [2.25, 7.13892, 1.15751],
 					"cubes": [
-						{"origin": [0.5, 5, -0.8], "size": [3.5, 2, 3.5], "pivot": [0, -6, 0], "rotation": [-2.5, 0, 0], "uv": [12, 46]},
+						{"origin": [0.5, 5, -0.8], "size": [3.5, 2, 3.5], "pivot": [0, -6, 0], "rotation": [-2.5, 0, 0], "uv": [24, 46]},
 						{"origin": [1.25, 0.98481, 0.5], "size": [2, 4, 2], "uv": [0, 0]},
 						{"origin": [1.25, -0.01519, -1.5], "size": [2, 1, 4], "uv": [26, 30]}
 					]
@@ -97,7 +113,7 @@
 					"parent": "right_leg",
 					"pivot": [2.25, 7.13892, 1.15751],
 					"cubes": [
-						{"origin": [-4, 5, -0.8], "size": [3.5, 2, 3.5], "pivot": [0, -6, 0], "rotation": [-2.5, 0, 0], "uv": [12, 46], "mirror": true},
+						{"origin": [-4, 5, -0.8], "size": [3.5, 2, 3.5], "pivot": [0, -6, 0], "rotation": [-2.5, 0, 0], "uv": [24, 46], "mirror": true},
 						{"origin": [-3.25, 0.98481, 0.5], "size": [2, 4, 2], "uv": [0, 0], "mirror": true},
 						{"origin": [-3.25, -0.01519, -1.5], "size": [2, 1, 4], "uv": [26, 30], "mirror": true}
 					]
