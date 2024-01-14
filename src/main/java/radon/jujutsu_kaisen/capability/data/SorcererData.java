@@ -1410,15 +1410,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void tryAdapt(DamageSource source) {
-        if (HelperMethods.isMelee(source) && source.getEntity() instanceof LivingEntity attacker) {
-            if (JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
-                this.tryAdapt(JJKAbilities.INFINITY.get());
-                return;
-            } else if (JJKAbilities.hasToggled(attacker, JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                this.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
-                return;
-            }
-        }
         this.tryAdapt(this.getAbility(source));
     }
 

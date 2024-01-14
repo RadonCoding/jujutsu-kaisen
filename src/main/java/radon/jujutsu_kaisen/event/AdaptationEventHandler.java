@@ -83,7 +83,13 @@ public class AdaptationEventHandler {
             if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
             if (!cap.isAdaptedTo(source)) {
-                cap.tryAdapt(source);
+                if (HelperMethods.isMelee(source) && source.getEntity() instanceof LivingEntity attacker) {
+                    if (JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
+                        cap.tryAdapt(JJKAbilities.INFINITY.get());
+                    } else if (JJKAbilities.hasToggled(attacker, JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                        cap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                    }
+                }
             }
 
             if (!(victim instanceof MahoragaEntity)) return;
