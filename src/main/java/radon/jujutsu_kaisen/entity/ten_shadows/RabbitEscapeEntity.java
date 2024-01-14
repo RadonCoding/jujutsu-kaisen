@@ -69,6 +69,14 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
+        if (this.getLeader() == pTarget || pTarget instanceof RabbitEscapeEntity rabbit && rabbit.getLeader() == pTarget) {
+            return false;
+        }
+        return super.canAttack(pTarget);
+    }
+
+    @Override
     protected void customServerAiStep() {
         if (this.getTarget() != null) {
             double d0 = this.getAttributeValue(Attributes.FOLLOW_RANGE);
