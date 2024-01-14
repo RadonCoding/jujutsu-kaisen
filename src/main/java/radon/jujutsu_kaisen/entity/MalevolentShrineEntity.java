@@ -92,7 +92,7 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
         if (this.first) {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    int delay = i * 8;
+                    int delay = i * 4;
 
                     int horizontal = i;
                     int vertical = j;
