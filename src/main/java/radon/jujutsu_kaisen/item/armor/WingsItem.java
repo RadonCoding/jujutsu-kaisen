@@ -49,11 +49,8 @@ public class WingsItem extends ArmorItem implements GeoItem {
     }
 
     private PlayState flyPredicate(AnimationState<WingsItem> animationState) {
-        Entity entity = animationState.getData(DataTickets.ENTITY);
-
-        if (!entity.onGround()) {
-            Vec3 movement = entity.getDeltaMovement();
-            return animationState.setAndContinue(movement.y > 0.0D ? FLY_VERTICAL : FLY_HORIZONTAL);
+        if (animationState.getData(DataTickets.ENTITY) instanceof LivingEntity entity && !entity.onGround()) {
+            return animationState.setAndContinue(new Vec3(entity.xxa, 0.0D, entity.zza).lengthSqr() > 1.0E-7D ? FLY_HORIZONTAL : FLY_VERTICAL);
         }
         return PlayState.STOP;
     }
