@@ -22,7 +22,7 @@ import radon.jujutsu_kaisen.entity.projectile.RedProjectile;
 
 public class RedRenderer extends EntityRenderer<RedProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/red.png");
-    private static final RenderType RENDER_TYPE = JJKRenderTypes.transparent(TEXTURE);
+    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE);
     private static final float SIZE = 0.1F;
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 

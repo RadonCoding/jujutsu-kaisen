@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -55,7 +56,7 @@ public class SkyStrikeRenderer extends EntityRenderer<SkyStrikeEntity> {
         boolean isStriking = pEntity.isStriking(pPartialTick);
 
         pPoseStack.pushPose();
-        VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.transparent(this.getTextureLocation(pEntity)));
+        VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(pEntity)));
 
         if (isStriking) {
             this.drawStrike(pEntity, maxY, pPartialTick, pPoseStack, consumer, pPackedLight);
