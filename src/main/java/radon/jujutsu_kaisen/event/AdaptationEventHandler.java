@@ -107,7 +107,6 @@ public class AdaptationEventHandler {
             if (victim.level().isClientSide) return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             DamageSource source = event.getSource();
@@ -115,7 +114,6 @@ public class AdaptationEventHandler {
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
             ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (event.isCanceled()) {
