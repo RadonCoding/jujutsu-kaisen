@@ -109,6 +109,12 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
                 if (!target.isDeadOrDying()) {
                     level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
                             0.0D, 0.0D, 1.0D);
+
+                    Vec3 center = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+                    Vec3 offset = center.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth(),
+                            (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbHeight(),
+                            (HelperMethods.RANDOM.nextDouble() - 0.5D) * target.getBbWidth());
+                    ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, offset.x, offset.y, offset.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                 }
             }, i);
         }
