@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -98,12 +99,19 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(), 0.0D, 0.0D, 1.0D);
-
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
                 1.0F, 1.0F);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        for (int i = 1; i <= 20; i++) {
+            cap.delayTickEvent(() -> {
+                if (!target.isDeadOrDying()) {
+                    level.sendParticles(JJKParticles.SLASH.get(), target.getX(), target.getY(), target.getZ(), 0, target.getId(),
+                            0.0D, 0.0D, 1.0D);
+                }
+            }, i);
+        }
 
         for (int i = 1; i <= 10; i++) {
             cap.delayTickEvent(() -> {
