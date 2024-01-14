@@ -116,6 +116,8 @@ public class AdaptationEventHandler {
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+            if (attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !attackerCap.hasToggled(JJKAbilities.WHEEL.get())) return;
+
             if (event.isCanceled()) {
                 if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     attackerCap.tryAdapt(JJKAbilities.INFINITY.get());
