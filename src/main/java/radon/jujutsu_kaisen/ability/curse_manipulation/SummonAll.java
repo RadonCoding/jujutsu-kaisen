@@ -67,7 +67,7 @@ public class SummonAll extends Ability {
     }
 
     @Override
-    public float getRealCost(LivingEntity owner) {
+    public float getCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbsorbedCurse> curses = cap.getCurses();
@@ -78,5 +78,10 @@ public class SummonAll extends Ability {
             cost += JJKAbilities.getCurseCost(curse);
         }
         return cost;
+    }
+
+    @Override
+    public float getRealCost(LivingEntity owner) {
+        return this.getCost(owner);
     }
 }
