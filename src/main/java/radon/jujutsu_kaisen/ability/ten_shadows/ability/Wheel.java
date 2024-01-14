@@ -85,4 +85,9 @@ public class Wheel extends Summon<WheelEntity> {
     public boolean shouldLog(LivingEntity owner) {
         return false;
     }
+
+    @Override
+    public boolean display() {
+        return false;
+    }
 }
