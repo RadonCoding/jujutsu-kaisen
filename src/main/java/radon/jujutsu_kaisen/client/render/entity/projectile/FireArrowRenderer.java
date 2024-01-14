@@ -36,13 +36,6 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
-
-        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
-        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
-
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(270.0F - yaw));
-        pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
-
         pPoseStack.scale(1.5F, 1.5F, 1.5F);
 
         boolean still = pEntity.getTime() >= FireArrowProjectile.DELAY;
@@ -51,6 +44,13 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         for (int i = 0; i < 2; i++) {
             pPoseStack.pushPose();
             pPoseStack.translate(0.0F, i * 0.1F, i * 0.1F - 0.1F);
+
+            float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+            float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(270.0F - yaw));
+            pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
+
             pPoseStack.mulPose(Axis.XP.rotationDegrees(i * 90.0F));
 
             VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
