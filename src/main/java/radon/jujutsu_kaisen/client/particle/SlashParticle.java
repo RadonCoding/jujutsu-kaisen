@@ -93,7 +93,7 @@ public class SlashParticle extends TextureSheetParticle {
 
         stack.scale(1.0F, 1.0F, 0.2F);
 
-        RenderType type = JJKRenderTypes.transparent(TEXTURE);
+        RenderType type = RenderType.entityCutoutNoCull(TEXTURE);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
         Matrix4f pose = stack.last().pose();

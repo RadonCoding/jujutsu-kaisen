@@ -86,6 +86,7 @@ public class FireParticle extends TextureSheetParticle {
         stack.translate(0.0F, 0.0F, -0.3F + (float) ((int) f3) * 0.02F);
         float f5 = 0.0F;
         int i = 0;
+
         VertexConsumer consumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
 
         for (PoseStack.Pose posestack$pose = stack.last(); f3 > 0.0F; ++i) {
