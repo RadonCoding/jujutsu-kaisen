@@ -105,35 +105,39 @@ public class AdaptationEventHandler {
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
-            
-            DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof MahoragaEntity mahoraga)) return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            ISorcererData mahoragaCap = mahoraga.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            DamageSource source = event.getSource();
 
-            if (!event.isCanceled()) {
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (event.isCanceled()) {
+                if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
+                    attackerCap.tryAdapt(JJKAbilities.INFINITY.get());
+                }
+                if (victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
+                    attackerCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
+                }
+                return;
+            }
+
+            if (attacker instanceof MahoragaEntity) {
                 Set<Ability> toggled = new HashSet<>(victimCap.getToggled());
 
                 for (Ability ability : toggled) {
-                    if (!mahoragaCap.isAdaptedTo(ability)) continue;
+                    if (!attackerCap.isAdaptedTo(ability)) continue;
                     victimCap.toggle(ability);
                 }
 
                 if (victim instanceof ServerPlayer player) {
                     PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                }
-            } else {
-                if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
-                    mahoragaCap.tryAdapt(JJKAbilities.INFINITY.get());
-                }
-
-                if (victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) {
-                    mahoragaCap.tryAdapt(JJKAbilities.SOUL_REINFORCEMENT.get());
                 }
             }
         }
