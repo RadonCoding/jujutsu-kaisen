@@ -129,8 +129,6 @@ public class SlashParticle extends TextureSheetParticle {
         mc.renderBuffers().bufferSource().endBatch(type);
 
         stack.popPose();
-
-        Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
     }
 
     @Override
