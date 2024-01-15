@@ -77,7 +77,7 @@ public class JJKParticleRenderTypes {
     public static ParticleRenderType CUSTOM = new ParticleRenderType() {
         @Override
         public void begin(@NotNull BufferBuilder buffer, @NotNull TextureManager manager) {
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.NEW_ENTITY);
         }
 
         @Override

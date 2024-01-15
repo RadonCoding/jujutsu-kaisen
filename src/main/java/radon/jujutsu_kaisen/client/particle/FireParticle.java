@@ -64,6 +64,8 @@ public class FireParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer pBuffer, @NotNull Camera pRenderInfo, float pPartialTicks) {
+        Minecraft mc = Minecraft.getInstance();
+
         PoseStack stack = new PoseStack();
 
         double d0 = Mth.lerp(pPartialTicks, this.xo, this.x);
@@ -87,7 +89,7 @@ public class FireParticle extends TextureSheetParticle {
         float f5 = 0.0F;
         int i = 0;
 
-        VertexConsumer consumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
+        VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(Sheets.cutoutBlockSheet());
 
         for (PoseStack.Pose posestack$pose = stack.last(); f3 > 0.0F; ++i) {
             TextureAtlasSprite sprite = i % 2 == 0 ? fire0 : fire1;
@@ -113,7 +115,7 @@ public class FireParticle extends TextureSheetParticle {
         }
         stack.popPose();
 
-        Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
+        mc.renderBuffers().bufferSource().endBatch();
     }
 
     @Override
