@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class CursedEnergyBlastEntity extends JujutsuProjectile {
     public static final int DURATION = 20;
     private static final float DAMAGE = 10.0F;
+    public static final float RANGE = (float) Math.pow(DURATION, 0.5F) * 5.0F;
 
     public CursedEnergyBlastEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);

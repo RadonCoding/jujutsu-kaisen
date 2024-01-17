@@ -23,7 +23,8 @@ public class CursedEnergyBlast extends Ability {
         if (target == null) return false;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechnique() == null && HelperMethods.RANDOM.nextInt(5) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= CursedEnergyBombEntity.RANGE / 2;
+        return cap.getTechnique() == null && HelperMethods.RANDOM.nextInt(5) == 0 && owner.hasLineOfSight(target) &&
+                owner.distanceTo(target) <= CursedEnergyBlastEntity.RANGE / 2;
     }
 
     @Override
