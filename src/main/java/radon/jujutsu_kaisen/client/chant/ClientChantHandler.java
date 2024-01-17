@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.client;
+package radon.jujutsu_kaisen.client.chant;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
