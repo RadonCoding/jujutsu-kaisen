@@ -88,6 +88,8 @@ public class SuguruGetoEntity extends SorcererEntity {
         for (RegistryObject<EntityType<?>> entry : registry) {
             EntityType<?> type = entry.get();
 
+            if (type == JJKEntities.ABSORBED_PLAYER.get()) continue;
+
             if (type.create(this.level()) instanceof CursedSpirit curse && curse.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 for (int i = 0; i < SorcererGrade.values().length - curse.getGrade().ordinal(); i++) {
                     this.tryAddCurse(data, type);
