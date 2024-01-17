@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
@@ -212,11 +213,25 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     }
                 }
             } else {
-                if (this.getAbility().canDie()) {
-                    cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                Summon<?> ability = this.getAbility();
 
-                    if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                if (ability.isTotality()) {
+                    for (EntityType<?> fusion : ability.getFusions()) {
+                        if (JJKAbilities.isDead(owner, fusion)) continue;
+
+                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), fusion);
+
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        }
+                    }
+                } else {
+                    if (ability.canDie()) {
+                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+
+                        if (owner instanceof ServerPlayer player) {
+                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        }
                     }
                 }
             }

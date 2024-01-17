@@ -32,7 +32,12 @@ public class DivineDogTotality extends Summon<DivineDogTotalityEntity> {
     }
 
     @Override
-    protected List<EntityType<?>> getFusions() {
+    public boolean isTotality() {
+        return true;
+    }
+
+    @Override
+    public List<EntityType<?>> getFusions() {
         return List.of(JJKEntities.DIVINE_DOG_WHITE.get(), JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
