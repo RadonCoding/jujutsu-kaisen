@@ -219,12 +219,12 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
             EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 1.4F)
+                    .sized(0.8F, 1.2F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
                             .toString()));
     public static RegistryObject<EntityType<ToadFusionEntity>> TOAD_FUSION = ENTITIES.register("toad_fusion", () ->
             EntityType.Builder.<ToadFusionEntity>of(ToadFusionEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 1.4F)
+                    .sized(0.8F, 1.2F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_fusion")
                             .toString()));
     public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
