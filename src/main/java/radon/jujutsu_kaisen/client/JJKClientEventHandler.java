@@ -511,6 +511,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), ItemEntityRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BOMB.get(), CursedEnergyBombRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
+            event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
         }
 
         @SubscribeEvent

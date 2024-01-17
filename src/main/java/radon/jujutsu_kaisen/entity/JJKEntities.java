@@ -219,12 +219,12 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
             EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 1.8F)
+                    .sized(1.0F, 1.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
                             .toString()));
     public static RegistryObject<EntityType<ToadFusionEntity>> TOAD_FUSION = ENTITIES.register("toad_fusion", () ->
             EntityType.Builder.<ToadFusionEntity>of(ToadFusionEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 1.8F)
+                    .sized(1.0F, 1.4F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_fusion")
                             .toString()));
     public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
@@ -490,6 +490,11 @@ public class JJKEntities {
             EntityType.Builder.<CursedEnergyBlastEntity>of(CursedEnergyBlastEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_blast")
+                            .toString()));
+    public static RegistryObject<EntityType<EelGrappleProjectile>> EEL_GRAPPLE = ENTITIES.register("eel_grapple", () ->
+            EntityType.Builder.<EelGrappleProjectile>of(EelGrappleProjectile::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "eel_grapple")
                             .toString()));
 
     @SubscribeEvent

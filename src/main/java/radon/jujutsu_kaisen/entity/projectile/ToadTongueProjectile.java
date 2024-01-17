@@ -102,7 +102,7 @@ public class ToadTongueProjectile extends JujutsuProjectile {
 
         if (this.grabbed) {
             if (((ServerLevel) this.level()).getEntity(this.target) instanceof LivingEntity living) {
-                if (!(owner instanceof ToadEntity toad) || toad.getTarget() != living || living.isDeadOrDying() || living.isRemoved() || !owner.isAlive() || owner.isRemoved())
+                if (!(owner instanceof ToadEntity toad) || toad.getTarget() != living || living.isDeadOrDying() || living.isRemoved())
                     this.discard();
 
                 living.teleportTo(this.pos.x, this.pos.y, this.pos.z);

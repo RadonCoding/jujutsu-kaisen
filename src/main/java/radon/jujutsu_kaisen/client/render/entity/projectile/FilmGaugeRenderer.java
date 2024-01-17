@@ -29,7 +29,7 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
-        Vec3 pos = pEntity.position().add(0.0D, pEntity.getBbHeight() * 0.5F, 0.0D);
+        Vec3 pos = pEntity.position().add(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
 
         Vec3 relative = pEntity.getStart().subtract(pos);
         float f0 = (float) relative.length();

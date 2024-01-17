@@ -117,6 +117,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DEATH_SWARM = ABILITIES.register("death_swarm", DeathSwarm::new);
     public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static RegistryObject<Ability> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
+    public static RegistryObject<Ability> EEL_GRAPPLE = ABILITIES.register("eel_grapple", EelGrapple::new);
 
     public static RegistryObject<Ability> FOREST_PLATFORM = ABILITIES.register("forest_platform", ForestPlatform::new);
     public static RegistryObject<Ability> FOREST_SPIKES = ABILITIES.register("forest_spikes", ForestSpikes::new);
