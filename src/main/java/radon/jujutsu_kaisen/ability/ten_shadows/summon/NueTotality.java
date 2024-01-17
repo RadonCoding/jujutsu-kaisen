@@ -32,7 +32,12 @@ public class NueTotality extends Summon<NueTotalityEntity> {
     }
 
     @Override
-    protected List<EntityType<?>> getFusions() {
+    public boolean isTotality() {
+        return true;
+    }
+
+    @Override
+    public List<EntityType<?>> getFusions() {
         return List.of(JJKEntities.NUE.get(), JJKEntities.GREAT_SERPENT.get());
     }
 

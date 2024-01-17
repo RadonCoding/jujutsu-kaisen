@@ -32,7 +32,7 @@ public class ToadFusion extends Summon<ToadFusionEntity> {
     }
 
     @Override
-    protected List<EntityType<?>> getFusions() {
+    public List<EntityType<?>> getFusions() {
         return List.of(JJKEntities.TOAD.get(), JJKEntities.NUE.get());
     }
 

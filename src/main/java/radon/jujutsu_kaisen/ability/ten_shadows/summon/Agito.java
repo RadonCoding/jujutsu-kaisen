@@ -34,7 +34,12 @@ public class Agito extends Summon<AgitoEntity> {
     }
 
     @Override
-    protected List<EntityType<?>> getFusions() {
+    public boolean isTotality() {
+        return true;
+    }
+
+    @Override
+    public List<EntityType<?>> getFusions() {
         return List.of(JJKEntities.NUE.get(), JJKEntities.GREAT_SERPENT.get(), JJKEntities.TRANQUIL_DEER.get());
     }
 

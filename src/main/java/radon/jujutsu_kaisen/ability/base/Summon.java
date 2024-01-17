@@ -40,7 +40,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         return true;
     }
 
-    protected List<EntityType<?>> getFusions() {
+    public boolean isTotality() {
+        return false;
+    }
+
+    public List<EntityType<?>> getFusions() {
         return List.of();
     }
 
