@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen;
+package radon.jujutsu_kaisen.chant;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -9,13 +9,12 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
@@ -27,7 +26,7 @@ public class ServerChantHandler {
     private static final int CLEAR_INTERVAL = 10 * 20;
 
     public static List<String> getMessages(LivingEntity owner) {
-        return messages.get(owner.getUUID());
+        return messages.getOrDefault(owner.getUUID(), List.of());
     }
 
     public static void onChant(LivingEntity owner, String word) {
