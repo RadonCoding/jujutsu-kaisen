@@ -48,6 +48,11 @@ public class RCT1 extends Ability implements Ability.IChannelened {
     }
 
     @Override
+    public boolean isUnlockable() {
+        return this == JJKAbilities.RCT1.get() || super.isUnlockable();
+    }
+
+    @Override
     public boolean isDisplayed(LivingEntity owner) {
         return true;
     }
