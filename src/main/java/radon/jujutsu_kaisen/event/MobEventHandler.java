@@ -12,7 +12,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import radon.jujutsu_kaisen.ChantHandler;
+import radon.jujutsu_kaisen.ServerChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
@@ -113,7 +113,7 @@ public class MobEventHandler {
 
                     if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy()) * cap.getMaximumOutput()))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
-                            ChantHandler.onChant(owner, chants.get(i));
+                            ServerChantHandler.onChant(owner, chants.get(i));
 
                             for (ServerPlayer player : level.players()) {
                                 if (player.distanceTo(owner) > 32.0D) continue;

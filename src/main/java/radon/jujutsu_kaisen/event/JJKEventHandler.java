@@ -1,8 +1,5 @@
 package radon.jujutsu_kaisen.event;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -25,12 +22,9 @@ import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import radon.jujutsu_kaisen.ChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.misc.Barrage;
 import radon.jujutsu_kaisen.ability.misc.Slam;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
