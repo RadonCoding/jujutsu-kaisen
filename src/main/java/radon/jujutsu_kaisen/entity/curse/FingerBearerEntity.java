@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.DisasterCurse;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -62,6 +64,13 @@ public class FingerBearerEntity extends CursedSpirit {
     @Override
     public @Nullable CursedTechnique getTechnique() {
         return null;
+    }
+
+    @Override
+    public void init(ISorcererData data) {
+        super.init(data);
+
+        data.addExtraEnergy(((CursedObjectItem) JJKItems.SUKUNA_FINGER.get().getDefaultInstance().getItem()).getEnergy());
     }
 
     private PlayState walkRunPredicate(AnimationState<FingerBearerEntity> animationState) {

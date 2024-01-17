@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class WaterTorrentEntity extends BeamEntity {
+    public static final double RANGE = 32.0D;
+
     public WaterTorrentEntity(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -54,7 +56,7 @@ public class WaterTorrentEntity extends BeamEntity {
 
     @Override
     protected double getRange() {
-        return 32.0D;
+        return RANGE;
     }
 
     @Override

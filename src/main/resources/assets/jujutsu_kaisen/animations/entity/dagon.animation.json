@@ -166,70 +166,6 @@
 				}
 			}
 		},
-		"attack.swing": {
-			"animation_length": 0.29167,
-			"bones": {
-				"upper_body": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 20, 0]
-						},
-						"0.0833": {
-							"vector": [0, -15, 0]
-						},
-						"0.2917": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"right_arm": {
-					"rotation": {
-						"0.0": {
-							"vector": [15, 0, 0]
-						},
-						"0.0833": {
-							"vector": [-95.26256, -9.05754, 4.25058]
-						},
-						"0.2917": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"right_forearm": {
-					"rotation": {
-						"0.0": {
-							"vector": [-75, 0, 0]
-						},
-						"0.0833": {
-							"vector": [20, 0, -5]
-						},
-						"0.2917": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"left_arm": {
-					"rotation": {
-						"0.0": {
-							"vector": [25, 0, 0]
-						},
-						"0.2917": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"left_forearm": {
-					"rotation": {
-						"0.0": {
-							"vector": [-45, 0, 0]
-						},
-						"0.0833": {
-							"vector": [0, 0, 0]
-						}
-					}
-				}
-			}
-		},
 		"move.run": {
 			"loop": true,
 			"animation_length": 0.83333,
@@ -438,6 +374,70 @@
 							"vector": [-90, 0, 0]
 						},
 						"0.8333": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"attack.swing": {
+			"animation_length": 0.29167,
+			"bones": {
+				"upper_body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 20, 0]
+						},
+						"0.0833": {
+							"vector": [0, -15, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [15, 0, 0]
+						},
+						"0.0833": {
+							"vector": [-95.26256, -9.05754, 4.25058]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_forearm": {
+					"rotation": {
+						"0.0": {
+							"vector": [-75, 0, 0]
+						},
+						"0.0833": {
+							"vector": [20, 0, -5]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [25, 0, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_forearm": {
+					"rotation": {
+						"0.0": {
+							"vector": [-45, 0, 0]
+						},
+						"0.0833": {
 							"vector": [0, 0, 0]
 						}
 					}

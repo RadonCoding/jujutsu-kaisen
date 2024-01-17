@@ -43,12 +43,16 @@ public abstract class CursedObjectItem extends Item {
                 this.getGrade().getName().copy().withStyle(ChatFormatting.DARK_RED)));
     }
 
+    public float getEnergy() {
+        return (this.getGrade().ordinal() + 1) * ConfigHolder.SERVER.cursedObjectEnergyForGrade.get().floatValue();
+    }
+
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
         pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
             if (cap.getType() == JujutsuType.CURSE) {
-                cap.addExtraEnergy((this.getGrade().ordinal() + 1) * ConfigHolder.SERVER.cursedObjectEnergyForGrade.get().floatValue());
+                cap.addExtraEnergy(this.getEnergy());
             } else {
                 pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
                         Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));

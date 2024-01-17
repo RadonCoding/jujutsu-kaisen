@@ -36,7 +36,6 @@ public class AbilityScreen extends RadialScreen {
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
         List<AbsorbedCurse> curses = cap.getCurses();
-
         items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
 
         Set<CursedTechnique> copied = cap.getCopied();

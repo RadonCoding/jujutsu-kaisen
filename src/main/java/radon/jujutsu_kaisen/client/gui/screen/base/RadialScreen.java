@@ -199,7 +199,6 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
@@ -212,6 +211,9 @@ public abstract class RadialScreen extends Screen {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
+
+        // DO NOT REMOVE
+        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;
