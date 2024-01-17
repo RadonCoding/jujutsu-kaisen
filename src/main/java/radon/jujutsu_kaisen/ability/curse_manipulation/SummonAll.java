@@ -52,7 +52,7 @@ public class SummonAll extends Ability {
         List<AbsorbedCurse> curses = cap.getCurses();
 
         for (AbsorbedCurse curse : curses) {
-            JJKAbilities.summonCurse(owner, curses.indexOf(curse), false);
+            JJKAbilities.summonCurse(owner, curse, false);
         }
     }
 

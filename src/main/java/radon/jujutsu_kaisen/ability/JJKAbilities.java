@@ -269,6 +269,16 @@ public class JJKAbilities {
         return Math.max(1.0F, getCurseExperience(curse) * 0.01F);
     }
 
+    public static void summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        List<AbsorbedCurse> curses = cap.getCurses();
+
+        if (!curses.contains(curse)) return;
+
+        summonCurse(owner, curses.indexOf(curse), charge);
+    }
+
     public static void summonCurse(LivingEntity owner, int index, boolean charge) {
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
 
