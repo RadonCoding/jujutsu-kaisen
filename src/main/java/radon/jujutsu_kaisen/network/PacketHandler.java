@@ -217,6 +217,21 @@ public class PacketHandler {
                 .encoder(UntriggerAbilityC2SPacket::encode)
                 .consumerMainThread(UntriggerAbilityC2SPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(AddChantS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(AddChantS2CPacket::new)
+                .encoder(AddChantS2CPacket::encode)
+                .consumerMainThread(AddChantS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(RemoveChantS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(RemoveChantS2CPacket::new)
+                .encoder(RemoveChantS2CPacket::encode)
+                .consumerMainThread(RemoveChantS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ClearChantsC2SPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ClearChantsC2SPacket::new)
+                .encoder(ClearChantsC2SPacket::encode)
+                .consumerMainThread(ClearChantsC2SPacket::handle)
+                .add();
     }
 
     public static <MSG> void broadcast(MSG message) {

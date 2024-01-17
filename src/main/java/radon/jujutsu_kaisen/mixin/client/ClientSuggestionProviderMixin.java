@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import radon.jujutsu_kaisen.ChantHandler;
+import radon.jujutsu_kaisen.ServerChantHandler;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 
 import java.util.Collection;
-import java.util.List;
 
 @Mixin(ClientSuggestionProvider.class)
 public class ClientSuggestionProviderMixin {
