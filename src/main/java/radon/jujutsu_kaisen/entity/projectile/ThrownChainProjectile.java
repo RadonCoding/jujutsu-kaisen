@@ -172,7 +172,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
                 Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
                         .xRot(pitch).yRot(-yaw);
-                Vec3 position = owner.position().add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(2.5D)).add(offset);
+                Vec3 position = owner.position().add(RotationUtil.getTargetAdjustedLookAngle(owner)).add(offset);
 
                 if (owner.isUsingItem()) {
                     this.setPos(position.x, position.y, position.z);
