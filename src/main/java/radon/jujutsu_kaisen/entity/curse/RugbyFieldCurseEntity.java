@@ -27,6 +27,7 @@ import software.bernie.geckolib.core.object.PlayState;
 public class RugbyFieldCurseEntity extends CursedSpirit {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public RugbyFieldCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -52,7 +53,6 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
         return null;
     }
 
-
     private PlayState walkRunPredicate(AnimationState<RugbyFieldCurseEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
@@ -60,9 +60,18 @@ public class RugbyFieldCurseEntity extends CursedSpirit {
         return PlayState.STOP;
     }
 
+    private PlayState swingPredicate(AnimationState<RugbyFieldCurseEntity> animationState) {
+        if (this.swinging) {
+            return animationState.setAndContinue(SWING);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
     @Override

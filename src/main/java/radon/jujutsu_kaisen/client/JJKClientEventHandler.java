@@ -357,6 +357,8 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
+            event.registerLayerDefinition(CursedEnergyBlastModel.LAYER, CursedEnergyBlastModel::createBodyLayer);
+
             event.registerLayerDefinition(TojiFushiguroModel.LAYER, SkinModel::createBodyLayer);
             event.registerLayerDefinition(TojiFushiguroModel.INNER_LAYER, SkinModel::createInnerLayer);
             event.registerLayerDefinition(TojiFushiguroModel.OUTER_LAYER, SkinModel::createOuterLayer);
@@ -404,6 +406,25 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
+            event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
+            event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CYCLOPS_CURSE.get(), CyclopsCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.KUCHISAKE_ONNA.get(), ScissorCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.WORM_CURSE.get(), WormCurseHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FUGLY_CURSE.get(), FuglyCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.BIRD_CURSE.get(), BirdCurseRenderer::new);
+            event.registerEntityRenderer(JJKEntities.FINGER_BEARER.get(), FingerBearerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntity::new);
+
+            event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
+            event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
             event.registerEntityRenderer(JJKEntities.TOJI_FUSHIGURO.get(), TojiFushiguroRenderer::new);
             event.registerEntityRenderer(JJKEntities.SATORU_GOJO.get(), SatoruGojoRenderer::new);
             event.registerEntityRenderer(JJKEntities.SUGURU_GETO.get(), SuguruGetoRenderer::new);
@@ -415,23 +436,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MAKI_ZENIN.get(), MakiZeninRenderer::new);
             event.registerEntityRenderer(JJKEntities.HAJIME_KASHIMO.get(), HajimeKashimoRenderer::new);
             event.registerEntityRenderer(JJKEntities.AOI_TODO.get(), AoiTodoRenderer::new);
-
-            event.registerEntityRenderer(JJKEntities.SUKUNA.get(), SukunaRenderer::new);
-            event.registerEntityRenderer(JJKEntities.HEIAN_SUKUNA.get(), HeianSukunaRenderer::new);
-
-            event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
-            event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
-            event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
-            event.registerEntityRenderer(JJKEntities.RUGBY_FIELD_CURSE.get(), RugbyFieldCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.FISH_CURSE.get(), FishCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CYCLOPS_CURSE.get(), CyclopsCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.KUCHISAKE_ONNA.get(), ScissorCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.ZOMBA_CURSE.get(), ZombaCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.WORM_CURSE.get(), WormCurseHeadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.FELINE_CURSE.get(), FelineCurseRenderer::new);
-            event.registerEntityRenderer(JJKEntities.HANAMI.get(), HanamiRenderer::new);
-            event.registerEntityRenderer(JJKEntities.RAINBOW_DRAGON.get(), RainbowDragonHeadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.ABSORBED_PLAYER.get(), AbsorbedPlayerEntity::new);
 
             event.registerEntityRenderer(JJKEntities.RIKA.get(), RikaRenderer::new);
 
@@ -482,7 +486,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.PIRANHA_SHIKIGAMI.get(), PiranhaShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.SIMPLE_DOMAIN.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.WATER_TORRENT.get(), WaterTorrentRenderer::new);
-
             event.registerEntityRenderer(JJKEntities.FOREST_SPIKE.get(), ForestSpikeRenderer::new);
             event.registerEntityRenderer(JJKEntities.WOOD_SEGMENT.get(), WoodSegmentRenderer::new);
             event.registerEntityRenderer(JJKEntities.WOOD_SHIELD_SEGMENT.get(), EmptyRenderer::new);
@@ -506,6 +509,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FIRE_BEAM.get(), FireBeamRenderer::new);
             event.registerEntityRenderer(JJKEntities.FOREST_DASH.get(), ForestDashRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), ItemEntityRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BOMB.get(), CursedEnergyBombRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
         }
 
         @SubscribeEvent

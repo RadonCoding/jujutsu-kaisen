@@ -29,16 +29,9 @@ public class ParryHandler {
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            if (attacker.swinging && victim.swinging) {
-                int rng = ConfigHolder.SERVER.parryChance.get();
-
-                if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) rng /= 2;
-                if (HelperMethods.RANDOM.nextInt(rng) != 0) return;
-
+            if (attacker.swinging && victim.swinging && attacker.swingTime == victim.swingTime) {
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(victim);
                 Vec3 start = victim.getEyePosition();
                 Vec3 result = attacker.getEyePosition().subtract(start);

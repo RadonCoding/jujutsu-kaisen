@@ -134,30 +134,26 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
             this.segments[i].tick();
 
             Entity leader = i == 0 ? this : this.segments[i - 1];
-            double followX = leader.getX();
-            double followY = leader.getY();
-            double followZ = leader.getZ();
+            Vec3 follow = leader.position();
 
             float angle = (((leader.getYRot() + 180.0F) * Mth.PI) / 180.0F);
+
+            double f = (leader.getBbWidth() / 2) + (this.segments[i].getBbWidth() / 2);
 
             double force = 0.05D + (1.0D / (i + 1)) * 0.5D;
 
             double idealX = -Mth.sin(angle) * force;
             double idealZ = Mth.cos(angle) * force;
 
-            double groundY = this.segments[i].isInWall() ? followY + 2.0F : followY;
-            double idealY = (groundY - followY) * force;
+            double groundY = this.segments[i].isInWall() ? follow.y + f : follow.y;
+            double idealY = (groundY - follow.y) * force;
 
-            Vec3 diff = new Vec3(this.segments[i].getX() - followX, this.segments[i].getY() - followY, this.segments[i].getZ() - followZ);
-            diff = diff.normalize();
+            Vec3 diff = new Vec3(this.segments[i].getX() - follow.x, this.segments[i].getY() - follow.y, this.segments[i].getZ() - follow.z)
+                    .normalize().add(idealX, idealY, idealZ).normalize();
 
-            diff = diff.add(idealX, idealY, idealZ).normalize();
-
-            double f = leader.getBbWidth();
-
-            double destX = followX + f * diff.x;
-            double destY = followY + f * diff.y;
-            double destZ = followZ + f * diff.z;
+            double destX = follow.x + f * diff.x;
+            double destY = follow.y + f * diff.y;
+            double destZ = follow.z + f * diff.z;
 
             this.segments[i].setPos(destX, destY, destZ);
 

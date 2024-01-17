@@ -137,7 +137,10 @@ public class JJKEventHandler {
                 newCap.resetCooldowns();
                 newCap.resetBurnout();
                 newCap.clearToggled();
-                newCap.revive(false);
+
+                if (!ConfigHolder.SERVER.realisticShikigami.get()) {
+                    newCap.revive(false);
+                }
                 newCap.resetBlackFlash();
                 newCap.resetExtraEnergy();
                 newCap.resetSpeedStacks();

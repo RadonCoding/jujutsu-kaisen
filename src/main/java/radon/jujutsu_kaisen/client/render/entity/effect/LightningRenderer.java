@@ -26,16 +26,16 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
     @Override
     public void render(@NotNull LightningEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        double collidePosX = pEntity.collidePosX;;
-        double collidePosY = pEntity.collidePosY;
-        double collidePosZ = pEntity.collidePosZ;
-
         if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
 
         Vector3f color = ParticleColors.getCursedEnergyColor(owner);
 
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F, 0.0F);
+
+        double collidePosX = pEntity.collidePosX;;
+        double collidePosY = pEntity.collidePosY;
+        double collidePosZ = pEntity.collidePosZ;
 
         Vec3 start = new Vec3(pEntity.getX(), pEntity.getY(), pEntity.getZ());
         Vec3 end = new Vec3(collidePosX, collidePosY, collidePosZ);

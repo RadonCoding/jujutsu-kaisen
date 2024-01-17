@@ -54,6 +54,9 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.ZOMBA_CURSE_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.WORM_CURSE_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.FELINE_CURSE_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.FUGLY_CURSE_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.BIRD_CURSE_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.FINGER_BEARER_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.RAINBOW_DRAGON_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.DISPLAY_CASE.get());

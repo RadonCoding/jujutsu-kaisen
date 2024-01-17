@@ -207,7 +207,9 @@ public class Infinity extends Ability implements Ability.IToggled {
         if (projectile instanceof ThrownChainProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
-        for (DomainExpansionEntity ignored : VeilHandler.getDomains(((ServerLevel) target.level()), target.blockPosition())) {
+        for (DomainExpansionEntity domain : VeilHandler.getDomains(((ServerLevel) target.level()), target.blockPosition())) {
+            if (!domain.checkSureHitEffect()) continue;
+
             return false;
         }
         if (projectile.getOwner() instanceof LivingEntity owner && JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) &&
@@ -281,7 +283,9 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (source.getEntity() == target || source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) return;
 
                 if (target.level() instanceof ServerLevel level) {
-                    for (DomainExpansionEntity ignored : VeilHandler.getDomains(level, target.blockPosition())) {
+                    for (DomainExpansionEntity domain : VeilHandler.getDomains(level, target.blockPosition())) {
+                        if (!domain.checkSureHitEffect()) continue;
+
                         return;
                     }
 

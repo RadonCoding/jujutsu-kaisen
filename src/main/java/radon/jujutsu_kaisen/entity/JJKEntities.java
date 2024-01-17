@@ -113,6 +113,21 @@ public class JJKEntities {
                     .sized(1.6F, 1.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "feline_curse")
                             .toString()));
+    public static RegistryObject<EntityType<FuglyCurseEntity>> FUGLY_CURSE = ENTITIES.register("fugly_curse", () ->
+            EntityType.Builder.<FuglyCurseEntity>of(FuglyCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(1.6F, 2.4F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "fugly_curse")
+                            .toString()));
+    public static RegistryObject<EntityType<BirdCurseEntity>> BIRD_CURSE = ENTITIES.register("bird_curse", () ->
+            EntityType.Builder.<BirdCurseEntity>of(BirdCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "bird_curse")
+                            .toString()));
+    public static RegistryObject<EntityType<FingerBearerEntity>> FINGER_BEARER = ENTITIES.register("finger_bearer", () ->
+            EntityType.Builder.<FingerBearerEntity>of(FingerBearerEntity::new, MobCategory.AMBIENT)
+                    .sized(1.4F, 3.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "finger_bearer")
+                            .toString()));
     public static RegistryObject<EntityType<RainbowDragonEntity>> RAINBOW_DRAGON = ENTITIES.register("rainbow_dragon", () ->
             EntityType.Builder.<RainbowDragonEntity>of(RainbowDragonEntity::new, MobCategory.AMBIENT)
                     .sized(1.5F, 1.125F)
@@ -123,13 +138,18 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
                             .toString()));
 
-    public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
-            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
-                            .toString()));
     public static RegistryObject<EntityType<SukunaEntity>> SUKUNA = ENTITIES.register("sukuna", () ->
             EntityType.Builder.<SukunaEntity>of(SukunaEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "sukuna")
+                            .toString()));
+    public static RegistryObject<EntityType<HeianSukunaEntity>> HEIAN_SUKUNA = ENTITIES.register("heian_sukuna", () ->
+            EntityType.Builder.<HeianSukunaEntity>of(HeianSukunaEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 2.9F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
+                            .toString()));
+    public static RegistryObject<EntityType<TojiFushiguroEntity>> TOJI_FUSHIGURO = ENTITIES.register("toji_fushiguro", () ->
+            EntityType.Builder.<TojiFushiguroEntity>of(TojiFushiguroEntity::new, MobCategory.AMBIENT)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toji_fushiguro")
                             .toString()));
     public static RegistryObject<EntityType<SatoruGojoEntity>> SATORU_GOJO = ENTITIES.register("satoru_gojo", () ->
             EntityType.Builder.<SatoruGojoEntity>of(SatoruGojoEntity::new, MobCategory.AMBIENT)
@@ -177,10 +197,86 @@ public class JJKEntities {
                     .sized(1.4F, 3.875F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rika")
                             .toString()));
-    public static RegistryObject<EntityType<HeianSukunaEntity>> HEIAN_SUKUNA = ENTITIES.register("heian_sukuna", () ->
-            EntityType.Builder.<HeianSukunaEntity>of(HeianSukunaEntity::new, MobCategory.MISC)
-                    .sized(1.0F, 2.9F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "heian_sukuna")
+
+    public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
+            EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 5.4F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
+    public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
+            EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 1.3F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_white")
+                            .toString()));
+    public static RegistryObject<EntityType<DivineDogBlackEntity>> DIVINE_DOG_BLACK = ENTITIES.register("divine_dog_black", () ->
+            EntityType.Builder.<DivineDogBlackEntity>of(DivineDogBlackEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 1.3F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_black")
+                            .toString()));
+    public static RegistryObject<EntityType<DivineDogTotalityEntity>> DIVINE_DOG_TOTALITY = ENTITIES.register("divine_dog_totality", () ->
+            EntityType.Builder.<DivineDogTotalityEntity>of(DivineDogTotalityEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 2.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_totality")
+                            .toString()));
+    public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
+            EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
+                            .toString()));
+    public static RegistryObject<EntityType<ToadFusionEntity>> TOAD_FUSION = ENTITIES.register("toad_fusion", () ->
+            EntityType.Builder.<ToadFusionEntity>of(ToadFusionEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_fusion")
+                            .toString()));
+    public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
+            EntityType.Builder.<ToadTongueProjectile>of(ToadTongueProjectile::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_tongue")
+                            .toString()));
+    public static RegistryObject<EntityType<RabbitEscapeEntity>> RABBIT_ESCAPE = ENTITIES.register("rabbit_escape", () ->
+            EntityType.Builder.<RabbitEscapeEntity>of(RabbitEscapeEntity::new, MobCategory.MISC)
+                    .sized(0.4F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rabbit_escape")
+                            .toString()));
+    public static RegistryObject<EntityType<NueEntity>> NUE = ENTITIES.register("nue", () ->
+            EntityType.Builder.<NueEntity>of(NueEntity::new, MobCategory.MISC)
+                    .sized(0.9F, 2.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue")
+                            .toString()));
+    public static RegistryObject<EntityType<NueTotalityEntity>> NUE_TOTALITY = ENTITIES.register("nue_totality", () ->
+            EntityType.Builder.<NueTotalityEntity>of(NueTotalityEntity::new, MobCategory.MISC)
+                    .sized(4.0F, 10.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue_totality")
+                            .toString()));
+    public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
+            EntityType.Builder.<GreatSerpentEntity>of(GreatSerpentEntity::new, MobCategory.MISC)
+                    .sized(1.4375F, 0.8125F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
+                            .toString()));
+    public static RegistryObject<EntityType<MaxElephantEntity>> MAX_ELEPHANT = ENTITIES.register("max_elephant", () ->
+            EntityType.Builder.<MaxElephantEntity>of(MaxElephantEntity::new, MobCategory.MISC)
+                    .sized(3.8F, 3.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "max_elephant")
+                            .toString()));
+    public static RegistryObject<EntityType<TranquilDeerEntity>> TRANQUIL_DEER = ENTITIES.register("tranquil_deer", () ->
+            EntityType.Builder.<TranquilDeerEntity>of(TranquilDeerEntity::new, MobCategory.MISC)
+                    .sized(3.8F, 3.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "tranquil_deer")
+                            .toString()));
+    public static RegistryObject<EntityType<PiercingBullEntity>> PIERCING_BULL = ENTITIES.register("piercing_bull", () ->
+            EntityType.Builder.<PiercingBullEntity>of(PiercingBullEntity::new, MobCategory.MISC)
+                    .sized(2.0F, 1.8F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_bull")
+                            .toString()));
+    public static RegistryObject<EntityType<AgitoEntity>> AGITO = ENTITIES.register("agito", () ->
+            EntityType.Builder.<AgitoEntity>of(AgitoEntity::new, MobCategory.MISC)
+                    .sized(1.6F, 4.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
+                            .toString()));
+
+    public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
+            EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
+                    .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
                             .toString()));
 
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
@@ -268,7 +364,7 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<PiranhaShikigamiProjectile>> PIRANHA_SHIKIGAMI = ENTITIES.register("piranha_shikigami", () ->
             EntityType.Builder.<PiranhaShikigamiProjectile>of(PiranhaShikigamiProjectile::new, MobCategory.MISC)
-                    .sized(2.0F, 2.0F)
+                    .sized(0.5F, 0.8F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piranha_shikigami")
                             .toString()));
     public static RegistryObject<EntityType<SharkShikigamiProjectile>> SHARK_SHIKIGAMI = ENTITIES.register("shark_shikigami", () ->
@@ -385,86 +481,15 @@ public class JJKEntities {
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_imbued_item")
                             .toString()));
-
-    public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
-            EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 5.4F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
-    public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
-            EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 1.3F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_white")
+    public static RegistryObject<EntityType<CursedEnergyBombEntity>> CURSED_ENERGY_BOMB = ENTITIES.register("cursed_energy_bomb", () ->
+            EntityType.Builder.<CursedEnergyBombEntity>of(CursedEnergyBombEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_bomb")
                             .toString()));
-    public static RegistryObject<EntityType<DivineDogBlackEntity>> DIVINE_DOG_BLACK = ENTITIES.register("divine_dog_black", () ->
-            EntityType.Builder.<DivineDogBlackEntity>of(DivineDogBlackEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 1.3F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_black")
-                            .toString()));
-    public static RegistryObject<EntityType<DivineDogTotalityEntity>> DIVINE_DOG_TOTALITY = ENTITIES.register("divine_dog_totality", () ->
-            EntityType.Builder.<DivineDogTotalityEntity>of(DivineDogTotalityEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 2.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_totality")
-                            .toString()));
-    public static RegistryObject<EntityType<ToadEntity>> TOAD = ENTITIES.register("toad", () ->
-            EntityType.Builder.<ToadEntity>of(ToadEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 1.8F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad")
-                            .toString()));
-    public static RegistryObject<EntityType<ToadFusionEntity>> TOAD_FUSION = ENTITIES.register("toad_fusion", () ->
-            EntityType.Builder.<ToadFusionEntity>of(ToadFusionEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 1.8F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_fusion")
-                            .toString()));
-    public static RegistryObject<EntityType<ToadTongueProjectile>> TOAD_TONGUE = ENTITIES.register("toad_tongue", () ->
-            EntityType.Builder.<ToadTongueProjectile>of(ToadTongueProjectile::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<CursedEnergyBlastEntity>> CURSED_ENERGY_BLAST = ENTITIES.register("cursed_energy_blast", () ->
+            EntityType.Builder.<CursedEnergyBlastEntity>of(CursedEnergyBlastEntity::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "toad_tongue")
-                            .toString()));
-    public static RegistryObject<EntityType<RabbitEscapeEntity>> RABBIT_ESCAPE = ENTITIES.register("rabbit_escape", () ->
-            EntityType.Builder.<RabbitEscapeEntity>of(RabbitEscapeEntity::new, MobCategory.MISC)
-                    .sized(0.4F, 0.5F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rabbit_escape")
-                            .toString()));
-    public static RegistryObject<EntityType<NueEntity>> NUE = ENTITIES.register("nue", () ->
-            EntityType.Builder.<NueEntity>of(NueEntity::new, MobCategory.MISC)
-                    .sized(0.9F, 2.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue")
-                            .toString()));
-    public static RegistryObject<EntityType<NueTotalityEntity>> NUE_TOTALITY = ENTITIES.register("nue_totality", () ->
-            EntityType.Builder.<NueTotalityEntity>of(NueTotalityEntity::new, MobCategory.MISC)
-                    .sized(4.0F, 10.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nue_totality")
-                            .toString()));
-    public static RegistryObject<EntityType<GreatSerpentEntity>> GREAT_SERPENT = ENTITIES.register("great_serpent", () ->
-            EntityType.Builder.<GreatSerpentEntity>of(GreatSerpentEntity::new, MobCategory.MISC)
-                    .sized(1.4375F, 0.8125F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "great_serpent")
-                            .toString()));
-    public static RegistryObject<EntityType<MaxElephantEntity>> MAX_ELEPHANT = ENTITIES.register("max_elephant", () ->
-            EntityType.Builder.<MaxElephantEntity>of(MaxElephantEntity::new, MobCategory.MISC)
-                    .sized(3.8F, 3.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "max_elephant")
-                            .toString()));
-    public static RegistryObject<EntityType<TranquilDeerEntity>> TRANQUIL_DEER = ENTITIES.register("tranquil_deer", () ->
-            EntityType.Builder.<TranquilDeerEntity>of(TranquilDeerEntity::new, MobCategory.MISC)
-                    .sized(3.8F, 3.6F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "tranquil_deer")
-                            .toString()));
-    public static RegistryObject<EntityType<PiercingBullEntity>> PIERCING_BULL = ENTITIES.register("piercing_bull", () ->
-            EntityType.Builder.<PiercingBullEntity>of(PiercingBullEntity::new, MobCategory.MISC)
-                    .sized(2.0F, 1.8F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "piercing_bull")
-                            .toString()));
-    public static RegistryObject<EntityType<AgitoEntity>> AGITO = ENTITIES.register("agito", () ->
-            EntityType.Builder.<AgitoEntity>of(AgitoEntity::new, MobCategory.MISC)
-                    .sized(1.6F, 4.0F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
-                            .toString()));
-
-    public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
-            EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
-                    .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_blast")
                             .toString()));
 
     @SubscribeEvent
@@ -512,6 +537,9 @@ public class JJKEntities {
         event.put(ZOMBA_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(WORM_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(FELINE_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(FUGLY_CURSE.get(), SorcererEntity.createAttributes().build());
+        event.put(BIRD_CURSE.get(), BirdCurseEntity.createAttributes().build());
+        event.put(FINGER_BEARER.get(), SorcererEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 

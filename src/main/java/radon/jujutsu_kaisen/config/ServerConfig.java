@@ -19,8 +19,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue experienceMultiplier;
     public final ForgeConfigSpec.DoubleValue deathPenalty;
     public final ForgeConfigSpec.IntValue blackFlashChance;
-    public final ForgeConfigSpec.IntValue parryChance;
-    private final ForgeConfigSpec.BooleanValue realisticShikigami;
+    public final ForgeConfigSpec.BooleanValue realisticShikigami;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -77,8 +76,6 @@ public class ServerConfig {
                 .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 100, 1, 1000);
-        this.parryChance = builder.comment("The chance of parrying an attack (smaller number equals bigger chance)")
-                .defineInRange("parryChance", 3, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .define("realisticShikigami", true);
         builder.pop();

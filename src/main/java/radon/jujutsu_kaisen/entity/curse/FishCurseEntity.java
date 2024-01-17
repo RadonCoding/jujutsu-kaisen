@@ -10,7 +10,6 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -93,7 +92,7 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
 
-    private PlayState walkPredicate(AnimationState<FishCurseEntity> animationState) {
+    private PlayState swimPredicate(AnimationState<FishCurseEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(SWIM);
         }
@@ -102,6 +101,6 @@ public class FishCurseEntity extends PackCursedSpirit {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk", this::walkPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swim", this::swimPredicate));
     }
 }
