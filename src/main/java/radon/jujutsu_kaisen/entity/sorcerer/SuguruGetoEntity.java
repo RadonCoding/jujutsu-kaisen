@@ -68,7 +68,7 @@ public class SuguruGetoEntity extends SorcererEntity {
     private AbsorbedCurse createCurse(EntityType<?> type) {
         if (!(type.create(this.level()) instanceof CursedSpirit curse)) return null;
         ISorcererData cap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return new AbsorbedCurse(JJKEntities.KUCHISAKE_ONNA.get().getDescription(), JJKEntities.KUCHISAKE_ONNA.get(), cap.serializeNBT());
+        return new AbsorbedCurse(type.getDescription(), type, cap.serializeNBT());
     }
 
     private void tryAddCurse(ISorcererData data, EntityType<?> type) {
