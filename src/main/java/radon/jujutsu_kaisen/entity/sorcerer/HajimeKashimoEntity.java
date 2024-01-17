@@ -30,6 +30,11 @@ public class HajimeKashimoEntity extends SorcererEntity {
     }
 
     @Override
+    public int getCursedEnergyColor() {
+        return 13893887;
+    }
+
+    @Override
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }
@@ -43,7 +48,6 @@ public class HajimeKashimoEntity extends SorcererEntity {
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }
-
 
     @Override
     public void onAddedToWorld() {

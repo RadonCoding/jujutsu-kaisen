@@ -27,6 +27,10 @@ public interface ISorcerer {
         return 0.0F;
     }
 
+    default int getCursedEnergyColor() {
+        return -1;
+    }
+
     SorcererGrade getGrade();
 
     @Nullable CursedTechnique getTechnique();
@@ -66,6 +70,10 @@ public interface ISorcerer {
             data.setMaxEnergy(this.getMaxEnergy());
         }
         data.setEnergy(data.getMaxEnergy());
+
+        if (this.getCursedEnergyColor() != -1) {
+            data.setCursedEnergyColor(this.getCursedEnergyColor());
+        }
 
         if (this.canPerformSorcery()) {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {

@@ -261,8 +261,8 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2.0F - 0.4D)
-                    .setMaxY(bounds.maxY - passenger.getBbHeight() / 2.0F);
+            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2 - 0.4D)
+                    .setMaxY(bounds.maxY - passenger.getBbHeight() + 0.4D);
         }
         return bounds;
     }

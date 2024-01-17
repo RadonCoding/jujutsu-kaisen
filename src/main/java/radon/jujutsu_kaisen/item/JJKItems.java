@@ -123,7 +123,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> HANAMI_SPAWN_EGG = ITEMS.register("hanami_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.HANAMI, 0xfdfcfb, 0x790510, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> RUGBY_FIELD_CURSE_SPAWN_EGG = ITEMS.register("rugby_field_curse_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x5d8c9a, 0x888441, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.RUGBY_FIELD_CURSE, 0x629fb0, 0xc7b46b, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FISH_CURSE_SPAWN_EGG = ITEMS.register("fish_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FISH_CURSE, 0x181a21, 0x252935, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> CYCLOPS_CURSE_SPAWN_EGG = ITEMS.register("cyclops_curse_spawn_egg",
@@ -136,6 +136,12 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.WORM_CURSE, 0xcac7bf, 0x4b8355, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FELINE_CURSE_SPAWN_EGG = ITEMS.register("feline_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.FELINE_CURSE, 0x79592d, 0x481f0d, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> FUGLY_CURSE_SPAWN_EGG = ITEMS.register("fugly_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.FUGLY_CURSE, 0xd7d2cb, 0x64685a, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> BIRD_CURSE_SPAWN_EGG = ITEMS.register("bird_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.BIRD_CURSE, 0xc79b54, 0xc7ad87, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> FINGER_BEARER_SPAWN_EGG = ITEMS.register("finger_bearer_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.FINGER_BEARER, 0xb7ccd5, 0x303a58, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> RAINBOW_DRAGON_SPAWN_EGG = ITEMS.register("rainbow_dragon_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.RAINBOW_DRAGON, 0xffffff, 0xffea59, new Item.Properties()));
 

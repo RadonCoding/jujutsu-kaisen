@@ -64,6 +64,8 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
+import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
+import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -156,6 +158,8 @@ public class JJKAbilities {
     public static RegistryObject<Ability> DISCHARGE = ABILITIES.register("discharge", Discharge::new);
     public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
     public static RegistryObject<Ability> SWITCH = ABILITIES.register("switch", Switch::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_BOMB = ABILITIES.register("cursed_energy_bomb", CursedEnergyBomb::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
 
     public static RegistryObject<Summon<?>> MAHORAGA = ABILITIES.register("mahoraga", Mahoraga::new);
     public static RegistryObject<Summon<?>> DIVINE_DOGS = ABILITIES.register("divine_dogs", DivineDogs::new);

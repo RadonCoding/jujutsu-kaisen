@@ -80,6 +80,10 @@ public abstract class BeamEntity extends JujutsuProjectile {
         return false;
     }
 
+    protected boolean shouldSwing() {
+        return true;
+    }
+
     protected Vec3 calculateSpawnPos(LivingEntity owner) {
         return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(RotationUtil.getTargetAdjustedLookAngle(owner));
@@ -112,7 +116,7 @@ public abstract class BeamEntity extends JujutsuProjectile {
         }
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            if (!this.isStill()) {
+            if (this.shouldSwing()) {
                 if (this.getTime() % 5 == 0) {
                     owner.swing(InteractionHand.MAIN_HAND);
                 }

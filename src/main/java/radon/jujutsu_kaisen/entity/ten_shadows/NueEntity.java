@@ -37,12 +37,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJumpInputListener {
-    private static final EntityDataAccessor<Integer> DATA_FLIGHT = SynchedEntityData.defineId(NueEntity.class, EntityDataSerializers.INT);
-
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    private static final RawAnimation FLY_1 = RawAnimation.begin().thenLoop("move.fly_1");
-    private static final RawAnimation FLY_2 = RawAnimation.begin().thenLoop("move.fly_2");
-    private static final RawAnimation FLY_3 = RawAnimation.begin().thenLoop("move.fly_3");
+    private static final RawAnimation FLY = RawAnimation.begin().thenLoop("move.fly");
     private static final RawAnimation SWING = RawAnimation.begin().thenLoop("attack.swing");
     private static final RawAnimation FLIGHT_FEET = RawAnimation.begin().thenLoop("misc.flight_feet");
     private static final RawAnimation GRAB_FEET = RawAnimation.begin().thenLoop("misc.grab_feet");
@@ -67,30 +63,6 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         this.yHeadRotO = this.yHeadRot;
 
         this.moveControl = new FlyingMoveControl(this, 20, true);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_FLIGHT, 0);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-
-        LivingEntity passenger = this.getControllingPassenger();
-
-        Vec3 movement = passenger == null ? this.getDeltaMovement() : new Vec3(passenger.xxa, 0.0D, passenger.zza);
-
-        if (this.jump) {
-            this.setFlight(Flight.ASCEND);
-        } else if (movement.length() > 1.0D) {
-            this.setFlight(Flight.SPRINT);
-        } else {
-            this.setFlight(Flight.NORMAL);
-        }
     }
 
     @Override
@@ -139,24 +111,11 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         return navigation;
     }
 
-    private Flight getFlight() {
-        return Flight.values()[this.entityData.get(DATA_FLIGHT)];
-    }
-
-    private void setFlight(Flight flight) {
-        this.entityData.set(DATA_FLIGHT, flight.ordinal());
-    }
-
     private PlayState flyIdlePredicate(AnimationState<NueEntity> animationState) {
         if (animationState.isMoving()) {
-            return switch (this.getFlight()) {
-                case ASCEND -> animationState.setAndContinue(FLY_1);
-                case SPRINT -> animationState.setAndContinue(FLY_2);
-                default -> animationState.setAndContinue(FLY_3);
-            };
-        } else {
-            return animationState.setAndContinue(IDLE);
+            return animationState.setAndContinue(FLY);
         }
+        return animationState.setAndContinue(IDLE);
     }
 
     private PlayState swingPredicate(AnimationState<NueEntity> animationState) {
@@ -176,7 +135,7 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", this::flyIdlePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Fly/Idle", 5, this::flyIdlePredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Feet", this::feetPredicate));
     }
@@ -230,8 +189,8 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
         LivingEntity passenger = this.getControllingPassenger();
 
         if (passenger != null) {
-            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2.0F - 0.4D)
-                    .setMaxY(bounds.maxY - passenger.getBbHeight() / 2.0F);
+            return bounds.setMinY(bounds.minY - passenger.getBbHeight() / 2 - 0.4D)
+                    .setMaxY(bounds.maxY - passenger.getBbHeight() + 0.4D);
         }
         return bounds;
     }

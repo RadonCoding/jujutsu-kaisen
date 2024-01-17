@@ -19,8 +19,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import java.util.List;
 
 public class ZombaCurseEntity extends CursedSpirit {
-    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public ZombaCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);

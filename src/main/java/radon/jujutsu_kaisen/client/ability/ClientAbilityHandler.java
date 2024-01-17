@@ -99,12 +99,16 @@ public class ClientAbilityHandler {
             if (mc.player == null) return;
 
             if (event.getKey() == KeyEvent.VK_SPACE) {
-                if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
-                    listener.setJump(event.getAction() != InputConstants.RELEASE);
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
-                } else if (mc.player.getFirstPassenger() instanceof IJumpInputListener listener) {
-                    listener.setJump(event.getAction() != InputConstants.RELEASE);
-                    PacketHandler.sendToServer(new JumpInputListenerC2SPacket(event.getAction() == InputConstants.PRESS));
+                if (event.getAction() == InputConstants.PRESS || event.getAction() == InputConstants.RELEASE) {
+                    boolean down = event.getAction() == InputConstants.PRESS;
+
+                    if (mc.player.getVehicle() instanceof IJumpInputListener listener) {
+                        listener.setJump(down);
+                        PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
+                    } else if (mc.player.getFirstPassenger() instanceof IJumpInputListener listener) {
+                        listener.setJump(down);
+                        PacketHandler.sendToServer(new JumpInputListenerC2SPacket(down));
+                    }
                 }
             }
 

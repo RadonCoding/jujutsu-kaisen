@@ -4,9 +4,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.BeamEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class PureLoveBeamEntity extends BeamEntity {
     public static final int FRAMES = 3;
@@ -21,6 +23,11 @@ public class PureLoveBeamEntity extends BeamEntity {
 
     public PureLoveBeamEntity(LivingEntity owner, float power) {
         super(JJKEntities.PURE_LOVE.get(), owner, power);
+    }
+
+    @Override
+    protected boolean shouldSwing() {
+        return false;
     }
 
     @Override
@@ -54,5 +61,11 @@ public class PureLoveBeamEntity extends BeamEntity {
     @Override
     public int getCharge() {
         return CHARGE;
+    }
+
+    @Override
+    protected Vec3 calculateSpawnPos(LivingEntity owner) {
+        return new Vec3(owner.getX(), owner.getEyeY() - 0.2D - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
     }
 }
