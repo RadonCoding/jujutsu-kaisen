@@ -76,7 +76,10 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
 
         if (this.getTime() >= DURATION) {
             if (owner != null && this.grabbed != null) {
-                this.grabbed.setDeltaMovement(owner.position().subtract(this.grabbed.position()).normalize().scale(PULL_STRENGTH));
+                this.grabbed.setDeltaMovement(owner.position().subtract(this.grabbed.position())
+                        .normalize()
+                        .scale(PULL_STRENGTH)
+                        .multiply(1.0D, 0.5D, 1.0D));
                 this.grabbed.hurtMarked = true;
             }
             this.discard();

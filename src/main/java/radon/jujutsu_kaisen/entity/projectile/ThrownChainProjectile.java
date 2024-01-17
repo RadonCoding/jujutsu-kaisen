@@ -103,7 +103,9 @@ public class ThrownChainProjectile extends AbstractArrow {
 
             if (this.getStack().isEmpty()) {
                 if (owner != null) {
-                    owner.setDeltaMovement(this.position().subtract(owner.position()).normalize().scale(PULL_STRENGTH));
+                    owner.setDeltaMovement(this.position().subtract(owner.position())
+                            .normalize()
+                            .scale(PULL_STRENGTH));
                     owner.hurtMarked = true;
 
                     this.dealtDamage = true;
@@ -121,7 +123,10 @@ public class ThrownChainProjectile extends AbstractArrow {
         if (this.getStack().isEmpty()) {
             if (owner != null) {
                 if (target.isPushable()) {
-                    target.setDeltaMovement(owner.position().subtract(target.position()).normalize().scale(PULL_STRENGTH));
+                    target.setDeltaMovement(owner.position().subtract(target.position())
+                            .normalize()
+                            .scale(PULL_STRENGTH)
+                            .multiply(1.0D, 0.5D, 1.0D));
                     target.hurtMarked = true;
 
                     this.dealtDamage = true;
