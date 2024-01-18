@@ -59,6 +59,8 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public boolean canUnlock(LivingEntity owner) {
+        if (this == JJKAbilities.RCT1.get()) return false;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getType() == JujutsuType.SORCERER && super.canUnlock(owner);
     }
