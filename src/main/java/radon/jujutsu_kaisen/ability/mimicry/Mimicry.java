@@ -33,7 +33,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.hasLineOfSight(target);
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target);
     }
 
     @Override

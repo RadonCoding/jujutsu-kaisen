@@ -26,7 +26,7 @@ public class Teleport extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
+        return target != null && !target.isDeadOrDying() && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
     }
 
     @Override

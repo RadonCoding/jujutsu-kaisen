@@ -34,9 +34,9 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (JJKAbilities.hasToggled(owner, this)) {
-            return target != null && HelperMethods.RANDOM.nextInt(20) != 0;
+            return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
         }
-        return target != null && HelperMethods.RANDOM.nextInt(10) == 0;
+        return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

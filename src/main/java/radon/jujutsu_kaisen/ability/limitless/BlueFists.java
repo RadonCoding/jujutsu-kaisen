@@ -26,7 +26,7 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.distanceTo(target) < 5.0D;
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) < 5.0D;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ShadowTravel extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.hasLineOfSight(target) && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
     }
 
     @Override
