@@ -14,12 +14,11 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Predicate;
 
 public class RotationUtil {
-    public static Vec2 getTargetAdjustedRotation(Entity entity) {
+    private static Vec2 getTargetAdjustedRotation(Vec3 start, Entity entity) {
         if (entity instanceof Targeting targeting) {
             LivingEntity target = targeting.getTarget();
 
             if (target != null) {
-                Vec3 start = entity.getEyePosition();
                 Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 double d0 = end.x - start.x;
                 double d1 = end.y - start.y;
@@ -47,19 +46,31 @@ public class RotationUtil {
         return new Vec2(entity.getXRot(), entity.getYRot());
     }
 
-    public static float getTargetAdjustedYRot(Entity entity) {
-        Vec2 rot = getTargetAdjustedRotation(entity);
+    public static float getTargetAdjustedYRot(Vec3 start, Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(start, entity);
         return rot.y;
     }
 
-    public static float getTargetAdjustedXRot(Entity entity) {
-        Vec2 rot = getTargetAdjustedRotation(entity);
+    public static float getTargetAdjustedXRot(Vec3 start, Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(start, entity);
         return rot.x;
     }
 
-    public static Vec3 getTargetAdjustedLookAngle(Entity entity) {
-        Vec2 rot = getTargetAdjustedRotation(entity);
+    public static Vec3 getTargetAdjustedLookAngle(Vec3 start, Entity entity) {
+        Vec2 rot = getTargetAdjustedRotation(start, entity);
         return calculateViewVector(rot.y, rot.x);
+    }
+
+    public static float getTargetAdjustedYRot(Entity entity) {
+        return getTargetAdjustedYRot(entity.getEyePosition(), entity);
+    }
+
+    public static float getTargetAdjustedXRot(Entity entity) {
+        return getTargetAdjustedXRot(entity.getEyePosition(), entity);
+    }
+
+    public static Vec3 getTargetAdjustedLookAngle(Entity entity) {
+        return getTargetAdjustedLookAngle(entity.getEyePosition(), entity);
     }
 
     public static Vec3 calculateViewVector(float yaw, float pitch) {
