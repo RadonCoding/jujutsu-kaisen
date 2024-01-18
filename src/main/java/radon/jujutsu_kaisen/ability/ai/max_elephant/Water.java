@@ -51,7 +51,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     private static Vec3 calculateSpawnPos(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        return new Vec3(owner.getX(), owner.getEyeY() - (SCALE / 2), owner.getZ()).add(look);
+        return new Vec3(owner.getX(), owner.getEyeY() - (SCALE * 0.25F), owner.getZ()).add(look);
     }
 
     @Override
