@@ -50,7 +50,12 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         if (owner.isVehicle()) {
             return JJKAbilities.isChanneling(owner, this);
         }
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && RotationUtil.hasLineOfSight(calculateSpawnPos(owner), owner, target);
+    }
+
+    private static Vec3 calculateSpawnPos(LivingEntity owner) {
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        return new Vec3(owner.getX(), owner.getEyeY() - (SCALE / 2), owner.getZ()).add(look);
     }
 
     @Override
@@ -109,8 +114,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (SCALE / 2), owner.getZ()).add(look);
+        Vec3 spawn = calculateSpawnPos(owner);
 
         float yaw = (float) ((RotationUtil.getTargetAdjustedYRot(spawn, owner) + 90.0F) * Math.PI / 180.0F);
         float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(spawn, owner) * Math.PI / 180.0F);
