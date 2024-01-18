@@ -25,7 +25,7 @@ public class RabbitEscape extends Summon<RabbitEscapeEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && owner.tickCount - owner.getLastHurtByMobTimestamp() < 20;
+        return target != null && !target.isDeadOrDying() && owner.tickCount - owner.getLastHurtByMobTimestamp() < 20;
     }
 
     @Override

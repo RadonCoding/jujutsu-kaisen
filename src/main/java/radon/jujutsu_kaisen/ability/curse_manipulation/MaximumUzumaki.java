@@ -22,7 +22,7 @@ public class MaximumUzumaki extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && owner.hasLineOfSight(target) &&
+        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
                 (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 

@@ -46,7 +46,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         if (owner.isVehicle()) {
             return JJKAbilities.isChanneling(owner, this);
         }
-        return target != null && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
     }
 
     @Override

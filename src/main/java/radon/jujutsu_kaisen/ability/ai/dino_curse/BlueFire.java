@@ -50,7 +50,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         if (owner.isVehicle()) {
             return JJKAbilities.isChanneling(owner, this);
         }
-        return target != null && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
     }
 
     @Override
