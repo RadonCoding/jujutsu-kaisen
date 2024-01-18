@@ -21,12 +21,13 @@ public class TravelParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
     private final boolean glow;
+    private final float scale;
     private final float opacity;
 
     protected TravelParticle(ClientLevel pLevel, double pX, double pY, double pZ, TravelParticleOptions options, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ);
 
-        this.quadSize = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
+        this.scale = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
         this.lifetime = options.lifetime();
 
         this.target = new Vec3(options.target());
@@ -51,17 +52,18 @@ public class TravelParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
+        this.quadSize = this.scale * (1.0F - ((float) this.age / this.lifetime));
+
         this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.setSprite(this.sprites.get(this.level.random));
 
         Vec3 pos = new Vec3(this.x, this.y, this.z);
-        Vec3 direction = this.target.subtract(pos).normalize();
+        Vec3 direction = this.target.subtract(pos);
 
-        double remaining = this.target.distanceTo(pos);
-        double distance = remaining / this.lifetime;
+        double factor = (double) this.age / this.lifetime;
 
-        Vec3 newPos = pos.add(direction.scale(distance));
+        Vec3 newPos = pos.add(direction.scale(factor));
         this.setPos(newPos.x, newPos.y, newPos.z);
     }
 

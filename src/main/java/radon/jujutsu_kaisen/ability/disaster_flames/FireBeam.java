@@ -8,7 +8,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FireBeam extends Ability {
     @Override
@@ -47,6 +46,6 @@ public class FireBeam extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.FLAMES;
+        return Classification.FIRE;
     }
 }

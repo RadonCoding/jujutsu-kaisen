@@ -87,6 +87,6 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
     @Override
     public Classification getClassification() {
-        return Classification.FLAMES;
+        return Classification.FIRE;
     }
 }

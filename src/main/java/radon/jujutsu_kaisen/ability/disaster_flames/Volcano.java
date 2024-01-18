@@ -83,6 +83,6 @@ public class Volcano extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.FLAMES;
+        return Classification.FIRE;
     }
 }
