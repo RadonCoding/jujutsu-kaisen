@@ -73,6 +73,24 @@ public class RotationUtil {
         return getTargetAdjustedLookAngle(entity.getEyePosition(), entity);
     }
 
+    public static boolean hasLineOfSight(Vec3 start, Entity entity, Entity target) {
+        if (target.level() != entity.level()) {
+            return false;
+        } else {
+            Vec3 end = new Vec3(target.getX(), target.getEyeY(), target.getZ());
+
+            if (end.distanceTo(start) > 128.0D) {
+                return false;
+            } else {
+                return entity.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+            }
+        }
+    }
+
+    public static boolean hasLineOfSight(Entity entity, Entity target) {
+        return hasLineOfSight(entity.getEyePosition(), entity, target);
+    }
+
     public static Vec3 calculateViewVector(float yaw, float pitch) {
         float f = pitch * ((float) Math.PI / 180.0F);
         float f1 = -yaw * ((float) Math.PI / 180.0F);
