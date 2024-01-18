@@ -106,7 +106,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         if (owner.level().isClientSide) return;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(look);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (SCALE / 2), owner.getZ()).add(look);
 
         float yaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0F);
         float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0F);
@@ -118,7 +118,7 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         Vec3 end = new Vec3(endPosX, endPosY, endPosZ);
         Vec3 collision = this.getCollision(owner, spawn, end);
 
-        ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), HelperMethods.RANDOM.nextFloat(),
+        ParticleOptions particle = new TravelParticle.TravelParticleOptions(collision.toVector3f(), Vec3.fromRGB24(MapColor.WATER.col).toVector3f(), SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
                 0.5F, false, (int) spawn.distanceTo(collision) / 2);
 
         for (int i = 0; i < 32; i++) {
