@@ -77,7 +77,7 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (target == null) {
             return Status.FAILURE;
         }
-        return super.isTriggerable(owner);
+        return super.isStillUsable(owner);
     }
 
     @Override
