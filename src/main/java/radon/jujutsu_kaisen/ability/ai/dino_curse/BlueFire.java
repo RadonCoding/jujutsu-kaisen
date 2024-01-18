@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.curse.DinoCurseEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MaxElephantEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -54,7 +55,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return owner instanceof MaxElephantEntity;
+        return owner instanceof DinoCurseEntity;
     }
 
     @Override
@@ -125,7 +126,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
                 (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
                 (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE);
 
-        ParticleOptions particle = new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE, SCALE * HelperMethods.RANDOM.nextFloat(),
+        ParticleOptions particle = new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE, SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
                 0.5F, true, (int) spawn.distanceTo(collision));
 
         for (int i = 0; i < SCALE * 16; i++) {
