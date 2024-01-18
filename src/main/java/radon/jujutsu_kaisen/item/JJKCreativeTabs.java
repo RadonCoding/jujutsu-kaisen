@@ -58,6 +58,7 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.BIRD_CURSE_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.FINGER_BEARER_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.RAINBOW_DRAGON_SPAWN_EGG.get());
+                        pOutput.accept(JJKItems.DINO_CURSE_SPAWN_EGG.get());
 
                         pOutput.accept(JJKItems.DISPLAY_CASE.get());
                         pOutput.accept(JJKItems.ALTAR.get());

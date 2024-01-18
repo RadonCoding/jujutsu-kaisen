@@ -147,6 +147,7 @@
   "item.jujutsu_kaisen.bird_curse_spawn_egg": "Spawn Bird Curse",
   "item.jujutsu_kaisen.finger_bearer_spawn_egg": "Spawn Finger Bearer",
   "item.jujutsu_kaisen.rainbow_dragon_spawn_egg": "Spawn Rainbow Dragon",
+  "item.jujutsu_kaisen.dino_curse_spawn_egg": "Spawn Dino Curse",
 
   "item.jujutsu_kaisen.cost": "Cost: %1$f",
 
@@ -536,6 +537,7 @@
   "entity.jujutsu_kaisen.bird_curse": "Bird Curse",
   "entity.jujutsu_kaisen.finger_bearer": "Finger Bearer",
   "entity.jujutsu_kaisen.rainbow_dragon": "Rainbow Dragon",
+  "entity.jujutsu_kaisen.dino_curse": "Dino Curse",
 
   "entity.jujutsu_kaisen.sukuna": "Sukuna",
   "entity.jujutsu_kaisen.heian_sukuna": "The King of Curses",

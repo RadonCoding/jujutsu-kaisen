@@ -133,6 +133,11 @@ public class JJKEntities {
                     .sized(1.5F, 1.125F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rainbow_dragon")
                             .toString()));
+    public static RegistryObject<EntityType<DinoCurseEntity>> DINO_CURSE = ENTITIES.register("dino_curse", () ->
+            EntityType.Builder.<DinoCurseEntity>of(DinoCurseEntity::new, MobCategory.AMBIENT)
+                    .sized(4.0F, 3.6F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dino_curse")
+                            .toString()));
     public static RegistryObject<EntityType<AbsorbedPlayerEntity>> ABSORBED_PLAYER = ENTITIES.register("absorbed_player", () ->
             EntityType.Builder.<AbsorbedPlayerEntity>of(AbsorbedPlayerEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "absorbed_player")
@@ -546,6 +551,7 @@ public class JJKEntities {
         event.put(BIRD_CURSE.get(), BirdCurseEntity.createAttributes().build());
         event.put(FINGER_BEARER.get(), SorcererEntity.createAttributes().build());
         event.put(RAINBOW_DRAGON.get(), RainbowDragonEntity.createAttributes().build());
+        event.put(DINO_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 
         event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());

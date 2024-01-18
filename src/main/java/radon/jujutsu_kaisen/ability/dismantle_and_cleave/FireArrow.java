@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.projectile.FireArrowProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FireArrow extends Ability {
     @Override
@@ -40,6 +39,6 @@ public class FireArrow extends Ability {
 
     @Override
     public Classification getClassification() {
-        return Classification.FLAMES;
+        return Classification.FIRE;
     }
 }

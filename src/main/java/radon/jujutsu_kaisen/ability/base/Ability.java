@@ -46,7 +46,7 @@ public abstract class Ability {
         NONE,
         CURSED_SPEECH,
         SLASHING,
-        FLAMES,
+        FIRE,
         WATER,
         PLANTS,
         BLUE,

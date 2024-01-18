@@ -43,8 +43,8 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (owner.isVehicle() && JJKAbilities.isChanneling(owner, this)) {
-            return true;
+        if (owner.isVehicle()) {
+            return JJKAbilities.isChanneling(owner, this);
         }
         return target != null && owner.distanceTo(target) <= RANGE && owner.hasLineOfSight(target);
     }
@@ -106,10 +106,10 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         if (owner.level().isClientSide) return;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY(), owner.getZ()).add(look);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(look);
 
-        float yaw = (float) ((owner.yHeadRot + 90.0F) * Math.PI / 180.0F);
-        float pitch = (float) (-owner.getXRot() * Math.PI / 180.0F);
+        float yaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0F);
+        float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0F);
 
         double endPosX = spawn.x + RANGE * Math.cos(yaw) * Math.cos(pitch);
         double endPosY = spawn.y + RANGE * Math.sin(pitch);
@@ -155,10 +155,10 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
 
                     double distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2) + Math.pow(z - centerZ, 2));
 
-                    if (distance <= radius) {
-                        if (!state.isSolidRender(owner.level(), pos)) {
-                            owner.level().destroyBlock(pos, false);
-                        }
+                    if (distance > radius) continue;
+
+                    if (!state.isSolidRender(owner.level(), pos)) {
+                        owner.level().destroyBlock(pos, false);
                     }
                 }
             }

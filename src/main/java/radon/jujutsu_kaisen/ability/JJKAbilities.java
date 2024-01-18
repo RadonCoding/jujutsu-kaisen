@@ -19,6 +19,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
+import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
@@ -191,6 +192,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
     public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
+    public static RegistryObject<Ability> BLUE_FIRE = ABILITIES.register("blue_fire", BlueFire::new);
 
     public static RegistryObject<Ability> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);

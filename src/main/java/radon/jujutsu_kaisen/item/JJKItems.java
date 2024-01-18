@@ -144,6 +144,8 @@ public class JJKItems {
             () -> new ForgeSpawnEggItem(JJKEntities.FINGER_BEARER, 0xb7ccd5, 0x303a58, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> RAINBOW_DRAGON_SPAWN_EGG = ITEMS.register("rainbow_dragon_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.RAINBOW_DRAGON, 0xffffff, 0xffea59, new Item.Properties()));
+    public static RegistryObject<ForgeSpawnEggItem> DINO_CURSE_SPAWN_EGG = ITEMS.register("dino_curse_spawn_egg",
+            () -> new ForgeSpawnEggItem(JJKEntities.DINO_CURSE, 0x2d405c, 0xb7f6fe, new Item.Properties()));
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);
