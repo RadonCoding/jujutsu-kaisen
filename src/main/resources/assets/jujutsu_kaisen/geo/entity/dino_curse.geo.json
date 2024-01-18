@@ -26,14 +26,8 @@
 					]
 				},
 				{
-					"name": "head_wrapper",
-					"parent": "chest",
-					"pivot": [0, 41.21715, -2.06396],
-					"rotation": [10, 0, 0]
-				},
-				{
 					"name": "head",
-					"parent": "head_wrapper",
+					"parent": "chest",
 					"pivot": [0, 41.21715, -2.06396],
 					"cubes": [
 						{"origin": [-19, 29.03663, -45.68583], "size": [38, 30, 43], "uv": [0, 76]},
