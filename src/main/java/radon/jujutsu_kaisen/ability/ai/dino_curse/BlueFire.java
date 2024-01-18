@@ -110,7 +110,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         if (owner.level().isClientSide) return;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - 0.2D, owner.getZ()).add(look);
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (SCALE / 2), owner.getZ()).add(look);
 
         float yaw = (float) ((RotationUtil.getTargetAdjustedYRot(owner) + 90.0F) * Math.PI / 180.0F);
         float pitch = (float) (-RotationUtil.getTargetAdjustedXRot(owner) * Math.PI / 180.0F);
