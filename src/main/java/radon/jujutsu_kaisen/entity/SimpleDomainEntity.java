@@ -43,7 +43,7 @@ public class SimpleDomainEntity extends Entity {
     @Nullable
     private LivingEntity cachedOwner;
 
-    protected SimpleDomainEntity(EntityType<? extends Mob> pType, Level pLevel) {
+    protected SimpleDomainEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
@@ -60,7 +60,7 @@ public class SimpleDomainEntity extends Entity {
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
-    public float getRadius() {
+    private float getRadius() {
         return this.entityData.get(DATA_RADIUS);
     }
 
