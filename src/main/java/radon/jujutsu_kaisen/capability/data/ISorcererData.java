@@ -187,6 +187,8 @@ public interface ISorcererData {
 
     void setEnergy(float energy);
 
+    float getExtraEnergy();
+
     void addExtraEnergy(float amount);
 
     void resetExtraEnergy();
