@@ -390,9 +390,7 @@ public class JJKAbilities {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner instanceof ISorcerer sorcerer) {
-            abilities.removeIf(ability -> !ability.isValid(owner));
             abilities.addAll(sorcerer.getCustom());
-            abilities.addAll(sorcerer.getUnlocked());
         }
 
         for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {
