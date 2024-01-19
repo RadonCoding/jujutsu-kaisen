@@ -86,6 +86,8 @@ public class AltarMenu extends ItemCombinerMenu {
             return new CurseModifier(action);
         } else if (stack.is(JJKItemTags.CURSED_TOOL)) {
             return new SorcererModifier(action);
+        } else if (stack.is(Items.TNT)) {
+            return new GriefingModifier(action);
         }
         throw new NotImplementedException();
     }

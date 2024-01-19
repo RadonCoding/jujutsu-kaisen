@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -13,7 +14,9 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -83,6 +86,31 @@ public class VeilHandler {
 
             if (relative.distSqr(Vec3i.ZERO) < radius * radius) {
                 return false; //VeilBlockEntity.isAllowed(pos, mob);
+            }
+        }
+        return true;
+    }
+
+    public static boolean canDestroy(@Nullable LivingEntity entity, Level level, double x, double y, double z) {
+        BlockPos target = BlockPos.containing(x, y, z);
+
+        for (Map.Entry<ResourceKey<Level>, BlockPos> entry : veils.entrySet()) {
+            ResourceKey<Level> dimension = entry.getKey();
+            BlockPos pos = entry.getValue();
+
+            if (level.dimension() != dimension || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
+
+            int radius = be.getSize();
+            BlockPos relative = target.subtract(pos);
+
+            if (relative.distSqr(Vec3i.ZERO) >= radius * radius) continue;
+
+            if (entity != null && be.ownerUUID == entity.getUUID()) continue;
+
+            for (Modifier modifier : be.modifiers) {
+                if (modifier.getAction() == Modifier.Action.DENY && modifier.getType() == Modifier.Type.GRIEFING) {
+                    return false;
+                }
             }
         }
         return true;
