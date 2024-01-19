@@ -99,6 +99,8 @@ public class SimpleDomainEntity extends Entity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_RADIUS, 0.0F);
+        this.entityData.define(DATA_MAX_HEALTH, 0.0F);
+        this.entityData.define(DATA_HEALTH, 0.0F);
     }
 
     @Override
