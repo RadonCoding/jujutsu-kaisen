@@ -223,7 +223,7 @@ public class Infinity extends Ability implements Ability.IToggled {
                 if (domain.getOwner() == projectile.getOwner()) return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -268,15 +268,12 @@ public class Infinity extends Ability implements Ability.IToggled {
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                     FrozenProjectileData.IDENTIFIER);
 
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
 
-            if (cap.hasToggled(JJKAbilities.INFINITY.get())) {
-                for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
-                    if (!Infinity.canBlock(target, projectile)) continue;
+            for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
+                if (!Infinity.canBlock(target, projectile)) continue;
 
-                    data.add(target, projectile);
-                }
+                data.add(target, projectile);
             }
         }
 
