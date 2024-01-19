@@ -33,7 +33,7 @@ import radon.jujutsu_kaisen.entity.ten_shadows.NueEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class NueLightning extends Ability implements Ability.IToggled {
+public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
     private static final float DAMAGE = 10.0F;
     private static final int STUN = 20;
 
@@ -83,43 +83,26 @@ public class NueLightning extends Ability implements Ability.IToggled {
 
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class NueLightningForgeEvents {
-        @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            DamageSource source = event.getSource();
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+    @Override
+    public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (!HelperMethods.isMelee(source)) return false;
 
-            if (attacker.level().isClientSide) return;
+        if (target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), owner))) {
+            target.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
 
-            LivingEntity victim = event.getEntity();
+            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                    SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-            if (!HelperMethods.isMelee(source)) return;
-
-            if (!JJKAbilities.hasToggled(attacker, JJKAbilities.NUE_LIGHTNING.get())) return;
-
-            victim.invulnerableTime = 0;
-
-            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), attacker))) {
-                if (victim.isDeadOrDying()) {
-                    event.setCanceled(true);
-                    return;
-                }
-
-                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), STUN, 0, false, false, false));
-
-                attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
-                        SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.MASTER, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
-
-                for (int i = 0; i < 32; i++) {
-                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING, 0.5F, 1),
-                            victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                            0, 0.0D, 0.0D, 0.0D, 0.0D);
-                }
+            for (int i = 0; i < 32; i++) {
+                double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                ((ServerLevel) owner.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.PURPLE_LIGHTNING, 0.5F, 1),
+                        target.getX() + offsetX, target.getY() + offsetY, target.getZ() + offsetZ,
+                        0, 0.0D, 0.0D, 0.0D, 0.0D);
             }
+            return true;
         }
+        return false;
     }
 }
