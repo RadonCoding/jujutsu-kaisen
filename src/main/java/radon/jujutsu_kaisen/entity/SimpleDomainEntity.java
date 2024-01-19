@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
@@ -81,7 +82,7 @@ public class SimpleDomainEntity extends Entity {
     }
 
     private void setHealth(float health) {
-        this.entityData.set(DATA_HEALTH, health);
+        this.entityData.set(DATA_HEALTH, Mth.clamp(health, 0.0F, this.getMaxHealth()));
     }
 
     @Override
@@ -106,13 +107,9 @@ public class SimpleDomainEntity extends Entity {
     }
 
     @Override
-    public boolean isSilent() {
-        return true;
-    }
-
-    @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return pSource.getDirectEntity() instanceof DomainExpansionEntity && super.hurt(pSource, pAmount);
+        this.setHealth(this.getHealth() - pAmount);
+        return true;
     }
 
     @Override
