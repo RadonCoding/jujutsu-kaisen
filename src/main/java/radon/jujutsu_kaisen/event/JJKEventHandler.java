@@ -53,21 +53,25 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class JJKEventHandlerForgeEvents {
         @SubscribeEvent
-        public static void onExplosion(ExplosionEvent event) {
+        public static void onExplosion(ExplosionEvent.Detonate event) {
             Explosion explosion = event.getExplosion();
             LivingEntity instigator = explosion.getIndirectSourceEntity();
 
-            for (BlockPos pos : explosion.getToBlow()) {
+            Iterator<BlockPos> iter = explosion.getToBlow().iterator();
+
+            while (iter.hasNext()) {
+                BlockPos pos = iter.next();
                 Vec3 center = pos.getCenter();
 
                 if (!VeilHandler.canDestroy(instigator, event.getLevel(), center.x, center.y, center.z)) {
-                    event.setCanceled(true);
+                    iter.remove();
                 }
             }
         }
