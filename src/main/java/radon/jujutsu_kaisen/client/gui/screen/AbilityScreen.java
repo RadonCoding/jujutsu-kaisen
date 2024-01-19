@@ -28,6 +28,8 @@ public class AbilityScreen extends RadialScreen {
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
+        // DO NOT REMOVE
+        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return List.of();
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
