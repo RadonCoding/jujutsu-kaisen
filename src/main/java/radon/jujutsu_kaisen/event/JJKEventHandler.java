@@ -197,16 +197,17 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            // If the target is dead we should not trigger any IAttack's
-            if (victim.getHealth() - event.getAmount() <= 0) return;
-
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    cap.attack(event.getSource(), victim));
+            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
+                // If the target is dead we should not trigger any IAttack's
+                if (victim.getHealth() - event.getAmount() <= 0) return;
 
-            // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
-            if (victim.isDeadOrDying()) event.setAmount(0.0F);
+                cap.attack(event.getSource(), victim);
+
+                // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
+                if (victim.isDeadOrDying()) event.setCanceled(true);
+            });
         }
 
         @SubscribeEvent

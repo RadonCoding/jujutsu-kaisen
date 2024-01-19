@@ -203,6 +203,8 @@ public class ClientAbilityHandler {
 
         if (owner == null) return Ability.Status.FAILURE;
 
+        // DO NOT REMOVE
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Ability.Status.FAILURE;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.INSTANT) {
