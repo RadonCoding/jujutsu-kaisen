@@ -56,7 +56,7 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return true;
     }
 

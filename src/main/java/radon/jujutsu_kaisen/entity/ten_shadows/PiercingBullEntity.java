@@ -67,7 +67,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return false;
     }
 

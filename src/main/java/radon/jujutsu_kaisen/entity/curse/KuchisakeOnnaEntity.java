@@ -73,7 +73,7 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return false;
     }
 
