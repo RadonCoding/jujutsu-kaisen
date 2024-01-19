@@ -88,5 +88,10 @@
     "sounds": [
       "jujutsu_kaisen:shoot"
     ]
+  },
+  "spark": {
+    "sounds": [
+      "jujutsu_kaisen:spark"
+    ]
   }
 }

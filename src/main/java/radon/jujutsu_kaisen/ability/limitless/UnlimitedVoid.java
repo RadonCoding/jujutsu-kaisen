@@ -29,10 +29,9 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - ownerCap.getDomainSize())),
+        entity.addEffect(new MobEffectInstance(JJKEffects.UNLIMITED_VOID.get(), Math.round(10 * 20 * this.getStrength(owner, instant)),
                 0, false, false, false));
-        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - ownerCap.getDomainSize())),
+        entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(10 * 20 * this.getStrength(owner, instant)),
                 4, false, false, false));
 
         if (domain.getTime() % 20 == 0) {

@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -20,6 +21,7 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.sound.JJKSounds;
 
 public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
@@ -78,27 +80,34 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SPARK.get(), SoundSource.MASTER, 2.0F, 1.0F);
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
 
-        if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
+        cap.delayTickEvent(() -> {
+            CursedTechnique technique = cap.getTechnique();
 
-        AbilityHandler.trigger(owner, ability);
+            if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
 
-        DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+            AbilityHandler.trigger(owner, ability);
 
-        if (domain == null) return;
+            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
 
-        for (Entity entity : domain.getAffected()) {
-            if (entity instanceof LivingEntity living) {
-                ability.onHitEntity(domain, owner, living, true);
+            if (domain == null) return;
+
+            cap.delayTickEvent(() -> {
+                for (Entity entity : domain.getAffected()) {
+                    if (entity instanceof LivingEntity living) {
+                        ability.onHitEntity(domain, owner, living, true);
+                    }
+                }
+            }, 1);
+            cap.delayTickEvent(domain::discard, 4);
+
+            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+                cap.addCooldown(ability);
             }
-        }
-        cap.delayTickEvent(domain::discard, 4);
-
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            cap.addCooldown(ability);
-        }
+        }, 20);
     }
 
     @Override
