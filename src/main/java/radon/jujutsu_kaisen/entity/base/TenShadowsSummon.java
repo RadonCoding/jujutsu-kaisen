@@ -69,8 +69,6 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
     protected abstract boolean canFly();
 
-    protected abstract boolean hasMeleeAttack();
-
     protected boolean shouldDespawn() {
         LivingEntity owner = this.getOwner();
 

@@ -128,8 +128,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
     protected boolean canFly() { return false; }
 
-    protected boolean hasMeleeAttack() { return true; }
-
     protected boolean targetsCurses() { return false; }
     protected boolean targetsSorcerers() { return true; }
 

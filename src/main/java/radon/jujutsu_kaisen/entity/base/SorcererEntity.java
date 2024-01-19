@@ -55,8 +55,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
     protected boolean canFly() { return false; }
 
-    protected boolean hasMeleeAttack() { return true; }
-
     protected boolean targetsCurses() { return true; }
     protected boolean targetsSorcerers() { return false; }
 

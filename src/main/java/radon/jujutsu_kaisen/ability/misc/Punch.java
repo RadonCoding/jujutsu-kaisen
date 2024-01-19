@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
+import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Punch extends Ability implements Ability.ICharged {
@@ -85,6 +87,11 @@ public class Punch extends Ability implements Ability.ICharged {
     @Override
     public MenuType getMenuType() {
         return MenuType.MELEE;
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return !(owner instanceof ISorcerer sorcerer && sorcerer.hasMeleeAttack()) && super.isValid(owner);
     }
 
     @Override
