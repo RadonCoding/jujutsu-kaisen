@@ -47,7 +47,7 @@ public class Dash extends Ability {
         Vec3 start = owner.getEyePosition();
         Vec3 result = target.getEyePosition().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
-        return angle < 1.0D;
+        return angle <= 0.5D;
     }
 
     @Override
