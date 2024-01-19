@@ -124,8 +124,12 @@ public class WeaponEventHandler {
 
             if (HelperMethods.isMelee(source)) {
                 if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
+                    victim.invulnerableTime = 0;
+
                     if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
                         if (victim.isDeadOrDying()) {
+                            victim.invulnerableTime = 20;
+
                             event.setAmount(0.0F);
                             return;
                         }
@@ -164,8 +168,12 @@ public class WeaponEventHandler {
                             attackerCap.useEnergy(cost);
                         }
 
+                        victim.invulnerableTime = 0;
+
                         if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
                             if (victim.isDeadOrDying()) {
+                                victim.invulnerableTime = 20;
+
                                 event.setAmount(0.0F);
                                 return;
                             }
