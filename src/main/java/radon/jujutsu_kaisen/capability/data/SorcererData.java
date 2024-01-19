@@ -1006,6 +1006,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public float getExtraEnergy() {
+        return this.extraEnergy;
+    }
+
+    @Override
     public void addExtraEnergy(float amount) {
         this.extraEnergy += amount;
     }
