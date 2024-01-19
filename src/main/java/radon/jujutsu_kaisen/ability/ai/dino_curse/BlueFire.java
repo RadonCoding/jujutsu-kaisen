@@ -133,7 +133,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         ParticleOptions particle = new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE, SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
                 0.5F, true, (int) spawn.distanceTo(collision));
 
-        for (int i = 0; i < SCALE * 16; i++) {
+        for (int i = 0; i < SCALE * 32; i++) {
             ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     spawn.y + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     spawn.z + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
@@ -145,7 +145,7 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         for (Entity entity : entities) {
             if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, null, this), DAMAGE * this.getPower(owner))) {
+            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                 entity.setSecondsOnFire(5);
             }
         }
