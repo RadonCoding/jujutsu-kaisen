@@ -394,25 +394,6 @@
 			"loop": true,
 			"animation_length": 0.75,
 			"bones": {
-				"body": {
-					"position": {
-						"0.0": {
-							"vector": [0, -6, 0]
-						},
-						"0.25": {
-							"vector": [0, -2, 0]
-						},
-						"0.375": {
-							"vector": [0, -6, 0]
-						},
-						"0.5417": {
-							"vector": [0, -2, 0]
-						},
-						"0.75": {
-							"vector": [0, -6, 0]
-						}
-					}
-				},
 				"chest": {
 					"rotation": {
 						"0.0": {
