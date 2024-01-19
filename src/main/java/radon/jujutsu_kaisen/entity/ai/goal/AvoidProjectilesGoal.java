@@ -63,7 +63,7 @@ public class AvoidProjectilesGoal extends Goal {
     @Override
     public boolean canUse() {
         this.toAvoid = this.getNearestEntity(this.mob.level().getEntitiesOfClass(Projectile.class, this.mob.getBoundingBox()
-                .inflate(this.maxDist, 3.0D, this.maxDist), entity -> true), this.mob.getX(), this.mob.getY(), this.mob.getZ());
+                .inflate(this.maxDist, 3.0D, this.maxDist), entity -> entity.getOwner() != this.mob), this.mob.getX(), this.mob.getY(), this.mob.getZ());
 
         if (this.toAvoid == null) {
             return false;
