@@ -24,7 +24,7 @@ public class CursedEnergyVisual {
 
             if (data == null) return;
 
-            if (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() && !JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES)) return;
+            if (data.channeled != JJKAbilities.CURSED_ENERGY_SHIELD.get() && !JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES)) return;
 
             float scale = data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() ? 1.5F : 1.0F;
 
