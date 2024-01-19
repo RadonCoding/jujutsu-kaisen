@@ -70,7 +70,7 @@
 					]
 				},
 				{
-					"name": "right_fist",
+					"name": "right_forearm",
 					"parent": "right_arm",
 					"pivot": [-20.6422, 52.18664, -1],
 					"cubes": [
@@ -87,7 +87,7 @@
 					]
 				},
 				{
-					"name": "left_fist",
+					"name": "left_forearm",
 					"parent": "left_arm",
 					"pivot": [20.62701, 52.01299, -1],
 					"cubes": [
@@ -103,7 +103,7 @@
 					]
 				},
 				{
-					"name": "right_foot",
+					"name": "right_knee",
 					"parent": "right_leg",
 					"pivot": [-8.834, 21.14, -1.07],
 					"cubes": [
@@ -120,7 +120,7 @@
 					]
 				},
 				{
-					"name": "left_foot",
+					"name": "left_knee",
 					"parent": "left_leg",
 					"pivot": [8.834, 21.14, -1.07],
 					"cubes": [
