@@ -211,15 +211,9 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
 
     @Override
     protected void customServerAiStep() {
+        super.customServerAiStep();
+
         this.entityData.set(DATA_SHOOTING, JJKAbilities.isChanneling(this, JJKAbilities.WATER.get()));
-
-        LivingEntity passenger = this.getControllingPassenger();
-
-        if (passenger != null) {
-            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
-        } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
     }
 
     @Override

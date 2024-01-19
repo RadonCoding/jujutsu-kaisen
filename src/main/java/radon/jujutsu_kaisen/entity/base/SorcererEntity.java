@@ -23,6 +23,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -154,7 +155,13 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
+        LivingEntity passenger = this.getControllingPassenger();
+
+        if (passenger != null) {
+            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
+        } else {
+            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
+        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {

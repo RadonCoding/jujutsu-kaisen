@@ -127,11 +127,6 @@ public class AgitoEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
-
-    @Override
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
 

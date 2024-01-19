@@ -206,15 +206,9 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
 
     @Override
     protected void customServerAiStep() {
+        super.customServerAiStep();
+
         this.setShooting(JJKAbilities.isChanneling(this, JJKAbilities.BLUE_FIRE.get()));
-
-        LivingEntity passenger = this.getControllingPassenger();
-
-        if (passenger != null) {
-            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
-        } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
     }
 
     @Override

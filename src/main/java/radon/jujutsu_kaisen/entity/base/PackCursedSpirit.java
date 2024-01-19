@@ -44,6 +44,8 @@ public abstract class PackCursedSpirit extends CursedSpirit {
 
     @Override
     protected void customServerAiStep() {
+        super.customServerAiStep();
+
         if (this.getTarget() != null) {
             double d0 = this.getAttributeValue(Attributes.FOLLOW_RANGE);
             AABB bounds = AABB.unitCubeFromLowerCorner(this.position()).inflate(d0, 10.0D, d0);

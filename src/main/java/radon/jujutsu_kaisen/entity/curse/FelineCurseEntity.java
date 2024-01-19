@@ -206,8 +206,6 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-
         int leap = this.entityData.get(DATA_LEAP);
 
         if (leap > 0) {
