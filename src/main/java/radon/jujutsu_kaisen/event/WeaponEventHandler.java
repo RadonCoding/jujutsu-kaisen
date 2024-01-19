@@ -108,12 +108,8 @@ public class WeaponEventHandler {
 
             if (HelperMethods.isMelee(source)) {
                 if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
-                        if (victim.isDeadOrDying()) {
-                            event.setCanceled(true);
-                            return;
-                        }
-                    }
+                    victim.invulnerableTime = 0;
+                    victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
                 }
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
@@ -148,8 +144,9 @@ public class WeaponEventHandler {
                             attackerCap.useEnergy(cost);
                         }
 
-                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                        victim.invulnerableTime = 0;
 
+                        if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
                             victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
 
                             attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
