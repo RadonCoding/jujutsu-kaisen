@@ -62,7 +62,7 @@ public class PiercingBullEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

@@ -76,7 +76,7 @@ public class MobEventHandler {
 
             DamageSource source = event.getSource();
 
-            if (victim instanceof ISorcerer sorcerer && sorcerer.canPerformSorcery()) {
+            if (victim instanceof ISorcerer sorcerer && sorcerer.canChant()) {
                 if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
                     if (!JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                         AbilityHandler.trigger(victim, JJKAbilities.CURSED_ENERGY_FLOW.get());

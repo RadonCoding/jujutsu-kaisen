@@ -48,7 +48,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

@@ -62,7 +62,7 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

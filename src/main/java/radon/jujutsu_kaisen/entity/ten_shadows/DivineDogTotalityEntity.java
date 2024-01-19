@@ -40,7 +40,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return true;
     }
 

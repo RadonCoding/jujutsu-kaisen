@@ -3,15 +3,11 @@ package radon.jujutsu_kaisen.ability;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -65,8 +61,6 @@ import radon.jujutsu_kaisen.entity.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -399,8 +393,6 @@ public class JJKAbilities {
             abilities.removeIf(ability -> !ability.isValid(owner));
             abilities.addAll(sorcerer.getCustom());
             abilities.addAll(sorcerer.getUnlocked());
-
-            if (!sorcerer.canPerformSorcery()) return new ArrayList<>(abilities);
         }
 
         for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {

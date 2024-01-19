@@ -1,25 +1,19 @@
 package radon.jujutsu_kaisen.entity.base;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
-import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface ISorcerer {
-    boolean canPerformSorcery();
+    boolean canChant();
 
     float getExperience();
 
@@ -75,7 +69,7 @@ public interface ISorcerer {
             data.setCursedEnergyColor(this.getCursedEnergyColor());
         }
 
-        if (this.canPerformSorcery()) {
+        if (this.canChant()) {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
                 if (!ability.isTechnique() || !ability.isScalable((LivingEntity) this)) continue;
 
