@@ -197,6 +197,8 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
+            if (victim.getHealth() - event.getAmount() <= 0) return;
+
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
