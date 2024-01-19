@@ -37,18 +37,8 @@ public class CursedEnergyShield extends Ability implements Ability.IChannelened 
 
     @Override
     public void run(LivingEntity owner) {
-        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (!(owner.level() instanceof ServerLevel)) return;
 
-        if (owner instanceof Player) {
-            for (int i = 0; i < 18; i++) {
-                double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2.25F) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).x;
-                double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * owner.getBbHeight();
-                double z = owner.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2.25F) - RotationUtil.getTargetAdjustedLookAngle(owner).scale(0.35D).z;
-                double speed = (owner.getBbHeight() * 0.45F) * HelperMethods.RANDOM.nextDouble();
-                level.sendParticles(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(owner), owner.getBbWidth() * 0.75F,
-                        0.2F, 6), x, y, z, 0, 0.0D, speed, 0.0D, 1.0D);
-            }
-        }
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));
     }
 

@@ -98,7 +98,7 @@ public class ClientVisualHandler {
                 if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
                 if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
 
-                return new ClientData(cap.getToggled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
+                return new ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
             }
         }
         return null;
@@ -350,6 +350,8 @@ public class ClientVisualHandler {
 
     public static class ClientData {
         public final Set<Ability> toggled;
+        @Nullable
+        public final Ability channeled;
         public final Set<Trait> traits;
         public final Set<CursedTechnique> techniques;
         @Nullable
@@ -362,6 +364,7 @@ public class ClientVisualHandler {
 
         public ClientData(CompoundTag nbt) {
             this.toggled = new HashSet<>();
+            this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled"))) : null;
             this.traits = new HashSet<>();
             this.techniques = new HashSet<>();
 
@@ -388,8 +391,9 @@ public class ClientVisualHandler {
             this.cursedEnergyColor = nbt.getInt("cursed_energy_color");
         }
 
-        public ClientData(Set<Ability> toggled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
             this.toggled = toggled;
+            this.channeled = channeled;
             this.traits = traits;
             this.techniques = techniques;
             this.technique = technique;
@@ -407,6 +411,10 @@ public class ClientVisualHandler {
                 toggledTag.add(StringTag.valueOf(JJKAbilities.getKey(ability).toString()));
             }
             nbt.put("toggled", toggledTag);
+
+            if (this.channeled != null) {
+                nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
+            }
 
             ListTag traitsTag = new ListTag();
 
