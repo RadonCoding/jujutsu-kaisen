@@ -86,6 +86,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
 
         for (ProjectionFrameEntity frame : owner.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(target.position(),
