@@ -277,38 +277,38 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 
-            if (JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) {
-                DamageSource source = event.getSource();
+            if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
 
-                if (source.getEntity() == target || source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) return;
+            DamageSource source = event.getSource();
 
-                if (target.level() instanceof ServerLevel level) {
-                    for (DomainExpansionEntity domain : VeilHandler.getDomains(level, target.blockPosition())) {
-                        if (!domain.checkSureHitEffect()) continue;
+            if (source.getEntity() == target || source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) return;
 
-                        return;
-                    }
+            if (target.level() instanceof ServerLevel level) {
+                for (DomainExpansionEntity domain : VeilHandler.getDomains(level, target.blockPosition())) {
+                    if (!domain.checkSureHitEffect()) continue;
 
-                    for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
-                            KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
-                        Optional<UUID> identifier = curse.getCurrent();
-                        if (identifier.isEmpty()) continue;
-                        if (identifier.get() == target.getUUID()) return;
-                    }
+                    return;
                 }
 
-                if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
-                    if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                        return;
-                    }
+                for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
+                        KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
+                    Optional<UUID> identifier = curse.getCurrent();
+                    if (identifier.isEmpty()) continue;
+                    if (identifier.get() == target.getUUID()) return;
                 }
-
-                // We don't want to play the sound in-case it's a stopped projectile
-                if (!(source.getDirectEntity() instanceof Projectile)) {
-                    target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
-                }
-                event.setCanceled(true);
             }
+
+            if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
+                if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+                    return;
+                }
+            }
+
+            // We don't want to play the sound in-case it's a stopped projectile
+            if (!(source.getDirectEntity() instanceof Projectile)) {
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+            }
+            event.setCanceled(true);
         }
     }
 }
