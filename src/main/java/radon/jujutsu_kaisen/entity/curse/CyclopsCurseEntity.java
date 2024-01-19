@@ -24,6 +24,7 @@ public class CyclopsCurseEntity extends CursedSpirit {
     public static EntityDataAccessor<Integer> DATA_SMASH = SynchedEntityData.defineId(CyclopsCurseEntity.class, EntityDataSerializers.INT);
 
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     public CyclopsCurseEntity(EntityType<? extends CursedSpirit> pType, Level pLevel) {
@@ -49,7 +50,7 @@ public class CyclopsCurseEntity extends CursedSpirit {
 
     private PlayState walkPredicate(AnimationState<CyclopsCurseEntity> animationState) {
         if (animationState.isMoving()) {
-            return animationState.setAndContinue(WALK);
+            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
         }
         return PlayState.STOP;
     }
