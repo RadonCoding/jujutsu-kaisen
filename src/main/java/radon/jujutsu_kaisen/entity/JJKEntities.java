@@ -81,7 +81,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<RugbyFieldCurseEntity>> RUGBY_FIELD_CURSE = ENTITIES.register("rugby_field_curse", () ->
             EntityType.Builder.of(RugbyFieldCurseEntity::new, MobCategory.AMBIENT)
-                    .sized(2.0F, 2.4F)
+                    .sized(2.0F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "rugby_field_curse")
                             .toString()));
     public static RegistryObject<EntityType<FishCurseEntity>> FISH_CURSE = ENTITIES.register("fish_curse", () ->
