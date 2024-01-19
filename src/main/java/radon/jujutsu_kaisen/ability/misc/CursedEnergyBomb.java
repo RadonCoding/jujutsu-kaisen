@@ -61,6 +61,6 @@ public class CursedEnergyBomb extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType() == JujutsuType.CURSE && super.isValid(owner);
+        return cap.getType() == JujutsuType.CURSE && cap.getExtraEnergy() > 0.0F && super.isValid(owner);
     }
 }
