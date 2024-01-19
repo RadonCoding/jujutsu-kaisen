@@ -85,6 +85,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
 
         if (target.hurt(JJKDamageSources.jujutsuAttack(owner, JJKAbilities.NUE_LIGHTNING.get()), DAMAGE * Ability.getPower(JJKAbilities.NUE_LIGHTNING.get(), owner))) {
