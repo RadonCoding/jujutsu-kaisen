@@ -27,7 +27,7 @@ public class BlueFistsVisual {
         return new Vec3(d0, d1, d2);
     }
 
-    private static Vec3 transform3rdPersonRight(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
+    public static Vec3 transform3rdPersonRight(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
         return rotateRoll(pos, (float) -angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
                 .add(0.05F * -6.0F, 1.02F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), 0.0F)
                 .yRot((-entity.yBodyRotO - (entity.yBodyRot - entity.yBodyRotO) * partialTicks) * (float) (Math.PI / 180.0D))
@@ -36,7 +36,7 @@ public class BlueFistsVisual {
                         Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    private static Vec3 transform3rdPersonLeft(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
+    public static Vec3 transform3rdPersonLeft(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
         return rotateRoll(pos, (float) -angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
                 .add(0.05F * 6.0F, 1.02F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), 0.0F)
                 .yRot((-entity.yBodyRotO - (entity.yBodyRot - entity.yBodyRotO) * partialTicks) * (float) (Math.PI / 180.0D))
