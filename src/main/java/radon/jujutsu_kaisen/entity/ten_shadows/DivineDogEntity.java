@@ -85,7 +85,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return true;
     }
 

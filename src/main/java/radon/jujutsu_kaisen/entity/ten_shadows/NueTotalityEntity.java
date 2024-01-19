@@ -75,7 +75,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return false;
     }
 

@@ -69,7 +69,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    protected boolean hasMeleeAttack() {
+    public boolean hasMeleeAttack() {
         return true;
     }
 
