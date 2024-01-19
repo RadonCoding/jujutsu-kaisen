@@ -116,7 +116,7 @@ public class SimpleDomainEntity extends Entity {
 
     @Override
     public void tick() {
-        if (this.getHealth() <= 0.0F) {
+        if (this.getHealth() == 0.0F) {
             this.discard();
             return;
         }
