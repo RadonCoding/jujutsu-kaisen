@@ -60,7 +60,7 @@ public class SimpleDomainEntity extends Entity {
         this.setHealth(this.entityData.get(DATA_MAX_HEALTH));
     }
 
-    private float getRadius() {
+    public float getRadius() {
         return this.entityData.get(DATA_RADIUS);
     }
 

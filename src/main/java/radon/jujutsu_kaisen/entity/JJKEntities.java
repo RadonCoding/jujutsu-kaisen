@@ -554,7 +554,6 @@ public class JJKEntities {
         event.put(DINO_CURSE.get(), SorcererEntity.createAttributes().build());
         event.put(ABSORBED_PLAYER.get(), SorcererEntity.createAttributes().build());
 
-        event.put(SIMPLE_DOMAIN.get(), Mob.createMobAttributes().build());
         event.put(WOOD_SHIELD.get(), Mob.createMobAttributes().build());
     }
 }
