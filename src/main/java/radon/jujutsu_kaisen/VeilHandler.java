@@ -99,7 +99,7 @@ public class VeilHandler {
             BlockPos pos = entry.getValue();
 
             // So that veil rods can still be broken
-            if (target == pos) continue;
+            if (target.equals(pos)) continue;
 
             if (level.dimension() != dimension || !(level.getBlockEntity(pos) instanceof VeilRodBlockEntity be)) continue;
 
