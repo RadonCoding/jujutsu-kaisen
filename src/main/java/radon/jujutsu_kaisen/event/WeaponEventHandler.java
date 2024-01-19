@@ -103,13 +103,33 @@ public class WeaponEventHandler {
                     JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                 DragonBoneItem.addEnergy(stack, 10.0F);
             }
+        }
 
-            if (victim.getHealth() - event.getAmount() <= 0.0F) return;
+        @SubscribeEvent
+        public static void onLivingHurt(LivingHurtEvent event) {
+            DamageSource source = event.getSource();
+
+            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide) return;
+
+            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
 
             if (HelperMethods.isMelee(source)) {
                 if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
-                    victim.invulnerableTime = 0;
-                    victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount());
+                    if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
+                        if (victim.isDeadOrDying()) {
+                            event.setAmount(0.0F);
+                            return;
+                        }
+                    }
                 }
 
                 if (stacks.contains(JJKItems.PLAYFUL_CLOUD.get())) {
@@ -144,9 +164,12 @@ public class WeaponEventHandler {
                             attackerCap.useEnergy(cost);
                         }
 
-                        victim.invulnerableTime = 0;
-
                         if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), KamutokeDaggerItem.MELEE_DAMAGE * attackerCap.getRealPower())) {
+                            if (victim.isDeadOrDying()) {
+                                event.setAmount(0.0F);
+                                return;
+                            }
+
                             victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), KamutokeDaggerItem.STUN, 0, false, false, false));
 
                             attacker.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(),
