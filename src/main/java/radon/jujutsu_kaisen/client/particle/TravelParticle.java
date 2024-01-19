@@ -52,8 +52,6 @@ public class TravelParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
-        this.quadSize = this.scale * (1.0F - ((float) this.age / this.lifetime));
-
         this.alpha = this.opacity * (1.0F - ((float) this.age / this.lifetime));
 
         this.setSprite(this.sprites.get(this.level.random));
