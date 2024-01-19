@@ -39,69 +39,6 @@ public class RugbyFieldCurseEntity extends CursedSpirit implements PlayerRideabl
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (pPlayer == this.getOwner() && !this.isVehicle()) {
-            if (pPlayer.startRiding(this)) {
-                pPlayer.setYRot(this.getYRot());
-                pPlayer.setXRot(this.getXRot());
-            }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
-        } else {
-            return super.mobInteract(pPlayer, pHand);
-        }
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getControllingPassenger() {
-        Entity entity = this.getFirstPassenger();
-
-        if (entity instanceof LivingEntity living) {
-            return living;
-        }
-        return null;
-    }
-
-    private Vec2 getRiddenRotation(LivingEntity pEntity) {
-        return new Vec2(pEntity.getXRot() * 0.5F, pEntity.getYRot());
-    }
-
-    @Override
-    protected float getRiddenSpeed(@NotNull Player pPlayer) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.5F;
-    }
-
-    @Override
-    protected void tickRidden(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
-        super.tickRidden(pPlayer, pTravelVector);
-
-        Vec2 vec2 = this.getRiddenRotation(pPlayer);
-        this.setRot(vec2.y, vec2.x);
-        this.yRotO = this.yBodyRot = this.yHeadRot = this.yHeadRotO = this.getYRot();
-    }
-
-    @Override
-    protected @NotNull Vec3 getRiddenInput(@NotNull Player pPlayer, @NotNull Vec3 pTravelVector) {
-        float f = pPlayer.xxa * 0.5F;
-        float f1 = pPlayer.zza;
-
-        if (f1 <= 0.0F) {
-            f1 *= 0.25F;
-        }
-        return new Vec3(f, 0.0D, f1);
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 1.0F;
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return this.getBbHeight();
-    }
-
-    @Override
     protected boolean isCustom() {
         return false;
     }
