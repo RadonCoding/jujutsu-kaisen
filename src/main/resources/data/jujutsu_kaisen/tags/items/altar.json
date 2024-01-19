@@ -19,6 +19,7 @@
     "minecraft:brown_dye",
     "minecraft:glass",
     "#jujutsu_kaisen:cursed_object",
-    "#jujutsu_kaisen:cursed_tool"
+    "#jujutsu_kaisen:cursed_tool",
+    "minecraft:tnt"
   ]
 }
