@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -61,19 +62,22 @@ public class JJKEventHandler {
         public static void onExplosion(ExplosionEvent event) {
             Explosion explosion = event.getExplosion();
             LivingEntity instigator = explosion.getIndirectSourceEntity();
-            Vec3 pos = explosion.getPosition();
 
-            if (!VeilHandler.canDestroy(instigator, event.getLevel(), pos.x, pos.y, pos.z)) {
-                event.setCanceled(true);
+            for (BlockPos pos : explosion.getToBlow()) {
+                Vec3 center = pos.getCenter();
+
+                if (!VeilHandler.canDestroy(instigator, event.getLevel(), center.x, center.y, center.z)) {
+                    event.setCanceled(true);
+                }
             }
         }
 
         @SubscribeEvent
         public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
             LivingEntity entity = event.getEntity();
-            Vec3 pos = event.getPos().getCenter();
+            Vec3 center = event.getPos().getCenter();
 
-            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), pos.x, pos.y, pos.z)) {
+            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), center.x, center.y, center.z)) {
                 event.setCanceled(true);
             }
         }
