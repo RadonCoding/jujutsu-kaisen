@@ -295,7 +295,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         event.setCanceled(true);
                         return;
                     }
-
                     event.setAmount(blocked);
                 }
             }

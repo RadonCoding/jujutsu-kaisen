@@ -11,6 +11,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.config.ClientConfig;
@@ -76,29 +77,31 @@ public class AbilityOverlay {
 
     private static void render(ForgeGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
         Minecraft mc = gui.getMinecraft();
-        LocalPlayer player = mc.player;
 
-        if (player == null) return;
+        if (mc.player == null) return;
+
+        // DO NOT REMOVE
+        if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         List<Component> lines = new ArrayList<>();
 
         Component nameText = Component.translatable(String.format("gui.%s.ability_overlay.name", JujutsuKaisen.MOD_ID), ability.getName());
         lines.add(nameText);
 
-        float cost = ability.getRealCost(player);
+        float cost = ability.getRealCost(mc.player);
 
         if (cost > 0.0F) {
             lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID), cost));
         }
 
-        int cooldown = ability.getRealCooldown(player);
+        int cooldown = ability.getRealCooldown(mc.player);
 
         if (cooldown > 0) {
             lines.add(Component.translatable(String.format("gui.%s.ability_overlay.cooldown", JujutsuKaisen.MOD_ID), Math.round((float) cooldown / 20)));
         }
 
         if (ability instanceof Ability.IDurationable durationable) {
-            int duration = durationable.getRealDuration(player);
+            int duration = durationable.getRealDuration(mc.player);
 
             if (duration > 0) {
                 Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), (float) duration / 20);
