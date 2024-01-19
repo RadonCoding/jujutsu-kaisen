@@ -47,7 +47,7 @@ public class FingerBearerEntity extends CursedSpirit {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return true;
     }
 

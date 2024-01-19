@@ -54,7 +54,7 @@ public class HanamiEntity extends DisasterCurse {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return true;
     }
 

@@ -44,7 +44,7 @@ public class RugbyFieldCurseEntity extends CursedSpirit implements PlayerRideabl
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

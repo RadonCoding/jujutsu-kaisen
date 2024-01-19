@@ -70,7 +70,7 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

@@ -20,7 +20,6 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -149,7 +148,7 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
         this.goalSelector.addGoal(goal++, new CustomLeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(goal++, this.canPerformSorcery() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
+        this.goalSelector.addGoal(goal++, this.canChant() || !this.getCustom().isEmpty() ? new SorcererGoal(this) : new HealingGoal(this));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
@@ -170,7 +169,7 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

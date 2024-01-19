@@ -63,7 +63,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

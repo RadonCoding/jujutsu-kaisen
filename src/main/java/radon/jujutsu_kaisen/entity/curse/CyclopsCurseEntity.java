@@ -36,7 +36,7 @@ public class CyclopsCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return false;
     }
 

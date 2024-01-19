@@ -75,7 +75,7 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean canPerformSorcery() {
+    public boolean canChant() {
         return true;
     }
 

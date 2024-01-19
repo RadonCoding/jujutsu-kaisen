@@ -29,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -40,8 +39,6 @@ import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.ArrayList;
@@ -95,7 +92,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
 
-        if (this.canPerformSorcery() || !this.getCustom().isEmpty()) {
+        if (this.canChant() || !this.getCustom().isEmpty()) {
             this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         }
 
