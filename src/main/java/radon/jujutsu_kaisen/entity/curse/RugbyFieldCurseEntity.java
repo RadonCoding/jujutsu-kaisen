@@ -97,6 +97,11 @@ public class RugbyFieldCurseEntity extends CursedSpirit implements PlayerRideabl
     }
 
     @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight();
+    }
+
+    @Override
     protected boolean isCustom() {
         return false;
     }

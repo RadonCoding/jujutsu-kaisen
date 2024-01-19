@@ -106,6 +106,11 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     }
 
     @Override
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight();
+    }
+
+    @Override
     public float getStepHeight() {
         return 1.0F;
     }
