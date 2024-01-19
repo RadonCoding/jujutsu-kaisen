@@ -101,8 +101,8 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
                         ability.onHitEntity(domain, owner, living, true);
                     }
                 }
-            }, 1);
-            cap.delayTickEvent(domain::discard, 4);
+                domain.discard();
+            }, 4);
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                 cap.addCooldown(ability);

@@ -29,6 +29,7 @@ import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -41,8 +42,8 @@ public class VeilRodBlockEntity extends BlockEntity {
     private int counter;
     private int size;
 
-    @Nullable
     public List<Modifier> modifiers;
+
     @Nullable
     public UUID ownerUUID;
 
@@ -50,6 +51,7 @@ public class VeilRodBlockEntity extends BlockEntity {
         super(JJKBlockEntities.VEIL_ROD.get(), pPos, pBlockState);
 
         this.size = ConfigHolder.SERVER.minimumVeilSize.get();
+        this.modifiers = new ArrayList<>();
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
@@ -80,13 +82,11 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         BlockState replacement = JJKBlocks.VEIL.get().defaultBlockState();
 
-        if (pBlockEntity.modifiers != null) {
-            for (Modifier modifier : pBlockEntity.modifiers) {
-                if (modifier.getType() == Modifier.Type.COLOR) {
-                    replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
-                } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
-                    replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
-                }
+        for (Modifier modifier : pBlockEntity.modifiers) {
+            if (modifier.getType() == Modifier.Type.COLOR) {
+                replacement = replacement.setValue(VeilBlock.COLOR, ((ColorModifier) modifier).getColor());
+            } else if (modifier.getType() == Modifier.Type.TRANSPARENT) {
+                replacement = replacement.setValue(VeilBlock.TRANSPARENT, true);
             }
         }
 

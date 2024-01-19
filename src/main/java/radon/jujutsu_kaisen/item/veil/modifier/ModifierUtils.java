@@ -20,6 +20,7 @@ public class ModifierUtils {
             case TRANSPARENT -> new TransparentModifier(nbt);
             case CURSE -> new CurseModifier(nbt);
             case SORCERER -> new SorcererModifier(nbt);
+            case GRIEFING -> new GriefingModifier(nbt);
         };
     }
 

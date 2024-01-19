@@ -13,16 +13,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.*;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.misc.Slam;
@@ -53,6 +57,27 @@ import java.util.List;
 public class JJKEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class JJKEventHandlerForgeEvents {
+        @SubscribeEvent
+        public static void onExplosion(ExplosionEvent event) {
+            Explosion explosion = event.getExplosion();
+            LivingEntity instigator = explosion.getIndirectSourceEntity();
+            Vec3 pos = explosion.getPosition();
+
+            if (!VeilHandler.canDestroy(instigator, event.getLevel(), pos.x, pos.y, pos.z)) {
+                event.setCanceled(true);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onLivingDestroyBlock(LivingDestroyBlockEvent event) {
+            LivingEntity entity = event.getEntity();
+            Vec3 pos = event.getPos().getCenter();
+
+            if (!VeilHandler.canDestroy(event.getEntity(), entity.level(), pos.x, pos.y, pos.z)) {
+                event.setCanceled(true);
+            }
+        }
+
         @SubscribeEvent
         public static void onSleepFinished(SleepFinishedTimeEvent event) {
             if (!(event.getLevel() instanceof ServerLevel level)) return;
