@@ -285,6 +285,7 @@ public class ClientVisualHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
 
+        CursedEnergyVisual.tick(entity);
         BlueFistsVisual.tick(entity);
         IdleTransfigurationVisual.tick(entity);
 
