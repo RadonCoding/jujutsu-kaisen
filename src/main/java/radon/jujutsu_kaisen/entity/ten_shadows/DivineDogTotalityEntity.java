@@ -41,7 +41,7 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
 
     @Override
     public boolean canChant() {
-        return true;
+        return false;
     }
 
     @Override
