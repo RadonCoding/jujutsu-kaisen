@@ -56,7 +56,23 @@ public class SorcererGoal extends Goal {
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
                 List<AbsorbedCurse> curses = cap.getCurses();
 
-                if (!curses.isEmpty()) {
+                if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    AbsorbedCurse closest = null;
+
+                    for (AbsorbedCurse curse : curses) {
+                        float diff = Math.abs(JJKAbilities.getCurseExperience(curse) - targetCap.getExperience());
+
+                        if (closest == null || diff < Math.abs(JJKAbilities.getCurseExperience(closest) - targetCap.getExperience())) {
+                            closest = curse;
+                        }
+                    }
+
+                    if (closest != null) {
+                        JJKAbilities.summonCurse(this.mob, closest, true);
+                    }
+                } else if (!curses.isEmpty()) {
                     JJKAbilities.summonCurse(this.mob, HelperMethods.RANDOM.nextInt(curses.size()), true);
                 }
             }
