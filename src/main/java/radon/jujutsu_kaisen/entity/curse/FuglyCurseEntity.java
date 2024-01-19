@@ -62,9 +62,4 @@ public class FuglyCurseEntity extends CursedSpirit {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
-
-    @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
 }

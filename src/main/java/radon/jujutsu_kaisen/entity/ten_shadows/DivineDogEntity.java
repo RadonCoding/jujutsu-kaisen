@@ -274,13 +274,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
 
     @Override
     protected void customServerAiStep() {
-        LivingEntity passenger = this.getControllingPassenger();
-
-        if (passenger != null) {
-            this.setSprinting(new Vec3(passenger.xxa, passenger.yya, passenger.zza).lengthSqr() > 0.01D);
-        } else {
-            this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-        }
+        super.customServerAiStep();
 
         int leap = this.entityData.get(DATA_LEAP);
 

@@ -92,11 +92,6 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
     }
 
     @Override
-    protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
-    }
-
-    @Override
     public Summon<?> getAbility() {
         return JJKAbilities.DIVINE_DOG_TOTALITY.get();
     }

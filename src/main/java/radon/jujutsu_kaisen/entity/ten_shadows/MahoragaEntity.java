@@ -172,7 +172,7 @@ public class MahoragaEntity extends TenShadowsSummon {
 
     @Override
     protected void customServerAiStep() {
-        this.setSprinting(this.getDeltaMovement().lengthSqr() > 0.01D && this.moveControl.getSpeedModifier() > 1.0D);
+        super.customServerAiStep();
 
         if (this.getHealth() < this.getMaxHealth()) {
             this.heal(4.0F / 20);
