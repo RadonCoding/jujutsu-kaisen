@@ -204,6 +204,8 @@ public class JJKEventHandler {
 
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
                     cap.attack(event.getSource(), victim));
+
+            if (victim.isDeadOrDying()) event.setCanceled(true);
         }
 
         @SubscribeEvent
