@@ -197,6 +197,7 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
+            // If the target is dead we should not trigger any IAttack's
             if (victim.getHealth() - event.getAmount() <= 0) return;
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
