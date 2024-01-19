@@ -387,6 +387,9 @@ public class SorcererData implements ISorcererData {
     @Override
     public void attack(DamageSource source, LivingEntity target) {
         for (Ability ability : this.toggled) {
+            // In-case any of IAttack's kill the target just break the loop
+            if (target.isDeadOrDying()) break;
+
             if (!(ability instanceof Ability.IAttack attack)) continue;
             if (ability.getStatus(this.owner) != Ability.Status.SUCCESS) continue;
             if (!attack.attack(source, this.owner, target)) continue;
