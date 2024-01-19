@@ -90,6 +90,8 @@ public class JJKClientEventHandler {
 
             if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
+
+
             ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             boolean translated = false;

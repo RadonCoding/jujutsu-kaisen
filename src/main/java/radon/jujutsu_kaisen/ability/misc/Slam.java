@@ -70,6 +70,11 @@ public class Slam extends Ability implements Ability.ICharged {
     }
 
     @Override
+    public boolean isValid(LivingEntity owner) {
+        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack()) && super.isValid(owner);
+    }
+
+    @Override
     public Status isStillUsable(LivingEntity owner) {
         if (owner.hasEffect(JJKEffects.STUN.get())) {
             return Status.FAILURE;
