@@ -84,11 +84,6 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         return false;
     }
 
-    @Override
-    public boolean hasMeleeAttack() {
-        return true;
-    }
-
     protected void setVariant(Variant variant) {
         this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
