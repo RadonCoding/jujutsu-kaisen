@@ -97,6 +97,7 @@ public class SuguruGetoEntity extends SorcererEntity {
             }
         }
         this.tryAddCurse(data, JJKEntities.KUCHISAKE_ONNA.get());
+        this.tryAddCurse(data, JJKEntities.DINO_CURSE.get());
     }
 
     @Override
