@@ -76,6 +76,7 @@ public class WaterTorrentRenderer extends EntityRenderer<WaterTorrentEntity> {
         float minV = 16.0F / TEXTURE_HEIGHT * frame;
         float maxU = minU + 16.0F / TEXTURE_WIDTH;
         float maxV = minV + 16.0F / TEXTURE_HEIGHT;
+
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
