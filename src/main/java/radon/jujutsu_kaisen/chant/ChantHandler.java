@@ -51,6 +51,8 @@ public class ChantHandler {
     public static String next(LivingEntity owner) {
         List<String> messages = owner.level().isClientSide ? ClientChantHandler.getMessages() : ServerChantHandler.getMessages(owner);
 
+        if (messages.isEmpty()) return null;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         Ability ability = cap.getAbility(messages.get(messages.size() - 1));
 
