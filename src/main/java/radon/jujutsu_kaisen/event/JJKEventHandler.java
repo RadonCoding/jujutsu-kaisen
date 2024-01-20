@@ -255,29 +255,29 @@ public class JJKEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            if (ConfigHolder.SERVER.realisticCurses.get()) {
-                ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
+            if (!ConfigHolder.SERVER.realisticCurses.get()) return;
 
-                List<Item> stacks = new ArrayList<>();
-                stacks.add(stack.getItem());
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                        .stream().map(ItemStack::getItem).toList());
+            ItemStack stack = source.getDirectEntity() instanceof ThrownChainProjectile chain ? chain.getStack() : attacker.getItemInHand(InteractionHand.MAIN_HAND);
 
-                if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
-                    boolean cursed = false;
+            List<Item> stacks = new ArrayList<>();
+            stacks.add(stack.getItem());
+            stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                    .stream().map(ItemStack::getItem).toList());
 
-                    if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
-                        cursed = true;
-                    } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
-                        cursed = true;
-                    } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                        ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                        cursed = cap.getEnergy() > 0.0F;
-                    }
+            if (JJKAbilities.getType(victim) == JujutsuType.CURSE) {
+                boolean cursed = false;
 
-                    if (!cursed) {
-                        event.setCanceled(true);
-                    }
+                if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
+                    cursed = true;
+                } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
+                    cursed = true;
+                } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+                    ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    cursed = cap.getEnergy() > 0.0F;
+                }
+
+                if (!cursed) {
+                    event.setCanceled(true);
                 }
             }
         }
