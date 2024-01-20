@@ -42,12 +42,12 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw + 90.0F));
-        pPoseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F - yaw));
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
 
         pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
-        boolean still = pEntity.getTime() >= FireArrowProjectile.DELAY;
+        boolean still = pEntity.getTime() + pPartialTick >= FireArrowProjectile.DELAY;
         RenderType type = JJKRenderTypes.glow(still ? STILL : STARTUP);
 
         VertexConsumer consumer = mc.renderBuffers().bufferSource().getBuffer(type);
@@ -56,7 +56,7 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         int frame = Mth.floor((pEntity.animation - 1 + pPartialTick) * 2);
 
         if (frame < 0) {
-            frame = still ? FireArrowProjectile.STILL_FRAMES : FireArrowProjectile.STARTUP_FRAMES * 2;
+            frame = (still ? FireArrowProjectile.STILL_FRAMES : FireArrowProjectile.STARTUP_FRAMES) * 2;
         }
 
         float minU = 0.0F;
