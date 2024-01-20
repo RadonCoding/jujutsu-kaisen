@@ -187,7 +187,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         List<HitResult> hits = new ArrayList<>();
 
-        double depth = Math.round(this.getDeltaMovement().length());
+        double depth = Math.max(1, Math.round(this.getDeltaMovement().length()));
 
         for (int z = 0; z < depth; z++) {
             for (int x = 0; x < length; x++) {
