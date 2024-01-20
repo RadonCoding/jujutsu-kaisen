@@ -42,10 +42,10 @@ public class FireArrowRenderer extends EntityRenderer<FireArrowProjectile> {
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F - yaw));
+        pPoseStack.mulPose(Axis.YN.rotationDegrees(90.0F - yaw));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
 
-        pPoseStack.mulPose(Axis.XN.rotationDegrees(90.0F));
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
         boolean still = pEntity.getTime() + pPartialTick >= FireArrowProjectile.DELAY;
         RenderType type = JJKRenderTypes.glow(still ? STILL : STARTUP);
