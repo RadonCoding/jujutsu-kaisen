@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -55,7 +54,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 .add(RotationUtil.getTargetAdjustedLookAngle(owner));
         this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATE_ROLL, roll);
+        this.setRoll(roll);
     }
 
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
@@ -63,8 +62,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        this.entityData.set(DATE_ROLL, roll);
-        this.entityData.set(DATA_LENGTH, length);
+        this.setRoll(roll);
+        this.setLength(length);
     }
 
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length, boolean instant, boolean destroy) {
@@ -84,8 +83,21 @@ public class DismantleProjectile extends JujutsuProjectile {
         this.entityData.define(DATA_LENGTH, 0);
     }
 
+    public int getLength() {
+        int length = this.entityData.get(DATA_LENGTH);
+        return length > 0 ? length : Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower()));
+    }
+
+    private void setLength(int length) {
+        this.entityData.set(DATA_LENGTH, length);
+    }
+
     public float getRoll() {
         return this.entityData.get(DATE_ROLL);
+    }
+
+    private void setRoll(float roll) {
+        this.entityData.set(DATE_ROLL, roll);
     }
 
     @Override
@@ -135,63 +147,79 @@ public class DismantleProjectile extends JujutsuProjectile {
         }
     }
 
-    public int getLength() {
-        int length = this.entityData.get(DATA_LENGTH);
-        return length > 0.0D ? length : Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower()));
+    private Vec3 rotate(Vec3 vector, Vec3 axis, double degrees) {
+        double radians = degrees * Math.PI / 180.0D;
+
+        double cosine = Math.cos(radians);
+        double sine = Math.sin(radians);
+
+        double xx = (1.0D - cosine) * axis.x * axis.x;
+        double xy = (1.0D - cosine) * axis.x * axis.y;
+        double xz = (1.0D - cosine) * axis.x * axis.z;
+        double yy = (1.0D - cosine) * axis.y * axis.y;
+        double yz = (1.0D - cosine) * axis.y * axis.z;
+        double zz = (1.0D - cosine) * axis.z * axis.z;
+
+        return new Vec3(
+                (cosine + xx) * vector.x + (xy - axis.z * sine) * vector.y + (xz + axis.y * sine) * vector.z,
+                (xy + axis.z * sine) * vector.x + (cosine + yy) * vector.y + (yz - axis.x * sine) * vector.z,
+                (xz - axis.y * sine) * vector.x + (yz + axis.x * sine) * vector.y + (cosine + zz) * vector.z
+        );
     }
 
     public List<HitResult> getHitResults() {
         if (!(this.getOwner() instanceof LivingEntity owner)) return List.of();
 
         Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
-        Vec3 movement = this.getDeltaMovement();
-        Direction direction = Direction.getNearest(movement.x, movement.y, movement.z).getOpposite();
 
-        Direction perpendicular;
+        float yaw = this.getYRot();
+        float pitch = this.getXRot();
+        float roll = this.getRoll();
 
-        if (Math.abs(this.getRoll() - 90.0F) < 30.0F) {
-            perpendicular = direction.getAxis() == Direction.Axis.Y ? Direction.fromYRot(this.getYRot()).getOpposite() : Direction.UP;
-        } else {
-            perpendicular = direction.getAxis() == Direction.Axis.Y ? Direction.fromYRot(this.getYRot()).getCounterClockWise() : direction.getCounterClockWise();
-        }
+        Vec3 forward = this.calculateViewVector(pitch, yaw);
+        Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+
+        Vec3 side = this.rotate(forward.cross(up), forward, -roll);
+
+        int length = this.getLength();
+        Vec3 start = center.add(side.scale((double) length / 2));
+        Vec3 end = center.add(forward.subtract(side.scale((double) length / 2)));
 
         List<HitResult> hits = new ArrayList<>();
 
-        float speed = (float) this.getDeltaMovement().length();
+        double depth = Math.round(this.getDeltaMovement().length());
 
-        int length = this.getLength();
-        BlockPos start = BlockPos.containing(center.relative(perpendicular.getOpposite(), (double) length / 2));
-        BlockPos end = BlockPos.containing(center.relative(direction, Math.round(speed)).relative(perpendicular, (double) length / 2));
+        for (int z = 0; z < depth; z++) {
+            for (int x = 0; x < length; x++) {
+                BlockPos current = BlockPos.containing(start.add(end.subtract(start).scale((1.0D / length) * x).add(forward.scale(z))));
 
-        BlockPos.betweenClosed(start, end).forEach(pos -> {
-            Vec3 current = pos.getCenter();
+                AABB bounds = AABB.ofSize(current.getCenter(), 1.0D, 1.0D, 1.0D);
 
-            AABB bounds = AABB.ofSize(current, 1.0D, 1.0D, 1.0D);
-
-            for (Entity entity : this.level().getEntities(this, bounds)) {
-                hits.add(new EntityHitResult(entity));
-            }
-
-            if (!this.destroy) return;
-
-            BlockState state = this.level().getBlockState(pos);
-
-            if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                boolean destroyed;
-
-                if (state.getFluidState().isEmpty()) {
-                    destroyed = this.level().destroyBlock(pos, false);
-                } else {
-                    destroyed = this.level().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                for (Entity entity : this.level().getEntities(this, bounds)) {
+                    hits.add(new EntityHitResult(entity));
                 }
 
-                if (destroyed) {
-                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getCenter().x, pos.getCenter().y, pos.getCenter().z,
-                            0, 1.0D, 0.0D, 0.0D, 1.0D);
-                    this.destroyed++;
+                if (!this.destroy) continue;
+
+                BlockState state = this.level().getBlockState(current);
+
+                if (HelperMethods.isDestroyable(this.level(), owner, current)) {
+                    boolean destroyed;
+
+                    if (state.getFluidState().isEmpty()) {
+                        destroyed = this.level().destroyBlock(current, false);
+                    } else {
+                        destroyed = this.level().setBlockAndUpdate(current, Blocks.AIR.defaultBlockState());
+                    }
+
+                    if (destroyed) {
+                        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, current.getCenter().x, current.getCenter().y, current.getCenter().z,
+                                0, 1.0D, 0.0D, 0.0D, 1.0D);
+                        this.destroyed++;
+                    }
                 }
             }
-        });
+        }
         return hits;
     }
 
