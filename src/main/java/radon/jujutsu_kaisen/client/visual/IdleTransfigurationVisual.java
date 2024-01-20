@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -23,6 +24,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class IdleTransfigurationVisual {
     private static final float RADIUS = 1.5F;
+    private static final float PARTICLE_SIZE = RADIUS * 0.2F;
 
     private static Vec3 rotateRoll(Vec3 pos, float roll) {
         float f = Mth.cos(roll);
@@ -33,22 +35,28 @@ public class IdleTransfigurationVisual {
         return new Vec3(d0, d1, d2);
     }
 
-    private static Vec3 transform3rdPersonRight(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
-        return rotateRoll(pos, (float) -angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
-                .add(0.05F * -6.0F, 1.02F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), 0.0F)
-                .yRot((-entity.yBodyRotO - (entity.yBodyRot - entity.yBodyRotO) * partialTicks) * (float) (Math.PI / 180.0D))
-                .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()),
-                        Mth.lerp(partialTicks, entity.yOld, entity.getY()),
-                        Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
+    private static Vec3 transform3rdPerson(Vec3 pos, Vec3 angles, LivingEntity entity, HumanoidArm arm, float partialTicks) {
+        return rotateRoll(pos, (float)angles.z).xRot((float)-angles.x).yRot((float)-angles.y)
+                .add(0.0586F * (arm == HumanoidArm.RIGHT ? -6.0F : 6.0F), 1.3F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), -0.05F)
+                .yRot(-Mth.lerp(partialTicks, entity.yBodyRotO, entity.yBodyRot) * (float) (Math.PI / 180.0D))
+                .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()), Mth.lerp(partialTicks, entity.yOld, entity.getY()), Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    private static Vec3 transform3rdPersonLeft(Vec3 pos, Vec3 angles, LivingEntity entity, float partialTicks) {
-        return rotateRoll(pos, (float) -angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
-                .add(0.05F * 6.0F, 1.02F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), 0.0F)
-                .yRot((-entity.yBodyRotO - (entity.yBodyRot - entity.yBodyRotO) * partialTicks) * (float) (Math.PI / 180.0D))
-                .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()),
-                        Mth.lerp(partialTicks, entity.yOld, entity.getY()),
-                        Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
+    private static void run(LivingEntity entity) {
+        Minecraft mc = Minecraft.getInstance();
+        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
+        EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
+
+        if (renderer instanceof LivingEntityRenderer<?, ?> living && living.getModel() instanceof HumanoidModel<?> humanoid) {
+            Vec3 right = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
+                    new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, HumanoidArm.RIGHT, mc.getPartialTick());
+            spawn(entity.level(), right, ParticleColors.getCursedEnergyColor(entity));
+
+            Vec3 left = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
+                    new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, HumanoidArm.LEFT, mc.getPartialTick());
+            spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
+
+        }
     }
 
     public static void tick(LivingEntity entity) {
@@ -106,26 +114,6 @@ public class IdleTransfigurationVisual {
 
             level.addParticle(new TravelParticle.TravelParticleOptions(pos.toVector3f(), color, RADIUS * 0.15F, 0.2F, true, 20),
                     x, y, z, 0.0D, 1.0D, 0.0D);
-        }
-    }
-
-    private static void run(LivingEntity entity) {
-        Minecraft mc = Minecraft.getInstance();
-        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
-        EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
-
-        if (renderer instanceof LivingEntityRenderer<?, ?> living && living.getModel() instanceof HumanoidModel<?> humanoid) {
-            Vec3 right = transform3rdPersonRight(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.425D, 0.0D),
-                    new Vec3(humanoid.rightArm.xRot, humanoid.rightArm.yRot, humanoid.rightArm.zRot), entity, mc.getPartialTick())
-                    .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
-                    .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            spawn(entity.level(), right, ParticleColors.getCursedEnergyColor(entity));
-
-            Vec3 left = transform3rdPersonLeft(new Vec3(0.0D, -0.5825D - entity.getBbHeight() * 0.425D, 0.0D),
-                    new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, mc.getPartialTick())
-                    .add(0.0D, 0.275D - entity.getBbHeight() * 0.5D, 0.0D)
-                    .add(0.0D, entity.getBbHeight() / 2.0F + 0.9F, 0.0D);
-            spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
         }
     }
 }
