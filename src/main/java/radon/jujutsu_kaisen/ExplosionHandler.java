@@ -182,7 +182,7 @@ public class ExplosionHandler {
                                                     .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                                                     .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
                                                     .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
-                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
+                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius * 2);
                                             block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
                                             block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
                                         }
