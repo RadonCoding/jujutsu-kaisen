@@ -20,6 +20,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue deathPenalty;
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
+    public final ForgeConfigSpec.BooleanValue realisticCurses;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -78,6 +79,8 @@ public class ServerConfig {
                 .defineInRange("blackFlashChance", 100, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .define("realisticShikigami", true);
+        this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
+                .define("realisticCurses", true);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
