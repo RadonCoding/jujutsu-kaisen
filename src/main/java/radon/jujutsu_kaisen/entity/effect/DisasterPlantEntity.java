@@ -118,18 +118,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
             return;
         }
 
-        Vec3 start = this.getEyePosition();
-        Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-
-        double d0 = end.x - start.x;
-        double d1 = end.y - start.y;
-        double d2 = end.z - start.z;
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double )(180.0F / (float)Math.PI)))));
-        this.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float)Math.PI)) - 90.0F));
-        this.setYHeadRot(this.getYRot());
-        this.xRotO = this.getXRot();
-        this.yRotO = this.getYRot();
+        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
