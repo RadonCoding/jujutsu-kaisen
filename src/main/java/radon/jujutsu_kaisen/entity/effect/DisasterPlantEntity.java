@@ -47,11 +47,8 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         this.setTarget(target);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = owner.position()
-                .subtract(look.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.setPos(spawn.x, spawn.y, spawn.z);
-
-        EntityUtil.rotate(this, look);
+        EntityUtil.offset(this, look, owner.position()
+                .subtract(look.multiply(this.getBbWidth(), 0.0D, this.getBbWidth())));
     }
 
     @Override

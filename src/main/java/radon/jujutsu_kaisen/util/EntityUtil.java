@@ -19,12 +19,14 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import java.util.UUID;
 
 public class EntityUtil {
-    public static void rotate(Entity entity, Vec3 look) {
+    public static void offset(Entity entity, Vec3 look, Vec3 pos) {
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
         entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
         entity.yRotO = entity.getYRot();
         entity.xRotO = entity.getXRot();
+
+        entity.setPos(pos.x, pos.y, pos.z);
     }
 
     public static void convertTo(LivingEntity src, LivingEntity dst, boolean transferInventory, boolean kill) {

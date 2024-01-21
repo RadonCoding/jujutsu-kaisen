@@ -55,10 +55,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         this.setTarget(target);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(center);
-        Vec3 spawn = new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look);
-        this.setPos(spawn.x, spawn.y, spawn.z);
-
-        EntityUtil.rotate(this, look);
+        EntityUtil.offset(this, look, new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look));
 
         this.entityData.set(DATA_START, this.position().toVector3f());
     }
