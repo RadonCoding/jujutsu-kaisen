@@ -1,7 +1,5 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,23 +11,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.ten_shadows.ToadEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.UUID;
-
 public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity {
     public static final float SPEED = 2.0F;
     private static final int DURATION = 5 * 20;
     public static final double RANGE = 16.0D;
-    private static final double PULL_STRENGTH = 5.0D;
 
-    private LivingEntity grabbed;
-    private Vec3 pos;
+    private LivingEntity pulled;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -55,8 +48,9 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         if (this.level().isClientSide) return;
         if (!(pResult.getEntity() instanceof LivingEntity target)) return;
 
-        this.grabbed = target;
-        this.pos = target.position();
+        this.pulled = target;
+
+        this.setDeltaMovement(Vec3.ZERO);
     }
 
     @Override
@@ -72,29 +66,20 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
 
         Entity owner = this.getOwner();
 
-        if (this.level().isClientSide) return;
-
         if (this.getTime() >= DURATION) {
-            if (owner != null && this.grabbed != null) {
-                this.grabbed.setDeltaMovement(owner.position().subtract(this.grabbed.position())
-                        .normalize()
-                        .scale(PULL_STRENGTH)
-                        .multiply(1.0D, 0.5D, 1.0D));
-                this.grabbed.hurtMarked = true;
-            }
             this.discard();
             return;
         }
 
         if (owner == null) return;
 
-        if (this.grabbed != null) {
-            if (this.grabbed.isRemoved() || this.grabbed.isDeadOrDying()) this.discard();
+        if (this.pulled != null) {
+            if (this.pulled.isRemoved() || this.pulled.isDeadOrDying()) this.discard();
 
-            this.grabbed.teleportTo(this.pos.x, this.pos.y, this.pos.z);
+            this.setPos(this.pulled.getX(), this.pulled.getY() + (this.pulled.getBbHeight() / 2.0F), this.pulled.getZ());
 
-            this.setPos(this.grabbed.getX(), this.grabbed.getY() + (this.grabbed.getBbHeight() / 2.0F), this.grabbed.getZ());
-            this.setDeltaMovement(Vec3.ZERO);
+            this.pulled.setDeltaMovement(owner.position().subtract(this.pulled.position()).normalize());
+            this.pulled.hurtMarked = true;
         } else {
             if (this.distanceTo(owner) >= RANGE) {
                 this.discard();

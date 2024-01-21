@@ -113,7 +113,9 @@ public class ThrownChainProjectile extends AbstractArrow {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult pResult) {
+    protected void onHitEntity(@NotNull EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+
         Entity target = pResult.getEntity();
 
         Entity owner = this.getOwner();
@@ -123,6 +125,8 @@ public class ThrownChainProjectile extends AbstractArrow {
                 if (target.isPushable()) {
                     this.pulled = target;
                     this.dealtDamage = true;
+
+                    this.setDeltaMovement(Vec3.ZERO);
                 }
             }
         } else {
@@ -133,8 +137,9 @@ public class ThrownChainProjectile extends AbstractArrow {
 
             SwordItem sword = (SwordItem) this.getStack().getItem();
             target.hurt(source, (float) (sword.getDamage() * speed));
+
+            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
         }
-        this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
     }
 
     @Override
