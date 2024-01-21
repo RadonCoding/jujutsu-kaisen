@@ -31,13 +31,15 @@ public class WoodSegmentRenderer extends EntityRenderer<WoodSegmentEntity> {
 
     @Override
     public void render(@NotNull WoodSegmentEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        pPoseStack.pushPose();
+        pPoseStack.scale(0.4F, 0.8F, 0.4F);
+
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-        pPoseStack.pushPose();
-        pPoseStack.scale(0.4F, 0.8F, 0.4F);
         pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch - 180.0F));
+
         pPoseStack.mulPose(Axis.YP.rotationDegrees(5.0F * pEntity.getIndex()));
 
         BlockPos pos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
