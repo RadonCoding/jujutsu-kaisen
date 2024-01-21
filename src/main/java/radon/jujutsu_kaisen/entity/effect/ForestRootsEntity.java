@@ -66,6 +66,10 @@ public class ForestRootsEntity extends JujutsuProjectile implements GeoEntity {
             } else if (victim != null) {
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);
+
+                    if (victim.isPassenger()) {
+                        victim.removeVehicle();
+                    }
                 }
             }
         }
