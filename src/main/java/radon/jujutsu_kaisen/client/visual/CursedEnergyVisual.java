@@ -30,9 +30,9 @@ public class CursedEnergyVisual {
 
             if (data.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get())) {
                 for (int i = 0; i < 12 * scale; i++) {
-                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).x;
+                    double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - entity.getLookAngle().scale(0.35D).x;
                     double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - RotationUtil.getTargetAdjustedLookAngle(entity).scale(0.35D).z;
+                    double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - entity.getLookAngle().scale(0.35D).z;
                     double speed = (entity.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
                     mc.level.addParticle(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(entity), entity.getBbWidth() * 0.5F * scale,
                             0.2F, 6), x, y, z, 00.0D, speed * scale, 0.0D);
