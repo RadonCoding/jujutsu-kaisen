@@ -100,9 +100,9 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
             for (int i = 0; i < count; i++) {
-                double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(victim).scale(0.35D).x;
+                double x = victim.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - victim.getLookAngle().scale(0.35D).x;
                 double y = victim.getY() + HelperMethods.RANDOM.nextDouble() * victim.getBbHeight();
-                double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - RotationUtil.getTargetAdjustedLookAngle(victim).scale(0.35D).z;
+                double z = victim.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (victim.getBbWidth() * 2) - victim.getLookAngle().scale(0.35D).z;
                 ((ServerLevel) victim.level()).sendParticles(ParticleTypes.SOUL, x, y, z, 0, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D, 1.0D);
             }
 
