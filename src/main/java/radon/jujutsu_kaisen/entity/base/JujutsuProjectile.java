@@ -38,6 +38,20 @@ public class JujutsuProjectile extends Projectile {
         this.setPower(power);
     }
 
+    @Override
+    public void setYRot(float pYRot) {
+        super.setYRot(pYRot);
+
+        this.yRotO = pYRot;
+    }
+
+    @Override
+    public void setXRot(float pXRot) {
+        super.setXRot(pXRot);
+
+        this.xRotO = pXRot;
+    }
+
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }
