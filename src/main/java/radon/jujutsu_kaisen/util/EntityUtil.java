@@ -1,5 +1,7 @@
 package radon.jujutsu_kaisen.util;
 
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,6 +21,16 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import java.util.UUID;
 
 public class EntityUtil {
+    public static void makePoofParticles(Entity entity) {
+        for (int i = 0; i < 20; ++i) {
+            double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
+            double d1 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
+            double d2 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
+            ((ServerLevel) entity.level()).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
+                    0, d0, d1, d2, 1.0D);
+        }
+    }
+
     public static void offset(Entity entity, Vec3 look, Vec3 pos) {
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));

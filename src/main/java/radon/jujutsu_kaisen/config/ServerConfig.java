@@ -26,6 +26,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
+    public final ForgeConfigSpec.BooleanValue destruction;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
@@ -92,6 +93,8 @@ public class ServerConfig {
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
                 .define("uniqueTraits", true);
+        this.destruction = builder.comment("When enabled abilities break blocks")
+                .define("destruction", true);
         builder.pop();
 
         builder.comment("Veils").push("veils");
