@@ -40,6 +40,7 @@ public class AirFrameRenderer extends EntityRenderer<AirFrameEntity> {
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+
         pPoseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
         pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch - 90.0F));
 
