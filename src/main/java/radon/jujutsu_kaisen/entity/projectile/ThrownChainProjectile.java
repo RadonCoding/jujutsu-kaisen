@@ -25,8 +25,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import javax.annotation.Nullable;
 
 public class ThrownChainProjectile extends AbstractArrow {
-    private static final double PULL_STRENGTH = 5.0D;
-
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
 
