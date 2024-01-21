@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CurseAbsorption extends Ability implements Ability.IToggled {
@@ -43,16 +44,6 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.TOGGLED;
-    }
-
-    private static void makePoofParticles(Entity entity) {
-        for (int i = 0; i < 20; ++i) {
-            double d0 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
-            double d1 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
-            double d2 = HelperMethods.RANDOM.nextGaussian() * 0.02D;
-            ((ServerLevel) entity.level()).sendParticles(ParticleTypes.POOF, entity.getRandomX(1.0D), entity.getRandomY(), entity.getRandomZ(1.0D),
-                    0, d0, d1, d2, 1.0D);
-        }
     }
 
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
@@ -112,7 +103,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
         } else {
             attacker.setItemSlot(EquipmentSlot.MAINHAND, stack);
         }
-        makePoofParticles(victim);
+        EntityUtil.makePoofParticles(victim);
 
         if (!(victim instanceof Player)) {
             victim.discard();

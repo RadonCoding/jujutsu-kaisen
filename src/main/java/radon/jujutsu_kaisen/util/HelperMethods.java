@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -61,6 +62,8 @@ public class HelperMethods {
     }
 
     public static boolean isDestroyable(BlockGetter getter, @Nullable LivingEntity source, BlockPos pos) {
+        if (!ConfigHolder.SERVER.destruction.get()) return false;
+
         if (source != null && !(source instanceof Player) && !source.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) return false;
 
         BlockState state = getter.getBlockState(pos);
