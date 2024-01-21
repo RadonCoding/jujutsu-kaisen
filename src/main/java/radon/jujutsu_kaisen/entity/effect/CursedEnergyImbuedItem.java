@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -31,9 +32,12 @@ public class CursedEnergyImbuedItem extends ItemEntity {
         this.setThrower(owner.getUUID());
         this.setItem(stack);
 
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                .add(look);
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
 
         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
     }

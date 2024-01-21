@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -50,9 +51,12 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                .add(look);
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
 
         this.setRoll(roll);
     }
@@ -60,7 +64,11 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
-        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        this.setPos(pos.x, pos.y, pos.z);
+
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+
+        EntityUtil.applyOffset(this, look);
 
         this.setRoll(roll);
         this.setLength(length);

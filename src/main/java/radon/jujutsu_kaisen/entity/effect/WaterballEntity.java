@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -47,7 +49,9 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
     }
 
     private static boolean isInside(LivingEntity owner, BlockPos pos) {
@@ -121,7 +125,13 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                 Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                this.setPos(spawn.x, spawn.y, spawn.z);
+
+                double d0 = look.horizontalDistance();
+                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
+                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
             }
         } else {
             this.discard();

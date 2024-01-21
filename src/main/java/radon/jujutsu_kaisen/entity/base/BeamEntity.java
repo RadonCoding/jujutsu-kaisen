@@ -51,6 +51,8 @@ public abstract class BeamEntity extends JujutsuProjectile {
         super(pType, pLevel);
 
         this.noCulling = true;
+
+        this.update();
     }
 
     protected BeamEntity(EntityType<? extends Projectile> pType, LivingEntity owner, float power) {

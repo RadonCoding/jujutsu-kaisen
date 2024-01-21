@@ -23,6 +23,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.ParticleUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -50,9 +51,12 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
     public FireballProjectile(LivingEntity owner, float power) {
         super(JJKEntities.FIREBALL.get(), owner.level(), owner, power);
 
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(RotationUtil.getTargetAdjustedLookAngle(owner));
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                .add(look);
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
     }
 
     @Override
@@ -180,7 +184,13 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 }
                 Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                 Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                this.setPos(spawn.x, spawn.y, spawn.z);
+
+                double d0 = look.horizontalDistance();
+                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
+                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
             } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);

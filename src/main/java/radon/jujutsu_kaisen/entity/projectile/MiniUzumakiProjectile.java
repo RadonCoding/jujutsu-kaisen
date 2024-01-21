@@ -58,10 +58,6 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.setOwner(owner);
         this.setPower(power);
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
-
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Entity weakest = null;
