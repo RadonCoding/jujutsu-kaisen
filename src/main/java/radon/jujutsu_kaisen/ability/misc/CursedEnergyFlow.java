@@ -289,12 +289,6 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
                         }
                     }
-
-                    // Fucking stupid forge events system i swear
-                    if (victim.isDeadOrDying()) {
-                        event.setCanceled(true);
-                        return;
-                    }
                     event.setAmount(blocked);
                 }
             }

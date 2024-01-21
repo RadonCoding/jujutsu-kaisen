@@ -382,15 +382,6 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onCursedEnergyCost(CursedEnergyCostEvent event) {
-            LivingEntity owner = event.getEntity();
-
-            if (!owner.level().isClientSide && owner.hasEffect(JJKEffects.CURSED_BUD.get())) {
-                owner.hurt(owner.level().damageSources().generic(), event.getCost() * 0.5F);
-            }
-        }
-
-        @SubscribeEvent
         public static void onAbilityStop(AbilityStopEvent event) {
             Ability ability = event.getAbility();
 
