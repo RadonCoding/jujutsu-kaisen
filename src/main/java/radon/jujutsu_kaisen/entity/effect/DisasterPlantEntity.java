@@ -125,8 +125,8 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
         double d1 = end.y - start.y;
         double d2 = end.z - start.z;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        this.setYRot((float) (Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)));
-        this.setXRot(-(float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)));
+        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double )(180.0F / (float)Math.PI)))));
+        this.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float)Math.PI)) - 90.0F));
         this.setYHeadRot(this.getYRot());
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
