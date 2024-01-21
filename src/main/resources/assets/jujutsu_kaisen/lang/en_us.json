@@ -4,8 +4,10 @@
   "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove copied techniques",
 
   "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
-  "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.cooldown": "%1$s cooldown: %2$fs",
+
+  "gui.jujutsu_kaisen.data_overlay.experience": "Experience: %1$d",
+  "gui.jujutsu_kaisen.data_overlay.transfigured_souls": "Transfigured Souls: %1$d",
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
@@ -572,6 +574,8 @@
   "entity.jujutsu_kaisen.tranquil_deer": "Tranquil Deer",
   "entity.jujutsu_kaisen.piercing_bull": "Piercing Bull",
   "entity.jujutsu_kaisen.agito": "Agito",
+
+  "entity.jujutsu_kaisen.transfigured_soul_small": "Transfigured Soul",
 
   "effect.jujutsu_kaisen.stun": "Stun",
   "effect.jujutsu_kaisen.unlimited_void": "Unlimited Void",

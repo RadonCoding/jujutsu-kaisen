@@ -223,6 +223,12 @@ public interface ISorcererData {
 
     @Nullable CursedTechnique getCurrentAbsorbed();
 
+    int getTransfiguredSouls();
+
+    void increaseTransfiguredSouls();
+
+    void decreaseTransfiguredSouls();
+
     @Nullable Ability getChanneled();
 
     void channel(@Nullable Ability ability);

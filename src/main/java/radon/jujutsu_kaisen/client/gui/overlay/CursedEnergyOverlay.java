@@ -12,6 +12,7 @@ import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -27,60 +28,62 @@ public class CursedEnergyOverlay {
 
         if (mc.player == null) return;
 
-        mc.player.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (cap.getEnergy() == 0.0F) return;
+        // DO NOT REMOVE
+        if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
-            RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+        if (cap.getEnergy() == 0.0F) return;
 
-            graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+        RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
-            float maxEnergy = cap.getMaxEnergy();
-            float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
-            graphics.blit(TEXTURE, 20, 33, 0, 9, (int) energyWidth, 7, 93, 16);
+        graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
 
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        float maxEnergy = cap.getMaxEnergy();
+        float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
+        graphics.blit(TEXTURE, 20, 33, 0, 9, (int) energyWidth, 7, 93, 16);
 
-            float scale = 0.6F;
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            graphics.pose().pushPose();
-            graphics.pose().scale(scale, scale, scale);
+        float scale = 0.6F;
 
-            graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)),
-                    Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
+        graphics.pose().pushPose();
+        graphics.pose().scale(scale, scale, scale);
 
-            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                    Math.round(23 * (1.0F / scale)), Math.round(34 * (1.0F / scale)), 16777215);
+        graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)),
+                Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
 
-            List<Component> lines = new ArrayList<>();
+        graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
+                Math.round(23 * (1.0F / scale)), Math.round(34 * (1.0F / scale)), 16777215);
 
-            for (Ability ability : cap.getToggled()) {
-                if (!(ability instanceof Ability.IAttack)) continue;
+        List<Component> lines = new ArrayList<>();
 
-                int cooldown = cap.getRemainingCooldown(ability);
+        for (Ability ability : cap.getToggled()) {
+            if (!(ability instanceof Ability.IAttack)) continue;
 
-                if (cooldown > 0) {
-                    lines.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
-                }
+            int cooldown = cap.getRemainingCooldown(ability);
+
+            if (cooldown > 0) {
+                lines.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
             }
+        }
 
-            int x = 20;
-            int y = 43;
+        int x = 20;
+        int y = 43;
 
-            for (Component line : lines) {
-                graphics.drawString(gui.getFont(), line, Math.round(x * (1.0F / scale)), Math.round(y * (1.0F / scale)), 16777215);
-                y += mc.font.lineHeight;
-            }
+        for (Component line : lines) {
+            graphics.drawString(gui.getFont(), line, Math.round(x * (1.0F / scale)), Math.round(y * (1.0F / scale)), 16777215);
+            y += mc.font.lineHeight;
+        }
 
-            graphics.pose().popPose();
+        graphics.pose().popPose();
 
-            RenderSystem.depthMask(true);
-            RenderSystem.enableDepthTest();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        });
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     };
 }

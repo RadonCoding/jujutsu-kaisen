@@ -19,6 +19,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.FireBeamEntity;
@@ -86,6 +87,9 @@ public abstract class BeamEntity extends JujutsuProjectile {
         return true;
     }
 
+    @Nullable
+    protected abstract Ability getSource();
+
     protected Vec3 calculateSpawnPos(LivingEntity owner) {
         return new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
                 .add(RotationUtil.getTargetAdjustedLookAngle(owner));
@@ -149,10 +153,8 @@ public abstract class BeamEntity extends JujutsuProjectile {
                         new Vec3(this.endPosX, this.endPosY, this.endPosZ));
 
                 for (Entity entity : entities) {
-                    if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
-                        continue;
-                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.WATER_TORRENT.get()), this.getDamage() * this.getPower()))
-                        continue;
+                    if (entity == owner) continue;
+                    if (!entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.getSource()), this.getDamage() * this.getPower())) continue;
 
                     if (this.causesFire()) {
                         entity.setSecondsOnFire(5);

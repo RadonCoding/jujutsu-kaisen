@@ -64,6 +64,8 @@ public class SorcererData implements ISorcererData {
     private final Set<CursedTechnique> absorbed;
     private @Nullable CursedTechnique currentAbsorbed;
 
+    private int transfiguredSouls;
+
     private CursedEnergyNature nature;
 
     private float experience;
@@ -1117,6 +1119,21 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public int getTransfiguredSouls() {
+        return this.transfiguredSouls;
+    }
+
+    @Override
+    public void increaseTransfiguredSouls() {
+        this.transfiguredSouls++;
+    }
+
+    @Override
+    public void decreaseTransfiguredSouls() {
+        this.transfiguredSouls--;
+    }
+
+    @Override
     public @Nullable Ability getChanneled() {
         return this.channeled;
     }
@@ -1625,6 +1642,7 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
+        nbt.putInt("transfigured_souls", this.transfiguredSouls);
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
         nbt.putFloat("output", this.output);
@@ -1836,6 +1854,7 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("current_absorbed")) {
             this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
         }
+        this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
         this.output = nbt.getFloat("output");

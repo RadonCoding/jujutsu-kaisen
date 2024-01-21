@@ -18,6 +18,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.BeamEntity;
@@ -78,6 +79,11 @@ public class FireBeamEntity extends BeamEntity {
     @Override
     protected boolean isStill() {
         return true;
+    }
+
+    @Override
+    protected @Nullable Ability getSource() {
+        return JJKAbilities.FIRE_BEAM.get();
     }
 
     @Override

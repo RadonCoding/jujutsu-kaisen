@@ -61,11 +61,9 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
 
         Entity entity = pResult.getEntity();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
-            }
-        }
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIREBALL.get()), DAMAGE * this.getPower());
     }
 
     @Override

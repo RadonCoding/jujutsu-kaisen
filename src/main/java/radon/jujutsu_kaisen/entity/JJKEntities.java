@@ -278,6 +278,13 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "agito")
                             .toString()));
 
+    public static RegistryObject<EntityType<TransfiguredSoulSmallEntity>> TRANSFIGURED_SOUL_SMALL = ENTITIES.register("transfigured_soul_small", () ->
+            EntityType.Builder.<TransfiguredSoulSmallEntity>of(TransfiguredSoulSmallEntity::new, MobCategory.MISC)
+                    .sized(0.6F, 1.2F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul_small")
+                            .toString()));
+
+
     public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
             EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
                     .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
@@ -481,8 +488,8 @@ public class JJKEntities {
                     .sized(ForestDashEntity.SIZE, ForestDashEntity.SIZE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "forest_dash")
                             .toString()));
-    public static RegistryObject<EntityType<CursedEnergyImbuedItem>> CURSED_ENERGY_IMBUED_ITEM = ENTITIES.register("cursed_energy_imbued_item", () ->
-            EntityType.Builder.<CursedEnergyImbuedItem>of(CursedEnergyImbuedItem::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<CursedEnergyImbuedItemProjectile>> CURSED_ENERGY_IMBUED_ITEM = ENTITIES.register("cursed_energy_imbued_item", () ->
+            EntityType.Builder.<CursedEnergyImbuedItemProjectile>of(CursedEnergyImbuedItemProjectile::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_imbued_item")
                             .toString()));
@@ -500,6 +507,11 @@ public class JJKEntities {
             EntityType.Builder.<EelGrappleProjectile>of(EelGrappleProjectile::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "eel_grapple")
+                            .toString()));
+    public static RegistryObject<EntityType<TransfiguredSoulProjectile>> TRANSFIGURED_SOUL = ENTITIES.register("transfigured_soul", () ->
+            EntityType.Builder.<TransfiguredSoulProjectile>of(TransfiguredSoulProjectile::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul")
                             .toString()));
 
     @SubscribeEvent

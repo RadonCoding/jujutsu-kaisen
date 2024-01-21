@@ -63,8 +63,7 @@ public class WaterballEntity extends JujutsuProjectile implements GeoEntity {
         BlockPos center = owner.blockPosition();
 
         for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(owner.position(), WIDTH, HEIGHT, WIDTH))) {
-            if ((!(entity instanceof LivingEntity living) || !owner.canAttack(living)) || !isInside(owner, entity.blockPosition()))
-                continue;
+            if (!isInside(owner, entity.blockPosition())) continue;
 
             if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DISASTER_TIDES.get()), DAMAGE * this.getPower())) {
                 entity.setDeltaMovement(entity.position().subtract(center.getCenter()));

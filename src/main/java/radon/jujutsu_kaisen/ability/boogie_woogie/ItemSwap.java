@@ -5,21 +5,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyImbuedItem;
-import radon.jujutsu_kaisen.item.base.CursedToolItem;
+import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ItemSwap extends Ability {
     public static final double RANGE = 30.0D;
@@ -42,7 +34,7 @@ public class ItemSwap extends Ability {
     private @Nullable Entity getTarget(LivingEntity owner) {
         Entity target = null;
 
-        for (Entity entity : owner.level().getEntitiesOfClass(CursedEnergyImbuedItem.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
+        for (Entity entity : owner.level().getEntitiesOfClass(CursedEnergyImbuedItemProjectile.class, AABB.ofSize(owner.position(), RANGE, RANGE, RANGE))) {
             if (target == null || entity.distanceTo(owner) < target.distanceTo(owner)) {
                 target = entity;
             }
