@@ -39,7 +39,7 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
             owner.swing(InteractionHand.MAIN_HAND);
 
             DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner), (owner.isShiftKeyDown() ? 90.0F : 0.0F) + (HelperMethods.RANDOM.nextFloat() - 0.5F) * 60.0F);
-            dismantle.setDeltaMovement(dismantle.getLookAngle().scale(SPEED));
+            dismantle.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             owner.level().addFreshEntity(dismantle);
 
             if (!owner.level().isClientSide) {
