@@ -52,11 +52,6 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
     }
 
     @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
-
-    @Override
     public @NotNull Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
