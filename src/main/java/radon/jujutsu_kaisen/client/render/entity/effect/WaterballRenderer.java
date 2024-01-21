@@ -24,7 +24,7 @@ public class WaterballRenderer extends GeoEntityRenderer<WaterballEntity> {
 
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

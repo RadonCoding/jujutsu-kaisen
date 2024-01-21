@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -36,20 +37,6 @@ public class JujutsuProjectile extends Projectile {
         this(pType, pLevel, pShooter);
 
         this.setPower(power);
-    }
-
-    @Override
-    public void setYRot(float pYRot) {
-        super.setYRot(pYRot);
-
-        this.yRotO = pYRot;
-    }
-
-    @Override
-    public void setXRot(float pXRot) {
-        super.setXRot(pXRot);
-
-        this.xRotO = pXRot;
     }
 
     public int getTime() {

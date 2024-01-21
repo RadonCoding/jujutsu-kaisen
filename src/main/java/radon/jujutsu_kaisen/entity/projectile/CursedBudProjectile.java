@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +19,7 @@ import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.effect.DisasterPlantEntity;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -44,7 +46,9 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
     }
 
     public CursedBudProjectile(LivingEntity owner, float power, DisasterPlantEntity plant) {
@@ -52,7 +56,9 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(plant);
         Vec3 spawn = new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look);
-        this.moveTo(spawn.x, spawn.y, spawn.z, plant.getYRot(), plant.getXRot());
+        this.setPos(spawn.x, spawn.y, spawn.z);
+
+        EntityUtil.applyOffset(this, look);
 
         this.plant = true;
     }
@@ -104,7 +110,13 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                     }
                     Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
                     Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                    this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                    this.setPos(spawn.x, spawn.y, spawn.z);
+
+                    double d0 = look.horizontalDistance();
+                    this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
+                    this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
+                    this.yRotO = this.getYRot();
+                    this.xRotO = this.getXRot();
                 }
             } else if (this.getTime() >= DURATION) {
                 this.discard();

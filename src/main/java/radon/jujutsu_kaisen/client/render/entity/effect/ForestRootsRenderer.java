@@ -22,7 +22,7 @@ public class ForestRootsRenderer extends GeoEntityRenderer<ForestRootsEntity> {
     public void preRender(PoseStack poseStack, ForestRootsEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float yaw = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot());
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(360.0F - yaw));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
