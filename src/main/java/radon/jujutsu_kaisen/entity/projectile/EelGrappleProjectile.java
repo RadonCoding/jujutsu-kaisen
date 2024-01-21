@@ -89,7 +89,7 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
         if (owner == null) return;
 
         if (this.grabbed != null) {
-            if (this.grabbed.isDeadOrDying() || this.grabbed.isRemoved()) this.discard();
+            if (this.grabbed.isRemoved() || this.grabbed.isDeadOrDying()) this.discard();
 
             this.grabbed.teleportTo(this.pos.x, this.pos.y, this.pos.z);
 

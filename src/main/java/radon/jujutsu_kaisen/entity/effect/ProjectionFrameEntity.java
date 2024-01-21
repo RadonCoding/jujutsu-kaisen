@@ -143,10 +143,6 @@ public class ProjectionFrameEntity extends Entity {
 
                 if (this.pos != null) {
                     victim.teleportTo(this.pos.x, this.pos.y, this.pos.z);
-
-                    if (victim.isPassenger()) {
-                        victim.removeVehicle();
-                    }
                 }
             }
         }
