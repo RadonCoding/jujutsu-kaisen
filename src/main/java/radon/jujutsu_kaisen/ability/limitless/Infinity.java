@@ -281,6 +281,8 @@ public class Infinity extends Ability implements Ability.IToggled {
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity target = event.getEntity();
 
+            if (target.level().isClientSide) return;
+
             if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
