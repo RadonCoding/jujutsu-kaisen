@@ -157,7 +157,7 @@ public class RedProjectile extends JujutsuProjectile {
                 }
 
                 if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).scale(SPEED));
+                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 }
             }
         }
