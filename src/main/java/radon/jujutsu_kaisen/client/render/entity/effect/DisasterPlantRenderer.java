@@ -27,7 +27,7 @@ public class DisasterPlantRenderer extends GeoEntityRenderer<DisasterPlantEntity
         float pitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
 
         poseStack.mulPose(Axis.YN.rotationDegrees(yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        poseStack.mulPose(Axis.XN.rotationDegrees(pitch));
 
         GeoBone parent = model.getBone("cursed_buds").orElseThrow();
         List<GeoBone> buds = parent.getChildBones();
