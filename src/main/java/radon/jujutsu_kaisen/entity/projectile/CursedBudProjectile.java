@@ -54,6 +54,8 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(plant);
         EntityUtil.offset(this, look, new Vec3(plant.getX(), plant.getEyeY() - (this.getBbHeight() / 2.0F), plant.getZ()).add(look));
 
+        this.setDeltaMovement(look.scale(SPEED));
+
         this.plant = true;
     }
 
@@ -95,24 +97,22 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.level().isClientSide) return;
 
-            if (!this.plant && this.getTime() < DELAY) {
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
+            if (!this.plant) {
+                if (this.getTime() < DELAY) {
+                    if (!owner.isAlive()) {
+                        this.discard();
+                    } else {
+                        if (this.getTime() % 5 == 0) {
+                            owner.swing(InteractionHand.MAIN_HAND);
+                        }
+                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
                     }
-                    Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                    EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
+                } else if (this.getTime() >= DURATION) {
+                    this.discard();
+                } else if (this.getTime() == DELAY) {
+                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
                 }
-            } else if (this.getTime() >= DURATION) {
-                this.discard();
-            } else if (this.plant) {
-                if (this.getTime() - 1 == 0) {
-                    this.setDeltaMovement(this.getForward().scale(SPEED));
-                }
-            } else if (this.getTime() == DELAY) {
-                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             }
         }
     }
