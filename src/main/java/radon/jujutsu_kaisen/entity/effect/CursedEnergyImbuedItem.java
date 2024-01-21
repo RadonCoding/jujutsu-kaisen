@@ -1,20 +1,15 @@
 package radon.jujutsu_kaisen.entity.effect;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -37,7 +32,7 @@ public class CursedEnergyImbuedItem extends ItemEntity {
                 .add(look);
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
 
         this.setDeltaMovement(this.getLookAngle().scale(SPEED));
     }

@@ -56,7 +56,7 @@ public class FireballProjectile extends JujutsuProjectile implements GeoEntity {
                 .add(look);
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
     }
 
     @Override

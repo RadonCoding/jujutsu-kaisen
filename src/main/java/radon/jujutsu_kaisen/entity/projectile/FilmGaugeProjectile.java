@@ -5,7 +5,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,7 +58,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         Vec3 spawn = new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look);
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
 
         this.entityData.set(DATA_START, this.position().toVector3f());
     }

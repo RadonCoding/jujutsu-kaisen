@@ -3,7 +3,6 @@ package radon.jujutsu_kaisen.entity.projectile;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +47,7 @@ public class LavaRockProjectile extends JujutsuProjectile {
                 .add(look);
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
     }
 
     public void setTarget(@Nullable LivingEntity target) {

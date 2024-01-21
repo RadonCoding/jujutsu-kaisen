@@ -56,7 +56,7 @@ public class DismantleProjectile extends JujutsuProjectile {
                 .add(look);
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
 
         this.setRoll(roll);
     }
@@ -68,7 +68,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
 
         this.setRoll(roll);
         this.setLength(length);
