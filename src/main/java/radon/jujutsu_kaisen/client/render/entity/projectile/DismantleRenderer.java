@@ -36,10 +36,10 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
 
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(yaw));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch - 90.0F));
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        pPoseStack.mulPose(Axis.XP.rotationDegrees(pitch));
 
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(pEntity.getRoll()));
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees(pEntity.getRoll()));
 
         pPoseStack.scale(1.0F, 1.0F, 0.2F);
 
