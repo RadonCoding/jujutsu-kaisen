@@ -52,11 +52,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(look);
-        this.setPos(spawn.x, spawn.y, spawn.z);
-
-        EntityUtil.rotate(this, look);
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
 
         this.setRoll(roll);
     }
@@ -64,11 +60,8 @@ public class DismantleProjectile extends JujutsuProjectile {
     public DismantleProjectile(LivingEntity owner, float power, float roll, Vec3 pos, int length) {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
-        this.setPos(pos.x, pos.y, pos.z);
-
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-
-        EntityUtil.rotate(this, look);
+        EntityUtil.offset(this, look, pos);
 
         this.setRoll(roll);
         this.setLength(length);

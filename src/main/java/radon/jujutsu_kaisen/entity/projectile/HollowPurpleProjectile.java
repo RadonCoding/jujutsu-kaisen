@@ -41,11 +41,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
         super(JJKEntities.HOLLOW_PURPLE.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                .add(look.scale(this.getRadius() * 0.5F));
-        this.setPos(spawn.x, spawn.y, spawn.z);
-
-        EntityUtil.rotate(this, look);
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(look.scale(this.getRadius() * 0.5F)));
     }
 
     public float getRadius() {
