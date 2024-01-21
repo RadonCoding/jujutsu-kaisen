@@ -221,13 +221,13 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
             double phi = this.random.nextDouble() * Math.PI;
 
-            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * Math.cos(phi);
+            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * 0.75F * Math.cos(phi);
 
-            double x = center.x + xOffset;
-            double y = center.y + yOffset;
-            double z = center.z + zOffset;
+            double x = center.x + xOffset * (radius * 0.1F);
+            double y = center.y + yOffset * (radius * 0.1F);
+            double z = center.z + zOffset * (radius * 0.1F);
 
             this.level().addParticle(new TravelParticle.TravelParticleOptions(new Vec3(x, y, z).toVector3f(), ParticleColors.DARK_PURPLE, radius * 0.2F, 1.0F, true, 5), true,
                     center.x, center.y, center.z, 0.0D, 0.0D, 0.0D);
@@ -237,9 +237,9 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
             double phi = this.random.nextDouble() * Math.PI;
 
-            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.5F * Math.cos(phi);
+            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * 0.75F * Math.cos(phi);
 
             double x = center.x + xOffset * 0.1F;
             double y = center.y + yOffset * 0.1F;
