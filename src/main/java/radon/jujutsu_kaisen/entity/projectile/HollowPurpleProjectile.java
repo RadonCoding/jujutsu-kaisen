@@ -45,7 +45,7 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
                 .add(look.scale(this.getRadius() * 0.5F));
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
     }
 
     public float getRadius() {

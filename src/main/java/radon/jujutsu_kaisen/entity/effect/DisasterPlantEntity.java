@@ -51,7 +51,7 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
                 .subtract(look.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
         this.setPos(spawn.x, spawn.y, spawn.z);
 
-        EntityUtil.applyOffset(this, look);
+        EntityUtil.rotate(this, look);
     }
 
     @Override

@@ -1,10 +1,5 @@
 package radon.jujutsu_kaisen.util;
 
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.misc.RCT1;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -25,7 +19,7 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import java.util.UUID;
 
 public class EntityUtil {
-    public static void applyOffset(Entity entity, Vec3 look) {
+    public static void rotate(Entity entity, Vec3 look) {
         double d0 = look.horizontalDistance();
         entity.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
         entity.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
