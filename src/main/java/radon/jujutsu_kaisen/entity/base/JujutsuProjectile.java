@@ -40,20 +40,6 @@ public class JujutsuProjectile extends Projectile {
         this.setPower(power);
     }
 
-    @Override
-    public void lookAt(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        Vec3 vec3 = pAnchor.apply(this);
-        double d0 = pTarget.x - vec3.x;
-        double d1 = pTarget.y - vec3.y;
-        double d2 = pTarget.z - vec3.z;
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)))));
-        this.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI))));
-        this.setYHeadRot(this.getYRot());
-        this.xRotO = this.getXRot();
-        this.yRotO = this.getYRot();
-    }
-
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }

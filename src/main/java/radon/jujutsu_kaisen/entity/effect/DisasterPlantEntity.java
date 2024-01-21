@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -117,7 +118,18 @@ public class DisasterPlantEntity extends JujutsuProjectile implements GeoEntity 
             return;
         }
 
-        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D));
+        Vec3 start = this.getEyePosition();
+        Vec3 end = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
+
+        double d0 = end.x - start.x;
+        double d1 = end.y - start.y;
+        double d2 = end.z - start.z;
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        this.setYRot((float) (Mth.atan2(d1, d3) * (double) (180.0F / (float) Math.PI)));
+        this.setXRot((float) (Mth.atan2(d2, d0) * (double) (180.0F / (float) Math.PI)));
+        this.setYHeadRot(this.getYRot());
+        this.xRotO = this.getXRot();
+        this.yRotO = this.getYRot();
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
