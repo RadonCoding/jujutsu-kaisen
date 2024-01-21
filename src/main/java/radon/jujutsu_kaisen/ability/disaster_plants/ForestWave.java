@@ -48,7 +48,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(-forest.getBbWidth() * 1.5F))
-                    .add(look.scale(charge + i));
+                    .add(look.scale(charge + i * forest.getBbWidth()));
             forest.moveTo(spawn.x, spawn.y, spawn.z, yRot, xRot);
 
             if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
@@ -64,7 +64,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
                     .add(look.yRot(90.0F).scale(forest.getBbWidth() * 1.5F))
-                    .add(look.scale(charge + i));
+                    .add(look.scale(charge + i * forest.getBbWidth()));
             forest.moveTo(spawn.x, spawn.y, spawn.z, yRot, xRot);
 
             if (charge != 0 && owner.level().getEntitiesOfClass(ForestWaveEntity.class, forest.getBoundingBox()).isEmpty())
