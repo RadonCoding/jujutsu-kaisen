@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -102,20 +103,13 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
                         owner.swing(InteractionHand.MAIN_HAND);
                     }
                     Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look);
-                    this.setPos(spawn.x, spawn.y, spawn.z);
-
-                    double d0 = look.horizontalDistance();
-                    this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-                    this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-                    this.yRotO = this.getYRot();
-                    this.xRotO = this.getXRot();
+                    EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
                 }
             } else if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (this.plant) {
                 if (this.getTime() - 1 == 0) {
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
+                    this.setDeltaMovement(this.getForward().scale(SPEED));
                 }
             } else if (this.getTime() == DELAY) {
                 this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
