@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class ForestWave extends Ability implements Ability.IChannelened, Ability.IDurationable {
     private static final int DELAY = 3;
+    private static final int SPEED = 5;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -41,9 +42,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
         float xRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
         float yRot = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 90.0F;
 
-        int speed = 3;
-
-        for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
+        for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
             ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
@@ -59,7 +58,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
             owner.level().addFreshEntity(forest);
         }
 
-        for (int i = charge < speed ? 0 : -speed; i <= speed; i++) {
+        for (int i = charge < SPEED ? 0 : -SPEED; i <= SPEED; i++) {
             ForestWaveEntity forest = new ForestWaveEntity(owner, this.getPower(owner));
             Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
             Vec3 spawn = new Vec3(owner.getX(), owner.getY(), owner.getZ())
