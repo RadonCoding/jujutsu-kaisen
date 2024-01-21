@@ -191,7 +191,7 @@ public class BlueProjectile extends JujutsuProjectile {
             double y = center.y + yOffset * (radius * 0.1F);
             double z = center.z + zOffset * (radius * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE, radius * 0.05F, 1.0F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.DARK_BLUE, radius * 0.075F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
 
@@ -199,15 +199,15 @@ public class BlueProjectile extends JujutsuProjectile {
             double theta = this.random.nextDouble() * Math.PI * 2.0D;
             double phi = this.random.nextDouble() * Math.PI;
 
-            double xOffset = radius * 0.75F * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * 0.75F * Math.sin(phi) * Math.sin(theta);
-            double zOffset = radius * 0.75F * Math.cos(phi);
+            double xOffset = radius * 0.5F * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * 0.5F * Math.sin(phi) * Math.sin(theta);
+            double zOffset = radius * 0.5F * Math.cos(phi);
 
-            double x = center.x + xOffset * 0.1F;
-            double y = center.y + yOffset * 0.1F;
-            double z = center.z + zOffset * 0.1F;
+            double x = center.x + xOffset * (radius * 0.5F * 0.1F);
+            double y = center.y + yOffset * (radius * 0.5F * 0.1F);
+            double z = center.z + zOffset * (radius * 0.5F * 0.1F);
 
-            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.025F, 1.0F, true, 5),
+            this.level().addParticle(new TravelParticle.TravelParticleOptions(center.toVector3f(), ParticleColors.LIGHT_BLUE, radius * 0.05F, 1.0F, true, 5),
                     x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
