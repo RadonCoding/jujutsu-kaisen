@@ -33,6 +33,8 @@ public class ThrownChainProjectile extends AbstractArrow {
     private boolean released;
     private boolean dealtDamage;
 
+    private Entity pulled;
+
     public ThrownChainProjectile(EntityType<? extends AbstractArrow> pType, Level pLevel) {
         super(pType, pLevel);
 
@@ -98,20 +100,16 @@ public class ThrownChainProjectile extends AbstractArrow {
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
 
-        if (!this.dealtDamage) {
-            Entity owner = this.getOwner();
+        if (this.dealtDamage) return;
 
-            if (this.getStack().isEmpty()) {
-                if (owner != null) {
-                    owner.setDeltaMovement(this.position().subtract(owner.position())
-                            .normalize()
-                            .scale(PULL_STRENGTH));
-                    owner.hurtMarked = true;
+        Entity owner = this.getOwner();
 
-                    this.dealtDamage = true;
-                }
-            }
-        }
+        if (owner == null) return;
+
+        if (!this.getStack().isEmpty()) return;
+
+        this.pulled = owner;
+        this.dealtDamage = true;
     }
 
     @Override
@@ -123,12 +121,7 @@ public class ThrownChainProjectile extends AbstractArrow {
         if (this.getStack().isEmpty()) {
             if (owner != null) {
                 if (target.isPushable()) {
-                    target.setDeltaMovement(owner.position().subtract(target.position())
-                            .normalize()
-                            .scale(PULL_STRENGTH)
-                            .multiply(1.0D, 0.5D, 1.0D));
-                    target.hurtMarked = true;
-
+                    this.pulled = target;
                     this.dealtDamage = true;
                 }
             }
@@ -145,36 +138,67 @@ public class ThrownChainProjectile extends AbstractArrow {
     }
 
     @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        if (this.getOwner() instanceof LivingEntity owner && !owner.isRemoved() && !owner.isDeadOrDying()) {
+            if (owner.getOffhandItem().isEmpty()) {
+                owner.setItemInHand(InteractionHand.OFF_HAND, this.getStack());
+                return;
+            }
+        }
+        this.spawnAtLocation(this.getStack(), 0.1F);
+    }
+
+    @Override
     public void tick() {
         this.setTime(this.getTime() + 1);
 
-        if (this.inGroundTime > 20) {
-            if (this.getOwner() instanceof LivingEntity owner) {
-                if (!owner.isRemoved() && !owner.isDeadOrDying()) {
-                    if (owner.getOffhandItem().isEmpty()) {
-                        owner.setItemInHand(InteractionHand.OFF_HAND, this.getStack());
-                    } else {
-                        owner.spawnAtLocation(this.getStack(), 0.1F);
-                    }
-                    this.discard();
-                }
-            }
-        } else if (this.inGroundTime > 4) {
-            this.dealtDamage = true;
-        }
+        Entity owner = this.getOwner();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (!this.released) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.inGroundTime > 20)) {
+            this.discard();
+        } else {
+            if (!(owner instanceof LivingEntity living)) return;
+
+            if (this.released) {
+                super.tick();
+
+                if (this.inGroundTime > 4) {
+                    this.dealtDamage = true;
+                }
+
+                if (this.dealtDamage && this.pulled != null) {
+                    if (this.pulled == living) {
+                        living.setDeltaMovement(this.position().subtract(living.position()).normalize());
+
+                        if (living.distanceTo(this) <= 1.0D) {
+                            this.discard();
+                            return;
+                        }
+                    } else {
+                        this.setPos(this.pulled.position().add(0.0D, this.pulled.getBbHeight() / 2.0F, 0.0D));
+
+                        this.pulled.setDeltaMovement(living.position().subtract(this.pulled.position()).normalize());
+
+                        if (this.pulled.distanceTo(living) <= 1.0D) {
+                            this.discard();
+                            return;
+                        }
+                    }
+                    this.pulled.hurtMarked = true;
+                }
+            } else {
                 double angle = Math.toRadians(this.getTime() * this.getTime());
                 double radius = 2.0D;
-                float yaw = (float) Math.toRadians(owner.getYRot());
+                float yaw = (float) Math.toRadians(living.getYRot());
                 float pitch = (float) Math.toRadians(90.0F);
 
                 Vec3 offset = new Vec3(Math.cos(angle) * radius, 0.0D, Math.sin(angle) * radius)
                         .xRot(pitch).yRot(-yaw);
-                Vec3 position = owner.position().add(RotationUtil.getTargetAdjustedLookAngle(owner)).add(offset);
+                Vec3 position = living.position().add(RotationUtil.getTargetAdjustedLookAngle(living)).add(offset);
 
-                if (owner.isUsingItem()) {
+                if (living.isUsingItem()) {
                     this.setPos(position.x, position.y, position.z);
                     this.setRot((float) Math.toDegrees(Math.atan2(offset.x, offset.z)),
                             -(float) Math.toDegrees(Math.asin(offset.y / offset.length())));
@@ -183,16 +207,14 @@ public class ThrownChainProjectile extends AbstractArrow {
                         this.playSound(SoundEvents.CHAIN_PLACE);
                     }
                 } else {
-                    Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                            .add(RotationUtil.getTargetAdjustedLookAngle(owner));
+                    Vec3 spawn = new Vec3(living.getX(), living.getEyeY() - (this.getBbHeight() / 2.0F), living.getZ())
+                            .add(RotationUtil.getTargetAdjustedLookAngle(living));
                     this.setPos(spawn.x, spawn.y, spawn.z);
-                    this.setRot(-RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+                    this.setRot(-RotationUtil.getTargetAdjustedYRot(living), RotationUtil.getTargetAdjustedXRot(living));
 
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
+                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(living).scale(new Vec3(this.xOld, this.yOld, this.zOld).subtract(position).length()));
                     this.released = true;
                 }
-            } else {
-                super.tick();
             }
         }
     }
