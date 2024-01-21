@@ -101,9 +101,6 @@ public class LightningEntity extends JujutsuProjectile {
 
                 if (!this.level().isClientSide) {
                     for (Entity entity : entities) {
-                        if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner)
-                            continue;
-
                         this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
 
                         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.LIGHTNING.get()),

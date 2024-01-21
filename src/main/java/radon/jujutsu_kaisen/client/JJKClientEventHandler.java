@@ -10,6 +10,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -352,7 +353,7 @@ public class JJKClientEventHandler {
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
-            event.registerAboveAll("experience_overlay", ExperienceOverlay.OVERLAY);
+            event.registerAboveAll("experience_overlay", DataOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
             event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
         }
@@ -452,11 +453,13 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.NUE.get(), NueRenderer::new);
             event.registerEntityRenderer(JJKEntities.NUE_TOTALITY.get(), NueTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.GREAT_SERPENT.get(), GreatSerpentHeadRenderer::new);
-            event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
             event.registerEntityRenderer(JJKEntities.MAX_ELEPHANT.get(), MaxElephantRenderer::new);
             event.registerEntityRenderer(JJKEntities.DIVINE_DOG_TOTALITY.get(), DivineDogTotalityRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_BULL.get(), PiercingBullRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANQUIL_DEER.get(), TranquilDeerRenderer::new);
+            event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
+
+            event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL_SMALL.get(), TransfiguredSoulSmallRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);
@@ -515,6 +518,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BOMB.get(), CursedEnergyBombRenderer::new);
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), ThrownItemRenderer::new);
         }
 
         @SubscribeEvent

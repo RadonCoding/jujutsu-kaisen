@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
@@ -9,10 +10,15 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.ability.base.Transformation;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.projectile.TransfiguredSoulProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+
+import java.util.List;
 
 public class Gun extends Transformation {
     @Override
@@ -39,6 +45,26 @@ public class Gun extends Transformation {
     }
 
     @Override
+    public Status isTriggerable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getTransfiguredSouls() == 0) {
+            return Status.FAILURE;
+        }
+        return super.isTriggerable(owner);
+    }
+
+    @Override
+    public Status isStillUsable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.getTransfiguredSouls() == 0) {
+            return Status.FAILURE;
+        }
+        return super.isStillUsable(owner);
+    }
+
+    @Override
     public float getCost(LivingEntity owner) {
         return 0.2F;
     }
@@ -61,6 +87,12 @@ public class Gun extends Transformation {
     @Override
     public void onRightClick(LivingEntity owner) {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.decreaseTransfiguredSouls();
+
+        TransfiguredSoulProjectile soul = new TransfiguredSoulProjectile(owner);
+        owner.level().addFreshEntity(soul);
     }
 
     @Override

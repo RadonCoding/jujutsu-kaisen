@@ -21,6 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -70,6 +71,11 @@ public class PiercingWaterEntity extends BeamEntity {
     @Override
     public int getCharge() {
         return 0;
+    }
+
+    @Override
+    protected @Nullable Ability getSource() {
+        return JJKAbilities.PIERCING_WATER.get();
     }
 
     @Override

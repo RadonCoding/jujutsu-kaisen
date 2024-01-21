@@ -5,6 +5,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.BeamEntity;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
@@ -49,6 +52,11 @@ public class CursedEnergyBombEntity extends BeamEntity {
     @Override
     public int getCharge() {
         return 20;
+    }
+
+    @Override
+    protected @Nullable Ability getSource() {
+        return JJKAbilities.CURSED_ENERGY_BOMB.get();
     }
 
     @Override

@@ -1,19 +1,26 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.TransfiguredSoulEntity;
+import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.TransfiguredSoulItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -96,7 +103,13 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
         if (amplifier >= required) {
-            // Give owner a transfigured soul item
+            ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
+
+            if (owner instanceof Player player) {
+                player.addItem(stack);
+            } else {
+                owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
+            }
 
             EntityUtil.makePoofParticles(target);
 

@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.effect;
+package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -14,14 +14,14 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class CursedEnergyImbuedItem extends ItemEntity {
+public class CursedEnergyImbuedItemProjectile extends ItemEntity {
     private static final double SPEED = 3.0D;
 
-    public CursedEnergyImbuedItem(EntityType<? extends ItemEntity> pEntityType, Level pLevel) {
+    public CursedEnergyImbuedItemProjectile(EntityType<? extends ItemEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    public CursedEnergyImbuedItem(Entity owner, ItemStack stack) {
+    public CursedEnergyImbuedItemProjectile(Entity owner, ItemStack stack) {
         super(JJKEntities.CURSED_ENERGY_IMBUED_ITEM.get(), owner.level());
 
         this.setThrower(owner.getUUID());
@@ -30,7 +30,7 @@ public class CursedEnergyImbuedItem extends ItemEntity {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
 
-        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
+        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
     }
 
     @Override

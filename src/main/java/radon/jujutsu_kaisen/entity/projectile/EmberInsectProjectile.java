@@ -87,11 +87,9 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
 
         Entity entity = pResult.getEntity();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if ((entity instanceof LivingEntity living && owner.canAttack(living)) && entity != owner) {
-                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * this.getPower());
-            }
-        }
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.EMBER_INSECTS.get()), DAMAGE * this.getPower());
     }
 
     @Override

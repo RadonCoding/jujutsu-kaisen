@@ -1,13 +1,12 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyImbuedItem;
+import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
 
 public class CEThrow extends Ability {
     @Override
@@ -34,7 +33,7 @@ public class CEThrow extends Ability {
         ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
         stack.shrink(1);
 
-        CursedEnergyImbuedItem item = new CursedEnergyImbuedItem(owner, stack.copyWithCount(1));
+        CursedEnergyImbuedItemProjectile item = new CursedEnergyImbuedItemProjectile(owner, stack.copyWithCount(1));
         owner.level().addFreshEntity(item);
 
         SwapOthers.setTarget(owner, item);

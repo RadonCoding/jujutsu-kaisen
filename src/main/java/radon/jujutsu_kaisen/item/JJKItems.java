@@ -79,6 +79,9 @@ public class JJKItems {
     public static RegistryObject<Item> CURSED_SPIRIT_ORB = ITEMS.register("cursed_spirit_orb",
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 
+    public static RegistryObject<Item> TRANSFIGURED_SOUL = ITEMS.register("transfigured_soul",
+            () -> new TransfiguredSoulItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+
     public static RegistryObject<Item> SORCERER_FLESH = ITEMS.register("sorcerer_flesh",
             () -> new SorcererFleshItem(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
     public static RegistryObject<Item> CURSE_FLESH = ITEMS.register("curse_flesh",
