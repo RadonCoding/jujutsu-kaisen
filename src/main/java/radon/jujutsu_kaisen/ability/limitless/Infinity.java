@@ -287,7 +287,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (source.getDirectEntity() instanceof Projectile projectile && !canBlock(target, projectile)) return;
 
-            if (source.getEntity() == target || source.is(DamageTypeTags.BYPASSES_ARMOR) && !source.is(DamageTypes.FALL)) return;
+            if (source.getEntity() == target) return;
 
             if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
                 if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
