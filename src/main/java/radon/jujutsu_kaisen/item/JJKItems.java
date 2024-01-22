@@ -80,7 +80,7 @@ public class JJKItems {
             () -> new CursedSpiritOrbItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
 
     public static RegistryObject<Item> TRANSFIGURED_SOUL = ITEMS.register("transfigured_soul",
-            () -> new TransfiguredSoulItem(new Item.Properties().food(JJKFoods.CURSED_OBJECT)));
+            () -> new TransfiguredSoulItem(new Item.Properties().food(JJKFoods.TRANSFIGURED_SOUL)));
 
     public static RegistryObject<Item> SORCERER_FLESH = ITEMS.register("sorcerer_flesh",
             () -> new SorcererFleshItem(new Item.Properties().food(JJKFoods.SORCERER_FLESH)));
