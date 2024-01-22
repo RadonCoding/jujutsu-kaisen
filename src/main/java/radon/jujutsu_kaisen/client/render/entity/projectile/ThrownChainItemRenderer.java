@@ -44,8 +44,12 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectil
         pPoseStack.pushPose();
         pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * scale / 1.25F, 0.0F);
         pPoseStack.scale(scale, scale, scale);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot())));
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot())));
+
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());
+
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + yaw));
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
         ItemStack stack = pEntity.getStack();
 
