@@ -58,7 +58,6 @@ public class AdaptationEventHandler {
         public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -80,9 +79,12 @@ public class AdaptationEventHandler {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
+            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get()))
+                return;
 
             if (!cap.isAdaptedTo(source)) {
+                cap.tryAdapt(source);
+
                 if (HelperMethods.isMelee(source) && source.getEntity() instanceof LivingEntity attacker) {
                     if (JJKAbilities.hasToggled(attacker, JJKAbilities.INFINITY.get())) {
                         cap.tryAdapt(JJKAbilities.INFINITY.get());
@@ -92,12 +94,12 @@ public class AdaptationEventHandler {
                 }
             }
 
-            if (!(victim instanceof MahoragaEntity)) return;
-
-            if (cap.isAdaptedTo(source)) {
-                victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+            if (victim instanceof MahoragaEntity) {
+                if (cap.isAdaptedTo(source)) {
+                    victim.level().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.MASTER, 1.0F, 1.0F);
+                }
+                event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(source)));
             }
-            event.setAmount(event.getAmount() * (1.0F - cap.getAdaptation(source)));
         }
 
         @SubscribeEvent(receiveCanceled = true)
