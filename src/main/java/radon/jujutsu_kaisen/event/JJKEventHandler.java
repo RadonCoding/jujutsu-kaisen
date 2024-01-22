@@ -199,15 +199,16 @@ public class JJKEventHandler {
 
             if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                // If the target is dead we should not trigger any IAttack's
-                if (victim.getHealth() - event.getAmount() <= 0) return;
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                cap.attack(event.getSource(), victim);
+            // If the target is dead we should not trigger any IAttack's
+            if (victim.getHealth() - event.getAmount() <= 0) return;
 
-                // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
-                if (victim.isDeadOrDying()) event.setCanceled(true);
-            });
+            cap.attack(event.getSource(), victim);
+
+            // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
+            if (victim.isDeadOrDying()) event.setCanceled(true);
         }
 
         @SubscribeEvent
@@ -216,19 +217,20 @@ public class JJKEventHandler {
 
             if (owner.isDeadOrDying()) return;
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                cap.tick(owner);
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
-                    owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
-                }
+            cap.tick(owner);
 
-                if (cap.getType() == JujutsuType.CURSE) {
-                    if (owner instanceof Player player) {
-                        player.getFoodData().setFoodLevel(20);
-                    }
+            if (cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
+                owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
+            }
+
+            if (cap.getType() == JujutsuType.CURSE) {
+                if (owner instanceof Player player) {
+                    player.getFoodData().setFoodLevel(20);
                 }
-            });
+            }
         }
 
         @SubscribeEvent
