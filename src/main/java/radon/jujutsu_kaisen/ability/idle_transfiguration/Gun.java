@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -74,6 +75,8 @@ public class Gun extends Transformation {
 
             cap.decreaseTransfiguredSouls();
         }
+
+        owner.swing(InteractionHand.MAIN_HAND);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
