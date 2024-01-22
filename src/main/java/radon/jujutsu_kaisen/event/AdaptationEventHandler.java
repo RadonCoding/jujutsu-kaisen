@@ -79,9 +79,9 @@ public class AdaptationEventHandler {
 
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get()))
-                return;
+            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
+            // Start/continue the adaptation process
             if (!cap.isAdaptedTo(source)) cap.tryAdapt(source);
 
             if (victim instanceof MahoragaEntity) {
