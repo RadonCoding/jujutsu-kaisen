@@ -39,7 +39,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     private static final int DURATION = 10;
     private static final int LINE_LENGTH = 2;
     private static final int MIN_LENGTH = 3;
-    private static final int MAX_LENGTH = 16;
+    public static final int MAX_LENGTH = 12;
 
     private boolean instant;
     private boolean destroy = true;

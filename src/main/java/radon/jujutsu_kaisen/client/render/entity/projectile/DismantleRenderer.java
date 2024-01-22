@@ -42,7 +42,8 @@ public class DismantleRenderer extends EntityRenderer<DismantleProjectile> {
 
         pPoseStack.mulPose(Axis.YP.rotationDegrees(pEntity.getRoll()));
 
-        pPoseStack.scale(1.0F, 1.0F, 0.2F);
+        float factor = (float) pEntity.getLength() / DismantleProjectile.MAX_LENGTH;
+        pPoseStack.scale(1.0F, 1.0F, 0.1F * (1.0F - factor));
 
         RenderType type = RenderType.entityTranslucent(TEXTURE);
 
