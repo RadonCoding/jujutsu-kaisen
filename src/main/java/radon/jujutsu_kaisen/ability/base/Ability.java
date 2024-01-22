@@ -355,6 +355,10 @@ public abstract class Ability {
         void onEnabled(LivingEntity owner);
 
         void onDisabled(LivingEntity owner);
+
+        default void applyModifiers(LivingEntity owner) {}
+
+        default void removeModifiers(LivingEntity owner) {}
     }
 
     public interface IAttack {
