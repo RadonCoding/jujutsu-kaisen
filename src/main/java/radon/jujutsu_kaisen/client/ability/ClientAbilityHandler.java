@@ -3,12 +3,16 @@ package radon.jujutsu_kaisen.client.ability;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +23,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -27,6 +32,7 @@ import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
 import radon.jujutsu_kaisen.client.gui.screen.AbilityScreen;
 import radon.jujutsu_kaisen.client.gui.screen.DomainScreen;
 import radon.jujutsu_kaisen.client.gui.screen.ShadowInventoryScreen;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -49,6 +55,55 @@ public class ClientAbilityHandler {
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
     public static class ClientAbilityHandlerForgeEvents {
+        @SubscribeEvent
+        public static void onRenderLivingPre(RenderLivingEvent.Pre<?, ?> event) {
+            LivingEntity entity = event.getEntity();
+
+            ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
+
+            if (data == null) return;
+
+            if (!(event.getRenderer().getModel() instanceof PlayerModel<?> player)) return;
+
+            for (Ability ability : data.toggled) {
+                if (!(ability instanceof ITransformation transformation)) continue;
+
+                if (transformation.isReplacement()) {
+                    switch (transformation.getBodyPart()) {
+                        case HEAD -> {
+                            player.head.visible = false;
+                            player.hat.visible = false;
+                        }
+                        case BODY -> player.setAllVisible(false);
+                        case RIGHT_ARM -> {
+                            player.rightArm.visible = false;
+                            player.rightSleeve.visible = false;
+                        }
+                        case LEFT_ARM -> {
+                            player.leftArm.visible = false;
+                            player.rightSleeve.visible = false;
+                        }
+                        case LEGS -> {
+                            player.rightLeg.visible = false;
+                            player.rightPants.visible = false;
+                            player.leftLeg.visible = false;
+                            player.leftPants.visible = false;
+                        }
+                    }
+                }
+
+                HumanoidModel.ArmPose pose = IClientItemExtensions.of(transformation.getItem()).getArmPose(event.getEntity(), InteractionHand.MAIN_HAND, transformation.getItem().getDefaultInstance());
+
+                if (pose != null) {
+                    if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM) {
+                        player.rightArmPose = pose;
+                    } else if (transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
+                        player.leftArmPose = pose;
+                    }
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             Minecraft mc = Minecraft.getInstance();
