@@ -46,26 +46,6 @@ public class Gun extends Transformation {
     }
 
     @Override
-    public Status isTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getTransfiguredSouls() == 0) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
-    }
-
-    @Override
-    public Status isStillUsable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getTransfiguredSouls() == 0) {
-            return Status.FAILURE;
-        }
-        return super.isStillUsable(owner);
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
         return 0.2F;
     }
@@ -87,12 +67,15 @@ public class Gun extends Transformation {
 
     @Override
     public void onRightClick(LivingEntity owner) {
-        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (cap.getTransfiguredSouls() == 0) return;
+
             cap.decreaseTransfiguredSouls();
         }
+
+        owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
         TransfiguredSoulProjectile soul = new TransfiguredSoulProjectile(owner);
         owner.level().addFreshEntity(soul);
