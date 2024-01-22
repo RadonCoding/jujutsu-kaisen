@@ -4,10 +4,9 @@
   "gui.jujutsu_kaisen.ability.right_click": "Right-click to remove copied techniques",
 
   "gui.jujutsu_kaisen.cursed_energy_overlay.output": "Output: %1$d%%",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.experience": "Experience: %1$d",
+  "gui.jujutsu_kaisen.cursed_energy_overlay.transfigured_souls": "Transfigured Souls: %1$d",
   "gui.jujutsu_kaisen.cursed_energy_overlay.cooldown": "%1$s cooldown: %2$fs",
-
-  "gui.jujutsu_kaisen.data_overlay.experience": "Experience: %1$d",
-  "gui.jujutsu_kaisen.data_overlay.transfigured_souls": "Transfigured Souls: %1$d",
 
   "gui.jujutsu_kaisen.ability_overlay.name": "Name: %1$s",
   "gui.jujutsu_kaisen.ability_overlay.cost": "Cost: %1$f",
@@ -115,6 +114,8 @@
   "item.jujutsu_kaisen.merged_flesh": "Merged Flesh",
 
   "item.jujutsu_kaisen.cursed_spirit_orb": "Cursed Spirit Orb",
+
+  "item.jujutsu_kaisen.transfigured_soul": "Transfigured Soul",
 
   "item.jujutsu_kaisen.inventory_curse": "Inventory Curse",
   "item.jujutsu_kaisen.inventory_curse.desc": "Inventory Curse",

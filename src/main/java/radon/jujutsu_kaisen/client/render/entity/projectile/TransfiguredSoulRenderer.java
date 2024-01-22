@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -28,6 +29,7 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
 
     public void render(TransfiguredSoulProjectile pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() * 0.75F, 0.0F);
 
         float yaw = Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
@@ -35,8 +37,8 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
         pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + yaw));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
-        this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
-
+        BakedModel model = this.itemRenderer.getModel(pEntity.getItem(), null, null, pEntity.getId());
+        this.itemRenderer.render(pEntity.getItem(), ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
         pPoseStack.popPose();
     }
 

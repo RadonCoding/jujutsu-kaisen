@@ -354,7 +354,6 @@ public class JJKClientEventHandler {
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
             event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
-            event.registerAboveAll("experience_overlay", DataOverlay.OVERLAY);
             event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
             event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
         }

@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
     private static final double SPEED = 5.0D;
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 10.0F;
 
     public TransfiguredSoulProjectile(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
