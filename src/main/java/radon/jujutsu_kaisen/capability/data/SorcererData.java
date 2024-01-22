@@ -23,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
+import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
@@ -389,6 +390,13 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void attack(DamageSource source, LivingEntity target) {
+        if (this.channeled instanceof Ability.IAttack attack) {
+            if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
+                this.channeled.charge(this.owner);
+                this.charge = 0;
+            }
+        }
+
         for (Ability ability : this.toggled) {
             // In-case any of IAttack's kill the target just break the loop
             if (target.isDeadOrDying()) break;

@@ -61,7 +61,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
     public TojiFushiguroEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
 
-        Arrays.fill(this.armorDropChances, 0.0F);
         Arrays.fill(this.handDropChances, 0.0F);
     }
 
@@ -185,7 +184,6 @@ public class TojiFushiguroEntity extends SorcererEntity {
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
     }
-
 
     @Override
     public void onAddedToWorld() {

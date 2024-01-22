@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.mixin.common;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;

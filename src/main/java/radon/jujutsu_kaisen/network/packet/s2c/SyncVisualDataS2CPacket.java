@@ -32,7 +32,7 @@ public class SyncVisualDataS2CPacket {
         NetworkEvent.Context ctx = supplier.get();
 
         ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                ClientVisualHandler.receive(this.src, new ClientVisualHandler.ClientData(this.nbt))));
+                ClientVisualHandler.receive(this.src, this.nbt)));
         ctx.setPacketHandled(true);
     }
 }

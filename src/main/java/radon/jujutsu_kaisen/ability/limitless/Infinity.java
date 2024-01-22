@@ -287,6 +287,8 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             DamageSource source = event.getSource();
 
+            if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
+
             if (source.getDirectEntity() instanceof Projectile projectile && !canBlock(target, projectile)) return;
 
             if (source.getEntity() == target) return;
