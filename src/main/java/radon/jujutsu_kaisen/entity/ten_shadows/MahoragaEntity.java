@@ -50,8 +50,27 @@ public class MahoragaEntity extends TenShadowsSummon {
     private static final int SLASH_DURATION = 20;
     private static final int RITUAL_DURATION = 3 * 20;
 
+    private boolean healing;
+
     public MahoragaEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
+    }
+
+    public MahoragaEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.MAHORAGA.get(), owner.level());
+
+        this.setTame(tame);
+        this.setOwner(owner);
+
+        Vec3 pos = owner.position()
+                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
+                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
     @Override
@@ -77,28 +96,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public boolean canChant() {
         return false;
-    }
-
-    @Override
-    public boolean hasMeleeAttack() {
-        return true;
-    }
-
-    public MahoragaEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.MAHORAGA.get(), owner.level());
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
     @Override
@@ -174,10 +171,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        if (this.getHealth() < this.getMaxHealth()) {
-            this.heal(4.0F / 20);
-        }
-
         LivingEntity target = this.getTarget();
 
         this.entityData.set(DATA_BATTLE, target != null);
@@ -250,12 +243,21 @@ public class MahoragaEntity extends TenShadowsSummon {
         }
     }
 
+    public void onAdaptation() {
+        this.healing = this.getHealth() < this.getMaxHealth();
+    }
+
     @Override
     public void tick() {
         super.tick();
 
         if (!this.isTame()) {
             this.setNoAi(this.getTime() <= RITUAL_DURATION);
+        }
+
+        if (this.healing) {
+            this.heal(2.0F / 20);
+            this.healing = this.getHealth() < this.getMaxHealth();
         }
     }
 
