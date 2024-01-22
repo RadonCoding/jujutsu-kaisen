@@ -32,6 +32,13 @@ public class MobEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class MobEventHandlerForgeEvents {
         @SubscribeEvent
+        public static void onLivingHitByDomain(LivingHitByDomainEvent event) {
+            LivingEntity victim = event.getEntity();
+
+            if (victim instanceof ISorcerer && victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
+        }
+
+        @SubscribeEvent
         public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
             if (event.getSpawnType() == MobSpawnType.NATURAL || event.getSpawnType() == MobSpawnType.CHUNK_GENERATION) {
                 if (!VeilHandler.canSpawn(event.getEntity(), event.getX(), event.getY(), event.getZ())) {
