@@ -73,8 +73,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level().getEntities(owner, bounds)) {
-                if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || (entity instanceof Projectile projectile && projectile.getOwner() == owner))
-                    continue;
+                if (entity instanceof LivingEntity living && !owner.canAttack(living)) continue;
 
                 Vec3 direction = center.subtract(entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0D), entity.getZ()).normalize();
                 entity.setDeltaMovement(direction);
@@ -122,7 +121,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level().getEntities(owner, bounds)) {
-                if ((entity instanceof Projectile projectile && projectile.getOwner() == owner)) continue;
+                if (entity instanceof Projectile projectile && projectile.getOwner() == owner) continue;
 
                 if (entity instanceof LivingEntity) {
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
