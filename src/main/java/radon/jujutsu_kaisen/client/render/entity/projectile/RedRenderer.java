@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -139,7 +140,7 @@ public class RedRenderer extends EntityRenderer<RedProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull RedProjectile pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override

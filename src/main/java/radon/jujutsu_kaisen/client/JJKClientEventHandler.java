@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -161,6 +162,14 @@ public class JJKClientEventHandler {
 
                     if (((IPlayerModelAccessor) model).getSlimAccessor()) {
                         event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
+                    }
+
+                    if (transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ||
+                            transformation.getBodyPart() == ITransformation.Part.LEFT_ARM) {
+                        if (((IPlayerModelAccessor) model).getSlimAccessor()) {
+                            float translation = transformation.getSlimTranslation();
+                            event.getPoseStack().translate(0.0F, transformation.getBodyPart() == ITransformation.Part.RIGHT_ARM ? translation : -translation, 0.0F);
+                        }
                     }
                     armor.renderToBuffer(event.getPoseStack(), consumer, event.getPackedLight(), OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
                     event.getPoseStack().popPose();

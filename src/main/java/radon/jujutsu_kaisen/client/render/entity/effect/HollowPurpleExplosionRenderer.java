@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
@@ -72,6 +73,6 @@ public class HollowPurpleExplosionRenderer extends EntityRenderer<HollowPurpleEx
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull HollowPurpleExplosion pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }

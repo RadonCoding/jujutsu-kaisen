@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -64,6 +65,6 @@ public class LavaRockRenderer extends EntityRenderer<LavaRockProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull LavaRockProjectile pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,6 +61,6 @@ public class LightningRenderer extends EntityRenderer<LightningEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull LightningEntity pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }
