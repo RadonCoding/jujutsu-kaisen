@@ -73,6 +73,11 @@ public class Punch extends Ability implements Ability.ICharged, Ability.IAttack 
     }
 
     @Override
+    protected int getCooldown() {
+        return 2 * 20;
+    }
+
+    @Override
     public MenuType getMenuType() {
         return MenuType.MELEE;
     }
