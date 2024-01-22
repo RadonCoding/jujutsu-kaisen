@@ -99,5 +99,4 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
         }
         return true;
     }
-
 }

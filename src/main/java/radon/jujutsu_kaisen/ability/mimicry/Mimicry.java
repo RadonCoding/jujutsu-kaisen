@@ -74,6 +74,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
 
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
