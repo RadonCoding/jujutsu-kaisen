@@ -99,7 +99,6 @@ public class SorcererData implements ISorcererData {
     private final Map<UUID, Set<Pact>> requestedPactsCreations;
     private final Map<UUID, Integer> createRequestExpirations;
     private final Map<UUID, Set<Pact>> requestedPactsRemovals;
-    private final Map<UUID, Integer> removeRequestExpirations;
     private final Set<BindingVow> bindingVows;
     private final Map<BindingVow, Integer> bindingVowCooldowns;
     private final Map<Ability, Set<String>> chants;
@@ -160,7 +159,6 @@ public class SorcererData implements ISorcererData {
         this.requestedPactsCreations = new HashMap<>();
         this.createRequestExpirations = new HashMap<>();
         this.requestedPactsRemovals = new HashMap<>();
-        this.removeRequestExpirations = new HashMap<>();
         this.bindingVows = new HashSet<>();
         this.bindingVowCooldowns = new HashMap<>();
         this.chants = new HashMap<>();
@@ -601,7 +599,6 @@ public class SorcererData implements ISorcererData {
             this.requestedPactsRemovals.put(recipient, new HashSet<>());
         }
         this.requestedPactsRemovals.get(recipient).add(pact);
-        this.removeRequestExpirations.put(recipient, 30 * 20);
     }
 
     @Override
@@ -613,7 +610,6 @@ public class SorcererData implements ISorcererData {
     @Override
     public void removePactRemovalRequest(UUID recipient, Pact pact) {
         this.requestedPactsRemovals.getOrDefault(recipient, new HashSet<>()).remove(pact);
-        this.removeRequestExpirations.remove(recipient);
     }
 
     @Override
