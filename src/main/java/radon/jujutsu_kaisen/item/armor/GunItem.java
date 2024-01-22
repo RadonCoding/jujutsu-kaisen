@@ -50,10 +50,10 @@ public class GunItem extends ArmorItem implements GeoItem {
                 return this.renderer;
             }
 
-            /*@Override
+            @Override
             public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
                 return POSE;
-            }*/
+            }
         });
     }
 
