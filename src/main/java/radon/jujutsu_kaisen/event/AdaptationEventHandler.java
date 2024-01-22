@@ -61,11 +61,11 @@ public class AdaptationEventHandler {
             if (victim instanceof Mob mob && mob.canAttack(event.getAttacker())) mob.setTarget(event.getAttacker());
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
-            victim.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                if (!cap.isAdaptedTo(event.getAbility())) {
-                    cap.tryAdapt(event.getAbility());
-                }
-            });
+            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (!cap.isAdaptedTo(event.getAbility())) {
+                cap.tryAdapt(event.getAbility());
+            }
         }
 
         @SubscribeEvent
