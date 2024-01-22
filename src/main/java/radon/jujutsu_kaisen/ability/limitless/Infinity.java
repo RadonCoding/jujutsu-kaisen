@@ -128,29 +128,29 @@ public class Infinity extends Ability implements Ability.IToggled {
             while (iter.hasNext()) {
                 FrozenProjectileNBT nbt = iter.next();
 
-                Entity target = level.getEntity(nbt.getTarget());
+                Entity projectile = level.getEntity(nbt.getTarget());
 
-                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity source)) {
-                    if (target != null) {
-                        target.setDeltaMovement(nbt.getMovement());
-                        target.setNoGravity(nbt.isNoGravity());
+                if (!(level.getEntity(nbt.getSource()) instanceof LivingEntity owner)) {
+                    if (projectile != null) {
+                        projectile.setDeltaMovement(nbt.getMovement());
+                        projectile.setNoGravity(nbt.isNoGravity());
                     }
                     iter.remove();
                     this.setDirty();
                     continue;
                 }
 
-                if (target == null) {
+                if (projectile == null) {
                     iter.remove();
                     this.setDirty();
                 } else {
-                    if (JJKAbilities.hasToggled(source, JJKAbilities.INFINITY.get()) && source.distanceTo(target) < 2.5F) {
+                    if (JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get()) && owner.distanceTo(projectile) < 2.5F) {
                         Vec3 original = nbt.getMovement();
-                        target.setDeltaMovement(original.scale(Double.MIN_VALUE));
-                        target.setNoGravity(true);
+                        projectile.setDeltaMovement(original.scale(Double.MIN_VALUE));
+                        projectile.setNoGravity(true);
                     } else {
-                        target.setDeltaMovement(nbt.getMovement());
-                        target.setNoGravity(nbt.isNoGravity());
+                        projectile.setDeltaMovement(nbt.getMovement());
+                        projectile.setNoGravity(nbt.isNoGravity());
                         iter.remove();
                         this.setDirty();
                     }
@@ -171,15 +171,15 @@ public class Infinity extends Ability implements Ability.IToggled {
                 this.putDouble("movement_z", movement.z);
             }
 
-            public FrozenProjectileNBT(CompoundTag tag) {
-                this.putUUID("source", tag.getUUID("source"));
-                this.putUUID("target", tag.getUUID("target"));
+            public FrozenProjectileNBT(CompoundTag nbt) {
+                this.putUUID("source", nbt.getUUID("source"));
+                this.putUUID("target", nbt.getUUID("target"));
 
-                this.putBoolean("no_gravity", tag.getBoolean("no_gravity"));
+                this.putBoolean("no_gravity", nbt.getBoolean("no_gravity"));
 
-                this.putDouble("movement_x", tag.getDouble("movement_x"));
-                this.putDouble("movement_y", tag.getDouble("movement_y"));
-                this.putDouble("movement_z", tag.getDouble("movement_z"));
+                this.putDouble("movement_x", nbt.getDouble("movement_x"));
+                this.putDouble("movement_y", nbt.getDouble("movement_y"));
+                this.putDouble("movement_z", nbt.getDouble("movement_z"));
             }
 
             public UUID getSource() {
@@ -203,22 +203,22 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
     }
 
-    private static boolean canBlock(LivingEntity target, Projectile projectile) {
-        if (projectile.getOwner() == target) return false;
+    private static boolean canBlock(LivingEntity owner, Projectile projectile) {
+        if (projectile.getOwner() == owner) return false;
 
         if (projectile instanceof ThrownChainProjectile chain) {
             if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
         }
 
-        for (KuchisakeOnnaEntity curse : target.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(target.position(),
+        for (KuchisakeOnnaEntity curse : owner.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(owner.position(),
                 KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
             Optional<UUID> identifier = curse.getCurrent();
             if (identifier.isEmpty()) continue;
-            if (identifier.get() == target.getUUID() && projectile.getOwner() == curse) return false;
+            if (identifier.get() == owner.getUUID() && projectile.getOwner() == curse) return false;
         }
 
         if (projectile instanceof JujutsuProjectile) {
-            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) target.level(), target.blockPosition())) {
+            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
                 if (!domain.checkSureHitEffect()) continue;
                 if (domain.getOwner() == projectile.getOwner()) return false;
             }
@@ -290,6 +290,8 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
 
             if (source.getDirectEntity() instanceof Projectile projectile && !canBlock(target, projectile)) return;
+
+            if (source.getDirectEntity() instanceof DomainExpansionEntity) return;
 
             if (source.getEntity() == target) return;
 
