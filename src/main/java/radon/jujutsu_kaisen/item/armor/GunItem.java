@@ -11,6 +11,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +54,15 @@ public class GunItem extends ArmorItem implements GeoItem {
             @Override
             public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
                 return POSE;
+            }
+
+            @Override
+            public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+                poseStack.translate(0.765F, -0.4F, 1.5F);
+                poseStack.mulPose(Axis.YN.rotationDegrees(6.0F));
+                poseStack.mulPose(Axis.XN.rotationDegrees(90.0F));
+                poseStack.scale(2.5F, 2.5F, 2.5F);
+                return true;
             }
         });
     }

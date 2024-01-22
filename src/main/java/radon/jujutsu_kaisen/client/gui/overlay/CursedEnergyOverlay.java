@@ -75,7 +75,7 @@ public class CursedEnergyOverlay {
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
         graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                Math.round(23 * (1.0F / SCALE)), Math.round(aboveY * (1.0F / SCALE)), 16777215);
+                Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 2) * (1.0F / SCALE)), 16777215);
 
         List<Component> below = new ArrayList<>();
 
