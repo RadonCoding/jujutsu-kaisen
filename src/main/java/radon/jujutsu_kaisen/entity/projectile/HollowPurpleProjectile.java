@@ -260,39 +260,40 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (this.getTime() >= DURATION) {
             this.discard();
-        } else {
-            if (this.getOwner() instanceof LivingEntity owner) {
-                this.spawnParticles();
+            return;
+        }
 
-                if (this.getTime() < DELAY) {
-                    if (!owner.isAlive()) {
-                        this.discard();
-                    } else {
-                        if (this.getTime() % 5 == 0) {
-                            owner.swing(InteractionHand.MAIN_HAND);
-                        }
-                        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-                        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                                .add(look.scale(this.getRadius() * 0.5F));
-                        this.setPos(spawn.x, spawn.y, spawn.z);
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-                        double d0 = look.horizontalDistance();
-                        this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
-                        this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
-                        this.yRotO = this.getYRot();
-                        this.xRotO = this.getXRot();
-                    }
-                } else {
-                    if (!this.level().isClientSide) {
-                        this.hurtEntities();
-                        this.breakBlocks();
-                    }
+        this.spawnParticles();
 
-                    if (this.getTime() == DELAY) {
-                        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
-                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-                    }
+        if (this.getTime() < DELAY) {
+            if (!owner.isAlive()) {
+                this.discard();
+            } else {
+                if (this.getTime() % 5 == 0) {
+                    owner.swing(InteractionHand.MAIN_HAND);
                 }
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+                Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                        .add(look.scale(this.getRadius() * 0.5F));
+                this.setPos(spawn.x, spawn.y, spawn.z);
+
+                double d0 = look.horizontalDistance();
+                this.setYRot((float) (Mth.atan2(look.x, look.z) * (double) (180.0F / (float) Math.PI)));
+                this.setXRot((float) (Mth.atan2(look.y, d0) * (double) (180.0F / (float) Math.PI)));
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
+            }
+        } else {
+            if (!this.level().isClientSide) {
+                this.hurtEntities();
+                this.breakBlocks();
+            }
+
+            if (this.getTime() == DELAY) {
+                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
             }
         }
     }

@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
     private static final double SPEED = 5.0D;
     private static final float DAMAGE = 10.0F;
+    private static final int DURATION = 5 * 20;
 
     public TransfiguredSoulProjectile(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -29,7 +30,12 @@ public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
         EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
 
-        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(pShooter).scale(SPEED));
+        this.setDeltaMovement(look.scale(SPEED));
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
     }
 
     @Override
@@ -41,6 +47,15 @@ public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.tickCount >= DURATION) {
+            this.discard();
+        }
     }
 
     @Override
