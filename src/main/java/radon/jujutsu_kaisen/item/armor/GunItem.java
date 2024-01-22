@@ -34,6 +34,13 @@ public class GunItem extends ArmorItem implements GeoItem {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+            private static final HumanoidModel.ArmPose POSE = HumanoidModel.ArmPose.create("gun", true, (model, entity, arm) -> {
+                model.leftArm.yRot = 0.8F + model.head.yRot;
+                model.rightArm.yRot = model.head.yRot;
+                model.leftArm.xRot = (-(float)Math.PI / 2.0F) + model.head.xRot + 0.1F;
+                model.rightArm.xRot = -1.5F + model.head.xRot;
+            });
+
             private GunRenderer renderer;
 
             @Override
@@ -41,6 +48,11 @@ public class GunItem extends ArmorItem implements GeoItem {
                 if (this.renderer == null) this.renderer = new GunRenderer();
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return this.renderer;
+            }
+
+            @Override
+            public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return POSE;
             }
         });
     }
