@@ -21,12 +21,17 @@ import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
 
 public class SatoruGojoEntity extends SorcererEntity {
+    private final ItemStack blindfold;
+
     public SatoruGojoEntity(EntityType<? extends PathfinderMob> pType, Level pLevel) {
         super(pType, pLevel);
+
+        this.blindfold = new ItemStack(JJKItems.BLINDFOLD.get());
     }
 
     @Override
@@ -61,9 +66,22 @@ public class SatoruGojoEntity extends SorcererEntity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
 
-        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.BLINDFOLD.get()));
+        LivingEntity target = this.getTarget();
+
+        boolean wear = false;
+
+        if (target == null || !target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            wear = true;
+        } else {
+            ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            if (SorcererUtil.getGrade(cap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal()) {
+                wear = true;
+            }
+        }
+        this.setItemSlot(EquipmentSlot.HEAD, wear ? this.blindfold : ItemStack.EMPTY);
     }
 }
