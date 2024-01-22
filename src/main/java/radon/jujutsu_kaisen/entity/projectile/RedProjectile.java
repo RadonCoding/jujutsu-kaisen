@@ -125,7 +125,7 @@ public class RedProjectile extends JujutsuProjectile {
                     if (this.chanted) {
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                        for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().inflate(1.0D))) {
+                        for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                                 if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
                                     continue;
