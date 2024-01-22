@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -57,5 +58,12 @@ public class SatoruGojoEntity extends SorcererEntity {
     @Override
     public JujutsuType getJujutsuType() {
         return JujutsuType.SORCERER;
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(JJKItems.BLINDFOLD.get()));
     }
 }
