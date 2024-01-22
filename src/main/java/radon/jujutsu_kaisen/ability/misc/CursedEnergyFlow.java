@@ -36,6 +36,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
@@ -141,7 +142,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     public void applyModifiers(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
-                Math.min(MAX_SPEED, cap.getExperience() * 0.0001D), AttributeModifier.Operation.ADDITION);
+                MAX_SPEED * (cap.getExperience() / ConfigHolder.SERVER.maximumExperienceAmount.get()), AttributeModifier.Operation.ADDITION);
     }
 
     @Override
