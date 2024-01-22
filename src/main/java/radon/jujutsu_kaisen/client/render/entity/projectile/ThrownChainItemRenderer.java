@@ -29,6 +29,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/chain_link.png");
 
+    private static final float SCALE = 1.5F;
+
     private final ItemRenderer itemRenderer;
 
     public ThrownChainItemRenderer(EntityRendererProvider.Context pContext) {
@@ -39,11 +41,9 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectil
 
     @Override
     public void render(@NotNull ThrownChainProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        float scale = 1.5F;
-
         pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * scale / 1.25F, 0.0F);
-        pPoseStack.scale(scale, scale, scale);
+        pPoseStack.translate(0.0F, pEntity.getBbHeight() / 2.0F * SCALE / 1.25F, 0.0F);
+        pPoseStack.scale(SCALE, SCALE, SCALE);
 
         float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
         float pitch = Mth.lerp(pPartialTick, pEntity.xRotO, pEntity.getXRot());

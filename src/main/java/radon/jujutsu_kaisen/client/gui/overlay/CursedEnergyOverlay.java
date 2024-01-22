@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 
@@ -22,6 +23,8 @@ import java.util.List;
 
 public class CursedEnergyOverlay {
     public static ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/overlay/energy_bar.png");
+
+    private static final float SCALE = 0.6F;
 
     public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
@@ -33,6 +36,25 @@ public class CursedEnergyOverlay {
         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getEnergy() == 0.0F) return;
+
+        graphics.pose().pushPose();
+        graphics.pose().scale(SCALE, SCALE, SCALE);
+
+        List<Component> above = new ArrayList<>();
+        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)));
+        above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), cap.getExperience()));
+
+        if (cap.hasTechnique(CursedTechnique.IDLE_TRANSFIGURATION)) {
+            above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID), cap.getTransfiguredSouls()));
+        }
+
+        int aboveY = 26;
+
+        for (Component line : above) {
+            graphics.drawString(gui.getFont(), line, Math.round(20 * (1.0F / SCALE)), Math.round(aboveY * (1.0F / SCALE)), 16777215);
+            aboveY += mc.font.lineHeight - 1;
+        }
+        graphics.pose().popPose();
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -49,18 +71,13 @@ public class CursedEnergyOverlay {
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        float scale = 0.6F;
-
         graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, scale);
-
-        graphics.drawString(gui.getFont(), Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)),
-                Math.round(20 * (1.0F / scale)), Math.round(26 * (1.0F / scale)), 16777215);
+        graphics.pose().scale(SCALE, SCALE, SCALE);
 
         graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                Math.round(23 * (1.0F / scale)), Math.round(34 * (1.0F / scale)), 16777215);
+                Math.round(23 * (1.0F / SCALE)), Math.round(aboveY * (1.0F / SCALE)), 16777215);
 
-        List<Component> lines = new ArrayList<>();
+        List<Component> below = new ArrayList<>();
 
         for (Ability ability : cap.getToggled()) {
             if (!(ability instanceof Ability.IAttack)) continue;
@@ -68,16 +85,15 @@ public class CursedEnergyOverlay {
             int cooldown = cap.getRemainingCooldown(ability);
 
             if (cooldown > 0) {
-                lines.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
+                below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), ability.getName(), Math.round((float) cooldown / 20)));
             }
         }
 
-        int x = 20;
-        int y = 43;
+        int belowY = aboveY + mc.font.lineHeight;
 
-        for (Component line : lines) {
-            graphics.drawString(gui.getFont(), line, Math.round(x * (1.0F / scale)), Math.round(y * (1.0F / scale)), 16777215);
-            y += mc.font.lineHeight;
+        for (Component line : below) {
+            graphics.drawString(gui.getFont(), line, Math.round(20 * (1.0F / SCALE)), Math.round(belowY * (1.0F / SCALE)), 16777215);
+            belowY += mc.font.lineHeight;
         }
 
         graphics.pose().popPose();
