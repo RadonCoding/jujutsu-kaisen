@@ -89,7 +89,9 @@ public class Punch extends Ability implements Ability.ICharged, Ability.IAttack 
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
+        if (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() == this) return false;
 
         float charge = (float) Math.min(CHARGE, this.getCharge(owner)) / CHARGE;
 
