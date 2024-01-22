@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,14 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
 
     public void render(TransfiguredSoulProjectile pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
-        pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-        pPoseStack.mulPose(Axis.ZN.rotationDegrees(45.0F));
+
+        float yaw = Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
+        float pitch = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
+
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        pPoseStack.mulPose(Axis.XN.rotationDegrees(pitch - 90.0F));
+
+        pPoseStack.mulPose(Axis.ZP.rotationDegrees(45.0F));
         this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
