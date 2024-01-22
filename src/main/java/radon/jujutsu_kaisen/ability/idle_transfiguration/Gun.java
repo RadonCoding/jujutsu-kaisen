@@ -4,6 +4,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -88,8 +89,10 @@ public class Gun extends Transformation {
     public void onRightClick(LivingEntity owner) {
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.SHOOT.get(), SoundSource.MASTER, 1.0F, 1.0F);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.decreaseTransfiguredSouls();
+        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.decreaseTransfiguredSouls();
+        }
 
         TransfiguredSoulProjectile soul = new TransfiguredSoulProjectile(owner);
         owner.level().addFreshEntity(soul);
