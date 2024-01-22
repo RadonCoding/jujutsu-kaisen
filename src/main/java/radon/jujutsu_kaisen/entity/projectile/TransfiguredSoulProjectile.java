@@ -2,36 +2,46 @@ package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
+public class TransfiguredSoulProjectile extends Projectile {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(TransfiguredSoulProjectile.class, EntityDataSerializers.INT);
 
     private static final double SPEED = 5.0D;
     private static final float DAMAGE = 10.0F;
     private static final int DURATION = 5 * 20;
 
-    public TransfiguredSoulProjectile(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
+    public TransfiguredSoulProjectile(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     public TransfiguredSoulProjectile(LivingEntity pShooter) {
-        super(JJKEntities.TRANSFIGURED_SOUL.get(), pShooter, pShooter.level());
+        super(JJKEntities.TRANSFIGURED_SOUL.get(), pShooter.level());
+
+        this.setOwner(pShooter);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(pShooter);
         EntityUtil.offset(this, look, new Vec3(pShooter.getX(), pShooter.getEyeY() - (this.getBbHeight() / 2.0F), pShooter.getZ()).add(look));
@@ -41,8 +51,6 @@ public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
 
     @Override
     protected void defineSynchedData() {
-        super.defineSynchedData();
-
         this.entityData.define(DATA_TIME, 0);
     }
 
@@ -69,8 +77,77 @@ public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
     }
 
     @Override
-    public boolean isNoGravity() {
+    public boolean ignoreExplosion() {
         return true;
+    }
+
+    @Override
+    public boolean isPushedByFluid(FluidType type) {
+        return false;
+    }
+
+    @Override
+    public void tick() {
+        this.setTime(this.getTime() + 1);
+
+        Entity owner = this.getOwner();
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
+            this.discard();
+        } else {
+            super.tick();
+
+            if (this.getTime() >= DURATION) {
+                this.discard();
+                return;
+            }
+
+            HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+
+            if (hit.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hit)) {
+                this.onHit(hit);
+            }
+
+            this.checkInsideBlocks();
+
+            Vec3 movement = this.getDeltaMovement();
+            double d0 = this.getX() + movement.x;
+            double d1 = this.getY() + movement.y;
+            double d2 = this.getZ() + movement.z;
+            this.setPos(d0, d1, d2);
+        }
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
+
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+        d0 *= 64.0D * getViewScale();
+        return pDistance < d0 * d0;
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        Entity entity = this.getOwner();
+        int i = entity == null ? 0 : entity.getId();
+        return new ClientboundAddEntityPacket(this.getId(), this.getUUID(), this.getX(), this.getY(), this.getZ(),
+                this.getXRot(), this.getYRot(), this.getType(), i, this.getDeltaMovement(), 0.0D);
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        this.moveTo(pPacket.getX(), pPacket.getY(), pPacket.getZ(), pPacket.getYRot(), pPacket.getXRot());
+        this.setDeltaMovement(pPacket.getXa(), pPacket.getYa(), pPacket.getZa());
     }
 
     @Override
@@ -82,19 +159,5 @@ public class TransfiguredSoulProjectile extends ThrowableItemProjectile {
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
         entity.hurt(this.damageSources().thrown(this, owner), DAMAGE);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (this.getTime() >= DURATION) {
-            this.discard();
-        }
-    }
-
-    @Override
-    protected @NotNull Item getDefaultItem() {
-        return JJKItems.TRANSFIGURED_SOUL.get();
     }
 }

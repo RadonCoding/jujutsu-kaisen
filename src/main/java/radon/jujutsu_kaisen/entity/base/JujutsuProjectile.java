@@ -54,6 +54,14 @@ public class JujutsuProjectile extends Projectile {
         this.entityData.set(DATA_TIME, time);
     }
 
+    protected void setPower(float power) {
+        this.entityData.set(DATA_POWER, power);
+    }
+
+    protected float getPower() {
+        return this.entityData.get(DATA_POWER);
+    }
+
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -73,14 +81,6 @@ public class JujutsuProjectile extends Projectile {
     @Override
     public boolean ignoreExplosion() {
         return true;
-    }
-
-    protected void setPower(float power) {
-        this.entityData.set(DATA_POWER, power);
-    }
-
-    protected float getPower() {
-        return this.entityData.get(DATA_POWER);
     }
 
     @Override
