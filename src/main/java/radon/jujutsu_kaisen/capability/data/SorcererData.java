@@ -1670,10 +1670,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
 
-        if (this.channeled != null) {
-            nbt.putString("channeled", JJKAbilities.getKey(this.channeled).toString());
-        }
-
         ListTag unlockedTag = new ListTag();
 
         for (Ability ability : this.unlocked) {
@@ -1885,10 +1881,6 @@ public class SorcererData implements ISorcererData {
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
-
-        if (nbt.contains("channeled")) {
-            this.channeled = JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled")));
-        }
 
         this.unlocked.clear();
 
