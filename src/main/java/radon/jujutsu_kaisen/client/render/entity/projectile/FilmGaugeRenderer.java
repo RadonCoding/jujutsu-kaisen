@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +77,7 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FilmGaugeProjectile pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {

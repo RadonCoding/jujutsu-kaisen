@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -88,6 +89,6 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull MeteorEntity pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }

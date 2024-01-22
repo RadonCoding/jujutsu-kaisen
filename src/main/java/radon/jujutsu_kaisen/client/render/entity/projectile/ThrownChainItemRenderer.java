@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -121,6 +122,6 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectil
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull ThrownChainProjectile pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }

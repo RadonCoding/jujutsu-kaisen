@@ -33,7 +33,7 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
         float pitch = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
 
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
-        pPoseStack.mulPose(Axis.XN.rotationDegrees(pitch - 90.0F));
+        pPoseStack.mulPose(Axis.XN.rotationDegrees(pitch));
 
         this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
         pPoseStack.popPose();

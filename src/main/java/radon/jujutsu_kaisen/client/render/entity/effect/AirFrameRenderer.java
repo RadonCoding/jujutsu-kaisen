@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -82,7 +83,7 @@ public class AirFrameRenderer extends EntityRenderer<AirFrameEntity> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull AirFrameEntity pEntity) {
-        return null;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
