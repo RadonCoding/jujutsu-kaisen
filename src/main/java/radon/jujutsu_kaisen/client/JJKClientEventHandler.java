@@ -92,8 +92,6 @@ public class JJKClientEventHandler {
 
             if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-
-
             ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             boolean translated = false;
@@ -135,13 +133,11 @@ public class JJKClientEventHandler {
 
                     IClientItemExtensions extensions = IClientItemExtensions.of(transformation.getItem());
 
-                    if (extensions.applyForgeHandTransform(event.getPoseStack(), mc.player, arm, transformation.getItem().getDefaultInstance(), event.getPartialTick(), equip, swing)) {
-                        event.setCanceled(true);
-                    }
+                    boolean custom = extensions.applyForgeHandTransform(event.getPoseStack(), mc.player, arm, transformation.getItem().getDefaultInstance(), event.getPartialTick(), equip, swing);
 
                     event.getPoseStack().pushPose();
 
-                    if (!event.isCanceled()) {
+                    if (!custom) {
                         float f1 = Mth.sqrt(swing);
                         float f2 = -0.3F * Mth.sin(f1 * (float) Math.PI);
                         float f3 = 0.4F * Mth.sin(f1 * ((float) Math.PI * 2.0F));
@@ -158,13 +154,15 @@ public class JJKClientEventHandler {
                         event.getPoseStack().mulPose(Axis.XP.rotationDegrees(200.0F));
                         event.getPoseStack().mulPose(Axis.YP.rotationDegrees(f * -135.0F));
                         event.getPoseStack().translate(f * 5.6F, 0.0F, 0.0F);
-                    }
 
-                    if (((IPlayerModelAccessor) model).getSlimAccessor()) {
-                        event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
+                        if (((IPlayerModelAccessor) model).getSlimAccessor()) {
+                            event.getPoseStack().translate(f * 0.0546875F, 0.0F, 0.0F);
+                        }
                     }
                     armor.renderToBuffer(event.getPoseStack(), consumer, event.getPackedLight(), OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
                     event.getPoseStack().popPose();
+
+                    event.setCanceled(custom);
                 }
             }
         }

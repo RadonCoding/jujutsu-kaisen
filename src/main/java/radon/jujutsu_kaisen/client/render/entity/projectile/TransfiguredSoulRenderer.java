@@ -15,8 +15,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.projectile.TransfiguredSoulProjectile;
+import radon.jujutsu_kaisen.item.JJKItems;
 
 public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulProjectile> {
     private final ItemRenderer itemRenderer;
@@ -37,8 +39,10 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
         pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F + yaw));
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(135.0F - pitch));
 
-        BakedModel model = this.itemRenderer.getModel(pEntity.getItem(), null, null, pEntity.getId());
-        this.itemRenderer.render(pEntity.getItem(), ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
+        ItemStack stack = JJKItems.TRANSFIGURED_SOUL.get().getDefaultInstance();
+
+        BakedModel model = this.itemRenderer.getModel(stack, null, null, pEntity.getId());
+        this.itemRenderer.render(stack, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, model);
         pPoseStack.popPose();
     }
 
