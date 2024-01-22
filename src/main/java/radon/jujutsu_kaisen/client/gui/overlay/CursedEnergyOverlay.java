@@ -63,11 +63,11 @@ public class CursedEnergyOverlay {
         Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
         RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
-        graphics.blit(TEXTURE, 20, 32, 0, 0, 93, 9, 93, 16);
+        graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 9, 93, 16);
 
         float maxEnergy = cap.getMaxEnergy();
         float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
-        graphics.blit(TEXTURE, 20, 33, 0, 9, (int) energyWidth, 7, 93, 16);
+        graphics.blit(TEXTURE, 20, aboveY + 1, 0, 9, (int) energyWidth, 7, 93, 16);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
