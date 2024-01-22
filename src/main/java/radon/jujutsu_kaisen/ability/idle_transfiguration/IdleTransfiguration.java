@@ -5,11 +5,10 @@ import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -123,7 +122,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
         if (amplifier >= required) {
-            if (target instanceof AgeableMob || target instanceof Player) {
+            if ((target instanceof Mob && !(target instanceof Monster) && !(target instanceof Animal)) || target instanceof Player) {
                 ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
 
                 if (owner instanceof Player player) {
