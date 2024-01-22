@@ -1,34 +1,30 @@
-package radon.jujutsu_kaisen.client.visual;
+package radon.jujutsu_kaisen.client.visual.visual;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
-@Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public class BlueFistsVisual {
+public class BlueFistsVisual implements IVisual {
     private static final float RADIUS = 1.5F;
     private static final float PARTICLE_SIZE = RADIUS * 0.2F;
 
@@ -48,7 +44,13 @@ public class BlueFistsVisual {
                 .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()), Mth.lerp(partialTicks, entity.yOld, entity.getY()), Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    private static void run(LivingEntity entity) {
+    @Override
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
+        return data.toggled.contains(JJKAbilities.BLUE_FISTS.get());
+    }
+
+    @Override
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
         Minecraft mc = Minecraft.getInstance();
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
@@ -61,16 +63,6 @@ public class BlueFistsVisual {
             Vec3 left = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
                     new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, HumanoidArm.LEFT, mc.getPartialTick());
             spawn(entity.level(), left);
-        }
-    }
-
-    public static void tick(LivingEntity entity) {
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
-
-        if (data == null) return;
-
-        if (data.toggled.contains(JJKAbilities.BLUE_FISTS.get())) {
-            run(entity);
         }
     }
 

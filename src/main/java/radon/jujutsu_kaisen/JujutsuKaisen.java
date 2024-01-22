@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
+import radon.jujutsu_kaisen.client.visual.JJKOverlays;
+import radon.jujutsu_kaisen.client.visual.JJKVisuals;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -79,6 +81,9 @@ public class JujutsuKaisen {
         JJKLootModifiers.LOOT_MODIFIERS.register(bus);
 
         JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
+
+        JJKVisuals.VISUALS.register(bus);
+        JJKOverlays.OVERLAYS.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);

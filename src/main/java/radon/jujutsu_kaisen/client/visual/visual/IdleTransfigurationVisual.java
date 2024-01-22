@@ -1,28 +1,34 @@
-package radon.jujutsu_kaisen.client.visual;
+package radon.jujutsu_kaisen.client.visual.visual;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.joml.Vector3f;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.particle.TravelParticle;
-import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class IdleTransfigurationVisual {
+public class IdleTransfigurationVisual implements IVisual {
     private static final float RADIUS = 1.5F;
     private static final float PARTICLE_SIZE = RADIUS * 0.2F;
 
@@ -36,14 +42,21 @@ public class IdleTransfigurationVisual {
     }
 
     private static Vec3 transform3rdPerson(Vec3 pos, Vec3 angles, LivingEntity entity, HumanoidArm arm, float partialTicks) {
-        return rotateRoll(pos, (float)angles.z).xRot((float)-angles.x).yRot((float)-angles.y)
+        return rotateRoll(pos, (float) angles.z).xRot((float) -angles.x).yRot((float) -angles.y)
                 .add(0.0586F * (arm == HumanoidArm.RIGHT ? -6.0F : 6.0F), 1.3F - (entity.isShiftKeyDown() ? 0.3F : 0.0F), -0.05F)
                 .yRot(-Mth.lerp(partialTicks, entity.yBodyRotO, entity.yBodyRot) * (float) (Math.PI / 180.0D))
                 .add(Mth.lerp(partialTicks, entity.xOld, entity.getX()), Mth.lerp(partialTicks, entity.yOld, entity.getY()), Mth.lerp(partialTicks, entity.zOld, entity.getZ()));
     }
 
-    private static void run(LivingEntity entity) {
+    @Override
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
+        return data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get());
+    }
+
+    @Override
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
         Minecraft mc = Minecraft.getInstance();
+
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
         EntityRenderer<?> renderer = dispatcher.getRenderer(entity);
 
@@ -55,45 +68,6 @@ public class IdleTransfigurationVisual {
             Vec3 left = transform3rdPerson(new Vec3(0.0D, -0.7D + (PARTICLE_SIZE / 2.0F), 0.0D),
                     new Vec3(humanoid.leftArm.xRot, humanoid.leftArm.yRot, humanoid.leftArm.zRot), entity, HumanoidArm.LEFT, mc.getPartialTick());
             spawn(entity.level(), left, ParticleColors.getCursedEnergyColor(entity));
-
-        }
-    }
-
-    public static void tick(LivingEntity entity) {
-        Minecraft mc = Minecraft.getInstance();
-
-        if (mc.level == null || mc.player == null) return;
-
-        if (JJKAbilities.getTechniques(mc.player).contains(CursedTechnique.IDLE_TRANSFIGURATION)) {
-            MobEffectInstance instance = entity.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
-
-            if (instance != null) {
-                int amplifier = instance.getAmplifier();
-
-                float attackerStrength = IdleTransfiguration.calculateStrength(mc.player);
-                float victimStrength = IdleTransfiguration.calculateStrength(entity);
-
-                int required = Math.round((victimStrength / attackerStrength) * 2);
-
-                if (amplifier >= required) {
-                    int count = Math.round(entity.getBbWidth() + entity.getBbHeight());
-
-                    for (int i = 0; i < count; i++) {
-                        double x = entity.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                        double y = entity.getY() + HelperMethods.RANDOM.nextDouble() * entity.getBbHeight();
-                        double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 2);
-                        mc.level.addParticle(ParticleTypes.SOUL, x, y, z, 0.0D, HelperMethods.RANDOM.nextDouble() * 0.1D, 0.0D);
-                    }
-                }
-            }
-        }
-
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(entity);
-
-        if (data == null) return;
-
-        if (data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            run(entity);
         }
     }
 
