@@ -38,6 +38,7 @@ public class DismantleProjectile extends JujutsuProjectile {
     public static final float DAMAGE = 10.0F;
     private static final int DURATION = 10;
     private static final int LINE_LENGTH = 2;
+    private static final int MIN_LENGTH = 3;
     private static final int MAX_LENGTH = 12;
 
     private boolean instant;
@@ -86,7 +87,7 @@ public class DismantleProjectile extends JujutsuProjectile {
 
     public int getLength() {
         int length = this.entityData.get(DATA_LENGTH);
-        return length > 0 ? length : Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower()));
+        return length > 0 ? length : Math.max(MIN_LENGTH, Math.min(MAX_LENGTH, Mth.floor(LINE_LENGTH * this.getPower())));
     }
 
     private void setLength(int length) {
