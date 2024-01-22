@@ -5,9 +5,12 @@ import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
@@ -120,28 +123,31 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
         if (amplifier >= required) {
-            ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
+            if (target instanceof AgeableMob || target instanceof Player) {
+                ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
 
-            if (owner instanceof Player player) {
-                player.addItem(stack);
-            } else {
-                owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
+                if (owner instanceof Player player) {
+                    player.addItem(stack);
+                } else {
+                    owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
+                }
+
+                EntityUtil.makePoofParticles(target);
+
+                if (!(target instanceof Player)) {
+                    target.discard();
+                } else {
+                    target.kill();
+                }
+                return true;
             }
+        }
 
-            EntityUtil.makePoofParticles(target);
+        MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true);
+        target.addEffect(instance);
 
-            if (!(target instanceof Player)) {
-                target.discard();
-            } else {
-                target.kill();
-            }
-        } else {
-            MobEffectInstance instance = new MobEffectInstance(JJKEffects.TRANSFIGURED_SOUL.get(), 60 * 20, amplifier, false, true, true);
-            target.addEffect(instance);
-
-            if (!owner.level().isClientSide) {
-                PacketDistributor.TRACKING_ENTITY.with(() -> target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
-            }
+        if (!owner.level().isClientSide) {
+            PacketDistributor.TRACKING_ENTITY.with(() -> target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
         }
         return true;
     }
