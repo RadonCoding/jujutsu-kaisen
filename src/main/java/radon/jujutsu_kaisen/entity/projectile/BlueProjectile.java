@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -125,7 +126,7 @@ public class BlueProjectile extends JujutsuProjectile {
 
                 if (entity instanceof LivingEntity) {
                     entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.entityData.get(DATA_MOTION) ? JJKAbilities.BLUE_MOTION.get() : JJKAbilities.BLUE_STILL.get()), DAMAGE * this.getPower());
-                } else if (entity instanceof Projectile || entity instanceof FallingBlockEntity) {
+                } else if (entity instanceof AbstractArrow || entity instanceof FallingBlockEntity) {
                     entity.discard();
                 }
             }
