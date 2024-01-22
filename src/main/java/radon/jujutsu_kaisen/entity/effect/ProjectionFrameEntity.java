@@ -28,7 +28,10 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.UUID;
 
 public class ProjectionFrameEntity extends Entity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ProjectionFrameEntity.class, EntityDataSerializers.INT);
+
     private static final int DURATION = 3 * 20;
+    private static final float DAMAGE = 15.0F;
 
     @Nullable
     private UUID victimUUID;
@@ -64,6 +67,15 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -79,6 +91,7 @@ public class ProjectionFrameEntity extends Entity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("power", this.power);
+        pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -92,6 +105,7 @@ public class ProjectionFrameEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.power = pCompound.getFloat("power");
+        this.setTime(pCompound.getInt("time"));
     }
 
     public float getPower() {
@@ -111,6 +125,8 @@ public class ProjectionFrameEntity extends Entity {
 
     @Override
     public void tick() {
+        this.setTime(this.getTime() + 1);
+
         LivingEntity victim = this.getVictim();
 
         if (!this.level().isClientSide && (victim == null || victim.isRemoved() || victim.isDeadOrDying())) {
@@ -120,7 +136,7 @@ public class ProjectionFrameEntity extends Entity {
 
             if (this.level().isClientSide) return;
 
-            if (this.tickCount >= DURATION) {
+            if (this.getTime() >= DURATION) {
                 this.discard();
             } else if (victim != null) {
                 victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 1, false, false, false));

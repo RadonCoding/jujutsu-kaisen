@@ -40,12 +40,34 @@ public class JujutsuProjectile extends Projectile {
         this.setPower(power);
     }
 
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
+        this.entityData.define(DATA_POWER, 0.0F);
+    }
+
     public int getTime() {
         return this.entityData.get(DATA_TIME);
     }
 
     public void setTime(int time) {
         this.entityData.set(DATA_TIME, time);
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putInt("time", this.getTime());
+        pCompound.putFloat("power", this.getPower());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.setTime(pCompound.getInt("time"));
+        this.setPower(pCompound.getFloat("power"));
     }
 
     @Override
@@ -100,30 +122,8 @@ public class JujutsuProjectile extends Projectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putInt("time", this.getTime());
-        pCompound.putFloat("power", this.getPower());
-    }
-
-    @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.setTime(pCompound.getInt("time"));
-        this.setPower(pCompound.getFloat("power"));
-    }
-
-    @Override
     public boolean fireImmune() {
         return true;
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-        this.entityData.define(DATA_POWER, 0.0F);
     }
 
     @Override

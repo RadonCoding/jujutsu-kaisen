@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import java.util.UUID;
 
 public class BlackFlashEntity extends Entity {
+    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(BlackFlashEntity.class, EntityDataSerializers.VECTOR3);
 
     private static final int DURATION = 10;
@@ -52,7 +53,16 @@ public class BlackFlashEntity extends Entity {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(DATA_TIME, 0);
         this.entityData.define(DATA_START, Vec3.ZERO.toVector3f());
+    }
+
+    public int getTime() {
+        return this.entityData.get(DATA_TIME);
+    }
+
+    public void setTime(int time) {
+        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -63,6 +73,8 @@ public class BlackFlashEntity extends Entity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
+        pCompound.putInt("time", this.getTime());
+
         Vector3f start = this.entityData.get(DATA_START);
         pCompound.putFloat("start_x", start.x);
         pCompound.putFloat("start_y", start.y);
@@ -77,6 +89,7 @@ public class BlackFlashEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
+        this.setTime(pCompound.getInt("time"));
         this.entityData.set(DATA_START, new Vector3f(pCompound.getFloat("start_x"), pCompound.getFloat("start_y"), pCompound.getFloat("start_z")));
     }
 
@@ -99,6 +112,8 @@ public class BlackFlashEntity extends Entity {
     public void tick() {
         super.tick();
 
+        this.setTime(this.getTime() + 1);
+
         LivingEntity victim = this.getVictim();
 
         for (int i = 0; i < 32; i++) {
@@ -108,7 +123,7 @@ public class BlackFlashEntity extends Entity {
             this.level().addParticle(JJKParticles.BLACK_FLASH.get(), this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ, 0.0D, 0.0D, 0.0D);
         }
 
-        if (this.tickCount >= DURATION) {
+        if (this.getTime() >= DURATION) {
             this.discard();
         } else {
             if (victim != null) {
