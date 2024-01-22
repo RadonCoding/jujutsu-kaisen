@@ -82,9 +82,7 @@ public class AdaptationEventHandler {
             if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get()))
                 return;
 
-            if (!cap.isAdaptedTo(source)) {
-                cap.tryAdapt(source);
-            }
+            if (!cap.isAdaptedTo(source)) cap.tryAdapt(source);
 
             if (victim instanceof MahoragaEntity) {
                 if (cap.isAdaptedTo(source)) {
