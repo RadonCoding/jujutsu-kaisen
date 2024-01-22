@@ -89,6 +89,16 @@ public class CursedEnergyOverlay {
             }
         }
 
+        Ability channeled = cap.getChanneled();
+
+        if (channeled instanceof Ability.IAttack) {
+            int cooldown = cap.getRemainingCooldown(channeled);
+
+            if (cooldown > 0) {
+                below.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.cooldown", JujutsuKaisen.MOD_ID), channeled.getName(), Math.round((float) cooldown / 20)));
+            }
+        }
+
         int belowY = aboveY + mc.font.lineHeight;
 
         for (Component line : below) {
