@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.TransfiguredSoulEntity;
@@ -39,6 +41,16 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
     @Override
     public void run(LivingEntity owner) {
 
+    }
+
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            cap.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
+        }
+        return super.isTriggerable(owner);
     }
 
     @Override
