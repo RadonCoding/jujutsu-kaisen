@@ -219,7 +219,7 @@ public class JJKEventHandler {
             owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 cap.tick(owner);
 
-                if (cap.hasTrait(Trait.SIX_EYES)) {
+                if (cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
                     owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
                 }
 

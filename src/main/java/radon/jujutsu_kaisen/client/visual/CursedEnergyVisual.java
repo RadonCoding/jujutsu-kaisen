@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.client.visual;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
@@ -10,6 +11,7 @@ import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.config.ClientConfig;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -24,7 +26,8 @@ public class CursedEnergyVisual {
 
             if (data == null) return;
 
-            if (data.channeled != JJKAbilities.CURSED_ENERGY_SHIELD.get() && !JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES)) return;
+            if (data.channeled != JJKAbilities.CURSED_ENERGY_SHIELD.get() && (!JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) ||
+                    mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()))) return;
 
             float scale = data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() ? 1.5F : 1.0F;
 
