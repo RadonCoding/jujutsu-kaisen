@@ -29,10 +29,6 @@ public interface ITransformation {
 
     void onRightClick(LivingEntity owner);
 
-    void applyModifiers(LivingEntity owner);
-
-    void removeModifiers(LivingEntity owner);
-
     default float getSlimTranslation() {
         return 0.0F;
     }

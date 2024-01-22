@@ -254,9 +254,7 @@ public class SorcererData implements ISorcererData {
             if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
                 ability.run(this.owner);
 
-                if (ability instanceof ITransformation transformation) {
-                    transformation.applyModifiers(this.owner);
-                }
+                ((Ability.IToggled) ability).applyModifiers(this.owner);
             } else {
                 remove.add(ability);
             }
@@ -896,11 +894,11 @@ public class SorcererData implements ISorcererData {
 
         if (this.toggled.contains(ability)) {
             this.toggled.remove(ability);
+
             ((Ability.IToggled) ability).onDisabled(this.owner);
 
-            if (ability instanceof ITransformation transformation) {
-                transformation.removeModifiers(this.owner);
-            }
+            ((Ability.IToggled) ability).removeModifiers(this.owner);
+
             MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
             this.toggled.add(ability);

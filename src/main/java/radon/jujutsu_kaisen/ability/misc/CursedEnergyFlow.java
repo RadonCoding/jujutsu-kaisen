@@ -50,6 +50,10 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.UUID;
 
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
+    private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("641b629b-f7b7-4066-a486-8e1d670a7439");
+
+    private static final double MAX_SPEED = 0.66D;
+
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
     @Override
@@ -131,6 +135,18 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 }
             }
         }
+    }
+
+    @Override
+    public void applyModifiers(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed",
+                Math.min(MAX_SPEED, cap.getExperience() * 0.001D), AttributeModifier.Operation.ADDITION);
+    }
+
+    @Override
+    public void removeModifiers(LivingEntity owner) {
+        EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
     }
 
     @Override
