@@ -31,8 +31,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.UUID;
 
 public class AirFrameEntity extends Entity {
-    private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(AirFrameEntity.class, EntityDataSerializers.INT);
-
     private static final int DURATION = 20;
     private static final float DAMAGE = 15.0F;
     private static final double RANGE = 3.0D;
@@ -60,15 +58,6 @@ public class AirFrameEntity extends Entity {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(DATA_TIME, 0);
-    }
-
-    public int getTime() {
-        return this.entityData.get(DATA_TIME);
-    }
-
-    public void setTime(int time) {
-        this.entityData.set(DATA_TIME, time);
     }
 
     @Override
@@ -77,7 +66,6 @@ public class AirFrameEntity extends Entity {
             pCompound.putUUID("owner", this.ownerUUID);
         }
         pCompound.putFloat("power", this.power);
-        pCompound.putInt("time", this.getTime());
     }
 
     @Override
@@ -86,7 +74,6 @@ public class AirFrameEntity extends Entity {
             this.ownerUUID = pCompound.getUUID("owner");
         }
         this.power = pCompound.getFloat("power");
-        this.setTime(pCompound.getInt("time"));
     }
 
     public float getPower() {
@@ -108,8 +95,6 @@ public class AirFrameEntity extends Entity {
     public void tick() {
         super.tick();
 
-        this.setTime(this.getTime() + 1);
-
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && (owner == null || owner.isRemoved() || owner.isDeadOrDying())) {
@@ -119,7 +104,7 @@ public class AirFrameEntity extends Entity {
 
             if (this.level().isClientSide) return;
 
-            if (this.getTime() >= DURATION) {
+            if (this.tickCount >= DURATION) {
                 if (owner != null) {
                     Vec3 center = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D);
                     ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
