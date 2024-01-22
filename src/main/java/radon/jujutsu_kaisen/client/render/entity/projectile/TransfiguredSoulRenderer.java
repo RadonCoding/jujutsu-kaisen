@@ -35,7 +35,6 @@ public class TransfiguredSoulRenderer extends EntityRenderer<TransfiguredSoulPro
         pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         pPoseStack.mulPose(Axis.XN.rotationDegrees(pitch - 90.0F));
 
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(45.0F));
         this.itemRenderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
