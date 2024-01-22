@@ -28,7 +28,9 @@ public class JJKCreativeTabs {
 
                         pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
                         pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
+
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
+                        pOutput.accept(JJKItems.BLINDFOLD.get());
 
                         pOutput.accept(JJKItems.TOJI_FUSHIGURO_SPAWN_EGG.get());
                         pOutput.accept(JJKItems.SATORU_GOJO_SPAWN_EGG.get());

@@ -61,6 +61,8 @@ public class JJKItems {
 
     public static RegistryObject<ArmorItem> INVENTORY_CURSE = ITEMS.register("inventory_curse",
             () -> new InventoryCurseItem(JJKArmorMaterials.INVENTORY_CURSE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static RegistryObject<Item> BLINDFOLD = ITEMS.register("blindfold",
+            () -> new BlindfoldItem(JJKArmorMaterials.BLINDFOLD, ArmorItem.Type.HELMET, new Item.Properties()));
 
     public static RegistryObject<Item> DISPLAY_CASE = ITEMS.register("display_case",
             () -> new DisplayCaseItem(JJKBlocks.DISPLAY_CASE.get(), new Item.Properties()));
@@ -152,7 +154,9 @@ public class JJKItems {
 
     public static class JJKArmorMaterials {
         public static JJKArmorMaterial CUSTOM_MODEL = new JJKArmorMaterial("custom_model", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.EMPTY, 0.0F, 0.0F, () -> Ingredient.EMPTY);
-        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 8, 0 }, 15, SoundEvents.ARMOR_EQUIP_LEATHER,
-                4.0F, 0.1F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial INVENTORY_CURSE = new JJKArmorMaterial("inventory_curse", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ARMOR_EQUIP_LEATHER,
+                0.0F, 0.0F, () -> Ingredient.EMPTY);
+        public static JJKArmorMaterial BLINDFOLD = new JJKArmorMaterial("blindfold", 0, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ARMOR_EQUIP_LEATHER,
+                0.0F, 0.0F, () -> Ingredient.EMPTY);
     }
 }
