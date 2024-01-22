@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,18 +12,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.TransfiguredSoulItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+
+import java.util.ArrayList;
 
 public class IdleTransfiguration extends Ability implements Ability.IToggled, Ability.IAttack {
     @Override
@@ -61,6 +68,16 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     @Override
     public void run(LivingEntity owner) {
 
+    }
+
+    @Override
+    public Status isTriggerable(LivingEntity owner) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
+            cap.toggle(JJKAbilities.SOUL_DECIMATION.get());
+        }
+        return super.isTriggerable(owner);
     }
 
     @Override
