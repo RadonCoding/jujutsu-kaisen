@@ -10,4 +10,5 @@ public class JJKFoods {
     public static final FoodProperties SORCERER_FLESH = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).meat().build();
     public static final FoodProperties CURSE_FLESH = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).meat().build();
     public static final FoodProperties MERGED_FLESH = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).meat().alwaysEat().build();
+    public static final FoodProperties TRANSFIGURED_SOUL = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).meat().alwaysEat().build();
 }
