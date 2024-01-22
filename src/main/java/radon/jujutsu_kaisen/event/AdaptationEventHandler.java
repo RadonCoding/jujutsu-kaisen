@@ -81,7 +81,7 @@ public class AdaptationEventHandler {
 
             if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
 
-            // Start/continue the adaptation process
+            // Initiate / continue the adaptation process
             if (!cap.isAdaptedTo(source)) cap.tryAdapt(source);
 
             if (victim instanceof MahoragaEntity) {
