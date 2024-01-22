@@ -32,4 +32,8 @@ public interface ITransformation {
     void applyModifiers(LivingEntity owner);
 
     void removeModifiers(LivingEntity owner);
+
+    default float getSlimTranslation() {
+        return 0.0F;
+    }
 }

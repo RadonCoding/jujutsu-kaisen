@@ -91,4 +91,9 @@ public class ArmBlade extends Transformation {
     public void onDisabled(LivingEntity owner) {
 
     }
+
+    @Override
+    public float getSlimTranslation() {
+        return 0.0625F;
+    }
 }
