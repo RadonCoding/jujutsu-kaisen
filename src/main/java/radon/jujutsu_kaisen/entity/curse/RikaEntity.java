@@ -229,15 +229,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        if (!this.isAddedToWorld()) {
-            return SorcererUtil.getGrade(this.getExperience());
-        }
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return SorcererUtil.getGrade(cap.getExperience());
-    }
-
-    @Override
     public @Nullable CursedTechnique getTechnique() {
         return null;
     }

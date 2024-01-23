@@ -68,13 +68,11 @@ public class Gun extends Transformation {
 
     @Override
     public void onRightClick(LivingEntity owner) {
-        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getTransfiguredSouls() == 0) return;
+        if (cap.getTransfiguredSouls() == 0) return;
 
-            cap.decreaseTransfiguredSouls();
-        }
+        cap.decreaseTransfiguredSouls();
 
         owner.swing(InteractionHand.MAIN_HAND);
 
