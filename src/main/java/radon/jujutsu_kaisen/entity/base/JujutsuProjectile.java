@@ -24,6 +24,8 @@ public class JujutsuProjectile extends Projectile {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
 
+    private boolean domain;
+
     public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }
@@ -62,12 +64,21 @@ public class JujutsuProjectile extends Projectile {
         return this.entityData.get(DATA_POWER);
     }
 
+    public boolean isDomain() {
+        return this.domain;
+    }
+
+    public void setDomain(boolean domain) {
+        this.domain = domain;
+    }
+
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
 
         pCompound.putInt("time", this.getTime());
         pCompound.putFloat("power", this.getPower());
+        pCompound.putBoolean("domain", this.domain);
     }
 
     @Override
@@ -76,6 +87,7 @@ public class JujutsuProjectile extends Projectile {
 
         this.setTime(pCompound.getInt("time"));
         this.setPower(pCompound.getFloat("power"));
+        this.domain = pCompound.getBoolean("domain");
     }
 
     @Override
