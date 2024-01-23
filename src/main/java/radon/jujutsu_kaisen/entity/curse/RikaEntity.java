@@ -28,7 +28,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.ai.goal.AvoidProjectilesGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.WaterWalkingFloatGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
 import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
@@ -36,7 +35,6 @@ import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -110,7 +108,6 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         int goal = 1;
         int target = 1;
 
-        this.goalSelector.addGoal(goal++, new AvoidProjectilesGoal(this, 16.0F, 1.0D, 1.1D));
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
