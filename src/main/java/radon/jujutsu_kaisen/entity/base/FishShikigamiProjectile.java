@@ -165,9 +165,13 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         if (this.getOwner() instanceof LivingEntity owner) {
             if (entity == owner) return;
 
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
-            entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
+            if (this.isDomain()) {
+                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain == null ? this : domain, owner, null), DAMAGE * this.getPower());
+            } else {
+                entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.DEATH_SWARM.get()), DAMAGE * this.getPower());
+            }
             this.discard();
         }
     }

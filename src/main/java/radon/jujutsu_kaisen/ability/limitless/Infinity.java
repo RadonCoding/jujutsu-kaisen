@@ -217,11 +217,8 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (identifier.get() == owner.getUUID() && projectile.getOwner() == curse) return false;
         }
 
-        if (projectile instanceof JujutsuProjectile) {
-            for (DomainExpansionEntity domain : VeilHandler.getDomains((ServerLevel) owner.level(), owner.blockPosition())) {
-                if (!domain.checkSureHitEffect()) continue;
-                if (domain.getOwner() == projectile.getOwner()) return false;
-            }
+        if (projectile instanceof JujutsuProjectile jujutsu) {
+            return !jujutsu.isDomain();
         }
         return true;
     }
