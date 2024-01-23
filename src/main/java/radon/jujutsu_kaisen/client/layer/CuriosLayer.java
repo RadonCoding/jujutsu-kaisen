@@ -16,11 +16,11 @@ import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 import javax.annotation.Nonnull;
 
 public class CuriosLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-
     private final RenderLayerParent<T, M> renderLayerParent;
 
     public CuriosLayer(RenderLayerParent<T, M> renderer) {
         super(renderer);
+
         this.renderLayerParent = renderer;
     }
 
