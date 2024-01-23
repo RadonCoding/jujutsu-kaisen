@@ -21,8 +21,7 @@ public class CursedEnergyVisual implements IVisual {
         if (mc.player == null) return false;
 
         return ConfigHolder.CLIENT.visibleCursedEnergy.get() && data.toggled.contains(JJKAbilities.CURSED_ENERGY_FLOW.get()) &&
-                data.channeled != JJKAbilities.CURSED_ENERGY_SHIELD.get() && (!JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) ||
-                mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get()));
+                (data.channeled == JJKAbilities.CURSED_ENERGY_SHIELD.get() || (JJKAbilities.hasTrait(mc.player, Trait.SIX_EYES) && !mc.player.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())));
     }
 
     @Override
