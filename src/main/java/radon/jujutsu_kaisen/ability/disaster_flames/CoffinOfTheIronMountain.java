@@ -37,12 +37,10 @@ public class CoffinOfTheIronMountain extends DomainExpansion implements DomainEx
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 20 == 0) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getPower(owner) * ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize()))) {
+            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(domain, owner, this), DAMAGE * this.getPower(owner) * this.getStrength(owner, false))) {
                 entity.setSecondsOnFire(15);
             }
-            LavaRockProjectile rock = new LavaRockProjectile(owner, this.getPower(owner), entity);
+            LavaRockProjectile rock = new LavaRockProjectile(owner, this.getPower(owner) * this.getStrength(owner, false), entity);
             rock.setDomain(true);
             owner.level().addFreshEntity(rock);
         }
