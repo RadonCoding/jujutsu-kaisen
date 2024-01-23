@@ -196,7 +196,7 @@ public abstract class DomainExpansionEntity extends Entity {
         if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if ((victim instanceof MahoragaEntity && victimCap.isAdaptedTo(this.ability)) || victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return false;
+            if ((victim instanceof MahoragaEntity && victimCap.isAdaptedTo(this.ability))) return false;
 
             if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
                 SimpleDomainEntity simple = victimCap.getSummonByClass(SimpleDomainEntity.class);
