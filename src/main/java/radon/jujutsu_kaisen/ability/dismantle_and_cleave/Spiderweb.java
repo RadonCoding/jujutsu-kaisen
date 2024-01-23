@@ -77,7 +77,7 @@ public class Spiderweb extends Ability {
                         if (HelperMethods.RANDOM.nextInt(Math.round(radius) * 2) == 0) {
                             Vec3 current = pos.getCenter();
                             owner.level().addFreshEntity(new DismantleProjectile(owner, this.getPower(owner),
-                                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, 3, true, true));
+                                    (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, current, HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, true));
                         }
                     });
                 }, i * 2);

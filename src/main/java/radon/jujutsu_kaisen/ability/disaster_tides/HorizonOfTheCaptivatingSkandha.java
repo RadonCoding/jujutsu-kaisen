@@ -45,7 +45,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
             if (instant || owner.level().getGameTime() % 3 * 20 == 0) {
                 Ability fish = JJKAbilities.DEATH_SWARM.get();
-                ((IDomainAttack) fish).performEntity(owner, domain, entity);
+                ((IDomainAttack) fish).performEntity(owner, entity, domain);
             }
         }
     }

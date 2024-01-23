@@ -46,13 +46,45 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
         return result;
     }
 
+    private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        for (int i = 0; i < 6; i++) {
+            float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+            float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+
+            float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
+
+            FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
+                    new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                    new SharkShikigamiProjectile(owner, power, target, xOffset, yOffset),
+                    new PiranhaShikigamiProjectile(owner, power, target, xOffset, yOffset)
+            };
+
+            int delay = i * 2;
+
+            cap.delayTickEvent(() -> {
+                if (target.isAlive() && !target.isRemoved()) {
+                    FishShikigamiProjectile projectile = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
+                    projectile.setDomain(domain != null);
+                    owner.level().addFreshEntity(projectile);
+                }
+            }, delay);
+        }
+    }
+
+    @Override
+    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
+        this.perform(owner, target, domain);
+    }
+
     @Override
     public void run(LivingEntity owner) {
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;
 
-        this.performEntity(owner, null, target);
+        this.perform(owner, target, null);
     }
 
     @Override
@@ -78,35 +110,5 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
     @Override
     public MenuType getMenuType() {
         return MenuType.MELEE;
-    }
-
-    @Override
-    public void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
-        if (target == null) return;
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        for (int i = 0; i < 6; i++) {
-            float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
-            float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
-
-            float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
-
-            FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
-                    new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
-                    new SharkShikigamiProjectile(owner, power, target, xOffset, yOffset),
-                    new PiranhaShikigamiProjectile(owner, power, target, xOffset, yOffset)
-            };
-
-            int delay = i * 2;
-
-            cap.delayTickEvent(() -> {
-                if (target.isAlive() && !target.isRemoved()) {
-                    FishShikigamiProjectile projectile = projectiles[HelperMethods.RANDOM.nextInt(projectiles.length)];
-                    projectile.setDomain(domain != null);
-                    owner.level().addFreshEntity(projectile);
-                }
-            }, delay);
-        }
     }
 }

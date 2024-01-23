@@ -32,7 +32,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
         if (instant || domain.getTime() == DELAY || (domain.level().getGameTime() % INTERVAL == 0 && domain.getTime() >= DELAY)) {
             Ability cleave = JJKAbilities.CLEAVE.get();
-            ((IDomainAttack) cleave).performEntity(owner, domain, entity);
+            ((IDomainAttack) cleave).performEntity(owner, entity, domain);
         }
     }
 
