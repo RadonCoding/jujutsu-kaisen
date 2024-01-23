@@ -233,9 +233,8 @@ public class BlueProjectile extends JujutsuProjectile {
             if (this.getTime() % 5 == 0) {
                 owner.swing(InteractionHand.MAIN_HAND);
             }
-            Vec3 center = owner.getEyePosition();
-            Vec3 pos = center.add(RotationUtil.getTargetAdjustedLookAngle(owner).scale(OFFSET));
-            this.setPos(pos.x, pos.y - (this.getBbHeight() / 2.0F), pos.z);
+            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+            EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look.scale(OFFSET)));
         }
     }
 
