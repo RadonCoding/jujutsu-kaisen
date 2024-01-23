@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -50,8 +51,10 @@ public class Dismantle extends Ability implements Ability.IChannelened, Ability.
 
     @Override
     public void performBlock(LivingEntity owner, @Nullable DomainExpansionEntity domain, BlockPos pos) {
-        DismantleProjectile dismantle = new DismantleProjectile(owner, this.getPower(owner),
-                (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), 5, true, false);
+        float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
+
+        DismantleProjectile dismantle = new DismantleProjectile(owner, power,
+                (HelperMethods.RANDOM.nextFloat() - 0.5F) * 360.0F, pos.getCenter(), HelperMethods.RANDOM.nextInt(DismantleProjectile.MIN_LENGTH, DismantleProjectile.MAX_LENGTH + 1), true, false);
         owner.level().addFreshEntity(dismantle);
 
         if (!owner.level().isClientSide) {
