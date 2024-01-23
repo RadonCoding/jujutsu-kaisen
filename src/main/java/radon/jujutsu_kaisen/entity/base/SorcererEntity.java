@@ -86,15 +86,6 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     }
 
     @Override
-    public SorcererGrade getGrade() {
-        if (!this.isAddedToWorld()) {
-            return SorcererUtil.getGrade(this.getExperience());
-        }
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return SorcererUtil.getGrade(cap.getExperience());
-    }
-
-    @Override
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 

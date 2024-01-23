@@ -547,6 +547,8 @@ public class JJKEntities {
         event.put(PIERCING_BULL.get(), PiercingBullEntity.createAttributes().build());
         event.put(AGITO.get(), AgitoEntity.createAttributes().build());
 
+        event.put(TRANSFIGURED_SOUL_SMALL.get(), SorcererEntity.createAttributes().build());
+
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(JOGOAT.get(), SorcererEntity.createAttributes().build());
         event.put(DAGON.get(), SorcererEntity.createAttributes().build());

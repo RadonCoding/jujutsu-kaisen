@@ -1,13 +1,16 @@
 package radon.jujutsu_kaisen.entity.base;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -27,7 +30,15 @@ public interface ISorcerer {
         return -1;
     }
 
-    SorcererGrade getGrade();
+    default SorcererGrade getGrade() {
+        Entity entity = (Entity) this;
+
+        if (!entity.isAddedToWorld()) {
+            return SorcererUtil.getGrade(this.getExperience());
+        }
+        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return SorcererUtil.getGrade(cap.getExperience());
+    }
 
     @Nullable CursedTechnique getTechnique();
 

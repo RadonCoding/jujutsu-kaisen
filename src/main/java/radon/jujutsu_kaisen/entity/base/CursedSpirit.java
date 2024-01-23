@@ -115,15 +115,6 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         return this.getGrade().ordinal() > SorcererGrade.GRADE_1.ordinal();
     }
 
-    @Override
-    public SorcererGrade getGrade() {
-        if (!this.isAddedToWorld()) {
-            return SorcererUtil.getGrade(this.getExperience());
-        }
-        ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return SorcererUtil.getGrade(cap.getExperience());
-    }
-
     protected abstract boolean isCustom();
 
     protected boolean canFly() { return false; }
@@ -171,7 +162,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     protected void actuallyHurt(@NotNull DamageSource pDamageSource, float pDamageAmount) {
         super.actuallyHurt(pDamageSource, pDamageAmount);
 
-        if (pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
+        if (!this.isTame() && pDamageSource.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker) && attacker != this) {
             this.setTarget(attacker);
         }
     }

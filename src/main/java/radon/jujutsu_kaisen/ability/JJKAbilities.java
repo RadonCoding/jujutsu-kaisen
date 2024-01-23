@@ -132,6 +132,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> GUN = ABILITIES.register("gun", Gun::new);
     public static RegistryObject<Ability> HORSE_LEGS = ABILITIES.register("horse_legs", HorseLegs::new);
     public static RegistryObject<Ability> WINGS = ABILITIES.register("wings", Wings::new);
+    public static RegistryObject<Ability> TRANSFIGURED_SOUL_SMALL = ABILITIES.register("transfigured_soul_small", TransfiguredSoulSmall::new);
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static RegistryObject<Ability> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
 

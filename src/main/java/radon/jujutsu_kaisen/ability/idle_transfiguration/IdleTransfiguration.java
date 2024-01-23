@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.entity.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -108,7 +109,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
-        if (amplifier >= required) {
+        if (target instanceof TransfiguredSoulEntity || amplifier >= required) {
             if ((target instanceof Mob && !(target instanceof Monster) && !(target instanceof Animal)) || target instanceof Player) {
                 ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
 
