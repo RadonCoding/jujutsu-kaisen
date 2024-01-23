@@ -19,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
@@ -31,7 +32,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IAttack, Ability.IToggled {
     public static final double RANGE = 30.0D;
-    private static final float MAX_DAMAGE = 25.0F;
+    private static final float MAX_DAMAGE = 35.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
@@ -50,10 +51,6 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     private DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
         return domain == null ? JJKDamageSources.jujutsuAttack(owner, this) : JJKDamageSources.indirectJujutsuAttack(domain, owner, this);
-    }
-
-    private float getMaxDamage(LivingEntity owner) {
-        return MAX_DAMAGE * this.getPower(owner);
     }
 
     private float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
@@ -85,7 +82,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
             float f2 = Mth.clamp(k, 0.0F, 20.0F);
             damage /= 1.0F - f2 / 25.0F;
         }
-        return Math.min(this.getMaxDamage(owner), damage);
+        return damage;
     }
 
     @Override
@@ -129,12 +126,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         }
 
         cap.delayTickEvent(() -> {
+            float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
+
             DamageSource source = this.getSource(owner, domain);
             float damage = this.calculateDamage(source, owner, target);
-
-            if (domain != null) {
-                damage *= ((ConfigHolder.SERVER.maximumDomainSize.get().floatValue() + 0.1F) - cap.getDomainSize());
-            }
+            damage = Math.min(MAX_DAMAGE * power, damage);
 
             boolean success = target.hurt(source, damage);
 

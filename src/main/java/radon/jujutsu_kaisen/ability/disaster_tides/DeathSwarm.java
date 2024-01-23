@@ -5,10 +5,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
+import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
@@ -87,7 +90,7 @@ public class DeathSwarm extends Ability implements Ability.IDomainAttack {
             float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
             float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
 
-            float power = domain == null ? this.getPower(owner) : cap.getRealPower();
+            float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
 
             FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
                     new EelShikigamiProjectile(owner, power, target, xOffset, yOffset),
