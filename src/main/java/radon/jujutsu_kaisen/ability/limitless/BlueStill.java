@@ -30,7 +30,7 @@ public class BlueStill extends Ability {
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        BlueProjectile blue = new BlueProjectile(owner, getPower(owner), false);
+        BlueProjectile blue = new BlueProjectile(owner, this.getPower(owner), false);
         owner.level().addFreshEntity(blue);
 
         owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.BLUE.get(), SoundSource.MASTER, 1.0F, 1.0F);
