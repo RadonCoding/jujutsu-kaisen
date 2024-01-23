@@ -91,9 +91,16 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
     }
 
     @Override
-    public void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {
-        if (target == null) return;
+    public int getCooldown() {
+        return 5 * 20;
+    }
 
+    @Override
+    public Classification getClassification() {
+        return Classification.SLASHING;
+    }
+    
+    private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
@@ -141,19 +148,14 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
     }
 
     @Override
-    public int getCooldown() {
-        return 5 * 20;
-    }
-
-    @Override
-    public Classification getClassification() {
-        return Classification.SLASHING;
+    public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
+        this.perform(owner, target, domain);
     }
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (!HelperMethods.isMelee(source)) return false;
-        this.performEntity(owner, null, target);
+        this.perform(owner, target, null);
         return true;
     }
 

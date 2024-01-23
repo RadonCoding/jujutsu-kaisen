@@ -311,8 +311,8 @@ public abstract class Ability {
     }
 
     public interface IDomainAttack {
-        default void performEntity(LivingEntity owner, @Nullable DomainExpansionEntity domain, @Nullable LivingEntity target) {}
-        default void performBlock(LivingEntity owner, @Nullable DomainExpansionEntity domain, BlockPos pos) {}
+        default void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {}
+        default void performBlock(LivingEntity owner, DomainExpansionEntity domain, BlockPos pos) {}
     }
 
     public interface ITenShadowsAttack {
