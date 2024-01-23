@@ -47,7 +47,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 
 public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, ISorcerer, ICommandable {
-    private static final int RARITY = 6;
+    private static final int RARITY = 10;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
