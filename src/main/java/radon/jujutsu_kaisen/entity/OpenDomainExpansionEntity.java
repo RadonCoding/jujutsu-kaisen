@@ -12,8 +12,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -99,7 +101,11 @@ public abstract class OpenDomainExpansionEntity extends DomainExpansionEntity {
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
-            this.ability.onHitEntity(this, owner, entity, false);
+            if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
+                this.ability.onHitBlock(this, owner, entity.blockPosition());
+            } else {
+                this.ability.onHitEntity(this, owner, entity, false);
+            }
         }
     }
 
