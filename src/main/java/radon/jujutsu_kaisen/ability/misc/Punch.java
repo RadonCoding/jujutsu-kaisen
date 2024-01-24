@@ -27,7 +27,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Punch extends Ability implements Ability.ICharged {
     private static final float DAMAGE = 5.0F;
-    private static final double RANGE = 16.0D;
+    private static final double RANGE = 3.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -108,18 +108,18 @@ public class Punch extends Ability implements Ability.ICharged {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        double range = cap.getRealPower() * charge;
+        double range = RANGE * cap.getRealPower() * charge;
 
         if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) range *= 2.0D;
 
         if (owner.distanceTo(target) > range) return false;
 
-        if (owner.distanceTo(target) > 3.0D) {
+        if (owner.distanceTo(target) > RANGE) {
             Vec3 direction = target.position().subtract(owner.position()).subtract(look.reverse().scale(owner.getBbWidth()));
             owner.teleportRelative(direction.x, direction.y, direction.z);
         }
 
-        if (owner.distanceTo(target) <= 3.0D) {
+        if (owner.distanceTo(target) <= RANGE) {
             if (!owner.level().isClientSide) {
                 Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                 ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
