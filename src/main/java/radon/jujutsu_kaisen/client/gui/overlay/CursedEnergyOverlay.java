@@ -35,8 +35,6 @@ public class CursedEnergyOverlay {
         if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getEnergy() == 0.0F) return;
-
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
@@ -56,26 +54,30 @@ public class CursedEnergyOverlay {
         }
         graphics.pose().popPose();
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
-        RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+        if (cap.getEnergy() > 0.0F) {
+            RenderSystem.disableDepthTest();
+            RenderSystem.depthMask(false);
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            Vector3f color = cap.isInZone() ? ParticleColors.BLACK_FLASH : Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
+            RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
 
-        graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 9, 93, 16);
+            graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 9, 93, 16);
 
-        float maxEnergy = cap.getMaxEnergy();
-        float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
-        graphics.blit(TEXTURE, 20, aboveY + 1, 0, 9, (int) energyWidth, 7, 93, 16);
+            float maxEnergy = cap.getMaxEnergy();
+            float energyWidth = (Mth.clamp(cap.getEnergy(), 0.0F, maxEnergy) / maxEnergy) * 94.0F;
+            graphics.blit(TEXTURE, 20, aboveY + 1, 0, 9, (int) energyWidth, 7, 93, 16);
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        }
 
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
-        graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
-                Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 2.5F) * (1.0F / SCALE)), 16777215);
+        if (cap.getEnergy() > 0.0F) {
+            graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), maxEnergy),
+                    Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 2.5F) * (1.0F / SCALE)), 16777215);
+        }
 
         List<Component> below = new ArrayList<>();
 
