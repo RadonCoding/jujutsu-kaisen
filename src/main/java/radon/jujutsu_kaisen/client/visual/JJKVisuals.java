@@ -12,16 +12,18 @@ import radon.jujutsu_kaisen.client.visual.visual.CursedEnergyVisual;
 import radon.jujutsu_kaisen.client.visual.visual.IdleTransfigurationVisual;
 import radon.jujutsu_kaisen.client.visual.visual.TransfiguredSoulVisual;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class JJKVisuals {
-    public static DeferredRegister<IVisual> VISUALS = DeferredRegister.create(
-            new ResourceLocation(JujutsuKaisen.MOD_ID, "visual"), JujutsuKaisen.MOD_ID);
-    public static Supplier<IForgeRegistry<IVisual>> VISUAL_REGISTRY =
-            VISUALS.makeRegistry(RegistryBuilder::new);
+    // TODO: Make this List<Supplier<IVisual>> and make each entity have their own instance
+    public static List<IVisual> VISUALS = new ArrayList<>();
 
-    public static RegistryObject<IVisual> CURSED_ENERGY = VISUALS.register("cursed_energy", CursedEnergyVisual::new);
-    public static RegistryObject<IVisual> BLUE_FISTS = VISUALS.register("blue_fists", BlueFistsVisual::new);
-    public static RegistryObject<IVisual> IDLE_TRANSFIGURATION = VISUALS.register("idle_transfiguration", IdleTransfigurationVisual::new);
-    public static RegistryObject<IVisual> TRANSFIGURED_SOUL = VISUALS.register("transfigured_soul", TransfiguredSoulVisual::new);
+    static {
+        VISUALS.add(new CursedEnergyVisual());
+        VISUALS.add(new BlueFistsVisual());
+        VISUALS.add(new IdleTransfigurationVisual());
+        VISUALS.add(new TransfiguredSoulVisual());
+    }
 }
