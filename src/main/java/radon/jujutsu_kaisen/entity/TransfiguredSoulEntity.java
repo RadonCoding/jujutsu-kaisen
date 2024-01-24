@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -53,13 +55,22 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
     }
 
     @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        LivingEntity owner = this.getOwner();
+
+        if (pSource.getEntity() == owner) {
+            IdleTransfiguration.absorb(owner, this);
+        }
+        return super.hurt(pSource, pAmount);
+    }
+
+    @Override
     protected void registerGoals() {
         int target = 1;
         int goal = 1;
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
-        this.goalSelector.addGoal(goal++,new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, false));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 

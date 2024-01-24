@@ -90,6 +90,24 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
     }
 
+    public static void absorb(LivingEntity owner, LivingEntity target) {
+        ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
+
+        if (owner instanceof Player player) {
+            player.addItem(stack);
+        } else {
+            owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        }
+
+        EntityUtil.makePoofParticles(target);
+
+        if (!(target instanceof Player)) {
+            target.discard();
+        } else {
+            target.kill();
+        }
+    }
+
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
@@ -109,23 +127,9 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
-        if (target instanceof TransfiguredSoulEntity || amplifier >= required) {
+        if (amplifier >= required) {
             if ((target instanceof Mob && !(target instanceof Monster) && !(target instanceof Animal)) || target instanceof Player) {
-                ItemStack stack = new ItemStack(JJKItems.TRANSFIGURED_SOUL.get());
-
-                if (owner instanceof Player player) {
-                    player.addItem(stack);
-                } else {
-                    owner.setItemSlot(EquipmentSlot.MAINHAND, stack);
-                }
-
-                EntityUtil.makePoofParticles(target);
-
-                if (!(target instanceof Player)) {
-                    target.discard();
-                } else {
-                    target.kill();
-                }
+                absorb(owner, target);
                 return true;
             }
         }
