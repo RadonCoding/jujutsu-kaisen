@@ -29,8 +29,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-import static radon.jujutsu_kaisen.client.SkyHandler.target;
-
 public class Punch extends Ability implements Ability.ICharged {
     private static final float DAMAGE = 5.0F;
     private static final double RANGE = 5.0D;
