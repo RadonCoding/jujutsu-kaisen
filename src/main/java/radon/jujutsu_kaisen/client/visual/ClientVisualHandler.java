@@ -83,10 +83,9 @@ public class ClientVisualHandler {
 
         if (data == null) return;
 
-        for (RegistryObject<IVisual> obj : JJKVisuals.VISUALS.getEntries()) {
-            if (!obj.get().isValid(entity, data)) continue;
-
-            obj.get().tick(entity, data);
+        for (IVisual visual : JJKVisuals.VISUALS) {
+            if (!visual.isValid(entity, data)) continue;
+            visual.tick(entity, data);
         }
     }
 
@@ -95,10 +94,9 @@ public class ClientVisualHandler {
 
         if (data == null) return;
 
-        for (RegistryObject<IOverlay> obj : JJKOverlays.OVERLAYS.getEntries()) {
-            if (!obj.get().isValid(entity, data)) continue;
-
-            obj.get().render(entity, data, texture, model, poseStack, buffer, partialTicks, packedLight);
+        for (IOverlay overlay : JJKOverlays.OVERLAYS) {
+            if (!overlay.isValid(entity, data)) continue;
+            overlay.render(entity, data, texture, model, poseStack, buffer, partialTicks, packedLight);
         }
     }
 

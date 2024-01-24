@@ -7,19 +7,26 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
+import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.client.visual.overlay.CursedSpeechOverlay;
 import radon.jujutsu_kaisen.client.visual.overlay.PerfectBodyOverlay;
 import radon.jujutsu_kaisen.client.visual.overlay.SixEyesOverlay;
+import radon.jujutsu_kaisen.client.visual.visual.BlueFistsVisual;
+import radon.jujutsu_kaisen.client.visual.visual.CursedEnergyVisual;
+import radon.jujutsu_kaisen.client.visual.visual.IdleTransfigurationVisual;
+import radon.jujutsu_kaisen.client.visual.visual.TransfiguredSoulVisual;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class JJKOverlays {
-    public static DeferredRegister<IOverlay> OVERLAYS = DeferredRegister.create(
-            new ResourceLocation(JujutsuKaisen.MOD_ID, "overlay"), JujutsuKaisen.MOD_ID);
-    public static Supplier<IForgeRegistry<IOverlay>> OVERLAY_REGISTRY =
-            OVERLAYS.makeRegistry(RegistryBuilder::new);
+    // TODO: Make this List<Supplier<IOverlay>> and make each entity have their own instance
+    public static List<IOverlay> OVERLAYS = new ArrayList<>();
 
-    public static RegistryObject<IOverlay> SIX_EYES = OVERLAYS.register("six_eyes", SixEyesOverlay::new);
-    public static RegistryObject<IOverlay> CURSED_SPEECH = OVERLAYS.register("cursed_speech", CursedSpeechOverlay::new);
-    public static RegistryObject<IOverlay> PERFECT_BODY = OVERLAYS.register("perfect_body", PerfectBodyOverlay::new);
+    static {
+        OVERLAYS.add(new SixEyesOverlay());
+        OVERLAYS.add(new CursedSpeechOverlay());
+        OVERLAYS.add(new PerfectBodyOverlay());
+    }
 }

@@ -82,9 +82,6 @@ public class JujutsuKaisen {
 
         JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
 
-        JJKVisuals.VISUALS.register(bus);
-        JJKOverlays.OVERLAYS.register(bus);
-
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);
     }
