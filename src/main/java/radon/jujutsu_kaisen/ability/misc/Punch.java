@@ -125,6 +125,13 @@ public class Punch extends Ability implements Ability.ICharged {
 
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
+                if (owner instanceof Player player) {
+                    player.attack(entity);
+                } else {
+                    owner.doHurtTarget(entity);
+                }
+                entity.invulnerableTime = 0;
+
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                     if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner))) {
                         entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F))
