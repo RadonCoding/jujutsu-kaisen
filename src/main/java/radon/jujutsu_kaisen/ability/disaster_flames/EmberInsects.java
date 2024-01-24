@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,8 @@ public class EmberInsects extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < 12; i++) {
