@@ -110,11 +110,11 @@ public class Punch extends Ability implements Ability.ICharged {
 
         double range = cap.getRealPower() * charge;
 
-        if (charge >= 0.5F) {
-            if (owner.distanceTo(target) < range && owner.distanceTo(target) > 3.0D) {
-                Vec3 direction = target.position().subtract(owner.position());
-                owner.teleportRelative(direction.x, direction.y, direction.z);
-            }
+        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) range *= 2.0D;
+
+        if (owner.distanceTo(target) <= range && owner.distanceTo(target) > 3.0D) {
+            Vec3 direction = target.position().subtract(owner.position()).subtract(look.reverse().scale(owner.getBbWidth()));
+            owner.teleportRelative(direction.x, direction.y, direction.z);
         }
 
         if (owner.distanceTo(target) <= 3.0D) {
