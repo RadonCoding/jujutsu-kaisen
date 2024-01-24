@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.render.entity.effect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -40,6 +42,11 @@ public class CursedEnergyBlastRenderer extends EntityRenderer<CursedEnergyBlastE
         float opacity = (float) Math.max((1.0F - Math.pow(fraction, 4.0F)) * 0.4F, 0.00001F);
 
         pPoseStack.pushPose();
+
+        float yaw = Mth.lerp(pPartialTick, pEntity.yRotO, pEntity.getYRot());
+
+        pPoseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+
         VertexConsumer consumer = pBuffer.getBuffer(JJKRenderTypes.energy(this.getTextureLocation(pEntity)));
         this.model.setupAnim(pEntity, 0.0F, 0.0F, age, 0.0F, 0.0F);
         this.model.renderToBuffer(pPoseStack, consumer, pPackedLight, OverlayTexture.NO_OVERLAY, color.x, color.y, color.z, opacity);
