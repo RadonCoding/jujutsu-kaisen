@@ -6,10 +6,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -22,12 +24,17 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+
+import java.util.List;
+
+import static radon.jujutsu_kaisen.client.SkyHandler.target;
 
 public class Punch extends Ability implements Ability.ICharged {
     private static final float DAMAGE = 5.0F;
-    private static final double RANGE = 3.0D;
+    private static final double RANGE = 5.0D;
+    private static final int CHARGE = 20;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -37,8 +44,10 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target)) return false;
-        return JJKAbilities.isChanneling(owner, this) ? this.getTarget(owner) == target : owner.distanceTo(target) <= 5.0D;
+        if (target == null) return false;
+        if (!owner.hasLineOfSight(target)) return false;
+        if (owner.distanceTo(target) > RANGE) return false;
+        return JJKAbilities.isChanneling(owner, this) && this.getCharge(owner) >= CHARGE;
     }
 
     @Override
@@ -56,18 +65,9 @@ public class Punch extends Ability implements Ability.ICharged {
         return ActivationType.CHANNELED;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-
-            return target;
-        }
-        return null;
-    }
-
     @Override
     public void run(LivingEntity owner) {
-        float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
+        float charge = (float) Math.min(CHARGE, this.getCharge(owner)) / CHARGE;
 
         if (owner.level().isClientSide) {
             ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID), charge * 100), false);
@@ -98,53 +98,50 @@ public class Punch extends Ability implements Ability.ICharged {
     public boolean onRelease(LivingEntity owner) {
         if (owner.isUsingItem()) return false;
 
-        LivingEntity target = this.getTarget(owner);
-
-        if (target == null) return false;
-
-        float charge = (float) Math.min(20, this.getCharge(owner)) / 20;
+        float charge = (float) Math.min(CHARGE, this.getCharge(owner)) / CHARGE;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        double range = RANGE * cap.getRealPower() * charge;
+        Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
-        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) range *= 2.0D;
+        List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE), entity -> entity != owner);
 
-        if (owner.distanceTo(target) > range) return false;
+        if (targets.isEmpty()) return false;
 
-        if (owner.distanceTo(target) > RANGE) {
-            Vec3 direction = target.position().subtract(owner.position()).subtract(look.scale(owner.getBbWidth()));
-            owner.teleportRelative(direction.x, direction.y, direction.z);
-        }
+        if (owner.level() instanceof ServerLevel level) {
+            for (int i = 0; i < 4; i++) {
+                Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                level.sendParticles(owner.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof SwordItem ? ParticleTypes.SWEEP_ATTACK : ParticleTypes.CLOUD,
+                        pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        0, 0.0D, 0.0D, 0.0D, 1.0D);
+            }
+            for (int i = 0; i < 4; i++) {
+                Vec3 pos = owner.getEyePosition().add(look.scale(2.5D));
+                level.sendParticles(ParticleTypes.CRIT,
+                        pos.x + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.y + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        pos.z + (HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.5D,
+                        0, 0.0D, 0.0D, 0.0D, 1.0D);
+            }
 
-        if (owner.distanceTo(target) <= RANGE) {
-            if (!owner.level().isClientSide) {
-                Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
-                ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-
-                owner.swing(InteractionHand.MAIN_HAND, true);
-
-                if (owner instanceof Player player) {
-                    player.attack(target);
-                } else {
-                    owner.doHurtTarget(target);
-                }
-                target.invulnerableTime = 0;
+            for (LivingEntity entity : targets) {
+                Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+                level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    if (target.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
-                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
                                 .multiply(1.0D, 0.25D, 1.0D));
-                        target.hurtMarked = true;
                     }
                 } else {
-                    if (target.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
-                        target.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
                                 .multiply(1.0D, 0.25D, 1.0D));
-                        target.hurtMarked = true;
                     }
                 }
             }
