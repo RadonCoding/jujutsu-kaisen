@@ -115,7 +115,7 @@ public class Punch extends Ability implements Ability.ICharged {
         if (owner.distanceTo(target) > range) return false;
 
         if (owner.distanceTo(target) > RANGE) {
-            Vec3 direction = target.position().subtract(owner.position()).subtract(look.reverse().scale(owner.getBbWidth()));
+            Vec3 direction = target.position().subtract(owner.position()).subtract(look.scale(owner.getBbWidth()));
             owner.teleportRelative(direction.x, direction.y, direction.z);
         }
 
