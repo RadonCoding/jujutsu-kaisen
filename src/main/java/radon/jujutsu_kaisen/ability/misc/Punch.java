@@ -32,7 +32,6 @@ import java.util.List;
 public class Punch extends Ability implements Ability.ICharged {
     private static final float DAMAGE = 5.0F;
     private static final double RANGE = 5.0D;
-    private static final int CHARGE = 20;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -44,8 +43,7 @@ public class Punch extends Ability implements Ability.ICharged {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
         if (!owner.hasLineOfSight(target)) return false;
-        if (owner.distanceTo(target) > RANGE) return false;
-        return JJKAbilities.isChanneling(owner, this) && this.getCharge(owner) >= CHARGE;
+        return owner.distanceTo(target) <= RANGE;
     }
 
     @Override
@@ -65,11 +63,7 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public void run(LivingEntity owner) {
-        float charge = (float) Math.min(CHARGE, this.getCharge(owner)) / CHARGE;
 
-        if (owner.level().isClientSide) {
-            ClientWrapper.setOverlayMessage(Component.translatable(String.format("chat.%s.charge", JujutsuKaisen.MOD_ID), charge * 100), false);
-        }
     }
 
     @Override
@@ -96,15 +90,13 @@ public class Punch extends Ability implements Ability.ICharged {
     public boolean onRelease(LivingEntity owner) {
         if (owner.isUsingItem()) return false;
 
-        float charge = (float) Math.min(CHARGE, this.getCharge(owner)) / CHARGE;
-
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
-        List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE), entity -> entity != owner);
+        List<LivingEntity> targets = owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE), entity -> entity != owner && entity.hasLineOfSight(owner));
 
         if (targets.isEmpty()) return false;
 
@@ -134,13 +126,13 @@ public class Punch extends Ability implements Ability.ICharged {
                 owner.swing(InteractionHand.MAIN_HAND, true);
 
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner) * charge)) {
-                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                    if (entity.hurt(owner instanceof Player player ? owner.damageSources().playerAttack(player) : owner.damageSources().mobAttack(owner), DAMAGE * this.getPower(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F))
                                 .multiply(1.0D, 0.25D, 1.0D));
                     }
                 } else {
-                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner) * charge)) {
-                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F) * charge)
+                    if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
+                        entity.setDeltaMovement(look.scale(LAUNCH_POWER * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F))
                                 .multiply(1.0D, 0.25D, 1.0D));
                     }
                 }
