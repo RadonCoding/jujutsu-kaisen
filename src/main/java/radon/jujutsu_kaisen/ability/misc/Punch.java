@@ -119,7 +119,6 @@ public class Punch extends Ability implements Ability.ICharged {
 
         if (owner.distanceTo(target) <= 3.0D) {
             if (!owner.level().isClientSide) {
-                cap.delayTickEvent(() -> {
                     Vec3 pos = target.position().add(0.0D, target.getBbHeight() / 2.0F, 0.0D);
                     ((ServerLevel) target.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
                     target.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
@@ -146,7 +145,6 @@ public class Punch extends Ability implements Ability.ICharged {
                             target.hurtMarked = true;
                         }
                     }
-                }, 1);
             }
             return true;
         }
