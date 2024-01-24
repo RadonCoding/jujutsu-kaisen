@@ -128,7 +128,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
         int required = Math.round((victimStrength / attackerStrength) * 2);
 
         if (amplifier >= required) {
-            if ((target instanceof Mob && !(target instanceof Monster) && !(target instanceof Animal)) || target instanceof Player) {
+            if ((target instanceof Mob && !(target instanceof Monster)) || target instanceof Player) {
                 absorb(owner, target);
                 return true;
             }
