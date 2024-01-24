@@ -24,14 +24,14 @@ public class EmberInsects extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
-
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (int i = 0; i < 12; i++) {
             int delay = i * 2;
 
             cap.delayTickEvent(() -> {
+                owner.swing(InteractionHand.MAIN_HAND);
+
                 EmberInsectProjectile insect = new EmberInsectProjectile(owner, this.getPower(owner),
                         HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1),
                         HelperMethods.RANDOM.nextFloat() * (HelperMethods.RANDOM.nextBoolean() ? 1 : -1));

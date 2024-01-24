@@ -143,20 +143,20 @@ public class EmberInsectProjectile extends JujutsuProjectile implements GeoEntit
     public void tick() {
         super.tick();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (this.getTime() < DELAY) {
-                if (!owner.isAlive()) {
-                    this.discard();
-                } else {
-                    if (this.getTime() % 5 == 0) {
-                        owner.swing(InteractionHand.MAIN_HAND);
-                    }
-                    this.applyOffset();
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
+
+        if (this.getTime() < DELAY) {
+            if (!owner.isAlive()) {
+                this.discard();
+            } else {
+                if (this.getTime() % 5 == 0) {
+                    owner.swing(InteractionHand.MAIN_HAND);
                 }
-            } else if (this.getTime() >= DELAY) {
-                if (this.getTime() == DELAY) {
-                    this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
-                }
+                this.applyOffset();
+            }
+        } else if (this.getTime() >= DELAY) {
+            if (this.getTime() == DELAY) {
+                this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
             }
         }
     }
