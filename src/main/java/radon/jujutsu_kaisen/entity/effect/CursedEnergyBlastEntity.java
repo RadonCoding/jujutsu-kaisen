@@ -14,6 +14,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -29,8 +30,8 @@ public class CursedEnergyBlastEntity extends JujutsuProjectile {
     public CursedEnergyBlastEntity(LivingEntity owner, float power) {
         super(JJKEntities.CURSED_ENERGY_BLAST.get(), owner.level(), owner, power);
 
-        Vec3 spawn = new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ());
-        this.moveTo(spawn.x, spawn.y, spawn.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ()));
     }
 
     @Override
