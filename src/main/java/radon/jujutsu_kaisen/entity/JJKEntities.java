@@ -60,21 +60,21 @@ public class JJKEntities {
                             .toString()));
 
     public static RegistryObject<EntityType<JogoEntity>> JOGO = ENTITIES.register("jogo", () ->
-            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.<JogoEntity>of(JogoEntity::new, MobCategory.CREATURE)
                     .sized(0.9F, 1.9F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogo")
                             .toString()));
     public static RegistryObject<EntityType<JogoatEntity>> JOGOAT = ENTITIES.register("jogoat", () ->
-            EntityType.Builder.<JogoatEntity>of(JogoatEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.<JogoatEntity>of(JogoatEntity::new, MobCategory.CREATURE)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "jogoat")
                             .toString()));
     public static RegistryObject<EntityType<DagonEntity>> DAGON = ENTITIES.register("dagon", () ->
-            EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.<DagonEntity>of(DagonEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "dagon")
                             .toString()));
     public static RegistryObject<EntityType<HanamiEntity>> HANAMI = ENTITIES.register("hanami", () ->
-            EntityType.Builder.<HanamiEntity>of(HanamiEntity::new, MobCategory.AMBIENT)
+            EntityType.Builder.<HanamiEntity>of(HanamiEntity::new, MobCategory.CREATURE)
                     .sized(1.4F, 3.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hanami")
                             .toString()));
@@ -205,7 +205,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 5.4F)
+                    .sized(1.4F, 5.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
     public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
             EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)

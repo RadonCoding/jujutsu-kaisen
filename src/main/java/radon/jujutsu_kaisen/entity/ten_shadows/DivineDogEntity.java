@@ -69,6 +69,11 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     }
 
     @Override
+    public boolean isInvulnerable() {
+        return this.entityData.get(DATA_RITUAL) > 0 || super.isInvulnerable();
+    }
+
+    @Override
     protected boolean isCustom() {
         return true;
     }

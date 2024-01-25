@@ -28,6 +28,8 @@ public class ThrownChainProjectile extends AbstractArrow {
     private static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(ThrownChainProjectile.class, EntityDataSerializers.ITEM_STACK);
 
+    private static final int DURATION = 2 * 20;
+
     private boolean released;
     private boolean dealtDamage;
 
@@ -159,7 +161,7 @@ public class ThrownChainProjectile extends AbstractArrow {
 
         Entity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.inGroundTime > 20)) {
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || this.inGroundTime > DURATION)) {
             this.discard();
         } else {
             if (!(owner instanceof LivingEntity living)) return;

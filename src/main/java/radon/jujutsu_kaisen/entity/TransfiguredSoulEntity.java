@@ -67,10 +67,10 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         LivingEntity owner = this.getOwner();
 
-        if (pSource.getEntity() == owner) {
+        if (owner != null && pSource.getEntity() == owner) {
             IdleTransfiguration.absorb(owner, this);
         }
         return super.hurt(pSource, pAmount);

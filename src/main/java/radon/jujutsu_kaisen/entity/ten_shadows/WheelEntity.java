@@ -63,7 +63,7 @@ public class WheelEntity extends Entity implements GeoEntity {
 
     @Override
     public double getMyRidingOffset() {
-        return 0.75D;
+        return 0.5D;
     }
 
     public void spin() {
@@ -128,7 +128,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         if (this.ownerUUID != null) {
             pCompound.putUUID("owner", this.ownerUUID);
         }
-        pCompound.putFloat("spin", this.entityData.get(DATA_SPIN));
+        pCompound.putInt("spin", this.entityData.get(DATA_SPIN));
     }
 
     @Override
@@ -149,6 +149,7 @@ public class WheelEntity extends Entity implements GeoEntity {
         int spin = this.entityData.get(DATA_SPIN);
 
         if (spin > 0) {
+            System.out.println(1337);
             return animationState.setAndContinue(SPIN);
         }
         animationState.getController().forceAnimationReset();

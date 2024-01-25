@@ -83,7 +83,7 @@ public class Punch extends Ability implements Ability.ICharged {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return (!(owner instanceof ISorcerer sorcerer) || !sorcerer.hasMeleeAttack() || !sorcerer.hasArms()) && super.isValid(owner);
+        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 
     @Override
