@@ -159,9 +159,9 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
         cap.resetFrames();
 
-        if (frames.size() < 24) {
+        /*if (frames.size() < 24) {
             return;
-        }
+        }*/
 
         int delay = 0;
 
@@ -179,7 +179,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
                 boolean isOnGround = isGrounded(owner.level(), owner.blockPosition()) || (previous.get() != null && isGrounded(owner.level(), BlockPos.containing(previous.get())));
 
-                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 24.0D * (cap.getSpeedStacks() + 1)) {
+                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 48.0D * (cap.getSpeedStacks() + 1)) {
                     cancelled.set(true);
 
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
@@ -211,7 +211,10 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 previous.set(frame);
             }, delay++);
         }
-        cap.addSpeedStack();
+
+        if (frames.size() >= 12) {
+            cap.addSpeedStack();
+        }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
