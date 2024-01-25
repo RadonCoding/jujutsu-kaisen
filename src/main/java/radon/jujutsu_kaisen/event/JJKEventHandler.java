@@ -226,7 +226,7 @@ public class JJKEventHandler {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
-            if cap.hasTrait(Trait.HEAVENLY_RESTRICTION) {
+            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 2, 0, false, false, false));
             }
 
