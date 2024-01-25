@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class DeathSwarm extends Ability implements Ability.IDomainAttack {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 50.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
