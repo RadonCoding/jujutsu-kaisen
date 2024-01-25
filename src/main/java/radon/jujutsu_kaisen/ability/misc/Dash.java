@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Dash extends Ability {
     public static final double RANGE = 30.0D;
-    private static final float DASH = 1.5F;
+    private static final float DASH = 2F;
     private static final float MAX_DASH = 5.0F;
 
     @Override
@@ -137,7 +137,7 @@ public class Dash extends Ability {
 
     @Override
     public int getCooldown() {
-        return 3 * 20;
+        return 2 * 20;
     }
 
     @Override
