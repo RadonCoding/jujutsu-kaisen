@@ -14,9 +14,9 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class DismantleNet extends Ability {
-    private static final int MIN_SIZE = 6;
-    private static final int MAX_SIZE = 24;
-    private static final int SIZE = 12;
+    private static final int MIN_SIZE = 5;
+    private static final int MAX_SIZE = 20;
+    private static final int SIZE = 10;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
