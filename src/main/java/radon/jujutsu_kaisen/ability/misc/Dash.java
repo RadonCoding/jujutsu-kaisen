@@ -42,13 +42,7 @@ public class Dash extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        if (!owner.hasLineOfSight(target)) return false;
-
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 start = owner.getEyePosition();
-        Vec3 result = target.position().subtract(start);
-        double angle = Math.acos(look.normalize().dot(result.normalize()));
-        return angle <= 0.5D;
+        return owner.hasLineOfSight(target);
     }
 
     @Override
