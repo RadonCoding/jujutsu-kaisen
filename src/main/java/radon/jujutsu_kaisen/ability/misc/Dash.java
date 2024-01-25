@@ -24,7 +24,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Dash extends Ability {
-    public static final double RANGE = 30.0D;
+    public static final double RANGE = 60.0D;
     private static final float DASH = 2.0F;
     private static final float MAX_DASH = 5.0F;
 
