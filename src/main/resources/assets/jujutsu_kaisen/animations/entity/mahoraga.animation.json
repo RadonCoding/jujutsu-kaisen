@@ -113,7 +113,7 @@
 				}
 			}
 		},
-		"misc.idle.battle": {
+		"misc.idle_battle": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
