@@ -66,7 +66,8 @@ public class JJKDamageSources {
             this.ability = ability;
         }
 
-        public @Nullable Ability getAbility() {
+        @Nullable
+        public Ability getAbility() {
             return this.ability;
         }
     }

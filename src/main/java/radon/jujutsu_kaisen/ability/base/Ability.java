@@ -67,6 +67,10 @@ public abstract class Ability {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
     }
 
+    protected boolean isDisabledFromDA() {
+        return false;
+    }
+
     // Used for skill tree
     public boolean isCursedEnergyColor() {
         return false;
@@ -174,7 +178,7 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && !(this instanceof DomainExpansion && cap.hasToggled(this) && SorcererUtil.isExperienced(cap.getExperience()))) &&
+        if ((this.isTechnique() && (this.isDisabledFromDA() || !SorcererUtil.isExperienced(cap.getExperience()))) && cap.hasToggled(this) &&
                 cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
             return false;
 

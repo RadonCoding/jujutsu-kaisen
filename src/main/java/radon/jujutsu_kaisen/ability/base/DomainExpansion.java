@@ -40,6 +40,11 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
+    protected boolean isDisabledFromDA() {
+        return false;
+    }
+
+    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
