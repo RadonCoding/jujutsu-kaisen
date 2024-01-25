@@ -217,12 +217,13 @@ public class MahoragaEntity extends TenShadowsSummon {
             LivingEntity owner = this.getOwner();
 
             if (owner != null) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                    this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                        dstCap.addAdapted(srcCap.getAdapted());
-                        dstCap.addAdapting(srcCap.getAdapting());
-                    });
-                });
+                if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+                ISorcererData src = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData dst = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                dst.addAdapted(src.getAdapted());
+                dst.addAdapting(src.getAdapting());
             }
         } else {
             this.playSound(JJKSounds.WOLF_HOWLING.get(), 3.0F, 1.0F);
@@ -244,18 +245,19 @@ public class MahoragaEntity extends TenShadowsSummon {
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
 
-        if (this.isTame()) {
-            LivingEntity owner = this.getOwner();
+        if (!this.isTame()) return;
 
-            if (owner != null) {
-                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
-                        dstCap.addAdapted(srcCap.getAdapted());
-                        dstCap.addAdapting(srcCap.getAdapting());
-                    });
-                });
-            }
-        }
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+
+        ISorcererData src = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData dst = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        dst.addAdapted(src.getAdapted());
+        dst.addAdapting(src.getAdapting());
     }
 
     public void onAdaptation() {
