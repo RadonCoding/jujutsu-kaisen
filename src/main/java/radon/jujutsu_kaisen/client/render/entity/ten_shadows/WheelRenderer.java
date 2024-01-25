@@ -9,13 +9,17 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
@@ -31,8 +35,8 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
 
         poseStack.translate(0.0F, animatable.getBbHeight() / 2.0F, 0.0F);
 
-        float yaw = Mth.lerp(partialTick, owner.yRotO, owner.getYRot());
-        poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        float yaw = Mth.lerp(partialTick, owner.yBodyRotO, owner.yBodyRot);
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
 
         float scale = owner.getBbWidth();
         poseStack.scale(scale, scale, scale);
@@ -52,6 +56,26 @@ public class WheelRenderer extends GeoEntityRenderer<WheelEntity> {
             red = 0.0F;
             green = 0.0F;
             blue = 0.0F;
+        }
+
+        boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null && animatable.getVehicle().shouldRiderSit());
+        float lerpBodyRot = 0.0F;
+        float lerpHeadRot = 0.0F;
+        float netHeadYaw = lerpHeadRot - lerpBodyRot;
+
+        float limbSwingAmount = 0;
+        float limbSwing = 0;
+
+        if (!isReRender) {
+            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
+            AnimationState<WheelEntity> animationState = new AnimationState<>(animatable, limbSwing, limbSwingAmount, partialTick, false);
+            long instanceId = getInstanceId(animatable);
+
+            animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
+            animationState.setData(DataTickets.ENTITY, animatable);
+            animationState.setData(DataTickets.ENTITY_MODEL_DATA, new EntityModelData(shouldSit, false, -netHeadYaw, -headPitch));
+            this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
+            this.model.handleAnimations(animatable, instanceId, animationState);
         }
 
         this.updateAnimatedTextureFrame(animatable);
