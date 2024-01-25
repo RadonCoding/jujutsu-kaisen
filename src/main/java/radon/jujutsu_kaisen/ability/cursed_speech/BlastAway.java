@@ -88,7 +88,7 @@ public class BlastAway extends Ability {
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return 6 * 20;
     }
 
     @Override
