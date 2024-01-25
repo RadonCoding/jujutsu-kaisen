@@ -58,10 +58,10 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     public FishShikigamiProjectile(EntityType<? extends Projectile> pType, LivingEntity owner, float power, LivingEntity target, float xOffset, float yOffset) {
         super(pType, owner.level(), owner, power);
 
-        this.setTarget(target);
-
         this.entityData.set(DATA_OFFSET_X, xOffset);
         this.entityData.set(DATA_OFFSET_Y, yOffset);
+
+        this.setTarget(target);
 
         this.applyOffset();
     }
@@ -126,32 +126,32 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
     private void applyRotation() {
         LivingEntity target = this.getTarget();
 
-        if (target != null) {
-            Vec3 delta = target.position().subtract(this.position());
-            double d0 = delta.horizontalDistance();
-            this.setYRot((float) (Mth.atan2(delta.x, delta.z) * (double) (180.0F / (float) Math.PI)));
-            this.setXRot((float) (Mth.atan2(delta.y, d0) * (double) (180.0F / (float) Math.PI)));
-            this.yRotO = this.getYRot();
-            this.xRotO = this.getXRot();
-        }
+        if (target == null) return;
+
+        Vec3 delta = target.position().subtract(this.position());
+        double d0 = delta.horizontalDistance();
+        this.setYRot((float) (Mth.atan2(delta.x, delta.z) * (double) (180.0F / (float) Math.PI)));
+        this.setXRot((float) (Mth.atan2(delta.y, d0) * (double) (180.0F / (float) Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
     private void applyOffset() {
-        if (this.getOwner() instanceof LivingEntity owner) {
-            float xOffset = this.entityData.get(DATA_OFFSET_X);
-            float yOffset = this.entityData.get(DATA_OFFSET_Y);
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-            Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        float xOffset = this.entityData.get(DATA_OFFSET_X);
+        float yOffset = this.entityData.get(DATA_OFFSET_Y);
 
-            this.applyRotation();
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-            Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
-                    .subtract(look.multiply(this.getBbWidth() * 3.0D, 0.0D, this.getBbWidth() * 3.0D))
-                    .add(look)
-                    .add(look.yRot(-90.0F).scale(xOffset))
-                    .add(new Vec3(0.0F, yOffset, 0.0F));
-            this.setPos(spawn.x, spawn.y, spawn.z);
-        }
+        this.applyRotation();
+
+        Vec3 spawn = new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .subtract(look.multiply(this.getBbWidth() * 3.0D, 0.0D, this.getBbWidth() * 3.0D))
+                .add(look)
+                .add(look.yRot(-90.0F).scale(xOffset))
+                .add(new Vec3(0.0F, yOffset, 0.0F));
+        this.setPos(spawn.x, spawn.y, spawn.z);
     }
 
     @Override
