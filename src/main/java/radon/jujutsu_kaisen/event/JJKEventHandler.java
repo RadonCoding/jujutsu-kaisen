@@ -222,14 +222,18 @@ public class JJKEventHandler {
 
             cap.tick(owner);
 
-            if (cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
+            if ((cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
-            if (cap.getType() == JujutsuType.CURSE) {
-                if (owner instanceof Player player) {
-                    player.getFoodData().setFoodLevel(20);
-                }
+            if cap.hasTrait(Trait.HEAVENLY_RESTRICTION) {
+                owner.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 2, 0, false, false, false));
+            }
+
+            owner.addEffect(new MobEffectInstance(MobEffects.JUMP, 2, 2, false, false, false));
+
+            if (owner instanceof Player player) {
+                player.getFoodData().setFoodLevel(20);
             }
         }
 
@@ -238,6 +242,8 @@ public class JJKEventHandler {
             event.getEntity().getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
                 if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                     event.setDistance(event.getDistance() * 0.1F);
+                } else {
+                    event.setDistance(event.getDistance() * 0.33F);
                 }
             });
 
