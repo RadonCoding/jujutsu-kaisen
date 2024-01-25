@@ -53,7 +53,7 @@ import java.util.UUID;
 public class CursedEnergyFlow extends Ability implements Ability.IToggled {
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("641b629b-f7b7-4066-a486-8e1d670a7439");
 
-    private static final double MAX_SPEED = 0.495D;
+    private static final double MAX_SPEED = 0.4D;
 
     private static final float LIGHTNING_DAMAGE = 5.0F;
 
@@ -230,9 +230,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         };
 
                         if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                            /*float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
                             if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(cost);
+                            attackerCap.useEnergy(cost);*/
 
                             if (attacker instanceof ServerPlayer player) {
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
@@ -298,9 +298,9 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     float block = event.getAmount() - blocked;
 
                     if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = block * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+                        /*float cost = block * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
                         if (victimCap.getEnergy() < cost) return;
-                        victimCap.useEnergy(cost);
+                        victimCap.useEnergy(cost);*/
 
                         if (victim instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
