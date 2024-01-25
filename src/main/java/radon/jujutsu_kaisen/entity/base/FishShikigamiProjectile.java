@@ -36,9 +36,6 @@ import java.util.UUID;
 public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEntity {
     private static final EntityDataAccessor<Float> DATA_OFFSET_X = SynchedEntityData.defineId(FishShikigamiProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_OFFSET_Y = SynchedEntityData.defineId(FishShikigamiProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DATA_BITE = SynchedEntityData.defineId(FishShikigamiProjectile.class, EntityDataSerializers.INT);
-
-    private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -92,7 +89,6 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
         this.entityData.define(DATA_OFFSET_X, 0.0F);
         this.entityData.define(DATA_OFFSET_Y, 0.0F);
-        this.entityData.define(DATA_BITE, 0);
     }
 
     private float getOffsetX() {
@@ -194,14 +190,6 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
             return;
         }
 
-        if (!this.level().isClientSide) {
-            int bite = this.entityData.get(DATA_BITE);
-
-            if (bite > 0) {
-                this.entityData.set(DATA_BITE, --bite);
-            }
-        }
-
         if (this.getOwner() instanceof LivingEntity owner) {
             if (this.getTime() < DELAY) {
                 if (!owner.isAlive()) {
@@ -229,17 +217,9 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
         }
     }
 
-    private PlayState bitePredicate(AnimationState<FishShikigamiProjectile> animationState) {
-        if (this.entityData.get(DATA_BITE) > 0) {
-            return animationState.setAndContinue(BITE);
-        }
-        animationState.getController().forceAnimationReset();
-        return PlayState.STOP;
-    }
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Bite", this::bitePredicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
     }
 
     @Override
