@@ -281,7 +281,15 @@ public interface ISorcererData {
 
     void removeShadowInventory(int index);
 
-    float getAdaptation(DamageSource source);
+    float getAdaptationProgress(DamageSource source);
+
+    float getAdaptationProgress(Adaptation adaptation);
+
+    Adaptation.Type getAdaptationType(DamageSource source);
+
+    Adaptation.Type getAdaptationType(Adaptation adaptation);
+
+    Map<Adaptation.Type, Float> getAdaptationTypes();
 
     boolean isAdaptedTo(DamageSource source);
 
