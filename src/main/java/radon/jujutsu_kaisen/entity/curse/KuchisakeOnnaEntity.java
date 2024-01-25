@@ -77,6 +77,16 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         return false;
     }
 
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.17D);

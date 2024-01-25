@@ -59,6 +59,16 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         return true;
     }
 
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
     public TranquilDeerEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.TRANQUIL_DEER.get(), owner.level());
 

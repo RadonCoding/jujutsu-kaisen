@@ -73,6 +73,16 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         return true;
     }
 
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
     public MaxElephantEntity(LivingEntity owner, boolean tame) {
         this(JJKEntities.MAX_ELEPHANT.get(), owner.level());
 

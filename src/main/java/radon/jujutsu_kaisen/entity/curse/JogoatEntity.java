@@ -57,6 +57,21 @@ public class JogoatEntity extends CursedSpirit {
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
     public boolean canChant() {
         return true;
     }

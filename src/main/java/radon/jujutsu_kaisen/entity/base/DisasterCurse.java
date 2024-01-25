@@ -23,6 +23,21 @@ public abstract class DisasterCurse extends CursedSpirit {
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
     public float getExperience() {
         return SorcererGrade.SPECIAL_GRADE.getRequiredExperience() * 2.0F;
     }

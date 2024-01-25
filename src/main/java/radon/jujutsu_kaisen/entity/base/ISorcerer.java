@@ -16,7 +16,11 @@ import java.util.List;
 import java.util.Set;
 
 public interface ISorcerer {
-    default boolean hasMeleeAttack() { return true; }
+    boolean hasMeleeAttack();
+
+    boolean hasArms();
+
+    boolean canJump();
 
     boolean canChant();
 

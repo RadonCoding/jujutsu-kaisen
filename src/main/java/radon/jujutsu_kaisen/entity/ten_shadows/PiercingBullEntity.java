@@ -72,6 +72,16 @@ public class PiercingBullEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
+    @Override
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
