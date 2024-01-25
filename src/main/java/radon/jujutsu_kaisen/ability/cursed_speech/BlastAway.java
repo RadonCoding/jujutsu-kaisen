@@ -27,7 +27,7 @@ public class BlastAway extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
     private static final float DAMAGE = 5.0F;
-    private static final double LAUNCH_POWER = 2.0D;
+    private static final double LAUNCH_POWER = 4.0D;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
