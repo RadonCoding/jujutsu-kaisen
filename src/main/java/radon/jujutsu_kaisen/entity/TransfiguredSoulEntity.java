@@ -29,12 +29,22 @@ import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
+import radon.jujutsu_kaisen.entity.curse.JogoEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.DivineDogEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, ICommandable {
     public static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(TransfiguredSoulEntity.class, EntityDataSerializers.INT);
+
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
+    private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
 
     protected TransfiguredSoulEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -107,6 +117,27 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
         super.readAdditionalSaveData(pCompound);
 
         this.setVariant(Variant.values()[pCompound.getInt("variant")]);
+    }
+
+    private PlayState walkRunPredicate(AnimationState<TransfiguredSoulEntity> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState swingPredicate(AnimationState<TransfiguredSoulEntity> animationState) {
+        if (this.swinging) {
+            return animationState.setAndContinue(SWING);
+        }
+        animationState.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
     }
 
     @Override
