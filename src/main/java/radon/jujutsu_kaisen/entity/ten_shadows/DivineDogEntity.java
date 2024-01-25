@@ -212,7 +212,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.MAX_HEALTH, 2 * 20.0D)
-                .add(Attributes.ATTACK_DAMAGE, 2.0D);
+                .add(Attributes.ATTACK_DAMAGE, 4.0D);
     }
 
     @Override
