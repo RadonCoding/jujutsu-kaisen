@@ -24,9 +24,9 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class VolcanoEntity extends JujutsuProjectile implements GeoEntity {
-    public static final int DELAY = 20;
-    private static final int DURATION = 3 * 20;
-    private static final float DAMAGE = 5.0F;
+    public static final int DELAY = 10;
+    private static final int DURATION = 5 * 20;
+    private static final float DAMAGE = 10.0F;
     private static final double RANGE = 20.0D;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
