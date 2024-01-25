@@ -75,7 +75,7 @@ public class ServerConfig {
         this.experienceMultiplier = builder.comment("Scale of experience you gain")
                         .defineInRange("experienceMultiplier", 1.0F, 0.0F, 100.0F);
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
-                .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
+                .defineInRange("deathPenalty", 0.025F, 0.0F, 1.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
                 .defineInRange("blackFlashChance", 100, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
