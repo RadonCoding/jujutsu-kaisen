@@ -201,6 +201,16 @@ public class RabbitEscapeEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
     public boolean canChant() {
         return false;
     }

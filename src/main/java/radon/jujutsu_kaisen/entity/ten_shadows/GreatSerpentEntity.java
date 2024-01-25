@@ -86,6 +86,16 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return true;
     }
 
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
     private PlayState bitePredicate(AnimationState<GreatSerpentEntity> animationState) {
         if (this.swinging) {
             return animationState.setAndContinue(BITE);

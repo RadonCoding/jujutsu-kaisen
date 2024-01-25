@@ -48,6 +48,21 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
+    @Override
     public boolean canChant() {
         return false;
     }

@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -83,6 +84,11 @@ public class Barrage extends Ability {
                 }
             }, i * 2);
         }
+    }
+
+    @Override
+    public boolean isValid(LivingEntity owner) {
+        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() || !sorcerer.hasArms()) && super.isValid(owner);
     }
 
     @Override

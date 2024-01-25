@@ -86,6 +86,16 @@ public class NueEntity extends TenShadowsSummon implements PlayerRideable, IJump
     }
 
     @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
+    @Override
     public @NotNull List<Ability> getCustom() {
         return List.of(JJKAbilities.NUE_LIGHTNING.get());
     }

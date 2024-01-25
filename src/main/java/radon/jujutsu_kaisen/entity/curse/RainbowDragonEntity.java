@@ -104,6 +104,21 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
+    @Override
     public boolean canChant() {
         return false;
     }

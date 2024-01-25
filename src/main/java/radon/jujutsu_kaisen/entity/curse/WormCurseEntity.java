@@ -63,6 +63,21 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return false;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
     public boolean canChant() {
         return false;
     }

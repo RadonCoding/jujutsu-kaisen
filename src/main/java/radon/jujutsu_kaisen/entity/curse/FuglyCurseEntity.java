@@ -28,6 +28,21 @@ public class FuglyCurseEntity extends CursedSpirit {
     }
 
     @Override
+    public boolean hasMeleeAttack() {
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
+    }
+
+    @Override
     public boolean canChant() {
         return false;
     }

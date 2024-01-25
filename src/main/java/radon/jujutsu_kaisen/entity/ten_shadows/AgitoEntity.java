@@ -60,6 +60,16 @@ public class AgitoEntity extends TenShadowsSummon {
         return true;
     }
 
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
     public AgitoEntity(LivingEntity owner) {
         this(JJKEntities.AGITO.get(), owner.level());
 

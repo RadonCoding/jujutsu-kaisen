@@ -81,7 +81,17 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     public boolean hasMeleeAttack() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
     }
 
     @Override

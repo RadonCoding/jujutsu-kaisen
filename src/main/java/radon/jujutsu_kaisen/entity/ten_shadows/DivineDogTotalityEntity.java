@@ -49,6 +49,16 @@ public class DivineDogTotalityEntity extends TenShadowsSummon {
         return true;
     }
 
+    @Override
+    public boolean hasArms() {
+        return true;
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
     public DivineDogTotalityEntity(LivingEntity owner) {
         super(JJKEntities.DIVINE_DOG_TOTALITY.get(), owner.level());
 
