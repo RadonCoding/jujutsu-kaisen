@@ -32,6 +32,8 @@ public class TransfiguredSoulSmall extends Ability {
 
         TransfiguredSoulSmallEntity soul = new TransfiguredSoulSmallEntity(owner);
         owner.level().addFreshEntity(soul);
+
+        cap.addSummon(soul);
     }
 
     @Override
