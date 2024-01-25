@@ -205,7 +205,7 @@ public class JJKEntities {
 
     public static RegistryObject<EntityType<MahoragaEntity>> MAHORAGA = ENTITIES.register("mahoraga", () ->
             EntityType.Builder.<MahoragaEntity>of(MahoragaEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 5.4F)
+                    .sized(1.4F, 5.6F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
     public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
             EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)
