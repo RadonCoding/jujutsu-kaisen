@@ -25,8 +25,6 @@ public class JujutsuProjectile extends Projectile {
     private static final EntityDataAccessor<Float> DATA_POWER = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> DATA_DOMAIN = SynchedEntityData.defineId(JujutsuProjectile.class, EntityDataSerializers.BOOLEAN);
 
-    private boolean domain;
-
     public JujutsuProjectile(EntityType<? extends Projectile> pType, Level pLevel) {
         super(pType, pLevel);
     }

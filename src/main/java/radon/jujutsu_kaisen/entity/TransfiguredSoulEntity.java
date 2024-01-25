@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
@@ -91,6 +93,20 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
 
     private void setVariant(Variant variant) {
         this.entityData.set(DATA_VARIANT, variant.ordinal());
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putInt("variant", this.getVariant().ordinal());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.setVariant(Variant.values()[pCompound.getInt("variant")]);
     }
 
     @Override

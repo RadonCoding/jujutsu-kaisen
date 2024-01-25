@@ -19,6 +19,6 @@ public class TransfiguredSoulSmallRenderer extends GeoEntityRenderer<Transfigure
     public @NotNull ResourceLocation getTextureLocation(@NotNull TransfiguredSoulSmallEntity animatable) {
         ResourceLocation key = super.getTextureLocation(animatable);
         return new ResourceLocation(key.getNamespace(), key.getPath().replace(".png",
-                String.format("_%s.%s", animatable.getVariant().ordinal(), "png")));
+                String.format("_%s.%s", animatable.getVariant().ordinal() + 1, "png")));
     }
 }
