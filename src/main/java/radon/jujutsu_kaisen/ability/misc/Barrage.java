@@ -88,7 +88,7 @@ public class Barrage extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() || sorcerer.hasArms()) && super.isValid(owner);
+        return (!(owner instanceof ISorcerer sorcerer) || sorcerer.hasMeleeAttack() && sorcerer.hasArms()) && super.isValid(owner);
     }
 
     @Override
