@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,20 +23,30 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
+import radon.jujutsu_kaisen.entity.sorcerer.TojiFushiguroEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.type.capability.ICurio;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider {
+public class InventoryCurseItem extends ArmorItem implements GeoItem, MenuProvider, ICurioItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public InventoryCurseItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {
         super(pMaterial, pType, pProperties);
+    }
+
+    @NotNull
+    @Override
+    public ICurio.DropRule getDropRule(SlotContext slotContext, DamageSource source, int lootingLevel, boolean recentlyHit, ItemStack stack) {
+        return slotContext.entity() instanceof Player ? ICurioItem.super.getDropRule(slotContext, source, lootingLevel, recentlyHit, stack) : ICurio.DropRule.DESTROY;
     }
 
     @Override
