@@ -39,9 +39,9 @@ public class Slam extends Ability implements Ability.ICharged {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 start = owner.getEyePosition();
-        Vec3 result = target.getEyePosition().subtract(start);
+        Vec3 result = target.position().subtract(start);
         double angle = Math.acos(look.normalize().dot(result.normalize()));
-        return angle < 1.0D;
+        return angle <= 0.5D;
     }
 
     @Override
