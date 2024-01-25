@@ -1413,7 +1413,7 @@ public class SorcererData implements ISorcererData {
         DamageType type = types.get(adaptation.getKey());
 
         if (type == types.get(DamageTypes.MOB_ATTACK) || type == types.get(DamageTypes.PLAYER_ATTACK)) {
-            return Adaptation.Type.KNOCKBACK;
+            return Adaptation.Type.COUNTER;
         }
         return Adaptation.Type.DAMAGE;
     }

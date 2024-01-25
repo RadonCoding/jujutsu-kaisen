@@ -78,6 +78,6 @@ public class Adaptation {
 
     public enum Type {
         DAMAGE,
-        KNOCKBACK
+        COUNTER
     }
 }
