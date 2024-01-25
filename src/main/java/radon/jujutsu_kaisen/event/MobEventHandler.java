@@ -120,7 +120,7 @@ public class MobEventHandler {
                 if (owner instanceof Mob) {
                     List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
 
-                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * (cap.getEnergy() / cap.getMaxEnergy()) * cap.getMaximumOutput()))) == 0) {
+                    if (!chants.isEmpty() && HelperMethods.RANDOM.nextInt(Math.max(1, (int) (50 * cap.getMaximumOutput()))) == 0) {
                         for (int i = 0; i < HelperMethods.RANDOM.nextInt(chants.size()); i++) {
                             ServerChantHandler.onChant(owner, chants.get(i));
 
