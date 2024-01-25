@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 public class SorcererData implements ISorcererData {
     private boolean initialized;
 
-    private int cursedEnergyColor;
+    private int cursedColor;
 
     private int points;
     private final Set<Ability> unlocked;
@@ -68,14 +68,14 @@ public class SorcererData implements ISorcererData {
 
     private int transfiguredSouls;
 
-    private CursedEnergyNature nature;
+    private CursedNature nature;
 
     private float experience;
     private float output;
 
-    private float energy;
-    private float maxEnergy;
-    private float extraEnergy;
+    private float ;
+    private float max;
+    private float extra;
 
     private JujutsuType type;
 
@@ -1001,7 +1001,7 @@ public class SorcererData implements ISorcererData {
         boolean night = time >= 13000 && time < 24000;
         return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
                 ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
-                        this.getRealPower() * (float) Math.log(this.getRealPower() + 1)) + this.extraEnergy;
+                        this.getRealPower() * (float) Math.log(this.getRealPower() + .8)) + this.extraEnergy;
     }
 
     @Override
