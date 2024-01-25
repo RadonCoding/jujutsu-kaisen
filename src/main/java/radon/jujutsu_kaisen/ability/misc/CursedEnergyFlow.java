@@ -205,7 +205,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (HelperMethods.isMelee(source)) {
-                        float increase = attackerCap.getExperience() * 0.0001F;
+                        float increase = attackerCap.getExperience() * 0.0015F;
 
                         switch (attackerCap.getNature()) {
                             case ROUGH -> increase *= 1.5F;
@@ -293,7 +293,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    float armor = victimCap.getExperience() * (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.05F : 0.015F);
+                    float armor = victimCap.getExperience() * (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.05F : 0.005F);
                     float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
                     float block = event.getAmount() - blocked;
 
