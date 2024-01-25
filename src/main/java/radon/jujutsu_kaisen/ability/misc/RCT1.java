@@ -36,7 +36,7 @@ public class RCT1 extends Ability implements Ability.IChannelened {
 
     @Override
     public void run(LivingEntity owner) {
-        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner));
+        owner.heal(ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 0.7F);
     }
 
     @Override
