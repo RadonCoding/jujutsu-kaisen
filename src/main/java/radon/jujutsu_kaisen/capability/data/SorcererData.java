@@ -1001,7 +1001,7 @@ public class SorcererData implements ISorcererData {
         boolean night = time >= 13000 && time < 24000;
         return (this.bindingVows.contains(BindingVow.OVERTIME) ? night ? 1.2F : 0.9F : 1.0F) *
                 ((this.maxEnergy == 0.0F ? ConfigHolder.SERVER.cursedEnergyAmount.get().floatValue() : this.maxEnergy) *
-                        this.getRealPower() * (float) Math.log(this.getRealPower() + 0.5)) + this.extraEnergy;
+                        this.getRealPower() * (float) (Math.log(this.getRealPower() + 1))*0.7F) + this.extraEnergy;
     }
 
     @Override
