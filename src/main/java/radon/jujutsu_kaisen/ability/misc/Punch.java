@@ -30,7 +30,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class Punch extends Ability implements Ability.ICharged {
-    private static final float DAMAGE = 5.0F;
+    private static final float DAMAGE = 7.0F;
     private static final double RANGE = 5.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
