@@ -33,7 +33,7 @@ import java.util.List;
 public class Die extends Ability {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
-    private static final float DAMAGE = 25.0F;
+    private static final float DAMAGE = 35.0F;
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
