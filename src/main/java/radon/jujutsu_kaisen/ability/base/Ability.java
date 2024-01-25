@@ -84,9 +84,9 @@ public abstract class Ability {
     public int getRealPointsCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTrait(Trait.SIX_EYES)) {
+        /*if (cap.hasTrait(Trait.SIX_EYES)) {
             return this.getPointsCost() / 2;
-        }
+        }*/
         return this.getPointsCost();
     }
 
@@ -157,7 +157,7 @@ public abstract class Ability {
     public int getRealCooldown(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isMelee() && cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) || (this.getCost(owner) > 0.0F && cap.hasTrait(Trait.SIX_EYES))) {
+        if (this.isMelee() && cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             return this.getCooldown() / 2;
         }
         return this.getCooldown();
