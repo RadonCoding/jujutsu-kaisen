@@ -34,7 +34,7 @@ public class EmberInsectsFlightRenderer extends GeoEntityRenderer<EmberInsectFli
 
         float yaw = Mth.lerp(partialTick, owner.yBodyRotO, owner.yBodyRot);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
 
         for (int i = 0; i < 2; i++) {
             poseStack.pushPose();
