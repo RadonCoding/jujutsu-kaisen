@@ -30,6 +30,6 @@ public class SorcererUtil {
     }
 
     public static float getPower(float experience) {
-        return 1.0F + experience / 1500.0F;
+        return 1.3F + experience / 1150.0F;
     }
 }
