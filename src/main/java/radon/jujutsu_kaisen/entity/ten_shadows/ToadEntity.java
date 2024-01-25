@@ -65,6 +65,11 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean isInvulnerable() {
+        return this.entityData.get(DATA_RITUAL) > 0 || super.isInvulnerable();
+    }
+
+    @Override
     protected boolean isCustom() {
         return true;
     }

@@ -79,6 +79,11 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean isNoAi() {
+        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isNoAi();
+    }
+
+    @Override
     public double getPassengersRidingOffset() {
         return this.getBbHeight() - 0.35D;
     }
@@ -267,10 +272,6 @@ public class MahoragaEntity extends TenShadowsSummon {
     @Override
     public void tick() {
         super.tick();
-
-        if (!this.isTame()) {
-            this.setNoAi(this.getTime() <= RITUAL_DURATION);
-        }
 
         if (this.healing) {
             this.heal(4.0F / 20);
