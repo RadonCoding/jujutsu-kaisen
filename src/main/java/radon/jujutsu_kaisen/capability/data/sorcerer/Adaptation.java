@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.item.veil.modifier.Modifier;
 
 public class Adaptation {
     private final ResourceLocation key;
@@ -75,5 +74,10 @@ public class Adaptation {
         }
         result = prime * result + this.key.hashCode();
         return result;
+    }
+
+    public enum Type {
+        DAMAGE,
+        KNOCKBACK
     }
 }
