@@ -79,10 +79,13 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
     }
 
     @Override
+    public boolean checkSureHitEffect() {
+        return this.getTime() >= MalevolentShrine.DELAY && super.checkSureHitEffect();
+    }
+
+    @Override
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         super.doSureHitEffect(owner);
-
-        if (this.getTime() < MalevolentShrine.DELAY) return;
 
         BlockPos center = this.blockPosition();
 
