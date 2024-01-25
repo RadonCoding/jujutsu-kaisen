@@ -1,9 +1,12 @@
 package radon.jujutsu_kaisen.event;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -20,6 +23,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Adaptation;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -66,27 +70,23 @@ public class AdaptationEventHandler {
 
                 float process = (1.0F - cap.getAdaptationProgress(source));
 
-                if (cap.getAdaptationType(source) == Adaptation.Type.DAMAGE) {
-                    event.setAmount(event.getAmount() * process);
-                }
-            }
-        }
+                switch (cap.getAdaptationType(source)) {
+                    case DAMAGE -> event.setAmount(event.getAmount() * process);
+                    case COUNTER -> {
+                        if (HelperMethods.RANDOM.nextInt(Math.max(1, Math.round(20 * process))) == 0) {
+                            Entity attacker = source.getEntity();
 
-        @SubscribeEvent
-        public static void onLivingKnockBack(LivingKnockBackEvent event) {
-            LivingEntity victim = event.getEntity();
+                            if (attacker != null) {
+                                victim.lookAt(EntityAnchorArgument.Anchor.EYES, attacker.position());
 
-            if (victim.level().isClientSide) return;
+                                victim.swing(InteractionHand.MAIN_HAND);
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (victim instanceof MahoragaEntity) {
-                Map<Adaptation.Type, Float> adaptations = cap.getAdaptationTypes();
-
-                if (adaptations.containsKey(Adaptation.Type.KNOCKBACK)) {
-                    event.setStrength(event.getStrength() * adaptations.get(Adaptation.Type.KNOCKBACK));
+                                if (victim.doHurtTarget(attacker)) {
+                                    victim.invulnerableTime = 0;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
