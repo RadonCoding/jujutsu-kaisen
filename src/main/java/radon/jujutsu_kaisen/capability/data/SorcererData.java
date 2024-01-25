@@ -388,6 +388,8 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public void attack(DamageSource source, LivingEntity target) {
+        if (this.owner == null) return;
+
         if (this.channeled instanceof Ability.IAttack attack) {
             if (this.channeled.getStatus(this.owner) == Ability.Status.SUCCESS && attack.attack(source, this.owner, target)) {
                 this.channeled.charge(this.owner);
