@@ -222,7 +222,7 @@ public class JJKEventHandler {
 
             cap.tick(owner);
 
-            if ((cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION) {
+            if ((cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
