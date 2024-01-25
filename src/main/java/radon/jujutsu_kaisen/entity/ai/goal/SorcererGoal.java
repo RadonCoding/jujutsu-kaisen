@@ -62,9 +62,9 @@ public class SorcererGoal extends Goal {
                     AbsorbedCurse closest = null;
 
                     for (AbsorbedCurse curse : curses) {
-                        float diff = Math.max(0, JJKAbilities.getCurseExperience(curse) - targetCap.getExperience());
+                        float diff = Math.abs(JJKAbilities.getCurseExperience(curse) - targetCap.getExperience());
 
-                        if (closest == null || diff < Math.max(0, JJKAbilities.getCurseExperience(closest) - targetCap.getExperience())) {
+                        if (closest == null || diff < Math.abs(JJKAbilities.getCurseExperience(closest) - targetCap.getExperience())) {
                             closest = curse;
                         }
                     }
