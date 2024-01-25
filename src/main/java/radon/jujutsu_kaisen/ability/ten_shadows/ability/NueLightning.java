@@ -34,7 +34,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class NueLightning extends Ability implements Ability.IToggled, Ability.IAttack {
-    private static final float DAMAGE = 10.0F;
+    private static final float DAMAGE = 5.0F;
     private static final int STUN = 20;
 
     @Override
