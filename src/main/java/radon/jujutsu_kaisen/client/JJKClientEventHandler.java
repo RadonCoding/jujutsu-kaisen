@@ -183,33 +183,42 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onPlayerMouseClick(InputEvent.InteractionKeyMappingTriggered event) {
+        public static void onInteractionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
             Minecraft mc = Minecraft.getInstance();
 
-            if (mc.player != null) {
-                MobEffectInstance instance = mc.player.getEffect(JJKEffects.STUN.get());
+            if (mc.player == null) return;
 
-                if ((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                    event.setCanceled(true);
-                    event.setSwingHand(false);
-                } else if (event.isUseItem()) {
-                    if (mc.options.keyShift.isDown()) {
-                        if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
-                            if (hit.getEntity() instanceof LivingEntity target) {
-                                PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
-                            }
+            MobEffectInstance instance = mc.player.getEffect(JJKEffects.STUN.get());
+
+            if ((instance != null && instance.getAmplifier() > 0) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
+                event.setCanceled(true);
+                event.setSwingHand(false);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onMouseButton(InputEvent.MouseButton event) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (mc.player == null) return;
+
+            if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
+                if (mc.options.keyShift.isDown()) {
+                    if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
+                        if (hit.getEntity() instanceof LivingEntity target) {
+                            PacketHandler.sendToServer(new CommandableTargetC2SPacket(target.getUUID()));
                         }
+                    }
+                } else {
+                    if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
+                        PacketHandler.sendToServer(new NyoiStaffSummonLightningC2SPacket(hit.getEntity().getUUID()));
                     } else {
-                        if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
-                            PacketHandler.sendToServer(new NyoiStaffSummonLightningC2SPacket(hit.getEntity().getUUID()));
-                        } else {
-                            ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                            for (Ability ability : cap.getToggled()) {
-                                if (!(ability instanceof ITransformation transformation)) continue;
-                                transformation.onRightClick(mc.player);
-                                PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
-                            }
+                        for (Ability ability : cap.getToggled()) {
+                            if (!(ability instanceof ITransformation transformation)) continue;
+                            transformation.onRightClick(mc.player);
+                            PacketHandler.sendToServer(new TransformationRightClickC2SPacket(JJKAbilities.getKey(ability)));
                         }
                     }
                 }
