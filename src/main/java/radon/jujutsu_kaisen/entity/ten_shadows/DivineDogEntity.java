@@ -116,7 +116,7 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         double z = this.getZ();
 
         double distance = this.getBbWidth() * 2;
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(this);
+        Vec3 look = this.calculateViewVector(0.0F, this.getYRot());
         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
         Vec3 side = look.cross(up);
         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
