@@ -202,7 +202,7 @@ public class JJKClientEventHandler {
 
             if (mc.player == null) return;
 
-            if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
+            if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (mc.options.keyShift.isDown()) {
                     if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                         if (hit.getEntity() instanceof LivingEntity target) {
