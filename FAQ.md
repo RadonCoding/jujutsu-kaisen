@@ -85,6 +85,8 @@ Veils are created using a **Veil Rod** and an **Altar**, when placed in an altar
 
 White squares mean that the modifier is allowed while black squares mean that it's denied.
 
+Veils prevent mobs from spawning inside them.
+
 Modifiers:
 
 - Name Tag (represents a player with the name of the name tag)
