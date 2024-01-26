@@ -70,6 +70,8 @@ public class Punch extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        owner.swing(InteractionHand.MAIN_HAND);
+
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -97,8 +99,6 @@ public class Punch extends Ability {
             Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
             level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
-
-            owner.swing(InteractionHand.MAIN_HAND, true);
 
             if (owner instanceof Player player) {
                 player.attack(entity);
