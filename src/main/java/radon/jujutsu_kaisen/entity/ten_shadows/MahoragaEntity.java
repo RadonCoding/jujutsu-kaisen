@@ -3,10 +3,7 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -214,6 +211,33 @@ public class MahoragaEntity extends TenShadowsSummon {
         }
      }
 
+     private void setRitualOffset(Mob entity, int index, double padding) {
+         entity.setNoAi(true);
+
+         double x = entity.getX();
+         double y = entity.getY();
+         double z = entity.getZ();
+
+         double distance = entity.getBbWidth() * 2;
+         Vec3 look = RotationUtil.calculateViewVector(0.0F, entity.getYRot());
+         Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
+         Vec3 side = look.cross(up);
+         Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
+                 .add(look.scale(padding + (index % 3) * 3.0D));
+         entity.setPos(x + offset.x, y, z + offset.z);
+
+         float yRot = entity.getYRot();
+
+         if (index < 3) {
+             yRot -= 90.0F;
+         } else {
+             yRot += 90.0F;
+         }
+         entity.setYRot(yRot);
+         entity.yHeadRot = entity.getYRot();
+         entity.yHeadRotO = entity.yHeadRot;
+     }
+
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
@@ -235,13 +259,15 @@ public class MahoragaEntity extends TenShadowsSummon {
 
             for (int i = 0; i < 6; i++) {
                 DivineDogBlackEntity dog = new DivineDogBlackEntity(this, true);
-                dog.setRitual(i, RITUAL_DURATION);
+                dog.setRitual(RITUAL_DURATION);
+                this.setRitualOffset(dog, i, 0.0D);
                 this.level().addFreshEntity(dog);
             }
             for (int i = 0; i < 6; i++) {
-                ToadEntity dog = new ToadEntity(JJKEntities.TOAD.get(), this, false, true);
-                dog.setRitual(i, RITUAL_DURATION);
-                this.level().addFreshEntity(dog);
+                ToadEntity toad = new ToadEntity(JJKEntities.TOAD.get(), this, false, true);
+                toad.setRitual(RITUAL_DURATION);
+                this.setRitualOffset(toad, i, 1.5D);
+                this.level().addFreshEntity(toad);
             }
         }
     }
