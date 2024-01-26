@@ -2,36 +2,38 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "counter",
-                  "target": "BlockEntityTag.counter",
-                  "op": "replace"
+                  "target": "BlockEntityTag.counter"
                 },
                 {
+                  "op": "replace",
                   "source": "frequency",
-                  "target": "BlockEntityTag.frequency",
-                  "op": "replace"
+                  "target": "BlockEntityTag.frequency"
                 },
                 {
+                  "op": "replace",
                   "source": "modifiers",
-                  "target": "BlockEntityTag.modifiers",
-                  "op": "replace"
+                  "target": "BlockEntityTag.modifiers"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "jujutsu_kaisen:veil_rod"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "jujutsu_kaisen:blocks/veil_rod"
 }
