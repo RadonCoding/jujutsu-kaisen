@@ -49,7 +49,7 @@ public class FishShikigami extends Ability {
         if (target == null) return;
 
         float xOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
-        float yOffset = (HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F;
+        float yOffset = owner.getBbHeight() + ((HelperMethods.RANDOM.nextFloat() - 0.5F) * 5.0F);
 
         FishShikigamiProjectile[] projectiles = new FishShikigamiProjectile[]{
                 new EelShikigamiProjectile(owner, this.getPower(owner), target, xOffset, yOffset),
