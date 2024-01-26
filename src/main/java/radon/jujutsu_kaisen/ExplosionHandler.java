@@ -162,6 +162,12 @@ public class ExplosionHandler {
 
                             if (distance <= radius * radius) {
                                 BlockPos pos = new BlockPos(x, y, z);
+                                Vec3 center = pos.getCenter();
+
+                                if (!VeilHandler.canDestroy(explosion.instigator, event.level, center.x, center.y, center.z)) {
+                                    continue;
+                                }
+
                                 BlockState block = event.level.getBlockState(pos);
                                 FluidState fluid = event.level.getFluidState(pos);
 
