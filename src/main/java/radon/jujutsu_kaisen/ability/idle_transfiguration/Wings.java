@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Wings extends Transformation {
-    private static final float SPEED = 0.05F;
+    private static final float SPEED = 0.025F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
@@ -35,15 +35,13 @@ public class Wings extends Transformation {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         owner.setDeltaMovement(movement.x, look.y, movement.z);
 
-        if (!owner.isFallFlying()) {
-            float f = owner.xxa * 0.5F;
-            float f1 = owner.zza;
+        float f = owner.xxa * 0.5F;
+        float f1 = owner.zza;
 
-            if (f1 <= 0.0F) {
-                f1 *= 0.25F;
-            }
-            owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
+        if (f1 <= 0.0F) {
+            f1 *= 0.25F;
         }
+        owner.moveRelative(SPEED, new Vec3(f, 0.0F, f1));
     }
 
     @Override
