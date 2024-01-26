@@ -54,13 +54,6 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        super.onHitBlock(pResult);
-
-        this.discard();
-    }
-
-    @Override
     public void tick() {
         super.tick();
 

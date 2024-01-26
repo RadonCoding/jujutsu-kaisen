@@ -71,10 +71,6 @@ public class ToadTongueProjectile extends JujutsuProjectile {
         this.grabbed = true;
         this.pos = target.position();
     }
-    @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        this.discard();
-    }
 
     @Override
     public void remove(@NotNull RemovalReason pReason) {
