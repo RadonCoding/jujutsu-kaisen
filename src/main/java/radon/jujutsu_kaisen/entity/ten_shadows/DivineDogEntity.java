@@ -107,32 +107,8 @@ public class DivineDogEntity extends TenShadowsSummon implements PlayerRideable 
         this.entityData.set(DATA_VARIANT, variant.ordinal());
     }
 
-    public void setRitual(int index, int duration) {
-        this.setNoAi(true);
+    public void setRitual(int duration) {
         this.entityData.set(DATA_RITUAL, duration);
-
-        double x = this.getX();
-        double y = this.getY();
-        double z = this.getZ();
-
-        double distance = this.getBbWidth() * 2;
-        Vec3 look = this.calculateViewVector(0.0F, this.getYRot());
-        Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
-        Vec3 side = look.cross(up);
-        Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))
-                .add(look.scale(1.5D + (index % 3) * 3.0D));
-        this.setPos(x + offset.x, y, z + offset.z);
-
-        float yRot = this.getYRot();
-
-        if (index < 3) {
-            yRot -= 90.0F;
-        } else {
-            yRot += 90.0F;
-        }
-        this.setYRot(yRot);
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
     }
 
     @Override
