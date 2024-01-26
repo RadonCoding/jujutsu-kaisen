@@ -123,10 +123,7 @@ public class Punch extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        if (owner.isUsingItem()) {
-            return Status.FAILURE;
-        }
-        return super.isTriggerable(owner);
+        return owner.isUsingItem() ? Status.FAILURE : super.isTriggerable(owner);
     }
 
     @Override
