@@ -35,6 +35,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -163,7 +165,7 @@ public class ExplosionHandler {
                                 BlockState block = event.level.getBlockState(pos);
                                 FluidState fluid = event.level.getFluidState(pos);
 
-                                float f = explosion.radius * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F);
+                                float f = explosion.radius * 2.0F * (0.7F + HelperMethods.RANDOM.nextFloat() * 0.6F);
 
                                 Optional<Float> optional = explosion.calculator.getBlockExplosionResistance(current, event.level, pos, block, fluid);
 
@@ -177,12 +179,13 @@ public class ExplosionHandler {
 
                                         if (block.canDropFromExplosion(event.level, pos, current)) {
                                             BlockEntity be = block.hasBlockEntity() ? event.level.getBlockEntity(pos) : null;
+
                                             LootParams.Builder params = (new LootParams.Builder((ServerLevel) event.level))
                                                     .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                                                     .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                                                     .withOptionalParameter(LootContextParams.BLOCK_ENTITY, be)
                                                     .withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.instigator)
-                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius * 2);
+                                                    .withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius);
                                             block.spawnAfterBreak((ServerLevel) event.level, pos, ItemStack.EMPTY, explosion.instigator instanceof Player);
                                             block.getDrops(params).forEach(stack -> addBlockDrops(drops, stack, imm));
                                         }
@@ -204,10 +207,10 @@ public class ExplosionHandler {
                             }
                         }
                     }
+                }
 
-                    for (Pair<ItemStack, BlockPos> pair : drops) {
-                        Block.popResource(event.level, pair.getSecond(), pair.getFirst());
-                    }
+                for (Pair<ItemStack, BlockPos> pair : drops) {
+                    Block.popResource(event.level, pair.getSecond(), pair.getFirst());
                 }
             }
             explosion.age++;
