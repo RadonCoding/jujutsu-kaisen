@@ -95,15 +95,6 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        super.onHitBlock(pResult);
-
-        if (this.getTime() >= DELAY && this.level().getBlockState(pResult.getBlockPos()).getBlock().defaultDestroyTime() <= Block.INDESTRUCTIBLE) {
-            this.discard();
-        }
-    }
-
-    @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         return EntityDimensions.fixed(this.getRadius(), this.getRadius());
     }
