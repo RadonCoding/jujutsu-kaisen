@@ -73,13 +73,6 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        super.onHitBlock(pResult);
-
-        this.discard();
-    }
-
-    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         super.onHitEntity(pResult);
 
