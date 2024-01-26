@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -157,6 +158,13 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
                 .add(look.yRot(-90.0F).scale(this.getOffsetX()))
                 .add(new Vec3(0.0F, this.getOffsetY(), 0.0F));
         this.setPos(spawn.x, spawn.y, spawn.z);
+    }
+
+    @Override
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+
+        this.discard();
     }
 
     @Override

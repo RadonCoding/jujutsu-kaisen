@@ -63,6 +63,11 @@ public class ToadTongueProjectile extends JujutsuProjectile {
     }
 
     @Override
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        this.discard();
+    }
+
+    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity target = pResult.getEntity();
 

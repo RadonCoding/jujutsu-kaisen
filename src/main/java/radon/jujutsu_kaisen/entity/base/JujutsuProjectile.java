@@ -92,13 +92,6 @@ public class JujutsuProjectile extends Projectile {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult pResult) {
-        super.onHitBlock(pResult);
-
-        this.discard();
-    }
-
-    @Override
     public boolean ignoreExplosion() {
         return true;
     }

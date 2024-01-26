@@ -44,6 +44,13 @@ public class EelGrappleProjectile extends JujutsuProjectile implements GeoEntity
     }
 
     @Override
+    protected void onHitBlock(@NotNull BlockHitResult pResult) {
+        super.onHitBlock(pResult);
+
+        this.discard();
+    }
+
+    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         if (this.level().isClientSide) return;
         if (!(pResult.getEntity() instanceof LivingEntity target)) return;
