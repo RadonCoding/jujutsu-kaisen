@@ -72,7 +72,7 @@ public class BlastAway extends Ability {
                         4.0F, (1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.2F) * 0.7F);
 
                 double power = LAUNCH_POWER * this.getPower(owner);
-                entity.setDeltaMovement(look.multiply(power, Math.min(LAUNCH_POWER, power), power));
+                entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.25D, 1.0D));
                 entity.hurtMarked = true;
             }
             if (entity instanceof Player player) {
