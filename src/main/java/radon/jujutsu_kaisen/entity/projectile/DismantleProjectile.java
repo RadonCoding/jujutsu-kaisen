@@ -176,8 +176,8 @@ public class DismantleProjectile extends JujutsuProjectile {
         float pitch = this.getXRot();
         float roll = this.getRoll();
 
-        Vec3 forward = this.calculateViewVector(pitch, yaw);
-        Vec3 up = this.calculateViewVector(pitch - 90.0F, yaw);
+        Vec3 forward = this.calculateViewVector(pitch, 180.0F - yaw);
+        Vec3 up = this.calculateViewVector(pitch - 90.0F, 180.0f - yaw);
 
         Vec3 side = this.rotate(forward.cross(up), forward, -roll);
 
