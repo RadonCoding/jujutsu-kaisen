@@ -57,7 +57,7 @@ public class ServerConfig {
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
         this.cursedEnergyAmount = builder.comment("Cursed energy amount (scales with experience)")
-                .defineInRange("cursedEnergyAmount", 500.0F, 0.0F, 100000.0F);
+                .defineInRange("cursedEnergyAmount", 1000.0F, 0.0F, 100000.0F);
         this.cursedEnergyRegenerationAmount = builder.comment("Cursed energy regeneration amount (depends on food level)")
                 .defineInRange("cursedEnergyRegenerationAmount", 0.25F, 0.0F, 100000.0F);
         this.maximumExperienceAmount = builder.comment("The maximum amount of experience one can obtain")
