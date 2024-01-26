@@ -59,8 +59,8 @@ public class Dash extends Ability {
     }
 
     private static boolean canDash(LivingEntity owner) {
-        return !owner.hasEffect(JJKEffects.STUN.get()) && RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
-                owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty();
+        return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
+                owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty());
     }
 
     @Override
