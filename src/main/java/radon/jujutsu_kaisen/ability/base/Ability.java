@@ -67,7 +67,7 @@ public abstract class Ability {
         return this.getActivationType(owner) != ActivationType.TOGGLED;
     }
 
-    protected boolean isDisabledFromDA() {
+    protected boolean isNotDisabledFromDA() {
         return false;
     }
 
@@ -178,7 +178,7 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && (this.isDisabledFromDA() || !SorcererUtil.isExperienced(cap.getExperience()))) && cap.hasToggled(this) &&
+        if ((this.isTechnique() && (this.isNotDisabledFromDA() || !SorcererUtil.isExperienced(cap.getExperience()))) && cap.hasToggled(this) &&
                 cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
             return false;
 
