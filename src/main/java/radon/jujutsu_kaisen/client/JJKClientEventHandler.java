@@ -183,7 +183,7 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onInteractionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+        public static void onPlayerMouseClick(InputEvent.InteractionKeyMappingTriggered event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
@@ -197,12 +197,14 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onMouseButton(InputEvent.MouseButton event) {
+        public static void onPlayerMouseClick(InputEvent.MouseButton.Pre event) {
             Minecraft mc = Minecraft.getInstance();
 
             if (mc.player == null) return;
 
-            if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
+            System.out.println(event.getAction() == InputConstants.PRESS);
+
+            if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (mc.options.keyShift.isDown()) {
                     if (RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit) {
                         if (hit.getEntity() instanceof LivingEntity target) {
