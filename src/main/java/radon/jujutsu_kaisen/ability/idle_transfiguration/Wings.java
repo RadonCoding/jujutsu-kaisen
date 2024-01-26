@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Wings extends Transformation {
-    private static final float SPEED = 0.05F;
+    private static final float SPEED = 0.025F;
 
     @Override
     public boolean isScalable(LivingEntity owner) {
