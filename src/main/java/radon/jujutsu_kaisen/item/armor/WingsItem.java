@@ -50,7 +50,12 @@ public class WingsItem extends ArmorItem implements GeoItem {
 
     @Override
     public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-        return !entity.onGround() && new Vec3(entity.xxa, 0.0D, entity.zza).lengthSqr() > 1.0E-7D;
+        return !entity.onGround() && new Vec3(entity.xxa, 0.0D, entity.zza).length() > 1.0E-7D;
+    }
+
+    @Override
+    public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
+        return true;
     }
 
     private PlayState flyPredicate(AnimationState<WingsItem> animationState) {
