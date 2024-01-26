@@ -93,12 +93,15 @@ public class Punch extends Ability {
                     0, 0.0D, 0.0D, 0.0D, 1.0D);
         }
 
+        Vec3 pos = owner.getEyePosition().add(look);
+        owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
+
         List<LivingEntity> targets = this.getTargets(owner);
 
         for (LivingEntity entity : targets) {
-            Vec3 pos = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
-            level.sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-            entity.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+            Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
+            level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+            entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
 
             if (owner instanceof Player player) {
                 player.attack(entity);
