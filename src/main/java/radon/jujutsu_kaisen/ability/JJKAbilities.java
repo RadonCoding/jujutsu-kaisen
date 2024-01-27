@@ -249,9 +249,10 @@ public class JJKAbilities {
             absorbed.setPlayer(profile);
         }
 
-        Vec3 pos = owner.position().subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                .multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
+        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
+        Vec3 pos = owner.position()
+                .subtract(direction.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
+        entity.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
 
         return entity;
     }
