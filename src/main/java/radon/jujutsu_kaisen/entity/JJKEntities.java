@@ -209,12 +209,12 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mahoraga").toString()));
     public static RegistryObject<EntityType<DivineDogWhiteEntity>> DIVINE_DOG_WHITE = ENTITIES.register("divine_dog_white", () ->
             EntityType.Builder.<DivineDogWhiteEntity>of(DivineDogWhiteEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 1.3F)
+                    .sized(0.8F, 1.3F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_white")
                             .toString()));
     public static RegistryObject<EntityType<DivineDogBlackEntity>> DIVINE_DOG_BLACK = ENTITIES.register("divine_dog_black", () ->
             EntityType.Builder.<DivineDogBlackEntity>of(DivineDogBlackEntity::new, MobCategory.MISC)
-                    .sized(1.4F, 1.3F)
+                    .sized(0.8F, 1.3F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "divine_dog_black")
                             .toString()));
     public static RegistryObject<EntityType<DivineDogTotalityEntity>> DIVINE_DOG_TOTALITY = ENTITIES.register("divine_dog_totality", () ->
