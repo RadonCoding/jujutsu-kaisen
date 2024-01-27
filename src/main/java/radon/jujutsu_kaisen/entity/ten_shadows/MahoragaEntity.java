@@ -219,7 +219,7 @@ public class MahoragaEntity extends TenShadowsSummon {
          double z = entity.getZ();
 
          double distance = entity.getBbWidth() * 2;
-         Vec3 look = RotationUtil.calculateViewVector(0.0F, this.getYRot());
+         Vec3 look = RotationUtil.calculateViewVector(0.0F, entity.getYRot());
          Vec3 up = new Vec3(0.0D, 1.0D, 0.0D);
          Vec3 side = look.cross(up);
          Vec3 offset = side.scale(distance * (index < 3 ? 1 : -1))

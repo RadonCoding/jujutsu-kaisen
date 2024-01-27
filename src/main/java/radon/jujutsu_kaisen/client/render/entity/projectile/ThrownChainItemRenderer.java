@@ -61,7 +61,7 @@ public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectil
             pPoseStack.pushPose();
             pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
             Vec3 ownerPos = getPosition(owner, owner.getBbHeight() * 0.35F, pPartialTick)
-                    .add(RotationUtil.calculateViewVector(owner.yBodyRot, 0.0F).yRot(90.0F).scale(-0.45D));
+                    .add(RotationUtil.calculateViewVector(0.0F, owner.yBodyRot).yRot(90.0F).scale(-0.45D));
             Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
             Vec3 relative = ownerPos.subtract(projectilePos);
             float f0 = (float) relative.length();
