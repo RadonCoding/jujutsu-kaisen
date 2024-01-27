@@ -40,6 +40,23 @@ public class AgitoEntity extends TenShadowsSummon {
         super(pType, pLevel);
     }
 
+    public AgitoEntity(LivingEntity owner) {
+        this(JJKEntities.AGITO.get(), owner.level());
+
+        this.setTame(true);
+        this.setOwner(owner);
+
+        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
+        Vec3 pos = owner.position()
+                .subtract(direction.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -68,23 +85,6 @@ public class AgitoEntity extends TenShadowsSummon {
     @Override
     public boolean canJump() {
         return true;
-    }
-
-    public AgitoEntity(LivingEntity owner) {
-        this(JJKEntities.AGITO.get(), owner.level());
-
-        this.setTame(true);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
     @Override

@@ -39,6 +39,23 @@ public class TranquilDeerEntity extends TenShadowsSummon {
         super(pType, pLevel);
     }
 
+    public TranquilDeerEntity(LivingEntity owner, boolean tame) {
+        this(JJKEntities.TRANQUIL_DEER.get(), owner.level());
+
+        this.setTame(tame);
+        this.setOwner(owner);
+
+        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
+        Vec3 pos = owner.position()
+                .subtract(direction.multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
+        this.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
+
+        this.yHeadRot = this.getYRot();
+        this.yHeadRotO = this.yHeadRot;
+
+        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
     @Override
     protected boolean isCustom() {
         return false;
@@ -67,23 +84,6 @@ public class TranquilDeerEntity extends TenShadowsSummon {
     @Override
     public boolean canJump() {
         return false;
-    }
-
-    public TranquilDeerEntity(LivingEntity owner, boolean tame) {
-        this(JJKEntities.TRANQUIL_DEER.get(), owner.level());
-
-        this.setTame(tame);
-        this.setOwner(owner);
-
-        Vec3 pos = owner.position()
-                .subtract(RotationUtil.getTargetAdjustedLookAngle(owner)
-                        .multiply(this.getBbWidth(), 0.0D, this.getBbWidth()));
-        this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
-
-        this.yHeadRot = this.getYRot();
-        this.yHeadRotO = this.yHeadRot;
-
-        this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
     }
 
     @Override
