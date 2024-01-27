@@ -43,7 +43,7 @@ public class ShadowTravel extends Ability {
         HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
         if (hit.getType() == HitResult.Type.MISS) return null;
         if (hit.getType() == HitResult.Type.BLOCK && (owner.level().getBlockState(((BlockHitResult) hit).getBlockPos().above()).canOcclude() ||
-                ((BlockHitResult) hit).getDirection() != Direction.UP)) return null;
+                ((BlockHitResult) hit).getDirection() == Direction.DOWN)) return null;
 
         long time = owner.level().getLevelData().getDayTime();
         boolean night = time >= 13000 && time < 24000;
