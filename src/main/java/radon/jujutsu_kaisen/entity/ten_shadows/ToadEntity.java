@@ -156,7 +156,6 @@ public class ToadEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.MAX_HEALTH, 10.0D);
     }
 
