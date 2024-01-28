@@ -256,11 +256,14 @@
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
+  "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
+  "ability.jujutsu_kaisen.dismantle_skating": "Dismantle Skating",
+  "ability.jujutsu_kaisen.dismantle_skating.enable": "Activated dismantle skating",
+  "ability.jujutsu_kaisen.dismantle_skating.disable": "Dectivated dismantle skating",
   "ability.jujutsu_kaisen.cleave": "Cleave",
   "ability.jujutsu_kaisen.cleave.enable": "Activated cleave",
   "ability.jujutsu_kaisen.cleave.disable": "Deactivated cleave",
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
-  "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
   "ability.jujutsu_kaisen.fire_arrow": "Open ■",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
 

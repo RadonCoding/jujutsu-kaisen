@@ -89,9 +89,10 @@ public class JJKAbilities {
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
+    public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
+    public static RegistryObject<Ability> DISMANTLE_SKATING = ABILITIES.register("dismantle_skating", DismantleSkating::new);
     public static RegistryObject<Ability> CLEAVE = ABILITIES.register("cleave", Cleave::new);
     public static RegistryObject<Ability> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
-    public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
 
