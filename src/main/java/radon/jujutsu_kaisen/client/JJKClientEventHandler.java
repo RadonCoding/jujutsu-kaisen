@@ -32,7 +32,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
-import radon.jujutsu_kaisen.ability.idle_transfiguration.PolymorphicSoulIsomer;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
@@ -488,7 +487,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT.get(), EmberInsectRenderer::new);
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
-            event.registerEntityRenderer(JJKEntities.THROWN_CHAIN.get(), ThrownChainItemRenderer::new);
+            event.registerEntityRenderer(JJKEntities.THROWN_CHAIN.get(), ThrownChainProjectileRenderer::new);
             event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
