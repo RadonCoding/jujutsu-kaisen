@@ -129,13 +129,14 @@ public class ThrownChainProjectile extends AbstractArrow {
             }
         } else {
             DamageSource source = this.damageSources().arrow(this, owner == null ? this : owner);
+            this.dealtDamage = true;
 
             double speed = this.getDeltaMovement().lengthSqr();
 
             SwordItem sword = (SwordItem) this.getStack().getItem();
             target.hurt(source, (float) (sword.getDamage() * speed));
 
-            this.discard();
+            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
         }
     }
 
