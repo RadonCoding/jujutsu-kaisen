@@ -13,11 +13,4 @@ public class PolymorphicSoulIsomerRenderer extends GeoEntityRenderer<Polymorphic
     public PolymorphicSoulIsomerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DefaultedTurnHeadEntityGeoModel<>(new ResourceLocation(JujutsuKaisen.MOD_ID, "polymorphic_soul_isomer")));
     }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull PolymorphicSoulIsomerEntity animatable) {
-        ResourceLocation key = super.getTextureLocation(animatable);
-        return new ResourceLocation(key.getNamespace(), key.getPath().replace(".png",
-                String.format("_%s.%s", animatable.getVariant().ordinal() + 1, "png")));
-    }
 }
