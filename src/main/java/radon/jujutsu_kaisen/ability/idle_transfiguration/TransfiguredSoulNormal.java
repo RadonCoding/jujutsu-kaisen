@@ -1,16 +1,25 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.TransfiguredSoul;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TransfiguredSoulNormal extends TransfiguredSoul {
+import java.util.List;
+
+public class TransfiguredSoulNormal extends TransfiguredSoul<TransfiguredSoulNormalEntity> {
+    public TransfiguredSoulNormal() {
+        super(TransfiguredSoulNormalEntity.class);
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
@@ -19,20 +28,18 @@ public class TransfiguredSoulNormal extends TransfiguredSoul {
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.TRANSFIGURED_SOUL_NORMAL.get());
     }
 
     @Override
-    public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+    public boolean isTenShadows() {
+        return false;
+    }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        TransfiguredSoulNormalEntity soul = new TransfiguredSoulNormalEntity(owner);
-        owner.level().addFreshEntity(soul);
-
-        cap.addSummon(soul);
+    @Override
+    protected TransfiguredSoulNormalEntity summon(LivingEntity owner) {
+        return new TransfiguredSoulNormalEntity(owner);
     }
 
     @Override

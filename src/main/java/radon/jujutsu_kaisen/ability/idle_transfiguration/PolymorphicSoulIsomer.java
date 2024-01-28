@@ -1,17 +1,25 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.TransfiguredSoul;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class PolymorphicSoulIsomer extends TransfiguredSoul {
+import java.util.List;
+
+public class PolymorphicSoulIsomer extends TransfiguredSoul<PolymorphicSoulIsomerEntity> {
+    public PolymorphicSoulIsomer() {
+        super(PolymorphicSoulIsomerEntity.class);
+    }
+
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
@@ -20,20 +28,18 @@ public class PolymorphicSoulIsomer extends TransfiguredSoul {
     }
 
     @Override
-    public ActivationType getActivationType(LivingEntity owner) {
-        return ActivationType.INSTANT;
+    public List<EntityType<?>> getTypes() {
+        return List.of(JJKEntities.POLYMORPHIC_SOUL_ISOMER.get());
     }
 
     @Override
-    public void run(LivingEntity owner) {
-        owner.swing(InteractionHand.MAIN_HAND);
+    public boolean isTenShadows() {
+        return false;
+    }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        PolymorphicSoulIsomerEntity soul = new PolymorphicSoulIsomerEntity(owner);
-        owner.level().addFreshEntity(soul);
-
-        cap.addSummon(soul);
+    @Override
+    protected PolymorphicSoulIsomerEntity summon(LivingEntity owner) {
+        return new PolymorphicSoulIsomerEntity(owner);
     }
 
     @Override

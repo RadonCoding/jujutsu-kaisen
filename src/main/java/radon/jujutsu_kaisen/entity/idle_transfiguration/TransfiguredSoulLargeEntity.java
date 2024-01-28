@@ -7,10 +7,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import radon.jujutsu_kaisen.entity.JJKEntities;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulVariantEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
+import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TransfiguredSoulLargeEntity extends TransfiguredSoulEntity {
+public class TransfiguredSoulLargeEntity extends TransfiguredSoulVariantEntity {
     public TransfiguredSoulLargeEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
     }
