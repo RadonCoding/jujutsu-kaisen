@@ -254,7 +254,7 @@ public abstract class Ability {
 
         Status status = this.getStatus(owner);
 
-        if (status == Status.SUCCESS) {
+        if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
             this.charge(owner);
         }
         return status;
