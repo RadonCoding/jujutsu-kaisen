@@ -11,6 +11,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulVariantEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -30,5 +32,10 @@ public class TransfiguredSoulSmallEntity extends TransfiguredSoulVariantEntity {
         return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 10.0F)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
+    }
+
+    @Override
+    public Summon<?> getAbility() {
+        return JJKAbilities.TRANSFIGURED_SOUL_SMALL.get();
     }
 }
