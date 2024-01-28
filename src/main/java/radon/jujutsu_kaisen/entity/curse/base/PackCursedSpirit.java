@@ -23,9 +23,9 @@ public abstract class PackCursedSpirit extends CursedSpirit {
         super(pType, pLevel);
     }
 
-    protected abstract int getMinCount();
+    public abstract int getMinCount();
 
-    protected abstract int getMaxCount();
+    public abstract int getMaxCount();
 
     protected abstract PackCursedSpirit spawn();
 

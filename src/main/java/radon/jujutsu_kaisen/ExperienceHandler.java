@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -185,6 +186,10 @@ public class ExperienceHandler {
 
             strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
             strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
+
+            if (entity instanceof PackCursedSpirit pack) {
+                strength *= pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
+            }
 
             if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
