@@ -53,6 +53,23 @@ public class VeilRodBlockEntity extends BlockEntity {
         this.modifiers = new ArrayList<>();
     }
 
+    public boolean isValid() {
+        if (!(this.level instanceof ServerLevel serverLevel)) return false;
+        if (this.ownerUUID == null) return false;
+
+        if (!(serverLevel.getEntity(this.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+            return false;
+
+        if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (cap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
+
+            return cap.getEnergy() >= cost;
+        }
+        return true;
+    }
+
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VeilRodBlockEntity pBlockEntity) {
         VeilHandler.veil(pLevel.dimension(), pPos);
 
@@ -60,9 +77,9 @@ public class VeilRodBlockEntity extends BlockEntity {
 
         pBlockEntity.counter = 0;
 
-        if (pBlockEntity.ownerUUID == null) return;
+        if (!pBlockEntity.isValid()) return;
 
-        if (!(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
+        if (pBlockEntity.ownerUUID == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.ownerUUID) instanceof LivingEntity owner) || !owner.getCapability(SorcererDataHandler.INSTANCE).isPresent())
             return;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
