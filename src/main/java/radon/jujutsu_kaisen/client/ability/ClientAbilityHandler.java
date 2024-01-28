@@ -41,8 +41,6 @@ import radon.jujutsu_kaisen.network.packet.c2s.RightClickInputListenerC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.TriggerAbilityC2SPacket;
 import radon.jujutsu_kaisen.network.packet.c2s.UntriggerAbilityC2SPacket;
 import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.awt.event.KeyEvent;
 
