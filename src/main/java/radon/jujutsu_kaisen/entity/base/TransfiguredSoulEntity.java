@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity;
+package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,9 +22,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
-import radon.jujutsu_kaisen.entity.base.ICommandable;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -77,6 +74,7 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
 
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
         this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, false));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
@@ -156,12 +154,12 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
 
     @Override
     public boolean hasArms() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canJump() {
-        return false;
+        return true;
     }
 
     @Override

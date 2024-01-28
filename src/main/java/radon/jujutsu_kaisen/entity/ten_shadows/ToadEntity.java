@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
+import radon.jujutsu_kaisen.entity.ai.goal.SorcererGoal;
 import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.entity.projectile.ToadTongueProjectile;
@@ -107,6 +108,7 @@ public class ToadEntity extends TenShadowsSummon {
 
         this.goalSelector.addGoal(goal++, new FloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
@@ -154,7 +156,7 @@ public class ToadEntity extends TenShadowsSummon {
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.MOVEMENT_SPEED, 0.33D)
                 .add(Attributes.MAX_HEALTH, 10.0D);
     }
 

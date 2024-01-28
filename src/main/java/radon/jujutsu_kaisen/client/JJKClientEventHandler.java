@@ -32,8 +32,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.ability.idle_transfiguration.PolymorphicSoulIsomer;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
+import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
+import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
+import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
+import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulSmallRenderer;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
@@ -465,6 +470,9 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.AGITO.get(), AgitoRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL_SMALL.get(), TransfiguredSoulSmallRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL_NORMAL.get(), TransfiguredSoulNormalRenderer::new);
+            event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL_LARGE.get(), TransfiguredSoulLargeRenderer::new);
+            event.registerEntityRenderer(JJKEntities.POLYMORPHIC_SOUL_ISOMER.get(), PolymorphicSoulIsomerRenderer::new);
 
             event.registerEntityRenderer(JJKEntities.TOAD_TONGUE.get(), ToadTongueRenderer::new);
             event.registerEntityRenderer(JJKEntities.WHEEL.get(), WheelRenderer::new);

@@ -1143,6 +1143,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void useTransfiguredSouls(int amount) {
+        this.transfiguredSouls -= amount;
+    }
+
+    @Override
     public @Nullable Ability getChanneled() {
         return this.channeled;
     }

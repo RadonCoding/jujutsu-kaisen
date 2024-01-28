@@ -7,10 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TransfiguredSoulSmall extends TransfiguredSoul {
+public class TransfiguredSoulNormal extends TransfiguredSoul {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
@@ -29,24 +29,15 @@ public class TransfiguredSoulSmall extends TransfiguredSoul {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        TransfiguredSoulSmallEntity soul = new TransfiguredSoulSmallEntity(owner);
+        TransfiguredSoulNormalEntity soul = new TransfiguredSoulNormalEntity(owner);
         owner.level().addFreshEntity(soul);
 
         cap.addSummon(soul);
     }
 
     @Override
-    public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getTransfiguredSouls() == 0) return false;
-
-        return super.isValid(owner);
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 50.0F;
     }
 
     @Override
