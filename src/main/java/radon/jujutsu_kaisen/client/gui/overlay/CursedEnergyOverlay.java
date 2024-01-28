@@ -72,7 +72,7 @@ public class CursedEnergyOverlay {
 
         if (cap.getEnergy() > 0.0F) {
             graphics.drawString(gui.getFont(), String.format("%.1f / %.1f", cap.getEnergy(), cap.getMaxEnergy()),
-                    Math.round(23 * (1.0F / SCALE)), Math.round((aboveY + 2.5F) * (1.0F / SCALE)), 16777215);
+                    Math.round(23 * (1.0F / SCALE)), (int) ((aboveY + 3.0F) * (1.0F / SCALE)), 16777215);
             aboveY += 4;
         }
 
