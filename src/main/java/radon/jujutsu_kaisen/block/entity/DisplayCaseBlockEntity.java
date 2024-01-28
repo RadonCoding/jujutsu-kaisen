@@ -43,7 +43,7 @@ import java.util.Optional;
 
 
 public class DisplayCaseBlockEntity extends BlockEntity {
-    private static final int RARITY = 5;
+    private static final int RARITY = 10;
     private static final int SPAWN_RANGE = 8;
 
     private ItemStack stack = ItemStack.EMPTY;
