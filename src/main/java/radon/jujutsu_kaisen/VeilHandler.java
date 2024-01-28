@@ -159,6 +159,6 @@ public class VeilHandler {
         if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide) return;
 
         veils.entrySet().removeIf(entry ->
-                event.level.dimension() == entry.getKey() && !(event.level.getBlockEntity(entry.getValue()) instanceof VeilRodBlockEntity));
+                event.level.dimension() == entry.getKey() && (!(event.level.getBlockEntity(entry.getValue()) instanceof VeilRodBlockEntity be) || !be.isValid()));
     }
 }
