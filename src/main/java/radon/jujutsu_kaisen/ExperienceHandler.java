@@ -60,11 +60,9 @@ public class ExperienceHandler {
                     }
                 }
 
-                if (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
+                while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
                     attacker = tamable.getOwner();
                 }
-
-                if (attacker instanceof TamableAnimal tamable && tamable.isTame()) return;
 
                 if (!existing) {
                     BattleData battle = new BattleData(attacker.getUUID(), victim.getUUID());
