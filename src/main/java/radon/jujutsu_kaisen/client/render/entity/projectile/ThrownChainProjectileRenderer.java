@@ -23,17 +23,16 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
-import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class ThrownChainItemRenderer extends EntityRenderer<ThrownChainProjectile> {
+public class ThrownChainProjectileRenderer extends EntityRenderer<ThrownChainProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/chain_link.png");
 
     private static final float SCALE = 1.5F;
 
     private final ItemRenderer itemRenderer;
 
-    public ThrownChainItemRenderer(EntityRendererProvider.Context pContext) {
+    public ThrownChainProjectileRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
 
         this.itemRenderer = pContext.getItemRenderer();
