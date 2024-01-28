@@ -26,12 +26,10 @@
   "mixins": [
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",
-    "common.IEntityAccessor",
     "common.ItemEntityMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
     "common.MobMixin",
-    "common.PathNavigationMixin",
-    "common.ServerEntityMixin"
+    "common.PathNavigationMixin"
   ]
 }

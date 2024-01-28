@@ -1,24 +1,17 @@
 package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.network.packet.s2c.UpdateMultipartS2CPacket;
 
 import javax.annotation.Nullable;
 
@@ -79,40 +72,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
         super.recreateFromPacket(packet);
 
         JJKPartEntity.assignPartIDs(this);
-    }
-
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements) {
-        this.interpTargetX = x;
-        this.interpTargetY = y;
-        this.interpTargetZ = z;
-        this.interpTargetYaw = yaw;
-        this.interpTargetPitch = pitch;
-        this.newPosRotationIncrements = posRotationIncrements;
-    }
-
-    public UpdateMultipartS2CPacket.PartDataHolder writeData() {
-        EntityDimensions dimensions = EntityDimensions.fixed(this.getBbWidth(), this.getBbHeight());
-        return new UpdateMultipartS2CPacket.PartDataHolder(
-                this.getX(),
-                this.getY(),
-                this.getZ(),
-                this.getYRot(),
-                this.getXRot(),
-                dimensions.width,
-                dimensions.height,
-                dimensions.fixed,
-                this.entityData.isDirty(),
-                this.entityData.isDirty() ? this.entityData.packDirty() : null);
-
-    }
-
-    public void readData(UpdateMultipartS2CPacket.PartDataHolder data) {
-        Vec3 vec = new Vec3(data.x(), data.y(), data.z());
-        this.setPositionAndRotationDirect(vec.x, vec.y, vec.z, data.yRot(), data.xRot(), 3);
-        final float w = data.width();
-        final float h = data.height();
-        this.setSize(data.fixed() ? EntityDimensions.fixed(w, h) : EntityDimensions.scalable(w, h));
-        if (data.dirty()) this.entityData.assignValues(data.data());
     }
 
     public final void updateLastPos() {
