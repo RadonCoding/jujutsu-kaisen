@@ -33,9 +33,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
-public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, ICommandable {
-    public static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(TransfiguredSoulEntity.class, EntityDataSerializers.INT);
-
+public abstract class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, ICommandable {
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     private static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     private static final RawAnimation SWING = RawAnimation.begin().thenPlay("attack.swing");
@@ -56,18 +54,6 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
 
         this.yHeadRot = this.getYRot();
         this.yHeadRotO = this.yHeadRot;
-
-        this.setVariant(HelperMethods.randomEnum(Variant.class));
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        LivingEntity owner = this.getOwner();
-
-        if (owner != null && pSource.getEntity() == owner) {
-            IdleTransfiguration.absorb(owner, this);
-        }
-        return super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -83,35 +69,6 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
 
         this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_VARIANT, -1);
-    }
-
-    public Variant getVariant() {
-        return Variant.values()[this.entityData.get(DATA_VARIANT)];
-    }
-
-    private void setVariant(Variant variant) {
-        this.entityData.set(DATA_VARIANT, variant.ordinal());
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-
-        pCompound.putInt("variant", this.getVariant().ordinal());
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-
-        this.setVariant(Variant.values()[pCompound.getInt("variant")]);
     }
 
     private PlayState walkRunPredicate(AnimationState<TransfiguredSoulEntity> animationState) {
@@ -133,11 +90,6 @@ public class TransfiguredSoulEntity extends SummonEntity implements ISorcerer, I
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Walk/Run", this::walkRunPredicate));
         controllerRegistrar.add(new AnimationController<>(this, "Swing", this::swingPredicate));
-    }
-
-    @Override
-    public Summon<?> getAbility() {
-        return null;
     }
 
     @Override
