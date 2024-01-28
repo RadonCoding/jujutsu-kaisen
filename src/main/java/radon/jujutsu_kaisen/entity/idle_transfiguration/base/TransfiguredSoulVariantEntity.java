@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -38,7 +37,7 @@ public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEnti
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_VARIANT, Variant.ORANGE.ordinal());
+        this.entityData.define(DATA_VARIANT, Variant.ONE.ordinal());
     }
 
     public Variant getVariant() {

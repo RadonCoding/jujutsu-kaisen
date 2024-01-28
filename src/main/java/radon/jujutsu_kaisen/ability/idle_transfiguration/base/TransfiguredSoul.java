@@ -14,8 +14,13 @@ public abstract class TransfiguredSoul<T extends Entity> extends Summon<T> imple
     }
 
     @Override
-    public void onEnabled(LivingEntity owner) {
-        super.onEnabled(owner);
+    public ActivationType getActivationType(LivingEntity owner) {
+        return ActivationType.INSTANT;
+    }
+
+    @Override
+    public void run(LivingEntity owner) {
+        super.run(owner);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         cap.useTransfiguredSouls(this.getSoulCost());
