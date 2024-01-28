@@ -173,6 +173,8 @@ public class FishShikigamiProjectile extends JujutsuProjectile implements GeoEnt
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
+        if (entity == owner) return;
+
         if (entity != this.getTarget()) return;
 
         if (this.isDomain()) {
