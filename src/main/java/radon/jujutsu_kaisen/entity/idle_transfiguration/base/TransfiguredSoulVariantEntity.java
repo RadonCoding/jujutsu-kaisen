@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TransfiguredSoulVariantEntity extends TransfiguredSoulEntity {
+public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEntity {
     public static final EntityDataAccessor<Integer> DATA_VARIANT = SynchedEntityData.defineId(TransfiguredSoulVariantEntity.class, EntityDataSerializers.INT);
 
     protected TransfiguredSoulVariantEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
