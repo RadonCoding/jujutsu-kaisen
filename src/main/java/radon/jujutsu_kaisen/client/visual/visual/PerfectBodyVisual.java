@@ -24,7 +24,7 @@ public class PerfectBodyVisual implements IVisual {
 
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return data.mouth > 0 && entity.level().getGameTime() % 10 != 0;
+        return data.mouth > 0 && entity.level().getGameTime() % 20 != 0;
     }
 
     @Override
