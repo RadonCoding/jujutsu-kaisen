@@ -150,7 +150,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public Status isTriggerable(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasSummonOfClass(this.clazz)) {
+        if ((this.isTenShadows() || this.getActivationType(owner) == ActivationType.TOGGLED) && cap.hasSummonOfClass(this.clazz)) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
