@@ -62,7 +62,7 @@ public class CursedEnergyOverlay {
             graphics.blit(TEXTURE, 20, aboveY, 0, 0, 93, 10, 93, 18);
 
             float energyWidth = (cap.getEnergy() / cap.getMaxEnergy()) * 94.0F;
-            graphics.blit(TEXTURE, 20, aboveY + 1, 0, 11, (int) energyWidth, 8, 91, 18);
+            graphics.blit(TEXTURE, 20, aboveY + 1, 0, 10, (int) energyWidth, 8, 91, 18);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
