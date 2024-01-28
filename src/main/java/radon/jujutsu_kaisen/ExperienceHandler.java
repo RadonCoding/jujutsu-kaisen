@@ -188,7 +188,7 @@ public class ExperienceHandler {
             strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
 
             if (entity instanceof PackCursedSpirit pack) {
-                strength *= pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
+                strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);
             }
 
             if (entity.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
