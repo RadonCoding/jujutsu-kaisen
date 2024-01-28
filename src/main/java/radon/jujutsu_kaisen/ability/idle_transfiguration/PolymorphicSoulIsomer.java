@@ -4,18 +4,19 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.TransfiguredSoul;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class TransfiguredSoulSmall extends TransfiguredSoul {
+public class PolymorphicSoulIsomer extends TransfiguredSoul {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        return HelperMethods.RANDOM.nextInt(5) == 0;
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
@@ -29,28 +30,19 @@ public class TransfiguredSoulSmall extends TransfiguredSoul {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        TransfiguredSoulSmallEntity soul = new TransfiguredSoulSmallEntity(owner);
+        PolymorphicSoulIsomerEntity soul = new PolymorphicSoulIsomerEntity(owner);
         owner.level().addFreshEntity(soul);
 
         cap.addSummon(soul);
     }
 
     @Override
-    public boolean isValid(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (cap.getTransfiguredSouls() == 0) return false;
-
-        return super.isValid(owner);
-    }
-
-    @Override
     public float getCost(LivingEntity owner) {
-        return 10.0F;
+        return 50.0F;
     }
 
     @Override
     public int getSoulCost() {
-        return 1;
+        return 5;
     }
 }

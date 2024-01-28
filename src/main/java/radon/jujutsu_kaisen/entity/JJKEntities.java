@@ -15,6 +15,10 @@ import radon.jujutsu_kaisen.entity.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
 import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulLargeEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulNormalEntity;
+import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEntity;
 import radon.jujutsu_kaisen.entity.projectile.*;
 import radon.jujutsu_kaisen.entity.sorcerer.*;
 import radon.jujutsu_kaisen.entity.ten_shadows.*;
@@ -283,7 +287,19 @@ public class JJKEntities {
                     .sized(0.6F, 1.2F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul_small")
                             .toString()));
-
+    public static RegistryObject<EntityType<TransfiguredSoulNormalEntity>> TRANSFIGURED_SOUL_NORMAL = ENTITIES.register("transfigured_soul_normal", () ->
+            EntityType.Builder.<TransfiguredSoulNormalEntity>of(TransfiguredSoulNormalEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul_normal")
+                            .toString()));
+    public static RegistryObject<EntityType<TransfiguredSoulLargeEntity>> TRANSFIGURED_SOUL_LARGE = ENTITIES.register("transfigured_soul_large", () ->
+            EntityType.Builder.<TransfiguredSoulLargeEntity>of(TransfiguredSoulLargeEntity::new, MobCategory.MISC)
+                    .sized(1.4F, 2.7F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "transfigured_soul_large")
+                            .toString()));
+    public static RegistryObject<EntityType<PolymorphicSoulIsomerEntity>> POLYMORPHIC_SOUL_ISOMER = ENTITIES.register("polymorphic_soul_isomer", () ->
+            EntityType.Builder.<PolymorphicSoulIsomerEntity>of(PolymorphicSoulIsomerEntity::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "polymorphic_soul_isomer")
+                            .toString()));
 
     public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
             EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
@@ -547,7 +563,10 @@ public class JJKEntities {
         event.put(PIERCING_BULL.get(), PiercingBullEntity.createAttributes().build());
         event.put(AGITO.get(), AgitoEntity.createAttributes().build());
 
-        event.put(TRANSFIGURED_SOUL_SMALL.get(), SorcererEntity.createAttributes().build());
+        event.put(TRANSFIGURED_SOUL_SMALL.get(), TransfiguredSoulSmallEntity.createAttributes().build());
+        event.put(TRANSFIGURED_SOUL_NORMAL.get(), SorcererEntity.createAttributes().build());
+        event.put(TRANSFIGURED_SOUL_LARGE.get(), TransfiguredSoulLargeEntity.createAttributes().build());
+        event.put(POLYMORPHIC_SOUL_ISOMER.get(), PolymorphicSoulIsomerEntity.createAttributes().build());
 
         event.put(JOGO.get(), SorcererEntity.createAttributes().build());
         event.put(JOGOAT.get(), SorcererEntity.createAttributes().build());

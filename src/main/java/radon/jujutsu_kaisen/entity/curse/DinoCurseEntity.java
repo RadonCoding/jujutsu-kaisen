@@ -176,13 +176,6 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
         return 2.0F;
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes()
-                .add(Attributes.MAX_HEALTH, 3 * 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
-                .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
-    }
-
     private PlayState walkRunIdlePredicate(AnimationState<DinoCurseEntity> animationState) {
         if (animationState.isMoving()) {
             return animationState.setAndContinue(this.isSprinting() ? RUN : WALK);

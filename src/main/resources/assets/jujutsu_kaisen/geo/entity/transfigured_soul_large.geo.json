@@ -39,19 +39,19 @@
 				{
 					"name": "right_arm",
 					"parent": "upper_body",
-					"pivot": [-9, 34, 0],
+					"pivot": [-9, 32, 0],
 					"rotation": [-12.5, 0, 0],
 					"cubes": [
-						{"origin": [-15, 10.5, -3], "size": [6, 25, 6], "uv": [0, 23]}
+						{"origin": [-15, 10.45259, -3.43288], "size": [6, 25, 6], "uv": [0, 23]}
 					]
 				},
 				{
 					"name": "left_arm",
 					"parent": "upper_body",
-					"pivot": [9, 34, 0],
+					"pivot": [9, 32, 0],
 					"rotation": [-12.5, 0, 0],
 					"cubes": [
-						{"origin": [9, 10.5, -3], "size": [6, 25, 6], "uv": [0, 23], "mirror": true}
+						{"origin": [9, 10.45259, -3.43288], "size": [6, 25, 6], "uv": [0, 23], "mirror": true}
 					]
 				},
 				{

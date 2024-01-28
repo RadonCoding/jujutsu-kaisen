@@ -229,6 +229,8 @@ public interface ISorcererData {
 
     void decreaseTransfiguredSouls();
 
+    void useTransfiguredSouls(int amount);
+
     @Nullable Ability getChanneled();
 
     void channel(@Nullable Ability ability);

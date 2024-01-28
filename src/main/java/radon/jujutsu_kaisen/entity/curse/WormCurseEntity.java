@@ -154,10 +154,6 @@ public class WormCurseEntity extends CursedSpirit {
         return this.segments != null;
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 3 * 0.3D);
-    }
-
     @Override
     public float getExperience() {
         return SorcererGrade.GRADE_2.getRequiredExperience();

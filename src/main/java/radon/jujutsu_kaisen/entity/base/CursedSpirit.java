@@ -130,7 +130,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         if (this.hasMeleeAttack()) {
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
-        this.goalSelector.addGoal(goal++,new SorcererGoal(this));
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
 
         if (this.isTame()) {
             this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
