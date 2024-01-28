@@ -89,10 +89,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         if (this.hasMeleeAttack()) {
             this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         }
-
-        if (this.canChant() || !this.getCustom().isEmpty()) {
-            this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        }
+        this.goalSelector.addGoal(goal++, new SorcererGoal(this));
 
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
