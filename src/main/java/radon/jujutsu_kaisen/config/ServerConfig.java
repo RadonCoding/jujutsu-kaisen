@@ -17,7 +17,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
 
-    public final ForgeConfigSpec.DoubleValue healingAmount;
+    public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
@@ -80,10 +80,10 @@ public class ServerConfig {
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
-        this.healingAmount = builder.comment("The amount of health you can heal per tick (scales with experience)")
-                .defineInRange("sorcererHealingAmount", 0.2F, 0.0F, 100.0F);
+        this.sorcererHealingAmount = builder.comment("The maximum amount of health sorcerers can heal per tick (scales with experience)")
+                .defineInRange("sorcererHealingAmount", 0.3F, 0.0F, 100.0F);
         this.curseHealingAmount = builder.comment("The maximum amount of health curses can heal per tick (scales with experience)")
-                .defineInRange("curseHealingAmount", 0.3F, 0.0F, 100.0F);
+                .defineInRange("curseHealingAmount", 0.5F, 0.0F, 100.0F);
         this.uniqueTechniques = builder.comment("When enabled on servers every player will have a unique technique if any are available")
                 .define("uniqueTechniques", true);
         this.uniqueTraits = builder.comment("When enabled on servers there can be only one six eyes, heavenly restriction and vessel")
