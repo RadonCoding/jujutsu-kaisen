@@ -62,7 +62,7 @@ public class DismantleProjectile extends JujutsuProjectile {
         super(JJKEntities.DISMANTLE.get(), owner.level(), owner, power);
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        EntityUtil.offset(this, look, pos.subtract(0.0D,  - (this.getBbHeight() / 2.0F), 0.0D));
+        EntityUtil.offset(this, look, pos.subtract(0.0D, this.getBbHeight() / 2.0F, 0.0D));
 
         this.setRoll(roll);
         this.setLength(length);
