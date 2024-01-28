@@ -55,7 +55,7 @@ public abstract class LivingEntityMixin {
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"))
     public float travel(BlockState instance, LevelReader levelReader, BlockPos blockPos, Entity entity) {
-        if (!(entity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.DISMANTLE_SKATING.get()) || !instance.canOcclude()) return instance.getFriction(levelReader, blockPos, entity);
+        if (!(entity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.DISMANTLE_SKATING.get()) || !instance.getFluidState().isEmpty()) return instance.getFriction(levelReader, blockPos, entity);
         return 1.0989F - 0.02F;
     }
 }
