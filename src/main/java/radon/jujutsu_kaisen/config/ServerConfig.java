@@ -1,11 +1,6 @@
 package radon.jujutsu_kaisen.config;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-
-import java.util.*;
 
 public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;

@@ -9,7 +9,6 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBlastEntity;
-import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class CursedEnergyBlast extends Ability {

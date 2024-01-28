@@ -178,9 +178,11 @@ public abstract class Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if ((this.isTechnique() && (this.isNotDisabledFromDA() || !SorcererUtil.isExperienced(cap.getExperience()))) && cap.hasToggled(this) &&
-                cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))
-            return false;
+        if (this.isTechnique() && cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            if (!this.isNotDisabledFromDA() || !cap.hasToggled(this)) {
+                return false;
+            }
+        }
 
         for (Ability ability : this.getRequirements()) {
             if (!ability.isUnlocked(owner)) return false;

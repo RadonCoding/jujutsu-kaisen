@@ -12,7 +12,6 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
-import radon.jujutsu_kaisen.client.visual.base.IVisual;
 
 public class CursedSpeechOverlay implements IOverlay {
     private static final RenderType CURSED_SPEECH = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/cursed_speech.png"));

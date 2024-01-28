@@ -1,10 +1,7 @@
 package radon.jujutsu_kaisen.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;

@@ -300,31 +300,31 @@ public class SorcererData implements ISorcererData {
     }
 
     private void updateAdaptation() {
-        if (this.toggled.contains(JJKAbilities.WHEEL.get())) {
-            Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
+        if (!this.toggled.contains(JJKAbilities.WHEEL.get())) return;
 
-            while (iter.hasNext()) {
-                Map.Entry<Adaptation, Integer> entry = iter.next();
+        Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
 
-                int timer = entry.getValue();
+        while (iter.hasNext()) {
+            Map.Entry<Adaptation, Integer> entry = iter.next();
 
-                if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
-                    iter.remove();
+            int timer = entry.getValue();
 
-                    this.adapted.add(entry.getKey());
+            if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
+                iter.remove();
 
-                    if (this.owner instanceof MahoragaEntity mahoraga) {
-                        mahoraga.onAdaptation();
-                    }
+                this.adapted.add(entry.getKey());
 
-                    WheelEntity wheel = this.getSummonByClass(WheelEntity.class);
-
-                    if (wheel != null) {
-                        wheel.spin();
-                    }
-                } else {
-                    entry.setValue(timer);
+                if (this.owner instanceof MahoragaEntity mahoraga) {
+                    mahoraga.onAdaptation();
                 }
+
+                WheelEntity wheel = this.getSummonByClass(WheelEntity.class);
+
+                if (wheel != null) {
+                    wheel.spin();
+                }
+            } else {
+                entry.setValue(timer);
             }
         }
     }

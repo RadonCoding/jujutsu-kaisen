@@ -1,12 +1,8 @@
 package radon.jujutsu_kaisen.item.crafting;
 
-import com.google.common.collect.Lists;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -17,8 +13,6 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.item.CursedEnergyFleshItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JJKRecipeSerializers;
-
-import java.util.List;
 
 public class MergedFleshRecipe extends CustomRecipe {
     public MergedFleshRecipe(ResourceLocation pId, CraftingBookCategory pCategory) {

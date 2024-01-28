@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.capability.data;
+package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 public class DelayedTickEvent {
     private final Runnable task;
