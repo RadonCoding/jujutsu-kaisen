@@ -15,8 +15,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 public class EelGrapple extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > EelGrappleProjectile.RANGE) return false;
+        if (target == null || !owner.hasLineOfSight(target) || owner.distanceTo(target) > EelGrappleProjectile.RANGE) return false;
         return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
