@@ -22,17 +22,6 @@ public class PerfectBodyVisual implements IVisual {
         data.mouth++;
     }
 
-    public static boolean shouldRenderExtraArms(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
-
-        for (Ability ability : data.toggled) {
-            if (!(ability instanceof ITransformation transformation)) continue;
-            if (transformation.getBodyPart() != ITransformation.Part.BODY || !transformation.isReplacement()) continue;
-            return false;
-        }
-        return data.traits.contains(Trait.PERFECT_BODY);
-    }
-
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
         return data.mouth > 0 && entity.level().getGameTime() % 5 != 0;

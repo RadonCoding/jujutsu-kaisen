@@ -7,10 +7,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
-import radon.jujutsu_kaisen.client.visual.visual.BlueFistsVisual;
-import radon.jujutsu_kaisen.client.visual.visual.CursedEnergyVisual;
-import radon.jujutsu_kaisen.client.visual.visual.IdleTransfigurationVisual;
-import radon.jujutsu_kaisen.client.visual.visual.TransfiguredSoulVisual;
+import radon.jujutsu_kaisen.client.visual.visual.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +22,6 @@ public class JJKVisuals {
         VISUALS.add(new BlueFistsVisual());
         VISUALS.add(new IdleTransfigurationVisual());
         VISUALS.add(new TransfiguredSoulVisual());
+        VISUALS.add(new PerfectBodyVisual());
     }
 }

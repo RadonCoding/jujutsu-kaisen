@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.client.visual.overlay;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -19,6 +20,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransformation;
+import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
@@ -73,9 +77,20 @@ public class PerfectBodyOverlay implements IOverlay {
         poseStack.popPose();
     }
 
+    public static boolean shouldRenderExtraArms(LivingEntity entity, ClientVisualHandler.ClientData data) {
+        if (Minecraft.getInstance().player == entity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) return false;
+
+        for (Ability ability : data.toggled) {
+            if (!(ability instanceof ITransformation transformation)) continue;
+            if (transformation.getBodyPart() != ITransformation.Part.BODY || !transformation.isReplacement()) continue;
+            return false;
+        }
+        return data.traits.contains(Trait.PERFECT_BODY);
+    }
+
     @Override
     public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return PerfectBodyVisual.shouldRenderExtraArms(entity, data);
+        return shouldRenderExtraArms(entity, data);
     }
 
     @Override
