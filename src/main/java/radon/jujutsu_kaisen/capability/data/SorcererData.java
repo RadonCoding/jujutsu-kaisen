@@ -375,6 +375,8 @@ public class SorcererData implements ISorcererData {
         if (this.brainDamageTimer >= JJKConstants.DECREASE_BRAIN_DAMAGE_INTERVAL) {
             this.brainDamageTimer = 0;
             this.brainDamage--;
+
+            this.output = this.getMaximumOutput();
         }
     }
 

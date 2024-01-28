@@ -4,11 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -65,7 +67,7 @@ public class VeilHandler {
         if (!domains.containsKey(level.dimension())) return result;
 
         for (UUID identifier : domains.get(level.dimension())) {
-            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || !bounds.intersects(domain.getBounds())) continue;
+            if (!(level.getEntity(identifier) instanceof DomainExpansionEntity domain) || (!bounds.intersects(domain.getBounds()))) continue;
             result.add(domain);
         }
         return result;
@@ -138,20 +140,25 @@ public class VeilHandler {
     }
 
     @SubscribeEvent
+    public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
+        Level level = event.getLevel();
+        Entity entity = event.getEntity();
+
+        if (domains.containsKey(level.dimension())) {
+            Set<UUID> current = domains.get(level.dimension());
+            current.remove(entity.getUUID());
+
+            if (current.isEmpty()) {
+                domains.remove(level.dimension());
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide)
-            return;
+        if (event.side == LogicalSide.CLIENT || event.type != TickEvent.Type.LEVEL || event.phase == TickEvent.Phase.START || event.level.isClientSide) return;
 
         veils.entrySet().removeIf(entry ->
                 event.level.dimension() == entry.getKey() && !(event.level.getBlockEntity(entry.getValue()) instanceof VeilRodBlockEntity));
-
-        domains.entrySet().removeIf(entry ->
-                event.level.dimension() == entry.getKey() && entry.getValue().isEmpty());
-
-
-        if (domains.containsKey(event.level.dimension())) {
-            domains.get(event.level.dimension()).removeIf(identifier ->
-                    !(((ServerLevel) event.level).getEntity(identifier) instanceof DomainExpansionEntity));
-        }
     }
 }

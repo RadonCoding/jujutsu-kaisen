@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
+import radon.jujutsu_kaisen.ability.limitless.UnlimitedVoid;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
@@ -221,24 +222,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return EntityDimensions.fixed(radius, radius);
     }
 
-    @Override
-    public boolean canBeHitByProjectile() {
-        return this.isAlive();
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        Entity entity = pSource.getEntity();
-
-        int radius = this.getRadius();
-        boolean completed = this.getTime() >= radius * 2;
-
-        if (!completed || entity != null && this.isInsideBarrier(entity.blockPosition())) {
-            return false;
-        }
-        return super.hurt(pSource, pAmount);
-    }
-
     private void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
             if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
@@ -359,40 +342,40 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            if (!this.level().isClientSide) {
-                int radius = this.getRadius();
-                boolean completed = this.getTime() >= radius * 2;
+        if (owner == null) return;
 
-                if (this.checkSureHitEffect()) {
-                    this.doSureHitEffect(owner);
-                }
+        if (this.level().isClientSide) return;
 
-                if (completed) {
-                    if (this.getTime() % 20 == 0) {
-                        this.check();
-                    }
-                }
+        int radius = this.getRadius();
+        boolean completed = this.getTime() >= radius * 2;
 
-                ParticleOptions particle = ((DomainExpansion.IClosedDomain) this.ability).getEnvironmentParticle();
+        if (this.checkSureHitEffect()) {
+            this.doSureHitEffect(owner);
+        }
 
-                if (particle != null) {
-                    AABB bounds = this.getBounds();
-
-                    for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, 16, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ,
-                            (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
-                        if (!this.isInsideBarrier(pos)) continue;
-                        Vec3 center = pos.getCenter();
-                        ((ServerLevel) this.level()).sendParticles(particle, center.x, center.y, center.z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
-                    }
-                }
-
-                if (this.getTime() - 1 == 0) {
-                    this.createBarrier(false);
-                } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
-                    this.discard();
-                }
+        if (completed) {
+            if (this.getTime() % 20 == 0) {
+                this.check();
             }
+        }
+
+        ParticleOptions particle = ((DomainExpansion.IClosedDomain) this.ability).getEnvironmentParticle();
+
+        if (particle != null) {
+            AABB bounds = this.getBounds();
+
+            for (BlockPos pos : BlockPos.randomBetweenClosed(this.random, 16, (int) bounds.minX, (int) bounds.minY, (int) bounds.minZ,
+                    (int) bounds.maxX, (int) bounds.maxY, (int) bounds.maxZ)) {
+                if (!this.isInsideBarrier(pos)) continue;
+                Vec3 center = pos.getCenter();
+                ((ServerLevel) this.level()).sendParticles(particle, center.x, center.y, center.z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
+        }
+
+        if (this.getTime() - 1 == 0) {
+            this.createBarrier(false);
+        } else if (completed && !this.isInsideBarrier(owner.blockPosition())) {
+            this.discard();
         }
     }
 }
