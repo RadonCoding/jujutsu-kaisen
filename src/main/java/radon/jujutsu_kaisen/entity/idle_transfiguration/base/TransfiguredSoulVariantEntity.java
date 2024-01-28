@@ -20,12 +20,12 @@ public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEnti
 
     protected TransfiguredSoulVariantEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
-
-        this.setVariant(HelperMethods.randomEnum(Variant.class));
     }
 
     public TransfiguredSoulVariantEntity(EntityType<? extends TamableAnimal> pType, LivingEntity owner) {
         super(pType, owner);
+
+        this.setVariant(HelperMethods.randomEnum(Variant.class));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -38,7 +38,7 @@ public abstract class TransfiguredSoulVariantEntity extends TransfiguredSoulEnti
     protected void defineSynchedData() {
         super.defineSynchedData();
 
-        this.entityData.define(DATA_VARIANT, -1);
+        this.entityData.define(DATA_VARIANT, Variant.ORANGE.ordinal());
     }
 
     public Variant getVariant() {
