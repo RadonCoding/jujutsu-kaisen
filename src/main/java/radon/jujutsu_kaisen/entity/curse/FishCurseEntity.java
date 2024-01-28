@@ -37,12 +37,12 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    protected int getMinCount() {
+    public int getMinCount() {
         return 2;
     }
 
     @Override
-    protected int getMaxCount() {
+    public int getMaxCount() {
         return 8;
     }
 

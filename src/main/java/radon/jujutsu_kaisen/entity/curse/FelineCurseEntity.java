@@ -115,12 +115,12 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     }
 
     @Override
-    protected int getMinCount() {
+    public int getMinCount() {
         return 1;
     }
 
     @Override
-    protected int getMaxCount() {
+    public int getMaxCount() {
         return 4;
     }
 
