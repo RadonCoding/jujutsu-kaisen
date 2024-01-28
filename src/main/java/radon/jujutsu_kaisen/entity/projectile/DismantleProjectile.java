@@ -141,6 +141,8 @@ public class DismantleProjectile extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
+        if (entity == owner) return;
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);

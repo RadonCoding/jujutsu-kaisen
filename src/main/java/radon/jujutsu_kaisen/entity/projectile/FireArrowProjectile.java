@@ -57,6 +57,8 @@ public class FireArrowProjectile extends JujutsuProjectile {
 
         if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
+        if (entity == owner) return;
+
         entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.FIRE_ARROW.get()), DAMAGE * this.getPower());
     }
 

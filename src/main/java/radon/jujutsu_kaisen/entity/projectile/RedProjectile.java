@@ -74,15 +74,15 @@ public class RedProjectile extends JujutsuProjectile {
 
         Entity entity = pResult.getEntity();
 
-        if (this.getOwner() instanceof LivingEntity owner) {
-            if (entity == owner) return;
+        if (!(this.getOwner() instanceof LivingEntity owner)) return;
 
-            float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
+        if (entity == owner) return;
 
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
-                entity.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
-                entity.hurtMarked = true;
-            }
+        float factor = 1.0F - (((float) this.getTime() - DELAY) / DURATION);
+
+        if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.RED.get()), DAMAGE * factor * this.getPower())) {
+            entity.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(this).multiply(1.0D, 0.25D, 1.0D).scale(LAUNCH_POWER));
+            entity.hurtMarked = true;
         }
     }
 
