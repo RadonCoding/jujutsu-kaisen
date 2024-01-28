@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.base;
+package radon.jujutsu_kaisen.entity.sorcerer.base;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;

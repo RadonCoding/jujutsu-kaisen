@@ -9,7 +9,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 

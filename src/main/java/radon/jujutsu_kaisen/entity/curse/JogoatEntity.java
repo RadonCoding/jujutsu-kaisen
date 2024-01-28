@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;

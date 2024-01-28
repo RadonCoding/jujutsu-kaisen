@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.base;
+package radon.jujutsu_kaisen.entity.curse.base;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;

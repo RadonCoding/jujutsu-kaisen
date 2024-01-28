@@ -11,7 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
 import radon.jujutsu_kaisen.entity.effect.WoodSegmentEntity;

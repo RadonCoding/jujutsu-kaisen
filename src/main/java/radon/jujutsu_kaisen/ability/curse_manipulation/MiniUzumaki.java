@@ -1,22 +1,15 @@
 package radon.jujutsu_kaisen.ability.curse_manipulation;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.projectile.MiniUzumakiProjectile;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.util.Map;
 
 public class MiniUzumaki extends Ability {
     @Override

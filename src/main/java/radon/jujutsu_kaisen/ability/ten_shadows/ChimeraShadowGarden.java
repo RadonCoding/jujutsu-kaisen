@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.ChimeraShadowGardenEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 
 import java.util.ArrayList;
 import java.util.List;

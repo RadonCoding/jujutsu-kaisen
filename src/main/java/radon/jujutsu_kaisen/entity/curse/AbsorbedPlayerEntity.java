@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
-import radon.jujutsu_kaisen.entity.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 
 import java.util.Optional;
 

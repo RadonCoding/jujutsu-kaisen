@@ -29,8 +29,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
-import radon.jujutsu_kaisen.entity.base.SorcererEntity;
-import radon.jujutsu_kaisen.entity.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
 import java.util.*;

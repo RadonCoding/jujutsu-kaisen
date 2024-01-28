@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.entity.base;
+package radon.jujutsu_kaisen.entity.curse.base;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -35,6 +35,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
+import radon.jujutsu_kaisen.entity.base.ICommandable;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;

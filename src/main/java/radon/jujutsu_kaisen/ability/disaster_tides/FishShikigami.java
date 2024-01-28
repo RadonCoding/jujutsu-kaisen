@@ -7,7 +7,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.entity.base.FishShikigamiProjectile;
+import radon.jujutsu_kaisen.entity.projectile.base.FishShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.EelShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.PiranhaShikigamiProjectile;
 import radon.jujutsu_kaisen.entity.projectile.SharkShikigamiProjectile;

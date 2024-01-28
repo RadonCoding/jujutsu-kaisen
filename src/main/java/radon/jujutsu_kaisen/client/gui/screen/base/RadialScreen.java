@@ -20,6 +20,7 @@ import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
@@ -292,6 +293,11 @@ public abstract class RadialScreen extends Screen {
                             Component durationText = Component.translatable(String.format("gui.%s.ability_overlay.duration", JujutsuKaisen.MOD_ID), (float) duration / 20);
                             lines.add(durationText);
                         }
+                    }
+
+                    if (item instanceof ITransfiguredSoul soul) {
+                        Component soulCostText = Component.translatable(String.format("gui.%s.ability_overlay.soul_cost", JujutsuKaisen.MOD_ID), soul.getSoulCost());
+                        lines.add(soulCostText);
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
