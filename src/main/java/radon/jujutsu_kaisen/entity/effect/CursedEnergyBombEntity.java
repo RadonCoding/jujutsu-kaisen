@@ -9,8 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.BeamEntity;
-import radon.jujutsu_kaisen.entity.curse.RikaEntity;
+import radon.jujutsu_kaisen.entity.effect.base.BeamEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class CursedEnergyBombEntity extends BeamEntity {
