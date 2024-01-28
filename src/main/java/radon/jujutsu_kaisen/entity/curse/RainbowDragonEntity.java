@@ -255,8 +255,8 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
-                .add(Attributes.ARMOR, 30.0D)
-                .add(Attributes.FLYING_SPEED);
+                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.ARMOR, 30.0D);
     }
 
     @Override
