@@ -30,7 +30,7 @@ public class CursedEnergyImbuedItemProjectile extends ItemEntity {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ()).add(look));
 
-        this.setDeltaMovement(RotationUtil.getTargetAdjustedLookAngle(owner).scale(SPEED));
+        this.setDeltaMovement(this.getLookAngle().scale(SPEED));
     }
 
     @Override
