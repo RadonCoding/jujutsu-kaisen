@@ -136,7 +136,7 @@ public class JJKItems {
     public static RegistryObject<ForgeSpawnEggItem> KUCHISAKE_ONNA_SPAWN_EGG = ITEMS.register("kuchisake_onna_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.KUCHISAKE_ONNA, 0xc3c6c8, 0xfaf4e0, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> ZOMBA_CURSE_SPAWN_EGG = ITEMS.register("zomba_curse_spawn_egg",
-            () -> new ForgeSpawnEggItem(JJKEntities.ZOMBA_CURSE, 0x72aeb3, 0xb49e6a, new Item.Properties()));
+            () -> new ForgeSpawnEggItem(JJKEntities.ZOMBA_CURSE, 0x72aeb3, 0xc1b385, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> WORM_CURSE_SPAWN_EGG = ITEMS.register("worm_curse_spawn_egg",
             () -> new ForgeSpawnEggItem(JJKEntities.WORM_CURSE, 0xcac7bf, 0x4b8355, new Item.Properties()));
     public static RegistryObject<ForgeSpawnEggItem> FELINE_CURSE_SPAWN_EGG = ITEMS.register("feline_curse_spawn_egg",
