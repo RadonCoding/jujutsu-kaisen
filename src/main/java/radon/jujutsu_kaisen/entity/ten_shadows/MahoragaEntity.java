@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity.ten_shadows;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -71,8 +72,9 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean isInvulnerable() {
-        return (!this.isTame() && this.getTime() <= RITUAL_DURATION) || super.isInvulnerable();
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        if (!this.isTame() && this.getTime() <= RITUAL_DURATION) return false;
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
