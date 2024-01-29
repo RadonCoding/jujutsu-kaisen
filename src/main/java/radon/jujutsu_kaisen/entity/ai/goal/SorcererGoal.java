@@ -107,14 +107,21 @@ public class SorcererGoal extends Goal {
     }
 
     @Override
+    public boolean requiresUpdateEveryTick() {
+        return true;
+    }
+
+    @Override
     public boolean canUse() {
-        long i = this.mob.level().getGameTime();
+        return true;
+
+        /*long i = this.mob.level().getGameTime();
 
         if (i - this.lastCanUseCheck < 20L) {
             return false;
         } else {
             this.lastCanUseCheck = i;
             return true;
-        }
+        }*/
     }
 }
