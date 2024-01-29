@@ -170,20 +170,6 @@ public class JJKClientEventHandler {
         }
 
         @SubscribeEvent
-        public static void onMovementInput(MovementInputUpdateEvent event) {
-            Minecraft mc = Minecraft.getInstance();
-
-            if (mc.player == null) return;
-
-            if (mc.player.hasEffect(JJKEffects.STUN.get()) || mc.player.hasEffect(JJKEffects.UNLIMITED_VOID.get())) {
-                mc.player.input.forwardImpulse = 0.0F;
-                mc.player.input.leftImpulse = 0.0F;
-                mc.player.input.jumping = false;
-                mc.player.input.shiftKeyDown = false;
-            }
-        }
-
-        @SubscribeEvent
         public static void onPlayerMouseClick(InputEvent.InteractionKeyMappingTriggered event) {
             Minecraft mc = Minecraft.getInstance();
 
