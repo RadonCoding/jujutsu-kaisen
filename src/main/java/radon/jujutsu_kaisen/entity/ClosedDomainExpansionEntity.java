@@ -185,14 +185,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         int radius = this.getRadius();
 
-        Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(this);
+        Vec3 direction = this.getLookAngle();
         Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
 
         double back = Math.sqrt((radius + direction.x * radius) * (radius + direction.x * radius) +
                 (radius + direction.y * radius) * (radius + direction.y * radius) +
                 (radius + direction.z * radius) * (radius + direction.z * radius));
-        int death = (int) Math.round(back) / 2;
+        int death = ((int) Math.round(back) / 2) + 1;
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
