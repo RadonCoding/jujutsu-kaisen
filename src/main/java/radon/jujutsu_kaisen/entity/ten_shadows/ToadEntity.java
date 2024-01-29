@@ -92,7 +92,7 @@ public class ToadEntity extends TenShadowsSummon {
 
     @Override
     public boolean hasArms() {
-        return true;
+        return false;
     }
 
     @Override
