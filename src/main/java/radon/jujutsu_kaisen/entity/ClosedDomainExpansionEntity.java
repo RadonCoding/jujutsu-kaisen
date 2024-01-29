@@ -200,14 +200,15 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
+                    int complete = radius * 2;
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind));
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (instant) {
-                        this.createBlock(radius - delay, pos, radius, distance);
+                        this.createBlock(complete - delay, pos, radius, distance);
                     } else {
-                        cap.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
+                        cap.delayTickEvent(() -> this.createBlock(complete - delay, pos, radius, distance), delay);
                     }
                 }
             }
