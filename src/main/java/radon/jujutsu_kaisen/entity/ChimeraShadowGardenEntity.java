@@ -72,7 +72,7 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                int death = width - i;
+                int death = (width - i) + 1;
 
                 cap.delayTickEvent(() -> {
                     for (int x = -horizontal; x <= horizontal; x++) {

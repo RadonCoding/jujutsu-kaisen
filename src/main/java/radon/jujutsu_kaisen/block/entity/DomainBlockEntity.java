@@ -40,14 +40,10 @@ public class DomainBlockEntity extends BlockEntity {
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
         if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
-            if (pBlockEntity.initialized) {
-                pBlockEntity.death--;
-            } else {
-                pBlockEntity.destroy();
-            }
+            pBlockEntity.death--;
         }
 
-        if (pBlockEntity.initialized && pBlockEntity.death <= 0) {
+        if (pBlockEntity.death <= 0) {
             pBlockEntity.destroy();
         }
     }
