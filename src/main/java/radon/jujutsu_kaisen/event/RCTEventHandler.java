@@ -54,7 +54,7 @@ public class RCTEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
 
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+            if (!(source.getEntity() instanceof LivingEntity)) return;
 
             LivingEntity victim = event.getEntity();
 
@@ -80,6 +80,8 @@ public class RCTEventHandler {
                     chance /= 2;
                 }
             }
+
+            System.out.println(chance);
 
             if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
 
