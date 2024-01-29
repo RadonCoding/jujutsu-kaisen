@@ -68,8 +68,18 @@ public abstract class LivingEntityMixin {
     public void travel(LivingEntity instance, Vec3 f4) {
         if (this.hasEffect(JJKEffects.STUN.get())) {
             instance.travel(Vec3.ZERO);
-        } else {
-            instance.travel(f4);
+            return;
         }
+        instance.travel(f4);
+    }
+
+    @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
+    public void jumpFromGround(CallbackInfo ci) {
+        if (this.hasEffect(JJKEffects.STUN.get())) ci.cancel();
+    }
+
+    @Inject(method = "jumpInLiquid", at = @At("HEAD"), cancellable = true)
+    public void jumpInLiquid(CallbackInfo ci) {
+        if (this.hasEffect(JJKEffects.STUN.get())) ci.cancel();
     }
 }
