@@ -75,7 +75,7 @@ public class WormCurseGrab extends Ability {
     public float getCost(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
-        return JJKAbilities.getCurseCost(curse);
+        return curse == null ? 0.0F : JJKAbilities.getCurseCost(curse);
     }
 
     @Override
