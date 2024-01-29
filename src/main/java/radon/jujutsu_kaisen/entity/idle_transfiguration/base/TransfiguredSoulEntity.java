@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
@@ -54,7 +55,7 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         LivingEntity owner = this.getOwner();
 
-        if (owner != null && pSource.getEntity() == owner) {
+        if (owner != null && pSource.getEntity() == owner && JJKAbilities.hasToggled(owner, JJKAbilities.IDLE_TRANSFIGURATION.get())) {
             IdleTransfiguration.absorb(owner, this);
         }
         return super.hurt(pSource, pAmount);
