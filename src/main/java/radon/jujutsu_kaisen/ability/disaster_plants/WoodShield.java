@@ -79,7 +79,6 @@ public class WoodShield extends Summon<WoodShieldEntity> {
                 return;
 
             if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-
             ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             WoodShieldEntity shield = cap.getSummonByClass(WoodShieldEntity.class);

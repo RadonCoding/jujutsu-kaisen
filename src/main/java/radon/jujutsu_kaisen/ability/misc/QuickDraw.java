@@ -11,13 +11,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
+import radon.jujutsu_kaisen.entity.effect.WoodShieldEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -47,13 +52,6 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             if (entity.invulnerableTime > 0) return;
 
             owner.lookAt(EntityAnchorArgument.Anchor.EYES, entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D));
-            owner.swing(InteractionHand.MAIN_HAND, true);
-
-            if (owner instanceof Player player) {
-                player.attack(entity);
-            } else {
-                owner.doHurtTarget(entity);
-            }
         }
     }
 
@@ -73,10 +71,6 @@ public class QuickDraw extends Ability implements Ability.IToggled {
             for (Entity entity : owner.level().getEntities(owner, domain.getBoundingBox())) {
                 if (entity == domain || entity.distanceTo(domain) > domain.getRadius()) continue;
 
-                attack(owner, entity);
-            }
-        } else if (JJKAbilities.hasToggled(owner, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
-            for (Entity entity : owner.level().getEntities(owner, owner.getBoundingBox().inflate(1.0D))) {
                 attack(owner, entity);
             }
         }
@@ -145,5 +139,20 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     @Override
     public boolean isTechnique() {
         return false;
+    }
+
+    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class QuickDrawForgeEvents {
+        @SubscribeEvent
+        public static void onLivingAttack(LivingAttackEvent event) {
+            Entity attacker = event.getSource().getDirectEntity();
+
+            LivingEntity victim = event.getEntity();
+
+            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.QUICK_DRAW.get()) ||
+                    !JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
+
+            QuickDraw.attack(victim, attacker);
+        }
     }
 }
