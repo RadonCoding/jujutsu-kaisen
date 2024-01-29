@@ -10,15 +10,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
-
-import java.awt.*;
 
 public class CursedEnergyColorTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.cursed_energy_color", JujutsuKaisen.MOD_ID));

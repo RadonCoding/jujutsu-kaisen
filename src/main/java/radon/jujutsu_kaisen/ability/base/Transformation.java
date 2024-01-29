@@ -1,8 +1,8 @@
 package radon.jujutsu_kaisen.ability.base;
 
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
 import java.util.ArrayList;
 
