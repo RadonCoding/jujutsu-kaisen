@@ -44,6 +44,26 @@
 					}
 				}
 			}
+		},
+		"misc.grab": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"jaw": {
+					"rotation": {
+						"vector": [45, 0, 0]
+					}
+				},
+				"upper_jaw": {
+					"rotation": {
+						"vector": [0, 22.5, 0]
+					}
+				},
+				"lower_jaw": {
+					"rotation": {
+						"vector": [0, -22.5, 0]
+					}
+				}
+			}
 		}
 	}
 }

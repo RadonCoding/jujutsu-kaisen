@@ -313,6 +313,11 @@ public interface ISorcererData {
 
     List<AbsorbedCurse> getCurses();
 
+    @Nullable
+    AbsorbedCurse getCurse(EntityType<?> type);
+
+    boolean hasCurse(EntityType<?> type);
+
     List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
     void addFrame(Vec3 frame, float yaw);
     void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame);

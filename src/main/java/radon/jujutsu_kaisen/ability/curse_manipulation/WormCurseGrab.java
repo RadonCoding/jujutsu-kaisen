@@ -1,10 +1,10 @@
-package radon.jujutsu_kaisen.ability.ten_shadows;
+package radon.jujutsu_kaisen.ability.curse_manipulation;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -17,7 +17,7 @@ import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class GreatSerpentGrab extends Ability {
+public class WormCurseGrab extends Ability {
     public static final double RANGE = 16.0D;
 
     @Override
@@ -28,7 +28,8 @@ public class GreatSerpentGrab extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        return JJKAbilities.hasTamed(owner, JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        return cap.hasCurse(JJKEntities.WORM_CURSE.get());
     }
 
     @Override
@@ -53,13 +54,11 @@ public class GreatSerpentGrab extends Ability {
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (AbilityHandler.trigger(owner, JJKAbilities.GREAT_SERPENT.get()) != Status.SUCCESS) return;
+        AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
 
-        GreatSerpentEntity serpent = cap.getSummonByClass(GreatSerpentEntity.class);
+        if (!(JJKAbilities.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
 
-        if (serpent == null) return;
-
-        serpent.grab(target);
+        worm.grab(target);
     }
 
     @Override
@@ -74,7 +73,9 @@ public class GreatSerpentGrab extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        return 0;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
+        return JJKAbilities.getCurseCost(curse);
     }
 
     @Override

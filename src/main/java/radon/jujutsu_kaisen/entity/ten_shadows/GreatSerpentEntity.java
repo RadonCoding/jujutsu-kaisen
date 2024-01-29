@@ -204,11 +204,6 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean isNoAi() {
-        return super.isNoAi();
-    }
-
-    @Override
     public boolean isPushable() {
         return !this.isGrabbing() && super.isPushable();
     }
