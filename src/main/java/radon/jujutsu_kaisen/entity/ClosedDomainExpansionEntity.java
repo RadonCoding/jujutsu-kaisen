@@ -199,22 +199,22 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
-                    if (distance < radius) {
-                        BlockPos pos = center.offset(x, y, z);
+                    if (distance >= radius) continue;
 
-                        // Calculate the delay based on the distance from the center to the front of the wall
-                        double front = Math.sqrt((x + direction.x * radius) * (x + direction.x * radius) +
-                                (y + direction.y * radius) * (y + direction.y * radius) +
-                                (z + direction.z * radius) * (z + direction.z * radius));
-                        int delay = (int) Math.round(front) / 2;
+                    BlockPos pos = center.offset(x, y, z);
 
-                        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    // Calculate the delay based on the distance from the center to the front of the wall
+                    double front = Math.sqrt((x + direction.x * radius) * (x + direction.x * radius) +
+                            (y + direction.y * radius) * (y + direction.y * radius) +
+                            (z + direction.z * radius) * (z + direction.z * radius));
+                    int delay = (int) Math.round(front) / 2;
 
-                        if (instant) {
-                            this.createBlock(death - delay, pos, radius, distance);
-                        } else {
-                            cap.delayTickEvent(() -> this.createBlock(death - delay, pos, radius, distance), delay);
-                        }
+                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                    if (instant) {
+                        this.createBlock(death - delay, pos, radius, distance);
+                    } else {
+                        cap.delayTickEvent(() -> this.createBlock(death - delay, pos, radius, distance), delay);
                     }
                 }
             }
