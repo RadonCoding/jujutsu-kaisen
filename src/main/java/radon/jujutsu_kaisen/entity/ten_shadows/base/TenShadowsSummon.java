@@ -254,23 +254,23 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         } else {
             super.tick();
 
-            if (!this.level().isClientSide) {
-                if (!this.isTame()) {
-                    this.checkParticipants();
+            if (this.level().isClientSide) return;
 
-                    boolean disappear = this.participants.isEmpty();
+            if (!this.isTame()) {
+                this.checkParticipants();
 
-                    if (disappear) {
-                        this.discard();
-                    }
-                } else {
-                    LivingEntity target = this.getTarget();
-                    this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
-                }
+                boolean disappear = this.participants.isEmpty();
 
-                if (owner != null && this.isClone() && !JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
+                if (disappear) {
                     this.discard();
                 }
+            } else {
+                LivingEntity target = this.getTarget();
+                this.setOrderedToSit(target != null && !target.isRemoved() && target.isAlive());
+            }
+
+            if (owner != null && this.isClone() && !JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
+                this.discard();
             }
         }
     }

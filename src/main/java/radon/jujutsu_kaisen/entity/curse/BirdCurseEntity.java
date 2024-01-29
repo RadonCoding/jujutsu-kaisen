@@ -69,7 +69,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
 
     @Override
     protected float getFlyingSpeed() {
-        return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.5F;
+        return this.getTarget() == null || this.isVehicle() ? 0.15F : 0.3F;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

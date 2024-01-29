@@ -1,5 +1,9 @@
 package radon.jujutsu_kaisen.entity.ten_shadows;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -15,6 +19,7 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
+import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -23,11 +28,17 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class GreatSerpentEntity extends TenShadowsSummon {
+    private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(GreatSerpentEntity.class, EntityDataSerializers.BOOLEAN);
+
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
+    private static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("misc.grab");
 
     private static final int MAX_SEGMENTS = 24;
 
     private final GreatSerpentSegmentEntity[] segments;
+
+    @Nullable
+    private LivingEntity target;
 
     public GreatSerpentEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -56,6 +67,26 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         this.yHeadRotO = this.yHeadRot;
 
         this.setPathfindingMalus(BlockPathTypes.LEAVES, 0.0F);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_GRABBING, false);
+    }
+
+    private boolean isGrabbing() {
+        return this.entityData.get(DATA_GRABBING);
+    }
+
+    private void setGrabbing(boolean grabbing) {
+        this.entityData.set(DATA_GRABBING, grabbing);
+    }
+
+    public void grab(LivingEntity target) {
+        this.target = target;
+        this.setGrabbing(false);
     }
 
     @Override
@@ -105,9 +136,17 @@ public class GreatSerpentEntity extends TenShadowsSummon {
         return PlayState.STOP;
     }
 
+    private PlayState grabPredicate(AnimationState<GreatSerpentEntity> animationState) {
+        if (this.isGrabbing()) {
+            return animationState.setAndContinue(GRAB);
+        }
+        return PlayState.STOP;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Bite", this::bitePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Grab", this::grabPredicate));
     }
 
     @Override
@@ -165,11 +204,46 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     @Override
+    public boolean isNoAi() {
+        return super.isNoAi();
+    }
+
+    @Override
+    public boolean isPushable() {
+        return !this.isGrabbing() && super.isPushable();
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         this.yHeadRot = this.getYRot();
         this.moveSegments();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (this.target == null || this.target.isDeadOrDying() || this.target.isRemoved()) {
+            this.setGrabbing(false);
+            return;
+        }
+
+        if (!this.isGrabbing()) {
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, this.target.position().add(0.0D, this.target.getBbHeight() / 2.0F, 0.0D));
+
+            this.setDeltaMovement(this.target.position().subtract(this.position()).normalize().scale(2.0D));
+
+            if (this.distanceTo(this.target) < 1.0D) {
+                this.setGrabbing(true);
+            }
+        } else {
+            this.setYRot(this.target.yBodyRot);
+
+            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)
+                    .subtract(0.0D, this.target.getBbHeight() / 2.0F, 0.0D);
+            this.target.teleportTo(pos.x, pos.y, pos.z);
+        }
     }
 
     @Override
@@ -178,7 +252,7 @@ public class GreatSerpentEntity extends TenShadowsSummon {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return SorcererEntity.createAttributes().add(Attributes.MOVEMENT_SPEED, 2 * 0.33D)
+        return SorcererEntity.createAttributes()
                 .add(Attributes.MAX_HEALTH, 3 * 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 3 * 2.0D);
     }
