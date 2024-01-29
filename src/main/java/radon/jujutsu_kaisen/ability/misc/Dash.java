@@ -104,10 +104,12 @@ public class Dash extends Ability {
             double distanceY = target.y - owner.getY();
             double distanceZ = target.z - owner.getZ();
 
+            float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+
             double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
-            double motionX = distanceX / distance * DASH;
-            double motionY = distanceY / distance * DASH;
-            double motionZ = distanceZ / distance * DASH;
+            double motionX = distanceX / distance * power;
+            double motionY = distanceY / distance * power;
+            double motionZ = distanceZ / distance * power;
 
             owner.setDeltaMovement(motionX, motionY, motionZ);
         }
