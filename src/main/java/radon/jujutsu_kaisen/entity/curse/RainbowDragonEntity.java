@@ -85,7 +85,6 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
         return navigation;
     }
 
-
     @Override
     protected boolean isCustom() {
         return false;
@@ -256,7 +255,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     public static AttributeSupplier.Builder createAttributes() {
         return SorcererEntity.createAttributes()
                 .add(Attributes.FLYING_SPEED)
-                .add(Attributes.ARMOR, 20.0D);
+                .add(Attributes.ARMOR, 10.0D);
     }
 
     @Override
