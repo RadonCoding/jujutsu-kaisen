@@ -29,8 +29,6 @@ public abstract class LivingEntityMixin {
 
     @Shadow public abstract boolean hasEffect(MobEffect pEffect);
 
-    @Shadow protected boolean jumping;
-
     @Inject(method = "isFallFlying", at = @At("HEAD"), cancellable = true)
     public void isFallFlying(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
@@ -70,7 +68,8 @@ public abstract class LivingEntityMixin {
     public void travel(LivingEntity instance, Vec3 f4) {
         if (this.hasEffect(JJKEffects.STUN.get())) {
             instance.travel(Vec3.ZERO);
+        } else {
+            instance.travel(f4);
         }
-        instance.travel(f4);
     }
 }
