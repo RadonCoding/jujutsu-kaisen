@@ -29,7 +29,6 @@
     "common.ItemEntityMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
-    "common.MobMixin",
-    "common.PathNavigationMixin"
+    "common.MobMixin"
   ]
 }
