@@ -7,13 +7,13 @@ import radon.jujutsu_kaisen.config.ConfigHolder;
 
 public enum SorcererGrade {
     GRADE_4(0.0F),
-    GRADE_3(125.0F),
-    SEMI_GRADE_2(250.0F),
-    GRADE_2(500.0F),
-    SEMI_GRADE_1(750.0F),
-    GRADE_1(1000.0F),
-    SPECIAL_GRADE_1(1500.0F),
-    SPECIAL_GRADE(2500.0F);
+    GRADE_3(50.0F),
+    SEMI_GRADE_2(100.0F),
+    GRADE_2(200.0F),
+    SEMI_GRADE_1(400.0F),
+    GRADE_1(800.0F),
+    SPECIAL_GRADE_1(1600.0F),
+    SPECIAL_GRADE(3200.0F);
 
     private final float required;
 
