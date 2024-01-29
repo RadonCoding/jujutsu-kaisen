@@ -224,7 +224,7 @@ public class SorcererData implements ISorcererData {
         for (Ability ability : new ArrayList<>(this.toggled)) {
             Ability.Status status = ability.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
+            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 ability.run(this.owner);
 
                 ((Ability.IToggled) ability).applyModifiers(this.owner);
@@ -242,7 +242,7 @@ public class SorcererData implements ISorcererData {
         if (this.channeled != null) {
             Ability.Status status = this.channeled.isStillUsable(this.owner);
 
-            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
+            if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN || (status == Ability.Status.ENERGY && this.channeled instanceof Ability.IAttack)) {
                 this.channeled.run(this.owner);
             } else {
                 this.channel(this.channeled);
