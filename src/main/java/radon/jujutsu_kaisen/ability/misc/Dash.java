@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -59,8 +60,8 @@ public class Dash extends Ability {
     }
 
     private static boolean canDash(LivingEntity owner) {
-        return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult || owner.isInWater() ||
-                owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty());
+        return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, RANGE).getType() != HitResult.Type.MISS ||
+                owner.onGround() || owner.isInFluidType());
     }
 
     @Override
@@ -80,21 +81,9 @@ public class Dash extends Ability {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit) {
-            Entity target = hit.getEntity();
+        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
 
-            double distanceX = target.getX() - owner.getX();
-            double distanceY = target.getY() - owner.getY();
-            double distanceZ = target.getZ() - owner.getZ();
-
-            double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
-            double motionX = distanceX / distance * DASH;
-            double motionY = distanceY / distance * DASH;
-            double motionZ = distanceZ / distance * DASH;
-
-            owner.setDeltaMovement(motionX, motionY, motionZ);
-            owner.hurtMarked = true;
-        } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
+        if (hit.getType() == HitResult.Type.MISS) {
             float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
             float f = owner.getYRot();
@@ -108,8 +97,21 @@ public class Dash extends Ability {
             f4 *= power / f5;
             owner.push(f2, f3, f4);
             owner.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
-            owner.hurtMarked = true;
+        } else {
+            Vec3 target = hit.getLocation();
+
+            double distanceX = target.x - owner.getX();
+            double distanceY = target.y - owner.getY();
+            double distanceZ = target.z - owner.getZ();
+
+            double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+            double motionX = distanceX / distance * DASH;
+            double motionY = distanceY / distance * DASH;
+            double motionZ = distanceZ / distance * DASH;
+
+            owner.setDeltaMovement(motionX, motionY, motionZ);
         }
+        owner.hurtMarked = true;
 
         Vec3 pos = owner.position();
 
