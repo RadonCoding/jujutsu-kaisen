@@ -44,16 +44,6 @@ public abstract class JJKPartEntity<T extends Entity> extends PartEntity<T> {
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return !this.isInvulnerableTo(pSource) && this.getParent().hurt(pSource, pAmount);
-    }
-
-    @Override
-    public boolean is(@NotNull Entity pEntity) {
-        return this == pEntity || this.getParent() == pEntity;
-    }
-
-    @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
         return this.size;
     }

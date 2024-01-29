@@ -36,6 +36,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.CameraShakeS2CPacket;
@@ -98,7 +99,7 @@ public class ExplosionHandler {
                     PacketHandler.sendToClient(new CameraShakeS2CPacket(1.0F, 5.0F, explosion.duration), player);
                 }
 
-                List<Entity> entities = event.level.getEntities(explosion.instigator, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
+                List<Entity> entities = event.level.getEntities(null, new AABB(Mth.floor(explosion.position.x - diameter - 1.0F),
                         Mth.floor(explosion.position.y - diameter - 1.0F),
                         Mth.floor(explosion.position.z - diameter - 1.0F),
                         Mth.floor(explosion.position.x + diameter + 1.0F),
@@ -107,6 +108,8 @@ public class ExplosionHandler {
                 ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
 
                 for (Entity entity : entities) {
+                    if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;
+
                     if (!entity.ignoreExplosion()) {
                         double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
 
