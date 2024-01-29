@@ -1,8 +1,10 @@
 package radon.jujutsu_kaisen.entity.curse;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
