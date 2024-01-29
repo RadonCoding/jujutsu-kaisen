@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.mixin.common;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.LevelReader;
@@ -19,10 +20,14 @@ import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffect;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Shadow public abstract void remove(Entity.RemovalReason pReason);
+
+    @Shadow public abstract boolean hasEffect(MobEffect pEffect);
 
     @Inject(method = "isFallFlying", at = @At("HEAD"), cancellable = true)
     public void isFallFlying(CallbackInfoReturnable<Boolean> cir) {
@@ -57,5 +62,10 @@ public abstract class LivingEntityMixin {
     public float travel(BlockState instance, LevelReader levelReader, BlockPos blockPos, Entity entity) {
         if (!(entity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.DISMANTLE_SKATING.get()) || !instance.getFluidState().isEmpty()) return instance.getFriction(levelReader, blockPos, entity);
         return 1.0989F - 0.02F;
+    }
+
+    @Inject(method = "isImmobile", at = @At("HEAD"), cancellable = true)
+    public void isImmobile(CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(JJKEffects.STUN.get())) cir.setReturnValue(true);
     }
 }
