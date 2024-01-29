@@ -210,12 +210,12 @@ public abstract class Ability {
         }
     }
 
-    public Status getStatus(LivingEntity owner) {
+    public Status getStatus(LivingEntity owner, boolean checkOwnership) {
         if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!JJKAbilities.getAbilities(owner).contains(this)) {
+        if (checkOwnership && !JJKAbilities.getAbilities(owner).contains(this)) {
             return Status.UNUSUABLE;
         }
 
@@ -240,7 +240,7 @@ public abstract class Ability {
 
         if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
-        Status status = this.getStatus(owner);
+        Status status = this.getStatus(owner, true);
 
         if (status == Status.SUCCESS && this.getActivationType(owner) == ActivationType.INSTANT) {
             this.charge(owner);
@@ -251,10 +251,10 @@ public abstract class Ability {
 
     public Status isStillUsable(LivingEntity owner) {
         if (this instanceof IAttack || this instanceof ICharged) {
-            return this.getStatus(owner);
+            return this.getStatus(owner, true);
         }
 
-        Status status = this.getStatus(owner);
+        Status status = this.getStatus(owner, true);
 
         if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
             this.charge(owner);
