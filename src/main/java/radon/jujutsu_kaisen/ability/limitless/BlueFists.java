@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -62,7 +63,7 @@ public class BlueFists extends Ability implements Ability.IToggled {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class BlueFistsForgeEvents {
         @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
+        public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
@@ -81,8 +82,11 @@ public class BlueFists extends Ability implements Ability.IToggled {
 
             ((ServerLevel) attacker.level()).getChunkSource().broadcastAndSend(attacker, new ClientboundAnimatePacket(victim, ClientboundAnimatePacket.CRITICAL_HIT));
 
-            victim.invulnerableTime = 0;
-            victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.BLUE_FISTS.get()), event.getAmount() * 0.5F);
+            if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, JJKAbilities.BLUE_FISTS.get()), event.getAmount() * 0.5F)) {
+                if (victim.isDeadOrDying()) {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 }
