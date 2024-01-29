@@ -27,8 +27,8 @@ import java.util.List;
 
 
 public class ShadowInventoryScreen extends Screen {
-    private static final float RADIUS_IN = 50.0F;
-    private static final float RADIUS_OUT = RADIUS_IN * 2.0F;
+    private static final int RADIUS_IN = 50;
+    private static final int RADIUS_OUT = RADIUS_IN * 2;
 
     private final List<ItemStack> items = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class ShadowInventoryScreen extends Screen {
     protected void init() {
         super.init();
 
-        assert this.minecraft != null;
+        if (this.minecraft == null) return;
 
         List<ItemStack> inventory = this.getItems();
 
@@ -134,7 +134,7 @@ public class ShadowInventoryScreen extends Screen {
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (int i = 0; i < this.items.size(); i++) {
             float startAngle = getAngleFor(i - 0.5F);
@@ -210,7 +210,7 @@ public class ShadowInventoryScreen extends Screen {
     }
 
     private float getAngleFor(double i) {
-        if (this.items.size() == 0) {
+        if (this.items.isEmpty()) {
             return 0;
         }
         return (float) (((i / this.items.size()) + 0.25) * Mth.TWO_PI + Math.PI);
