@@ -137,7 +137,6 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
                 if (victim.hurt(JJKDamageSources.indirectJujutsuAttack(frame, attacker, JJKAbilities.TWENTY_FOUR_FRAME_RULE.get()), DAMAGE * frame.getPower())) {
                     if (victim.isDeadOrDying()) {
                         event.setCanceled(true);
-                        return;
                     }
                 }
                 break;
