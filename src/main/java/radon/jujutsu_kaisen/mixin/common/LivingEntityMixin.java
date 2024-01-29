@@ -66,14 +66,11 @@ public abstract class LivingEntityMixin {
         return 1.0989F - 0.02F;
     }
 
-    @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isImmobile()Z"))
-    public void aiStep(CallbackInfo ci) {
+    @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V"))
+    public void travel(LivingEntity instance, Vec3 f4) {
         if (this.hasEffect(JJKEffects.STUN.get())) {
-            LivingEntity entity = (LivingEntity) (Object) this;
-
-            this.jumping = false;
-            entity.xxa = 0.0F;
-            entity.zza = 0.0F;
+            instance.travel(Vec3.ZERO);
         }
+        instance.travel(f4);
     }
 }
