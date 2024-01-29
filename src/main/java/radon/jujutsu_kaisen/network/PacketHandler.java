@@ -32,6 +32,11 @@ public class PacketHandler {
                 .encoder(SyncSorcererDataS2CPacket::encode)
                 .consumerMainThread(SyncSorcererDataS2CPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SyncTenShadowsDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncTenShadowsDataS2CPacket::new)
+                .encoder(SyncTenShadowsDataS2CPacket::encode)
+                .consumerMainThread(SyncTenShadowsDataS2CPacket::handle)
+                .add();
         INSTANCE.messageBuilder(TriggerAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(TriggerAbilityC2SPacket::new)
                 .encoder(TriggerAbilityC2SPacket::encode)

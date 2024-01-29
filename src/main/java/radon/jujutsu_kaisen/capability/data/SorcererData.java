@@ -105,14 +105,6 @@ public class SorcererData implements ISorcererData {
     private final Map<BindingVow, Integer> bindingVowCooldowns;
     private final Map<Ability, Set<String>> chants;
 
-    // Ten shadows
-    private final Set<ResourceLocation> tamed;
-    private final Set<ResourceLocation> dead;
-    private final List<ItemStack> shadowInventory;
-    private final Set<Adaptation> adapted;
-    private final Map<Adaptation, Integer> adapting;
-    private TenShadowsMode mode;
-
     // Curse Manipulation
     private final List<AbsorbedCurse> curses;
 
@@ -147,8 +139,6 @@ public class SorcererData implements ISorcererData {
 
         this.output = 1.0F;
 
-        this.mode = TenShadowsMode.SUMMON;
-
         this.lastBlackFlashTime = -1;
 
         this.toggled = new HashSet<>();
@@ -165,17 +155,9 @@ public class SorcererData implements ISorcererData {
         this.bindingVowCooldowns = new HashMap<>();
         this.chants = new HashMap<>();
 
-        this.tamed = new HashSet<>();
-        this.dead = new HashSet<>();
-
-        this.adapted = new HashSet<>();
-        this.adapting = new HashMap<>();
-
         this.curses = new ArrayList<>();
 
         this.frames = new ArrayList<>();
-
-        this.shadowInventory = new ArrayList<>();
     }
 
     private void sync() {
@@ -295,36 +277,6 @@ public class SorcererData implements ISorcererData {
                 if (entity == null || !entity.isAlive() || entity.isRemoved()) {
                     iter.remove();
                 }
-            }
-        }
-    }
-
-    private void updateAdaptation() {
-        if (!this.toggled.contains(JJKAbilities.WHEEL.get())) return;
-
-        Iterator<Map.Entry<Adaptation, Integer>> iter = this.adapting.entrySet().iterator();
-
-        while (iter.hasNext()) {
-            Map.Entry<Adaptation, Integer> entry = iter.next();
-
-            int timer = entry.getValue();
-
-            if (++timer >= JJKConstants.REQUIRED_ADAPTATION) {
-                iter.remove();
-
-                this.adapted.add(entry.getKey());
-
-                if (this.owner instanceof MahoragaEntity mahoraga) {
-                    mahoraga.onAdaptation();
-                }
-
-                WheelEntity wheel = this.getSummonByClass(WheelEntity.class);
-
-                if (wheel != null) {
-                    wheel.spin();
-                }
-            } else {
-                entry.setValue(timer);
             }
         }
     }
@@ -454,8 +406,6 @@ public class SorcererData implements ISorcererData {
                 EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
                 EntityUtil.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
             }
-
-            this.updateAdaptation();
 
             if (this.owner instanceof ServerPlayer player) {
                 if (!this.initialized) {
@@ -1299,218 +1249,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        return this.tamed.contains(registry.getKey(entity));
-    }
-
-    @Override
-    public void tame(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        this.tamed.add(registry.getKey(entity));
-    }
-
-    @Override
-    public void setTamed(Set<ResourceLocation> tamed) {
-        this.tamed.clear();
-        this.tamed.addAll(tamed);
-    }
-
-    @Override
-    public Set<ResourceLocation> getTamed() {
-        return this.tamed;
-    }
-
-    @Override
-    public boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        return this.dead.contains(registry.getKey(entity));
-    }
-
-    @Override
-    public Set<ResourceLocation> getDead() {
-        return this.dead;
-    }
-
-    @Override
-    public void setDead(Set<ResourceLocation> dead) {
-        this.dead.clear();
-        this.dead.addAll(dead);
-    }
-
-    @Override
-    public void kill(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        this.dead.add(registry.getKey(entity));
-    }
-
-    @Override
-    public void revive(boolean full) {
-        this.dead.clear();
-
-        if (full) {
-            this.tamed.clear();
-        }
-    }
-
-    @Override
-    public Set<Adaptation> getAdapted() {
-        return this.adapted;
-    }
-
-    @Override
-    public void addAdapted(Set<Adaptation> adaptations) {
-        this.adapted.addAll(adaptations);
-    }
-
-    @Override
-    public Map<Adaptation, Integer> getAdapting() {
-        return this.adapting;
-    }
-
-    @Override
-    public void addAdapting(Map<Adaptation, Integer> adapting) {
-        this.adapting.putAll(adapting);
-    }
-
-    @Override
-    public void addShadowInventory(ItemStack stack) {
-        this.shadowInventory.add(stack);
-    }
-
-    @Override
-    public ItemStack getShadowInventory(int index) {
-        return this.shadowInventory.get(index);
-    }
-
-    @Override
-    public List<ItemStack> getShadowInventory() {
-        return this.shadowInventory;
-    }
-
-    @Override
-    public void removeShadowInventory(int index) {
-        this.shadowInventory.remove(index);
-    }
-
-    private Adaptation getAdaptation(DamageSource source) {
-        RegistryAccess registry = this.owner.level().registryAccess();
-        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-        return new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
-    }
-
-    @Override
-    public float getAdaptationProgress(DamageSource source) {
-        return this.getAdaptationProgress(this.getAdaptation(source));
-    }
-
-    @Override
-    public float getAdaptationProgress(Adaptation adaptation) {
-        return this.adapted.contains(adaptation) ? 1.0F : (float) this.adapting.getOrDefault(adaptation, 0) / JJKConstants.REQUIRED_ADAPTATION;
-    }
-
-    @Override
-    public Adaptation.Type getAdaptationType(DamageSource source) {
-        Adaptation adaptation = this.getAdaptation(source);
-        return this.getAdaptationType(adaptation);
-    }
-
-    @Override
-    public Adaptation.Type getAdaptationType(Adaptation adaptation) {
-        RegistryAccess registry = this.owner.level().registryAccess();
-        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-
-        DamageType type = types.get(adaptation.getKey());
-
-        if (type == types.get(DamageTypes.MOB_ATTACK) || type == types.get(DamageTypes.PLAYER_ATTACK)) {
-            return Adaptation.Type.COUNTER;
-        }
-        return Adaptation.Type.DAMAGE;
-    }
-
-    @Override
-    public Map<Adaptation.Type, Float> getAdaptationTypes() {
-        Map<Adaptation.Type, Float> adaptations = new HashMap<>();
-
-        for (Adaptation adaptation : this.adapting.keySet()) {
-            adaptations.put(this.getAdaptationType(adaptation), this.getAdaptationProgress(adaptation));
-        }
-        for (Adaptation adaptation : this.adapted) {
-            adaptations.put(this.getAdaptationType(adaptation), this.getAdaptationProgress(adaptation));
-        }
-        return adaptations;
-    }
-
-    @Override
-    public boolean isAdaptedTo(DamageSource source) {
-        Adaptation adaptation = this.getAdaptation(source);
-        return this.adapted.contains(adaptation);
-    }
-
-    @Override
-    public boolean isAdaptedTo(Ability ability) {
-        for (Adaptation adapted : this.adapted) {
-            Ability current = adapted.getAbility();
-
-            if (current == null) continue;
-
-            if (current == ability) return true;
-
-            Ability.Classification first = current.getClassification();
-            Ability.Classification second = ability.getClassification();
-
-            if (first == Ability.Classification.NONE || second == Ability.Classification.NONE) continue;
-            if (first == second) return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isAdaptedTo(CursedTechnique technique) {
-        for (Ability ability : technique.getAbilities()) {
-            if (this.isAdaptedTo(ability)) return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void tryAdapt(DamageSource source) {
-        RegistryAccess registry = this.owner.level().registryAccess();
-        Registry<DamageType> types = registry.registryOrThrow(Registries.DAMAGE_TYPE);
-
-        Adaptation adaptation = new Adaptation(types.getKey(source.type()),
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu ? jujutsu.getAbility() : null);
-
-        if (!this.adapting.containsKey(adaptation)) {
-            this.adapting.put(adaptation, 0);
-        } else {
-            int timer = this.adapting.get(adaptation);
-            timer += JJKConstants.ADAPTATION_STEP;
-            this.adapting.put(adaptation, timer);
-        }
-    }
-
-    @Override
-    public void tryAdapt(Ability ability) {
-        Adaptation adaptation = new Adaptation(JJKDamageSources.JUJUTSU.location(), ability);
-
-        if (!this.adapting.containsKey(adaptation)) {
-            this.adapting.put(adaptation, 0);
-        } else {
-            int timer = this.adapting.get(adaptation);
-            timer += JJKConstants.ADAPTATION_STEP;
-            this.adapting.put(adaptation, timer);
-        }
-    }
-
-    @Override
-    public TenShadowsMode getMode() {
-        return this.mode;
-    }
-
-    @Override
-    public void setMode(TenShadowsMode mode) {
-        this.mode = mode;
-    }
-
-    @Override
     public void addCurse(AbsorbedCurse curse) {
         this.curses.add(curse);
     }
@@ -1733,7 +1471,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("burnout", this.burnout);
         nbt.putInt("brain_damage", this.brainDamage);
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
-        nbt.putInt("mode", this.mode.ordinal());
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
         nbt.putInt("speed_stacks", this.speedStacks);
@@ -1857,44 +1594,6 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("chants", chantsTag);
 
-        ListTag tamedTag = new ListTag();
-
-        for (ResourceLocation key : this.tamed) {
-            tamedTag.add(StringTag.valueOf(key.toString()));
-        }
-        nbt.put("tamed", tamedTag);
-
-        ListTag deadTag = new ListTag();
-
-        for (ResourceLocation key : this.dead) {
-            deadTag.add(StringTag.valueOf(key.toString()));
-        }
-        nbt.put("dead", deadTag);
-
-        ListTag adaptedTag = new ListTag();
-
-        for (Adaptation adaptation : this.adapted) {
-            adaptedTag.add(adaptation.serializeNBT());
-        }
-        nbt.put("adapted", adaptedTag);
-
-        ListTag adaptingTag = new ListTag();
-
-        for (Map.Entry<Adaptation, Integer> entry : this.adapting.entrySet()) {
-            CompoundTag data = new CompoundTag();
-            data.put("adaptation", entry.getKey().serializeNBT());
-            data.putInt("stage", entry.getValue());
-            adaptingTag.add(data);
-        }
-        nbt.put("adapting", adaptingTag);
-
-        ListTag shadowInventoryTag = new ListTag();
-
-        for (ItemStack stack : this.shadowInventory) {
-            shadowInventoryTag.add(stack.save(new CompoundTag()));
-        }
-        nbt.put("shadow_inventory", shadowInventoryTag);
-
         ListTag cursesTag = new ListTag();
 
         for (AbsorbedCurse curse : this.curses) {
@@ -1937,7 +1636,6 @@ public class SorcererData implements ISorcererData {
         this.burnout = nbt.getInt("burnout");
         this.brainDamage = nbt.getInt("brain_damage");
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
-        this.mode = TenShadowsMode.values()[nbt.getInt("mode")];
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
         this.speedStacks = nbt.getInt("speed_stacks");
@@ -2026,37 +1724,6 @@ public class SorcererData implements ISorcererData {
                 chants.add(entry.getAsString());
             }
             this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
-        }
-
-        this.tamed.clear();
-
-        for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
-            this.tamed.add(new ResourceLocation(key.getAsString()));
-        }
-
-        this.dead.clear();
-
-        for (Tag key : nbt.getList("dead", Tag.TAG_STRING)) {
-            this.dead.add(new ResourceLocation(key.getAsString()));
-        }
-
-        this.adapted.clear();
-
-        for (Tag key : nbt.getList("adapted", Tag.TAG_COMPOUND)) {
-            this.adapted.add(new Adaptation((CompoundTag) key));
-        }
-
-        this.adapting.clear();
-
-        for (Tag key : nbt.getList("adapting", Tag.TAG_COMPOUND)) {
-            CompoundTag adaptation = (CompoundTag) key;
-            this.adapting.put(new Adaptation(adaptation.getCompound("adaptation")), adaptation.getInt("stage"));
-        }
-
-        this.shadowInventory.clear();
-
-        for (Tag key : nbt.getList("shadow_inventory", Tag.TAG_COMPOUND)) {
-            this.shadowInventory.add(ItemStack.of((CompoundTag) key));
         }
 
         this.curses.clear();

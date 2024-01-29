@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -191,16 +193,17 @@ public abstract class DomainExpansionEntity extends Entity {
         if (!owner.canAttack(victim)) return false;
 
         if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData victimTenShadowsCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimSorcererCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if ((victim instanceof MahoragaEntity && victimCap.isAdaptedTo(this.ability))) return false;
+            if ((victim instanceof MahoragaEntity && victimTenShadowsCap.isAdaptedTo(this.ability))) return false;
 
-            if (victimCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                SimpleDomainEntity simple = victimCap.getSummonByClass(SimpleDomainEntity.class);
+            if (victimSorcererCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                SimpleDomainEntity simple = victimSorcererCap.getSummonByClass(SimpleDomainEntity.class);
 
                 if (simple != null) {
-                    ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerCap.getAbilityPower() * 10.0F);
+                    ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererCap.getAbilityPower() * 10.0F);
                 }
             }
 

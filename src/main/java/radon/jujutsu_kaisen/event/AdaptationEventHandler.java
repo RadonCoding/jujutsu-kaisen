@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -35,7 +37,7 @@ public class AdaptationEventHandler {
 
             if (!JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData cap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (!cap.isAdaptedTo(event.getAbility())) {
                 cap.tryAdapt(event.getAbility());
@@ -50,11 +52,9 @@ public class AdaptationEventHandler {
 
             DamageSource source = event.getSource();
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            if (JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !JJKAbilities.hasToggled(victim, JJKAbilities.WHEEL.get())) return;
 
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) || !cap.hasToggled(JJKAbilities.WHEEL.get())) return;
+            ITenShadowsData cap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
             // Initiate / continue the adaptation process
             if (!cap.isAdaptedTo(source)) cap.tryAdapt(source);
@@ -100,10 +100,10 @@ public class AdaptationEventHandler {
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!attacker.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+            ITenShadowsData attackerCap = attacker.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()) && attackerCap.hasToggled(JJKAbilities.WHEEL.get())) {
+            if (!JJKAbilities.hasToggled(attacker, JJKAbilities.DOMAIN_AMPLIFICATION.get()) && JJKAbilities.hasToggled(attacker, JJKAbilities.WHEEL.get())) {
                 if (victimCap.hasToggled(JJKAbilities.INFINITY.get())) {
                     attackerCap.tryAdapt(JJKAbilities.INFINITY.get());
                 }

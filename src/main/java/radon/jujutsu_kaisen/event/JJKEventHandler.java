@@ -13,7 +13,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -35,12 +34,10 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.effect.base.JJKEffect;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.JJKPartEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
@@ -145,52 +142,6 @@ public class JJKEventHandler {
             if (event.getEntity() instanceof ServerPlayer player) {
                 ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onPlayerClone(PlayerEvent.Clone event) {
-            Player original = event.getOriginal();
-            Player player = event.getEntity();
-
-            original.reviveCaps();
-
-            ISorcererData oldCap = original.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData newCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            newCap.deserializeNBT(oldCap.serializeNBT());
-
-            if (event.isWasDeath()) {
-                newCap.setEnergy(newCap.getMaxEnergy());
-                newCap.resetCooldowns();
-                newCap.resetBurnout();
-                newCap.clearToggled();
-
-                if (!ConfigHolder.SERVER.realisticShikigami.get()) {
-                    newCap.revive(false);
-                }
-                newCap.resetBlackFlash();
-                newCap.resetExtraEnergy();
-                newCap.resetSpeedStacks();
-
-                if (!player.level().isClientSide) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
-                }
-            }
-            original.invalidateCaps();
-        }
-
-        @SubscribeEvent
-        public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof LivingEntity entity) {
-                if (entity instanceof Player || entity instanceof ISorcerer) {
-                    SorcererDataHandler.SorcererDataProvider provider = new SorcererDataHandler.SorcererDataProvider();
-
-                    ISorcererData cap = provider.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    cap.init(entity);
-
-                    event.addCapability(SorcererDataHandler.SorcererDataProvider.IDENTIFIER, provider);
-                }
             }
         }
 

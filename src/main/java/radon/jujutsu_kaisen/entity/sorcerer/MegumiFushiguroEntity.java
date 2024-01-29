@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -70,22 +72,17 @@ public class MegumiFushiguroEntity extends SorcererEntity {
         return JujutsuType.SORCERER;
     }
 
-
-    @Override
-    public void init(ISorcererData data) {
-        super.init(data);
-
-        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.RABBIT_ESCAPE.get());
-        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.TOAD.get());
-        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
-        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
-        data.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
-    }
-
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
+
+        ITenShadowsData cap = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.RABBIT_ESCAPE.get());
+        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.TOAD.get());
+        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
+        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
+        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
     }
 }

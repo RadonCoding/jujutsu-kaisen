@@ -18,6 +18,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -144,8 +145,8 @@ public class AgitoEntity extends TenShadowsSummon {
             LivingEntity owner = this.getOwner();
 
             if (owner != null) {
-                this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(srcCap -> {
-                    owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(dstCap -> {
+                this.getCapability(TenShadowsDataHandler.INSTANCE).ifPresent(srcCap -> {
+                    owner.getCapability(TenShadowsDataHandler.INSTANCE).ifPresent(dstCap -> {
                         dstCap.addAdapted(srcCap.getAdapted());
                     });
                 });

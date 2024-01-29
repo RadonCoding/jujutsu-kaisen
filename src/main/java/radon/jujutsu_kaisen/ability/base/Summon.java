@@ -8,7 +8,9 @@ import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.TenShadowsMode;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -61,7 +63,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
         for (EntityType<?> type : this.getTypes()) {
             if (cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type)) return true;
@@ -81,7 +83,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (!super.isValid(owner)) return false;
 
         if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.getMode() != TenShadowsMode.SUMMON) return false;
 
@@ -130,7 +132,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!this.canDie()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.isDead(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), type);
     }
 
