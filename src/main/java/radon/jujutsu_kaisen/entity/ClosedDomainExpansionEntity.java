@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -185,14 +186,10 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         int radius = this.getRadius();
 
-        Vec3 direction = this.getLookAngle();
-        Vec3 behind = this.position().add(0.0D, radius, 0.0D);
-        BlockPos center = BlockPos.containing(behind);
+        BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 
-        double back = Math.sqrt((radius + direction.x * radius) * (radius + direction.x * radius) +
-                (radius + direction.y * radius) * (radius + direction.y * radius) +
-                (radius + direction.z * radius) * (radius + direction.z * radius));
-        int death = ((int) Math.round(back) / 2) + 1;
+        Vec3 direction = this.getLookAngle();
+        Vec3 behind = this.position().subtract(direction.scale(radius - OFFSET)).add(0.0D, radius, 0.0D);
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
@@ -203,18 +200,14 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    // Calculate the delay based on the distance from the center to the front of the wall
-                    double front = Math.sqrt((x + direction.x * radius) * (x + direction.x * radius) +
-                            (y + direction.y * radius) * (y + direction.y * radius) +
-                            (z + direction.z * radius) * (z + direction.z * radius));
-                    int delay = (int) Math.round(front) / 2;
+                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind));
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                     if (instant) {
-                        this.createBlock(death - delay, pos, radius, distance);
+                        this.createBlock(radius - delay, pos, radius, distance);
                     } else {
-                        cap.delayTickEvent(() -> this.createBlock(death - delay, pos, radius, distance), delay);
+                        cap.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
                     }
                 }
             }
