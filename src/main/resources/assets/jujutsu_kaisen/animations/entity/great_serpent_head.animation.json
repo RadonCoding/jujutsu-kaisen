@@ -31,6 +31,21 @@
 					}
 				}
 			}
+		},
+		"misc.grab": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"head": {
+					"rotation": {
+						"vector": [-22.5, 0, 0]
+					}
+				},
+				"jaw": {
+					"rotation": {
+						"vector": [45, 0, 0]
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2

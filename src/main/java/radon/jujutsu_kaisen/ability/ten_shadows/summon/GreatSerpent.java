@@ -71,6 +71,4 @@ public class GreatSerpent extends Summon<GreatSerpentEntity> {
     protected boolean canTame() {
         return true;
     }
-
-
 }

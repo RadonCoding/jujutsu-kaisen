@@ -697,6 +697,110 @@
 					}
 				}
 			}
+		},
+		"attack.swing": {
+			"animation_length": 0.29167,
+			"bones": {
+				"upper_body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 20, 0]
+						},
+						"0.0833": {
+							"vector": [0, -15, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_arm_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [15, 0, 0]
+						},
+						"0.0833": {
+							"vector": [-95.26256, -9.05754, 4.25058]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_forearm_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [-75, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0, 0, -10]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_arm_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [25, 0, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"right_forearm_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [-45, 0, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_arm_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [25, 0, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_forearm_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [-45, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_arm_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [25, 0, 0]
+						},
+						"0.2917": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"left_forearm_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [-45, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2

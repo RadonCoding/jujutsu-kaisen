@@ -97,16 +97,16 @@ public class Dash extends Ability {
         } else if (owner.onGround() || !owner.getFeetBlockState().getFluidState().isEmpty()) {
             float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
-            float f7 = owner.getYRot();
-            float f = owner.getXRot();
-            float f1 = -Mth.sin(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));
-            float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F));
-            float f3 = Mth.cos(f7 * ((float) Math.PI / 180.0F)) * Mth.cos(f * ((float) Math.PI / 180.0F));
-            float f4 = Mth.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
-            f1 *= power / f4;
-            f2 *= power / f4;
-            f3 *= power / f4;
-            owner.push(f1, f2, f3);
+            float f = owner.getYRot();
+            float f1 = owner.getXRot();
+            float f2 = -Mth.sin(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
+            float f3 = -Mth.sin(f1 * ((float) Math.PI / 180.0F));
+            float f4 = Mth.cos(f * ((float) Math.PI / 180.0F)) * Mth.cos(f1 * ((float) Math.PI / 180.0F));
+            float f5 = Mth.sqrt(f2 * f2 + f3 * f3 + f4 * f4);
+            f2 *= power / f5;
+            f3 *= power / f5;
+            f4 *= power / f5;
+            owner.push(f2, f3, f4);
             owner.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
             owner.hurtMarked = true;
         }

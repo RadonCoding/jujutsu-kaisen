@@ -141,6 +141,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         if (this.getActivationType(owner) == ActivationType.INSTANT) {
             this.spawn(owner, false);
         }
@@ -179,12 +181,21 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
             ((TenShadowsSummon) summon).setClone(clone);
         }
         owner.level().addFreshEntity(summon);
+
         cap.addSummon(summon);
     }
 
     @Override
     public void onEnabled(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         this.spawn(owner, false);
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        }
     }
 
     @Override
