@@ -29,6 +29,8 @@ public abstract class LivingEntityMixin {
 
     @Shadow public abstract boolean hasEffect(MobEffect pEffect);
 
+    @Shadow protected boolean jumping;
+
     @Inject(method = "isFallFlying", at = @At("HEAD"), cancellable = true)
     public void isFallFlying(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
@@ -64,8 +66,14 @@ public abstract class LivingEntityMixin {
         return 1.0989F - 0.02F;
     }
 
-    @Inject(method = "isImmobile", at = @At("HEAD"), cancellable = true)
-    public void isImmobile(CallbackInfoReturnable<Boolean> cir) {
-        if (this.hasEffect(JJKEffects.STUN.get())) cir.setReturnValue(true);
+    @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isImmobile()Z"))
+    public void aiStep(CallbackInfo ci) {
+        if (this.hasEffect(JJKEffects.STUN.get())) {
+            LivingEntity entity = (LivingEntity) (Object) this;
+
+            this.jumping = false;
+            entity.xxa = 0.0F;
+            entity.zza = 0.0F;
+        }
     }
 }
