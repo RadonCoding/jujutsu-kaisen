@@ -61,7 +61,7 @@ public class Dash extends Ability {
     }
 
     private static boolean canDash(LivingEntity owner) {
-        return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, RANGE).getType() != HitResult.Type.MISS ||
+        return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, getRange(owner)).getType() != HitResult.Type.MISS ||
                 owner.onGround() || owner.isInFluidType());
     }
 
@@ -86,7 +86,7 @@ public class Dash extends Ability {
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
 
-        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
+        HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
         if (hit.getType() == HitResult.Type.MISS) {
             float power = Math.min(MAX_DASH, DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
