@@ -195,7 +195,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                     level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
                             0, 0.0D, 0.0D, 0.0D, 1.0D);
                 }
-                AABB bounds = owner.getBoundingBox();
+                AABB bounds = owner.getBoundingBox().inflate(1.0D);
 
                 for (Entity entity : owner.level().getEntities(owner, AABB.ofSize(frame, bounds.getXsize(), bounds.getYsize(), bounds.getZsize()))) {
                     owner.swing(InteractionHand.MAIN_HAND, true);
