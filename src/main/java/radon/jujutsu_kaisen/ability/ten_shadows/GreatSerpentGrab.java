@@ -47,6 +47,8 @@ public class GreatSerpentGrab extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
+        if (owner.level().isClientSide) return;
+
         LivingEntity target = this.getTarget(owner);
 
         if (target == null) return;
