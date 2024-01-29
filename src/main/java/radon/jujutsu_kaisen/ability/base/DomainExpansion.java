@@ -77,7 +77,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
                 break;
             }
 
-            Status status = this.getStatus(owner, false);
+            Status status = this.getStatus(owner);
 
             if (result && (status == Status.SUCCESS)) {
                 if (cap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
