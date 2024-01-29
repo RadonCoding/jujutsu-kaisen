@@ -60,7 +60,7 @@ public class Dash extends Ability {
 
     private static boolean canDash(LivingEntity owner) {
         return !owner.hasEffect(JJKEffects.STUN.get()) && (RotationUtil.getLookAtHit(owner, getRange(owner)).getType() != HitResult.Type.MISS ||
-                owner.onGround() || owner.isInFluidType());
+                owner.onGround() || owner.isInFluidType() || !owner.getFeetBlockState().getFluidState().isEmpty());
     }
 
     private static float getRange(LivingEntity owner) {
