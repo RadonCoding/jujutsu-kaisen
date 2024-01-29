@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -202,6 +203,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> ENHANCE_CURSE = ABILITIES.register("enhance_curse", EnhanceCurse::new);
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
+    public static RegistryObject<Ability> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
 
     public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);
@@ -273,24 +275,26 @@ public class JJKAbilities {
         return Math.max(1.0F, getCurseExperience(curse) * 0.01F);
     }
 
-    public static void summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
+    @Nullable
+    public static Entity summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbsorbedCurse> curses = cap.getCurses();
 
-        if (!curses.contains(curse)) return;
+        if (!curses.contains(curse)) return null;
 
-        summonCurse(owner, curses.indexOf(curse), charge);
+        return summonCurse(owner, curses.indexOf(curse), charge);
     }
 
-    public static void summonCurse(LivingEntity owner, int index, boolean charge) {
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return;
+    @Nullable
+    public static Entity summonCurse(LivingEntity owner, int index, boolean charge) {
+        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return null;
 
         ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbsorbedCurse> curses = ownerCap.getCurses();
 
-        if (index >= curses.size()) return;
+        if (index >= curses.size()) return null;
 
         AbsorbedCurse curse = curses.get(index);
 
@@ -299,7 +303,7 @@ public class JJKAbilities {
 
             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
                 if (ownerCap.getEnergy() < cost) {
-                    return;
+                    return null;
                 }
                 ownerCap.useEnergy(cost);
             }
@@ -307,7 +311,7 @@ public class JJKAbilities {
 
         CursedSpirit entity = createCurse(owner, curse);
 
-        if (entity == null) return;
+        if (entity == null) return null;
 
         owner.level().addFreshEntity(entity);
 
@@ -320,6 +324,7 @@ public class JJKAbilities {
         if (owner instanceof ServerPlayer player) {
             PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
         }
+        return entity;
     }
 
     public static Set<CursedTechnique> getTechniques(LivingEntity owner) {

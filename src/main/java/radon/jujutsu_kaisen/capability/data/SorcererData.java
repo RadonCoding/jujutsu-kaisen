@@ -1530,6 +1530,22 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public @Nullable AbsorbedCurse getCurse(EntityType<?> type) {
+        for (AbsorbedCurse curse : this.getCurses()) {
+            if (curse.getType() == type) return curse;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasCurse(EntityType<?> type) {
+        for (AbsorbedCurse curse : this.getCurses()) {
+            if (curse.getType() == type) return true;
+        }
+        return false;
+    }
+
+    @Override
     public List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames() {
         return this.frames;
     }

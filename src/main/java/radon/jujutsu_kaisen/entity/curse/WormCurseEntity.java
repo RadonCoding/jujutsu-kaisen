@@ -1,8 +1,13 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -12,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
+import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -19,11 +25,17 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class WormCurseEntity extends CursedSpirit {
+    private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(WormCurseEntity.class, EntityDataSerializers.BOOLEAN);
+
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
+    private static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("misc.grab");
 
     private static final int MAX_SEGMENTS = 24;
 
     private final WormCurseSegmentEntity[] segments;
+
+    @Nullable
+    private LivingEntity target;
 
     public WormCurseEntity(EntityType<? extends TamableAnimal> pType, Level pLevel) {
         super(pType, pLevel);
@@ -35,6 +47,26 @@ public class WormCurseEntity extends CursedSpirit {
             this.segments[i].moveTo(this.getX() + 0.1D * i, this.getY() + 0.5D, this.getZ() + 0.1D * i, this.random.nextFloat() * 360.0F, 0.0F);
         }
         this.setId(ENTITY_COUNTER.getAndAdd(this.segments.length + 1) + 1);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(DATA_GRABBING, false);
+    }
+
+    private boolean isGrabbing() {
+        return this.entityData.get(DATA_GRABBING);
+    }
+
+    private void setGrabbing(boolean grabbing) {
+        this.entityData.set(DATA_GRABBING, grabbing);
+    }
+
+    public void grab(LivingEntity target) {
+        this.target = target;
+        this.setGrabbing(false);
     }
 
     @Override
@@ -79,9 +111,17 @@ public class WormCurseEntity extends CursedSpirit {
         return PlayState.STOP;
     }
 
+    private PlayState grabPredicate(AnimationState<WormCurseEntity> animationState) {
+        if (this.isGrabbing()) {
+            return animationState.setAndContinue(GRAB);
+        }
+        return PlayState.STOP;
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "Bite", this::bitePredicate));
+        controllerRegistrar.add(new AnimationController<>(this, "Grab", this::grabPredicate));
     }
 
     @Override
@@ -139,11 +179,41 @@ public class WormCurseEntity extends CursedSpirit {
     }
 
     @Override
+    public boolean isPushable() {
+        return !this.isGrabbing() && super.isPushable();
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         this.yHeadRot = this.getYRot();
         this.moveSegments();
+
+        LivingEntity owner = this.getOwner();
+
+        if (owner == null) return;
+
+        if (this.target == null || this.target.isDeadOrDying() || this.target.isRemoved()) {
+            this.setGrabbing(false);
+            return;
+        }
+
+        if (!this.isGrabbing()) {
+            this.lookAt(EntityAnchorArgument.Anchor.EYES, this.target.position().add(0.0D, this.target.getBbHeight() / 2.0F, 0.0D));
+
+            this.setDeltaMovement(this.target.position().subtract(this.position()).normalize().scale(2.0D));
+
+            if (this.distanceTo(this.target) < 1.0D) {
+                this.setGrabbing(true);
+            }
+        } else {
+            this.setYRot(this.target.yBodyRot);
+
+            Vec3 pos = this.position().add(0.0D, this.getBbHeight() / 2.0F, 0.0D)
+                    .subtract(0.0D, this.target.getBbHeight() / 2.0F, 0.0D);
+            this.target.teleportTo(pos.x, pos.y, pos.z);
+        }
     }
 
     @Override
