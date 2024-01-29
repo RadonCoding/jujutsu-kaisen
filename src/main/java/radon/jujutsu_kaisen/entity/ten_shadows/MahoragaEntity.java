@@ -18,6 +18,8 @@ import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -248,10 +250,10 @@ public class MahoragaEntity extends TenShadowsSummon {
             LivingEntity owner = this.getOwner();
 
             if (owner != null) {
-                if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
 
-                ISorcererData src = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                ISorcererData dst = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ITenShadowsData src = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+                ITenShadowsData dst = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
                 dst.addAdapted(src.getAdapted());
                 dst.addAdapting(src.getAdapting());
@@ -284,10 +286,10 @@ public class MahoragaEntity extends TenShadowsSummon {
 
         if (owner == null) return;
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
 
-        ISorcererData src = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData dst = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
         dst.addAdapted(src.getAdapted());
         dst.addAdapting(src.getAdapting());

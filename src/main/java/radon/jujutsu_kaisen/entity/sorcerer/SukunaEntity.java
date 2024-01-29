@@ -27,6 +27,8 @@ import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -249,13 +251,16 @@ public class SukunaEntity extends SorcererEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner != null) {
-            ISorcererData src = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData dst = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData sorcererSrc = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData tenShadowsSrc = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
-            dst.setTraits(src.getTraits());
-            dst.setAdditional(src.getTechnique());
-            dst.setTamed(src.getTamed());
-            dst.setDead(src.getDead());
+            ISorcererData sorcererDst = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData tenShadowsDst = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+
+            sorcererDst.setTraits(sorcererSrc.getTraits());
+            sorcererDst.setAdditional(sorcererSrc.getTechnique());
+            tenShadowsDst.setTamed(tenShadowsSrc.getTamed());
+            tenShadowsDst.setDead(tenShadowsSrc.getDead());
         }
     }
 
@@ -270,8 +275,8 @@ public class SukunaEntity extends SorcererEntity {
                 player.setGameMode(this.original == null ? player.server.getDefaultGameType() : this.original);
             }
 
-            ISorcererData src = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData dst = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData src = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            ITenShadowsData dst = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
             dst.setTamed(src.getTamed());
             dst.setDead(src.getDead());

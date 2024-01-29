@@ -56,6 +56,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -366,8 +368,8 @@ public class JJKAbilities {
     }
 
     public static boolean isDead(LivingEntity owner, EntityType<?> type) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return false;
+        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         return cap.isDead(registry, type);
     }

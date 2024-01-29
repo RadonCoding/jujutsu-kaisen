@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -29,25 +31,26 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData ownerCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (this.isTamed(owner)) {
-            if (JJKAbilities.hasToggled(owner, this)) {
-                return HelperMethods.RANDOM.nextInt(20) != 0;
-            } else {
-                if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!this.isTamed(owner)) {
+            return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
+        }
 
-                    for (CursedTechnique technique : targetCap.getTechniques()) {
-                        if (ownerCap.isAdaptedTo(technique)) {
-                            return true;
-                        }
-                    }
+        if (JJKAbilities.hasToggled(owner, this)) {
+            return HelperMethods.RANDOM.nextInt(20) != 0;
+        }
+
+        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
+            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+            for (CursedTechnique technique : targetCap.getTechniques()) {
+                if (ownerCap.isAdaptedTo(technique)) {
+                    return true;
                 }
-                return HelperMethods.RANDOM.nextInt(10) == 0;
             }
         }
-        return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override

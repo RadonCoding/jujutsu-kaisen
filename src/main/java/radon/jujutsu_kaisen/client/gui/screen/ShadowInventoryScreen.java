@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.capability.data.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -60,8 +62,8 @@ public class ShadowInventoryScreen extends Screen {
 
     private @Nullable List<ItemStack> getItems() {
         if (this.minecraft == null || this.minecraft.player == null) return null;
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!this.minecraft.player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return null;
+        ITenShadowsData cap = this.minecraft.player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getShadowInventory();
     }
 

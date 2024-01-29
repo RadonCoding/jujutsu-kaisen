@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.capability.data.sorcerer;
+package radon.jujutsu_kaisen.capability.data.ten_shadows;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
