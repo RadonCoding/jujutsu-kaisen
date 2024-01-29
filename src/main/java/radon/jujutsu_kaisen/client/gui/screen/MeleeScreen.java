@@ -35,9 +35,7 @@ public class MeleeScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
-
-        if (selected != null && !abilities.contains(selected)) {
+        if (selected != null && !selected.isValid(this.minecraft.player)) {
             selected = null;
         }
     }
