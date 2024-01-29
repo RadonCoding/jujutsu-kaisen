@@ -53,9 +53,9 @@ public class GreatSerpentGrab extends Ability {
 
         if (target == null) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        AbilityHandler.trigger(owner, JJKAbilities.GREAT_SERPENT.get());
 
-        if (AbilityHandler.trigger(owner, JJKAbilities.GREAT_SERPENT.get()) != Status.SUCCESS) return;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         GreatSerpentEntity serpent = cap.getSummonByClass(GreatSerpentEntity.class);
 
