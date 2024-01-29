@@ -274,7 +274,7 @@ public class ClientAbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+            if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
@@ -283,7 +283,7 @@ public class ClientAbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
-            if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
+            if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.channel(ability);
                 MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
