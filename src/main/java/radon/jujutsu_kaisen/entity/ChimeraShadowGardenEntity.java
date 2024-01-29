@@ -72,50 +72,52 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
 
                 ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
+                int death = width - i;
+
                 cap.delayTickEvent(() -> {
                     for (int x = -horizontal; x <= horizontal; x++) {
                         for (int z = -horizontal; z <= horizontal; z++) {
                             double distance = Math.sqrt(x * x + vertical * vertical + z * z);
 
-                            if (distance <= horizontal && distance >= horizontal - 1) {
-                                BlockPos pos = center.offset(x, -vertical, z);
+                            if (distance > horizontal || distance < horizontal - 1) continue;
 
-                                BlockState state = this.level().getBlockState(pos);
+                            BlockPos pos = center.offset(x, -vertical, z);
 
-                                if (state.is(Blocks.BEDROCK)) continue;
+                            BlockState state = this.level().getBlockState(pos);
 
-                                if (!this.isRemoved()) {
-                                    BlockEntity existing = this.level().getBlockEntity(pos);
+                            if (state.is(Blocks.BEDROCK)) continue;
 
-                                    CompoundTag saved = null;
+                            if (this.isRemoved()) return;
 
-                                    if (existing instanceof VeilBlockEntity be) {
-                                        be.destroy();
+                            BlockEntity existing = this.level().getBlockEntity(pos);
 
-                                        state = this.level().getBlockState(pos);
-                                    } else if (existing instanceof VeilBlockEntity be) {
-                                        be.destroy();
+                            CompoundTag saved = null;
 
-                                        state = this.level().getBlockState(pos);
-                                    } else if (existing instanceof DomainBlockEntity be) {
-                                        BlockState original = be.getOriginal();
+                            if (existing instanceof VeilBlockEntity be) {
+                                be.destroy();
 
-                                        if (original == null) return;
+                                state = this.level().getBlockState(pos);
+                            } else if (existing instanceof VeilBlockEntity be) {
+                                be.destroy();
 
-                                        state = original;
-                                        saved = be.getSaved();
-                                    } else if (existing != null) {
-                                        saved = existing.saveWithFullMetadata();
-                                    }
+                                state = this.level().getBlockState(pos);
+                            } else if (existing instanceof DomainBlockEntity be) {
+                                BlockState original = be.getOriginal();
 
-                                    Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
-                                    owner.level().setBlock(pos, block.defaultBlockState(),
-                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                if (original == null) return;
 
-                                    if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                                        be.create(this.uuid, state, saved);
-                                    }
-                                }
+                                state = original;
+                                saved = be.getSaved();
+                            } else if (existing != null) {
+                                saved = existing.saveWithFullMetadata();
+                            }
+
+                            Block block = JJKBlocks.CHIMERA_SHADOW_GARDEN.get();
+                            owner.level().setBlock(pos, block.defaultBlockState(),
+                                    Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                            if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
+                                be.create(this.uuid, death, state, saved);
                             }
                         }
                     }

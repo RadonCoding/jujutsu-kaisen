@@ -20,6 +20,8 @@ public class DomainBlockEntity extends BlockEntity {
     private boolean initialized;
     private UUID identifier;
 
+    private int death;
+
     @Nullable
     private BlockState original;
 
@@ -38,6 +40,10 @@ public class DomainBlockEntity extends BlockEntity {
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, DomainBlockEntity pBlockEntity) {
         if (pBlockEntity.identifier == null || !(((ServerLevel) pLevel).getEntity(pBlockEntity.identifier) instanceof DomainExpansionEntity domain) || domain.isRemoved() || !domain.isAlive()) {
+            pBlockEntity.death--;
+        }
+
+        if (pBlockEntity.death <= 0) {
             pBlockEntity.destroy();
         }
     }
@@ -93,9 +99,10 @@ public class DomainBlockEntity extends BlockEntity {
         return this.saved;
     }
 
-    public void create(UUID identifier, BlockState state, CompoundTag saved) {
+    public void create(UUID identifier, int delay, BlockState state, CompoundTag saved) {
         this.initialized = true;
         this.identifier = identifier;
+        this.death = delay;
         this.original = state;
         this.saved = saved;
         this.setChanged();
@@ -109,6 +116,7 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
+            this.death = pTag.getInt("death_time");
             this.deferred = pTag.getCompound("original");
 
             if (pTag.contains("saved")) {
@@ -125,6 +133,7 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             pTag.putUUID("identifier", this.identifier);
+            pTag.putInt("death_time", this.death);
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));

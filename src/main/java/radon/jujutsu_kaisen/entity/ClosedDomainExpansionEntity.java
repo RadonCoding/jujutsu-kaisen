@@ -106,7 +106,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
-    private void createBlock(BlockPos pos, int radius, double distance) {
+    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -171,7 +171,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             if (distance >= radius - 1 && success) this.total++;
 
             if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
-                be.create(this.uuid, state, saved);
+                be.create(this.uuid, delay, state, saved);
             }
         }
     }
@@ -188,6 +188,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         Vec3 direction = RotationUtil.getTargetAdjustedLookAngle(this);
         Vec3 behind = this.position().add(0.0D, radius, 0.0D);
         BlockPos center = BlockPos.containing(behind);
+
+        double back = Math.sqrt((radius + direction.x * radius) * (radius + direction.x * radius) +
+                (radius + direction.y * radius) * (radius + direction.y * radius) +
+                (radius + direction.z * radius) * (radius + direction.z * radius));
+        int death = (int) Math.round(back) / 2;
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
@@ -206,9 +211,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
                         if (instant) {
-                            this.createBlock(pos, radius, distance);
+                            this.createBlock(death - delay, pos, radius, distance);
                         } else {
-                            cap.delayTickEvent(() -> this.createBlock(pos, radius, distance), delay);
+                            cap.delayTickEvent(() -> this.createBlock(death - delay, pos, radius, distance), delay);
                         }
                     }
                 }
