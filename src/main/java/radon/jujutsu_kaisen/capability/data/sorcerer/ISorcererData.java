@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.capability.data;
+package radon.jujutsu_kaisen.capability.data.sorcerer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;

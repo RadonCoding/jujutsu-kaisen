@@ -2,11 +2,10 @@ package radon.jujutsu_kaisen.ability.idle_transfiguration.base;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 
 public abstract class TransfiguredSoul<T extends Entity> extends Summon<T> implements ITransfiguredSoul {
     public TransfiguredSoul(Class<T> clazz) {

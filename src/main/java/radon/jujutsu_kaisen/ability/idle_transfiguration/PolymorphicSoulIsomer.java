@@ -1,16 +1,12 @@
 package radon.jujutsu_kaisen.ability.idle_transfiguration;
 
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.TransfiguredSoul;
-import radon.jujutsu_kaisen.capability.data.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.PolymorphicSoulIsomerEntity;
-import radon.jujutsu_kaisen.entity.idle_transfiguration.TransfiguredSoulSmallEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
