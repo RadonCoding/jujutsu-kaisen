@@ -196,48 +196,15 @@ public class JJKEventHandler {
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+            if (!(event.getSource().getEntity() instanceof LivingEntity owner)) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             // If the target is dead we should not trigger any IAttack's
-            if (victim.getHealth() - event.getAmount() <= 0) {
-                if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (victim.getHealth() - event.getAmount() <= 0.0F) return;
 
-                // Check if the victim should unlock RCT
-                if (victimCap.isUnlocked(JJKAbilities.RCT1.get())) return;
-                if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
-                if (victimCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
-                if (victimCap.getType() != JujutsuType.SORCERER) return;
-                if (SorcererUtil.getGrade(victimCap.getExperience()).ordinal() < SorcererGrade.GRADE_1.ordinal())
-                    return;
-
-                int chance = ConfigHolder.SERVER.reverseCursedTechniqueChance.get();
-
-                for (InteractionHand hand : InteractionHand.values()) {
-                    ItemStack stack = victim.getItemInHand(hand);
-
-                    if (stack.is(Items.TOTEM_OF_UNDYING)) {
-                        chance /= 2;
-                    }
-                }
-
-                if (HelperMethods.RANDOM.nextInt(chance) != 0) return;
-
-                victim.setHealth(victim.getMaxHealth() / 2);
-                victimCap.unlock(JJKAbilities.RCT1.get());
-
-                if (victim instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                }
-
-                event.setCanceled(true);
-                return;
-            }
-
-            attackerCap.attack(event.getSource(), victim);
+            cap.attack(event.getSource(), victim);
 
             // If the target died from the IAttack's then cancel (yes this is very scuffed lmao)
             if (victim.isDeadOrDying()) event.setCanceled(true);
