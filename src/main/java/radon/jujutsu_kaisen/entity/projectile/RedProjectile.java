@@ -126,7 +126,7 @@ public class RedProjectile extends JujutsuProjectile {
 
                         for (BlueProjectile blue : this.level().getEntitiesOfClass(BlueProjectile.class, this.getBoundingBox().expandTowards(this.getDeltaMovement()))) {
                             if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                                if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner) != Ability.Status.SUCCESS) {
+                                if (JJKAbilities.HOLLOW_PURPLE.get().getStatus(owner, false) != Ability.Status.SUCCESS) {
                                     continue;
                                 }
                             }
