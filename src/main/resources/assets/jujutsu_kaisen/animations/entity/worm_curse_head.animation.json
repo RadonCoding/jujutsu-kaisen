@@ -2,17 +2,14 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"attack.bite": {
-			"animation_length": 0.20833,
+			"animation_length": 0.16667,
 			"bones": {
-				"head": {
+				"lower_jaw": {
 					"rotation": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [30, 0, 0]
 						},
-						"0.0833": {
-							"vector": [-5, 0, 0]
-						},
-						"0.2083": {
+						"0.1667": {
 							"vector": [0, 0, 0]
 						}
 					}
@@ -20,25 +17,9 @@
 				"upper_jaw": {
 					"rotation": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [-30, 0, 0]
 						},
-						"0.0417": {
-							"vector": [0, 32.5, 0]
-						},
-						"0.2083": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"lower_jaw": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.0417": {
-							"vector": [0, -32.5, 0]
-						},
-						"0.2083": {
+						"0.1667": {
 							"vector": [0, 0, 0]
 						}
 					}
@@ -55,12 +36,12 @@
 				},
 				"upper_jaw": {
 					"rotation": {
-						"vector": [0, 22.5, 0]
+						"vector": [-30, 0, 0]
 					}
 				},
 				"lower_jaw": {
 					"rotation": {
-						"vector": [0, -22.5, 0]
+						"vector": [30, 0, 0]
 					}
 				}
 			}

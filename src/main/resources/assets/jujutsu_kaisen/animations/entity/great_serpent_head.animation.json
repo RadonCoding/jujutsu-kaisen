@@ -1,48 +1,42 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"attack.bite": {
-			"animation_length": 0.25,
+		"misc.grab": {
+			"loop": "hold_on_last_frame",
 			"bones": {
-				"head": {
+				"lower_jaw": {
 					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.1667": {
-							"vector": [-35, 0, 0]
-						},
-						"0.25": {
-							"vector": [0, 0, 0]
-						}
+						"vector": [30, 0, 0]
 					}
 				},
-				"jaw": {
+				"upper_jaw": {
 					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.1667": {
-							"vector": [50, 0, 0]
-						},
-						"0.25": {
-							"vector": [0, 0, 0]
-						}
+						"vector": [-30, 0, 0]
 					}
 				}
 			}
 		},
-		"misc.grab": {
-			"loop": "hold_on_last_frame",
+		"attack.bite": {
+			"animation_length": 0.16667,
 			"bones": {
-				"head": {
+				"lower_jaw": {
 					"rotation": {
-						"vector": [-22.5, 0, 0]
+						"0.0": {
+							"vector": [30, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0]
+						}
 					}
 				},
-				"jaw": {
+				"upper_jaw": {
 					"rotation": {
-						"vector": [45, 0, 0]
+						"0.0": {
+							"vector": [-30, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0]
+						}
 					}
 				}
 			}
