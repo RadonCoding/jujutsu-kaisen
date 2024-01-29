@@ -110,13 +110,15 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class TwentyFourFrameRuleForgeEvents {
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingDamage(LivingDamageEvent event) {
             DamageSource source = event.getSource();
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
+
+            if (victim.getHealth() - event.getAmount() <= 0.0F) return;
 
             for (ProjectionFrameEntity frame : victim.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(victim.position(),
                     8.0D, 8.0D, 8.0D))) {
