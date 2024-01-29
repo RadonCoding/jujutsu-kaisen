@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -205,8 +207,16 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                     }
                 }
 
-                owner.teleportTo(frame.x, frame.y, frame.z);
-                owner.setYRot(yaw);
+                Set<RelativeMovement> movements = EnumSet.noneOf(RelativeMovement.class);
+                movements.add(RelativeMovement.X);
+                movements.add(RelativeMovement.Y);
+                movements.add(RelativeMovement.Z);
+                movements.add(RelativeMovement.X_ROT);
+                movements.add(RelativeMovement.Y_ROT);
+
+                owner.teleportTo((ServerLevel) owner.level(), frame.x, frame.y, frame.z, movements, yaw, owner.getXRot());
+                owner.setDeltaMovement(owner.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
+                owner.setOnGround(true);
 
                 previous.set(frame);
             }, delay++);
