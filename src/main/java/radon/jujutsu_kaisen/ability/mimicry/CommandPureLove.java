@@ -38,7 +38,7 @@ public class CommandPureLove extends Ability {
 
         if (rika == null) return;
 
-        if (JJKAbilities.SHOOT_PURE_LOVE.get().getStatus(rika, false) != Status.SUCCESS) return;
+        if (JJKAbilities.SHOOT_PURE_LOVE.get().getStatus(rika) != Status.SUCCESS) return;
 
         rika.setOpen(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
     }

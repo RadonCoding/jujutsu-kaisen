@@ -210,14 +210,10 @@ public abstract class Ability {
         }
     }
 
-    public Status getStatus(LivingEntity owner, boolean checkOwnership) {
+    public Status getStatus(LivingEntity owner) {
         if (this != JJKAbilities.WHEEL.get() && owner.hasEffect(JJKEffects.UNLIMITED_VOID.get())) return Status.FAILURE;
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (checkOwnership && !JJKAbilities.getAbilities(owner).contains(this)) {
-            return Status.UNUSUABLE;
-        }
 
         if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
             if (this.isTechnique() && cap.hasBurnout()) {
@@ -236,11 +232,13 @@ public abstract class Ability {
     }
 
     public Status isTriggerable(LivingEntity owner) {
+        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
+
         MobEffectInstance instance = owner.getEffect(JJKEffects.STUN.get());
 
         if (instance != null && instance.getAmplifier() > 0) return Status.FAILURE;
 
-        Status status = this.getStatus(owner, true);
+        Status status = this.getStatus(owner);
 
         if (status == Status.SUCCESS && this.getActivationType(owner) == ActivationType.INSTANT) {
             this.charge(owner);
@@ -250,11 +248,13 @@ public abstract class Ability {
     }
 
     public Status isStillUsable(LivingEntity owner) {
+        if (!JJKAbilities.getAbilities(owner).contains(this)) return Status.UNUSUABLE;
+
         if (this instanceof IAttack || this instanceof ICharged) {
-            return this.getStatus(owner, true);
+            return this.getStatus(owner);
         }
 
-        Status status = this.getStatus(owner, true);
+        Status status = this.getStatus(owner);
 
         if (status == Ability.Status.SUCCESS || status == Ability.Status.COOLDOWN) {
             this.charge(owner);
