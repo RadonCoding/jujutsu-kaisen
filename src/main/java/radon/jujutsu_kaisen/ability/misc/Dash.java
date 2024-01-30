@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Cursor3D;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -9,10 +10,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -67,11 +72,28 @@ public class Dash extends Ability {
 
         boolean collision = false;
 
-        for (VoxelShape shape : owner.level().getBlockCollisions(owner, owner.getBoundingBox().inflate(1.0E-7D))) {
-            if (shape.isEmpty()) continue;
+        AABB bounds = owner.getBoundingBox();
+        Cursor3D cursor = new Cursor3D(Mth.floor(bounds.minX - 1.0E-7D) - 1,
+                Mth.floor(bounds.minY - 1.0E-7D) - 1,
+                Mth.floor(bounds.minZ - 1.0E-7D) - 1,
+                Mth.floor(bounds.maxX + 1.0E-7D) + 1,
+                Mth.floor(bounds.maxY + 1.0E-7D) + 1,
+                Mth.floor(bounds.maxZ + 1.0E-7D) + 1);
 
-            collision = true;
-            break;
+        while (cursor.advance()) {
+            int i = cursor.nextX();
+            int j = cursor.nextY();
+            int k = cursor.nextZ();
+            int l = cursor.getNextType();
+
+            if (l == 3) continue;
+
+            BlockState state = owner.level().getBlockState(new BlockPos(i, j, k));
+
+            if (!state.isAir()) {
+                collision = true;
+                break;
+            }
         }
         return collision || owner.getXRot() >= 15.0F;
     }
