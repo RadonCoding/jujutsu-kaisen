@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.curse;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -10,7 +11,10 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
@@ -20,6 +24,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
+import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -30,6 +35,7 @@ import software.bernie.geckolib.core.object.PlayState;
 public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable, IJumpInputListener {
     private static final RawAnimation BITE = RawAnimation.begin().thenPlay("attack.bite");
 
+    private static final int MAX_IDLE_Y = 16;
     private static final int MAX_SEGMENTS = 12;
 
     public static final int ARMS = 1;
@@ -214,7 +220,14 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
 
     @Override
     public boolean isNoGravity() {
-        return !this.isVehicle() && super.isNoGravity();
+        if (this.isVehicle()) return false;
+
+        Vec3 offset = this.position().subtract(0.0D, MAX_IDLE_Y, 0.0D);
+        BlockHitResult hit = this.level().clip(new ClipContext(this.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
+
+        if (this.getTarget() == null && hit.getType() == HitResult.Type.MISS) return false;
+
+        return super.isNoGravity();
     }
 
     @Override
