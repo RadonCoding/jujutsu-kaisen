@@ -53,6 +53,8 @@ public class HollowPurpleProjectile extends JujutsuProjectile {
 
         if (this.getOwner() instanceof LivingEntity owner) {
             for (Entity entity : this.level().getEntities(owner, bounds)) {
+                if (entity == this) continue;
+
                 if (entity instanceof Projectile) {
                     entity.discard();
                     continue;
