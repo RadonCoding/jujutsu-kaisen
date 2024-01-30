@@ -44,6 +44,9 @@ public class ExperienceHandler {
     public static void onLivingDamage(LivingDamageEvent event) {
         LivingEntity victim = event.getEntity();
 
+        // Tames do not give experience
+        if (victim instanceof TamableAnimal tamable && tamable.isTame()) return;
+
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             if (!victim.isAlive() || victim.isRemoved() || !attacker.isAlive() || attacker.isRemoved()) return;
 
