@@ -70,16 +70,6 @@ public class Wings extends Transformation {
     }
 
     @Override
-    public void applyModifiers(LivingEntity owner) {
-
-    }
-
-    @Override
-    public void removeModifiers(LivingEntity owner) {
-
-    }
-
-    @Override
     public void onEnabled(LivingEntity owner) {
         
     }
