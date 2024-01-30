@@ -501,7 +501,7 @@
   "chat.jujutsu_kaisen.pact_request_remove": "Sent a pact removal request to %1$s",
 
   "chat.jujutsu_kaisen.pact_question_create": "Do you %1$s or %2$s a %3$s pact with %4$s?",
-  "chat.jujutsu_kaisen.pact_question_remove": "Do you %1$s to %2$s the removal of the %2$s pact with %3$s?",
+  "chat.jujutsu_kaisen.pact_question_remove": "Do you %1$s to %2$s the removal of the %3$s pact with %4$s?",
 
   "chat.jujutsu_kaisen.pact_question_accept": "accept",
   "chat.jujutsu_kaisen.pact_question_decline": "decline",
