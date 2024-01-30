@@ -71,12 +71,15 @@ public class Dash extends Ability {
 
             if (state.isAir()) continue;
 
-            if (AABB.ofSize(pos.getCenter(), 0.5D, 0.5D, 0.5D).intersects(owner.getBoundingBox().inflate(1.0E-7D))) {
+            if (AABB.ofSize(pos.getCenter(), 1.0D, 1.0D, 1.0D).intersects(owner.getBoundingBox().inflate(1.0E-7D))) {
                 collision = true;
                 break;
             }
         }
-        return collision || owner.getXRot() >= 45.0F;
+
+        System.out.println(collision);
+
+        return collision || owner.getXRot() >= 15.0F;
     }
 
     private static float getRange(LivingEntity owner) {
