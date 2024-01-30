@@ -67,15 +67,11 @@ public class Dash extends Ability {
 
         boolean collision = false;
 
-        for (VoxelShape shape : owner.level().getBlockCollisions(owner, owner.getBoundingBox())) {
+        for (VoxelShape shape : owner.level().getBlockCollisions(owner, owner.getBoundingBox().inflate(1.0E-7D))) {
             if (shape.isEmpty()) continue;
 
-            System.out.println(shape.bounds().intersects(owner.getBoundingBox()));
-
-            if (shape.bounds().intersects(owner.getBoundingBox())) {
-                collision = true;
-                break;
-            }
+            collision = true;
+            break;
         }
         return collision || owner.getXRot() >= 15.0F;
     }
