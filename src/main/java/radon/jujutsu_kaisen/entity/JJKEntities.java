@@ -27,23 +27,6 @@ import radon.jujutsu_kaisen.entity.ten_shadows.*;
 public class JJKEntities {
     public static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, JujutsuKaisen.MOD_ID);
 
-    public static RegistryObject<EntityType<RedProjectile>> RED = ENTITIES.register("red", () ->
-            EntityType.Builder.<RedProjectile>of(RedProjectile::new, MobCategory.MISC)
-                    .sized(0.15F, 0.15F)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")
-                            .toString()));
-    public static RegistryObject<EntityType<BlueProjectile>> BLUE = ENTITIES.register("blue", () ->
-            EntityType.Builder.<BlueProjectile>of(BlueProjectile::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")
-                            .toString()));
-    public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
-            EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
-                            .toString()));
-    public static RegistryObject<EntityType<HollowPurpleExplosion>> HOLLOW_PURPLE_EXPLOSION = ENTITIES.register("hollow_purple_explosion", () ->
-            EntityType.Builder.<HollowPurpleExplosion>of(HollowPurpleExplosion::new, MobCategory.MISC)
-                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")
-                            .toString()));
     public static RegistryObject<EntityType<ClosedDomainExpansionEntity>> CLOSED_DOMAIN_EXPANSION = ENTITIES.register("closed_domain_expansion", () ->
             EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
                     .fireImmune()
@@ -301,12 +284,29 @@ public class JJKEntities {
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "polymorphic_soul_isomer")
                             .toString()));
 
+
     public static RegistryObject<EntityType<SimpleDomainEntity>> SIMPLE_DOMAIN = ENTITIES.register("simple_domain", () ->
             EntityType.Builder.<SimpleDomainEntity>of(SimpleDomainEntity::new, MobCategory.MISC)
                     .sized(SimpleDomainEntity.RADIUS, SimpleDomainEntity.RADIUS)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "simple_domain")
                             .toString()));
-
+    public static RegistryObject<EntityType<RedProjectile>> RED = ENTITIES.register("red", () ->
+            EntityType.Builder.<RedProjectile>of(RedProjectile::new, MobCategory.MISC)
+                    .sized(0.15F, 0.15F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "red")
+                            .toString()));
+    public static RegistryObject<EntityType<BlueProjectile>> BLUE = ENTITIES.register("blue", () ->
+            EntityType.Builder.<BlueProjectile>of(BlueProjectile::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "blue")
+                            .toString()));
+    public static RegistryObject<EntityType<HollowPurpleProjectile>> HOLLOW_PURPLE = ENTITIES.register("hollow_purple", () ->
+            EntityType.Builder.<HollowPurpleProjectile>of(HollowPurpleProjectile::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple")
+                            .toString()));
+    public static RegistryObject<EntityType<HollowPurpleExplosion>> HOLLOW_PURPLE_EXPLOSION = ENTITIES.register("hollow_purple_explosion", () ->
+            EntityType.Builder.<HollowPurpleExplosion>of(HollowPurpleExplosion::new, MobCategory.MISC)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "hollow_purple_explosion")
+                            .toString()));
     public static RegistryObject<EntityType<DismantleProjectile>> DISMANTLE = ENTITIES.register("dismantle", () ->
             EntityType.Builder.<DismantleProjectile>of(DismantleProjectile::new, MobCategory.MISC)
                     .sized(1.0F, 1.0F)
