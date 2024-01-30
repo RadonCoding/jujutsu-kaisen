@@ -119,30 +119,6 @@ public class JJKEventHandler {
         }
 
         @SubscribeEvent
-        public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-            if (event.getEntity() instanceof ServerPlayer player) {
-                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (event.getEntity() instanceof ServerPlayer player) {
-                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-            if (event.getEntity() instanceof ServerPlayer player) {
-                ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
-
-        @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
 
