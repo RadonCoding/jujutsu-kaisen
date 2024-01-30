@@ -62,11 +62,7 @@ public class ExperienceHandler {
                 }
 
                 while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
-                    LivingEntity owner = tamable.getOwner();
-
-                    if (owner == null || owner.isDeadOrDying() || owner.isRemoved()) break;
-
-                    attacker = owner;
+                    attacker = tamable.getOwner();
                 }
 
                 if (!existing) {
