@@ -8,10 +8,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -22,7 +24,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class Barrage extends Ability {
-    private static final double RANGE = 5.0D;
+    private static final double RANGE = 3.0D;
     public static int DURATION = 8;
 
     @Override
@@ -76,7 +78,8 @@ public class Barrage extends Ability {
 
                 Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
-                for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE), entity -> entity != owner && entity.hasLineOfSight(owner))) {
+                for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                        entity -> entity != owner && owner.hasLineOfSight(entity))) {
                     if (owner instanceof Player player) {
                         player.attack(entity);
                     } else {
