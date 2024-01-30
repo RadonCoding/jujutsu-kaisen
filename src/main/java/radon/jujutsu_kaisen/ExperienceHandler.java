@@ -66,6 +66,8 @@ public class ExperienceHandler {
 
                 while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
                     attacker = tamable.getOwner();
+
+                    if (attacker == null) return;
                 }
 
                 if (!existing) {

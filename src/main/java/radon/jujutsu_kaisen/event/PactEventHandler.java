@@ -52,10 +52,14 @@ public class PactEventHandler {
 
             while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
                 attacker = tamable.getOwner();
+
+                if (attacker == null) return;
             }
 
             while (victim instanceof TamableAnimal tamable && tamable.isTame()) {
                 victim = tamable.getOwner();
+
+                if (victim == null) return;
             }
 
             // Check for Pact.INVULNERABILITY
