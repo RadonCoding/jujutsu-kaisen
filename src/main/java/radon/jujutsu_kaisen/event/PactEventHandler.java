@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.event;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,6 +49,14 @@ public class PactEventHandler {
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+            while (attacker instanceof TamableAnimal tamable && tamable.isTame()) {
+                attacker = tamable.getOwner();
+            }
+
+            while (victim instanceof TamableAnimal tamable && tamable.isTame()) {
+                victim = tamable.getOwner();
+            }
 
             // Check for Pact.INVULNERABILITY
             if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent() && attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
