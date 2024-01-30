@@ -5,8 +5,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.RiderShieldingMount;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.phys.AABB;
@@ -24,8 +26,8 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.List;
 
 public class Punch extends Ability {
+    private static final double RANGE = 3.0D;
     private static final float DAMAGE = 5.0F;
-    private static final double RANGE = 5.0D;
     private static final double LAUNCH_POWER = 2.5D;
 
     @Override
@@ -35,9 +37,9 @@ public class Punch extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null) return false;
-        if (!owner.hasLineOfSight(target)) return false;
-        return owner.distanceTo(target) <= RANGE;
+        if (target == null || target.isDeadOrDying()) return false;
+        if (!owner.hasLineOfSight(target) || owner.distanceTo(target) > RANGE) return false;
+        return HelperMethods.RANDOM.nextInt(3) == 0;
     }
 
     @Override
@@ -53,13 +55,6 @@ public class Punch extends Ability {
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
         return ActivationType.INSTANT;
-    }
-
-    private List<LivingEntity> getTargets(LivingEntity owner) {
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
-        Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
-        return owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
-                entity -> entity != owner && entity.hasLineOfSight(owner));
     }
 
     @Override
@@ -90,9 +85,10 @@ public class Punch extends Ability {
         Vec3 pos = owner.getEyePosition().add(look);
         owner.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_SMALL_FALL, SoundSource.MASTER, 1.0F, 0.3F);
 
-        List<LivingEntity> targets = this.getTargets(owner);
+        Vec3 offset = owner.getEyePosition().add(look.scale(RANGE / 2));
 
-        for (LivingEntity entity : targets) {
+        for (LivingEntity entity : owner.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(offset, RANGE, RANGE, RANGE),
+                entity -> entity != owner && owner.hasLineOfSight(entity))) {
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
             level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
             entity.level().playSound(null, center.x, center.y, center.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
