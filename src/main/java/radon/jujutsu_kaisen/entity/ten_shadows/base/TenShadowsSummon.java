@@ -43,6 +43,7 @@ import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.base.SummonEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -204,7 +205,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                     if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
                     }
                 }
             } else {
@@ -217,7 +218,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                         cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), fusion);
 
                         if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
                         }
                     }
                 } else {
@@ -225,7 +226,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                         cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
 
                         if (owner instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
                         }
                     }
                 }
