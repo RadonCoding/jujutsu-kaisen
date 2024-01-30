@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
@@ -66,19 +67,16 @@ public class Dash extends Ability {
 
         boolean collision = false;
 
-        for (BlockPos pos : BlockPos.betweenClosedStream(owner.getBoundingBox().inflate(1.0D)).toList()) {
-            BlockState state = owner.level().getBlockState(pos);
+        for (VoxelShape shape : owner.level().getBlockCollisions(owner, owner.getBoundingBox())) {
+            if (shape.isEmpty()) continue;
 
-            if (state.isAir()) continue;
+            System.out.println(shape.bounds().intersects(owner.getBoundingBox()));
 
-            if (AABB.ofSize(pos.getCenter(), 1.0D, 1.0D, 1.0D).intersects(owner.getBoundingBox().inflate(1.0E-7D))) {
+            if (shape.bounds().intersects(owner.getBoundingBox())) {
                 collision = true;
                 break;
             }
         }
-
-        System.out.println(collision);
-
         return collision || owner.getXRot() >= 15.0F;
     }
 
