@@ -101,7 +101,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         }
 
         if (this.getGrade().ordinal() >= SorcererGrade.GRADE_1.ordinal()) {
-            if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 64.0D, 32.0D, 64.0D)).isEmpty())
+            if (!pLevel.getEntitiesOfClass(this.getClass(), AABB.ofSize(this.position(), 128.0D, 64.0D, 128.0D)).isEmpty())
                 return false;
         }
 
