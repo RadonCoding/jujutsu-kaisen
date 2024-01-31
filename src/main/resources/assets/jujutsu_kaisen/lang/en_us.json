@@ -183,6 +183,9 @@
 
   "block.jujutsu_kaisen.fake_wood": "Fake Wood",
 
+  "fluid_type.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
+  "fluid_type.jujutsu_kaisen.fake_water": "Fake Water",
+
   "item.jujutsu_kaisen.veil_rod_item.modifiers": "Modifiers: ",
   "item.jujutsu_kaisen.veil_rod.entity.allow": "Allow entity: %1$s",
   "item.jujutsu_kaisen.veil_rod.entity.deny": "Deny entity: %1$s",
