@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.misc;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -19,6 +20,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.effect.JJKEffects;
+import radon.jujutsu_kaisen.effect.base.JJKEffect;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -28,8 +31,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class QuickDraw extends Ability implements Ability.IToggled {
-    private static final Map<UUID, Vec3> POSITIONS = new HashMap<>();
-
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return false;
@@ -56,9 +57,9 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
 
-        if (!POSITIONS.containsKey(owner.getUUID())) return;
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) {
             SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
@@ -74,32 +75,13 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public Status isStillUsable(LivingEntity owner) {
-        if (POSITIONS.containsKey(owner.getUUID())) {
-            if (owner.position() != POSITIONS.get(owner.getUUID())) {
-                return Status.FAILURE;
-            }
-        }
-        return super.isStillUsable(owner);
-    }
-
-    @Override
     public void onEnabled(LivingEntity owner) {
-        if (!owner.level().isClientSide) {
-            POSITIONS.put(owner.getUUID(), owner.position());
-        }
+
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        if (!owner.level().isClientSide) {
-            POSITIONS.remove(owner.getUUID());
 
-            if (owner instanceof ServerPlayer player) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-            }
-        }
     }
 
     @Override
