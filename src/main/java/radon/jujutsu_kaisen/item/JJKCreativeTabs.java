@@ -26,8 +26,9 @@ public class JJKCreativeTabs {
                         pOutput.accept(JJKItems.POLEARM_STAFF.get());
                         pOutput.accept(JJKItems.STEEL_GAUNTLET.get());
 
+                        pOutput.accept(JJKItems.GREEN_HANDLE_KATANA.get());
+                        pOutput.accept(JJKItems.RED_HANDLE_KATANA.get());
                         pOutput.accept(JJKItems.JET_BLACK_SHADOW_SWORD.get());
-                        pOutput.accept(JJKItems.YUTA_OKKOTSU_SWORD.get());
 
                         pOutput.accept(JJKItems.INVENTORY_CURSE.get());
                         pOutput.accept(JJKItems.BLINDFOLD.get());

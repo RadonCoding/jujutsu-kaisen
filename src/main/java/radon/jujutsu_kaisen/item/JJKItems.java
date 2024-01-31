@@ -43,8 +43,10 @@ public class JJKItems {
     public static RegistryObject<Item> STEEL_GAUNTLET = ITEMS.register("steel_gauntlet",
             () -> new SteelGauntletItem(JJKTiers.CURSED_TOOL, 4, 0.0F, new Item.Properties()));
 
-    public static RegistryObject<Item> YUTA_OKKOTSU_SWORD = ITEMS.register("yuta_okkotsu_sword",
-            () -> new YutaOkkotsuSword(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> GREEN_HANDLE_KATANA = ITEMS.register("green_handle_katana",
+            () -> new GreenHandleKatana(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
+    public static RegistryObject<Item> RED_HANDLE_KATANA = ITEMS.register("red_handle_katana",
+            () -> new RedHandleKatana(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
     public static RegistryObject<Item> JET_BLACK_SHADOW_SWORD = ITEMS.register("jet_black_shadow_sword",
             () -> new JetBlackShadowSwordItem(JJKTiers.CURSED_TOOL, 6, -2.8F, new Item.Properties()));
 

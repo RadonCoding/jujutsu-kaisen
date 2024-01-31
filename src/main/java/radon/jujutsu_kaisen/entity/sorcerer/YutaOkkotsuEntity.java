@@ -66,6 +66,6 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.YUTA_OKKOTSU_SWORD.get()));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.GREEN_HANDLE_KATANA.get()));
     }
 }
