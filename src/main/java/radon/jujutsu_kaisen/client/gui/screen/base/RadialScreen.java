@@ -192,7 +192,7 @@ public abstract class RadialScreen extends Screen {
 
         return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
                 item.type == DisplayItem.Type.COPIED && cap.getCurrentCopied() == item.copied ||
-                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentCopied() == item.absorbed;
+                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentAbsorbed() == item.absorbed;
     }
 
     @Override
