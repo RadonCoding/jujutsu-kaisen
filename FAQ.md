@@ -2,14 +2,23 @@
 
 ### Commands
 /addpoints
+
 /refill
+
 /reroll
+
 /resetsummons
+
 /setexperience
+
 /setgrade
+
 /setnature
+
 /settechnique
+
 /settype
+
 /trait
 
 ### Experience
