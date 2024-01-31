@@ -30,17 +30,6 @@ public class MeleeScreen extends RadialScreen {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (this.minecraft == null || this.minecraft.player == null) return;
-
-        if (selected != null && !selected.isValid(this.minecraft.player) || !JJKAbilities.getAbilities(this.minecraft.player).contains(selected)) {
-            selected = null;
-        }
-    }
-
-    @Override
     protected List<DisplayItem> getItems() {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 

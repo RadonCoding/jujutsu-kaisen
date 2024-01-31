@@ -127,12 +127,11 @@ public class AbilityOverlay {
 
     public static IGuiOverlay OVERLAY = (gui, graphics, partialTicks, width, height) -> {
         Minecraft mc = gui.getMinecraft();
-        LocalPlayer player = mc.player;
 
-        if (player == null) return;
+        if (mc.player == null) return;
 
         if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.SCROLL) {
-            abilities = JJKAbilities.getAbilities(player);
+            abilities = JJKAbilities.getAbilities(mc.player);
             abilities.removeIf(ability -> ability.getMenuType() != MenuType.MELEE);
 
             if (!abilities.isEmpty()) {
@@ -140,12 +139,15 @@ public class AbilityOverlay {
                 Ability ability = abilities.get(index);
                 render(gui, graphics, width, height, ability);
             }
-        } else {
-            Ability ability = MeleeScreen.getSelected();
+        } else if (ConfigHolder.CLIENT.meleeMenuType.get() == MeleeMenuType.TOGGLE) {
+            Ability selected = MeleeScreen.getSelected();
 
-            if (ability != null) {
-                render(gui, graphics, width, height, ability);
+            if (selected == null) return;
+
+            if (!selected.isValid(mc.player) || !JJKAbilities.getAbilities(mc.player).contains(selected)) {
+                selected = null;
             }
+            render(gui, graphics, width, height, selected);
         }
     };
 }
