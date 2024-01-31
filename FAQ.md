@@ -1,25 +1,25 @@
 ## FAQ
 
 ### Commands
-/addpoints
+/addpoints (gives you points)
 
-/refill
+/refill (refills your cursed energy)
 
-/reroll
+/reroll (resets your character)
 
-/resetsummons
+/resetsummons (resets all ten shadows shikigami)
 
-/setexperience
+/setexperience (sets your experience)
 
-/setgrade
+/setgrade (sets your experience to the experience of a specific grade)
 
-/setnature
+/setnature (sets your cursed energy nature)
 
-/settechnique
+/settechnique (sets your technique)
 
-/settype
+/settype (sets your type to either sorcerer or curse)
 
-/trait
+/trait (allows you to manage traits)
 
 ### Experience
 
