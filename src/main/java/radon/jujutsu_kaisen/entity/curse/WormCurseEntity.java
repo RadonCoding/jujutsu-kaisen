@@ -194,9 +194,11 @@ public class WormCurseEntity extends CursedSpirit {
 
         if (owner == null) return;
 
-        if (this.target == null || this.target.isDeadOrDying() || this.target.isRemoved()) {
-            this.setGrabbing(false);
-            return;
+        if (this.isGrabbing()) {
+            if (this.target == null || this.target.isDeadOrDying() || this.target.isRemoved()) {
+                this.setGrabbing(false);
+                return;
+            }
         }
 
         if (!this.isGrabbing()) {
