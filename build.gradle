@@ -26,6 +26,8 @@ mixin {
 }
 
 minecraft {
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
     mappings channel: mapping_channel, version: mapping_version
 
     runs {
