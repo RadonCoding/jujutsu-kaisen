@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.ability.ai.cyclops;
+package radon.jujutsu_kaisen.ability.shockwave;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -16,8 +16,8 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.CyclopsCurseEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
-public class CyclopsSmash extends Ability {
-    private static final int RADIUS = 10;
+public class Shockwave extends Ability {
+    private static final double RADIUS = 10.0D;
     private static final float DAMAGE = 10.0F;
 
     @Override
@@ -26,18 +26,8 @@ public class CyclopsSmash extends Ability {
     }
 
     @Override
-    public boolean isTechnique() {
-        return false;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= 3.0D;
-    }
-
-    @Override
-    public boolean isValid(LivingEntity owner) {
-        return owner instanceof CyclopsCurseEntity;
+        return target != null && !target.isDeadOrDying() && owner.distanceTo(target) <= RADIUS;
     }
 
     @Override

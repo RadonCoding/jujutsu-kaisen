@@ -205,6 +205,9 @@
   "ability.jujutsu_kaisen.fail.burnout": "Burnout: %1$d seconds",
   "ability.jujutsu_kaisen.fail.failure": "Can't use it right now",
 
+  "ability.jujutsu_kaisen.shockwave": "Shockwave",
+  "ability.jujutsu_kaisen.sky_strike": "Sky Strike",
+
   "ability.jujutsu_kaisen.dash": "Dash",
   "ability.jujutsu_kaisen.punch": "Punch",
   "ability.jujutsu_kaisen.slam": "Slam",
@@ -244,7 +247,6 @@
   "ability.jujutsu_kaisen.infinity": "Infinity",
   "ability.jujutsu_kaisen.infinity.enable": "Activated infinity",
   "ability.jujutsu_kaisen.infinity.disable": "Deactivated infinity",
-
   "ability.jujutsu_kaisen.red": "Red",
   "ability.jujutsu_kaisen.maximum_red": "Maximum Red",
   "ability.jujutsu_kaisen.blue_still": "Blue: Still",
@@ -438,6 +440,8 @@
   "grade.jujutsu_kaisen.special_grade": "Special Grade",
 
   "cursed_technique.jujutsu_kaisen.none": "None",
+  "cursed_technique.jujutsu_kaisen.shockwave": "Shockwave",
+  "cursed_technique.jujutsu_kaisen.sky_strike": "Sky Strike",
   "cursed_technique.jujutsu_kaisen.curse_manipulation": "Curse Manipulation",
   "cursed_technique.jujutsu_kaisen.limitless": "Limitless",
   "cursed_technique.jujutsu_kaisen.dismantle_and_cleave": "Dismantle & Cleave",

@@ -58,7 +58,7 @@ public class ZombaCurseEntity extends CursedSpirit {
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return null;
+        return CursedTechnique.SKY_STRIKE;
     }
 
     @Override

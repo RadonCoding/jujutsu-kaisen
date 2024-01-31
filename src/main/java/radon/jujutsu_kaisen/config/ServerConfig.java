@@ -1,6 +1,13 @@
 package radon.jujutsu_kaisen.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ServerConfig {
     public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
@@ -42,6 +49,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue rct3Cost;
     public final ForgeConfigSpec.IntValue outputRCTCost;
     public final ForgeConfigSpec.IntValue maximumCopiedTechniques;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
 
     public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
     public final ForgeConfigSpec.IntValue curseRarity;
@@ -136,6 +144,23 @@ public class ServerConfig {
                 .defineInRange("outputRCTCost", 300, 1, 10000);
         this.maximumCopiedTechniques = builder.comment("The amount of techniques mimicry can copy")
                 .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
+        this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
+                .defineList("unlockableTechniques", () -> List.of(
+                                CursedTechnique.CURSE_MANIPULATION.name(),
+                                CursedTechnique.LIMITLESS.name(),
+                                CursedTechnique.DISMANTLE_AND_CLEAVE.name(),
+                                CursedTechnique.CURSED_SPEECH.name(),
+                                CursedTechnique.MIMICRY.name(),
+                                CursedTechnique.DISASTER_FLAMES.name(),
+                                CursedTechnique.DISASTER_TIDES.name(),
+                                CursedTechnique.DISASTER_PLANTS.name(),
+                                CursedTechnique.IDLE_TRANSFIGURATION.name(),
+                                CursedTechnique.TEN_SHADOWS.name(),
+                                CursedTechnique.BOOGIE_WOOGIE.name(),
+                                CursedTechnique.PROJECTION_SORCERY.name()
+                        ),
+                        ignored -> true
+                );
         builder.pop();
 
         builder.comment("Rarity").push("rarity");
@@ -150,5 +175,11 @@ public class ServerConfig {
         this.vesselRarity = builder.comment("Rarity of being a vessel (bigger value = rarer)")
                 .defineInRange("vesselRarity", 10, 1, 1000000);
         builder.pop();
+    }
+
+    public List<CursedTechnique> getUnlockableTechniques() {
+        return this.unlockableTechniques.get().stream()
+                .map(CursedTechnique::valueOf)
+                .collect(Collectors.toList());
     }
 }
