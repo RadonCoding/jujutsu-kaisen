@@ -1,15 +1,15 @@
-package radon.jujutsu_kaisen.ability.ai.zomba_curse;
+package radon.jujutsu_kaisen.ability.sky_strike;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SkyStrike extends Ability {
@@ -21,18 +21,8 @@ public class SkyStrike extends Ability {
     }
 
     @Override
-    public boolean isTechnique() {
-        return false;
-    }
-
-    @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
-    }
-
-    @Override
-    public boolean isValid(LivingEntity owner) {
-        return owner instanceof ZombaCurseEntity;
     }
 
     @Override
@@ -57,7 +47,7 @@ public class SkyStrike extends Ability {
 
         if (target == null) return;
 
-        SkyStrikeEntity strike = new SkyStrikeEntity(owner, getPower(owner), target.position());
+        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getPower(owner), target.position());
         owner.level().addFreshEntity(strike);
     }
 
@@ -79,5 +69,10 @@ public class SkyStrike extends Ability {
     @Override
     public float getCost(LivingEntity owner) {
         return 100.0F;
+    }
+
+    @Override
+    public MenuType getMenuType() {
+        return MenuType.MELEE;
     }
 }

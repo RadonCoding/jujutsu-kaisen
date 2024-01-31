@@ -15,13 +15,13 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.ai.cyclops.CyclopsSmash;
+import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
 import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
-import radon.jujutsu_kaisen.ability.ai.zomba_curse.SkyStrike;
+import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
@@ -77,6 +77,38 @@ public class JJKAbilities {
             new ResourceLocation(JujutsuKaisen.MOD_ID, "ability"), JujutsuKaisen.MOD_ID);
     public static Supplier<IForgeRegistry<Ability>> ABILITY_REGISTRY =
             ABILITIES.makeRegistry(RegistryBuilder::new);
+
+    public static RegistryObject<Ability> SHOCKWAVE = ABILITIES.register("shockwave", Shockwave::new);
+
+    public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
+
+    public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
+    public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
+    public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
+    public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
+    public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
+    public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
+    public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
+    public static RegistryObject<Ability> QUICK_DRAW = ABILITIES.register("quick_draw", QuickDraw::new);
+    public static RegistryObject<Ability> FALLING_BLOSSOM_EMOTION = ABILITIES.register("falling_blossom_emotion", FallingBlossomEmotion::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_SHIELD = ABILITIES.register("cursed_energy_shield", CursedEnergyShield::new);
+    public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
+    public static RegistryObject<Ability> DISCHARGE = ABILITIES.register("discharge", Discharge::new);
+    public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
+    public static RegistryObject<Ability> SWITCH = ABILITIES.register("switch", Switch::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_BOMB = ABILITIES.register("cursed_energy_bomb", CursedEnergyBomb::new);
+    public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
+
+    public static RegistryObject<RCT1> RCT1 = ABILITIES.register("rct1", RCT1::new);
+    public static RegistryObject<RCT1> RCT2 = ABILITIES.register("rct2", RCT2::new);
+    public static RegistryObject<RCT1> RCT3 = ABILITIES.register("rct3", RCT3::new);
+    public static RegistryObject<Ability> OUTPUT_RCT = ABILITIES.register("output_rct", OutputRCT::new);
+
+    public static RegistryObject<Ability> SHOOT_PURE_LOVE = ABILITIES.register("shoot_pure_love", ShootPureLove::new);
+    public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
+    public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
+    public static RegistryObject<Ability> BLUE_FIRE = ABILITIES.register("blue_fire", BlueFire::new);
 
     public static RegistryObject<Ability> INFINITY = ABILITIES.register("infinity", Infinity::new);
     public static RegistryObject<Ability> RED = ABILITIES.register("red", Red::new);
@@ -143,29 +175,6 @@ public class JJKAbilities {
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static RegistryObject<Ability> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
 
-    public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
-    public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
-    public static RegistryObject<Ability> SLAM = ABILITIES.register("slam", Slam::new);
-    public static RegistryObject<Ability> BARRAGE = ABILITIES.register("barrage", Barrage::new);
-    public static RegistryObject<RCT1> RCT1 = ABILITIES.register("rct1", RCT1::new);
-    public static RegistryObject<RCT1> RCT2 = ABILITIES.register("rct2", RCT2::new);
-    public static RegistryObject<RCT1> RCT3 = ABILITIES.register("rct3", RCT3::new);
-    public static RegistryObject<Ability> OUTPUT_RCT = ABILITIES.register("output_rct", OutputRCT::new);
-    public static RegistryObject<Ability> HEAL = ABILITIES.register("heal", Heal::new);
-    public static RegistryObject<Ability> DOMAIN_AMPLIFICATION = ABILITIES.register("domain_amplification", DomainAmplification::new);
-    public static RegistryObject<Ability> SIMPLE_DOMAIN = ABILITIES.register("simple_domain", SimpleDomain::new);
-    public static RegistryObject<Ability> QUICK_DRAW = ABILITIES.register("quick_draw", QuickDraw::new);
-    public static RegistryObject<Ability> FALLING_BLOSSOM_EMOTION = ABILITIES.register("falling_blossom_emotion", FallingBlossomEmotion::new);
-    public static RegistryObject<Ability> CURSED_ENERGY_FLOW = ABILITIES.register("cursed_energy_flow", CursedEnergyFlow::new);
-    public static RegistryObject<Ability> CURSED_ENERGY_SHIELD = ABILITIES.register("cursed_energy_shield", CursedEnergyShield::new);
-    public static RegistryObject<Ability> LIGHTNING = ABILITIES.register("lightning", Lightning::new);
-    public static RegistryObject<Ability> DISCHARGE = ABILITIES.register("discharge", Discharge::new);
-    public static RegistryObject<Ability> ZERO_POINT_TWO_SECOND_DOMAIN_EXPANSION = ABILITIES.register("zero_point_two_second_domain_expansion", ZeroPointTwoSecondDomainExpansion::new);
-    public static RegistryObject<Ability> SWITCH = ABILITIES.register("switch", Switch::new);
-    public static RegistryObject<Ability> CURSED_ENERGY_BOMB = ABILITIES.register("cursed_energy_bomb", CursedEnergyBomb::new);
-    public static RegistryObject<Ability> CURSED_ENERGY_BLAST = ABILITIES.register("cursed_energy_blast", CursedEnergyBlast::new);
-
-
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
     public static RegistryObject<Ability> SHADOW_STORAGE = ABILITIES.register("shadow_storage", ShadowStorage::new);
@@ -190,13 +199,6 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
 
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
-
-    public static RegistryObject<Ability> SHOOT_PURE_LOVE = ABILITIES.register("shoot_pure_love", ShootPureLove::new);
-    public static RegistryObject<Ability> CYCLOPS_SMASH = ABILITIES.register("cyclops_smash", CyclopsSmash::new);
-    public static RegistryObject<Ability> WATER = ABILITIES.register("water", Water::new);
-    public static RegistryObject<Ability> SCISSORS = ABILITIES.register("scissors", Scissors::new);
-    public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
-    public static RegistryObject<Ability> BLUE_FIRE = ABILITIES.register("blue_fire", BlueFire::new);
 
     public static RegistryObject<Ability> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.JJKConstants;
@@ -27,6 +28,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -1307,7 +1309,7 @@ public class SorcererData implements ISorcererData {
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
 
-        Set<CursedTechnique> techniques = new HashSet<>();
+        Set<CursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
         if (ConfigHolder.SERVER.uniqueTraits.get() || ConfigHolder.SERVER.uniqueTraits.get()) {
@@ -1330,7 +1332,7 @@ public class SorcererData implements ISorcererData {
                 if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
 
                 ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                techniques.addAll(cap.getTechniques());
+                taken.addAll(cap.getTechniques());
                 traits.addAll(cap.getTraits());
             }
         }
@@ -1339,11 +1341,12 @@ public class SorcererData implements ISorcererData {
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
+            List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
+
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
-                this.technique = HelperMethods.randomEnum(CursedTechnique.class, techniques);
-            } else {
-                this.technique = HelperMethods.randomEnum(CursedTechnique.class);
+                unlockable.removeAll(taken);
             }
+            this.technique = unlockable.get(HelperMethods.RANDOM.nextInt(unlockable.size()));
 
             if (HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.cursedEnergyNatureRarity.get()) == 0) {
                 this.nature = HelperMethods.randomEnum(CursedEnergyNature.class, Set.of(CursedEnergyNature.BASIC));

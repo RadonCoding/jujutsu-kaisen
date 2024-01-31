@@ -85,18 +85,13 @@ public class CyclopsCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @NotNull List<Ability> getCustom() {
-        return List.of(JJKAbilities.CYCLOPS_SMASH.get());
-    }
-
-    @Override
     public float getExperience() {
         return SorcererGrade.GRADE_2.getRequiredExperience();
     }
 
     @Override
     public @Nullable CursedTechnique getTechnique() {
-        return null;
+        return CursedTechnique.SHOCKWAVE;
     }
 
     @Override
