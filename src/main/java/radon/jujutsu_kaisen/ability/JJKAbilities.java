@@ -296,7 +296,10 @@ public class JJKAbilities {
 
         List<AbsorbedCurse> curses = ownerCap.getCurses();
 
-        if (index >= curses.size()) return null;
+        if (index >= curses.size()) {
+            System.out.println("no such curse");
+            return null;
+        }
 
         AbsorbedCurse curse = curses.get(index);
 
