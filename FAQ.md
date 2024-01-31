@@ -1,5 +1,17 @@
 ## FAQ
 
+### Commands
+/addpoints
+/refill
+/reroll
+/resetsummons
+/setexperience
+/setgrade
+/setnature
+/settechnique
+/settype
+/trait
+
 ### Experience
 
 You gain experience by fighting stronger opponents, but opponents no less than 25% weaker than you will still give you experience.
