@@ -167,7 +167,7 @@ public abstract class Ability {
         return this.getCooldown();
     }
 
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.RADIAL;
     }
 

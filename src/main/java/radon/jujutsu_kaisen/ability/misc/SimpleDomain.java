@@ -72,7 +72,7 @@ public class SimpleDomain extends Summon<SimpleDomainEntity> {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.DOMAIN;
     }
 

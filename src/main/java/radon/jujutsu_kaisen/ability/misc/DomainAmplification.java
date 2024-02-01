@@ -59,7 +59,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.DOMAIN;
     }
 

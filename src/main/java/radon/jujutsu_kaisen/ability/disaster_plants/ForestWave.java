@@ -91,7 +91,7 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

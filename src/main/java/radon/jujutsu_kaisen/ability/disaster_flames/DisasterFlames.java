@@ -104,7 +104,7 @@ public class DisasterFlames extends Ability implements Ability.IImbued {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

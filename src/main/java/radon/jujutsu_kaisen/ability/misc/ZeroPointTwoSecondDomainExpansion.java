@@ -41,7 +41,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.DOMAIN;
     }
 
