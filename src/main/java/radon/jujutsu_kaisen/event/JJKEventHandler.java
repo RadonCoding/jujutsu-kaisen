@@ -145,16 +145,11 @@ public class JJKEventHandler {
 
             if (owner.isDeadOrDying()) return;
 
-            if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            cap.tick(owner);
-
-            if (cap.hasTrait(Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
+            if (JJKAbilities.hasTrait(owner, Trait.SIX_EYES) && !owner.getItemBySlot(EquipmentSlot.HEAD).is(JJKItems.BLINDFOLD.get())) {
                 owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 220, 0, false, false, false));
             }
 
-            if (cap.getType() == JujutsuType.CURSE) {
+            if (JJKAbilities.getType(owner) == JujutsuType.CURSE) {
                 if (owner instanceof Player player) {
                     player.getFoodData().setFoodLevel(20);
                 }
