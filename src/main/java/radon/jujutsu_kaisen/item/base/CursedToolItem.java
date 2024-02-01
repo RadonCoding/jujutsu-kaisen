@@ -29,7 +29,9 @@ public abstract class CursedToolItem extends SwordItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+
         pTooltipComponents.add(Component.translatable(String.format("%s.desc", this.getDescriptionId())));
         pTooltipComponents.add(Component.translatable(String.format("item.%s.grade", JujutsuKaisen.MOD_ID),
                 this.getGrade().getName().copy().withStyle(ChatFormatting.DARK_RED)));
