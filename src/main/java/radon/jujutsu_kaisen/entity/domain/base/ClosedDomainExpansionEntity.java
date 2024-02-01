@@ -180,6 +180,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
             be.create(this.uuid, delay, state, saved);
         }
+
+        if (!this.level().getBlockState(pos.above()).canSurvive(this.level(), pos)) {
+            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+            this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
+        }
     }
 
     protected List<BlockPos> getFloor() {
@@ -198,7 +203,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    if (this.level().getBlockState(pos).getShape(this.level(), pos).isEmpty() || !this.level().getBlockState(pos.above()).isAir()) continue;
+                    if (this.level().getBlockState(pos).isAir() || !this.level().getBlockState(pos.above()).isAir()) continue;
 
                     floor.add(pos);
                 }
