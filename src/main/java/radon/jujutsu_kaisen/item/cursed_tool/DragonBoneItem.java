@@ -96,7 +96,7 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
 
         pTooltipComponents.add(Component.translatable(String.format("%s.energy", this.getDescriptionId()), (getEnergy(pStack) / MAX_ENERGY) * 100));

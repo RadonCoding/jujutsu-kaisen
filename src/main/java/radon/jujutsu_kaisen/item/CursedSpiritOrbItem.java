@@ -45,6 +45,8 @@ public class CursedSpiritOrbItem extends Item {
 
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+
         AbsorbedCurse curse = getAbsorbed(pStack);
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.getName().copy().withStyle(ChatFormatting.DARK_RED)));
         pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID),
