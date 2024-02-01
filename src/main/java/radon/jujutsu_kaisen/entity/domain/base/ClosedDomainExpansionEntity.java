@@ -263,7 +263,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return EntityDimensions.fixed(radius, radius);
     }
 
-    private void doSureHitEffect(@NotNull LivingEntity owner) {
+    protected void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
             if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
