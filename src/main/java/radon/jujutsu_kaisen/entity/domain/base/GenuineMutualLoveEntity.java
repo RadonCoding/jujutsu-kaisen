@@ -1,12 +1,19 @@
 package radon.jujutsu_kaisen.entity.domain.base;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
@@ -51,6 +58,31 @@ public class GenuineMutualLoveEntity extends ClosedDomainExpansionEntity {
 
             floor.remove(pos);
             iter.remove();
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        ListTag offsets = new ListTag();
+
+        for (Map.Entry<BlockPos, ICursedTechnique> entry : this.offsets.entrySet()) {
+            CompoundTag nbt = new CompoundTag();
+            nbt.put("pos", NbtUtils.writeBlockPos(entry.getKey()));
+            nbt.putString("technique", JJKCursedTechniques.getKey(entry.getValue()).toString());
+            offsets.add(nbt);
+        }
+        pCompound.put("offsets", offsets);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        for (Tag key : pCompound.getList("offsets", Tag.TAG_COMPOUND)) {
+            CompoundTag nbt = (CompoundTag) key;
+            this.offsets.put(NbtUtils.readBlockPos(nbt.getCompound("pos")), JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique"))));
         }
     }
 
