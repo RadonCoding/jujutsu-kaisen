@@ -24,6 +24,7 @@ public class MimicryTechnique implements ICursedTechnique {
     public Set<Ability> getAbilities() {
         return Set.of(JJKAbilities.RIKA.get(),
                 JJKAbilities.MIMICRY.get(),
+                JJKAbilities.REFILL.get(),
                 JJKAbilities.COMMAND_PURE_LOVE.get());
     }
 }
