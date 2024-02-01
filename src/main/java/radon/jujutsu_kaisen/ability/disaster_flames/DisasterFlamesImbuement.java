@@ -13,6 +13,6 @@ public class DisasterFlamesImbuement extends Imbuement {
 
     @Override
     public int getCooldown() {
-        return JJKAbilities.DISASTER_FLAMES_IMBUEMENT.get().getCooldown();
+        return JJKAbilities.DISASTER_FLAMES.get().getCooldown();
     }
 }
