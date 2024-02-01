@@ -143,11 +143,9 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
         for (Entity entity : entities) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
-            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                entity.setSecondsOnFire(5);
-            }
+            entity.setSecondsOnFire(5);
         }
 
         double radius = SCALE * 2.0F;

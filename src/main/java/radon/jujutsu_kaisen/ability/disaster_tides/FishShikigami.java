@@ -32,12 +32,8 @@ public class FishShikigami extends Ability {
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         LivingEntity result = null;
 
-        if (owner instanceof Player) {
-            if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-                if (owner.canAttack(target)) {
-                    result = target;
-                }
-            }
+        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
+            result = target;
         }
         return result;
     }

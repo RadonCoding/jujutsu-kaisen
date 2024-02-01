@@ -36,11 +36,11 @@ public class DontMove extends Ability {
         return Ability.ActivationType.INSTANT;
     }
 
-    private static List<Entity> getEntities(LivingEntity owner) {
+    private static List<LivingEntity> getEntities(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level().getEntities(owner, bounds, entity -> !(entity instanceof LivingEntity living) || owner.canAttack(living));
+        return owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner);
     }
 
     @Override

@@ -190,8 +190,6 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        if (!owner.canAttack(victim)) return false;
-
         if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ITenShadowsData victimTenShadowsCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
             ISorcererData victimSorcererCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

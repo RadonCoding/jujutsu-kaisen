@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.ability.base.Imbuement;
 import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
@@ -172,8 +173,8 @@ public class ImbuementHandler {
 
             for (ItemStack stack : stacks) {
                 for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
-                    Imbuement ability = technique.getImbuement();
-                    ability.hit(attacker, victim);
+                    IImbuement imbuement = (IImbuement) technique.getImbuement();
+                    imbuement.hit(attacker, victim);
                 }
             }
         }

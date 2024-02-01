@@ -36,8 +36,6 @@ public class GreatSerpentGrab extends Ability {
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-
             return target;
         }
         return null;
@@ -78,7 +76,7 @@ public class GreatSerpentGrab extends Ability {
     }
 
     @Override
-    protected int getCooldown() {
+    public int getCooldown() {
         return 10 * 20;
     }
 

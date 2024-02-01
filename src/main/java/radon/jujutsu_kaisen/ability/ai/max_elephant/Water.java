@@ -135,12 +135,10 @@ public class Water extends Ability implements Ability.IChannelened, Ability.IDur
         List<Entity> entities = this.checkCollisions(owner, spawn, end, collision);
 
         for (Entity entity : entities) {
-            if ((entity instanceof LivingEntity living && !owner.canAttack(living)) || entity == owner) continue;
+            if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
-            if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
-                entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
-                entity.hurtMarked = true;
-            }
+            entity.setDeltaMovement(spawn.subtract(entity.position()).normalize().reverse());
+            entity.hurtMarked = true;
         }
 
         double radius = SCALE * 2.0F;
