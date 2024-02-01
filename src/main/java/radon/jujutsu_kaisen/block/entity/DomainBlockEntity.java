@@ -51,8 +51,6 @@ public class DomainBlockEntity extends BlockEntity {
     public void destroy() {
         if (this.level == null) return;
 
-        this.setRemoved();
-
         BlockState original = this.getOriginal();
 
         if (original != null) {
