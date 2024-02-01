@@ -60,33 +60,5 @@ public class GenuineMutualLove extends DomainExpansion implements DomainExpansio
                 event.setCanceled(true);
             }
         }
-
-        @SubscribeEvent
-        public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
-
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
-
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
-
-            List<ItemStack> stacks = new ArrayList<>();
-
-            if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
-                stacks.add(chain.getStack());
-            } else {
-                stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
-            }
-
-            if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
-
-            for (ItemStack stack : stacks) {
-                if (stack.is(JJKItems.MIMICRY_KATANA_BLACK.get()) || stack.is(JJKItems.MIMICRY_KATANA_WHITE.get())) {
-                    stack.shrink(1);
-                }
-            }
-        }
     }
 }
