@@ -95,7 +95,7 @@ public class ProjectionSorceryDataHandler {
         LivingEntity owner = event.getEntity();
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        IProjectionSorceryData cap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 
         cap.tick(owner);
     }

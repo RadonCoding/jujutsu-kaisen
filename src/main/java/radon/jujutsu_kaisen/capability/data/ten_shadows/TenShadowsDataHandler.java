@@ -97,8 +97,8 @@ public class TenShadowsDataHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
+        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
         cap.tick(owner);
     }
