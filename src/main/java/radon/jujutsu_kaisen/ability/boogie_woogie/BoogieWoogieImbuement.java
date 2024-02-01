@@ -6,7 +6,7 @@ import radon.jujutsu_kaisen.ability.base.Imbuement;
 
 public class BoogieWoogieImbuement extends Imbuement {
     @Override
-    public void hit(ItemStack stack, LivingEntity owner, LivingEntity target) {
+    public void hit(LivingEntity owner, LivingEntity target) {
         JJKAbilities.SWAP_SELF.get().run(owner, target);
     }
 
