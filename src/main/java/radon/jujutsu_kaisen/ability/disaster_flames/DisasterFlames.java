@@ -52,6 +52,8 @@ public class DisasterFlames extends Ability implements Ability.IImbued {
 
     @Override
     public void run(LivingEntity owner, Entity target) {
+        if (owner.level().isClientSide) return;
+
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
