@@ -111,6 +111,8 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        if (distance >= radius) return;
+
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -172,18 +174,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         owner.level().removeBlockEntity(pos);
 
+        if (!this.level().getBlockState(pos.above()).isAir()) {
+            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
+            this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
+        }
+
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
-                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
 
         if (distance >= radius - 1 && success) this.total++;
 
         if (this.level().getBlockEntity(pos) instanceof DomainBlockEntity be) {
             be.create(this.uuid, delay, state, saved);
-        }
-
-        if (!this.level().getBlockState(pos.above()).canSurvive(this.level(), pos)) {
-            BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
-            this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
         }
     }
 
@@ -230,8 +232,6 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
-
-                    if (distance >= radius) continue;
 
                     BlockPos pos = center.offset(x, y, z);
 
