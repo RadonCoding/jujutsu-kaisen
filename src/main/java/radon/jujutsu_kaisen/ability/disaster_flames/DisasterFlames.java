@@ -52,17 +52,16 @@ public class DisasterFlames extends Ability implements Ability.IImbued {
 
     @Override
     public void run(LivingEntity owner, Entity target) {
+        owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        for (int i = 1; i <= 8; i++) {
+        if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()), DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) {
+            target.setSecondsOnFire(5);
+        }
+
+        for (int i = 0; i < 4; i++) {
             cap.delayTickEvent(() -> {
-                if (!target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()),
-                        DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) return;
-
-                target.setSecondsOnFire(5);
-
-                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-
                 double x = target.getX();
                 double y = target.getY();
                 double z = target.getZ();
