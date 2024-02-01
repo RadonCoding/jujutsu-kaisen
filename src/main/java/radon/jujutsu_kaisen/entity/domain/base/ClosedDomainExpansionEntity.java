@@ -22,6 +22,7 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.block.domain.DomainBlock;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -174,7 +175,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         owner.level().removeBlockEntity(pos);
 
-        if (!this.level().getBlockState(pos.above()).isAir()) {
+        if (!this.level().getBlockState(pos.above()).isAir() && !(this.level().getBlockEntity(pos.above()) instanceof DomainBlockEntity)) {
             BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
             this.createBlock(delay, pos.above(), radius, Math.sqrt(pos.above().distSqr(center)));
         }
