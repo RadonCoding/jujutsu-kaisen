@@ -2,6 +2,9 @@ package radon.jujutsu_kaisen.entity.base;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -221,5 +224,22 @@ public abstract class DomainExpansionEntity extends Entity {
         if (owner == null) return 0.0F;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
+    }
+
+    @Override
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+        LivingEntity entity = this.getOwner();
+        return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
+    }
+
+    @Override
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+
+        LivingEntity owner = (LivingEntity) this.level().getEntity(pPacket.getData());
+
+        if (owner != null) {
+            this.setOwner(owner);
+        }
     }
 }
