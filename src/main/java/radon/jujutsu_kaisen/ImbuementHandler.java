@@ -4,6 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.HumanoidArm;
@@ -29,6 +31,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICurs
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.config.ServerConfig;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -184,6 +188,10 @@ public class ImbuementHandler {
                     if (ability.getRealCooldown(attacker) == 0) continue;
 
                     cap.addCooldown(ability);
+
+                    if (attacker instanceof ServerPlayer player) {
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                    }
                 }
             }
         }
