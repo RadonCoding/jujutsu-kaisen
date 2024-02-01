@@ -54,29 +54,30 @@ public class DisasterFlames extends Ability implements Ability.IImbued {
     public void run(LivingEntity owner, Entity target) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()), DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) {
-            target.setSecondsOnFire(5);
+        for (int i = 1; i <= 8; i++) {
+            cap.delayTickEvent(() -> {
+                if (!target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()),
+                        DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) return;
 
-            for (int i = 0; i < 8; i++) {
-                cap.delayTickEvent(() -> {
-                    owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+                target.setSecondsOnFire(5);
 
-                    double x = target.getX();
-                    double y = target.getY();
-                    double z = target.getZ();
+                owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
 
-                    for (int j = 0; j < 32; j++) {
-                        Vec3 speed = new Vec3((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.25D, HelperMethods.RANDOM.nextDouble() * 0.5D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.25D);
+                double x = target.getX();
+                double y = target.getY();
+                double z = target.getZ();
 
-                        double offsetX = x + speed.x;
-                        double offsetY = y + speed.y;
-                        double offsetZ = z + speed.z;
+                for (int j = 0; j < 32; j++) {
+                    Vec3 speed = new Vec3((HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.25D, HelperMethods.RANDOM.nextDouble() * 0.5D, (HelperMethods.RANDOM.nextDouble() - 0.5D) * 0.25D);
 
-                        ((ServerLevel) target.level()).sendParticles(new FireParticle.FireParticleOptions(target.getBbWidth(), true, 20), offsetX, offsetY, offsetZ, 0,
-                                speed.x, speed.y, speed.z, 1.0D);
-                    }
-                }, i * 2);
-            }
+                    double offsetX = x + speed.x;
+                    double offsetY = y + speed.y;
+                    double offsetZ = z + speed.z;
+
+                    ((ServerLevel) target.level()).sendParticles(new FireParticle.FireParticleOptions(target.getBbWidth(), true, 20), offsetX, offsetY, offsetZ, 0,
+                            speed.x, speed.y, speed.z, 1.0D);
+                }
+            }, i * 2);
         }
     }
 
