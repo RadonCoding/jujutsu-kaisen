@@ -41,7 +41,7 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         ChimeraShadowGardenEntity domain = new ChimeraShadowGardenEntity(owner, this, width, height);
         owner.level().addFreshEntity(domain);
 
-        if (owner.level() instanceof ServerLevel level) {
+        if (owner.level() instanceof ServerLevel) {
             List<TenShadowsSummon> summons = new ArrayList<>();
 
             for (Entity entity : cap.getSummons()) {

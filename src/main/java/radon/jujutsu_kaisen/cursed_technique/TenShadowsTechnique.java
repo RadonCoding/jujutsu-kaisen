@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.cursed_technique;
 
+import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -7,6 +8,11 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import java.util.Set;
 
 public class TenShadowsTechnique implements ICursedTechnique {
+    @Override
+    public @Nullable Ability getDomain() {
+        return JJKAbilities.CHIMERA_SHADOW_GARDEN.get();
+    }
+
     @Override
     public Ability getImbuement() {
         return JJKAbilities.TEN_SHADOWS_IMBUEMENT.get();
