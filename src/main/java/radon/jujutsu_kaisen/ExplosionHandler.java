@@ -106,36 +106,36 @@ public class ExplosionHandler {
                 for (Entity entity : entities) {
                     if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;
 
-                    if (!entity.ignoreExplosion()) {
-                        double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
+                    if (entity.ignoreExplosion()) continue;
 
-                        if (d12 <= 1.0D) {
-                            double d5 = entity.getX() - explosion.position.x;
-                            double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y;
-                            double d9 = entity.getZ() - explosion.position.z;
-                            double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    double d12 = Math.sqrt(entity.distanceToSqr(explosion.position)) / (double) diameter;
 
-                            if (d13 != 0.0D) {
-                                d5 /= d13;
-                                d7 /= d13;
-                                d9 /= d13;
-                                double d14 = Explosion.getSeenPercent(explosion.position, entity);
-                                double d10 = (1.0D - d12) * d14;
-                                entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * explosion.radius + 1.0D)) * explosion.damage);
-                                double d11;
+                    if (d12 <= 1.0D) {
+                        double d5 = entity.getX() - explosion.position.x;
+                        double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - explosion.position.y;
+                        double d9 = entity.getZ() - explosion.position.z;
+                        double d13 = Math.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
 
-                                if (entity instanceof LivingEntity living) {
-                                    d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
-                                } else {
-                                    d11 = d10;
-                                }
+                        if (d13 != 0.0D) {
+                            d5 /= d13;
+                            d7 /= d13;
+                            d9 /= d13;
+                            double d14 = Explosion.getSeenPercent(explosion.position, entity);
+                            double d10 = (1.0D - d12) * d14;
+                            entity.hurt(explosion.source, (float) ((int)((d10 * d10 + d10) / 2.0D * 7.0D * explosion.radius + 1.0D)) * explosion.damage);
+                            double d11;
 
-                                d5 *= d11;
-                                d7 *= d11;
-                                d9 *= d11;
-                                Vec3 vec31 = new Vec3(d5, d7, d9);
-                                entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
+                            if (entity instanceof LivingEntity living) {
+                                d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(living, d10);
+                            } else {
+                                d11 = d10;
                             }
+
+                            d5 *= d11;
+                            d7 *= d11;
+                            d9 *= d11;
+                            Vec3 vec31 = new Vec3(d5, d7, d9);
+                            entity.setDeltaMovement(entity.getDeltaMovement().add(vec31));
                         }
                     }
                 }
