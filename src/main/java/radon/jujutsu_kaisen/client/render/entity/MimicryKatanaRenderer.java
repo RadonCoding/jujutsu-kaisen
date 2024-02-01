@@ -53,27 +53,25 @@ public class MimicryKatanaRenderer extends EntityRenderer<MimicryKatanaEntity> {
 
         Component name = pEntity.getTechnique().getName();
 
-        double d0 = this.entityRenderDispatcher.distanceToSqr(pEntity);
-
-        if (ForgeHooksClient.isNameplateInRenderDistance(pEntity, d0)) {
-            boolean flag = !pEntity.isDiscrete();
+            boolean discrete = !pEntity.isDiscrete();
             float f = pEntity.getNameTagOffsetY();
+
             pPoseStack.pushPose();
             pPoseStack.translate(0.0F, f, 0.0F);
             pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
             pPoseStack.scale(-0.0125F, -0.0125F, 0.0125F);
+
             Matrix4f matrix4f = pPoseStack.last().pose();
             float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
             int j = (int) (f1 * 255.0F) << 24;
             Font font = this.getFont();
             float f2 = (float) (-font.width(name) / 2);
-            font.drawInBatch(name, f2, 0.0F, 553648127, false, matrix4f, pBuffer, flag ? Font.DisplayMode.NORMAL : Font.DisplayMode.NORMAL, j, pPackedLight);
+            font.drawInBatch(name, f2, 0.0F, 553648127, false, matrix4f, pBuffer, discrete ? Font.DisplayMode.NORMAL : Font.DisplayMode.NORMAL, j, pPackedLight);
 
-            if (flag) {
+            if (discrete) {
                 font.drawInBatch(name, f2, 0.0F, -1, false, matrix4f, pBuffer, Font.DisplayMode.NORMAL, 0, pPackedLight);
             }
             pPoseStack.popPose();
-        }
     }
 
     @Override

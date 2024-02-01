@@ -151,7 +151,7 @@ public class MimicryKatanaEntity extends Entity {
 
     @Override
     public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        Entity entity = this.getDomain();
+        DomainExpansionEntity entity = this.getDomain();
         return new ClientboundAddEntityPacket(this, entity == null ? 0 : entity.getId());
     }
 
