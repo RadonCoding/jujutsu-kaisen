@@ -112,13 +112,13 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        if (this.isRemoved()) return;
+
         if (distance >= radius) return;
 
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
-
-        if (this.isRemoved()) return;
 
         BlockState state = this.level().getBlockState(pos);
 
@@ -235,9 +235,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                 for (int z = -radius; z <= radius; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
 
+                    if (distance >= radius) continue;
+
                     BlockPos pos = center.offset(x, y, z);
 
-                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
+                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2 + 1;
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
