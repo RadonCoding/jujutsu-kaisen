@@ -94,9 +94,7 @@ public class ImbuementHandler {
 
         int imbuement = imbuements.getInt(JJKCursedTechniques.getKey(technique).toString());
 
-        if (imbuement >= ConfigHolder.SERVER.requiredImbuementAmount.get()) return;
-
-        imbuements.putInt(JJKCursedTechniques.getKey(technique).toString(), imbuement + amount);
+        imbuements.putInt(JJKCursedTechniques.getKey(technique).toString(), Math.min(ConfigHolder.SERVER.requiredImbuementAmount.get(), imbuement + amount));
     }
 
     public static void setFullyImbued(ItemStack stack, ICursedTechnique technique) {
