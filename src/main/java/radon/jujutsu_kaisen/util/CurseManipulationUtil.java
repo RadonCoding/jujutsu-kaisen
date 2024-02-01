@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncCurseManipulationDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 import javax.annotation.Nullable;
@@ -107,7 +108,7 @@ public class CurseManipulationUtil {
         ownerCurseManipulationCap.removeCurse(curse);
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
         }
         return entity;
     }
