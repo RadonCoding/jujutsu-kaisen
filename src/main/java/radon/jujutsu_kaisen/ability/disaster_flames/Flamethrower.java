@@ -1,11 +1,13 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +69,13 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                     entity.setSecondsOnFire(5);
                 }
             }
+
+            BlockPos.betweenClosedStream(bounds).forEach(pos -> {
+                if (HelperMethods.RANDOM.nextInt(3) == 0 && owner.level().getBlockState(pos).isAir() &&
+                        owner.level().getBlockState(pos.below()).isSolidRender(owner.level(), pos.below())) {
+                    owner.level().setBlockAndUpdate(pos, BaseFireBlock.getState(owner.level(), pos));
+                }
+            });
         }
     }
 
