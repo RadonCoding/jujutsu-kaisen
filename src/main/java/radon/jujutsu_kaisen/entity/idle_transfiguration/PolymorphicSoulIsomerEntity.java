@@ -29,6 +29,6 @@ public class PolymorphicSoulIsomerEntity extends TransfiguredSoulEntity {
 
     @Override
     public Summon<?> getAbility() {
-        return JJKAbilities.POLYMORPHIC_SOUl_ISOMER.get();
+        return JJKAbilities.POLYMORPHIC_SOUL_ISOMER.get();
     }
 }

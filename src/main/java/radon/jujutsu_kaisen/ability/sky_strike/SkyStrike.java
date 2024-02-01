@@ -32,8 +32,6 @@ public class SkyStrike extends Ability {
 
     private @Nullable LivingEntity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            if (!owner.canAttack(target)) return null;
-            
             return target;
         }
         return null;

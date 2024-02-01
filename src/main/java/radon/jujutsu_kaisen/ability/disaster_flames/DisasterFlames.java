@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -18,7 +19,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.List;
 
-public class DisasterFlames extends Ability {
+public class DisasterFlames extends Ability implements Ability.IImbued {
     private static final double AOE_RANGE = 5.0D;
     private static final float DAMAGE = 25.0F;
 
@@ -32,7 +33,7 @@ public class DisasterFlames extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private void spawnParticles(Entity entity) {
+    private static void spawnParticles(Entity entity) {
         double x = entity.getX();
         double y = entity.getY() + (entity.getBbHeight() / 2.0F);
         double z = entity.getZ();
@@ -51,15 +52,13 @@ public class DisasterFlames extends Ability {
         }
     }
 
-    private List<Entity> getTargets(LivingEntity owner) {
-        List<Entity> entities = owner.level().getEntities(owner, owner.getBoundingBox().inflate(AOE_RANGE));
-        entities.removeIf(entity -> (entity instanceof LivingEntity living && !owner.canAttack(living)));
-        return entities;
+    private List<LivingEntity> getTargets(LivingEntity owner) {
+        return owner.level().getEntitiesOfClass(LivingEntity.class, owner.getBoundingBox().inflate(AOE_RANGE), entity -> entity != owner);
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        List<Entity> targets = this.getTargets(owner);
+        List<LivingEntity> targets = this.getTargets(owner);
 
         if (targets.isEmpty()) {
             return Status.FAILURE;
@@ -68,18 +67,23 @@ public class DisasterFlames extends Ability {
     }
 
     @Override
+    public void run(LivingEntity owner, Entity target) {
+        owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
+
+        if (target.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, JJKAbilities.DISASTER_FLAMES.get()), DAMAGE * Ability.getPower(JJKAbilities.DISASTER_FLAMES.get(), owner) * (float) (1.0F - (target.distanceTo(owner) / AOE_RANGE)))) {
+            target.setSecondsOnFire(5);
+            spawnParticles(target);
+        }
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
         if (owner.level().isClientSide) return;
 
-        for (Entity entity : this.getTargets(owner)) {
-            entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.MASTER, 1.0F, 1.0F);
-
-            if (entity.hurt(JJKDamageSources.indirectJujutsuAttack(owner, owner, this), DAMAGE * this.getPower(owner) * (float) (1.0F - (entity.distanceTo(owner) / AOE_RANGE)))) {
-                entity.setSecondsOnFire(5);
-                this.spawnParticles(entity);
-            }
+        for (LivingEntity entity : this.getTargets(owner)) {
+            this.run(owner, entity);
         }
     }
 

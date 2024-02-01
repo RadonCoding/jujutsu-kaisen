@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
@@ -150,7 +151,7 @@ public abstract class Ability {
         return List.of();
     }
 
-    protected int getCooldown() {
+    public int getCooldown() {
         return 0;
     }
 
@@ -369,5 +370,9 @@ public abstract class Ability {
 
     public interface IAttack {
         boolean attack(DamageSource source, LivingEntity owner, LivingEntity target);
+    }
+
+    public interface IImbued {
+        void run(LivingEntity owner, Entity target);
     }
 }

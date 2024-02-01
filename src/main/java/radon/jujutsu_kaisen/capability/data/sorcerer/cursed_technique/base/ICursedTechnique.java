@@ -15,7 +15,7 @@ public interface ICursedTechnique {
         return null;
     }
 
-    <T extends Ability & IImbuement> T getImbuement();
+    Ability getImbuement();
 
     Set<Ability> getAbilities();
 

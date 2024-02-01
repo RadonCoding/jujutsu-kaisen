@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class SwapSelf extends Ability {
+public class SwapSelf extends Ability implements Ability.IImbued {
     public static final double RANGE = 30.0D;
 
     @Override
@@ -72,6 +72,11 @@ public class SwapSelf extends Ability {
     }
 
     @Override
+    public void run(LivingEntity owner, Entity target) {
+        swap(owner, target);
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
@@ -80,7 +85,7 @@ public class SwapSelf extends Ability {
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            swap(owner, target);
+            this.run(owner, target);
         }
     }
 

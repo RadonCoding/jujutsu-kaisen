@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class IdleTransfigurationTechnique implements ICursedTechnique {
                 JJKAbilities.TRANSFIGURED_SOUL_SMALL.get(),
                 JJKAbilities.TRANSFIGURED_SOUL_NORMAL.get(),
                 JJKAbilities.TRANSFIGURED_SOUL_LARGE.get(),
-                JJKAbilities.POLYMORPHIC_SOUl_ISOMER.get(),
+                JJKAbilities.POLYMORPHIC_SOUL_ISOMER.get(),
                 JJKAbilities.INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING.get());
     }
 }
