@@ -64,7 +64,7 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.CHIMERA_SHADOW_GARDEN.get());
+        return List.of(JJKAbilities.CHIMERA_SHADOW_GARDEN.get(), JJKAbilities.SIMPLE_DOMAIN.get());
     }
 
     @Override
