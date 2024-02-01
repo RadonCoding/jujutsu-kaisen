@@ -239,7 +239,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2 + 1;
+                    int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
 
                     ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
