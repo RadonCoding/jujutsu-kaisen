@@ -126,15 +126,13 @@ public class BlueFire extends Ability implements Ability.IChannelened, Ability.I
         Vec3 end = new Vec3(endPosX, endPosY, endPosZ);
         Vec3 collision = this.getCollision(owner, spawn, end);
 
-        Vec3 offset = collision.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
-                (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
-                (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE);
-
-        ParticleOptions particle = new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE, SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F,
-                0.5F, true, (int) spawn.distanceTo(collision));
-
         for (int i = 0; i < SCALE * 32; i++) {
-            ((ServerLevel) owner.level()).sendParticles(particle, spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
+            Vec3 offset = collision.add((HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
+                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE,
+                    (HelperMethods.RANDOM.nextDouble() - 0.5D) * SCALE);
+            ((ServerLevel) owner.level()).sendParticles(new TravelParticle.TravelParticleOptions(offset.toVector3f(), ParticleColors.BLUE_FIRE,
+                            SCALE * HelperMethods.RANDOM.nextFloat() * 0.5F, 0.5F, true, (int) spawn.distanceTo(collision)),
+                    spawn.x + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     spawn.y + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     spawn.z + ((HelperMethods.RANDOM.nextDouble() - 0.5D) * 2.0F),
                     0, 0.0F, 0.0F, 0.0F, 1.0D);
