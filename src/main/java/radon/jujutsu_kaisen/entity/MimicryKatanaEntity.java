@@ -75,6 +75,11 @@ public class MimicryKatanaEntity extends Entity {
     }
 
     @Override
+    public boolean skipAttackInteraction(@NotNull Entity pEntity) {
+        return true;
+    }
+
+    @Override
     public @NotNull InteractionResult interact(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         DomainExpansionEntity domain = this.getDomain();
 
