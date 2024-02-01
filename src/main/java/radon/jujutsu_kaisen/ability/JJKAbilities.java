@@ -132,6 +132,7 @@ public class JJKAbilities {
 
     public static RegistryObject<Rika> RIKA = ABILITIES.register("rika", Rika::new);
     public static RegistryObject<Mimicry> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
+    public static RegistryObject<Refill> REFILL = ABILITIES.register("refill", Refill::new);
     public static RegistryObject<CommandPureLove> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
     public static RegistryObject<GenuineMutualLove> GENUINE_MUTUAL_LOVE = ABILITIES.register("genuine_mutual_love", GenuineMutualLove::new);
     public static RegistryObject<MimicryImbuement> MIMICRY_IMBUEMENT = ABILITIES.register("mimicry_imbuement", MimicryImbuement::new);

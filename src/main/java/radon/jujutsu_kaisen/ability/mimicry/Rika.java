@@ -18,9 +18,6 @@ import radon.jujutsu_kaisen.util.SorcererUtil;
 import java.util.List;
 
 public class Rika extends Summon<RikaEntity> {
-    private static final float AMOUNT = 100.0F;
-    private static final int INTERVAL = 5 * 20;
-
     public Rika() {
         super(RikaEntity.class);
     }
