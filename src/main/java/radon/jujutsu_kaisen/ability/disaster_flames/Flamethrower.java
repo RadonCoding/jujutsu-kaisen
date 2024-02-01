@@ -45,21 +45,22 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
         if (owner.level() instanceof ServerLevel level) {
             float scale = 1.0F;
 
-            for (int i = 0; i < 96; i++) {
+            Vec3 start = owner.getEyePosition().subtract(0.0D, scale / 2, 0.0D).add(look);
+
+            for (int i = 0; i < 32; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
                 double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
-                double r = HelperMethods.RANDOM.nextDouble() * 4.0D;
+                double r = HelperMethods.RANDOM.nextDouble() * RANGE * 0.75D;
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
-                Vec3 start = owner.getEyePosition().subtract(0.0D, scale / 2, 0.0D).add(look);
                 Vec3 end = start.add(look.scale(RANGE)).add(x, y, z);
                 Vec3 speed = start.subtract(end).scale(1.0D / 20).reverse();
                 level.sendParticles(new FireParticle.FireParticleOptions(scale, true, 20), start.x, start.y, start.z, 0,
                         speed.x, speed.y, speed.z, 1.0D);
             }
 
-            AABB bounds = AABB.ofSize(owner.getEyePosition(), 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(1.0D);
+            AABB bounds = AABB.ofSize(start, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(1.0D);
 
             for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner && entity.hasLineOfSight(owner))) {
                 if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
