@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +51,8 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
 
             Vec3 start = owner.getEyePosition().subtract(0.0D, scale / 2, 0.0D).add(look);
 
+            Vec3 end = RotationUtil.getHitResult(owner, start, start.add(look.scale(RANGE))).getLocation();
+
             for (int i = 0; i < 32; i++) {
                 double theta = HelperMethods.RANDOM.nextDouble() * 2 * Math.PI;
                 double phi = HelperMethods.RANDOM.nextDouble() * Math.PI;
@@ -56,23 +60,26 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
-                Vec3 end = start.add(look.scale(RANGE)).add(x, y, z);
-                Vec3 speed = start.subtract(end).scale(1.0D / 20).reverse();
+                Vec3 offset = end.add(x, y, z);
+                Vec3 speed = start.subtract(offset).scale(1.0D / 20).reverse();
                 level.sendParticles(new FireParticle.FireParticleOptions(scale, true, 20), start.x, start.y, start.z, 0,
                         speed.x, speed.y, speed.z, 1.0D);
             }
 
-            AABB bounds = AABB.ofSize(start, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(1.0D);
+            AABB bounds = AABB.ofSize(end, 1.0D, 1.0D, 1.0D).inflate(1.0D);
 
-            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner && entity.hasLineOfSight(owner))) {
+            for (Entity entity : owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner)) {
                 if (entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) {
                     entity.setSecondsOnFire(5);
                 }
             }
 
             BlockPos.betweenClosedStream(bounds).forEach(pos -> {
-                if (HelperMethods.RANDOM.nextInt(3) == 0 && owner.level().getBlockState(pos).isAir() &&
-                        owner.level().getBlockState(pos.below()).isSolidRender(owner.level(), pos.below())) {
+                if (HelperMethods.RANDOM.nextInt(3) != 0) return;
+
+                BlockState state = owner.level().getBlockState(pos);
+
+                if (state.isFlammable(owner.level(), pos, owner.getDirection())) {
                     owner.level().setBlockAndUpdate(pos, BaseFireBlock.getState(owner.level(), pos));
                 }
             });
