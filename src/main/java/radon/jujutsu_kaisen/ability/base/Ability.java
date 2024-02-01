@@ -202,13 +202,13 @@ public abstract class Ability {
     public void charge(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!(owner instanceof Player player && player.getAbilities().instabuild)) {
-            cap.useEnergy(this.getRealCost(owner));
+        if (owner instanceof Player player && player.getAbilities().instabuild) return;
 
-            if (this.getRealCooldown(owner) > 0) {
-                cap.addCooldown(this);
-            }
-        }
+        cap.useEnergy(this.getRealCost(owner));
+
+        if (this.getRealCooldown(owner) == 0) return;
+
+        cap.addCooldown(this);
     }
 
     public Status getStatus(LivingEntity owner) {
