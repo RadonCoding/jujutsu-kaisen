@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.CurseManipulationUtil;
@@ -83,6 +84,16 @@ public class SorcererGoal extends Goal {
                 this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
                 curseManipulationCap.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
                 this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            }
+        }
+
+        ISorcererData cap = this.mob.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasSummonOfClass(RikaEntity.class)) {
+            RikaEntity rika = cap.getSummonByClass(RikaEntity.class);
+
+            if (rika != null) {
+                rika.changeTarget(this.mob.getTarget());
             }
         }
 
