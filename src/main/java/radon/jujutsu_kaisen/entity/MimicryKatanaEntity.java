@@ -82,10 +82,12 @@ public class MimicryKatanaEntity extends Entity {
             ItemStack stack = new ItemStack(this::getItem);
             ImbuementHandler.setFullyImbued(stack, this.getTechnique());
 
-            if (pPlayer.addItem(stack)) {
+            if (pPlayer.getItemInHand(pHand).isEmpty()) {
+                pPlayer.setItemInHand(pHand, stack);
                 this.discard();
+
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         return super.interact(pPlayer, pHand);
     }

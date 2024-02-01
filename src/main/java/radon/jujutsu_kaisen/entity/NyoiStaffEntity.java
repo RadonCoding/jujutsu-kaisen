@@ -73,8 +73,10 @@ public class NyoiStaffEntity extends Entity {
     @Override
     public @NotNull InteractionResult interact(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (pPlayer == this.getOwner()) {
-            if (pPlayer.addItem(this.getItem())) {
+            if (pPlayer.getItemInHand(pHand).isEmpty()) {
+                pPlayer.setItemInHand(pHand, this.getItem());
                 this.discard();
+
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
         }
