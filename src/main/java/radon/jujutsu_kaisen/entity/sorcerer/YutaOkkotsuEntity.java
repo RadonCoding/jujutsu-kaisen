@@ -10,9 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
 
@@ -34,8 +35,8 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.MIMICRY;
+    public @Nullable ICursedTechnique getTechnique() {
+        return JJKCursedTechniques.MIMICRY.get();
     }
 
     @Override
@@ -59,7 +60,7 @@ public class YutaOkkotsuEntity extends SorcererEntity {
     public void init(ISorcererData data) {
         super.init(data);
 
-        data.copy(CursedTechnique.CURSED_SPEECH);
+        data.copy(JJKCursedTechniques.CURSED_SPEECH.get());
     }
 
     @Override

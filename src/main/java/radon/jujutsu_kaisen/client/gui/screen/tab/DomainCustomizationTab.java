@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetDomainSizeC2SPacket;
 
 public class DomainCustomizationTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.domain_customization", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
 
     private ForgeSlider sizeSlider;
     private float oldSize;

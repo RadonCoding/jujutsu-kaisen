@@ -9,13 +9,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.chant.ChantHandler;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -304,9 +305,9 @@ public abstract class Ability {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return cost;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        CursedTechnique copied = cap.getCurrentCopied();
+        ICursedTechnique copied = cap.getCurrentCopied();
 
-        if (copied != null && List.of(copied.getAbilities()).contains(this)) {
+        if (copied != null && copied.getAbilities().contains(this)) {
             cost *= 1.5F;
         }
         if (cap.hasTrait(Trait.SIX_EYES)) {

@@ -6,7 +6,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.DisasterCurse;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -36,8 +37,8 @@ public class DagonEntity extends DisasterCurse {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.DISASTER_TIDES;
+    public @Nullable ICursedTechnique getTechnique() {
+        return JJKCursedTechniques.DISASTER_TIDES.get();
     }
 
     @Override

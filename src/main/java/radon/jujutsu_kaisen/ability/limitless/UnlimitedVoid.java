@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -19,11 +19,6 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import java.util.List;
 
 public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IClosedDomain {
-    @Override
-    public List<Block> getBlocks() {
-        return List.of(JJKBlocks.UNLIMITED_VOID.get());
-    }
-
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
@@ -58,5 +53,10 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
         owner.level().addFreshEntity(domain);
 
         return domain;
+    }
+
+    @Override
+    public List<Block> getBlocks() {
+        return List.of(JJKBlocks.UNLIMITED_VOID.get());
     }
 }

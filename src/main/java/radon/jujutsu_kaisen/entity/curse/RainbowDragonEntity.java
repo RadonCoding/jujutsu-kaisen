@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.curse;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,11 +19,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
-import radon.jujutsu_kaisen.entity.effect.MeteorEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -282,7 +281,7 @@ public class RainbowDragonEntity extends CursedSpirit implements PlayerRideable,
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return null;
     }
 }

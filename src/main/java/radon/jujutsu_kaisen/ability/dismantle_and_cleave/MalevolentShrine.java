@@ -7,7 +7,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.MalevolentShrineEntity;
+import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 

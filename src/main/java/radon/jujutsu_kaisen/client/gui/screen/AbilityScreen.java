@@ -11,7 +11,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
@@ -37,10 +38,10 @@ public class AbilityScreen extends RadialScreen {
         List<AbsorbedCurse> curses = cap.getCurses();
         items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
 
-        Set<CursedTechnique> copied = cap.getCopied();
+        Set<ICursedTechnique> copied = cap.getCopied();
         items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
 
-        Set<CursedTechnique> absorbed = cap.getAbsorbed();
+        Set<ICursedTechnique> absorbed = cap.getAbsorbed();
         items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
 
         return items;
@@ -93,7 +94,7 @@ public class AbilityScreen extends RadialScreen {
         if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasTechnique(CursedTechnique.MIMICRY)) return;
+        if (!cap.hasTechnique(JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

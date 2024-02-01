@@ -51,7 +51,7 @@ public class Dash extends Ability {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
-        return owner.hasLineOfSight(target) && owner.distanceTo(target) <= getRange(owner);
+        return HelperMethods.RANDOM.nextInt(3) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= getRange(owner);
     }
 
     @Override

@@ -2,7 +2,8 @@ package radon.jujutsu_kaisen.client.gui.screen;
 
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
 import java.util.AbstractMap;
 
@@ -10,8 +11,8 @@ public class DisplayItem {
     public final Type type;
     public Ability ability;
     public AbstractMap.SimpleEntry<AbsorbedCurse, Integer> curse;
-    public CursedTechnique copied;
-    public CursedTechnique absorbed;
+    public ICursedTechnique copied;
+    public ICursedTechnique absorbed;
 
     public DisplayItem(Type type) {
         this.type = type;
@@ -29,7 +30,7 @@ public class DisplayItem {
         this.curse = new AbstractMap.SimpleEntry<>(curse, index);
     }
 
-    public DisplayItem(Type type, CursedTechnique technique) {
+    public DisplayItem(Type type, ICursedTechnique technique) {
         this(type);
 
         if (this.type == Type.COPIED) {

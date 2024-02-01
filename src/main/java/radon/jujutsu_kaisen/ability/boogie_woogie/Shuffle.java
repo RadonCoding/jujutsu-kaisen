@@ -66,22 +66,7 @@ public class Shuffle extends Ability implements Ability.IChannelened {
 
             Entity second = targets.get(HelperMethods.RANDOM.nextInt(targets.size()));
 
-            second.level().playSound(null, second.getX(), second.getY(), second.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
-            second.level().playSound(null, first.getX(), first.getY(), first.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-            Vec3 pos = first.position();
-
-            Vec2 ownerRot = second.getRotationVector();
-            Vec2 targetRot = first.getRotationVector();
-
-            first.teleportTo(second.getX(), second.getY(), second.getZ());
-            second.teleportTo(pos.x, pos.y, pos.z);
-
-            first.setYRot(ownerRot.y);
-            first.setXRot(ownerRot.x);
-
-            second.setYRot(targetRot.y);
-            second.setXRot(targetRot.x);
+            SwapSelf.swap(first, second);
         }
     }
 

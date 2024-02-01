@@ -24,9 +24,10 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -90,7 +91,7 @@ public class SukunaEntity extends SorcererEntity {
 
         ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasTechnique(CursedTechnique.TEN_SHADOWS)) {
+        if (cap.hasTechnique(JJKCursedTechniques.TEN_SHADOWS.get())) {
             for (Entity entity : cap.getSummons()) {
                 if (entity instanceof TenShadowsSummon) return;
             }
@@ -102,7 +103,7 @@ public class SukunaEntity extends SorcererEntity {
                 return;
             }
 
-            for (Ability ability : CursedTechnique.TEN_SHADOWS.getAbilities()) {
+            for (Ability ability : JJKCursedTechniques.TEN_SHADOWS.get().getAbilities()) {
                 if (!(ability instanceof Summon<?> summon) || summon.isTamed(this)) continue;
 
                 AbilityHandler.trigger(this, ability);
@@ -169,8 +170,8 @@ public class SukunaEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.DISMANTLE_AND_CLEAVE;
+    public @Nullable ICursedTechnique getTechnique() {
+        return JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get();
     }
 
     @Override

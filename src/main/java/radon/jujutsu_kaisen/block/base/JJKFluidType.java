@@ -27,10 +27,10 @@ public class JJKFluidType extends FluidType {
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
-                    WATER_STILL = new ResourceLocation("block/water_still"),
-                    WATER_FLOW = new ResourceLocation("block/water_flow"),
-                    WATER_OVERLAY = new ResourceLocation("block/water_overlay");
+            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.tryParse("textures/misc/underwater.png"),
+                    WATER_STILL = ResourceLocation.tryParse("block/water_still"),
+                    WATER_FLOW = ResourceLocation.tryParse("block/water_flow"),
+                    WATER_OVERLAY = ResourceLocation.tryParse("block/water_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {

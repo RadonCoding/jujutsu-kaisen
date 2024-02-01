@@ -5,23 +5,24 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
 import java.util.function.Supplier;
 
 public class SetAdditionalC2SPacket {
-    private final CursedTechnique technique;
+    private final ICursedTechnique technique;
 
-    public SetAdditionalC2SPacket(CursedTechnique technique) {
+    public SetAdditionalC2SPacket(ICursedTechnique technique) {
         this.technique = technique;
     }
 
     public SetAdditionalC2SPacket(FriendlyByteBuf buf) {
-        this(buf.readEnum(CursedTechnique.class));
+        this(JJKCursedTechniques.getValue(buf.readResourceLocation()));
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeEnum(this.technique);
+        buf.writeResourceLocation(JJKCursedTechniques.getKey(this.technique));
     }
 
     public void handle(Supplier<NetworkEvent.Context> supplier) {

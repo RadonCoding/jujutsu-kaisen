@@ -10,8 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.TimeCellMoonPalaceEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
@@ -69,6 +69,6 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.TIME_CELL_MOON_PALACE.get());
+        return List.of(JJKBlocks.DOMAIN.get());
     }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -77,6 +77,6 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get());
+        return List.of(JJKBlocks.DOMAIN.get());
     }
 }

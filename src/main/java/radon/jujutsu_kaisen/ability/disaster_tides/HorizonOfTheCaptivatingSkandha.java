@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 import java.util.List;

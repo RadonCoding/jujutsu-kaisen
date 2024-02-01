@@ -6,7 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.IdleTransfiguration;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -19,7 +19,7 @@ public class TransfiguredSoulVisual implements IVisual {
 
         if (mc.player == null) return false;
 
-        if (!JJKAbilities.getTechniques(mc.player).contains(CursedTechnique.IDLE_TRANSFIGURATION)) return false;
+        if (!JJKCursedTechniques.getTechniques(mc.player).contains(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) return false;
 
         return entity.hasEffect(JJKEffects.TRANSFIGURED_SOUL.get());
     }

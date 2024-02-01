@@ -14,8 +14,9 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -92,7 +93,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return null;
     }
 

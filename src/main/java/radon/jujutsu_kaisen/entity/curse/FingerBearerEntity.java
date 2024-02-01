@@ -5,8 +5,9 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
@@ -66,7 +67,7 @@ public class FingerBearerEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return null;
     }
 

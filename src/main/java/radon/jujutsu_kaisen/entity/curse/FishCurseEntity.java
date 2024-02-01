@@ -10,8 +10,9 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.PackCursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -102,10 +103,9 @@ public class FishCurseEntity extends PackCursedSpirit {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return null;
     }
-
 
     private PlayState swimPredicate(AnimationState<FishCurseEntity> animationState) {
         if (animationState.isMoving()) {

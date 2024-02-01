@@ -2,7 +2,6 @@ package radon.jujutsu_kaisen.ability.idle_transfiguration.base;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.ability.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;

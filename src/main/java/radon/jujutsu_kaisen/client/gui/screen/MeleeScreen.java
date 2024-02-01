@@ -10,7 +10,7 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
 
@@ -62,7 +62,7 @@ public class MeleeScreen extends RadialScreen {
         if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasTechnique(CursedTechnique.MIMICRY)) return;
+        if (!cap.hasTechnique(JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

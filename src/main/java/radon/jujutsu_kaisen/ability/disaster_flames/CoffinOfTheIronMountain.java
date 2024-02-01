@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 

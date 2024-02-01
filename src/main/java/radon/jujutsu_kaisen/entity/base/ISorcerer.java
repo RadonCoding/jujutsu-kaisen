@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -44,9 +46,9 @@ public interface ISorcerer {
         return SorcererUtil.getGrade(cap.getExperience());
     }
 
-    @Nullable CursedTechnique getTechnique();
+    @Nullable ICursedTechnique getTechnique();
 
-    default @Nullable CursedTechnique getAdditional() {
+    default @Nullable ICursedTechnique getAdditional() {
         return null;
     }
 

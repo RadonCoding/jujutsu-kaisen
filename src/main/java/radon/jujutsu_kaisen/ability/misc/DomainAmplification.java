@@ -13,7 +13,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
@@ -67,7 +68,7 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public Ability getParent(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = cap.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.CURSED_ENERGY_FLOW.get() : technique.getDomain();
     }
 

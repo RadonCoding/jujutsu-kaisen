@@ -20,10 +20,11 @@ import radon.jujutsu_kaisen.ability.LivingHitByDomainEvent;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -102,10 +103,12 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!owner.level().isClientSide) {
+            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasSummonOfClass(DomainExpansionEntity.class)) {
-            return Status.FAILURE;
+            if (!cap.hasSummonOfClass(DomainExpansionEntity.class)) {
+                return Status.FAILURE;
+            }
         }
         return super.isStillUsable(owner);
     }
@@ -165,7 +168,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     @Override
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = cap.getTechnique();
         return technique != null && technique.getDomain() == this && super.isDisplayed(owner);
     }
 

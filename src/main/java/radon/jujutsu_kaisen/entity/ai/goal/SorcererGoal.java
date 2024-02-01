@@ -11,7 +11,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -37,7 +38,7 @@ public class SorcererGoal extends Goal {
 
         if (cap.hasToggled(JJKAbilities.RIKA.get())) {
             if (cap.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
-                List<CursedTechnique> copied = new ArrayList<>(cap.getCopied());
+                List<ICursedTechnique> copied = new ArrayList<>(cap.getCopied());
 
                 if (!copied.isEmpty()) {
                     cap.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
@@ -45,7 +46,7 @@ public class SorcererGoal extends Goal {
             }
         }
 
-        if (cap.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+        if (cap.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {

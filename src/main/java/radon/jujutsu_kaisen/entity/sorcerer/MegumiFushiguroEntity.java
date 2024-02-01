@@ -12,9 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -57,8 +58,8 @@ public class MegumiFushiguroEntity extends SorcererEntity {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.TEN_SHADOWS;
+    public @Nullable ICursedTechnique getTechnique() {
+        return JJKCursedTechniques.TEN_SHADOWS.get();
     }
 
     @Override
