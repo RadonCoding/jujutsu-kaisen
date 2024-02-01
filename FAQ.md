@@ -1,5 +1,26 @@
 ## FAQ
 
+### Commands
+/addpoints (gives you points)
+
+/refill (refills your cursed energy)
+
+/reroll (resets your character)
+
+/resetsummons (resets all ten shadows shikigami)
+
+/setexperience (sets your experience)
+
+/setgrade (sets your experience to the experience of a specific grade)
+
+/setnature (sets your cursed energy nature)
+
+/settechnique (sets your technique)
+
+/settype (sets your type to either sorcerer or curse)
+
+/trait (allows you to manage traits)
+
 ### Experience
 
 You gain experience by fighting stronger opponents, but opponents no less than 25% weaker than you will still give you experience.
