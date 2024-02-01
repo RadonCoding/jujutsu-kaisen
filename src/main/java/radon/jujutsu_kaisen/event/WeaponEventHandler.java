@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WeaponEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -54,13 +55,14 @@ public class WeaponEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            List<ItemStack> stacks = new ArrayList<>();
+            List<Item> stacks = new ArrayList<>();
 
             if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
-                stacks.add(chain.getStack());
+                stacks.add(chain.getStack().getItem());
             } else {
-                stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
+                stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND).getItem());
+                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
+                        .stream().map(ItemStack::getItem).collect(Collectors.toSet()));
             }
 
             if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;

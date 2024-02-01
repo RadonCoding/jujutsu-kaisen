@@ -22,11 +22,14 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -188,11 +191,12 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData curseManipulationCap = this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
-                item.type == DisplayItem.Type.COPIED && cap.getCurrentCopied() == item.copied ||
-                item.type == DisplayItem.Type.ABSORBED && cap.getCurrentAbsorbed() == item.absorbed;
+                item.type == DisplayItem.Type.COPIED && sorcererCap.getCurrentCopied() == item.copied ||
+                item.type == DisplayItem.Type.ABSORBED && curseManipulationCap.getCurrentAbsorbed() == item.absorbed;
     }
 
     @Override
@@ -301,11 +305,11 @@ public abstract class RadialScreen extends Screen {
                     }
                 } else if (item.type == DisplayItem.Type.CURSE) {
                     Component costText = Component.translatable(String.format("gui.%s.ability_overlay.cost", JujutsuKaisen.MOD_ID),
-                            JJKAbilities.getCurseCost(item.curse.getKey()));
+                            CurseManipulationUtil.getCurseCost(item.curse.getKey()));
                     lines.add(costText);
 
                     Component experienceText = Component.translatable(String.format("gui.%s.ability_overlay.experience", JujutsuKaisen.MOD_ID),
-                            JJKAbilities.getCurseExperience(item.curse.getKey()));
+                            CurseManipulationUtil.getCurseExperience(item.curse.getKey()));
                     lines.add(experienceText);
                 }
 
@@ -320,7 +324,7 @@ public abstract class RadialScreen extends Screen {
 
             if ((item.ability instanceof Summon<?> summon && summon.display()) || item.type == DisplayItem.Type.CURSE) {
                 Entity entity = item.type == DisplayItem.Type.ABILITY ? ((Summon<?>) item.ability).getTypes().get(0).create(this.minecraft.level) :
-                        JJKAbilities.createCurse(this.minecraft.player, item.curse.getKey());
+                        CurseManipulationUtil.createCurse(this.minecraft.player, item.curse.getKey());
 
                 if (entity == null) continue;
 

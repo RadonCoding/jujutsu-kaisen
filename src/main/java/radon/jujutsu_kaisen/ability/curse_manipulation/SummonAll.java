@@ -5,10 +5,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 
 import java.util.List;
 
@@ -34,18 +37,18 @@ public class SummonAll extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbsorbedCurse> curses = cap.getCurses();
 
         for (AbsorbedCurse curse : curses) {
-            JJKAbilities.summonCurse(owner, curse, false);
+            CurseManipulationUtil.summonCurse(owner, curse, false);
         }
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (cap.getCurses().isEmpty()) {
             return Status.FAILURE;
@@ -55,14 +58,14 @@ public class SummonAll extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbsorbedCurse> curses = cap.getCurses();
 
         float cost = 0.0F;
 
         for (AbsorbedCurse curse : curses) {
-            cost += JJKAbilities.getCurseCost(curse);
+            cost += CurseManipulationUtil.getCurseCost(curse);
         }
         return cost;
     }

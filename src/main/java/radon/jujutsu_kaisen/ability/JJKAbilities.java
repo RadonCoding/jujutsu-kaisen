@@ -46,14 +46,16 @@ import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -256,92 +258,6 @@ public class JJKAbilities {
     }
 
     @Nullable
-    public static CursedSpirit createCurse(LivingEntity owner, AbsorbedCurse curse) {
-        CursedSpirit entity = curse.getType() == EntityType.PLAYER ? JJKEntities.ABSORBED_PLAYER.get().create(owner.level()) :
-                (CursedSpirit) curse.getType().create(owner.level());
-
-        if (entity == null) return null;
-
-        entity.setTame(true);
-        entity.setOwner(owner);
-
-        GameProfile profile = curse.getProfile();
-
-        if (profile != null && entity instanceof AbsorbedPlayerEntity absorbed) {
-            absorbed.setPlayer(profile);
-        }
-
-        Vec3 direction = RotationUtil.calculateViewVector(0.0F, owner.getYRot());
-        Vec3 pos = owner.position()
-                .subtract(direction.multiply(entity.getBbWidth(), 0.0D, entity.getBbWidth()));
-        entity.moveTo(pos.x, pos.y, pos.z, owner.getYRot(), owner.getXRot());
-
-        return entity;
-    }
-
-    public static float getCurseExperience(AbsorbedCurse curse) {
-        ISorcererData data = new SorcererData();
-        data.deserializeNBT(curse.getData());
-        return data.getExperience();
-    }
-
-    public static float getCurseCost(AbsorbedCurse curse) {
-        return Math.max(1.0F, getCurseExperience(curse) * 0.01F);
-    }
-
-    @Nullable
-    public static Entity summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        List<AbsorbedCurse> curses = cap.getCurses();
-
-        if (!curses.contains(curse)) return null;
-
-        return summonCurse(owner, curses.indexOf(curse), charge);
-    }
-
-    @Nullable
-    public static Entity summonCurse(LivingEntity owner, int index, boolean charge) {
-        if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || hasToggled(owner, DOMAIN_AMPLIFICATION.get())) return null;
-
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        List<AbsorbedCurse> curses = ownerCap.getCurses();
-
-        if (index >= curses.size()) return null;
-
-        AbsorbedCurse curse = curses.get(index);
-
-        if (charge) {
-            float cost = getCurseCost(curse);
-
-            if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-                if (ownerCap.getEnergy() < cost) {
-                    return null;
-                }
-                ownerCap.useEnergy(cost);
-            }
-        }
-
-        CursedSpirit entity = createCurse(owner, curse);
-
-        if (entity == null) return null;
-
-        owner.level().addFreshEntity(entity);
-
-        ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        curseCap.deserializeNBT(curse.getData());
-
-        ownerCap.addSummon(entity);
-        ownerCap.removeCurse(curse);
-
-        if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
-        }
-        return entity;
-    }
-
-    @Nullable
     public static JujutsuType getType(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -354,24 +270,6 @@ public class JJKAbilities {
         return cap.getToggled();
     }
 
-    public static boolean hasTamed(LivingEntity owner, EntityType<?> type) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-
-        for (RegistryObject<Ability> ability : ABILITIES.getEntries()) {
-            if (!(ability.get() instanceof Summon<?> summon)) continue;
-            if (!summon.getTypes().contains(type)) continue;
-            return summon.isTamed(owner);
-        }
-        return false;
-    }
-
-    public static boolean isDead(LivingEntity owner, EntityType<?> type) {
-        if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return false;
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        return cap.isDead(registry, type);
-    }
-
     public static boolean isChanneling(LivingEntity owner, Ability ability) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -382,6 +280,29 @@ public class JJKAbilities {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.hasTrait(trait);
+    }
+
+    public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
+        Set<ICursedTechnique> techniques = new HashSet<>();
+
+        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return techniques;
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (!owner.getCapability(CurseManipulationDataHandler.INSTANCE).isPresent()) return techniques;
+        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (sorcererCap.getTechnique() != null) techniques.add(sorcererCap.getTechnique());
+        if (sorcererCap.getCurrentCopied() != null) techniques.add(sorcererCap.getCurrentCopied());
+        if (curseManipulationCap.getCurrentAbsorbed() != null) techniques.add(curseManipulationCap.getCurrentAbsorbed());
+        if (sorcererCap.getAdditional() != null) techniques.add(sorcererCap.getAdditional());
+
+        return techniques;
+    }
+
+    public static boolean hasTechnique(LivingEntity owner, ICursedTechnique technique) {
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCopied().contains(technique) || curseManipulationCap.getAbsorbed().contains(technique);
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
@@ -402,7 +323,7 @@ public class JJKAbilities {
             return new ArrayList<>(abilities);
         }
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         if (owner instanceof ISorcerer sorcerer) {
             abilities.addAll(sorcerer.getCustom());
@@ -411,17 +332,17 @@ public class JJKAbilities {
         for (RegistryObject<Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
+            if (!ability.isTechnique() && (!sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
                 abilities.add(ability);
             }
         }
 
-        if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            for (ICursedTechnique technique : cap.getTechniques()) {
+        if (!sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            for (ICursedTechnique technique : JJKAbilities.getTechniques(owner)) {
                 abilities.addAll(technique.getAbilities());
             }
 
-            ICursedTechnique technique = cap.getTechnique();
+            ICursedTechnique technique = sorcererCap.getTechnique();
 
             if (technique != null && technique.getDomain() != null) {
                 abilities.add(technique.getDomain());

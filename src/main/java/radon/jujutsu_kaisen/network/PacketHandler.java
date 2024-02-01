@@ -8,6 +8,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
@@ -36,6 +37,16 @@ public class PacketHandler {
                 .decoder(SyncTenShadowsDataS2CPacket::new)
                 .encoder(SyncTenShadowsDataS2CPacket::encode)
                 .consumerMainThread(SyncTenShadowsDataS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SyncProjectionSorceryDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncProjectionSorceryDataS2CPacket::new)
+                .encoder(SyncProjectionSorceryDataS2CPacket::encode)
+                .consumerMainThread(SyncProjectionSorceryDataS2CPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(SyncCurseManipulationDataS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncCurseManipulationDataS2CPacket::new)
+                .encoder(SyncCurseManipulationDataS2CPacket::encode)
+                .consumerMainThread(SyncCurseManipulationDataS2CPacket::handle)
                 .add();
         INSTANCE.messageBuilder(TriggerAbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(TriggerAbilityC2SPacket::new)

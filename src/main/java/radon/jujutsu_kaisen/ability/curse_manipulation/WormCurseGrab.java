@@ -7,11 +7,14 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.WormCurseEntity;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -26,7 +29,7 @@ public class WormCurseGrab extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
         return cap.hasCurse(JJKEntities.WORM_CURSE.get());
     }
 
@@ -48,11 +51,11 @@ public class WormCurseGrab extends Ability {
 
         if (target == null) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
 
-        if (!(JJKAbilities.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
+        if (!(CurseManipulationUtil.summonCurse(owner, curse, false) instanceof WormCurseEntity worm)) return;
 
         worm.grab(target);
     }
@@ -69,9 +72,9 @@ public class WormCurseGrab extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
         AbsorbedCurse curse = cap.getCurse(JJKEntities.WORM_CURSE.get());
-        return curse == null ? 0.0F : JJKAbilities.getCurseCost(curse);
+        return curse == null ? 0.0F : CurseManipulationUtil.getCurseCost(curse);
     }
 
     @Override

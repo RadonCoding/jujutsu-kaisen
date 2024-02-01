@@ -11,8 +11,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -78,7 +77,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         ICursedTechnique current = ownerCap.getTechnique();
         ICursedTechnique copied = targetCap.getTechnique();
 
-        if (copied == null || current == null || ownerCap.hasTechnique(copied) || current == copied) return false;
+        if (copied == null || current == null || JJKAbilities.hasTechnique(owner, copied) || current == copied) return false;
 
         owner.sendSystemMessage(Component.translatable(String.format("chat.%s.mimicry", JujutsuKaisen.MOD_ID), copied.getName()));
 

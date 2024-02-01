@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 
 import java.util.function.Supplier;
 
@@ -29,9 +30,9 @@ public class CurseSummonC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
-            JJKAbilities.summonCurse(sender, this.index, true);
+            CurseManipulationUtil.summonCurse(sender, this.index, true);
         });
         ctx.setPacketHandled(true);
     }

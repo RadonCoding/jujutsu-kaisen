@@ -1,5 +1,8 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.EntityHitResult;
@@ -10,6 +13,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.GreatSerpentEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -26,7 +31,9 @@ public class GreatSerpentGrab extends Ability {
     @Override
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
-        return JJKAbilities.hasTamed(owner, JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
+        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        return cap.hasTamed(registry, JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
     }
 
     @Override

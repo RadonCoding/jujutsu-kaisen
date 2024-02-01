@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.ability.base;
 
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -87,6 +88,8 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             if (cap.getMode() != TenShadowsMode.SUMMON) return false;
 
+            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+
             for (Ability ability : JJKAbilities.getToggled(owner)) {
                 if (!(ability instanceof Summon<?> summon)) continue;
 
@@ -95,7 +98,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                     if (summon.getFusions().contains(type)) return false;
                 }
                 for (EntityType<?> fusion : this.getFusions()) {
-                    if (!JJKAbilities.hasTamed(owner, fusion)) return false;
+                    if (!cap.hasTamed(registry, fusion)) return false;
                     if (summon.getTypes().contains(fusion)) return false;
                     if (summon.getFusions().contains(fusion)) return false;
                 }
@@ -107,16 +110,16 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             for (int i = 0; i < fusions.size(); i++) {
                 if (this.isBottomlessWell()) {
-                    if (JJKAbilities.isDead(owner, fusions.get(i)) || !JJKAbilities.hasTamed(owner, fusions.get(i))) {
+                    if (cap.isDead(registry, fusions.get(i)) || !cap.hasTamed(registry, fusions.get(i))) {
                         return false;
                     }
                 } else {
                     if (this.isSpecificFusion()) {
-                        if ((i == 0) == JJKAbilities.isDead(owner, fusions.get(i))) {
+                        if ((i == 0) == cap.isDead(registry, fusions.get(i))) {
                             return false;
                         }
                     } else {
-                        if (JJKAbilities.isDead(owner, fusions.get(i))) {
+                        if (cap.isDead(registry, fusions.get(i))) {
                             dead++;
                         }
                     }

@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.entity.ten_shadows.base;
 
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -32,9 +33,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.entity.ai.goal.BetterFollowOwnerGoal;
@@ -212,8 +212,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                 Summon<?> ability = this.getAbility();
 
                 if (ability.isTotality()) {
+                    Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+
                     for (EntityType<?> fusion : ability.getFusions()) {
-                        if (JJKAbilities.isDead(owner, fusion)) continue;
+                        if (cap.isDead(registry, fusion)) continue;
 
                         cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), fusion);
 

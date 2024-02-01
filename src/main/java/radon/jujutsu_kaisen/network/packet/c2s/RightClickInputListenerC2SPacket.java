@@ -28,7 +28,7 @@ public class RightClickInputListenerC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (sender.getVehicle() instanceof IRightClickInputListener listener) {
                 listener.setDown(this.down);

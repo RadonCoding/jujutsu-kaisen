@@ -31,7 +31,7 @@ public class SetDomainSizeC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             cap.setDomainSize(Mth.clamp(this.domainSize, ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue()));

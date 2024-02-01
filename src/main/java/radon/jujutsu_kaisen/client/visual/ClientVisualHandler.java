@@ -18,12 +18,14 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -60,16 +62,18 @@ public class ClientVisualHandler {
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData sorcererCap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ICurseManipulationData curseManipulationCap = mc.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
                 Set<ICursedTechnique> techniques = new HashSet<>();
 
-                if (cap.getTechnique() != null) techniques.add(cap.getTechnique());
-                if (cap.getCurrentCopied() != null) techniques.add(cap.getCurrentCopied());
-                if (cap.getCurrentAbsorbed() != null) techniques.add(cap.getCurrentAbsorbed());
-                if (cap.getAdditional() != null) techniques.add(cap.getAdditional());
+                if (sorcererCap.getTechnique() != null) techniques.add(sorcererCap.getTechnique());
+                if (sorcererCap.getCurrentCopied() != null) techniques.add(sorcererCap.getCurrentCopied());
+                if (curseManipulationCap.getCurrentAbsorbed() != null) techniques.add(curseManipulationCap.getCurrentAbsorbed());
+                if (sorcererCap.getAdditional() != null) techniques.add(sorcererCap.getAdditional());
 
-                return new ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), techniques, cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
+                return new ClientData(sorcererCap.getToggled(), sorcererCap.getChanneled(), sorcererCap.getTraits(), techniques,
+                        sorcererCap.getTechnique(), sorcererCap.getType(), sorcererCap.getExperience(), sorcererCap.getCursedEnergyColor());
             }
         }
         return null;

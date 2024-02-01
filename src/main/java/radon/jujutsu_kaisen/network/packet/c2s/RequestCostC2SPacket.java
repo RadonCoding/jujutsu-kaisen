@@ -36,7 +36,7 @@ public class RequestCostC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             ServerPlayer target = sender.server.getPlayerList().getPlayerByName(String.valueOf(this.name));
 

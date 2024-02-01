@@ -26,7 +26,7 @@ public class OpenInventoryCurseC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (sender.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof InventoryCurseItem item) {
                 sender.openMenu(item);

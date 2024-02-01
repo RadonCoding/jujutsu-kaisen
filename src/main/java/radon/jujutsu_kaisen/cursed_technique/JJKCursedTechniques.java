@@ -1,4 +1,4 @@
-package radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique;
+package radon.jujutsu_kaisen.cursed_technique;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -7,10 +7,11 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -46,9 +47,7 @@ public class JJKCursedTechniques {
     }
 
     public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Set.of();
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechniques();
+        return JJKAbilities.getTechniques(owner);
     }
 
     @Nullable

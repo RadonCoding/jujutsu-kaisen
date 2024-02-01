@@ -48,6 +48,10 @@ public class TenShadowsDataHandler {
             if (!ConfigHolder.SERVER.realisticShikigami.get()) {
                 newCap.revive(false);
             }
+
+            if (!player.level().isClientSide) {
+                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
+            }
         }
         original.invalidateCaps();
     }

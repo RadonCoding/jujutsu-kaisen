@@ -8,11 +8,13 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.ability.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
@@ -28,20 +30,24 @@ public class AbilityScreen extends RadialScreen {
 
         // DO NOT REMOVE
         if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return List.of();
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        // DO NOT REMOVE
+        if (!this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).isPresent()) return List.of();
+        ICurseManipulationData curseManipulationCap = this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
         abilities.removeIf(ability -> ability.getMenuType() != MenuType.RADIAL);
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
-        List<AbsorbedCurse> curses = cap.getCurses();
+        List<AbsorbedCurse> curses = curseManipulationCap.getCurses();
         items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
 
-        Set<ICursedTechnique> copied = cap.getCopied();
+        Set<ICursedTechnique> copied = sorcererCap.getCopied();
         items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
 
-        Set<ICursedTechnique> absorbed = cap.getAbsorbed();
+        Set<ICursedTechnique> absorbed = curseManipulationCap.getAbsorbed();
         items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
 
         return items;
@@ -54,7 +60,8 @@ public class AbilityScreen extends RadialScreen {
         if (this.hovered != -1) {
             if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData sorcererCap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ICurseManipulationData curseManipulationCap = this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
             DisplayItem item = this.getCurrent().get(this.hovered);
 
@@ -62,7 +69,7 @@ public class AbilityScreen extends RadialScreen {
                 case ABILITY -> {
                     Ability ability = item.ability;
 
-                    if (cap.hasToggled(ability) || cap.isChanneling(ability)) {
+                    if (sorcererCap.hasToggled(ability) || sorcererCap.isChanneling(ability)) {
                         AbilityHandler.untrigger(this.minecraft.player, ability);
                         PacketHandler.sendToServer(new UntriggerAbilityC2SPacket(JJKAbilities.getKey(ability)));
                     } else {
@@ -73,11 +80,11 @@ public class AbilityScreen extends RadialScreen {
                 }
                 case CURSE -> PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
                 case COPIED -> {
+                    sorcererCap.setCurrentCopied(item.copied);
                     PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
-                    cap.setCurrentCopied(item.copied);
                 }
                 case ABSORBED -> {
-                    cap.setCurrentAbsorbed(item.absorbed);
+                    curseManipulationCap.setCurrentAbsorbed(item.absorbed);
                     PacketHandler.sendToServer(new SetAbsorbedC2SPacket(item.absorbed));
                 }
             }
@@ -90,11 +97,7 @@ public class AbilityScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        // DO NOT REMOVE
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (!cap.hasTechnique(JJKCursedTechniques.MIMICRY.get())) return;
+        if (!JJKAbilities.hasTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

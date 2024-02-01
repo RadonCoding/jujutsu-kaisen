@@ -1,7 +1,10 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +34,9 @@ public class SwitchMode extends Ability {
         if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (JJKAbilities.hasTamed(owner, JJKEntities.MAHORAGA.get())) {
+            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+
+            if (ownerCap.hasTamed(registry, JJKEntities.MAHORAGA.get())) {
                 if (ownerCap.getMode() == TenShadowsMode.SUMMON) {
                     if (targetCap.hasToggled(JJKAbilities.INFINITY.get())) {
                         return !ownerCap.isAdaptedTo(JJKAbilities.INFINITY.get());

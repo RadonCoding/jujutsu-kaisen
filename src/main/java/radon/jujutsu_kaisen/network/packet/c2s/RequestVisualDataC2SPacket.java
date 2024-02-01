@@ -4,6 +4,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -33,16 +35,17 @@ public class RequestVisualDataC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             LivingEntity target = (LivingEntity) sender.serverLevel().getEntity(this.src);
 
             if (target != null) {
-                target.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), cap.getTechniques(), cap.getTechnique(), cap.getType(),
-                            cap.getExperience(), cap.getCursedEnergyColor());
-                    PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
-                });
+                if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+                ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+                ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), JJKAbilities.getTechniques(target),
+                        cap.getTechnique(), cap.getType(), cap.getExperience(), cap.getCursedEnergyColor());
+                PacketHandler.sendToClient(new ReceiveVisualDataS2CPacket(this.src, data.serializeNBT()), sender);
             }
         });
         ctx.setPacketHandled(true);

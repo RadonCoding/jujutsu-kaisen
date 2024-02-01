@@ -24,6 +24,9 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryData;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
@@ -87,7 +90,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        IProjectionSorceryData cap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<AbstractMap.SimpleEntry<Vec3, Float>> frames = cap.getFrames();
 
@@ -154,11 +157,12 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     public void onStop(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        IProjectionSorceryData projectionSorceryCap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 
-        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(cap.getFrames());
+        List<AbstractMap.SimpleEntry<Vec3, Float>> frames = new ArrayList<>(projectionSorceryCap.getFrames());
 
-        cap.resetFrames();
+        projectionSorceryCap.resetFrames();
 
         if (frames.size() < 24) {
             return;
@@ -173,14 +177,14 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
             Vec3 frame = entry.getKey();
             float yaw = entry.getValue();
 
-            cap.delayTickEvent(() -> {
+            sorcererCap.delayTickEvent(() -> {
                 if (cancelled.get()) return;
 
                 owner.walkAnimation.setSpeed(2.0F);
 
                 boolean isOnGround = isGrounded(owner.level(), owner.blockPosition()) || (previous.get() != null && isGrounded(owner.level(), BlockPos.containing(previous.get())));
 
-                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 24.0D * (cap.getSpeedStacks() + 1)) {
+                if ((!isOnGround && !owner.level().getBlockState(BlockPos.containing(frame)).canOcclude()) || frame.distanceTo(owner.position()) >= 24.0D * (projectionSorceryCap.getSpeedStacks() + 1)) {
                     cancelled.set(true);
 
                     owner.level().addFreshEntity(new ProjectionFrameEntity(owner, owner, Ability.getPower(JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(), owner)));
@@ -220,7 +224,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
                 previous.set(frame);
             }, delay++);
         }
-        cap.addSpeedStack();
+        projectionSorceryCap.addSpeedStack();
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -236,7 +240,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            IProjectionSorceryData cap = attacker.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 
             if (cap.getSpeedStacks() == 0) return;
 
