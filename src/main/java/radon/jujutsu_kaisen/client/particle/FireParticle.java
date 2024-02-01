@@ -42,6 +42,8 @@ public class FireParticle extends TextureSheetParticle {
 
         this.size = Math.max(options.scalar(), (this.random.nextFloat() - 0.5F) * options.scalar());
 
+        this.quadSize = this.size * (1.0F - ((float) this.age / this.lifetime));
+
         this.hasPhysics = false;
     }
 
