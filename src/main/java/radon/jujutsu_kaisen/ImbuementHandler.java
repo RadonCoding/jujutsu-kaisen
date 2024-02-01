@@ -36,7 +36,7 @@ import java.util.*;
 
 public class ImbuementHandler {
     public static Set<ICursedTechnique> getFullImbuements(ItemStack stack) {
-       Map<ICursedTechnique, Integer> amounts = getImbuementAmounts(stack);
+        Map<ICursedTechnique, Integer> amounts = getImbuementAmounts(stack);
 
         Iterator<Map.Entry<ICursedTechnique, Integer>> iter = amounts.entrySet().iterator();
 
@@ -179,11 +179,11 @@ public class ImbuementHandler {
                     Ability ability = technique.getImbuement();
                     ((IImbuement) ability).hit(attacker, victim);
 
-                    if (!(attacker instanceof Player player && player.getAbilities().instabuild)) {
-                        if (ability.getRealCooldown(attacker) > 0) {
-                            cap.addCooldown(ability);
-                        }
-                    }
+                    if (attacker instanceof Player player && player.getAbilities().instabuild) continue;
+
+                    if (ability.getRealCooldown(attacker) == 0) continue;
+
+                    cap.addCooldown(ability);
                 }
             }
         }
