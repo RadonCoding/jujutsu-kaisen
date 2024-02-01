@@ -53,7 +53,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
                 double y = r * Math.sin(phi) * Math.sin(theta);
                 double z = r * Math.cos(phi);
                 Vec3 start = owner.getEyePosition().subtract(0.0D, scale / 2, 0.0D).add(look);
-                Vec3 end = start.add(look.scale(RANGE * 2)).add(x, y, z);
+                Vec3 end = start.add(look.scale(RANGE)).add(x, y, z);
                 Vec3 speed = start.subtract(end).scale(1.0D / 20).reverse();
                 level.sendParticles(new FireParticle.FireParticleOptions(scale, true, 20), start.x, start.y, start.z, 0,
                         speed.x, speed.y, speed.z, 1.0D);
