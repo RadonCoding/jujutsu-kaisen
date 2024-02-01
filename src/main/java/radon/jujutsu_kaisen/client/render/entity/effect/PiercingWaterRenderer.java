@@ -39,8 +39,7 @@ public class PiercingWaterRenderer extends EntityRenderer<PiercingWaterEntity> {
 
     @Override
     public void render(PiercingWaterEntity pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        Entity owner = pEntity.getOwner();
-        this.clearerView = owner instanceof Player && Minecraft.getInstance().player == owner &&
+        this.clearerView = Minecraft.getInstance().player == pEntity.getOwner() &&
                 Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
 
         double collidePosX = pEntity.prevCollidePosX + (pEntity.collidePosX - pEntity.prevCollidePosX) * pPartialTick;
