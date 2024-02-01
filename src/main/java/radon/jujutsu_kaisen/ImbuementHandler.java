@@ -139,6 +139,8 @@ public class ImbuementHandler {
             stacks.addAll(CuriosUtil.findSlots(owner, "right_hand"));
             stacks.addAll(CuriosUtil.findSlots(owner, "left_hand"));
 
+            stacks.removeIf(ItemStack::isEmpty);
+
             for (ItemStack stack : stacks) {
                 if (!(stack.getItem() instanceof SwordItem)) continue;
                 increaseImbuementAmount(stack, technique, amount);
@@ -167,6 +169,7 @@ public class ImbuementHandler {
                 stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
                 stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
             }
+            stacks.removeIf(ItemStack::isEmpty);
 
             if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
@@ -190,7 +193,7 @@ public class ImbuementHandler {
                 }
 
                 if (stack.is(JJKItems.MIMICRY_KATANA_BLACK.get()) || stack.is(JJKItems.MIMICRY_KATANA_WHITE.get())) {
-                    stack.shrink(1);
+                    stack.setDamageValue(stack.getMaxDamage());
                 }
             }
         }
