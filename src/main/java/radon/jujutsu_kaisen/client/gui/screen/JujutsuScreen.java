@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JujutsuScreen extends Screen {
-    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
-    public static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
+    private static final ResourceLocation WINDOW_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/window.png");
+    public static final ResourceLocation TABS_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/tabs.png");
     public static final int WINDOW_WIDTH = 252;
     public static final int WINDOW_HEIGHT = 140;
     private static final int WINDOW_INSIDE_X = 9;

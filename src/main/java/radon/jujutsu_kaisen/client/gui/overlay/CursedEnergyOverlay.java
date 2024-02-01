@@ -12,7 +12,7 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class CursedEnergyOverlay {
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.output", JujutsuKaisen.MOD_ID), Math.round(cap.getOutput() * 100)));
         above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.experience", JujutsuKaisen.MOD_ID), cap.getExperience()));
 
-        if (cap.hasTechnique(CursedTechnique.IDLE_TRANSFIGURATION)) {
+        if (cap.hasTechnique(JJKCursedTechniques.IDLE_TRANSFIGURATION.get())) {
             above.add(Component.translatable(String.format("gui.%s.cursed_energy_overlay.transfigured_souls", JujutsuKaisen.MOD_ID), cap.getTransfiguredSouls()));
         }
 

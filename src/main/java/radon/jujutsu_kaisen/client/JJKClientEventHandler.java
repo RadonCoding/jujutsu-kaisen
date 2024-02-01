@@ -404,6 +404,11 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.GENUINE_MUTUAL_LOVE.get(), EmptyRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
+            event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
+
             event.registerEntityRenderer(JJKEntities.JOGO.get(), JogoRenderer::new);
             event.registerEntityRenderer(JJKEntities.JOGOAT.get(), JogoatRenderer::new);
             event.registerEntityRenderer(JJKEntities.DAGON.get(), DagonRenderer::new);
@@ -464,9 +469,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.RED.get(), RedRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLUE.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE.get(), EmptyRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CLOSED_DOMAIN_EXPANSION.get(), EmptyRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISMANTLE.get(), DismantleRenderer::new);
-            event.registerEntityRenderer(JJKEntities.MALEVOLENT_SHRINE.get(), MalevolentShrineRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_ARROW.get(), FireArrowRenderer::new);
             event.registerEntityRenderer(JJKEntities.PURE_LOVE.get(), PureLoveRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIREBALL.get(), FireballRenderer::new);
@@ -474,7 +477,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
             event.registerEntityRenderer(JJKEntities.THROWN_CHAIN.get(), ThrownChainProjectileRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), EmptyRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
@@ -484,7 +486,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.MINI_UZUMAKI.get(), MiniUzumakiRenderer::new);
             event.registerEntityRenderer(JJKEntities.HOLLOW_PURPLE_EXPLOSION.get(), HollowPurpleExplosionRenderer::new);
             event.registerEntityRenderer(JJKEntities.WATERBALL.get(), WaterballRenderer::new);
-            event.registerEntityRenderer(JJKEntities.CHIMERA_SHADOW_GARDEN.get(), ChimeraShadowGardenRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_SHIKIGAMI.get(), EelShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.SHARK_SHIKIGAMI.get(), SharkShikigamiRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIRANHA_SHIKIGAMI.get(), PiranhaShikigamiRenderer::new);
@@ -508,6 +509,7 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
             event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
+            event.registerEntityRenderer(JJKEntities.MIMICRY_KATANA.get(), MimicryKatanaRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
             event.registerEntityRenderer(JJKEntities.AIR_FRAME.get(), AirFrameRenderer::new);
             event.registerEntityRenderer(JJKEntities.FIRE_BEAM.get(), FireBeamRenderer::new);

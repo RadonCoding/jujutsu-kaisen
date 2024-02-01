@@ -27,6 +27,7 @@
     "common.EnchantmentHelperMixin",
     "common.EntityMixin",
     "common.ItemEntityMixin",
+    "common.ItemMixin",
     "common.LivingEntityMixin",
     "common.MeleeAttackGoalMixin",
     "common.MobMixin"

@@ -10,7 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
 import java.util.*;
 
@@ -68,7 +69,7 @@ public interface ITenShadowsData {
 
     boolean isAdaptedTo(@Nullable Ability ability);
 
-    boolean isAdaptedTo(CursedTechnique technique);
+    boolean isAdaptedTo(ICursedTechnique technique);
 
     void tryAdapt(DamageSource source);
 

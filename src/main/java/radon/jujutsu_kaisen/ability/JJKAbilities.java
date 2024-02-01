@@ -15,12 +15,15 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.mimicry.*;
+import radon.jujutsu_kaisen.ability.projection_sorcery.*;
 import radon.jujutsu_kaisen.ability.shockwave.Shockwave;
 import radon.jujutsu_kaisen.ability.ai.dino_curse.BlueFire;
 import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
+import radon.jujutsu_kaisen.ability.shockwave.ShockwaveImbuement;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
@@ -37,13 +40,7 @@ import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
-import radon.jujutsu_kaisen.ability.projection_sorcery.AirFrame;
-import radon.jujutsu_kaisen.ability.projection_sorcery.ProjectionSorcery;
-import radon.jujutsu_kaisen.ability.projection_sorcery.TimeCellMoonPalace;
-import radon.jujutsu_kaisen.ability.projection_sorcery.TwentyFourFrameRule;
-import radon.jujutsu_kaisen.ability.mimicry.CommandPureLove;
-import radon.jujutsu_kaisen.ability.mimicry.Mimicry;
-import radon.jujutsu_kaisen.ability.mimicry.Rika;
+import radon.jujutsu_kaisen.ability.sky_strike.SkyStrikeImbuement;
 import radon.jujutsu_kaisen.ability.ten_shadows.*;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
@@ -52,10 +49,11 @@ import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
@@ -79,8 +77,10 @@ public class JJKAbilities {
             ABILITIES.makeRegistry(RegistryBuilder::new);
 
     public static RegistryObject<Ability> SHOCKWAVE = ABILITIES.register("shockwave", Shockwave::new);
+    public static RegistryObject<Ability> SHOCKWAVE_IMBUEMENT = ABILITIES.register("shockwave_imbuement", ShockwaveImbuement::new);
 
     public static RegistryObject<Ability> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
+    public static RegistryObject<Ability> SKY_STRIKE_IMBUEMENT = ABILITIES.register("sky_strike_imbuement", SkyStrikeImbuement::new);
 
     public static RegistryObject<Ability> DASH = ABILITIES.register("dash", Dash::new);
     public static RegistryObject<Ability> PUNCH = ABILITIES.register("punch", Punch::new);
@@ -119,6 +119,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> TELEPORT = ABILITIES.register("teleport", Teleport::new);
     public static RegistryObject<Ability> FLY = ABILITIES.register("fly", Fly::new);
     public static RegistryObject<Ability> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
+    public static RegistryObject<Ability> LIMITLESS_IMBUEMENT = ABILITIES.register("limitless_imbuement", LimitlessImbuement::new);
 
     public static RegistryObject<Ability> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
     public static RegistryObject<Ability> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
@@ -127,10 +128,13 @@ public class JJKAbilities {
     public static RegistryObject<Ability> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
     public static RegistryObject<Ability> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static RegistryObject<Ability> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
+    public static RegistryObject<Ability> DISMANTLE_AND_CLEAVE_IMBUEMENT = ABILITIES.register("dismantle_and_cleave_imbuement", DismantleAndCleaveImbuement::new);
 
     public static RegistryObject<Summon<?>> RIKA = ABILITIES.register("rika", Rika::new);
     public static RegistryObject<Ability> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
     public static RegistryObject<Ability> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
+    public static RegistryObject<Ability> GENUINE_MUTUAL_LOVE = ABILITIES.register("genuine_mutual_love", GenuineMutualLove::new);
+    public static RegistryObject<Ability> MIMICRY_IMBUEMENT = ABILITIES.register("mimicry_imbuement", MimicryImbuement::new);
 
     public static RegistryObject<Ability> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
     public static RegistryObject<Ability> EMBER_INSECT_FLIGHT = ABILITIES.register("ember_insect_flight", EmberInsectFlight::new);
@@ -141,6 +145,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FIREBALL = ABILITIES.register("fireball", Fireball::new);
     public static RegistryObject<Ability> FIRE_BEAM = ABILITIES.register("fire_beam", FireBeam::new);
     public static RegistryObject<Ability> COFFIN_OF_THE_IRON_MOUNTAIN = ABILITIES.register("coffin_of_the_iron_mountain", CoffinOfTheIronMountain::new);
+    public static RegistryObject<Ability> DISASTER_FLAMES_IMBUEMENT = ABILITIES.register("disaster_flames_imbuement", DisasterFlamesImbuement::new);
 
     public static RegistryObject<Ability> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static RegistryObject<Ability> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
@@ -149,6 +154,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static RegistryObject<Ability> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
     public static RegistryObject<Ability> EEL_GRAPPLE = ABILITIES.register("eel_grapple", EelGrapple::new);
+    public static RegistryObject<Ability> DISASTER_TIDES_IMBUEMENT = ABILITIES.register("disaster_tides_imbuement", DisasterTidesImbuement::new);
 
     public static RegistryObject<Ability> FOREST_PLATFORM = ABILITIES.register("forest_platform", ForestPlatform::new);
     public static RegistryObject<Ability> FOREST_SPIKES = ABILITIES.register("forest_spikes", ForestSpikes::new);
@@ -159,6 +165,7 @@ public class JJKAbilities {
     public static RegistryObject<Ability> FOREST_DASH = ABILITIES.register("forest_dash", ForestDash::new);
     public static RegistryObject<Ability> DISASTER_PLANT = ABILITIES.register("disaster_plant", DisasterPlant::new);
     public static RegistryObject<Ability> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
+    public static RegistryObject<Ability> DISASTER_PLANTS_IMBUEMENT = ABILITIES.register("disaster_plants_imbuement", DisasterPlantsImbuement::new);
 
     public static RegistryObject<Ability> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
     public static RegistryObject<Ability> SOUL_DECIMATION = ABILITIES.register("soul_decimation", SoulDecimation::new);
@@ -174,6 +181,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> POLYMORPHIC_SOUl_ISOMER = ABILITIES.register("polymorphic_soul_isomer", PolymorphicSoulIsomer::new);
     public static RegistryObject<Ability> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static RegistryObject<Ability> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
+    public static RegistryObject<Ability> IDLE_TRANSFIGURATION_IMBUEMENT = ABILITIES.register("idle_transfiguration_imbuement", IdleTransfigurationImbuement::new);
 
     public static RegistryObject<Ability> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static RegistryObject<Ability> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
@@ -199,6 +207,7 @@ public class JJKAbilities {
     public static RegistryObject<Summon<?>> AGITO = ABILITIES.register("agito", Agito::new);
 
     public static RegistryObject<Ability> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
+    public static RegistryObject<Ability> TEN_SHADOWS_IMBUEMENT = ABILITIES.register("ten_shadows_imbuement", TenShadowsImbuement::new);
 
     public static RegistryObject<Ability> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static RegistryObject<Ability> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
@@ -208,12 +217,14 @@ public class JJKAbilities {
     public static RegistryObject<Ability> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static RegistryObject<Ability> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
     public static RegistryObject<Ability> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
+    public static RegistryObject<Ability> CURSE_MANIPULATION_IMBUEMENT = ABILITIES.register("curse_manipulation_imbuement", CurseManipulationImbuement::new);
 
     public static RegistryObject<Ability> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static RegistryObject<Ability> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);
     public static RegistryObject<Ability> BLAST_AWAY = ABILITIES.register("blast_away", BlastAway::new);
     public static RegistryObject<Ability> EXPLODE = ABILITIES.register("explode", Explode::new);
     public static RegistryObject<Ability> DIE = ABILITIES.register("die", Die::new);
+    public static RegistryObject<Ability> CURSED_SPEECH_IMBUEMENT = ABILITIES.register("cursed_speech_imbuement", CursedSpeechImbuement::new);
 
     public static RegistryObject<Ability> SWAP_SELF = ABILITIES.register("swap_self", SwapSelf::new);
     public static RegistryObject<Ability> SWAP_OTHERS = ABILITIES.register("swap_others", SwapOthers::new);
@@ -221,15 +232,13 @@ public class JJKAbilities {
     public static RegistryObject<Ability> CE_THROW = ABILITIES.register("ce_throw", CEThrow::new);
     public static RegistryObject<Ability> ITEM_SWAP = ABILITIES.register("item_swap", ItemSwap::new);
     public static RegistryObject<Ability> SHUFFLE = ABILITIES.register("shuffle", Shuffle::new);
+    public static RegistryObject<Ability> BOOGIE_WOOGIE_IMBUEMENT = ABILITIES.register("boogie_woogie_imbuement", BoogieWoogieImbuement::new);
 
     public static RegistryObject<Ability> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
     public static RegistryObject<Ability> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
     public static RegistryObject<Ability> AIR_FRAME = ABILITIES.register("air_frame", AirFrame::new);
     public static RegistryObject<Ability> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
-
-    public static String getName(Ability ability) {
-        return getKey(ability).getPath();
-    }
+    public static RegistryObject<Ability> PROJECTION_SORCERY_IMBUEMENT = ABILITIES.register("projection_sorcery_imbuement", ProjectionSorceryImbuement::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return ABILITY_REGISTRY.get().getKey(ability);
@@ -331,20 +340,6 @@ public class JJKAbilities {
         return entity;
     }
 
-    public static Set<CursedTechnique> getTechniques(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Set.of();
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getTechniques();
-    }
-
-    @Nullable
-    public static CursedTechnique getTechnique(Ability ability) {
-        for (CursedTechnique technique : CursedTechnique.values()) {
-            if (List.of(technique.getAbilities()).contains(ability)) return technique;
-        }
-        return null;
-    }
-
     @Nullable
     public static JujutsuType getType(LivingEntity owner) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
@@ -392,8 +387,10 @@ public class JJKAbilities {
         Set<Ability> abilities = new LinkedHashSet<>(List.of(JJKAbilities.HEAL.get(), JJKAbilities.RCT1.get(), JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get()));
 
         if (owner instanceof JogoatEntity) {
-            for (CursedTechnique technique : CursedTechnique.values()) {
-                abilities.addAll(Arrays.asList(technique.getAbilities()));
+            for (RegistryObject<ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
+                ICursedTechnique technique = entry.get();
+                
+                abilities.addAll(technique.getAbilities());
 
                 Ability domain = technique.getDomain();
 
@@ -419,11 +416,11 @@ public class JJKAbilities {
         }
 
         if (!cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
-            for (CursedTechnique technique : cap.getTechniques()) {
-                abilities.addAll(Arrays.asList(technique.getAbilities()));
+            for (ICursedTechnique technique : cap.getTechniques()) {
+                abilities.addAll(technique.getAbilities());
             }
 
-            CursedTechnique technique = cap.getTechnique();
+            ICursedTechnique technique = cap.getTechnique();
 
             if (technique != null && technique.getDomain() != null) {
                 abilities.add(technique.getDomain());

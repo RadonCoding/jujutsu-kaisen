@@ -11,6 +11,11 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
+import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
+import radon.jujutsu_kaisen.entity.domain.base.GenuineMutualLoveEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
@@ -31,6 +36,11 @@ public class JJKEntities {
             EntityType.Builder.<ClosedDomainExpansionEntity>of(ClosedDomainExpansionEntity::new, MobCategory.MISC)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "closed_domain_expansion")
+                            .toString()));
+    public static RegistryObject<EntityType<GenuineMutualLoveEntity>> GENUINE_MUTUAL_LOVE = ENTITIES.register("genuine_mutual_love", () ->
+            EntityType.Builder.<GenuineMutualLoveEntity>of(GenuineMutualLoveEntity::new, MobCategory.MISC)
+                    .fireImmune()
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "genuine_mutual_love")
                             .toString()));
     public static RegistryObject<EntityType<MalevolentShrineEntity>> MALEVOLENT_SHRINE = ENTITIES.register("malevolent_shrine", () ->
             EntityType.Builder.<MalevolentShrineEntity>of(MalevolentShrineEntity::new, MobCategory.MISC)
@@ -491,8 +501,13 @@ public class JJKEntities {
                             .toString()));
     public static RegistryObject<EntityType<NyoiStaffEntity>> NYOI_STAFF = ENTITIES.register("nyoi_staff", () ->
             EntityType.Builder.<NyoiStaffEntity>of(NyoiStaffEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 1.8F)
+                    .sized(0.5F, 2.0F)
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "nyoi_staff")
+                            .toString()));
+    public static RegistryObject<EntityType<MimicryKatanaEntity>> MIMICRY_KATANA = ENTITIES.register("mimicry_katana", () ->
+            EntityType.Builder.<MimicryKatanaEntity>of(MimicryKatanaEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 2.0F)
+                    .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "mimicry_katana")
                             .toString()));
     public static RegistryObject<EntityType<FireBeamEntity>> FIRE_BEAM = ENTITIES.register("fire_beam", () ->
             EntityType.Builder.<FireBeamEntity>of(FireBeamEntity::new, MobCategory.MISC)

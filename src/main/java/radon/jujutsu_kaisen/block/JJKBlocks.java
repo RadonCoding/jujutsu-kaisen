@@ -58,15 +58,15 @@ public class JJKBlocks {
                     .noLootTable()
                     .air()));
 
-    public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
-            new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
+    public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
+            new SkyBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
 
-    public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
-            new SkyBlock(BlockBehaviour.Properties.of()
+    public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
+            new UnlimitedVoidBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
@@ -142,14 +142,19 @@ public class JJKBlocks {
                     .lightLevel((pState) -> 14)
                     .emissiveRendering((pState, pLevel, pPos) -> true)));
 
-    public static RegistryObject<DomainBlock> SELF_EMBODIMENT_OF_PERFECTION = BLOCKS.register("self_embodiment_of_perfection", () ->
+    public static RegistryObject<DomainBlock> GENUINE_MUTUAL_LOVE_ONE = BLOCKS.register("genuine_mutual_love_one", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
-
-    public static RegistryObject<DomainBlock> TIME_CELL_MOON_PALACE = BLOCKS.register("time_cell_moon_palace", () ->
+    public static RegistryObject<DomainBlock> GENUINE_MUTUAL_LOVE_TWO = BLOCKS.register("genuine_mutual_love_two", () ->
+            new DomainBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+    public static RegistryObject<DomainBlock> GENUINE_MUTUAL_LOVE_THREE = BLOCKS.register("genuine_mutual_love_three", () ->
             new DomainBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)

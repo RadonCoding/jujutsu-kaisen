@@ -44,6 +44,25 @@ public class SwapSelf extends Ability {
                 || target instanceof JujutsuProjectile) && (!(target instanceof LivingEntity living) || !JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION));
     }
 
+    public static void swap(Entity first, Entity second) {
+        first.level().playSound(null, first.getX(), first.getY(), first.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
+        first.level().playSound(null, second.getX(), second.getY(), second.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
+
+        Vec3 pos = second.position();
+
+        Vec2 ownerRot = first.getRotationVector();
+        Vec2 targetRot = second.getRotationVector();
+
+        second.teleportTo(first.getX(), first.getY(), first.getZ());
+        first.teleportTo(pos.x, pos.y, pos.z);
+
+        second.setYRot(ownerRot.y);
+        second.setXRot(ownerRot.x);
+
+        first.setYRot(targetRot.y);
+        first.setXRot(targetRot.x);
+    }
+
     private @Nullable Entity getTarget(LivingEntity owner) {
         if (RotationUtil.getLookAtHit(owner, RANGE, target -> !target.isSpectator()) instanceof EntityHitResult hit) {
             Entity target = hit.getEntity();
@@ -61,22 +80,7 @@ public class SwapSelf extends Ability {
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
-            owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-            Vec3 pos = target.position();
-
-            Vec2 ownerRot = owner.getRotationVector();
-            Vec2 targetRot = target.getRotationVector();
-
-            target.teleportTo(owner.getX(), owner.getY(), owner.getZ());
-            owner.teleportTo(pos.x, pos.y, pos.z);
-
-            target.setYRot(ownerRot.y);
-            target.setXRot(ownerRot.x);
-
-            owner.setYRot(targetRot.y);
-            owner.setXRot(targetRot.x);
+            swap(owner, target);
         }
     }
 

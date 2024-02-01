@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class AbilityWidget {
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/widgets.png");
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final AbilityTab tab;

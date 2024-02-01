@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import radon.jujutsu_kaisen.JJKConstants;
@@ -25,11 +23,11 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.config.ServerConfig;
-import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
@@ -52,15 +50,15 @@ public class SorcererData implements ISorcererData {
 
     private float domainSize;
 
-    private @Nullable CursedTechnique technique;
+    private @Nullable ICursedTechnique technique;
 
-    private @Nullable CursedTechnique additional;
+    private @Nullable ICursedTechnique additional;
 
-    private final Set<CursedTechnique> copied;
-    private @Nullable CursedTechnique currentCopied;
+    private final Set<ICursedTechnique> copied;
+    private @Nullable ICursedTechnique currentCopied;
 
-    private final Set<CursedTechnique> absorbed;
-    private @Nullable CursedTechnique currentAbsorbed;
+    private final Set<ICursedTechnique> absorbed;
+    private @Nullable ICursedTechnique currentAbsorbed;
 
     private int transfiguredSouls;
 
@@ -692,7 +690,7 @@ public class SorcererData implements ISorcererData {
             Ability domain = this.technique.getDomain();
 
             if (domain != null && this.toggled.contains(domain)) {
-                power *= 2.0F;
+                power *= 1.2F;
             }
         }
         return power;
@@ -745,13 +743,13 @@ public class SorcererData implements ISorcererData {
         this.domainSize = domainSize;
     }
 
-    public @Nullable CursedTechnique getTechnique() {
+    public @Nullable ICursedTechnique getTechnique() {
         return this.technique;
     }
 
     @Override
-    public Set<CursedTechnique> getTechniques() {
-        Set<CursedTechnique> techniques = new HashSet<>();
+    public Set<ICursedTechnique> getTechniques() {
+        Set<ICursedTechnique> techniques = new HashSet<>();
 
         if (this.getTechnique() != null) techniques.add(this.getTechnique());
         if (this.getCurrentCopied() != null) techniques.add(this.getCurrentCopied());
@@ -762,12 +760,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public boolean hasTechnique(CursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.getCurrentCopied() == technique || this.currentAbsorbed == technique;
+    public boolean hasTechnique(ICursedTechnique technique) {
+        return this.technique == technique || this.additional == technique || this.copied.contains(technique) || this.absorbed.contains(technique);
     }
 
     @Override
-    public void setTechnique(@Nullable CursedTechnique technique) {
+    public void setTechnique(@Nullable ICursedTechnique technique) {
         this.technique = technique;
         this.sync();
     }
@@ -1009,31 +1007,31 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void uncopy(CursedTechnique technique) {
+    public void uncopy(ICursedTechnique technique) {
         this.copied.remove(technique);
     }
 
     @Override
-    public void copy(@Nullable CursedTechnique technique) {
+    public void copy(@Nullable ICursedTechnique technique) {
         this.copied.add(technique);
     }
 
     @Override
-    public Set<CursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(CursedTechnique.MIMICRY)) {
+    public Set<ICursedTechnique> getCopied() {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(JJKCursedTechniques.MIMICRY.get())) {
             return Set.of();
         }
         return this.copied;
     }
 
     @Override
-    public void setCurrentCopied(@Nullable CursedTechnique technique) {
+    public void setCurrentCopied(@Nullable ICursedTechnique technique) {
         this.currentCopied = this.currentCopied == technique ? null : technique;
         this.sync();
     }
 
     @Override
-    public @Nullable CursedTechnique getCurrentCopied() {
+    public @Nullable ICursedTechnique getCurrentCopied() {
         if (!this.toggled.contains(JJKAbilities.RIKA.get())) {
             return null;
         }
@@ -1041,33 +1039,33 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void absorb(@Nullable CursedTechnique technique) {
+    public void absorb(@Nullable ICursedTechnique technique) {
         this.absorbed.add(technique);
     }
 
     @Override
-    public void unabsorb(CursedTechnique technique) {
+    public void unabsorb(ICursedTechnique technique) {
         this.absorbed.remove(technique);
         this.currentAbsorbed = null;
     }
 
     @Override
-    public Set<CursedTechnique> getAbsorbed() {
-        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+    public Set<ICursedTechnique> getAbsorbed() {
+        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             return Set.of();
         }
         return this.absorbed;
     }
 
     @Override
-    public void setCurrentAbsorbed(@Nullable CursedTechnique technique) {
+    public void setCurrentAbsorbed(@Nullable ICursedTechnique technique) {
         this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
         this.sync();
     }
 
     @Override
-    public @Nullable CursedTechnique getCurrentAbsorbed() {
-        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+    public @Nullable ICursedTechnique getCurrentAbsorbed() {
+        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             return null;
         }
         return this.currentAbsorbed;
@@ -1254,7 +1252,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public List<AbsorbedCurse> getCurses() {
-        if (!this.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) return List.of();
+        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) return List.of();
 
         List<AbsorbedCurse> sorted = new ArrayList<>(this.curses);
         sorted.sort((o1, o2) -> (int) (JJKAbilities.getCurseExperience(o2) - JJKAbilities.getCurseExperience(o1)));
@@ -1309,7 +1307,7 @@ public class SorcererData implements ISorcererData {
         this.traits.remove(Trait.HEAVENLY_RESTRICTION);
         this.traits.remove(Trait.VESSEL);
 
-        Set<CursedTechnique> taken = new HashSet<>();
+        Set<ICursedTechnique> taken = new HashSet<>();
         Set<Trait> traits = new HashSet<>();
 
         if (ConfigHolder.SERVER.uniqueTraits.get() || ConfigHolder.SERVER.uniqueTraits.get()) {
@@ -1341,7 +1339,7 @@ public class SorcererData implements ISorcererData {
                 HelperMethods.RANDOM.nextInt(ConfigHolder.SERVER.heavenlyRestrictionRarity.get()) == 0) {
             this.addTrait(Trait.HEAVENLY_RESTRICTION);
         } else {
-            List<CursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
+            List<ICursedTechnique> unlockable = ConfigHolder.SERVER.getUnlockableTechniques();
 
             if (ConfigHolder.SERVER.uniqueTechniques.get()) {
                 unlockable.removeAll(taken);
@@ -1417,12 +1415,12 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public @Nullable CursedTechnique getAdditional() {
+    public @Nullable ICursedTechnique getAdditional() {
         return this.additional;
     }
 
     @Override
-    public void setAdditional(@Nullable CursedTechnique technique) {
+    public void setAdditional(@Nullable ICursedTechnique technique) {
         this.additional = technique;
         this.sync();
     }
@@ -1436,16 +1434,16 @@ public class SorcererData implements ISorcererData {
         nbt.putFloat("domain_size", this.domainSize);
 
         if (this.technique != null) {
-            nbt.putInt("technique", this.technique.ordinal());
+            nbt.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
         }
         if (this.additional != null) {
-            nbt.putInt("additional", this.additional.ordinal());
+            nbt.putString("additional", JJKCursedTechniques.getKey(this.additional).toString());
         }
         if (this.currentCopied != null) {
-            nbt.putInt("current_copied", this.currentCopied.ordinal());
+            nbt.putString("current_copied", JJKCursedTechniques.getKey(this.currentCopied).toString());
         }
         if (nbt.contains("current_absorbed")) {
-            this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
+            this.currentAbsorbed = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_absorbed")));
         }
         nbt.putInt("transfigured_souls", this.transfiguredSouls);
         nbt.putInt("nature", this.nature.ordinal());
@@ -1476,15 +1474,15 @@ public class SorcererData implements ISorcererData {
 
         ListTag copiedTag = new ListTag();
 
-        for (CursedTechnique technique : this.copied) {
-            copiedTag.add(IntTag.valueOf(technique.ordinal()));
+        for (ICursedTechnique technique : this.copied) {
+            copiedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
         }
         nbt.put("copied", copiedTag);
 
         ListTag absorbedTag = new ListTag();
 
-        for (CursedTechnique technique : this.absorbed) {
-            absorbedTag.add(IntTag.valueOf(technique.ordinal()));
+        for (ICursedTechnique technique : this.absorbed) {
+            absorbedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
         }
         nbt.put("absorbed", absorbedTag);
 
@@ -1601,16 +1599,16 @@ public class SorcererData implements ISorcererData {
         this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
-            this.technique = CursedTechnique.values()[nbt.getInt("technique")];
+            this.technique = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique")));
         }
         if (nbt.contains("additional")) {
-            this.additional = CursedTechnique.values()[nbt.getInt("additional")];
+            this.additional = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("additional")));
         }
         if (nbt.contains("current_copied")) {
-            this.currentCopied = CursedTechnique.values()[nbt.getInt("current_copied")];
+            this.currentCopied = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_copied")));
         }
         if (nbt.contains("current_absorbed")) {
-            this.currentAbsorbed = CursedTechnique.values()[nbt.getInt("current_absorbed")];
+            this.currentAbsorbed = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_absorbed")));
         }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
@@ -1631,25 +1629,25 @@ public class SorcererData implements ISorcererData {
         this.unlocked.clear();
 
         for (Tag tag : nbt.getList("unlocked", Tag.TAG_STRING)) {
-            this.unlocked.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
+            this.unlocked.add(JJKAbilities.getValue(ResourceLocation.tryParse(tag.getAsString())));
         }
 
         this.copied.clear();
 
-        for (Tag tag : nbt.getList("copied", Tag.TAG_INT)) {
-            this.copied.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
+        for (Tag tag : nbt.getList("copied", Tag.TAG_STRING)) {
+            this.copied.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
         }
 
         this.absorbed.clear();
 
-        for (Tag tag : nbt.getList("absorbed", Tag.TAG_INT)) {
-            this.absorbed.add(CursedTechnique.values()[((IntTag) tag).getAsInt()]);
+        for (Tag tag : nbt.getList("absorbed", Tag.TAG_STRING)) {
+            this.absorbed.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
         }
 
         this.toggled.clear();
 
         for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-            this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
+            this.toggled.add(JJKAbilities.getValue(ResourceLocation.tryParse(key.getAsString())));
         }
 
         this.traits.clear();
@@ -1662,7 +1660,7 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
-            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
+            this.cooldowns.put(JJKAbilities.getValue(ResourceLocation.tryParse(data.getString("identifier"))),
                     data.getInt("cooldown"));
         }
 
@@ -1710,7 +1708,7 @@ public class SorcererData implements ISorcererData {
             for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 chants.add(entry.getAsString());
             }
-            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
+            this.chants.put(JJKAbilities.getValue(ResourceLocation.tryParse(data.getString("ability"))), chants);
         }
 
         this.curses.clear();

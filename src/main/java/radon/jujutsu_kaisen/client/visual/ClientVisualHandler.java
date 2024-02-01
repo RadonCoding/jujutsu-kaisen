@@ -20,9 +20,10 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.visual.base.IOverlay;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -61,7 +62,7 @@ public class ClientVisualHandler {
             if (mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                 ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                Set<CursedTechnique> techniques = new HashSet<>();
+                Set<ICursedTechnique> techniques = new HashSet<>();
 
                 if (cap.getTechnique() != null) techniques.add(cap.getTechnique());
                 if (cap.getCurrentCopied() != null) techniques.add(cap.getCurrentCopied());
@@ -122,16 +123,16 @@ public class ClientVisualHandler {
         @Nullable
         public Ability channeled;
         public Set<Trait> traits;
-        public Set<CursedTechnique> techniques;
+        public Set<ICursedTechnique> techniques;
         @Nullable
-        public CursedTechnique technique;
+        public ICursedTechnique technique;
         public JujutsuType type;
         public float experience;
         public int cursedEnergyColor;
 
         public int mouth;
 
-        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<CursedTechnique> techniques, @Nullable CursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
+        public ClientData(Set<Ability> toggled, @Nullable Ability channeled, Set<Trait> traits, Set<ICursedTechnique> techniques, @Nullable ICursedTechnique technique, JujutsuType type, float experience, int cursedEnergyColor) {
             this.toggled = toggled;
             this.channeled = channeled;
             this.traits = traits;
@@ -148,14 +149,14 @@ public class ClientVisualHandler {
 
         public void deserializeNBT(CompoundTag nbt) {
             this.toggled = new HashSet<>();
-            this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled"))) : null;
+            this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(ResourceLocation.tryParse(nbt.getString("channeled"))) : null;
             this.traits = new HashSet<>();
             this.techniques = new HashSet<>();
 
-            this.technique = nbt.contains("technique") ? CursedTechnique.values()[nbt.getInt("technique")] : null;
+            this.technique = nbt.contains("technique") ? JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique"))) : null;
 
             for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-                this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
+                this.toggled.add(JJKAbilities.getValue(ResourceLocation.tryParse(key.getAsString())));
             }
 
             for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
@@ -165,9 +166,7 @@ public class ClientVisualHandler {
             }
 
             for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
-                if (key instanceof IntTag tag) {
-                    this.techniques.add(CursedTechnique.values()[tag.getAsInt()]);
-                }
+                this.techniques.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(key.getAsString())));
             }
 
             this.type = JujutsuType.values()[nbt.getInt("type")];
@@ -198,13 +197,13 @@ public class ClientVisualHandler {
 
             ListTag techniquesTag = new ListTag();
 
-            for (CursedTechnique technique : this.techniques) {
-                techniquesTag.add(IntTag.valueOf(technique.ordinal()));
+            for (ICursedTechnique technique : this.techniques) {
+                techniquesTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
             }
             nbt.put("techniques", techniquesTag);
 
             if (this.technique != null) {
-                nbt.putInt("technique", this.technique.ordinal());
+                nbt.putString("technique", JJKCursedTechniques.getKey(this.technique).toString());
             }
             nbt.putInt("type", this.type.ordinal());
             nbt.putFloat("experience", this.experience);

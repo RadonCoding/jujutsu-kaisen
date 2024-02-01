@@ -28,7 +28,7 @@ import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.mixin.client.ILevelRendererAccessor;
 
 public class SkyHandler {
-    private static final ResourceLocation SUN_LOCATION = new ResourceLocation("textures/environment/sun.png");
+    private static final ResourceLocation SUN_LOCATION = ResourceLocation.tryParse("textures/environment/sun.png");
 
     private static ClientLevel overworld;
     private static TextureTarget target;

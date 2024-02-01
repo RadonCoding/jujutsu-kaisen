@@ -14,7 +14,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -48,14 +49,14 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
     public boolean isDisplayed(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = cap.getTechnique();
         return technique != null && technique.getDomain() != null && super.isDisplayed(owner);
     }
 
     @Override
     public boolean isValid(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = cap.getTechnique();
         return technique != null && technique.getDomain() != null && technique.getDomain().isValid(owner) && super.isValid(owner);
     }
 
@@ -63,7 +64,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     public Status isTriggerable(LivingEntity owner) {
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
             ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            CursedTechnique technique = cap.getTechnique();
+            ICursedTechnique technique = cap.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return Status.FAILURE;
 
@@ -81,7 +82,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
         cap.delayTickEvent(() -> {
-            CursedTechnique technique = cap.getTechnique();
+            ICursedTechnique technique = cap.getTechnique();
 
             if (technique == null || !(technique.getDomain() instanceof DomainExpansion ability)) return;
 
@@ -115,7 +116,7 @@ public class ZeroPointTwoSecondDomainExpansion extends Ability {
     @Override
     public Ability getParent(LivingEntity owner) {
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        CursedTechnique technique = cap.getTechnique();
+        ICursedTechnique technique = cap.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.SIMPLE_DOMAIN.get() : technique.getDomain();
     }
 

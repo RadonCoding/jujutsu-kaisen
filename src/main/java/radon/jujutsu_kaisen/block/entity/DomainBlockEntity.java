@@ -116,7 +116,7 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             this.identifier = pTag.getUUID("identifier");
-            this.death = pTag.getInt("death_time");
+            this.death = pTag.getInt("death");
             this.deferred = pTag.getCompound("original");
 
             if (pTag.contains("saved")) {
@@ -133,7 +133,7 @@ public class DomainBlockEntity extends BlockEntity {
 
         if (this.initialized) {
             pTag.putUUID("identifier", this.identifier);
-            pTag.putInt("death_time", this.death);
+            pTag.putInt("death", this.death);
 
             if (this.original != null) {
                 pTag.put("original", NbtUtils.writeBlockState(this.original));

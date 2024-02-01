@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
 
 public class CursedEnergyColorTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.cursed_energy_color", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
 
     private ForgeSlider rSlider;
     private ForgeSlider gSlider;

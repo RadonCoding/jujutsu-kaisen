@@ -16,7 +16,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.WheelEntity;
@@ -255,7 +256,7 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public boolean isAdaptedTo(CursedTechnique technique) {
+    public boolean isAdaptedTo(ICursedTechnique technique) {
         for (Ability ability : technique.getAbilities()) {
             if (this.isAdaptedTo(ability)) return true;
         }
@@ -355,13 +356,13 @@ public class TenShadowsData implements ITenShadowsData {
         this.tamed.clear();
 
         for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
-            this.tamed.add(new ResourceLocation(key.getAsString()));
+            this.tamed.add(ResourceLocation.tryParse(key.getAsString()));
         }
 
         this.dead.clear();
 
         for (Tag key : nbt.getList("dead", Tag.TAG_STRING)) {
-            this.dead.add(new ResourceLocation(key.getAsString()));
+            this.dead.add(ResourceLocation.tryParse(key.getAsString()));
         }
 
         this.adapted.clear();

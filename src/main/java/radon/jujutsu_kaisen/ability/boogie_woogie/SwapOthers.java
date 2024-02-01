@@ -74,22 +74,7 @@ public class SwapOthers extends Ability {
 
                 if (second == null) return;
 
-                owner.level().playSound(null, second.getX(), second.getY(), second.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 2.0F, 1.0F);
-                owner.level().playSound(null, first.getX(), first.getY(), first.getZ(), JJKSounds.CLAP.get(), SoundSource.MASTER, 1.0F, 1.0F);
-
-                Vec3 pos = second.position();
-
-                Vec2 firstRot = first.getRotationVector();
-                Vec2 secondRot = second.getRotationVector();
-
-                second.teleportTo(first.getX(), first.getY(), first.getZ());
-                first.teleportTo(pos.x, pos.y, pos.z);
-
-                second.setYRot(firstRot.y);
-                second.setXRot(firstRot.x);
-
-                first.setYRot(secondRot.y);
-                first.setXRot(secondRot.x);
+                SwapSelf.swap(first, second);
 
                 TARGETS.remove(owner.getUUID());
             } else {

@@ -29,9 +29,9 @@ public class JJKBlockEntities {
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_THREE.get(),
                             JJKBlocks.SHINING_SEA_OF_FLOWERS_DECORATION_FOUR.get(),
 
-                            JJKBlocks.SELF_EMBODIMENT_OF_PERFECTION.get(),
-
-                            JJKBlocks.TIME_CELL_MOON_PALACE.get(),
+                            JJKBlocks.GENUINE_MUTUAL_LOVE_ONE.get(),
+                            JJKBlocks.GENUINE_MUTUAL_LOVE_TWO.get(),
+                            JJKBlocks.GENUINE_MUTUAL_LOVE_THREE.get(),
 
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));

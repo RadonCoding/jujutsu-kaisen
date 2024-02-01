@@ -29,8 +29,6 @@ public class NyoiStaffRenderer extends EntityRenderer<NyoiStaffEntity> {
         pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
         this.renderer.renderStatic(pEntity.getItem(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
         pPoseStack.popPose();
-
-        super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
     }
 
     @Override

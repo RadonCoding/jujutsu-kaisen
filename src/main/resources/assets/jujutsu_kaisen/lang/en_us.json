@@ -77,6 +77,8 @@
   "item.jujutsu_kaisen.curse": "Cursed Spirit: %1$s",
   "item.jujutsu_kaisen.experience": "Experience: %1$f",
 
+  "item.jujutsu_kaisen.imbuement": "%1$s imbuement: %2$f%%",
+
   "item.jujutsu_kaisen.inverted_spear_of_heaven": "Inverted Spear of Heaven",
   "item.jujutsu_kaisen.inverted_spear_of_heaven.desc": "Nullifies all cursed techniques on contact.",
   "item.jujutsu_kaisen.playful_cloud": "Playful Cloud",
@@ -103,6 +105,8 @@
 
   "item.jujutsu_kaisen.green_handle_katana": "Green Handle Katana",
   "item.jujutsu_kaisen.red_handle_katana": "Red Handle Katana",
+  "item.jujutsu_kaisen.mimicry_katana_black": "Mimicry Katana",
+  "item.jujutsu_kaisen.mimicry_katana_white": "Mimicry Katana",
   "item.jujutsu_kaisen.jet_black_shadow_sword": "Jet-Black Shadow Sword",
 
   "item.jujutsu_kaisen.sukuna_finger": "Sukuna Finger",
@@ -276,12 +280,11 @@
   "ability.jujutsu_kaisen.rika": "Rika",
   "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
   "ability.jujutsu_kaisen.rika.disable": "Released Rika",
-
   "ability.jujutsu_kaisen.mimicry": "Mimicry",
   "ability.jujutsu_kaisen.mimicry.enable": "Activated mimicry",
   "ability.jujutsu_kaisen.mimicry.disable": "Deactivated mimicry",
-
   "ability.jujutsu_kaisen.command_pure_love": "Pure Love",
+  "ability.jujutsu_kaisen.genuine_mutual_love": "Genuine Mutual Love",
 
   "ability.jujutsu_kaisen.ember_insects": "Ember Insects",
   "ability.jujutsu_kaisen.ember_insect_flight": "Ember Insect Flight",
@@ -440,7 +443,6 @@
   "grade.jujutsu_kaisen.special_grade_1": "Special Grade 1",
   "grade.jujutsu_kaisen.special_grade": "Special Grade",
 
-  "cursed_technique.jujutsu_kaisen.none": "None",
   "cursed_technique.jujutsu_kaisen.shockwave": "Shockwave",
   "cursed_technique.jujutsu_kaisen.sky_strike": "Sky Strike",
   "cursed_technique.jujutsu_kaisen.curse_manipulation": "Curse Manipulation",
@@ -533,6 +535,7 @@
   "chat.jujutsu_kaisen.enhance_curse": "Experience: %1$f/%2$f",
 
   "entity.jujutsu_kaisen.closed_domain_expansion": "Closed Domain Expansion",
+  "entity.jujutsu_kaisen.genuine_mutual_love": "Genuine Mutual Love",
   "entity.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
   "entity.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
 
@@ -634,6 +637,7 @@
   "entity.jujutsu_kaisen.disaster_plant": "Disaster Plant",
   "entity.jujutsu_kaisen.wheel": "Wheel",
   "entity.jujutsu_kaisen.nyoi_staff": "Nyoi Staff",
+  "entity.jujutsu_kaisen.mimicry_katana": "Mimicry Katana",
   "entity.jujutsu_kaisen.fire_beam": "Fire Beam",
   "entity.jujutsu_kaisen.forest_dash": "Forest Dash",
   "entity.jujutsu_kaisen.cursed_energy_imbued_item": "Cursed Energy Imbued Item",

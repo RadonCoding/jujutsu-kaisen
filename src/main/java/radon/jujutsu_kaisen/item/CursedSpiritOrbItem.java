@@ -18,7 +18,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class CursedSpiritOrbItem extends Item {
         if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasTechnique(CursedTechnique.CURSE_MANIPULATION)) {
+            if (!cap.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
                 pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
                 return stack;
             }

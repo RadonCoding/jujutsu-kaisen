@@ -7,8 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -57,8 +58,8 @@ public class ZombaCurseEntity extends CursedSpirit {
     }
 
     @Override
-    public @Nullable CursedTechnique getTechnique() {
-        return CursedTechnique.SKY_STRIKE;
+    public @Nullable ICursedTechnique getTechnique() {
+        return JJKCursedTechniques.SKY_STRIKE.get();
     }
 
     @Override

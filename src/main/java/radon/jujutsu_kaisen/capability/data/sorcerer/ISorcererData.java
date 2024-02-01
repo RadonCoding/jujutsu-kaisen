@@ -1,19 +1,16 @@
 package radon.jujutsu_kaisen.capability.data.sorcerer;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
 import java.util.*;
 
@@ -115,16 +112,16 @@ public interface ISorcererData {
 
     boolean hasToggled(Ability ability);
 
-    @Nullable CursedTechnique getAdditional();
+    @Nullable ICursedTechnique getAdditional();
 
-    void setAdditional(CursedTechnique technique);
+    void setAdditional(ICursedTechnique technique);
 
-    @Nullable CursedTechnique getTechnique();
-    Set<CursedTechnique> getTechniques();
+    @Nullable ICursedTechnique getTechnique();
+    Set<ICursedTechnique> getTechniques();
 
-    boolean hasTechnique(CursedTechnique technique);
+    boolean hasTechnique(ICursedTechnique technique);
 
-    void setTechnique(@Nullable CursedTechnique technique);
+    void setTechnique(@Nullable ICursedTechnique technique);
 
     CursedEnergyNature getNature();
 
@@ -203,25 +200,25 @@ public interface ISorcererData {
 
     void delayTickEvent(Runnable task, int delay);
     
-    void uncopy(CursedTechnique technique);
+    void uncopy(ICursedTechnique technique);
 
-    void copy(@Nullable CursedTechnique technique);
+    void copy(@Nullable ICursedTechnique technique);
 
-    Set<CursedTechnique> getCopied();
+    Set<ICursedTechnique> getCopied();
 
-    void setCurrentCopied(@Nullable CursedTechnique technique);
+    void setCurrentCopied(@Nullable ICursedTechnique technique);
 
-    @Nullable CursedTechnique getCurrentCopied();
+    @Nullable ICursedTechnique getCurrentCopied();
 
-    void absorb(@Nullable CursedTechnique technique);
+    void absorb(@Nullable ICursedTechnique technique);
 
-    void unabsorb(CursedTechnique technique);
+    void unabsorb(ICursedTechnique technique);
 
-    Set<CursedTechnique> getAbsorbed();
+    Set<ICursedTechnique> getAbsorbed();
 
-    void setCurrentAbsorbed(@Nullable CursedTechnique technique);
+    void setCurrentAbsorbed(@Nullable ICursedTechnique technique);
 
-    @Nullable CursedTechnique getCurrentAbsorbed();
+    @Nullable ICursedTechnique getCurrentAbsorbed();
 
     int getTransfiguredSouls();
 

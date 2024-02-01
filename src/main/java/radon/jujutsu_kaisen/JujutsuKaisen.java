@@ -1,36 +1,31 @@
 package radon.jujutsu_kaisen;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.core.util.Loader;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.fluid.JJKFluidTypes;
 import radon.jujutsu_kaisen.block.fluid.JJKFluids;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.client.gui.screen.AltarScreen;
 import radon.jujutsu_kaisen.client.gui.screen.BountyScreen;
 import radon.jujutsu_kaisen.client.gui.screen.VeilRodScreen;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.client.render.item.armor.InventoryCurseRenderer;
-import radon.jujutsu_kaisen.client.visual.JJKOverlays;
-import radon.jujutsu_kaisen.client.visual.JJKVisuals;
+import radon.jujutsu_kaisen.command.JJKCommandArgumentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.JJKEntityDataSerializers;
-import radon.jujutsu_kaisen.event.CuriosEventHandler;
 import radon.jujutsu_kaisen.item.JJKCreativeTabs;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JJKRecipeSerializers;
@@ -55,6 +50,7 @@ public class JujutsuKaisen {
         ctx.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 
         JJKAbilities.ABILITIES.register(bus);
+        JJKCursedTechniques.CURSED_TECHNIQUES.register(bus);
 
         JJKEntities.ENTITIES.register(bus);
         JJKEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
@@ -81,6 +77,8 @@ public class JujutsuKaisen {
         JJKLootModifiers.LOOT_MODIFIERS.register(bus);
 
         JJKCreativeTabs.CREATIVE_MODE_TABS.register(bus);
+
+        JJKCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(bus);
 
         bus.addListener(JujutsuKaisen::onCommonSetup);
         bus.addListener(JujutsuKaisen::onClientSetup);

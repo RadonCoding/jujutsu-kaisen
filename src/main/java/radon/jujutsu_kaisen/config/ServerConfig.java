@@ -1,12 +1,11 @@
 package radon.jujutsu_kaisen.config;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedTechnique;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServerConfig {
@@ -23,6 +22,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.IntValue blackFlashChance;
     public final ForgeConfigSpec.BooleanValue realisticShikigami;
     public final ForgeConfigSpec.BooleanValue realisticCurses;
+    public final ForgeConfigSpec.IntValue requiredImbuementAmount;
 
     public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
     public final ForgeConfigSpec.DoubleValue curseHealingAmount;
@@ -85,6 +85,8 @@ public class ServerConfig {
                 .define("realisticShikigami", true);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
                 .define("realisticCurses", true);
+        this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into oa weapon")
+                        .defineInRange("requiredImbuementAmount", 1000, 1, 100000);
         builder.pop();
 
         builder.comment("Miscellaneous").push("misc");
@@ -146,18 +148,18 @@ public class ServerConfig {
                 .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
         this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
                 .defineList("unlockableTechniques", () -> List.of(
-                                CursedTechnique.CURSE_MANIPULATION.name(),
-                                CursedTechnique.LIMITLESS.name(),
-                                CursedTechnique.DISMANTLE_AND_CLEAVE.name(),
-                                CursedTechnique.CURSED_SPEECH.name(),
-                                CursedTechnique.MIMICRY.name(),
-                                CursedTechnique.DISASTER_FLAMES.name(),
-                                CursedTechnique.DISASTER_TIDES.name(),
-                                CursedTechnique.DISASTER_PLANTS.name(),
-                                CursedTechnique.IDLE_TRANSFIGURATION.name(),
-                                CursedTechnique.TEN_SHADOWS.name(),
-                                CursedTechnique.BOOGIE_WOOGIE.name(),
-                                CursedTechnique.PROJECTION_SORCERY.name()
+                        JJKCursedTechniques.getKey(JJKCursedTechniques.CURSE_MANIPULATION.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.LIMITLESS.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.CURSED_SPEECH.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.MIMICRY.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.DISASTER_FLAMES.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.DISASTER_TIDES.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.DISASTER_PLANTS.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.IDLE_TRANSFIGURATION.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.TEN_SHADOWS.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.BOOGIE_WOOGIE.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.PROJECTION_SORCERY.get()).toString()
                         ),
                         ignored -> true
                 );
@@ -177,9 +179,9 @@ public class ServerConfig {
         builder.pop();
     }
 
-    public List<CursedTechnique> getUnlockableTechniques() {
+    public List<ICursedTechnique> getUnlockableTechniques() {
         return this.unlockableTechniques.get().stream()
-                .map(CursedTechnique::valueOf)
+                .map(key -> JJKCursedTechniques.getValue(ResourceLocation.tryParse(key)))
                 .collect(Collectors.toList());
     }
 }

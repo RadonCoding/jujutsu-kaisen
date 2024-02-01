@@ -23,7 +23,7 @@ import radon.jujutsu_kaisen.client.MixinData;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 
 public class ProjectionFrameRenderer extends EntityRenderer<ProjectionFrameEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/block/glass.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.tryParse("textures/block/glass.png");
     private static final RenderType RENDER_TYPE = JJKRenderTypes.entityCutoutNoCull(TEXTURE);
     private static final float SIZE = 1.0F;
 

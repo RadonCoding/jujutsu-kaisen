@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public class ChantTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.chant", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
 
     private ChantListWidget chants;
     private EditBox text;
