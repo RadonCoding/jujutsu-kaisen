@@ -182,7 +182,7 @@ public class ImbuementHandler {
                 }
 
                 if (stack.is(JJKItems.MIMICRY_KATANA_BLACK.get()) || stack.is(JJKItems.MIMICRY_KATANA_WHITE.get())) {
-                    stack.setDamageValue(stack.getMaxDamage());
+                    stack.shrink(1);
                 }
             }
         }
