@@ -60,8 +60,7 @@ public class WeaponEventHandler {
                 stacks.add(chain.getStack());
             } else {
                 stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                        .stream().toList());
+                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
             }
 
             if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
@@ -153,8 +152,7 @@ public class WeaponEventHandler {
                 stacks.add(chain.getStack());
             } else {
                 stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand")
-                        .stream().toList());
+                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
             }
 
             if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
