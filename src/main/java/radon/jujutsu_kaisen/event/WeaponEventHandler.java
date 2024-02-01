@@ -156,6 +156,7 @@ public class WeaponEventHandler {
                 stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
                 stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
             }
+            stacks.removeIf(ItemStack::isEmpty);
 
             if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 

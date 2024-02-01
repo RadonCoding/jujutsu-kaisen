@@ -90,6 +90,8 @@ public class CursedEnergyOverlay {
         stacks.addAll(CuriosUtil.findSlots(mc.player, "right_hand"));
         stacks.addAll(CuriosUtil.findSlots(mc.player, "left_hand"));
 
+        stacks.removeIf(ItemStack::isEmpty);
+
         for (ItemStack stack : stacks) {
             for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
                 Ability ability = technique.getImbuement();
