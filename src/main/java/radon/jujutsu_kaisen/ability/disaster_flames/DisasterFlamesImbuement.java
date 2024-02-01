@@ -7,7 +7,7 @@ import radon.jujutsu_kaisen.ability.boogie_woogie.SwapSelf;
 
 public class DisasterFlamesImbuement extends Imbuement {
     @Override
-    public void hit(ItemStack stack, LivingEntity owner, LivingEntity target) {
+    public void hit(LivingEntity owner, LivingEntity target) {
         JJKAbilities.DISASTER_FLAMES.get().run(owner, target);
     }
 

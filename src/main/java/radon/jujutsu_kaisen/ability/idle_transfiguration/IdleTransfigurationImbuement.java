@@ -5,7 +5,7 @@ import radon.jujutsu_kaisen.ability.base.Imbuement;
 
 public class IdleTransfigurationImbuement extends Imbuement {
     @Override
-    public void hit(ItemStack stack, LivingEntity owner, LivingEntity target) {
+    public void hit(LivingEntity owner, LivingEntity target) {
 
     }
 }

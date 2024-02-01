@@ -11,7 +11,7 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
 public class CurseManipulationImbuement extends Imbuement {
     @Override
-    public void hit(ItemStack stack, LivingEntity owner, LivingEntity target) {
+    public void hit(LivingEntity owner, LivingEntity target) {
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
