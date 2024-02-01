@@ -181,7 +181,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         }
 
         boolean success = owner.level().setBlock(pos, block.defaultBlockState(),
-                Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
+                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 
         if (distance >= radius - 1 && success) this.total++;
 
