@@ -61,8 +61,8 @@ public class Explode extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
+        for (LivingEntity entity : getEntities(owner)) {
+            if (JJKAbilities.hasToggled(entity, JJKAbilities.INFINITY.get())) continue;
 
             ExplosionHandler.spawn(owner.level().dimension(), entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D), Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner)),
                     20, owner, JJKDamageSources.jujutsuAttack(owner, this), false);
