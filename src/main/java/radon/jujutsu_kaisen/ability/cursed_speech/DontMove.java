@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.ability.cursed_speech;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,8 +13,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.ability.base.IImbuement;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -58,10 +62,10 @@ public class DontMove extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living)) continue;
+        for (LivingEntity entity : getEntities(owner)) {
+            if (JJKAbilities.hasToggled(entity, JJKAbilities.INFINITY.get())) continue;
 
-            living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getPower(owner)), 1, false, false, false));
+            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getPower(owner)), 1, false, false, false));
 
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));

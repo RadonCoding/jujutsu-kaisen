@@ -173,7 +173,7 @@ public class ImbuementHandler {
             for (ItemStack stack : stacks) {
                 for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
                     Ability ability = technique.getImbuement();
-                    ((IImbuement) ability).hit(attacker, victim);
+                    ((IImbuement) ability).hit(stack, attacker, victim);
 
                     if (attacker instanceof Player player && player.getAbilities().instabuild) continue;
 

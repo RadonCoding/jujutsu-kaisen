@@ -39,11 +39,11 @@ public class BlastAway extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private static List<LivingEntity> getEntities(LivingEntity owner) {
+    private static List<Entity> getEntities(LivingEntity owner) {
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
         Vec3 src = owner.getEyePosition();
         AABB bounds = AABB.ofSize(src, 1.0D, 1.0D, 1.0D).expandTowards(look.scale(RANGE)).inflate(RADIUS);
-        return owner.level().getEntitiesOfClass(LivingEntity.class, bounds, entity -> entity != owner);
+        return owner.level().getEntities(owner, bounds);
     }
 
     @Override
@@ -75,6 +75,7 @@ public class BlastAway extends Ability {
                 entity.setDeltaMovement(look.scale(power).multiply(1.0D, 0.25D, 1.0D));
                 entity.hurtMarked = true;
             }
+
             if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.blast_away", JujutsuKaisen.MOD_ID), owner.getName()));
             }

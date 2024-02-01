@@ -99,21 +99,17 @@ public class Die extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        for (LivingEntity entity : getEntities(owner)) {
+            if (JJKAbilities.hasToggled(entity, JJKAbilities.INFINITY.get())) continue;
 
-        for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
+            entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
 
-            living.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner));
+            if (owner.getMaxHealth() / entity.getMaxHealth() >= 4) {
+                DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
+                entity.hurt(source, calculateDamage(source, entity));
+            }
 
-            living.getCapability(SorcererDataHandler.INSTANCE).ifPresent(targetCap -> {
-                if (SorcererUtil.getGrade(ownerCap.getExperience()).ordinal() - SorcererUtil.getGrade(targetCap.getExperience()).ordinal() >= 2) {
-                    DamageSource source = JJKDamageSources.jujutsuAttack(owner, this);
-                    entity.hurt(source, calculateDamage(source, living));
-                }
-            });
-
-            if (living instanceof Player player) {
+            if (entity instanceof Player player) {
                 player.sendSystemMessage(Component.translatable(String.format("chat.%s.die", JujutsuKaisen.MOD_ID), owner.getName()));
             }
         }

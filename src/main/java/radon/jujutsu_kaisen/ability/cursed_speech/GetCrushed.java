@@ -63,8 +63,9 @@ public class GetCrushed extends Ability {
 
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-        for (Entity entity : getEntities(owner)) {
-            if (!(entity instanceof LivingEntity living) || JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) continue;
+        for (LivingEntity entity : getEntities(owner)) {
+            if (JJKAbilities.hasToggled(entity, JJKAbilities.INFINITY.get())) continue;
+
             if (!entity.hurt(JJKDamageSources.jujutsuAttack(owner, this), DAMAGE * this.getPower(owner))) continue;
 
             Vec3 center = entity.position().add(0.0D, entity.getBbHeight() / 2.0F, 0.0D);
