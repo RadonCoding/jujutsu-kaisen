@@ -19,8 +19,6 @@ import java.util.Optional;
 public class JJKEntityDataSerializers {
     public static DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, JujutsuKaisen.MOD_ID);
 
-    public static RegistryObject<EntityDataSerializer<Optional<ResourceLocation>>> OPTIONAL_RESOURCE_LOCATION = ENTITY_DATA_SERIALIZERS.register("optional_resource_location", () ->
-            EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation));
     public static RegistryObject<EntityDataSerializer<Optional<CompoundTag>>> OPTIONAL_COMPOUND_TAG = ENTITY_DATA_SERIALIZERS.register("optional_compound_tag", () ->
             EntityDataSerializer.optional(FriendlyByteBuf::writeNbt, FriendlyByteBuf::readNbt));
 }
