@@ -58,7 +58,7 @@ public class MeleeScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        if (!JJKAbilities.hasTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
+        if (!JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

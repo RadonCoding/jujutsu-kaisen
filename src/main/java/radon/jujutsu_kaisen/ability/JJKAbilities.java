@@ -302,7 +302,15 @@ public class JJKAbilities {
     public static boolean hasTechnique(LivingEntity owner, ICursedTechnique technique) {
         ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
         ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCopied().contains(technique) || curseManipulationCap.getAbsorbed().contains(technique);
+        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCopied().contains(technique) ||
+                curseManipulationCap.getAbsorbed().contains(technique);
+    }
+
+    public static boolean hasActiveTechnique(LivingEntity owner, ICursedTechnique technique) {
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCurrentCopied() == technique ||
+                curseManipulationCap.getCurrentAbsorbed() == technique;
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {

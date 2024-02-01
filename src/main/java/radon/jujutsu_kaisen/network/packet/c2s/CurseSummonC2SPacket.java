@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 
 import java.util.function.Supplier;
@@ -32,7 +33,9 @@ public class CurseSummonC2SPacket {
 
             if (sender == null) return;
 
-            CurseManipulationUtil.summonCurse(sender, this.index, true);
+            if (JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+                CurseManipulationUtil.summonCurse(sender, this.index, true);
+            }
         });
         ctx.setPacketHandled(true);
     }

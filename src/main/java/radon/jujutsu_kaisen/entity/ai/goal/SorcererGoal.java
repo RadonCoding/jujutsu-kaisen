@@ -50,7 +50,7 @@ public class SorcererGoal extends Goal {
             }
         }
 
-        if (JJKAbilities.hasTechnique(this.mob, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        if (JJKAbilities.hasActiveTechnique(this.mob, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {

@@ -3,6 +3,7 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -37,7 +38,7 @@ public class SetAbsorbedC2SPacket {
 
             ICurseManipulationData cap = sender.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (cap.getAbsorbed().contains(this.technique)) {
+            if (JJKAbilities.hasActiveTechnique(sender, JJKCursedTechniques.CURSE_MANIPULATION.get()) && cap.getAbsorbed().contains(this.technique)) {
                 cap.setCurrentAbsorbed(this.technique);
             }
         });

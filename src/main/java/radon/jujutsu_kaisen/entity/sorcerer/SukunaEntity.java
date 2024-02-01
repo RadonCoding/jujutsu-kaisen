@@ -89,7 +89,7 @@ public class SukunaEntity extends SorcererEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        if (JJKAbilities.hasTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) {
+        if (JJKAbilities.hasActiveTechnique(this, JJKCursedTechniques.TEN_SHADOWS.get())) {
             ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
             for (Entity entity : cap.getSummons()) {

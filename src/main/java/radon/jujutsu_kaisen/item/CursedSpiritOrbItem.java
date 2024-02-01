@@ -62,7 +62,7 @@ public class CursedSpiritOrbItem extends Item {
         if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
             ICurseManipulationData cap = pEntityLiving.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!JJKAbilities.hasTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            if (!JJKAbilities.hasActiveTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
                 pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
                 return stack;
             }

@@ -66,7 +66,7 @@ public class CursedBud extends Ability {
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
-            if (!JJKAbilities.hasTechnique(attacker, JJKCursedTechniques.DISASTER_PLANTS.get())) return;
+            if (!JJKAbilities.hasActiveTechnique(attacker, JJKCursedTechniques.DISASTER_PLANTS.get())) return;
 
             for (CursedBudProjectile bud : victim.level().getEntitiesOfClass(CursedBudProjectile.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
                 if (bud.getOwner() != attacker) continue;

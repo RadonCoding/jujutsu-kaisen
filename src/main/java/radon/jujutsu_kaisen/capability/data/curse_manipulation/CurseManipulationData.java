@@ -56,9 +56,6 @@ public class CurseManipulationData implements ICurseManipulationData {
 
     @Override
     public Set<ICursedTechnique> getAbsorbed() {
-        if (!JJKAbilities.hasTechnique(this.owner, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            return Set.of();
-        }
         return this.absorbed;
     }
 
@@ -70,9 +67,6 @@ public class CurseManipulationData implements ICurseManipulationData {
 
     @Override
     public @Nullable ICursedTechnique getCurrentAbsorbed() {
-        if (!JJKAbilities.hasTechnique(this.owner, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            return null;
-        }
         return this.currentAbsorbed;
     }
 
@@ -88,8 +82,6 @@ public class CurseManipulationData implements ICurseManipulationData {
 
     @Override
     public List<AbsorbedCurse> getCurses() {
-        if (!JJKAbilities.hasTechnique(this.owner, JJKCursedTechniques.CURSE_MANIPULATION.get())) return List.of();
-
         List<AbsorbedCurse> sorted = new ArrayList<>(this.curses);
         sorted.sort((o1, o2) -> (int) (CurseManipulationUtil.getCurseExperience(o2) - CurseManipulationUtil.getCurseExperience(o1)));
         return sorted;
