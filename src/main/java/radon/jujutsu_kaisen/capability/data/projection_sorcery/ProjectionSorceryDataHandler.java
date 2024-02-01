@@ -94,6 +94,8 @@ public class ProjectionSorceryDataHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
+        if (owner.isDeadOrDying()) return;
+
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         IProjectionSorceryData cap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 

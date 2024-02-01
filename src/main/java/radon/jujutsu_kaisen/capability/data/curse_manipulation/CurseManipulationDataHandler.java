@@ -92,6 +92,8 @@ public class CurseManipulationDataHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
+        if (owner.isDeadOrDying()) return;
+
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
