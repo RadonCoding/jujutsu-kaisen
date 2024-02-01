@@ -12,8 +12,10 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.base.GenuineMutualLoveEntity;
 import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
@@ -26,8 +28,27 @@ import java.util.List;
 
 public class GenuineMutualLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
-    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
+    public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
+        super.onHitEntity(domain, owner, entity, instant);
 
+        ICursedTechnique technique = ((GenuineMutualLoveEntity) domain).getTechnique();
+
+        if (technique == null) return;
+
+        if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
+
+        copied.onHitEntity(domain, owner, entity, instant);
+    }
+
+    @Override
+    public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
+        ICursedTechnique technique = ((GenuineMutualLoveEntity) domain).getTechnique();
+
+        if (technique == null) return;
+
+        if (!(technique.getDomain() instanceof DomainExpansion copied)) return;
+
+        copied.onHitBlock(domain, owner, pos);
     }
 
     @Override

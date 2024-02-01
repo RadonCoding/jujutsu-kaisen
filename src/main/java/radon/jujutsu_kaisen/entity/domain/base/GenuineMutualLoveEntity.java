@@ -69,33 +69,8 @@ public class GenuineMutualLoveEntity extends ClosedDomainExpansionEntity {
         }
     }
 
-    @Override
-    protected void doSureHitEffect(@NotNull LivingEntity owner) {
-        if (this.technique == null || !(this.technique.getDomain() instanceof DomainExpansion domain)) return;
-
-        for (LivingEntity entity : this.getAffected()) {
-            if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
-                domain.onHitBlock(this, owner, entity.blockPosition());
-            } else {
-                domain.onHitEntity(this, owner, entity, false);
-            }
-        }
-
-        int radius = this.getRadius();
-        BlockPos center = this.blockPosition().offset(0, radius / 2, 0);
-
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-
-                    if (distance < radius - 1) {
-                        BlockPos pos = center.offset(x, y, z);
-                        domain.onHitBlock(this, owner, pos);
-                    }
-                }
-            }
-        }
+    public ICursedTechnique getTechnique() {
+        return this.technique;
     }
 
     @Override
