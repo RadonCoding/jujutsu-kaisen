@@ -37,7 +37,7 @@ public class AbilityScreen extends RadialScreen {
         ICurseManipulationData curseManipulationCap = this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
-        abilities.removeIf(ability -> ability.getMenuType() != MenuType.RADIAL);
+        abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.RADIAL);
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 

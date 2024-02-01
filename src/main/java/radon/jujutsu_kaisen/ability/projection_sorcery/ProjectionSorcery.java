@@ -144,7 +144,7 @@ public class ProjectionSorcery extends Ability implements Ability.IChannelened, 
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

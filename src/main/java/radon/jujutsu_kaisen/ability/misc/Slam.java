@@ -96,7 +96,7 @@ public class Slam extends Ability implements Ability.ICharged {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

@@ -77,7 +77,7 @@ public class Volcano extends Ability {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

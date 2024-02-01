@@ -34,7 +34,7 @@ public class MeleeScreen extends RadialScreen {
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return List.of();
 
         List<Ability> abilities = JJKAbilities.getAbilities(this.minecraft.player);
-        abilities.removeIf(ability -> ability.getMenuType() != MenuType.MELEE);
+        abilities.removeIf(ability -> ability.getMenuType(this.minecraft.player) != MenuType.MELEE);
 
         return new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
     }

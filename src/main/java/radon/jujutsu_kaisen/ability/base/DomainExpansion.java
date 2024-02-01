@@ -160,7 +160,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.DOMAIN;
     }
 

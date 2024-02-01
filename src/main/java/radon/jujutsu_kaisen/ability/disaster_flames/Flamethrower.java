@@ -102,7 +102,7 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 

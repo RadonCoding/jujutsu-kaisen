@@ -80,7 +80,7 @@ public class SoulRestoration extends Ability {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.MELEE;
     }
 }

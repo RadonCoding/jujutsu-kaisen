@@ -195,7 +195,7 @@ public class Dash extends Ability {
     }
 
     @Override
-    public MenuType getMenuType() {
+    public MenuType getMenuType(LivingEntity owner) {
         return MenuType.NONE;
     }
 }
