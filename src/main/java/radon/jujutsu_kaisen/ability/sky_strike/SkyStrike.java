@@ -1,14 +1,20 @@
 package radon.jujutsu_kaisen.ability.sky_strike;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.entity.curse.ZombaCurseEntity;
 import radon.jujutsu_kaisen.entity.effect.SkyStrikeEntity;
+import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -22,7 +28,8 @@ public class SkyStrike extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return HelperMethods.RANDOM.nextInt(3) == 0 && target != null && this.getTarget(owner) == target;
+        if (target == null) return false;
+        return HelperMethods.RANDOM.nextInt(3) == 0 && this.getTarget(owner) instanceof EntityHitResult hit && hit.getEntity() == target;
     }
 
     @Override
@@ -30,30 +37,30 @@ public class SkyStrike extends Ability {
         return ActivationType.INSTANT;
     }
 
-    private @Nullable LivingEntity getTarget(LivingEntity owner) {
-        if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity target) {
-            return target;
-        }
-        return null;
+    private @Nullable HitResult getTarget(LivingEntity owner) {
+        HitResult hit = RotationUtil.getLookAtHit(owner, RANGE);
+        if (hit.getType() == HitResult.Type.MISS) return null;
+        if (hit.getType() == HitResult.Type.BLOCK && ((BlockHitResult) hit).getDirection() == Direction.DOWN) return null;
+        return hit;
     }
 
     @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
-        LivingEntity target = this.getTarget(owner);
+        HitResult hit = this.getTarget(owner);
 
-        if (target == null) return;
+        if (hit == null) return;
 
-        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getPower(owner), target.position());
+        SkyStrikeEntity strike = new SkyStrikeEntity(owner, this.getPower(owner), hit.getLocation());
         owner.level().addFreshEntity(strike);
     }
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        LivingEntity target = this.getTarget(owner);
+        HitResult hit = this.getTarget(owner);
 
-        if (target == null) {
+        if (hit == null) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
