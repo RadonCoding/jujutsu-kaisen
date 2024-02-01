@@ -21,7 +21,7 @@ public class HorizonOfTheCaptivatingSkandha extends DomainExpansion implements D
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.SKY.get());
+        return List.of(JJKBlocks.DAY_SKY.get());
     }
 
     @Override

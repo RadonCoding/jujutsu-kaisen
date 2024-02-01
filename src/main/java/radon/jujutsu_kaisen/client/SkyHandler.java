@@ -31,15 +31,20 @@ public class SkyHandler {
     private static final ResourceLocation SUN_LOCATION = ResourceLocation.tryParse("textures/environment/sun.png");
 
     private static ClientLevel overworld;
-    private static TextureTarget target;
+    private static TextureTarget dayTarget;
+    private static TextureTarget nightTarget;
     private static int skyWidth = -1;
     private static int skyHeight = -1;
 
     private static VertexBuffer skyBuffer;
     private static final Lazy<VertexBuffer> optional = Lazy.of(SkyHandler::getSky);
 
-    public static TextureTarget getTarget() {
-        return target;
+    public static TextureTarget getDayTarget() {
+        return dayTarget;
+    }
+
+    public static TextureTarget getNightTarget() {
+        return nightTarget;
     }
 
     private static VertexBuffer getSky() {
@@ -70,7 +75,7 @@ public class SkyHandler {
         return pBuilder.end();
     }
 
-    public static void renderSky(PoseStack poseStack, float partialTick, Matrix4f matrix4f) {
+    private static void createDaySky(PoseStack poseStack, float partialTick, Matrix4f matrix4f) {
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
         int ww = window.getWidth();
@@ -82,35 +87,86 @@ public class SkyHandler {
 
         boolean update = false;
 
-        if (target == null || skyWidth != ww || skyHeight != wh) {
+        if (dayTarget == null || skyWidth != ww || skyHeight != wh) {
             update = true;
             skyWidth = ww;
             skyHeight = wh;
         }
 
         if (update) {
-            if (target != null) {
-                target.destroyBuffers();
+            if (dayTarget != null) {
+                dayTarget.destroyBuffers();
             }
-            target = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
+            dayTarget = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
         }
 
         mc.gameRenderer.setRenderBlockOutline(false);
-        target.bindWrite(true);
+        dayTarget.bindWrite(true);
 
         RenderTarget current = mc.getMainRenderTarget();
-        renderActualSky(poseStack, partialTick, matrix4f);
+        renderActualSky(poseStack, partialTick, matrix4f, false);
 
         mc.gameRenderer.setRenderBlockOutline(true);
-        target.unbindRead();
-        target.unbindWrite();
+        dayTarget.unbindRead();
+        dayTarget.unbindWrite();
         current.bindWrite(true);
     }
 
-    public static void renderActualSky(PoseStack poseStack, float partialTick, Matrix4f projection) {
+    private static void createNightSky(PoseStack poseStack, float partialTick, Matrix4f matrix4f) {
+        Minecraft mc = Minecraft.getInstance();
+        Window window = mc.getWindow();
+        int ww = window.getWidth();
+        int wh = window.getHeight();
+
+        if (ww <= 0 || wh <= 0) {
+            return;
+        }
+
+        boolean update = false;
+
+        if (nightTarget == null || skyWidth != ww || skyHeight != wh) {
+            update = true;
+            skyWidth = ww;
+            skyHeight = wh;
+        }
+
+        if (update) {
+            if (nightTarget != null) {
+                nightTarget.destroyBuffers();
+            }
+            nightTarget = new TextureTarget(skyWidth, skyHeight, true, Minecraft.ON_OSX);
+        }
+
+        mc.gameRenderer.setRenderBlockOutline(false);
+        nightTarget.bindWrite(true);
+
+        RenderTarget current = mc.getMainRenderTarget();
+        renderActualSky(poseStack, partialTick, matrix4f, true);
+
+        mc.gameRenderer.setRenderBlockOutline(true);
+        nightTarget.unbindRead();
+        nightTarget.unbindWrite();
+        current.bindWrite(true);
+    }
+
+    public static void renderSky(PoseStack poseStack, float partialTick, Matrix4f matrix4f) {
+        Minecraft mc = Minecraft.getInstance();
+        Window window = mc.getWindow();
+        int ww = window.getWidth();
+        int wh = window.getHeight();
+
+        if (ww <= 0 || wh <= 0) {
+            return;
+        }
+
+        createDaySky(poseStack, partialTick, matrix4f);
+        createNightSky(poseStack, partialTick, matrix4f);
+    }
+
+    public static void renderActualSky(PoseStack poseStack, float partialTick, Matrix4f projection, boolean night) {
         Minecraft mc = Minecraft.getInstance();
 
-        assert mc.level != null && mc.player != null;
+        if (mc.level == null || mc.player == null) return;
 
         if (overworld == null) {
             ClientPacketListener conn = mc.getConnection();
@@ -120,8 +176,9 @@ public class SkyHandler {
             Holder<DimensionType> holder = mc.level.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD);
             overworld = new ClientLevel(conn, new ClientLevel.ClientLevelData(Difficulty.NORMAL, false, false),
                     Level.OVERWORLD, holder, 0, 0, mc::getProfiler, mc.levelRenderer, false, 0);
-            overworld.setDayTime(1000);
         }
+        overworld.setDayTime(night ? 18000 : 1000);
+
         final Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 pos = camera.getPosition();
 

@@ -8,16 +8,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.block.entity.SkyBlockEntity;
-import radon.jujutsu_kaisen.block.entity.UnlimitedVoidBlockEntity;
+import radon.jujutsu_kaisen.block.entity.DaySkyBlockEntity;
+import radon.jujutsu_kaisen.block.entity.NightSkyBlockEntity;
 import radon.jujutsu_kaisen.client.JJKRenderTypes;
-import radon.jujutsu_kaisen.client.SkyHandler;
 
-public class SkyRenderer implements BlockEntityRenderer<SkyBlockEntity> {
-    public SkyRenderer(BlockEntityRendererProvider.Context ignored) {
+public class NightSkyRenderer implements BlockEntityRenderer<NightSkyBlockEntity> {
+    public NightSkyRenderer(BlockEntityRendererProvider.Context ignored) {
     }
 
-    public void render(@NotNull SkyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void render(@NotNull NightSkyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         Matrix4f matrix4f = pPoseStack.last().pose();
         this.renderCube(matrix4f, pBuffer.getBuffer(this.renderType()));
     }
@@ -39,6 +38,6 @@ public class SkyRenderer implements BlockEntityRenderer<SkyBlockEntity> {
     }
 
     protected RenderType renderType() {
-        return JJKRenderTypes.sky();
+        return JJKRenderTypes.nightSky();
     }
 }
