@@ -58,12 +58,20 @@ public class JJKBlocks {
                     .noLootTable()
                     .air()));
 
-    public static RegistryObject<DomainBlock> SKY = BLOCKS.register("sky", () ->
-            new SkyBlock(BlockBehaviour.Properties.of()
+    public static RegistryObject<DomainBlock> DAY_SKY = BLOCKS.register("day_sky", () ->
+            new DaySkyBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 8.0F)
                     .isSuffocating(JJKBlocks::never)
                     .lightLevel((pState) -> 14)
                     .noLootTable()));
+
+    public static RegistryObject<DomainBlock> NIGHT_SKY = BLOCKS.register("night_sky", () ->
+            new NightSkyBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 8.0F)
+                    .isSuffocating(JJKBlocks::never)
+                    .lightLevel((pState) -> 14)
+                    .noLootTable()));
+
 
     public static RegistryObject<DomainBlock> UNLIMITED_VOID = BLOCKS.register("unlimited_void", () ->
             new UnlimitedVoidBlock(BlockBehaviour.Properties.of()

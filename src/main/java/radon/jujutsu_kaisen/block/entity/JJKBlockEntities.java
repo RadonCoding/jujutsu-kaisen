@@ -36,13 +36,20 @@ public class JJKBlockEntities {
                             JJKBlocks.CHIMERA_SHADOW_GARDEN.get())
                     .build(null));
 
+
     public static RegistryObject<BlockEntityType<UnlimitedVoidBlockEntity>> UNLIMITED_VOID = BLOCK_ENTITIES.register("unlimited_void", () ->
             BlockEntityType.Builder.of(UnlimitedVoidBlockEntity::new,
                             JJKBlocks.UNLIMITED_VOID.get())
                     .build(null));
-    public static RegistryObject<BlockEntityType<SkyBlockEntity>> SKY = BLOCK_ENTITIES.register("sky", () ->
-            BlockEntityType.Builder.of(SkyBlockEntity::new,
-                            JJKBlocks.SKY.get())
+
+    public static RegistryObject<BlockEntityType<DaySkyBlockEntity>> DAY_SKY = BLOCK_ENTITIES.register("day_sky", () ->
+            BlockEntityType.Builder.of(DaySkyBlockEntity::new,
+                            JJKBlocks.DAY_SKY.get())
+                    .build(null));
+
+    public static RegistryObject<BlockEntityType<NightSkyBlockEntity>> NIGHT_SKY = BLOCK_ENTITIES.register("night_sky", () ->
+            BlockEntityType.Builder.of(NightSkyBlockEntity::new,
+                            JJKBlocks.NIGHT_SKY.get())
                     .build(null));
 
     public static RegistryObject<BlockEntityType<DisplayCaseBlockEntity>> DISPLAY_CASE = BLOCK_ENTITIES.register("display_case", () ->

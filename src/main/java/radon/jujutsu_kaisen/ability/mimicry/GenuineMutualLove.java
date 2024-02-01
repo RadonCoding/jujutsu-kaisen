@@ -42,7 +42,7 @@ public class GenuineMutualLove extends DomainExpansion implements DomainExpansio
 
     @Override
     public List<Block> getBlocks() {
-        return List.of(JJKBlocks.DOMAIN.get());
+        return List.of(JJKBlocks.NIGHT_SKY.get());
     }
 
     @Override

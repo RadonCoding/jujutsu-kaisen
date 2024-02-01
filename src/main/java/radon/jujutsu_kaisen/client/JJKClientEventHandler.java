@@ -34,6 +34,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.screen.MeleeScreen;
+import radon.jujutsu_kaisen.client.render.block.NightSkyRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.PolymorphicSoulIsomerRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulLargeRenderer;
 import radon.jujutsu_kaisen.client.render.entity.idle_transfiguration.TransfiguredSoulNormalRenderer;
@@ -62,7 +63,7 @@ import radon.jujutsu_kaisen.client.model.entity.*;
 import radon.jujutsu_kaisen.client.particle.*;
 import radon.jujutsu_kaisen.client.render.EmptyRenderer;
 import radon.jujutsu_kaisen.client.render.block.DisplayCaseRenderer;
-import radon.jujutsu_kaisen.client.render.block.SkyRenderer;
+import radon.jujutsu_kaisen.client.render.block.DaySkyRenderer;
 import radon.jujutsu_kaisen.client.render.block.UnlimitedVoidRenderer;
 import radon.jujutsu_kaisen.client.render.entity.*;
 import radon.jujutsu_kaisen.client.render.entity.curse.*;
@@ -477,7 +478,6 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.VOLCANO.get(), VolcanoRenderer::new);
             event.registerEntityRenderer(JJKEntities.METEOR.get(), MeteorRenderer::new);
             event.registerEntityRenderer(JJKEntities.THROWN_CHAIN.get(), ThrownChainProjectileRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
             event.registerEntityRenderer(JJKEntities.SCISSOR.get(), ScissorRenderer::new);
             event.registerEntityRenderer(JJKEntities.PIERCING_WATER.get(), PiercingWaterRenderer::new);
             event.registerEntityRenderer(JJKEntities.JUJUTSU_LIGHTNING.get(), LightningBoltRenderer::new);
@@ -504,10 +504,8 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.FILM_GAUGE.get(), FilmGaugeRenderer::new);
             event.registerEntityRenderer(JJKEntities.TIME_CELL_MOON_PALACE.get(), TimeCellMoonPalaceRenderer::new);
             event.registerEntityRenderer(JJKEntities.DISASTER_PLANT.get(), DisasterPlantRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
             event.registerEntityRenderer(JJKEntities.SELF_EMBODIMENT_OF_PERFECTION.get(), SelfEmbodimentOfPerfectionRenderer::new);
             event.registerEntityRenderer(JJKEntities.BLACk_FLASH.get(), BlackFlashRenderer::new);
-            event.registerBlockEntityRenderer(JJKBlockEntities.SKY.get(), SkyRenderer::new);
             event.registerEntityRenderer(JJKEntities.NYOI_STAFF.get(), NyoiStaffRenderer::new);
             event.registerEntityRenderer(JJKEntities.MIMICRY_KATANA.get(), MimicryKatanaRenderer::new);
             event.registerEntityRenderer(JJKEntities.EMBER_INSECT_FLIGHT.get(), EmberInsectsFlightRenderer::new);
@@ -519,6 +517,11 @@ public class JJKClientEventHandler {
             event.registerEntityRenderer(JJKEntities.CURSED_ENERGY_BLAST.get(), CursedEnergyBlastRenderer::new);
             event.registerEntityRenderer(JJKEntities.EEL_GRAPPLE.get(), EelGrappleRenderer::new);
             event.registerEntityRenderer(JJKEntities.TRANSFIGURED_SOUL.get(), TransfiguredSoulRenderer::new);
+
+            event.registerBlockEntityRenderer(JJKBlockEntities.DISPLAY_CASE.get(), DisplayCaseRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.UNLIMITED_VOID.get(), UnlimitedVoidRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.DAY_SKY.get(), DaySkyRenderer::new);
+            event.registerBlockEntityRenderer(JJKBlockEntities.NIGHT_SKY.get(), NightSkyRenderer::new);
         }
 
         @SubscribeEvent
