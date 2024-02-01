@@ -208,7 +208,7 @@ public class SkyHandler {
         VertexBuffer.unbind();
         RenderSystem.enableBlend();
 
-        float[] color = overworld.effects().getSunriseColor(overworld.getTimeOfDay(partialTick), partialTick);
+        /*float[] color = overworld.effects().getSunriseColor(overworld.getTimeOfDay(partialTick), partialTick);
 
         if (color != null) {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -233,7 +233,7 @@ public class SkyHandler {
             }
             BufferUploader.drawWithShader(buffer.end());
             poseStack.popPose();
-        }
+        }*/
 
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         poseStack.pushPose();
