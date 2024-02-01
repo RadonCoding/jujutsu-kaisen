@@ -41,15 +41,20 @@ public class AbilityScreen extends RadialScreen {
 
         List<DisplayItem> items = new ArrayList<>(abilities.stream().map(DisplayItem::new).toList());
 
-        List<AbsorbedCurse> curses = curseManipulationCap.getCurses();
-        items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
+        if (JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            List<AbsorbedCurse> curses = curseManipulationCap.getCurses();
+            items.addAll(curses.stream().map(curse -> new DisplayItem(curse, curses.indexOf(curse))).toList());
+        }
 
-        Set<ICursedTechnique> copied = sorcererCap.getCopied();
-        items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
+        if (sorcererCap.hasToggled(JJKAbilities.RIKA.get())) {
+            Set<ICursedTechnique> copied = sorcererCap.getCopied();
+            items.addAll(copied.stream().map(technique -> new DisplayItem(DisplayItem.Type.COPIED, technique)).toList());
+        }
 
-        Set<ICursedTechnique> absorbed = curseManipulationCap.getAbsorbed();
-        items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
-
+        if (JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            Set<ICursedTechnique> absorbed = curseManipulationCap.getAbsorbed();
+            items.addAll(absorbed.stream().map(technique -> new DisplayItem(DisplayItem.Type.ABSORBED, technique)).toList());
+        }
         return items;
     }
 
@@ -81,7 +86,7 @@ public class AbilityScreen extends RadialScreen {
                 case CURSE -> PacketHandler.sendToServer(new CurseSummonC2SPacket(item.curse.getValue()));
                 case COPIED -> {
                     sorcererCap.setCurrentCopied(item.copied);
-                    PacketHandler.sendToServer(new SetAdditionalC2SPacket(item.copied));
+                    PacketHandler.sendToServer(new SetCopiedC2SPacket(item.copied));
                 }
                 case ABSORBED -> {
                     curseManipulationCap.setCurrentAbsorbed(item.absorbed);
@@ -97,7 +102,7 @@ public class AbilityScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        if (!JJKAbilities.hasTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
+        if (!JJKAbilities.hasActiveTechnique(this.minecraft.player, JJKCursedTechniques.MIMICRY.get())) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

@@ -957,9 +957,6 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public Set<ICursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !JJKAbilities.hasTechnique(this.owner, JJKCursedTechniques.MIMICRY.get())) {
-            return Set.of();
-        }
         return this.copied;
     }
 

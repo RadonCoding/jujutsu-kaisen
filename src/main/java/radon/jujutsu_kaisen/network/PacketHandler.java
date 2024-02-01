@@ -8,7 +8,6 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
@@ -123,10 +122,10 @@ public class PacketHandler {
                 .encoder(CurseSummonC2SPacket::encode)
                 .consumerMainThread(CurseSummonC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SetAdditionalC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(SetAdditionalC2SPacket::new)
-                .encoder(SetAdditionalC2SPacket::encode)
-                .consumerMainThread(SetAdditionalC2SPacket::handle)
+        INSTANCE.messageBuilder(SetCopiedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetCopiedC2SPacket::new)
+                .encoder(SetCopiedC2SPacket::encode)
+                .consumerMainThread(SetCopiedC2SPacket::handle)
                 .add();
         INSTANCE.messageBuilder(SetAbsorbedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(SetAbsorbedC2SPacket::new)
