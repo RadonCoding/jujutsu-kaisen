@@ -93,7 +93,7 @@ public class CurseManipulationDataHandler {
         LivingEntity owner = event.getEntity();
 
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         cap.tick(owner);
     }
