@@ -264,6 +264,7 @@
   "ability.jujutsu_kaisen.teleport": "Teleport",
   "ability.jujutsu_kaisen.fly": "Fly",
   "ability.jujutsu_kaisen.unlimited_void": "Unlimited Void",
+  "ability.jujutsu_kaisen.limitless_imbuement": "Limitless Imbuement",
 
   "ability.jujutsu_kaisen.dismantle": "Dismantle",
   "ability.jujutsu_kaisen.dismantle_net": "Dismantle Net",
@@ -276,6 +277,7 @@
   "ability.jujutsu_kaisen.spiderweb": "Spiderweb",
   "ability.jujutsu_kaisen.fire_arrow": "Open ■",
   "ability.jujutsu_kaisen.malevolent_shrine": "Malevolent Shrine",
+  "ability.jujutsu_kaisen.dismantle_and_cleave_imbuement": "Dismantle & Cleave Imbuement",
 
   "ability.jujutsu_kaisen.rika": "Rika",
   "ability.jujutsu_kaisen.rika.enable": "Summoned Rika",
@@ -285,6 +287,7 @@
   "ability.jujutsu_kaisen.mimicry.disable": "Deactivated mimicry",
   "ability.jujutsu_kaisen.command_pure_love": "Pure Love",
   "ability.jujutsu_kaisen.genuine_mutual_love": "Genuine Mutual Love",
+  "ability.jujutsu_kaisen.mimicry_imbuement": "Mimicry Imbuement",
 
   "ability.jujutsu_kaisen.ember_insects": "Ember Insects",
   "ability.jujutsu_kaisen.ember_insect_flight": "Ember Insect Flight",
@@ -297,6 +300,7 @@
   "ability.jujutsu_kaisen.fireball": "Fireball",
   "ability.jujutsu_kaisen.fire_beam": "Fire Beam",
   "ability.jujutsu_kaisen.coffin_of_the_iron_mountain": "Coffin of the Iron Mountain",
+  "ability.jujutsu_kaisen.disaster_flames_imbuement": "Disaster Flames Imbuement",
 
   "ability.jujutsu_kaisen.horizon_of_the_captivating_skandha": "Horizon of the Captivating Skandha",
   "ability.jujutsu_kaisen.disaster_tides": "Disaster Tides",
@@ -305,6 +309,7 @@
   "ability.jujutsu_kaisen.fish_shikigami": "Fish Shikigami",
   "ability.jujutsu_kaisen.water_torrent": "Water Torrent",
   "ability.jujutsu_kaisen.eel_grapple": "Eel Grapple",
+  "ability.jujutsu_kaisen.disaster_tides_imbuement": "Disaster Tides Imbuement",
 
   "ability.jujutsu_kaisen.forest_platform": "Forest Platform",
   "ability.jujutsu_kaisen.forest_platform.enable": "Activated forest platform",
@@ -319,6 +324,7 @@
   "ability.jujutsu_kaisen.forest_dash": "Forest Dash",
   "ability.jujutsu_kaisen.disaster_plant": "Disaster Plant",
   "ability.jujutsu_kaisen.shining_sea_of_flowers": "Shining Sea of Flowers",
+  "ability.jujutsu_kaisen.disaster_plants_imbuement": "Disaster Plants Imbuement",
 
   "ability.jujutsu_kaisen.idle_transfiguration": "Idle Transfiguration",
   "ability.jujutsu_kaisen.idle_transfiguration.enable": "Activated idle transfiguration",
@@ -350,6 +356,7 @@
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.enable": "Activated instant spirit body of distorted killing",
   "ability.jujutsu_kaisen.instant_spirit_body_of_distorted_killing.disable": "Deactivated instant spirit body of distorted killing",
   "ability.jujutsu_kaisen.self_embodiment_of_perfection": "Self Embodiment of Perfection",
+  "ability.jujutsu_kaisen.idle_transfiguration_imbuement": "Idle Transfiguration Imbuement",
 
   "ability.jujutsu_kaisen.switch_mode": "Switch Mode",
   "ability.jujutsu_kaisen.release_shikigami": "Release Shikigami",
@@ -401,11 +408,11 @@
   "ability.jujutsu_kaisen.agito.enable": "Summoned Agito",
   "ability.jujutsu_kaisen.agito.disable": "Released Agito",
   "ability.jujutsu_kaisen.chimera_shadow_garden": "Chimera Shadow Garden",
+  "ability.jujutsu_kaisen.ten_shadows_imbuement": "Ten Shadows Imbuement",
 
   "ability.jujutsu_kaisen.curse_absorption": "Curse Absorption",
   "ability.jujutsu_kaisen.curse_absorption.enable": "Activated curse absorption",
   "ability.jujutsu_kaisen.curse_absorption.disable": "Disabled curse absorption",
-
   "ability.jujutsu_kaisen.release_curse": "Release Curse",
   "ability.jujutsu_kaisen.release_curses": "Release Curses",
   "ability.jujutsu_kaisen.summon_all": "Summon All",
@@ -413,12 +420,14 @@
   "ability.jujutsu_kaisen.maximum_uzumaki": "Maximum Uzumaki",
   "ability.jujutsu_kaisen.mini_uzumaki": "Mini Uzumaki",
   "ability.jujutsu_kaisen.worm_curse_grab": "Worm Curse: Grab",
+  "ability.jujutsu_kaisen.curse_manipulation_imbuement": "Curse Manipulation Imbuement",
 
   "ability.jujutsu_kaisen.dont_move": "Don't Move",
   "ability.jujutsu_kaisen.get_crushed": "Get Crushed",
   "ability.jujutsu_kaisen.blast_away": "Blast Away",
   "ability.jujutsu_kaisen.explode": "Explode",
   "ability.jujutsu_kaisen.die": "Die",
+  "ability.jujutsu_kaisen.cursed_speech_imbuement": "Cursed Speech Imbuement",
 
   "ability.jujutsu_kaisen.swap_self": "Swap Self",
   "ability.jujutsu_kaisen.swap_others": "Swap Others",
@@ -426,6 +435,7 @@
   "ability.jujutsu_kaisen.ce_throw": "CE Throw",
   "ability.jujutsu_kaisen.item_swap": "Item Swap",
   "ability.jujutsu_kaisen.shuffle": "Shuffle",
+  "ability.jujutsu_kaisen.boogie_woogie_imbuement": "Boogie Woogie Imbuement",
 
   "ability.jujutsu_kaisen.projection_sorcery": "Projection Sorcery",
   "ability.jujutsu_kaisen.twenty_four_frame_rule": "Twenty Four Frame Rule",
@@ -433,6 +443,7 @@
   "ability.jujutsu_kaisen.twenty_four_frame_rule.disable": "Deactivated twenty four frame rule",
   "ability.jujutsu_kaisen.air_frame": "Air Frame",
   "ability.jujutsu_kaisen.time_cell_moon_palace": "Time Cell Moon Palace",
+  "ability.jujutsu_kaisen.projection_sorcery_imbuement": "Projection Sorcery Imbuement",
 
   "grade.jujutsu_kaisen.grade_4": "Grade 4",
   "grade.jujutsu_kaisen.grade_3": "Grade 3",
