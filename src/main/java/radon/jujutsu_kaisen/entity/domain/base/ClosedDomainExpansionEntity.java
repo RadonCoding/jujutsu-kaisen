@@ -198,7 +198,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     BlockPos pos = center.offset(x, y, z);
 
-                    if (!this.level().getBlockState(pos).canOcclude() || !this.level().getBlockState(pos.above()).isAir()) continue;
+                    if (this.level().getBlockState(pos).getShape(this.level(), pos).isEmpty() || !this.level().getBlockState(pos.above()).isAir()) continue;
 
                     floor.add(pos);
                 }
