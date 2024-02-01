@@ -128,24 +128,13 @@ public class ImbuementHandler {
 
             if (technique == null) return;
 
-            List<ItemStack> stacks = new ArrayList<>();
+            ItemStack stack = owner.getItemInHand(InteractionHand.MAIN_HAND);
 
-            if (!owner.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
-                stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
-            }
-            if (!owner.getItemInHand(InteractionHand.OFF_HAND).isEmpty()) {
-                stacks.add(owner.getItemInHand(InteractionHand.OFF_HAND));
-            }
-            stacks.addAll(CuriosUtil.findSlots(owner, "right_hand"));
-            stacks.addAll(CuriosUtil.findSlots(owner, "left_hand"));
+            if (stack.isEmpty()) return;
 
-            stacks.removeIf(ItemStack::isEmpty);
+            if (!(stack.getItem() instanceof SwordItem)) return;
 
-            for (ItemStack stack : stacks) {
-                if (!(stack.getItem() instanceof SwordItem)) continue;
-                increaseImbuementAmount(stack, technique, amount);
-                break;
-            }
+            increaseImbuementAmount(stack, technique, amount);
         }
 
         @SubscribeEvent
