@@ -97,6 +97,8 @@ public class TenShadowsDataHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
+        if (owner.isDeadOrDying()) return;
+
         if (!owner.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 

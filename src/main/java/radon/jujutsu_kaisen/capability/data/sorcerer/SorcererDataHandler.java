@@ -97,6 +97,8 @@ public class SorcererDataHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
+        if (owner.isDeadOrDying()) return;
+
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

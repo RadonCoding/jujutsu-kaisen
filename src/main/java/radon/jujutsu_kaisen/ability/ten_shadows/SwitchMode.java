@@ -70,7 +70,7 @@ public class SwitchMode extends Ability {
         cap.setMode(cap.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);
 
         if (owner instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable(String.format("chat.%s.switch_mode", JujutsuKaisen.MOD_ID), cap.getMode()));
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.switch_mode", JujutsuKaisen.MOD_ID), cap.getMode().name().toLowerCase()));
         }
     }
 
