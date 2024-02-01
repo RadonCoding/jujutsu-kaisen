@@ -9,10 +9,12 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.*;
+import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -69,6 +71,17 @@ public interface ISorcerer {
 
     JujutsuType getJujutsuType();
 
+    static Set<String> getRandomChantCombo(int count) {
+        List<? extends String> chants = ConfigHolder.SERVER.chants.get();
+
+        Set<String> combo = new HashSet<>();
+
+        while (combo.size() < Math.min(chants.size(), count)) {
+            combo.add(chants.get(HelperMethods.RANDOM.nextInt(chants.size())));
+        }
+        return combo;
+    }
+
     default void init(ISorcererData data) {
         data.setExperience(this.getExperience());
         data.setTechnique(this.getTechnique());
@@ -91,9 +104,9 @@ public interface ISorcerer {
             for (Ability ability : JJKAbilities.getAbilities((LivingEntity) this)) {
                 if (!ability.isTechnique() || !ability.isScalable((LivingEntity) this)) continue;
 
-                Set<String> chants = HelperMethods.getRandomWordCombo(5);
+                Set<String> chants = getRandomChantCombo(5);
 
-                while (!data.isChantsAvailable(chants)) chants = HelperMethods.getRandomWordCombo(5);
+                while (!data.isChantsAvailable(chants)) chants = getRandomChantCombo(5);
 
                 data.addChants(ability, chants);
             }

@@ -29,6 +29,7 @@ public class ServerConfig {
     public final ForgeConfigSpec.BooleanValue uniqueTechniques;
     public final ForgeConfigSpec.BooleanValue uniqueTraits;
     public final ForgeConfigSpec.BooleanValue destruction;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> chants;
 
     public final ForgeConfigSpec.IntValue minimumVeilSize;
     public final ForgeConfigSpec.IntValue maximumVeilSize;
@@ -100,6 +101,21 @@ public class ServerConfig {
                 .define("uniqueTraits", true);
         this.destruction = builder.comment("When enabled abilities break blocks")
                 .define("destruction", true);
+        this.chants = builder.comment("Possible chants for NPCs")
+                .defineList("unlockableTechniques", () -> List.of(
+                                "Nah, I'd win.",
+                                "Stand proud.",
+                                "You can cook.",
+                                "Did you pray today?",
+                                "You're strong.",
+                                "Are you the strongest because?",
+                                "Owari da.",
+                                "I shall never forget you.",
+                                "With this treasure i summon...",
+                                "Have you ever trained?"
+                        ),
+                        ignored -> true
+                );
         builder.pop();
 
         builder.comment("Veils").push("veils");

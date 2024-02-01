@@ -24,9 +24,6 @@ import java.util.*;
 public class HelperMethods {
     public static final RandomSource RANDOM = RandomSource.createThreadSafe();
 
-    // TODO: move this goofy shit to config
-    private static final String[] WORDS = {"Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"};
-
     public static boolean isMelee(DamageSource source) {
         return !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ||
                 source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() != null && jujutsu.getAbility().isMelee();
@@ -50,18 +47,6 @@ public class HelperMethods {
                     !domain.isInsideBarrier(source.blockPosition());
         }
         return destroyable;
-    }
-
-    public static Set<String> getRandomWordCombo(int count) {
-        if (count > WORDS.length)
-            throw new IllegalArgumentException("Number of words requested exceeds the available word list.");
-
-        Set<String> combo = new HashSet<>();
-
-        while (combo.size() < count) {
-            combo.add(WORDS[RANDOM.nextInt(WORDS.length)]);
-        }
-        return combo;
     }
 
     public static <E> E getWeightedRandom(Map<E, Double> weights, RandomSource random) {
