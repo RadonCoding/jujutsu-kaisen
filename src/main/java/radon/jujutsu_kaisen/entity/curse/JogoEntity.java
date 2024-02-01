@@ -43,7 +43,7 @@ public class JogoEntity extends DisasterCurse {
 
     @Override
     public List<Ability> getUnlocked() {
-        return List.of(JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
+        return List.of(JJKAbilities.COFFIN_OF_THE_IRON_MOUNTAIN.get(), JJKAbilities.SIMPLE_DOMAIN.get(), JJKAbilities.DOMAIN_AMPLIFICATION.get());
     }
 
     private PlayState walkRunPredicate(AnimationState<JogoEntity> animationState) {
