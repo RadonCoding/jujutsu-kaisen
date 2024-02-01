@@ -173,6 +173,9 @@ public class ImbuementHandler {
             for (ItemStack stack : stacks) {
                 for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
                     Ability ability = technique.getImbuement();
+
+                    if (!cap.isCooldownDone(ability)) continue;
+
                     ((IImbuement) ability).hit(attacker, victim);
 
                     if (attacker instanceof Player player && player.getAbilities().instabuild) continue;

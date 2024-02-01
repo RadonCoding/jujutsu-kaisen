@@ -25,7 +25,7 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.List;
 
-public class DontMove extends Ability {
+public class DontMove extends Ability implements Ability.IImbued {
     private static final double RANGE = 20.0D;
     private static final double RADIUS = 1.0D;
     private static final int DURATION = 20;
@@ -48,6 +48,19 @@ public class DontMove extends Ability {
     }
 
     @Override
+    public void run(LivingEntity owner, Entity target) {
+        if (!(target instanceof LivingEntity living)) return;
+
+        if (JJKAbilities.hasToggled(living, JJKAbilities.INFINITY.get())) return;
+
+        living.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getPower(owner)), 1, false, false, false));
+
+        if (living instanceof Player player) {
+            player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
+        }
+    }
+
+    @Override
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
@@ -63,13 +76,7 @@ public class DontMove extends Ability {
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         for (LivingEntity entity : getEntities(owner)) {
-            if (JJKAbilities.hasToggled(entity, JJKAbilities.INFINITY.get())) continue;
-
-            entity.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), Math.round(DURATION * this.getPower(owner)), 1, false, false, false));
-
-            if (entity instanceof Player player) {
-                player.sendSystemMessage(Component.translatable(String.format("chat.%s.dont_move", JujutsuKaisen.MOD_ID), owner.getName()));
-            }
+            this.run(owner, entity);
         }
     }
 

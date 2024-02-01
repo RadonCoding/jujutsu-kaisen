@@ -8,11 +8,11 @@ import radon.jujutsu_kaisen.ability.base.Imbuement;
 public class CursedSpeechImbuement extends Imbuement {
     @Override
     public void hit(LivingEntity owner, LivingEntity target) {
-
+        JJKAbilities.DONT_MOVE.get().run(owner, target);
     }
 
     @Override
     public int getCooldown() {
-        return 10 * 20;
+        return JJKAbilities.DONT_MOVE.get().getCooldown();
     }
 }
