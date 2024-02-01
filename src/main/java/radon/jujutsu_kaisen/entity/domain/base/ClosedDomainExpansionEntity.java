@@ -110,7 +110,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
         return relative.distSqr(Vec3i.ZERO) < (radius - 1) * (radius - 1);
     }
 
-    private void createBlock(int delay, BlockPos pos, int radius, double distance) {
+    protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
@@ -183,7 +183,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     }
 
     protected List<BlockPos> getFloor() {
-        int radius = this.getRadius();
+        int radius = this.getRadius() - 1;
 
         BlockPos center = BlockPos.containing(this.position().add(0.0D, radius, 0.0D));
 

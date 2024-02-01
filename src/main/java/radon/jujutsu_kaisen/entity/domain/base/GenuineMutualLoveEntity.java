@@ -14,53 +14,52 @@ import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 import java.util.*;
 
 public class GenuineMutualLoveEntity extends ClosedDomainExpansionEntity {
+    private Map<BlockPos, ICursedTechnique> offsets = new HashMap<>();
+
     public GenuineMutualLoveEntity(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
     public GenuineMutualLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
+
+        List<BlockPos> floor = this.getFloor();
+
+        if (floor.isEmpty()) return;
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        Set<ICursedTechnique> copied = cap.getCopied();
+
+        if (copied.isEmpty()) return;
+
+        int total = floor.size() / 8;
+        int share = total / copied.size();
+
+        List<ICursedTechnique> all = new ArrayList<>();
+
+        for (ICursedTechnique technique : copied) {
+            all.addAll(Collections.nCopies(share, technique));
+        }
+
+        Iterator<ICursedTechnique> iter = all.iterator();
+
+        while (iter.hasNext() && !floor.isEmpty()) {
+            ICursedTechnique technique = iter.next();
+            BlockPos pos = floor.get(this.random.nextInt(floor.size()));
+            this.offsets.put(pos, technique);
+
+            floor.remove(pos);
+            iter.remove();
+        }
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    protected void createBlock(int delay, BlockPos pos, int radius, double distance) {
+        super.createBlock(delay, pos, radius, distance);
 
-        int radius = this.getRadius();
-
-        if (this.getTime() == radius * 2) {
-            List<BlockPos> floor = this.getFloor();
-
-            LivingEntity owner = this.getOwner();
-
-            if (owner == null || floor.isEmpty()) return;
-
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            Set<ICursedTechnique> copied = cap.getCopied();
-
-            if (copied.isEmpty()) return;
-
-            int total = floor.size() / 8;
-            int share = total / copied.size();
-
-            List<ICursedTechnique> all = new ArrayList<>();
-
-            for (ICursedTechnique technique : copied) {
-                all.addAll(Collections.nCopies(share, technique));
-            }
-
-            Iterator<ICursedTechnique> iter = all.iterator();
-
-            while (iter.hasNext() && !floor.isEmpty()) {
-                ICursedTechnique technique = iter.next();
-
-                BlockPos pos = floor.get(this.random.nextInt(floor.size()));
-                this.level().addFreshEntity(new MimicryKatanaEntity(this, technique, pos.getCenter().add(0.0D, 0.5D, 0.0D)));
-
-                floor.remove(pos);
-                iter.remove();
-            }
+        if (this.offsets.containsKey(pos)) {
+            this.level().addFreshEntity(new MimicryKatanaEntity(this, this.offsets.get(pos), pos.getCenter().add(0.0D, 0.5D, 0.0D)));
         }
     }
 }
