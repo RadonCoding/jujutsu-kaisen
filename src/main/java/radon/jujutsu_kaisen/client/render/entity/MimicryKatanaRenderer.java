@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +20,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
+import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class MimicryKatanaRenderer extends EntityRenderer<MimicryKatanaEntity> {
     private final ItemRenderer renderer;
@@ -42,6 +44,12 @@ public class MimicryKatanaRenderer extends EntityRenderer<MimicryKatanaEntity> {
 
         this.renderer.renderStatic(pEntity.getItem().getDefaultInstance(), ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
         pPoseStack.popPose();
+
+        DomainExpansionEntity domain = pEntity.getDomain();
+
+        if (domain == null) return;
+
+        if (Minecraft.getInstance().player != domain.getOwner()) return;
 
         Component name = pEntity.getTechnique().getName();
 
