@@ -1,11 +1,10 @@
-package radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique;
+package radon.jujutsu_kaisen.cursed_technique;
 
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class LimitlessTechnique implements ICursedTechnique {

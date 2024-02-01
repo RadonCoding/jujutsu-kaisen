@@ -31,7 +31,7 @@ public class SetTojiBountyC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (sender.containerMenu instanceof BountyMenu menu) {
                 if (!menu.stillValid(sender)) {

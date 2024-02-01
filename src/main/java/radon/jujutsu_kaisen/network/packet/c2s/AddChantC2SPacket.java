@@ -37,7 +37,7 @@ public class AddChantC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get()) return;
 

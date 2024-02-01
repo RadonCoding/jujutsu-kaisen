@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -108,9 +110,10 @@ public class Dash extends Ability {
 
         if (!canDash(owner)) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        IProjectionSorceryData projectionSorceryCap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.getSpeedStacks() > 0 || cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (projectionSorceryCap.getSpeedStacks() > 0 || sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
@@ -121,8 +124,8 @@ public class Dash extends Ability {
 
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
-        float power = Math.min(MAX_DASH * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
-                DASH * (1.0F + this.getPower(owner) * 0.1F) * (cap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+        float power = Math.min(MAX_DASH * (sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
+                DASH * (1.0F + this.getPower(owner) * 0.1F) * (sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
         if (hit.getType() == HitResult.Type.MISS) {
             float f = owner.getYRot();

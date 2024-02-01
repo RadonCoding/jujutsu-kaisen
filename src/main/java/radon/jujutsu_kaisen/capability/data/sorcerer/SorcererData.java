@@ -23,8 +23,10 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -35,6 +37,7 @@ import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.PlayerUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
+import radon.jujutsu_kaisen.visual.ServerVisualHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -56,9 +59,6 @@ public class SorcererData implements ISorcererData {
 
     private final Set<ICursedTechnique> copied;
     private @Nullable ICursedTechnique currentCopied;
-
-    private final Set<ICursedTechnique> absorbed;
-    private @Nullable ICursedTechnique currentAbsorbed;
 
     private int transfiguredSouls;
 
@@ -97,23 +97,12 @@ public class SorcererData implements ISorcererData {
     private final Map<BindingVow, Integer> bindingVowCooldowns;
     private final Map<Ability, Set<String>> chants;
 
-    // Curse Manipulation
-    private final List<AbsorbedCurse> curses;
-
-    // Projection Sorcery
-    private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
-    private int speedStacks;
-    private int noMotionTime;
-
     private int fingers;
 
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("72ff5080-3a82-4a03-8493-3be970039cfe");
     private static final UUID ATTACK_DAMAGE_UUID = UUID.fromString("4979087e-da76-4f8a-93ef-6e5847bfa2ee");
     private static final UUID ATTACK_SPEED_UUID = UUID.fromString("a2aef906-ed31-49e8-a56c-decccbfa2c1f");
     private static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("9fe023ca-f22b-4429-a5e5-c099387d5441");
-    private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
-    private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
-    private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
     private LivingEntity owner;
 
@@ -127,7 +116,6 @@ public class SorcererData implements ISorcererData {
         this.type = JujutsuType.SORCERER;
 
         this.copied = new LinkedHashSet<>();
-        this.absorbed = new LinkedHashSet<>();
 
         this.output = 1.0F;
 
@@ -146,18 +134,6 @@ public class SorcererData implements ISorcererData {
         this.bindingVows = new HashSet<>();
         this.bindingVowCooldowns = new HashMap<>();
         this.chants = new HashMap<>();
-
-        this.curses = new ArrayList<>();
-
-        this.frames = new ArrayList<>();
-    }
-
-    private void sync() {
-        if (!this.owner.level().isClientSide) {
-            ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(this.getToggled(), this.channeled, this.getTraits(), this.getTechniques(), this.getTechnique(), this.getType(),
-                    this.getExperience(), this.getCursedEnergyColor());
-            PacketHandler.broadcast(new SyncVisualDataS2CPacket(this.owner.getUUID(), data.serializeNBT()));
-        }
     }
 
     private void updateCooldowns() {
@@ -379,26 +355,6 @@ public class SorcererData implements ISorcererData {
         this.updateBrainDamage();
 
         if (!this.owner.level().isClientSide) {
-            if (this.speedStacks > 0) {
-                EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                EntityUtil.applyModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID, "Attack speed", this.speedStacks, AttributeModifier.Operation.MULTIPLY_TOTAL);
-                EntityUtil.applyModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
-
-                if (this.owner.walkDist == this.owner.walkDistO) {
-                    this.noMotionTime++;
-                } else if (this.noMotionTime == 1) {
-                    this.noMotionTime = 0;
-                }
-
-                if (this.noMotionTime > 1) {
-                    this.resetSpeedStacks();
-                }
-            } else {
-                EntityUtil.removeModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID);
-                EntityUtil.removeModifier(this.owner, Attributes.ATTACK_SPEED, PROJECTION_ATTACK_SPEED_UUID);
-                EntityUtil.removeModifier(this.owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), PROJECTION_STEP_HEIGHT_UUID);
-            }
-
             if (this.owner instanceof ServerPlayer player) {
                 if (!this.initialized) {
                     this.initialized = true;
@@ -455,7 +411,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setCursedEnergyColor(int color) {
         this.cursedEnergyColor = color;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -709,7 +665,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setExperience(float experience) {
         this.experience = experience;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -729,7 +685,7 @@ public class SorcererData implements ISorcererData {
                 this.owner.sendSystemMessage(Component.translatable(String.format("chat.%s.rank_up", JujutsuKaisen.MOD_ID), current.getName()));
             }
         }
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
         return true;
     }
 
@@ -748,26 +704,9 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public Set<ICursedTechnique> getTechniques() {
-        Set<ICursedTechnique> techniques = new HashSet<>();
-
-        if (this.getTechnique() != null) techniques.add(this.getTechnique());
-        if (this.getCurrentCopied() != null) techniques.add(this.getCurrentCopied());
-        if (this.getCurrentAbsorbed() != null) techniques.add(this.getCurrentAbsorbed());
-        if (this.getAdditional() != null) techniques.add(this.getAdditional());
-
-        return techniques;
-    }
-
-    @Override
-    public boolean hasTechnique(ICursedTechnique technique) {
-        return this.technique == technique || this.additional == technique || this.copied.contains(technique) || this.absorbed.contains(technique);
-    }
-
-    @Override
     public void setTechnique(@Nullable ICursedTechnique technique) {
         this.technique = technique;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -793,19 +732,19 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addTrait(Trait trait) {
         this.traits.add(trait);
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
     public void addTraits(List<Trait> traits) {
         this.traits.addAll(traits);
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
     public void removeTrait(Trait trait) {
         this.traits.remove(trait);
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -817,13 +756,13 @@ public class SorcererData implements ISorcererData {
     public void setTraits(Set<Trait> traits) {
         this.traits.clear();
         this.traits.addAll(traits);
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
     public void setType(JujutsuType type) {
         this.type = type;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -854,7 +793,7 @@ public class SorcererData implements ISorcererData {
             this.toggled.add(ability);
             ((Ability.IToggled) ability).onEnabled(this.owner);
         }
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -933,7 +872,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void addEnergy(float amount) {
         this.energy = Math.min(this.getMaxEnergy(), this.energy + amount);
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -1018,7 +957,7 @@ public class SorcererData implements ISorcererData {
 
     @Override
     public Set<ICursedTechnique> getCopied() {
-        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !this.hasTechnique(JJKCursedTechniques.MIMICRY.get())) {
+        if (!this.hasToggled(JJKAbilities.RIKA.get()) || !JJKAbilities.hasTechnique(this.owner, JJKCursedTechniques.MIMICRY.get())) {
             return Set.of();
         }
         return this.copied;
@@ -1027,7 +966,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setCurrentCopied(@Nullable ICursedTechnique technique) {
         this.currentCopied = this.currentCopied == technique ? null : technique;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -1036,39 +975,6 @@ public class SorcererData implements ISorcererData {
             return null;
         }
         return this.currentCopied;
-    }
-
-    @Override
-    public void absorb(@Nullable ICursedTechnique technique) {
-        this.absorbed.add(technique);
-    }
-
-    @Override
-    public void unabsorb(ICursedTechnique technique) {
-        this.absorbed.remove(technique);
-        this.currentAbsorbed = null;
-    }
-
-    @Override
-    public Set<ICursedTechnique> getAbsorbed() {
-        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            return Set.of();
-        }
-        return this.absorbed;
-    }
-
-    @Override
-    public void setCurrentAbsorbed(@Nullable ICursedTechnique technique) {
-        this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
-        this.sync();
-    }
-
-    @Override
-    public @Nullable ICursedTechnique getCurrentAbsorbed() {
-        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
-            return null;
-        }
-        return this.currentAbsorbed;
     }
 
     @Override
@@ -1124,7 +1030,7 @@ public class SorcererData implements ISorcererData {
                 }
             }
         }
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -1241,61 +1147,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public void addCurse(AbsorbedCurse curse) {
-        this.curses.add(curse);
-    }
-
-    @Override
-    public void removeCurse(AbsorbedCurse curse) {
-        this.curses.remove(curse);
-    }
-
-    @Override
-    public List<AbsorbedCurse> getCurses() {
-        if (!this.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) return List.of();
-
-        List<AbsorbedCurse> sorted = new ArrayList<>(this.curses);
-        sorted.sort((o1, o2) -> (int) (JJKAbilities.getCurseExperience(o2) - JJKAbilities.getCurseExperience(o1)));
-        return sorted;
-    }
-
-    @Override
-    public @Nullable AbsorbedCurse getCurse(EntityType<?> type) {
-        for (AbsorbedCurse curse : this.getCurses()) {
-            if (curse.getType() == type) return curse;
-        }
-        return null;
-    }
-
-    @Override
-    public boolean hasCurse(EntityType<?> type) {
-        for (AbsorbedCurse curse : this.getCurses()) {
-            if (curse.getType() == type) return true;
-        }
-        return false;
-    }
-
-    @Override
-    public List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames() {
-        return this.frames;
-    }
-
-    @Override
-    public void addFrame(Vec3 frame, float yaw) {
-        this.frames.add(new AbstractMap.SimpleEntry<>(frame, yaw));
-    }
-
-    @Override
-    public void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame) {
-        this.frames.remove(frame);
-    }
-
-    @Override
-    public void resetFrames() {
-        this.frames.clear();
-    }
-
-    @Override
     public void generate(ServerPlayer owner) {
         this.initialized = true;
 
@@ -1328,9 +1179,9 @@ public class SorcererData implements ISorcererData {
                 }
 
                 if (!player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) continue;
-
                 ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                taken.addAll(cap.getTechniques());
+
+                taken.addAll(JJKAbilities.getTechniques(player));
                 traits.addAll(cap.getTraits());
             }
         }
@@ -1378,22 +1229,6 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
-    public int getSpeedStacks() {
-        return this.speedStacks;
-    }
-
-    @Override
-    public void addSpeedStack() {
-        this.speedStacks = Math.min(JJKConstants.MAX_PROJECTION_SORCERY_STACKS, this.speedStacks + 1);
-    }
-
-    @Override
-    public void resetSpeedStacks() {
-        this.speedStacks = 0;
-        this.noMotionTime = 0;
-    }
-
-    @Override
     public int getFingers() {
         return this.fingers;
     }
@@ -1422,7 +1257,7 @@ public class SorcererData implements ISorcererData {
     @Override
     public void setAdditional(@Nullable ICursedTechnique technique) {
         this.additional = technique;
-        this.sync();
+        ServerVisualHandler.sync(this.owner);
     }
 
     @Override
@@ -1442,9 +1277,6 @@ public class SorcererData implements ISorcererData {
         if (this.currentCopied != null) {
             nbt.putString("current_copied", JJKCursedTechniques.getKey(this.currentCopied).toString());
         }
-        if (nbt.contains("current_absorbed")) {
-            this.currentAbsorbed = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_absorbed")));
-        }
         nbt.putInt("transfigured_souls", this.transfiguredSouls);
         nbt.putInt("nature", this.nature.ordinal());
         nbt.putFloat("experience", this.experience);
@@ -1458,7 +1290,6 @@ public class SorcererData implements ISorcererData {
         nbt.putInt("brain_damage_timer", this.brainDamageTimer);
         nbt.putInt("charge", this.charge);
         nbt.putLong("last_black_flash_time", this.lastBlackFlashTime);
-        nbt.putInt("speed_stacks", this.speedStacks);
         nbt.putInt("fingers", this.fingers);
 
         ListTag unlockedTag = new ListTag();
@@ -1478,13 +1309,6 @@ public class SorcererData implements ISorcererData {
             copiedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
         }
         nbt.put("copied", copiedTag);
-
-        ListTag absorbedTag = new ListTag();
-
-        for (ICursedTechnique technique : this.absorbed) {
-            absorbedTag.add(StringTag.valueOf(JJKCursedTechniques.getKey(technique).toString()));
-        }
-        nbt.put("absorbed", absorbedTag);
 
         ListTag toggledTag = new ListTag();
 
@@ -1579,13 +1403,6 @@ public class SorcererData implements ISorcererData {
         }
         nbt.put("chants", chantsTag);
 
-        ListTag cursesTag = new ListTag();
-
-        for (AbsorbedCurse curse : this.curses) {
-            cursesTag.add(curse.serializeNBT());
-        }
-        nbt.put("curses", cursesTag);
-
         return nbt;
     }
 
@@ -1607,9 +1424,6 @@ public class SorcererData implements ISorcererData {
         if (nbt.contains("current_copied")) {
             this.currentCopied = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_copied")));
         }
-        if (nbt.contains("current_absorbed")) {
-            this.currentAbsorbed = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_absorbed")));
-        }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
         this.experience = nbt.getFloat("experience");
@@ -1623,7 +1437,6 @@ public class SorcererData implements ISorcererData {
         this.brainDamageTimer = nbt.getInt("brain_damage_timer");
         this.charge = nbt.getInt("charge");
         this.lastBlackFlashTime = nbt.getLong("last_black_flash_time");
-        this.speedStacks = nbt.getInt("speed_stacks");
         this.fingers = nbt.getInt("fingers");
 
         this.unlocked.clear();
@@ -1636,12 +1449,6 @@ public class SorcererData implements ISorcererData {
 
         for (Tag tag : nbt.getList("copied", Tag.TAG_STRING)) {
             this.copied.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
-        }
-
-        this.absorbed.clear();
-
-        for (Tag tag : nbt.getList("absorbed", Tag.TAG_STRING)) {
-            this.absorbed.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
         }
 
         this.toggled.clear();
@@ -1709,13 +1516,6 @@ public class SorcererData implements ISorcererData {
                 chants.add(entry.getAsString());
             }
             this.chants.put(JJKAbilities.getValue(ResourceLocation.tryParse(data.getString("ability"))), chants);
-        }
-
-        this.curses.clear();
-
-        for (Tag key : nbt.getList("curses", Tag.TAG_COMPOUND)) {
-            CompoundTag curse = (CompoundTag) key;
-            this.curses.add(new AbsorbedCurse(curse));
         }
     }
 }

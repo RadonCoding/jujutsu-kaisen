@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
@@ -34,11 +36,12 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.setOwner(owner);
         this.setPower(power);
 
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData ownerCurseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
         Entity weakest = null;
 
-        for (Entity current : ownerCap.getSummons()) {
+        for (Entity current : ownerSorcererCap.getSummons()) {
             if (!(current instanceof CursedSpirit)) continue;
 
             if (weakest == null) {
@@ -58,10 +61,10 @@ public class MiniUzumakiProjectile extends BeamEntity {
             this.setPower(SorcererUtil.getPower(weakestCap.getExperience()));
 
             if (SorcererUtil.getGrade(weakestCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && weakestCap.getTechnique() != null) {
-                ownerCap.absorb(weakestCap.getTechnique());
+                ownerCurseManipulationCap.absorb(weakestCap.getTechnique());
 
                 if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerCap.serializeNBT()), player);
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
                 }
             }
             weakest.discard();

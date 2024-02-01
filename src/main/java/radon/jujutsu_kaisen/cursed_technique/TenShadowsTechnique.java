@@ -1,8 +1,8 @@
-package radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique;
+package radon.jujutsu_kaisen.cursed_technique;
 
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
 import java.util.Set;
 

@@ -28,7 +28,7 @@ public class JumpInputListenerC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (sender.getVehicle() instanceof IJumpInputListener listener) {
                 listener.setJump(this.down);

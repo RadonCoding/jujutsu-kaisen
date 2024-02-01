@@ -32,7 +32,7 @@ public class NyoiStaffSummonLightningC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             if (!(sender.serverLevel().getEntity(this.identifier) instanceof NyoiStaffEntity staff)) return;
             if (!staff.isCharged() || staff.getOwner() != sender) return;

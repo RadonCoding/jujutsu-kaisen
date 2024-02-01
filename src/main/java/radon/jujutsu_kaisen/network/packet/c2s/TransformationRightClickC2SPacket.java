@@ -32,7 +32,7 @@ public class TransformationRightClickC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             Ability ability = JJKAbilities.getValue(this.key);
 

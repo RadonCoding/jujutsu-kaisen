@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
 import java.util.*;
 
@@ -117,9 +117,6 @@ public interface ISorcererData {
     void setAdditional(ICursedTechnique technique);
 
     @Nullable ICursedTechnique getTechnique();
-    Set<ICursedTechnique> getTechniques();
-
-    boolean hasTechnique(ICursedTechnique technique);
 
     void setTechnique(@Nullable ICursedTechnique technique);
 
@@ -210,16 +207,6 @@ public interface ISorcererData {
 
     @Nullable ICursedTechnique getCurrentCopied();
 
-    void absorb(@Nullable ICursedTechnique technique);
-
-    void unabsorb(ICursedTechnique technique);
-
-    Set<ICursedTechnique> getAbsorbed();
-
-    void setCurrentAbsorbed(@Nullable ICursedTechnique technique);
-
-    @Nullable ICursedTechnique getCurrentAbsorbed();
-
     int getTransfiguredSouls();
 
     void increaseTransfiguredSouls();
@@ -252,30 +239,13 @@ public interface ISorcererData {
 
     <T extends Entity> boolean hasSummonOfClass(Class<T> clazz);
 
-    void addCurse(AbsorbedCurse curse);
-
-    void removeCurse(AbsorbedCurse curse);
-
-    List<AbsorbedCurse> getCurses();
-
-    @Nullable
-    AbsorbedCurse getCurse(EntityType<?> type);
-
-    boolean hasCurse(EntityType<?> type);
-
-    List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
-    void addFrame(Vec3 frame, float yaw);
-    void removeFrame(AbstractMap.SimpleEntry<Vec3, Float> frame);
-    void resetFrames();
-
-    int getSpeedStacks();
-    void addSpeedStack();
-    void resetSpeedStacks();
-
     int getFingers();
+
     void setFingers(int count);
+
     int addFingers(int count);
 
     CompoundTag serializeNBT();
+
     void deserializeNBT(CompoundTag nbt);
 }

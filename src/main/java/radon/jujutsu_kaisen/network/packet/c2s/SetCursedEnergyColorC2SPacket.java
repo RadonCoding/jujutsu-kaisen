@@ -29,7 +29,7 @@ public class SetCursedEnergyColorC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
             cap.setCursedEnergyColor(this.cursedEnergyColor);

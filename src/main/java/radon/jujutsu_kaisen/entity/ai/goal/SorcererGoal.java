@@ -8,13 +8,16 @@ import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ public class SorcererGoal extends Goal {
     private static final int CHANGE_COPIED_TECHNIQUE_INTERVAL = 10 * 20;
 
     private final PathfinderMob mob;
-    private long lastCanUseCheck;
+    //private long lastCanUseCheck;
 
     public SorcererGoal(PathfinderMob mob) {
         this.mob = mob;
@@ -34,23 +37,24 @@ public class SorcererGoal extends Goal {
     public void tick() {
         List<Ability> abilities = JJKAbilities.getAbilities(this.mob);
 
-        ISorcererData cap = this.mob.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererCap = this.mob.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData curseManipulationCap = this.mob.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (cap.hasToggled(JJKAbilities.RIKA.get())) {
-            if (cap.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
-                List<ICursedTechnique> copied = new ArrayList<>(cap.getCopied());
+        if (sorcererCap.hasToggled(JJKAbilities.RIKA.get())) {
+            if (sorcererCap.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {
+                List<ICursedTechnique> copied = new ArrayList<>(sorcererCap.getCopied());
 
                 if (!copied.isEmpty()) {
-                    cap.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
+                    sorcererCap.setCurrentCopied(copied.get(HelperMethods.RANDOM.nextInt(copied.size())));
                 }
             }
         }
 
-        if (cap.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+        if (JJKAbilities.hasTechnique(this.mob, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
             LivingEntity target = this.mob.getTarget();
 
             if (target != null && HelperMethods.RANDOM.nextInt(5) == 0) {
-                List<AbsorbedCurse> curses = cap.getCurses();
+                List<AbsorbedCurse> curses = curseManipulationCap.getCurses();
 
                 if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -58,18 +62,18 @@ public class SorcererGoal extends Goal {
                     AbsorbedCurse closest = null;
 
                     for (AbsorbedCurse curse : curses) {
-                        float diff = Math.abs(JJKAbilities.getCurseExperience(curse) - targetCap.getExperience());
+                        float diff = Math.abs(CurseManipulationUtil.getCurseExperience(curse) - targetCap.getExperience());
 
-                        if (closest == null || diff < Math.abs(JJKAbilities.getCurseExperience(closest) - targetCap.getExperience())) {
+                        if (closest == null || diff < Math.abs(CurseManipulationUtil.getCurseExperience(closest) - targetCap.getExperience())) {
                             closest = curse;
                         }
                     }
 
                     if (closest != null) {
-                        JJKAbilities.summonCurse(this.mob, closest, true);
+                        CurseManipulationUtil.summonCurse(this.mob, closest, true);
                     }
                 } else if (!curses.isEmpty()) {
-                    JJKAbilities.summonCurse(this.mob, HelperMethods.RANDOM.nextInt(curses.size()), true);
+                    CurseManipulationUtil.summonCurse(this.mob, HelperMethods.RANDOM.nextInt(curses.size()), true);
                 }
             }
 
@@ -77,7 +81,7 @@ public class SorcererGoal extends Goal {
 
             if (stack.is(JJKItems.CURSED_SPIRIT_ORB.get())) {
                 this.mob.playSound(this.mob.getEatingSound(stack), 1.0F, 1.0F + (HelperMethods.RANDOM.nextFloat() - HelperMethods.RANDOM.nextFloat()) * 0.4F);
-                cap.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
+                curseManipulationCap.addCurse(CursedSpiritOrbItem.getAbsorbed(stack));
                 this.mob.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             }
         }

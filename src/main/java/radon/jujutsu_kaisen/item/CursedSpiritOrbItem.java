@@ -15,10 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.util.CurseManipulationUtil;
 
 import java.util.List;
 
@@ -50,16 +53,16 @@ public class CursedSpiritOrbItem extends Item {
         AbsorbedCurse curse = getAbsorbed(pStack);
         pTooltipComponents.add(Component.translatable(String.format("item.%s.curse", JujutsuKaisen.MOD_ID), curse.getName().copy().withStyle(ChatFormatting.DARK_RED)));
         pTooltipComponents.add(Component.translatable(String.format("item.%s.experience", JujutsuKaisen.MOD_ID),
-                Component.literal(Float.toString(JJKAbilities.getCurseExperience(curse))).withStyle(ChatFormatting.GREEN)));
+                Component.literal(Float.toString(CurseManipulationUtil.getCurseExperience(curse))).withStyle(ChatFormatting.GREEN)));
     }
 
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
         if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ICurseManipulationData cap = pEntityLiving.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
 
-            if (!cap.hasTechnique(JJKCursedTechniques.CURSE_MANIPULATION.get())) {
+            if (!JJKAbilities.hasTechnique(pEntityLiving, JJKCursedTechniques.CURSE_MANIPULATION.get())) {
                 pEntityLiving.addEffect(new MobEffectInstance(MobEffects.POISON, 10 * 20, 1));
                 return stack;
             }

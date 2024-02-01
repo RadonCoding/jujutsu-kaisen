@@ -33,7 +33,7 @@ public class ShadowInventoryTakeC2SPacket {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 
-            assert sender != null;
+            if (sender == null) return;
 
             ITenShadowsData cap = sender.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 

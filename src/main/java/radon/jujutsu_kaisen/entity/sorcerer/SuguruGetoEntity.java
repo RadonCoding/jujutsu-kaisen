@@ -7,13 +7,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.JJKCursedTechniques;
+import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.cursed_technique.base.ICursedTechnique;
+import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -55,17 +57,21 @@ public class SuguruGetoEntity extends SorcererEntity {
         return new AbsorbedCurse(type.getDescription(), type, cap.serializeNBT());
     }
 
-    private void tryAddCurse(ISorcererData data, EntityType<?> type) {
+    private void tryAddCurse(EntityType<?> type) {
+        ICurseManipulationData cap = this.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+
         AbsorbedCurse curse = this.createCurse(type);
 
         if (curse == null) return;
 
-        data.addCurse(curse);
+        cap.addCurse(curse);
     }
 
     @Override
-    public void init(ISorcererData data) {
-        super.init(data);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
 
         Collection<RegistryObject<EntityType<?>>> registry = JJKEntities.ENTITIES.getEntries();
 
@@ -76,18 +82,11 @@ public class SuguruGetoEntity extends SorcererEntity {
 
             if (type.create(this.level()) instanceof CursedSpirit curse && curse.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {
                 for (int i = 0; i < SorcererGrade.values().length - curse.getGrade().ordinal(); i++) {
-                    this.tryAddCurse(data, type);
+                    this.tryAddCurse(type);
                 }
             }
         }
-        this.tryAddCurse(data, JJKEntities.KUCHISAKE_ONNA.get());
-        this.tryAddCurse(data, JJKEntities.DINO_CURSE.get());
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
+        this.tryAddCurse(JJKEntities.KUCHISAKE_ONNA.get());
+        this.tryAddCurse(JJKEntities.DINO_CURSE.get());
     }
 }
