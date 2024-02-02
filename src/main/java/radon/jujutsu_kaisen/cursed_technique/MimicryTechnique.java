@@ -20,7 +20,7 @@ public class MimicryTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.RIKA.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.RIKA.get(),
                 JJKAbilities.MIMICRY.get(),
                 JJKAbilities.REFILL.get(),
                 JJKAbilities.COMMAND_PURE_LOVE.get());

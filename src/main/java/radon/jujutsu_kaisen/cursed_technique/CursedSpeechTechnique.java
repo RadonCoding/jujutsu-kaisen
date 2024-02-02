@@ -14,7 +14,7 @@ public class CursedSpeechTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.DONT_MOVE.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.DONT_MOVE.get(),
                 JJKAbilities.GET_CRUSHED.get(),
                 JJKAbilities.BLAST_AWAY.get(),
                 JJKAbilities.EXPLODE.get(),

@@ -14,6 +14,6 @@ public class ShockwaveTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.SHOCKWAVE.get());
+        return new LinkedHashSet<>(Set.of(JJKAbilities.SHOCKWAVE.get());
     }
 }

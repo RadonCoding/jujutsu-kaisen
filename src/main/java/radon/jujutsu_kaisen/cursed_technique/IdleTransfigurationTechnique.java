@@ -20,7 +20,7 @@ public class IdleTransfigurationTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.IDLE_TRANSFIGURATION.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.IDLE_TRANSFIGURATION.get(),
                 JJKAbilities.SOUL_DECIMATION.get(),
                 JJKAbilities.SOUL_REINFORCEMENT.get(),
                 JJKAbilities.SOUL_RESTORATION.get(),
