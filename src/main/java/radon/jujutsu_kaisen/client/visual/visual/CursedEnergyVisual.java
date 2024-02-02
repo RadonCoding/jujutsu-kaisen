@@ -38,7 +38,7 @@ public class CursedEnergyVisual implements IVisual {
             double z = entity.getZ() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (entity.getBbWidth() * 1.5F * scale) - entity.getLookAngle().scale(0.35D).z;
             double speed = (entity.getBbHeight() * 0.3F) * HelperMethods.RANDOM.nextDouble();
             mc.level.addParticle(new CursedEnergyParticle.CursedEnergyParticleOptions(ParticleColors.getCursedEnergyColor(entity), entity.getBbWidth() * 0.5F * scale,
-                    0.2F, 6), x, y, z, 00.0D, speed * scale, 0.0D);
+                    0.2F, 6), x, y, z, 0.0D, speed * scale, 0.0D);
         }
     }
 }
