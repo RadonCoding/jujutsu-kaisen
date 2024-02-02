@@ -21,6 +21,7 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.effect.ProjectionFrameEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ScreenFlashS2CPacket;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -69,7 +70,7 @@ public class TwentyFourFrameRule extends Ability implements Ability.IToggled, Ab
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
+        if (!DamageUtil.isMelee(source)) return false;
 
         for (ProjectionFrameEntity frame : owner.level().getEntitiesOfClass(ProjectionFrameEntity.class, AABB.ofSize(target.position(),
                 8.0D, 8.0D, 8.0D))) {

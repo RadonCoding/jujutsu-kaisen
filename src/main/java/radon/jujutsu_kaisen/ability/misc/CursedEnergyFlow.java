@@ -40,6 +40,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -199,7 +200,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                    if (HelperMethods.isMelee(source)) {
+                    if (DamageUtil.isMelee(source)) {
                         float increase = attackerCap.getExperience() * 0.005F;
 
                         switch (attackerCap.getNature()) {
@@ -238,7 +239,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                 }
             }
 
-            if (HelperMethods.isMelee(source)) {
+            if (DamageUtil.isMelee(source)) {
                 if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                     ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
@@ -276,7 +277,7 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
                         }
                     }
 
-                    if (HelperMethods.isMelee(source)) {
+                    if (DamageUtil.isMelee(source)) {
                         switch (victimCap.getNature()) {
                             case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
                                     false, false, false));

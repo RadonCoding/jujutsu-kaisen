@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class SoulReinforcement extends Ability implements Ability.IToggled {
@@ -77,14 +78,14 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
                 if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
                 ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                if (HelperMethods.isMelee(source)) {
+                if (DamageUtil.isMelee(source)) {
                     if ((attackerCap.hasTrait(Trait.VESSEL) && attackerCap.getFingers() > 0) || attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
                         return;
                     }
                 }
             }
 
-            if (!HelperMethods.isBlockable(victim, source)) return;
+            if (!DamageUtil.isBlockable(victim, source)) return;
 
             if (source.is(JJKDamageSources.SOUL)) return;
 

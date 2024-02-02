@@ -19,6 +19,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.item.CursedSpiritOrbItem;
 import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.EntityUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -73,7 +74,7 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static void check(LivingEntity victim, DamageSource source) {
-        if (!HelperMethods.isMelee(source)) return;
+        if (!DamageUtil.isMelee(source)) return;
 
         if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 

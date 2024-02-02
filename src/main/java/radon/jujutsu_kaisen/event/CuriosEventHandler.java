@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -49,7 +50,7 @@ public class CuriosEventHandler {
 
         if (!JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) return;
 
-        if (!HelperMethods.isMelee(source)) return;
+        if (!DamageUtil.isMelee(source)) return;
 
         LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(attacker);
 

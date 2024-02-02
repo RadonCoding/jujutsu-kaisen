@@ -15,6 +15,7 @@ import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttack {
@@ -67,7 +68,7 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
+        if (!DamageUtil.isMelee(source)) return false;
 
         if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
 

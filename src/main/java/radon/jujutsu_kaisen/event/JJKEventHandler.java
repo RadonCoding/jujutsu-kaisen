@@ -197,7 +197,7 @@ public class JJKEventHandler {
 
                     if (event.getSource() instanceof JJKDamageSources.JujutsuDamageSource) {
                         cursed = true;
-                    } else if (HelperMethods.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
+                    } else if (DamageUtil.isMelee(source) && (stacks.stream().anyMatch(item -> item instanceof CursedToolItem))) {
                         cursed = true;
                     } else if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
                         ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
@@ -228,7 +228,7 @@ public class JJKEventHandler {
 
             if (source.getEntity() instanceof LivingEntity attacker) {
                 if (JJKAbilities.hasTrait(attacker, Trait.PERFECT_BODY)) {
-                    if (HelperMethods.isMelee(source)) {
+                    if (DamageUtil.isMelee(source)) {
                         event.setAmount(event.getAmount() * 2.0F);
                     }
                 }

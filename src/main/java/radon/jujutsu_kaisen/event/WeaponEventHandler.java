@@ -35,6 +35,7 @@ import radon.jujutsu_kaisen.item.cursed_tool.KamutokeDaggerItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -65,7 +66,7 @@ public class WeaponEventHandler {
                         .stream().map(ItemStack::getItem).collect(Collectors.toSet()));
             }
 
-            if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
+            if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
             if (JJKAbilities.hasTrait(attacker, Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                 if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
@@ -158,7 +159,7 @@ public class WeaponEventHandler {
             }
             stacks.removeIf(ItemStack::isEmpty);
 
-            if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
+            if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
             for (ItemStack stack : stacks) {
                 if (stack.is(JJKItems.DRAGON_BONE.get()) && (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) ||
