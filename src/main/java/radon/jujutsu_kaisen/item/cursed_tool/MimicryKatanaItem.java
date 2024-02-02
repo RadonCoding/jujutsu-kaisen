@@ -8,9 +8,6 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.entity.domain.base.GenuineMutualLoveEntity;
 
 public class MimicryKatanaItem extends KatanaItem {
     public MimicryKatanaItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
@@ -26,7 +23,7 @@ public class MimicryKatanaItem extends KatanaItem {
     public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 
-        if (!(pEntity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.GENUINE_MUTUAL_LOVE.get())) {
+        if (!(pEntity instanceof LivingEntity living) || !JJKAbilities.hasToggled(living, JJKAbilities.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE.get())) {
             pStack.shrink(1);
         }
     }

@@ -1,37 +1,28 @@
 package radon.jujutsu_kaisen.ability.mimicry;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.ItemStackedOnOtherEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.domain.base.GenuineMutualLoveEntity;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
+import radon.jujutsu_kaisen.entity.domain.base.AllEncompassingUnequiovocalLove;
 import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.util.CuriosUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GenuineMutualLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
+public class AllEncompassingUnequivocalLove extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
 
-        ICursedTechnique technique = ((GenuineMutualLoveEntity) domain).getTechnique();
+        ICursedTechnique technique = ((AllEncompassingUnequiovocalLove) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -42,7 +33,7 @@ public class GenuineMutualLove extends DomainExpansion implements DomainExpansio
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        ICursedTechnique technique = ((GenuineMutualLoveEntity) domain).getTechnique();
+        ICursedTechnique technique = ((AllEncompassingUnequiovocalLove) domain).getTechnique();
 
         if (technique == null) return;
 
@@ -55,7 +46,7 @@ public class GenuineMutualLove extends DomainExpansion implements DomainExpansio
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
         int radius = Math.round(this.getRadius(owner));
 
-        GenuineMutualLoveEntity domain = new GenuineMutualLoveEntity(owner, this, radius);
+        AllEncompassingUnequiovocalLove domain = new AllEncompassingUnequiovocalLove(owner, this, radius);
         owner.level().addFreshEntity(domain);
 
         return domain;
@@ -68,7 +59,7 @@ public class GenuineMutualLove extends DomainExpansion implements DomainExpansio
 
     @Override
     public List<Block> getFloorBlocks() {
-        return List.of(JJKBlocks.GENUINE_MUTUAL_LOVE_ONE.get(), JJKBlocks.GENUINE_MUTUAL_LOVE_TWO.get(), JJKBlocks.GENUINE_MUTUAL_LOVE_THREE.get());
+        return List.of(JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_ONE.get(), JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_TWO.get(), JJKBlocks.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE_THREE.get());
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
