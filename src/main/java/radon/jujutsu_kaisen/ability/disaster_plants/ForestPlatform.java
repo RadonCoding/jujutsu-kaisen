@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
-wwwwwwwwww
+
 public class ForestPlatform extends Ability implements Ability.IToggled {
     @Override
     public boolean isScalable(LivingEntity owner) {
