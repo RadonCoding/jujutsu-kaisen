@@ -25,6 +25,7 @@ import radon.jujutsu_kaisen.entity.effect.BlackFlashEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ClearChantsC2SPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
@@ -77,7 +78,7 @@ public class BlackFlashHandler {
 
             if (victim.level().isClientSide) return;
 
-            if (!HelperMethods.isMelee(source)) return;
+            if (!DamageUtil.isMelee(source)) return;
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
             ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

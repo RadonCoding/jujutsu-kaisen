@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -113,7 +114,7 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
+        if (!DamageUtil.isMelee(source)) return false;
         if (!owner.getMainHandItem().isEmpty()) return false;
 
         this.run(owner, target);

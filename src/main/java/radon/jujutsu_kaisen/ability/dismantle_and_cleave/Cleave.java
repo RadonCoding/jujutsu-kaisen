@@ -24,6 +24,7 @@ import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IAttack, Ability.IToggled {
@@ -155,7 +156,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (owner.level().isClientSide) return false;
-        if (!HelperMethods.isMelee(source)) return false;
+        if (!DamageUtil.isMelee(source)) return false;
 
         perform(owner, target, null);
 

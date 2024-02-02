@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -20,7 +21,7 @@ public class ParryHandler {
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
 
-            if (!HelperMethods.isMelee(source)) return;
+            if (!DamageUtil.isMelee(source)) return;
 
             LivingEntity victim = event.getEntity();
 

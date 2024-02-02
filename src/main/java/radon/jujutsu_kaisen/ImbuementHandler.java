@@ -26,6 +26,7 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.CuriosUtil;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
@@ -160,7 +161,7 @@ public class ImbuementHandler {
             }
             stacks.removeIf(ItemStack::isEmpty);
 
-            if (!HelperMethods.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
+            if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
             for (ItemStack stack : stacks) {
                 for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {

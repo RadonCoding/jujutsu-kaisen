@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
@@ -213,7 +214,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             Projectile projectile = event.getProjectile();
 
-            if (!HelperMethods.isBlockable(owner, projectile)) return;
+            if (!DamageUtil.isBlockable(owner, projectile)) return;
 
             data.add(owner, projectile);
 
@@ -232,7 +233,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
             for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
-                if (!HelperMethods.isBlockable(owner, projectile)) continue;
+                if (!DamageUtil.isBlockable(owner, projectile)) continue;
 
                 data.add(owner, projectile);
             }
@@ -248,7 +249,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             DamageSource source = event.getSource();
 
-            if (!HelperMethods.isBlockable(owner, source)) return;
+            if (!DamageUtil.isBlockable(owner, source)) return;
 
             // We don't want to play the sound in-case it's a stopped projectile
             if (!(source.getDirectEntity() instanceof Projectile)) {

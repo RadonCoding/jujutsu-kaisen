@@ -17,6 +17,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.entity.projectile.CursedBudProjectile;
+import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
@@ -62,7 +63,7 @@ public class CursedBud extends Ability {
 
             LivingEntity victim = event.getEntity();
 
-            if (!HelperMethods.isMelee(source)) return;
+            if (!DamageUtil.isMelee(source)) return;
 
             if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
