@@ -46,7 +46,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         this.noCulling = true;
     }
 
-    public FilmGaugeProjectile(LivingEntity owner, float power, LivingEntity target, DomainExpansionCenterEntity center) {
+    public FilmGaugeProjectile(LivingEntity owner, float power, LivingEntity target) {
         this(JJKEntities.FILM_GAUGE.get(), owner.level());
 
         this.setOwner(owner);
@@ -54,8 +54,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         this.setTarget(target);
 
-        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(center);
-        EntityUtil.offset(this, look, new Vec3(center.getX(), center.getY() + (center.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), center.getZ()).add(look));
+        Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
+        EntityUtil.offset(this, look, new Vec3(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ())
+                .add(look));
 
         this.entityData.set(DATA_START, this.position().toVector3f());
     }
