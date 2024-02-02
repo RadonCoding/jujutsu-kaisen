@@ -106,22 +106,22 @@ public class MalevolentShrineEntity extends OpenDomainExpansionEntity implements
                             for (int z = -horizontal; z <= horizontal; z++) {
                                 double distance = Math.sqrt(x * x + vertical * vertical + z * z);
 
-                                if (distance < horizontal && distance >= horizontal - 1) {
-                                    BlockPos pos = center.offset(x, vertical, z);
+                                if (distance >= horizontal || distance < horizontal - 1) continue;
 
-                                    if (!this.isAffected(pos)) continue;
+                                BlockPos pos = center.offset(x, vertical, z);
 
-                                    owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
-                                            1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
+                                if (!this.isAffected(pos)) continue;
 
-                                    if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
-                                        owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
-                                                Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                                owner.level().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER,
+                                        1.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.5F);
 
-                                        if (this.random.nextInt(10) == 0) {
-                                            ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
-                                                    0.0D, 0.0D, 0.0D, 0.0D);
-                                        }
+                                if (HelperMethods.isDestroyable(this.level(), owner, pos)) {
+                                    owner.level().setBlock(pos, Blocks.AIR.defaultBlockState(),
+                                            Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+
+                                    if (this.random.nextInt(10) == 0) {
+                                        ((ServerLevel) owner.level()).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 0,
+                                                0.0D, 0.0D, 0.0D, 0.0D);
                                     }
                                 }
                             }
