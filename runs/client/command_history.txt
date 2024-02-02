@@ -9,3 +9,4 @@
 /setexperience @p 10000
 /settechnique @p jujutsu_kaisen:dismantle_and_cleave
 /setexperience @p 10000
+/refill @p
