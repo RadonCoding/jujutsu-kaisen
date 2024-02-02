@@ -86,7 +86,7 @@ public class ServerConfig {
                 .define("realisticShikigami", true);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
                 .define("realisticCurses", true);
-        this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into oa weapon")
+        this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
                         .defineInRange("requiredImbuementAmount", 1000, 1, 100000);
         builder.pop();
 
