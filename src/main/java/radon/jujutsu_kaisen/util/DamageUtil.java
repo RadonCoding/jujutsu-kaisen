@@ -33,7 +33,7 @@ public class DamageUtil {
         }
 
         if (projectile instanceof JujutsuProjectile jujutsu) {
-            return jujutsu.isDomain();
+            return !jujutsu.isDomain();
         }
         return true;
     }
