@@ -23,7 +23,7 @@
 
 ### Experience
 
-You gain experience by fighting stronger opponents, but opponents no less than 25% weaker than you will still give you experience.
+You gain experience by fighting stronger opponents, but opponents no less than 50% weaker than you will still give you experience.
 
 The strength of an opponent is calculated based on the following factors:
 
