@@ -48,8 +48,8 @@ public class SorcererDataHandler {
             newCap.resetBrainDamage();
             newCap.resetBurnout();
 
-            newCap.resetBlackFlash();
             newCap.resetExtraEnergy();
+            newCap.resetBlackFlash();
 
             if (!player.level().isClientSide) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(newCap.serializeNBT()), (ServerPlayer) player);
