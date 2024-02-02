@@ -5,3 +5,6 @@
 /settechnique @p jujutsu_kaisen:mimicry
 /settechnique @p jujutsu_kaisen:idle_transfiguration
 /settechnique @p jujutsu_kaisen:mimicry
+/setexperience @p 1000
+/setexperience @p 10000
+/settechnique @p jujutsu_kaisen:dismantle_and_cleave
