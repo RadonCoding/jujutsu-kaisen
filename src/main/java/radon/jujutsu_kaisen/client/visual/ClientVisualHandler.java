@@ -83,6 +83,8 @@ public class ClientVisualHandler {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
 
+        if (!entity.level().isClientSide) return;
+
         ClientData data = get(entity);
 
         if (data == null) return;
