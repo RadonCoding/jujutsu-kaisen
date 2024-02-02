@@ -11,8 +11,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
+import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
@@ -23,6 +26,20 @@ import java.util.List;
 
 public class SelfEmbodimentOfPerfection extends DomainExpansion implements DomainExpansion.IClosedDomain {
     @Override
+    public void onEnabled(LivingEntity owner) {
+        super.onEnabled(owner);
+
+        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+
+        if (cap.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            cap.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
+        }
+        if (cap.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
+            cap.toggle(JJKAbilities.SOUL_DECIMATION.get());
+        }
+    }
+
+    @Override
     public @Nullable ParticleOptions getEnvironmentParticle() {
         return ParticleTypes.WHITE_ASH;
     }
@@ -30,6 +47,8 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     @Override
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
         super.onHitEntity(domain, owner, entity, instant);
+
+        if (IdleTransfiguration.checkSukuna(owner, entity)) return;
 
         float attackerStrength = IdleTransfiguration.calculateStrength(owner);
         float victimStrength = IdleTransfiguration.calculateStrength(entity);

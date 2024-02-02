@@ -782,16 +782,17 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.toggled.contains(ability)) {
-            this.toggled.remove(ability);
-
             ((Ability.IToggled) ability).onDisabled(this.owner);
+
+            this.toggled.remove(ability);
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
 
             MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
-            this.toggled.add(ability);
             ((Ability.IToggled) ability).onEnabled(this.owner);
+
+            this.toggled.add(ability);
         }
         ServerVisualHandler.sync(this.owner);
     }

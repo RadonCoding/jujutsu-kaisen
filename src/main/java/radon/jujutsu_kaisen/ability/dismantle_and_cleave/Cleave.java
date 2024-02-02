@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -44,11 +45,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     }
 
-    private DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
-        return domain == null ? JJKDamageSources.jujutsuAttack(owner, this) : JJKDamageSources.indirectJujutsuAttack(domain, owner, this);
+    private static DamageSource getSource(LivingEntity owner, @Nullable DomainExpansionEntity domain) {
+        return domain == null ? JJKDamageSources.jujutsuAttack(owner, JJKAbilities.CLEAVE.get()) : JJKDamageSources.indirectJujutsuAttack(domain, owner, JJKAbilities.CLEAVE.get());
     }
 
-    private float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
+    private static float calculateDamage(DamageSource source, LivingEntity owner, LivingEntity target) {
         float damage = target.getMaxHealth();
         float armor = (float) target.getArmorValue();
         float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
@@ -95,7 +96,7 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         return Classification.SLASHING;
     }
     
-    private void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
@@ -128,10 +129,10 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         }
 
         cap.delayTickEvent(() -> {
-            float power = domain == null ? this.getPower(owner) : this.getPower(owner) * DomainExpansion.getStrength(owner, false);
+            float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
-            DamageSource source = this.getSource(owner, domain);
-            float damage = this.calculateDamage(source, owner, target);
+            DamageSource source = getSource(owner, domain);
+            float damage = calculateDamage(source, owner, target);
             damage = Math.min(MAX_DAMAGE * power, damage);
 
             boolean success = target.hurt(source, damage);
@@ -144,13 +145,13 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     @Override
     public void performEntity(LivingEntity owner, LivingEntity target, DomainExpansionEntity domain) {
-        this.perform(owner, target, domain);
+        perform(owner, target, domain);
     }
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
         if (!HelperMethods.isMelee(source)) return false;
-        this.perform(owner, target, null);
+        perform(owner, target, null);
         return true;
     }
 

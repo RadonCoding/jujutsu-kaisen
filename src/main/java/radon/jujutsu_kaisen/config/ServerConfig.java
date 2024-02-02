@@ -81,7 +81,7 @@ public class ServerConfig {
         this.deathPenalty = builder.comment("Percentage of experience lost on death")
                 .defineInRange("deathPenalty", 0.05F, 0.0F, 1.0F);
         this.blackFlashChance = builder.comment("The chance of black flash (smaller number equals bigger chance)")
-                .defineInRange("blackFlashChance", 100, 1, 1000);
+                .defineInRange("blackFlashChance", 50, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .define("realisticShikigami", true);
         this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
