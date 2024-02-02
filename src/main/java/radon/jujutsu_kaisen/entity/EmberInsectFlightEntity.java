@@ -56,7 +56,7 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
 
     @Override
     public float getMyRidingOffset(Entity pEntity) {
-        return pEntity.getBbHeight() * 0.75F;
+        return -pEntity.getBbHeight() * 0.25F;
     }
 
     @Override
