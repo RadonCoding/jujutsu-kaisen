@@ -19,7 +19,7 @@ public class Wings extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 0.0F;
+        return owner.fallDistance > 1.0F && !owner.isInFluidType();
     }
 
     @Override

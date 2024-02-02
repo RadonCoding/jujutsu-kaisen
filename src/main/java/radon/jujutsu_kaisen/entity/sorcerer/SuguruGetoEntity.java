@@ -1,11 +1,11 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
@@ -73,11 +73,7 @@ public class SuguruGetoEntity extends SorcererEntity {
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.PLAYFUL_CLOUD.get()));
 
-        Collection<RegistryObject<EntityType<?>>> registry = JJKEntities.ENTITIES.getEntries();
-
-        for (RegistryObject<EntityType<?>> entry : registry) {
-            EntityType<?> type = entry.get();
-
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE.stream().toList()) {
             if (type == JJKEntities.ABSORBED_PLAYER.get()) continue;
 
             if (type.create(this.level()) instanceof CursedSpirit curse && curse.getGrade().ordinal() < SorcererGrade.SPECIAL_GRADE.ordinal()) {

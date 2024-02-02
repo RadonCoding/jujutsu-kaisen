@@ -1,25 +1,33 @@
 package radon.jujutsu_kaisen.client.gui.screen.tab;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 
 public enum JJKTabType {
-    ABOVE(0, 0, 28, 32, 8),
-    BELOW(84, 0, 28, 32, 8),
-    LEFT(0, 64, 32, 28, 5),
-    RIGHT(96, 64, 32, 28, 5);
+    ABOVE(28, 32, 8),
+    BELOW(28, 32, 8),
+    LEFT(32, 28, 5),
+    RIGHT(32, 28, 5);
+
+    private static final ResourceLocation[] SELECTED = {
+            new ResourceLocation("advancements/tab_above_left_selected"),
+            new ResourceLocation("advancements/tab_above_middle_selected"),
+            new ResourceLocation("advancements/tab_above_right_selected")
+    };
+    private static final ResourceLocation[] UNSELECTED = {
+            new ResourceLocation("advancements/tab_above_left"),
+            new ResourceLocation("advancements/tab_above_middle"),
+            new ResourceLocation("advancements/tab_above_right")
+    };
 
     public static final int MAX_TABS = java.util.Arrays.stream(values()).mapToInt(e -> e.max).sum();
-    private final int textureX;
-    private final int textureY;
     private final int width;
     private final int height;
     private final int max;
 
-    JJKTabType(int pTextureX, int pTextureY, int pWidth, int pHeight, int pMax) {
-        this.textureX = pTextureX;
-        this.textureY = pTextureY;
+    JJKTabType(int pWidth, int pHeight, int pMax) {
         this.width = pWidth;
         this.height = pHeight;
         this.max = pMax;
@@ -30,17 +38,18 @@ public enum JJKTabType {
     }
 
     public void draw(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY, boolean pIsSelected, int pIndex) {
-        int i = this.textureX;
+        ResourceLocation[] sprites = pIsSelected ? SELECTED : UNSELECTED;
 
-        if (pIndex > 0) {
-            i += this.width;
-        }
+        ResourceLocation sprite;
 
-        if (pIndex == this.max - 1) {
-            i += this.width;
+        if (pIndex == 0) {
+            sprite = sprites[0];
+        } else if (pIndex == this.max - 1) {
+            sprite = sprites[2];
+        } else {
+            sprite = sprites[1];
         }
-        int j = pIsSelected ? this.textureY + this.height : this.textureY;
-        pGuiGraphics.blit(JujutsuScreen.TABS_LOCATION, pOffsetX + this.getX(pIndex), pOffsetY + this.getY(pIndex), i, j, this.width, this.height);
+        pGuiGraphics.blitSprite(sprite, pOffsetX + this.getX(pIndex), pOffsetY + this.getY(pIndex), this.width, this.height);
     }
 
     public void drawIcon(GuiGraphics pGuiGraphics, int pOffsetX, int pOffsetY, int pIndex, ItemStack pStack) {

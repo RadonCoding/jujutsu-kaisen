@@ -28,11 +28,11 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -101,7 +101,7 @@ public class ExplosionHandler {
                         Mth.floor(explosion.position.x + diameter + 1.0F),
                         Mth.floor(explosion.position.y + diameter + 1.0F),
                         Mth.floor(explosion.position.z + diameter + 1.0F)));
-                ForgeEventFactory.onExplosionDetonate(event.level, current, entities, diameter);
+                EventHooks.onExplosionDetonate(event.level, current, entities, diameter);
 
                 for (Entity entity : entities) {
                     if (!(explosion.source instanceof JJKDamageSources.JujutsuDamageSource) && entity == explosion.instigator) continue;

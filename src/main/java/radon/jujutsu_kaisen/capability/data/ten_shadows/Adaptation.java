@@ -23,10 +23,10 @@ public class Adaptation {
     }
 
     public Adaptation(CompoundTag nbt) {
-        this.key = ResourceLocation.tryParse(nbt.getString("name"));
+        this.key = new ResourceLocation(nbt.getString("name"));
 
         if (nbt.contains("ability")) {
-            this.ability = JJKAbilities.getValue(ResourceLocation.tryParse(nbt.getString("ability")));
+            this.ability = JJKAbilities.getValue(new ResourceLocation(nbt.getString("ability")));
         }
     }
 

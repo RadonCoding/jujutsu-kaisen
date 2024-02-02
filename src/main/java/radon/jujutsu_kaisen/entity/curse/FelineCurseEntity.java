@@ -105,7 +105,7 @@ public class FelineCurseEntity extends PackCursedSpirit implements PlayerRideabl
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         return this.getBbHeight();
     }
 

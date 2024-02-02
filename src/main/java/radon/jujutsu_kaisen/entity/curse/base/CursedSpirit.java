@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.curse.base;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -69,7 +70,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
+            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.value()).isValid()) {
                 success = true;
                 break;
             }

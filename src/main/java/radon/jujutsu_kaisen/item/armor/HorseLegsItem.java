@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.render.item.armor.HorseLegsRenderer;
 import radon.jujutsu_kaisen.client.render.item.armor.InstantSpiritBodyOfDistortedKillingRenderer;

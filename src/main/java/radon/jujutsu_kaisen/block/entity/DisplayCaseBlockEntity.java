@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.block.JJKBlocks;
@@ -56,7 +57,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
     private static @Nullable Entity getRandomCurse(Level level, float energy) {
         List<Entity> pool = new ArrayList<>();
 
-        for (EntityType<?> type : level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE)) {
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
             if (type.is(JJKEntityTypeTags.SPAWNABLE_CURSE) && type.create(level) instanceof LivingEntity entity && entity instanceof ISorcerer sorcerer &&
                     SorcererUtil.getPower(sorcerer.getExperience()) <= energy) {
                 pool.add(entity);
@@ -109,7 +110,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
         if (pDistance > (double)(pMob.getType().getCategory().getDespawnDistance() * pMob.getType().getCategory().getDespawnDistance()) && pMob.removeWhenFarAway(pDistance)) {
             return false;
         } else {
-            return ForgeEventFactory.checkSpawnPosition(pMob, pLevel, MobSpawnType.SPAWNER);
+            return EventHooks.checkSpawnPosition(pMob, pLevel, MobSpawnType.SPAWNER);
         }
     }
 
@@ -119,7 +120,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
     }
 
     private static WeightedRandomList<MobSpawnSettings.SpawnerData> mobsAt(ServerLevel pLevel, StructureManager pStructureManager, ChunkGenerator pGenerator, MobCategory pCategory, BlockPos pPos, @javax.annotation.Nullable Holder<Biome> pBiome) {
-        return ForgeEventFactory.getPotentialSpawns(pLevel, pCategory, pPos, NaturalSpawner.isInNetherFortressBounds(pPos, pLevel, pCategory, pStructureManager) ?
+        return EventHooks.getPotentialSpawns(pLevel, pCategory, pPos, NaturalSpawner.isInNetherFortressBounds(pPos, pLevel, pCategory, pStructureManager) ?
                 pStructureManager.registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(BuiltinStructures.FORTRESS).spawnOverrides().get(MobCategory.MONSTER).spawns() :
                 pGenerator.getMobsAt(pBiome != null ? pBiome : pLevel.getBiome(pPos), pStructureManager, pCategory, pPos));
     }
@@ -231,7 +232,7 @@ public class DisplayCaseBlockEntity extends BlockEntity {
                                     ((ServerLevel) pLevel).addFreshEntityWithPassengers(curse);
                                     //pCallback.run(mob, chunk);
 
-                                    if (j >= ForgeEventFactory.getMaxSpawnPackSize(curse)) {
+                                    if (j >= EventHooks.getMaxSpawnPackSize(curse)) {
                                         return;
                                     }
                                     if (curse.isMaxGroupSizeReached(l1)) {

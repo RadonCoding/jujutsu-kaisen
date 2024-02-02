@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -46,7 +47,7 @@ public class DurationBlockEntity extends BlockEntity {
     }
 
     public @Nullable BlockState getOriginal() {
-        if (this.original == null && this.deferred != null) {
+        if (this.original == null && this.deferred != null && this.level != null) {
             this.original = NbtUtils.readBlockState(this.level.holderLookup(Registries.BLOCK), this.deferred);
             this.deferred = null;
             this.setChanged();

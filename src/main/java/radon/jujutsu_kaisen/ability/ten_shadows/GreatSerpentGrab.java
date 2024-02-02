@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows;
 
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -32,8 +32,7 @@ public class GreatSerpentGrab extends Ability {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        return cap.hasTamed(registry, JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
+        return cap.hasTamed(JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
     }
 
     @Override

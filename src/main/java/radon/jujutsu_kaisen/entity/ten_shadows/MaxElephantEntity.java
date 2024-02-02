@@ -101,7 +101,7 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         return this.getBbHeight();
     }
 

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -16,9 +16,9 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetDomainSizeC2SPacket;
 
 public class DomainCustomizationTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.domain_customization", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
-    private ForgeSlider sizeSlider;
+    private ExtendedSlider sizeSlider;
     private float oldSize;
 
     public DomainCustomizationTab(Minecraft minecraft, JujutsuScreen screen, JJKTabType type, int index, int page) {
@@ -57,7 +57,7 @@ public class DomainCustomizationTab extends JJKTab {
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
         int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
-        this.sizeSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
+        this.sizeSlider = new ExtendedSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), j + ((JujutsuScreen.WINDOW_HEIGHT - 16) / 2), 110, 16, Component.empty(), Component.empty(),
                 ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue(), cap.getDomainSize(), 0.1D, 0, true);
         this.addRenderableWidget(this.sizeSlider);
     }

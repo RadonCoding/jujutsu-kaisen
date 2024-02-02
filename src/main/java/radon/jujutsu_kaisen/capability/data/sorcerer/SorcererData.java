@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
@@ -16,8 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityStopEvent;
@@ -788,7 +788,7 @@ public class SorcererData implements ISorcererData {
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
 
-            MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
+            NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
             ((Ability.IToggled) ability).onEnabled(this.owner);
 
@@ -1019,7 +1019,7 @@ public class SorcererData implements ISorcererData {
             if (!this.owner.level().isClientSide && this.channeled.shouldLog(this.owner)) {
                 this.owner.sendSystemMessage(this.channeled.getDisableMessage());
             }
-            MinecraftForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
+            NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         }
 
         if (this.channeled == ability) {
@@ -1177,7 +1177,7 @@ public class SorcererData implements ISorcererData {
                 ServerPlayer player;
 
                 if ((player = owner.server.getPlayerList().getPlayerByName(profile.getName())) == null) {
-                    player = owner.server.getPlayerList().getPlayerForLogin(profile);
+                    player = owner.server.getPlayerList().getPlayerForLogin(profile, ClientInformation.createDefault());
                     owner.server.getPlayerList().load(player);
                 }
 
@@ -1419,13 +1419,13 @@ public class SorcererData implements ISorcererData {
         this.domainSize = nbt.getFloat("domain_size");
 
         if (nbt.contains("technique")) {
-            this.technique = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique")));
+            this.technique = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique")));
         }
         if (nbt.contains("additional")) {
-            this.additional = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("additional")));
+            this.additional = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("additional")));
         }
         if (nbt.contains("current_copied")) {
-            this.currentCopied = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_copied")));
+            this.currentCopied = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("current_copied")));
         }
         this.transfiguredSouls = nbt.getInt("transfigured_souls");
         this.nature = CursedEnergyNature.values()[nbt.getInt("nature")];
@@ -1445,19 +1445,19 @@ public class SorcererData implements ISorcererData {
         this.unlocked.clear();
 
         for (Tag tag : nbt.getList("unlocked", Tag.TAG_STRING)) {
-            this.unlocked.add(JJKAbilities.getValue(ResourceLocation.tryParse(tag.getAsString())));
+            this.unlocked.add(JJKAbilities.getValue(new ResourceLocation(tag.getAsString())));
         }
 
         this.copied.clear();
 
         for (Tag tag : nbt.getList("copied", Tag.TAG_STRING)) {
-            this.copied.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
+            this.copied.add(JJKCursedTechniques.getValue(new ResourceLocation(tag.getAsString())));
         }
 
         this.toggled.clear();
 
         for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-            this.toggled.add(JJKAbilities.getValue(ResourceLocation.tryParse(key.getAsString())));
+            this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
         }
 
         this.traits.clear();
@@ -1470,7 +1470,7 @@ public class SorcererData implements ISorcererData {
 
         for (Tag key : nbt.getList("cooldowns", Tag.TAG_COMPOUND)) {
             CompoundTag data = (CompoundTag) key;
-            this.cooldowns.put(JJKAbilities.getValue(ResourceLocation.tryParse(data.getString("identifier"))),
+            this.cooldowns.put(JJKAbilities.getValue(new ResourceLocation(data.getString("identifier"))),
                     data.getInt("cooldown"));
         }
 
@@ -1518,7 +1518,7 @@ public class SorcererData implements ISorcererData {
             for (Tag entry : data.getList("entries", Tag.TAG_STRING)) {
                 chants.add(entry.getAsString());
             }
-            this.chants.put(JJKAbilities.getValue(ResourceLocation.tryParse(data.getString("ability"))), chants);
+            this.chants.put(JJKAbilities.getValue(new ResourceLocation(data.getString("ability"))), chants);
         }
     }
 }

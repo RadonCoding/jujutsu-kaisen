@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.entity.sorcerer.base;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
@@ -115,7 +116,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
         boolean success = false;
 
         for (Holder<Structure> holder : structures) {
-            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.get()).isValid()) {
+            if (((ServerLevel) this.level()).structureManager().getStructureWithPieceAt(this.blockPosition(), holder.value()).isValid()) {
                 success = true;
                 break;
             }

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
@@ -92,7 +92,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     public void applyModifiers(LivingEntity owner) {
         EntityUtil.applyModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID, "Attack damage", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
         EntityUtil.applyModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID, "Movement speed", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
-        EntityUtil.applyModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
+        EntityUtil.applyModifier(owner, NeoForgeMod.STEP_HEIGHT.value(), STEP_HEIGHT_UUID, "Step height addition", 2.0F, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.ARMOR, ARMOR_UUID, "Armor", 20.0D, AttributeModifier.Operation.ADDITION);
         EntityUtil.applyModifier(owner, Attributes.ARMOR_TOUGHNESS, ARMOR_TOUGHNESS_UUID, "Armor toughness", 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
@@ -101,7 +101,7 @@ public class InstantSpiritBodyOfDistortedKilling extends Transformation {
     public void removeModifiers(LivingEntity owner) {
         EntityUtil.removeModifier(owner, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_UUID);
         EntityUtil.removeModifier(owner, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_UUID);
-        EntityUtil.removeModifier(owner, ForgeMod.STEP_HEIGHT_ADDITION.get(), STEP_HEIGHT_UUID);
+        EntityUtil.removeModifier(owner, NeoForgeMod.STEP_HEIGHT.value(), STEP_HEIGHT_UUID);
         EntityUtil.removeModifier(owner, Attributes.ARMOR, ARMOR_UUID);
         EntityUtil.removeModifier(owner, Attributes.ARMOR_TOUGHNESS, ARMOR_TOUGHNESS_UUID);
     }

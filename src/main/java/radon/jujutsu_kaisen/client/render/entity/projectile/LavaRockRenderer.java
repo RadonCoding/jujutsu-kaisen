@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.projectile.LavaRockProjectile;
 
-import static net.minecraftforge.client.model.data.ModelData.EMPTY;
+import static net.neoforged.neoforge.client.model.data.ModelData.EMPTY;
 
 public class LavaRockRenderer extends EntityRenderer<LavaRockProjectile> {
     private final BlockRenderDispatcher dispatcher;

@@ -17,7 +17,7 @@ public class EmberInsectFlight extends Summon<EmberInsectFlightEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return owner.fallDistance > 1.0F;
+        return owner.fallDistance > 1.0F && !owner.isInFluidType();
     }
 
     @Override

@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraftforge.client.ForgeHooksClient;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;

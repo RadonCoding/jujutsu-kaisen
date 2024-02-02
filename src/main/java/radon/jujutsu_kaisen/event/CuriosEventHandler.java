@@ -9,12 +9,12 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
@@ -77,7 +77,7 @@ public class CuriosEventHandler {
                 stack.hurtEnemy(victim, player);
 
                 if (stack.isEmpty()) {
-                    ForgeEventFactory.onPlayerDestroyItem(player, copy, InteractionHand.MAIN_HAND);
+                    EventHooks.onPlayerDestroyItem(player, copy, InteractionHand.MAIN_HAND);
                     player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 }
             }

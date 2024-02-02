@@ -12,7 +12,9 @@ import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,12 +26,12 @@ import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
@@ -108,7 +110,7 @@ public class JJKClientEventHandler {
                     PlayerRenderer renderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(mc.player);
                     PlayerModel<AbstractClientPlayer> model = renderer.getModel();
 
-                    GeoArmorRenderer<T> armor = (GeoArmorRenderer<T>) ForgeHooksClient.getArmorModel(mc.player, transformation.getItem().getDefaultInstance(), EquipmentSlot.CHEST, model);
+                    GeoArmorRenderer<T> armor = (GeoArmorRenderer<T>) ClientHooks.getArmorModel(mc.player, transformation.getItem().getDefaultInstance(), EquipmentSlot.CHEST, model);
 
                     VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.armorCutoutNoCull(armor.getTextureLocation((T) transformation.getItem())));
 
@@ -323,10 +325,10 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterPlayerLayers(EntityRenderersEvent.AddLayers event) {
-            if (event.getSkin("default") instanceof PlayerRenderer renderer) {
+            if (event.getSkin(PlayerSkin.Model.WIDE) instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
-            if (event.getSkin("slim") instanceof PlayerRenderer renderer) {
+            if (event.getSkin(PlayerSkin.Model.SLIM) instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new JJKOverlayLayer<>(renderer));
             }
         }
@@ -348,10 +350,10 @@ public class JJKClientEventHandler {
 
         @SubscribeEvent
         public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("ability_overlay", AbilityOverlay.OVERLAY);
-            event.registerAboveAll("cursed_energy_overlay", CursedEnergyOverlay.OVERLAY);
-            event.registerAboveAll("six_eyes_overlay", SixEyesOverlay.OVERLAY);
-            event.registerAboveAll("screen_flash_overlay", ScreenFlashOverlay.OVERLAY);
+            event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "ability_overlay"), AbilityOverlay.OVERLAY);
+            event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "cursed_energy_overlay"), CursedEnergyOverlay.OVERLAY);
+            event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "six_eyes_overlay"), SixEyesOverlay.OVERLAY);
+            event.registerAboveAll(new ResourceLocation(JujutsuKaisen.MOD_ID, "screen_flash_overlay"), ScreenFlashOverlay.OVERLAY);
         }
 
         @SubscribeEvent

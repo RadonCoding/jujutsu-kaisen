@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -79,10 +79,10 @@ public class MegumiFushiguroEntity extends SorcererEntity {
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
 
         ITenShadowsData cap = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.RABBIT_ESCAPE.get());
-        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.TOAD.get());
-        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get());
-        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.GREAT_SERPENT.get());
-        cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get());
+        cap.tame(JJKEntities.RABBIT_ESCAPE.get());
+        cap.tame(JJKEntities.TOAD.get());
+        cap.tame(JJKEntities.NUE.get());
+        cap.tame(JJKEntities.GREAT_SERPENT.get());
+        cap.tame(JJKEntities.MAX_ELEPHANT.get());
     }
 }

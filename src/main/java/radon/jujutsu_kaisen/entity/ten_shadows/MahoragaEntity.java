@@ -85,8 +85,8 @@ public class MahoragaEntity extends TenShadowsSummon {
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return this.getBbHeight() - 0.35D;
+    protected float ridingOffset(@NotNull Entity pEntity) {
+        return this.getBbHeight() - 0.35F;
     }
 
     @Override

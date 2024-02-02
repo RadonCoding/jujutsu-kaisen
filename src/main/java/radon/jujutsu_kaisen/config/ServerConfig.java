@@ -1,7 +1,8 @@
 package radon.jujutsu_kaisen.config;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
@@ -9,56 +10,56 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ServerConfig {
-    public final ForgeConfigSpec.DoubleValue cursedEnergyAmount;
-    public final ForgeConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
-    public final ForgeConfigSpec.DoubleValue maximumExperienceAmount;
-    public final ForgeConfigSpec.DoubleValue cursedObjectEnergyForGrade;
-    public final ForgeConfigSpec.IntValue reverseCursedTechniqueChance;
-    public final ForgeConfigSpec.DoubleValue requiredExperienceForExperienced;
-    public final ForgeConfigSpec.IntValue sorcererFleshRarity;
-    public final ForgeConfigSpec.IntValue curseFleshRarity;
-    public final ForgeConfigSpec.DoubleValue experienceMultiplier;
-    public final ForgeConfigSpec.DoubleValue deathPenalty;
-    public final ForgeConfigSpec.IntValue blackFlashChance;
-    public final ForgeConfigSpec.BooleanValue realisticShikigami;
-    public final ForgeConfigSpec.BooleanValue realisticCurses;
-    public final ForgeConfigSpec.IntValue requiredImbuementAmount;
+    public final ModConfigSpec.DoubleValue cursedEnergyAmount;
+    public final ModConfigSpec.DoubleValue cursedEnergyRegenerationAmount;
+    public final ModConfigSpec.DoubleValue maximumExperienceAmount;
+    public final ModConfigSpec.DoubleValue cursedObjectEnergyForGrade;
+    public final ModConfigSpec.IntValue reverseCursedTechniqueChance;
+    public final ModConfigSpec.DoubleValue requiredExperienceForExperienced;
+    public final ModConfigSpec.IntValue sorcererFleshRarity;
+    public final ModConfigSpec.IntValue curseFleshRarity;
+    public final ModConfigSpec.DoubleValue experienceMultiplier;
+    public final ModConfigSpec.DoubleValue deathPenalty;
+    public final ModConfigSpec.IntValue blackFlashChance;
+    public final ModConfigSpec.BooleanValue realisticShikigami;
+    public final ModConfigSpec.BooleanValue realisticCurses;
+    public final ModConfigSpec.IntValue requiredImbuementAmount;
 
-    public final ForgeConfigSpec.DoubleValue sorcererHealingAmount;
-    public final ForgeConfigSpec.DoubleValue curseHealingAmount;
-    public final ForgeConfigSpec.BooleanValue uniqueTechniques;
-    public final ForgeConfigSpec.BooleanValue uniqueTraits;
-    public final ForgeConfigSpec.BooleanValue destruction;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> chants;
+    public final ModConfigSpec.DoubleValue sorcererHealingAmount;
+    public final ModConfigSpec.DoubleValue curseHealingAmount;
+    public final ModConfigSpec.BooleanValue uniqueTechniques;
+    public final ModConfigSpec.BooleanValue uniqueTraits;
+    public final ModConfigSpec.BooleanValue destruction;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> chants;
 
-    public final ForgeConfigSpec.IntValue minimumVeilSize;
-    public final ForgeConfigSpec.IntValue maximumVeilSize;
-    public final ForgeConfigSpec.DoubleValue minimumDomainSize;
-    public final ForgeConfigSpec.DoubleValue maximumDomainSize;
+    public final ModConfigSpec.IntValue minimumVeilSize;
+    public final ModConfigSpec.IntValue maximumVeilSize;
+    public final ModConfigSpec.DoubleValue minimumDomainSize;
+    public final ModConfigSpec.DoubleValue maximumDomainSize;
 
-    public final ForgeConfigSpec.IntValue maximumChantCount;
-    public final ForgeConfigSpec.IntValue maximumChantLength;
-    public final ForgeConfigSpec.DoubleValue chantSimilarityThreshold;
+    public final ModConfigSpec.IntValue maximumChantCount;
+    public final ModConfigSpec.IntValue maximumChantLength;
+    public final ModConfigSpec.DoubleValue chantSimilarityThreshold;
 
-    public final ForgeConfigSpec.IntValue simpleDomainCost;
-    public final ForgeConfigSpec.IntValue quickDrawCost;
-    public final ForgeConfigSpec.IntValue fallingBlossomEmotionCost;
-    public final ForgeConfigSpec.IntValue domainExpansionCost;
-    public final ForgeConfigSpec.IntValue domainAmplificationCost;
-    public final ForgeConfigSpec.IntValue zeroPointTwoSecondDomainExpansionCost;
-    public final ForgeConfigSpec.IntValue rct2Cost;
-    public final ForgeConfigSpec.IntValue rct3Cost;
-    public final ForgeConfigSpec.IntValue outputRCTCost;
-    public final ForgeConfigSpec.IntValue maximumCopiedTechniques;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
+    public final ModConfigSpec.IntValue simpleDomainCost;
+    public final ModConfigSpec.IntValue quickDrawCost;
+    public final ModConfigSpec.IntValue fallingBlossomEmotionCost;
+    public final ModConfigSpec.IntValue domainExpansionCost;
+    public final ModConfigSpec.IntValue domainAmplificationCost;
+    public final ModConfigSpec.IntValue zeroPointTwoSecondDomainExpansionCost;
+    public final ModConfigSpec.IntValue rct2Cost;
+    public final ModConfigSpec.IntValue rct3Cost;
+    public final ModConfigSpec.IntValue outputRCTCost;
+    public final ModConfigSpec.IntValue maximumCopiedTechniques;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> unlockableTechniques;
 
-    public final ForgeConfigSpec.IntValue cursedEnergyNatureRarity;
-    public final ForgeConfigSpec.IntValue curseRarity;
-    public final ForgeConfigSpec.IntValue sixEyesRarity;
-    public final ForgeConfigSpec.IntValue heavenlyRestrictionRarity;
-    public final ForgeConfigSpec.IntValue vesselRarity;
+    public final ModConfigSpec.IntValue cursedEnergyNatureRarity;
+    public final ModConfigSpec.IntValue curseRarity;
+    public final ModConfigSpec.IntValue sixEyesRarity;
+    public final ModConfigSpec.IntValue heavenlyRestrictionRarity;
+    public final ModConfigSpec.IntValue vesselRarity;
 
-    public ServerConfig(ForgeConfigSpec.Builder builder) {
+    public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Progression").push("progression");
         this.cursedEnergyAmount = builder.comment("Cursed energy amount (scales with experience)")
                 .defineInRange("cursedEnergyAmount", 1000.0F, 0.0F, 100000.0F);
@@ -164,7 +165,7 @@ public class ServerConfig {
                 .defineInRange("maximumCopiedTechniques", 3, 1, 10000);
         this.unlockableTechniques = builder.comment("Techniques that are unlockable by default")
                 .defineList("unlockableTechniques", () -> List.of(
-                        JJKCursedTechniques.getKey(JJKCursedTechniques.CURSE_MANIPULATION.get()).toString(),
+                                JJKCursedTechniques.getKey(JJKCursedTechniques.CURSE_MANIPULATION.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.LIMITLESS.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.DISMANTLE_AND_CLEAVE.get()).toString(),
                                 JJKCursedTechniques.getKey(JJKCursedTechniques.CURSED_SPEECH.get()).toString(),
@@ -197,7 +198,7 @@ public class ServerConfig {
 
     public List<ICursedTechnique> getUnlockableTechniques() {
         return this.unlockableTechniques.get().stream()
-                .map(key -> JJKCursedTechniques.getValue(ResourceLocation.tryParse(key)))
+                .map(key -> JJKCursedTechniques.getValue(new ResourceLocation(key)))
                 .collect(Collectors.toList());
     }
 }

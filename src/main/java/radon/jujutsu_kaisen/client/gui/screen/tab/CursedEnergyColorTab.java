@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
@@ -18,11 +18,11 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetCursedEnergyColorC2SPacket;
 
 public class CursedEnergyColorTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.cursed_energy_color", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
-    private ForgeSlider rSlider;
-    private ForgeSlider gSlider;
-    private ForgeSlider bSlider;
+    private ExtendedSlider rSlider;
+    private ExtendedSlider gSlider;
+    private ExtendedSlider bSlider;
 
     private float oldR, oldG, oldB;
 
@@ -80,15 +80,15 @@ public class CursedEnergyColorTab extends JJKTab {
 
         int centerY = j + (JujutsuScreen.WINDOW_HEIGHT / 2);
 
-        this.rSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY - 32, 110, 16, Component.empty(), Component.empty(),
+        this.rSlider = new ExtendedSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY - 32, 110, 16, Component.empty(), Component.empty(),
                 0.0F, 255.0F, color.x * 255, 0.1D, 0, true);
         this.addRenderableWidget(this.rSlider);
 
-        this.gSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY, 110, 16, Component.empty(), Component.empty(),
+        this.gSlider = new ExtendedSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY, 110, 16, Component.empty(), Component.empty(),
                 0.0F, 255.0F, color.y * 255, 0.1D, 0, true);
         this.addRenderableWidget(this.gSlider);
 
-        this.bSlider = new ForgeSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY + 32, 110, 16, Component.empty(), Component.empty(),
+        this.bSlider = new ExtendedSlider(i + ((JujutsuScreen.WINDOW_WIDTH - 110) / 2), centerY + 32, 110, 16, Component.empty(), Component.empty(),
                 0.0F, 255.0F, color.z * 255, 0.1D, 0, true);
         this.addRenderableWidget(this.bSlider);
     }

@@ -34,7 +34,7 @@ public class CursedTechniqueArgument implements ArgumentType<ResourceLocation> {
         Object obj = pContext.getSource();
 
         if (obj instanceof SharedSuggestionProvider) {
-            SharedSuggestionProvider.suggestResource(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY.get().getKeys(), pBuilder);
+            SharedSuggestionProvider.suggestResource(JJKCursedTechniques.CURSED_TECHNIQUE_REGISTRY.keySet(), pBuilder);
         }
         return pBuilder.buildFuture();
     }

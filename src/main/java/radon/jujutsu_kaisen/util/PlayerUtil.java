@@ -1,6 +1,7 @@
 package radon.jujutsu_kaisen.util;
 
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -11,7 +12,7 @@ public class PlayerUtil {
     public static void giveAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
+        AdvancementHolder advancement = server.getAdvancements().get(new ResourceLocation(JujutsuKaisen.MOD_ID,
                 String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
 
         if (advancement != null) {
@@ -28,7 +29,7 @@ public class PlayerUtil {
     public static void removeAdvancement(ServerPlayer player, String name) {
         MinecraftServer server = player.getServer();
         assert server != null;
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(JujutsuKaisen.MOD_ID,
+        AdvancementHolder advancement = server.getAdvancements().get(new ResourceLocation(JujutsuKaisen.MOD_ID,
                 String.format("%s/%s", JujutsuKaisen.MOD_ID, name)));
 
         if (advancement != null) {

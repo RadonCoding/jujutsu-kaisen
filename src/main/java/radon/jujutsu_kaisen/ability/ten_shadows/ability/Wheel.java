@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -54,7 +54,7 @@ public class Wheel extends Summon<WheelEntity> {
         if (!super.isValid(owner)) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         return !JJKAbilities.hasToggled(owner, JJKAbilities.MAHORAGA.get()) &&
-                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAHORAGA.get()) &&
+                cap.hasTamed(JJKEntities.MAHORAGA.get()) &&
                 (JJKAbilities.hasToggled(owner, this) || cap.getMode() == TenShadowsMode.ABILITY);
     }
 

@@ -110,7 +110,7 @@ public class MimicryKatanaEntity extends Entity {
     }
 
     public ICursedTechnique getTechnique() {
-        return JJKCursedTechniques.getValue(ResourceLocation.tryParse(this.entityData.get(DATA_TECHNIQUE)));
+        return JJKCursedTechniques.getValue(new ResourceLocation(this.entityData.get(DATA_TECHNIQUE)));
     }
 
     private void setTechnique(ICursedTechnique technique) {
@@ -151,7 +151,7 @@ public class MimicryKatanaEntity extends Entity {
             this.domainUUID = pCompound.getUUID("domain");
         }
         this.setVariant(Variant.values()[pCompound.getInt("variant")]);
-        this.setTechnique(JJKCursedTechniques.getValue(ResourceLocation.tryParse(pCompound.getString("technique"))));
+        this.setTechnique(JJKCursedTechniques.getValue(new ResourceLocation(pCompound.getString("technique"))));
     }
 
     @Override

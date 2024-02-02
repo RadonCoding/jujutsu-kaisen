@@ -1,0 +1,9 @@
+
+#Settings
+[settings]
+	#The melee menu type
+	#Allowed Values: SCROLL, TOGGLE
+	meleeMenuType = "TOGGLE"
+	#Whether or not cursed energy particles are visible
+	visibleCursedEnergy = true
+

@@ -14,6 +14,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.*;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.CubicSampler;
@@ -23,12 +24,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Lazy;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.mixin.client.ILevelRendererAccessor;
 
 public class SkyHandler {
-    private static final ResourceLocation SUN_LOCATION = ResourceLocation.tryParse("textures/environment/sun.png");
+    private static final ResourceLocation SUN_LOCATION = new ResourceLocation("textures/environment/sun.png");
 
     private static ClientLevel overworld;
     private static TextureTarget dayTarget;

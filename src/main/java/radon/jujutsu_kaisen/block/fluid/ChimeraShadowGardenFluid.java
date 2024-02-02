@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
+public abstract class ChimeraShadowGardenFluid extends BaseFlowingFluid {
     protected ChimeraShadowGardenFluid(Properties properties) {
         super(properties);
     }
@@ -45,7 +45,7 @@ public abstract class ChimeraShadowGardenFluid extends ForgeFlowingFluid {
         public Flowing(Properties properties) {
             super(properties);
 
-            registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
+            this.registerDefaultState(this.getStateDefinition().any().setValue(LEVEL, 7));
         }
 
         protected void createFluidStateDefinition(StateDefinition.@NotNull Builder<Fluid, FluidState> builder) {

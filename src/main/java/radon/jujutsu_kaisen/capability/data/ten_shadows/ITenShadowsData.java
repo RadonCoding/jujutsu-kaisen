@@ -7,7 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
+import net.neoforged.neoforge.common.capabilities.AutoRegisterCapability;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -20,21 +20,21 @@ public interface ITenShadowsData {
 
     void init(LivingEntity owner);
 
-    boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity);
+    boolean hasTamed(EntityType<?> entity);
 
-    void tame(Registry<EntityType<?>> registry, EntityType<?> entity);
+    void tame(EntityType<?> entity);
 
     void setTamed(Set<ResourceLocation> tamed);
 
     Set<ResourceLocation> getTamed();
 
-    boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity);
+    boolean isDead(EntityType<?> entity);
 
     Set<ResourceLocation> getDead();
 
     void setDead(Set<ResourceLocation> dead);
 
-    void kill(Registry<EntityType<?>> registry, EntityType<?> entity);
+    void kill(EntityType<?> entity);
 
     void revive(boolean full);
 

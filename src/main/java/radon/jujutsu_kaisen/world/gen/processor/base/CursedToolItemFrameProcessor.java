@@ -1,8 +1,7 @@
 package radon.jujutsu_kaisen.world.gen.processor.base;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,12 +23,10 @@ import java.util.*;
 
 
 public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
-    private static ItemStack getRandomCursedTool(ServerLevel level) {
+    private static ItemStack getRandomCursedTool() {
         Map<ItemStack, Double> pool = new HashMap<>();
 
-        Registry<Item> registry = level.registryAccess().registryOrThrow(Registries.ITEM);
-
-        for (Item item : registry) {
+        for (Item item : BuiltInRegistries.ITEM) {
             ItemStack stack = new ItemStack(item);
 
             if (stack.is(JJKItemTags.CURSED_TOOL)) {
@@ -49,7 +46,7 @@ public abstract class CursedToolItemFrameProcessor extends StructureProcessor {
 
         if (entity.isPresent()) {
             if (entity.get() instanceof ItemFrame frame) {
-                frame.setItem(getRandomCursedTool(level), false);
+                frame.setItem(getRandomCursedTool(), false);
                 return new StructureTemplate.StructureEntityInfo(entityInfo.pos, entityInfo.blockPos, frame.serializeNBT());
             }
         }

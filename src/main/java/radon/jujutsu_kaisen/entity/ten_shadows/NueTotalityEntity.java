@@ -240,9 +240,9 @@ public class NueTotalityEntity extends TenShadowsSummon implements PlayerRideabl
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         LivingEntity passenger = this.getControllingPassenger();
-        if (passenger == null) return super.getPassengersRidingOffset();
+        if (passenger == null) return super.ridingOffset(pEntity);
         return -passenger.getBbHeight() + 0.8F;
     }
 

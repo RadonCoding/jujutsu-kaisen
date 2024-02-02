@@ -8,12 +8,12 @@ import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -155,14 +155,14 @@ public class ClientVisualHandler {
 
         public void deserializeNBT(CompoundTag nbt) {
             this.toggled = new HashSet<>();
-            this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(ResourceLocation.tryParse(nbt.getString("channeled"))) : null;
+            this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled"))) : null;
             this.traits = new HashSet<>();
             this.techniques = new HashSet<>();
 
-            this.technique = nbt.contains("technique") ? JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique"))) : null;
+            this.technique = nbt.contains("technique") ? JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))) : null;
 
             for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
-                this.toggled.add(JJKAbilities.getValue(ResourceLocation.tryParse(key.getAsString())));
+                this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
             }
 
             for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
@@ -172,7 +172,7 @@ public class ClientVisualHandler {
             }
 
             for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
-                this.techniques.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(key.getAsString())));
+                this.techniques.add(JJKCursedTechniques.getValue(new ResourceLocation(key.getAsString())));
             }
 
             this.type = JujutsuType.values()[nbt.getInt("type")];

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.summon;
 
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,8 +58,7 @@ public class DivineDogs extends Summon<DivineDogEntity> {
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        return cap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get());
+        return cap.isDead(JJKEntities.DIVINE_DOG_WHITE.get()) && cap.isDead(JJKEntities.DIVINE_DOG_BLACK.get());
     }
 
     @Override
@@ -68,15 +67,13 @@ public class DivineDogs extends Summon<DivineDogEntity> {
             ITenShadowsData tenShadowsCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
             ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-
-            if (!tenShadowsCap.isDead(registry, JJKEntities.DIVINE_DOG_WHITE.get())) {
+            if (!tenShadowsCap.isDead(JJKEntities.DIVINE_DOG_WHITE.get())) {
                 DivineDogWhiteEntity white = new DivineDogWhiteEntity(owner, false);
                 white.setClone(clone);
                 owner.level().addFreshEntity(white);
                 sorcererCap.addSummon(white);
             }
-            if (!tenShadowsCap.isDead(registry, JJKEntities.DIVINE_DOG_BLACK.get())) {
+            if (!tenShadowsCap.isDead(JJKEntities.DIVINE_DOG_BLACK.get())) {
                 DivineDogBlackEntity black = new DivineDogBlackEntity(owner, false);
                 black.setClone(clone);
                 owner.level().addFreshEntity(black);

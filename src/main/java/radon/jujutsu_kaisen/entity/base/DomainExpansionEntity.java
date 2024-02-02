@@ -98,7 +98,7 @@ public abstract class DomainExpansionEntity extends Entity {
         if (pCompound.hasUUID("owner")) {
             this.ownerUUID = pCompound.getUUID("owner");
         }
-        this.ability = (DomainExpansion) JJKAbilities.getValue(ResourceLocation.tryParse(pCompound.getString("ability")));
+        this.ability = (DomainExpansion) JJKAbilities.getValue(new ResourceLocation(pCompound.getString("ability")));
         this.first = pCompound.getBoolean("first");
         this.setTime(pCompound.getInt("time"));
     }
