@@ -6,14 +6,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -28,11 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
-import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
-import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
@@ -255,7 +248,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             DamageSource source = event.getSource();
 
-            if (HelperMethods.isSureHit(owner, source)) return;
+            if (!HelperMethods.isBlockable(owner, source)) return;
 
             // We don't want to play the sound in-case it's a stopped projectile
             if (!(source.getDirectEntity() instanceof Projectile)) {

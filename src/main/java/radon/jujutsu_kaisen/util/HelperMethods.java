@@ -52,21 +52,19 @@ public class HelperMethods {
         return true;
     }
 
-    public static boolean isSureHit(LivingEntity target, DamageSource source) {
-        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return true;
+    public static boolean isBlockable(LivingEntity target, DamageSource source) {
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
 
-        if (source.getDirectEntity() instanceof Projectile projectile && !isBlockable(target, projectile)) return true;
+        if (source.getDirectEntity() instanceof Projectile projectile && !isBlockable(target, projectile)) return false;
 
-        if (source.getDirectEntity() instanceof DomainExpansionEntity) return true;
+        if (source.getDirectEntity() instanceof DomainExpansionEntity) return false;
 
-        if (source.getEntity() == target) return true;
+        if (source.getEntity() == target) return false;
 
         if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
-            if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                return true;
-            }
+            return !JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
-        return false;
+        return true;
     }
 
     public static boolean isMelee(DamageSource source) {
