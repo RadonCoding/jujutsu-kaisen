@@ -9,10 +9,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.IImbuement;
@@ -52,7 +52,7 @@ public class ImbuementHandler {
     public static Map<ICursedTechnique, Integer> getImbuementAmounts(ItemStack stack) {
         Map<ICursedTechnique, Integer> amounts = new HashMap<>();
 
-        for (RegistryObject<ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
+        for (DeferredHolder<ICursedTechnique, ? extends ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
             ICursedTechnique technique = entry.get();
 
             int amount = getImbuementAmount(stack, technique);

@@ -51,6 +51,11 @@ public abstract class RadialScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+
+    }
+
+    @Override
     public boolean isPauseScreen() {
         return false;
     }

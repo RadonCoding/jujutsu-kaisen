@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.client.layer.JJKOverlayLayer;
@@ -41,7 +42,7 @@ public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kais
         GameProfile profile = pEntity.getPlayer();
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
         PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-        this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
+        this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
 
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
@@ -51,7 +52,7 @@ public class AbsorbedPlayerEntity extends HumanoidMobRenderer<radon.jujutsu_kais
         GameProfile profile = pEntity.getPlayer();
         ClientPacketListener conn = Minecraft.getInstance().getConnection();
         PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-        this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
-        return info == null ? DefaultPlayerSkin.getDefaultSkin(profile.getId()) : info.getSkinLocation();
+        this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
+        return (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).texture();
     }
 }

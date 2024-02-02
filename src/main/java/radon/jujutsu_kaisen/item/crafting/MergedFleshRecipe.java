@@ -15,8 +15,8 @@ import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.item.JJKRecipeSerializers;
 
 public class MergedFleshRecipe extends CustomRecipe {
-    public MergedFleshRecipe(ResourceLocation pId, CraftingBookCategory pCategory) {
-        super(pId, pCategory);
+    public MergedFleshRecipe(CraftingBookCategory pCategory) {
+        super(pCategory);
     }
 
     @Override

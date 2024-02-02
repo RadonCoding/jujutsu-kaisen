@@ -1,0 +1,2 @@
+/advancement grant @p everything
+/effect clear

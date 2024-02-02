@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
@@ -32,9 +32,7 @@ public class CommandableTargetC2SPacket {
         buf.writeUUID(this.target);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
+    public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 

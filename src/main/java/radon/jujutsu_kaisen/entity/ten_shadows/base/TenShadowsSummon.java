@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.entity.ten_shadows.base;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -202,7 +202,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
             if (!this.isTame()) {
                 if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
-                    cap.tame(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                    cap.tame(this.getType());
 
                     if (owner instanceof ServerPlayer player) {
                         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
@@ -212,12 +212,10 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                 Summon<?> ability = this.getAbility();
 
                 if (ability.isTotality()) {
-                    Registry<EntityType<?>> registry = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-
                     for (EntityType<?> fusion : ability.getFusions()) {
-                        if (cap.isDead(registry, fusion)) continue;
+                        if (cap.isDead(fusion)) continue;
 
-                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), fusion);
+                        cap.kill(fusion);
 
                         if (owner instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);
@@ -225,7 +223,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
                     }
                 } else {
                     if (ability.canDie()) {
-                        cap.kill(this.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), this.getType());
+                        cap.kill(this.getType());
 
                         if (owner instanceof ServerPlayer player) {
                             PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), player);

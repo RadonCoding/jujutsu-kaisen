@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.event;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -8,10 +8,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.chant.ServerChantHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -126,12 +126,7 @@ public class MobEventHandler {
 
                             for (ServerPlayer player : level.players()) {
                                 if (player.distanceTo(owner) > 32.0D) continue;
-
-                                ResourceLocation key = owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE).getKey(owner.getType());
-
-                                if (key != null) {
-                                    player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
-                                }
+                                player.sendSystemMessage(Component.literal(String.format("<%s> %s", owner.getName().getString(), chants.get(i))));
                             }
                         }
                     }

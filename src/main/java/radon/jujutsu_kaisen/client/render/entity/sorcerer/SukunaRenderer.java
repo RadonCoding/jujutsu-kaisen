@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -53,7 +54,7 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             GameProfile profile = pEntity.getPlayer();
             ClientPacketListener conn = Minecraft.getInstance().getConnection();
             PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-            this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
+            this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
         } else {
             LivingEntity entity = (LivingEntity) type.create(mc.level);
             if (entity == null) return;
@@ -72,8 +73,8 @@ public class SukunaRenderer extends HumanoidMobRenderer<SukunaEntity, PlayerMode
             GameProfile profile = pEntity.getPlayer();
             ClientPacketListener conn = Minecraft.getInstance().getConnection();
             PlayerInfo info = conn == null ? null : conn.getPlayerInfo(profile.getId());
-            this.model = (info == null ? DefaultPlayerSkin.getSkinModelName(profile.getId()) : info.getModelName()).equals("default") ? this.normal : this.slim;
-            return info == null ? DefaultPlayerSkin.getDefaultSkin(profile.getId()) : info.getSkinLocation();
+            this.model = (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).model() == PlayerSkin.Model.WIDE ? this.normal : this.slim;
+            return (info == null ? DefaultPlayerSkin.get(profile.getId()) : info.getSkin()).texture();
         } else {
             Minecraft mc = Minecraft.getInstance();
             assert mc.level != null;

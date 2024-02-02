@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,7 +36,7 @@ public class NueLightning extends Ability implements Ability.IToggled, Ability.I
         if (!super.isValid(owner)) return false;
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
         return !JJKAbilities.hasToggled(owner, JJKAbilities.NUE.get()) &&
-                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.NUE.get()) &&
+                cap.hasTamed(JJKEntities.NUE.get()) &&
                 cap.getMode() == TenShadowsMode.ABILITY;
     }
 

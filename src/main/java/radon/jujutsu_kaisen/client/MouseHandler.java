@@ -1,9 +1,9 @@
 package radon.jujutsu_kaisen.client;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 import radon.jujutsu_kaisen.client.gui.overlay.AbilityOverlay;
@@ -15,7 +15,7 @@ public class MouseHandler {
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
         if (ConfigHolder.CLIENT.meleeMenuType.get() != MeleeMenuType.SCROLL) return;
 
-        double delta = event.getScrollDelta();
+        double delta = event.getScrollDeltaY();
 
         int i = (int) Math.signum(delta);
 

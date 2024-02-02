@@ -92,7 +92,7 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         return this.getBbHeight() * 1.5F;
     }
 
@@ -157,7 +157,7 @@ public class MeteorEntity extends JujutsuProjectile {
     }
 
     @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
+    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements) {
         this.lerpX = pX;
         this.lerpY = pY;
         this.lerpZ = pZ;

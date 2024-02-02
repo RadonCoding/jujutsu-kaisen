@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class AbilityTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.ability", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private final Map<Ability, AbilityWidget> abilities = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class AbilityTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        for (RegistryObject<Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
+        for (DeferredHolder<Ability, ? extends Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
             if (ability.isDisplayed(this.minecraft.player) && ability.getParent(this.minecraft.player) == null) {
@@ -48,7 +48,7 @@ public class AbilityTab extends JJKTab {
     private void addAbilityAndChildren(Ability ability) {
         this.addAbility(ability);
 
-        for (RegistryObject<Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
+        for (DeferredHolder<Ability, ? extends Ability> entry : JJKAbilities.ABILITIES.getEntries()) {
             Ability current = entry.get();
 
             if (current.isDisplayed(this.minecraft.player) && current.getParent(this.minecraft.player) == ability) {

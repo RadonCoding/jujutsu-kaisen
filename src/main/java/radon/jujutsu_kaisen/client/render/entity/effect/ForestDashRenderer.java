@@ -19,12 +19,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.entity.effect.ForestDashEntity;
 import radon.jujutsu_kaisen.entity.effect.ForestWaveEntity;
 
-import static net.minecraftforge.client.model.data.ModelData.EMPTY;
+import static net.neoforged.neoforge.client.model.data.ModelData.EMPTY;
 
 public class ForestDashRenderer extends EntityRenderer<ForestDashEntity> {
     private final BlockRenderDispatcher dispatcher;

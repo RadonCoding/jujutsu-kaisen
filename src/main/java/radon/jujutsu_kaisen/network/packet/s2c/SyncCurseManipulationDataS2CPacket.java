@@ -3,9 +3,8 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
@@ -29,17 +28,17 @@ public class SyncCurseManipulationDataS2CPacket {
         buf.writeNbt(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
+    public void handle(NetworkEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                Player player = ClientWrapper.getPlayer();
 
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Player player = ClientWrapper.getPlayer();
+                assert player != null;
 
-            assert player != null;
-
-            ICurseManipulationData cap = player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.deserializeNBT(this.nbt);
-        }));
+                ICurseManipulationData cap = player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.deserializeNBT(this.nbt);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 }

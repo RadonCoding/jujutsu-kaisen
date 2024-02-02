@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.ImbuementHandler;
 import radon.jujutsu_kaisen.JujutsuKaisen;

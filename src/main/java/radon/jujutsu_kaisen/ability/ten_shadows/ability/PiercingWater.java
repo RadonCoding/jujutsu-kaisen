@@ -1,6 +1,6 @@
 package radon.jujutsu_kaisen.ability.ten_shadows.ability;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -30,7 +30,7 @@ public class PiercingWater extends Ability {
         ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
 
         return !JJKAbilities.hasToggled(owner, JJKAbilities.MAX_ELEPHANT.get()) &&
-                cap.hasTamed(owner.level().registryAccess().registryOrThrow(Registries.ENTITY_TYPE), JJKEntities.MAX_ELEPHANT.get()) &&
+                cap.hasTamed(JJKEntities.MAX_ELEPHANT.get()) &&
                 cap.getMode() == TenShadowsMode.ABILITY;
     }
 

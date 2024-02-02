@@ -6,6 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,13 +15,13 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
@@ -28,6 +29,7 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.util.DamageUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
+import software.bernie.geckolib.cache.AnimatableIdCache;
 
 import java.util.*;
 
@@ -73,6 +75,8 @@ public class Infinity extends Ability implements Ability.IToggled {
     }
 
     public static class FrozenProjectileData extends SavedData {
+        private static final SavedData.Factory<FrozenProjectileData> FACTORY = new SavedData.Factory<>(FrozenProjectileData::new, FrozenProjectileData::new, null);
+
         public static final String IDENTIFIER = "frozen_projectile_data";
 
         private final Map<UUID, FrozenProjectileNBT> frozen;
@@ -81,15 +85,15 @@ public class Infinity extends Ability implements Ability.IToggled {
             this.frozen = new HashMap<>();
         }
 
-        public static FrozenProjectileData load(CompoundTag pCompoundTag) {
-            FrozenProjectileData data = new FrozenProjectileData();
-            ListTag frozenTag = pCompoundTag.getList("frozen", Tag.TAG_COMPOUND);
+        public FrozenProjectileData(CompoundTag nbt) {
+            this();
+
+            ListTag frozenTag = nbt.getList("frozen", Tag.TAG_COMPOUND);
 
             for (Tag tag : frozenTag) {
-                FrozenProjectileNBT nbt = new FrozenProjectileNBT((CompoundTag) tag);
-                data.frozen.put(nbt.getTarget(), nbt);
+                FrozenProjectileNBT frozen = new FrozenProjectileNBT((CompoundTag) tag);
+                this.frozen.put(frozen.getTarget(), frozen);
             }
-            return data;
         }
 
         @Override
@@ -195,8 +199,7 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (event.phase == TickEvent.Phase.START) return;
 
             if (event.level instanceof ServerLevel level) {
-                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
-                        FrozenProjectileData.IDENTIFIER);
+                FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
                 data.tick(level);
             }
         }
@@ -209,8 +212,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
-                    FrozenProjectileData.IDENTIFIER);
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             Projectile projectile = event.getProjectile();
 
@@ -227,8 +229,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
-                    FrozenProjectileData.IDENTIFIER);
+            FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData.FACTORY, FrozenProjectileData.IDENTIFIER);
 
             if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 

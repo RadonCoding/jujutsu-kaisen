@@ -1,9 +1,8 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.client.visual.visual.PerfectBodyVisual;
 
 import java.util.UUID;
@@ -24,11 +23,12 @@ public class SyncMouthS2CPacket {
         buf.writeUUID(this.src);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                PerfectBodyVisual.onChant(this.src)));
+    public void handle(NetworkEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                PerfectBodyVisual.onChant(this.src);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 }

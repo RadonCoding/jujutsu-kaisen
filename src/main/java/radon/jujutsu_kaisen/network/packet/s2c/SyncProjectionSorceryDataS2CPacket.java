@@ -3,13 +3,10 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.capability.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.function.Supplier;
@@ -29,17 +26,17 @@ public class SyncProjectionSorceryDataS2CPacket {
         buf.writeNbt(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
+    public void handle(NetworkEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                Player player = ClientWrapper.getPlayer();
 
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Player player = ClientWrapper.getPlayer();
+                assert player != null;
 
-            assert player != null;
-
-            IProjectionSorceryData cap = player.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.deserializeNBT(this.nbt);
-        }));
+                IProjectionSorceryData cap = player.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
+                cap.deserializeNBT(this.nbt);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 }

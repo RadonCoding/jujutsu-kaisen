@@ -28,7 +28,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class AbilityWidget {
-    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
+    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/widgets.png");
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final AbilityTab tab;
@@ -235,11 +236,12 @@ public class AbilityWidget {
 
         if (!this.description.isEmpty()) {
             if (flag1) {
-                pGuiGraphics.blitNineSliced(WIDGETS_LOCATION, k, l + 26 - i1, this.width, i1, 10, 200, 26, 0, 52);
+                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, k, l + 26 - i1, this.width, i1);
             } else {
-                pGuiGraphics.blitNineSliced(WIDGETS_LOCATION, k, l, this.width, i1, 10, 200, 26, 0, 52);
+                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, k, l, this.width, i1);
             }
         }
+
         pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, this.unlocked ? 0 : 26, i, 26);
         pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, this.unlocked ? 0 : 26, j, 26);
         pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);

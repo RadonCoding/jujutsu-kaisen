@@ -131,13 +131,13 @@ public class CurseManipulationData implements ICurseManipulationData {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains("current_absorbed")) {
-            this.currentAbsorbed = JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("current_absorbed")));
+            this.currentAbsorbed = JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("current_absorbed")));
         }
 
         this.absorbed.clear();
 
         for (Tag tag : nbt.getList("absorbed", Tag.TAG_STRING)) {
-            this.absorbed.add(JJKCursedTechniques.getValue(ResourceLocation.tryParse(tag.getAsString())));
+            this.absorbed.add(JJKCursedTechniques.getValue(new ResourceLocation(tag.getAsString())));
         }
 
         this.curses.clear();

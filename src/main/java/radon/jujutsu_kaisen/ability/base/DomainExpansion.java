@@ -10,7 +10,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.VeilHandler;
@@ -147,7 +148,7 @@ public abstract class DomainExpansion extends Ability implements Ability.IToggle
     }
 
     public void onHitEntity(DomainExpansionEntity domain, LivingEntity owner, LivingEntity entity, boolean instant) {
-        MinecraftForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
+        NeoForge.EVENT_BUS.post(new LivingHitByDomainEvent(entity, this, owner));
     }
 
     public abstract void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos);

@@ -24,7 +24,6 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
         this.y1 = this.y0 + height;
 
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
 
         this.builder = builder;
         this.refreshList();
@@ -60,9 +59,11 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     }
 
     @Override
-    protected void renderBackground(GuiGraphics pGuiGraphics) {
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         pGuiGraphics.renderOutline(this.x0, this.y0, this.width, this.height, -16777216);
         pGuiGraphics.fill(this.x0, this.y0, this.x1, this.y1, -1072689136);
+
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override

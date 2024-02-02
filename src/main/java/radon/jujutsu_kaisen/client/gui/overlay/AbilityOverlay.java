@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
@@ -74,7 +74,7 @@ public class AbilityOverlay {
         return index;
     }
 
-    private static void render(ForgeGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
+    private static void render(ExtendedGui gui, GuiGraphics graphics, int width, int height, Ability ability) {
         Minecraft mc = gui.getMinecraft();
 
         if (mc.player == null) return;

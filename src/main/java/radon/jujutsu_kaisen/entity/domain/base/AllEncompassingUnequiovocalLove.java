@@ -95,12 +95,12 @@ public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity
         super.readAdditionalSaveData(pCompound);
 
         if (pCompound.contains("technique")) {
-            this.technique = JJKCursedTechniques.getValue(ResourceLocation.tryParse(pCompound.getString("technique")));
+            this.technique = JJKCursedTechniques.getValue(new ResourceLocation(pCompound.getString("technique")));
         }
 
         for (Tag key : pCompound.getList("offsets", Tag.TAG_COMPOUND)) {
             CompoundTag nbt = (CompoundTag) key;
-            this.offsets.put(NbtUtils.readBlockPos(nbt.getCompound("pos")), JJKCursedTechniques.getValue(ResourceLocation.tryParse(nbt.getString("technique"))));
+            this.offsets.put(NbtUtils.readBlockPos(nbt.getCompound("pos")), JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))));
         }
     }
 

@@ -131,7 +131,7 @@ public class BirdCurseEntity extends CursedSpirit implements PlayerRideable, IJu
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         return this.getBbHeight();
     }
 

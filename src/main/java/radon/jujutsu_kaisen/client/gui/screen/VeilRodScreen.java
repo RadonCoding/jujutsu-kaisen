@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
+import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -16,7 +16,7 @@ import radon.jujutsu_kaisen.network.packet.c2s.SetSizeC2SPacket;
 public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/container/veil_rod.png");
 
-    private ForgeSlider sizeSlider;
+    private ExtendedSlider sizeSlider;
 
     private int oldFrequency;
 
@@ -59,7 +59,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.sizeSlider = new ForgeSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(),
+        this.sizeSlider = new ExtendedSlider(i + 33, j + 35, 110, 16, Component.empty(), Component.empty(),
                 ConfigHolder.SERVER.minimumVeilSize.get(), ConfigHolder.SERVER.maximumVeilSize.get(), this.menu.getSize(), true);
         this.addRenderableWidget(this.sizeSlider);
         this.setInitialFocus(this.sizeSlider);
@@ -67,7 +67,7 @@ public class VeilRodScreen extends AbstractContainerScreen<VeilRodMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }

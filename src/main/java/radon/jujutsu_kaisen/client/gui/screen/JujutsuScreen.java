@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JujutsuScreen extends Screen {
-    private static final ResourceLocation WINDOW_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/window.png");
-    public static final ResourceLocation TABS_LOCATION = ResourceLocation.tryParse("textures/gui/advancements/tabs.png");
+    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
     public static final int WINDOW_WIDTH = 252;
     public static final int WINDOW_HEIGHT = 140;
     private static final int WINDOW_INSIDE_X = 9;
@@ -39,6 +38,11 @@ public class JujutsuScreen extends Screen {
 
     public JujutsuScreen() {
         super(GameNarrator.NO_TITLE);
+    }
+
+    @Override
+    public void renderBackground(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+
     }
 
     private void setSelectedTab(@NotNull JJKTab tab) {
@@ -141,7 +145,7 @@ public class JujutsuScreen extends Screen {
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int i = (this.width - WINDOW_WIDTH) / 2;
         int j = (this.height - WINDOW_HEIGHT) / 2;
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
         if (maxPages != 0) {
             net.minecraft.network.chat.Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));

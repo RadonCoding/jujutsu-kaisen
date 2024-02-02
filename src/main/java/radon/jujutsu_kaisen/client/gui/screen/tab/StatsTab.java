@@ -25,7 +25,7 @@ import static radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen.WINDOW_INSIDE
 
 public class StatsTab extends JJKTab {
     private static final Component TITLE = Component.translatable(String.format("gui.%s.stats", JujutsuKaisen.MOD_ID));
-    private static final ResourceLocation BACKGROUND = ResourceLocation.tryParse("textures/gui/advancements/backgrounds/stone.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/advancements/backgrounds/stone.png");
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] { 0, 10, -10, 25, -25 };
 
@@ -93,6 +93,8 @@ public class StatsTab extends JJKTab {
     @Override
     public void drawContents(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.drawContents(pGuiGraphics, pX, pY);
+        
+        if (this.minecraft.player == null) return;
 
         int i = (this.screen.width - JujutsuScreen.WINDOW_WIDTH) / 2;
         int j = (this.screen.height - JujutsuScreen.WINDOW_HEIGHT) / 2;
@@ -100,10 +102,10 @@ public class StatsTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        drawHead(pGuiGraphics, this.minecraft.player.getSkinTextureLocation(), xOffset + 12, yOffset, 6);
-        drawUpperBody(pGuiGraphics, this.minecraft.player.getSkinTextureLocation(), xOffset + 12, yOffset + 47, 6);
-        drawRightArm(pGuiGraphics, this.minecraft.player.getSkinTextureLocation(), xOffset, yOffset + 47, 6);
-        drawLeftArm(pGuiGraphics, this.minecraft.player.getSkinTextureLocation(), xOffset + 60, yOffset + 47, 6);
+        drawHead(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset + 12, yOffset, 6);
+        drawUpperBody(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset + 12, yOffset + 47, 6);
+        drawRightArm(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset, yOffset + 47, 6);
+        drawLeftArm(pGuiGraphics, this.minecraft.player.getSkin().texture(), xOffset + 60, yOffset + 47, 6);
         
         ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 

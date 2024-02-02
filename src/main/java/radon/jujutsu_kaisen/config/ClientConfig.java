@@ -1,13 +1,13 @@
 package radon.jujutsu_kaisen.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import radon.jujutsu_kaisen.client.gui.MeleeMenuType;
 
 public class ClientConfig {
-    public final ForgeConfigSpec.EnumValue<MeleeMenuType> meleeMenuType;
-    public final ForgeConfigSpec.BooleanValue visibleCursedEnergy;
+    public final ModConfigSpec.EnumValue<MeleeMenuType> meleeMenuType;
+    public final ModConfigSpec.BooleanValue visibleCursedEnergy;
 
-    public ClientConfig(ForgeConfigSpec.Builder builder) {
+    public ClientConfig(ModConfigSpec.Builder builder) {
         builder.comment("Settings").push("settings");
         this.meleeMenuType = builder.comment("The melee menu type")
                 .defineEnum("meleeMenuType", MeleeMenuType.TOGGLE);

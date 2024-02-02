@@ -8,7 +8,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
@@ -35,9 +35,7 @@ public class QuestionCreatePactC2SPacket {
         buf.writeEnum(this.pact);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
+    public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             ServerPlayer sender = ctx.getSender();
 

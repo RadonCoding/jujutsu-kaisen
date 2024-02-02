@@ -9,14 +9,15 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
@@ -266,27 +267,27 @@ public class ClientAbilityHandler {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.isTriggerable(owner)))) {
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 ability.run(owner);
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.isTriggerable(owner))) | (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.toggle(ability);
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             Ability.Status status;
 
             if (isSuccess(ability, (status = ability.isTriggerable(owner))) || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
                 cap.channel(ability);
-                MinecraftForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
+                NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         }

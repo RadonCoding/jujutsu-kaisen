@@ -2,6 +2,7 @@ package radon.jujutsu_kaisen.capability.data.ten_shadows;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
@@ -89,13 +90,13 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public boolean hasTamed(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        return this.tamed.contains(registry.getKey(entity));
+    public boolean hasTamed(EntityType<?> entity) {
+        return this.tamed.contains(BuiltInRegistries.ENTITY_TYPE.getKey(entity));
     }
 
     @Override
-    public void tame(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        this.tamed.add(registry.getKey(entity));
+    public void tame(EntityType<?> entity) {
+        this.tamed.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity));
     }
 
     @Override
@@ -110,8 +111,8 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public boolean isDead(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        return this.dead.contains(registry.getKey(entity));
+    public boolean isDead(EntityType<?> entity) {
+        return this.dead.contains(BuiltInRegistries.ENTITY_TYPE.getKey(entity));
     }
 
     @Override
@@ -126,8 +127,8 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public void kill(Registry<EntityType<?>> registry, EntityType<?> entity) {
-        this.dead.add(registry.getKey(entity));
+    public void kill(EntityType<?> entity) {
+        this.dead.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity));
     }
 
     @Override
@@ -353,13 +354,13 @@ public class TenShadowsData implements ITenShadowsData {
         this.tamed.clear();
 
         for (Tag key : nbt.getList("tamed", Tag.TAG_STRING)) {
-            this.tamed.add(ResourceLocation.tryParse(key.getAsString()));
+            this.tamed.add(new ResourceLocation(key.getAsString()));
         }
 
         this.dead.clear();
 
         for (Tag key : nbt.getList("dead", Tag.TAG_STRING)) {
-            this.dead.add(ResourceLocation.tryParse(key.getAsString()));
+            this.dead.add(new ResourceLocation(key.getAsString()));
         }
 
         this.adapted.clear();

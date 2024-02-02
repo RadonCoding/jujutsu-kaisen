@@ -7,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.SteelGauntletRenderer;
@@ -50,7 +50,7 @@ public class SteelGauntletItem extends CursedToolItem implements GeoItem {
     }
 
     @Override
-    public boolean canPerformAction(@NotNull ItemStack stack, net.minecraftforge.common.@NotNull ToolAction toolAction) {
+    public boolean canPerformAction(@NotNull ItemStack stack, net.neoforged.neoforge.common.@NotNull ToolAction toolAction) {
         return ToolActions.DEFAULT_SHIELD_ACTIONS.contains(toolAction);
     }
 

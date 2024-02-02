@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;

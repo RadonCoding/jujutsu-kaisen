@@ -1,9 +1,8 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 
 import java.util.function.Supplier;
@@ -23,11 +22,12 @@ public class AddChantS2CPacket {
         buf.writeUtf(this.chant);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
-
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                ClientChantHandler.add(this.chant)));
+    public void handle(NetworkEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                ClientChantHandler.add(this.chant);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 }

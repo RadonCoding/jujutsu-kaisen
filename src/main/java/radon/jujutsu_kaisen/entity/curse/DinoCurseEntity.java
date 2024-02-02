@@ -85,7 +85,7 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     }
 
     @Override
-    public double getPassengersRidingOffset() {
+    protected float ridingOffset(@NotNull Entity pEntity) {
         return this.getBbHeight();
     }
 

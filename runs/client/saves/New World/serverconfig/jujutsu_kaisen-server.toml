@@ -1,0 +1,138 @@
+
+#Progression
+[progression]
+	#Cursed energy amount (scales with experience)
+	#Range: 0.0 ~ 100000.0
+	cursedEnergyAmount = 1000.0
+	#Cursed energy regeneration amount (depends on food level)
+	#Range: 0.0 ~ 100000.0
+	cursedEnergyRegenerationAmount = 0.25
+	#The maximum amount of experience one can obtain
+	#Range: 1.0 ~ 1000000.0
+	maximumExperienceAmount = 10000.0
+	#The amount of energy consuming cursed objects gives to curses (multiplied by the grade of the object)
+	#Range: 1.0 ~ 1000.0
+	cursedObjectEnergyForGrade = 100.0
+	#The chance of unlocking reverse cursed technique when dying (smaller number equals bigger chance and the value is halved when holding a totem)
+	#Range: 1 ~ 1000
+	reverseCursedTechniqueChance = 20
+	#The amount of experience required for a player to be classified as experienced (for now means they can use domain amplification during a domain expansion)
+	#Range: 1.0 ~ 100000.0
+	requiredExperienceForExperienced = 3000.0
+	#Rarity of sorcerers dropping flesh (bigger value means more rare)
+	#Range: 0 ~ 100000
+	sorcererFleshRarity = 20
+	#Rarity of curses dropping flesh (bigger value means more rare)
+	#Range: 0 ~ 100000
+	curseFleshRarity = 20
+	#Scale of experience you gain
+	#Range: 0.0 ~ 100.0
+	experienceMultiplier = 1.0
+	#Percentage of experience lost on death
+	#Range: 0.0 ~ 1.0
+	deathPenalty = 0.05000000074505806
+	#The chance of black flash (smaller number equals bigger chance)
+	#Range: 1 ~ 1000
+	blackFlashChance = 50
+	#When enabled Ten Shadows shikigami will die permanently
+	realisticShikigami = true
+	#When enabled curses only take damage from jujutsu attacks
+	realisticCurses = true
+	#Amount of times a technique has to be used to be imbued into a weapon
+	#Range: 1 ~ 100000
+	requiredImbuementAmount = 1000
+
+#Miscellaneous
+[misc]
+	#The maximum amount of health sorcerers can heal per tick (scales with experience)
+	#Range: 0.0 ~ 100.0
+	sorcererHealingAmount = 0.05000000074505806
+	#The maximum amount of health curses can heal per tick (scales with experience)
+	#Range: 0.0 ~ 100.0
+	curseHealingAmount = 0.07500000298023224
+	#When enabled on servers every player will have a unique technique if any are available
+	uniqueTechniques = true
+	#When enabled on servers there can be only one six eyes, heavenly restriction and vessel
+	uniqueTraits = true
+	#When enabled abilities break blocks
+	destruction = true
+	#Possible chants for NPCs
+	unlockableTechniques = ["Nah, I'd win.", "Stand proud.", "You can cook.", "Did you pray today?", "You're strong.", "Are you the strongest because?", "Owari da.", "I shall never forget you.", "With this treasure i summon...", "Have you ever trained?"]
+
+#Veils
+[veils]
+	#Minimum size for a veil
+	#Range: 4 ~ 64
+	minimumVeilSize = 4
+	#Maximum size for a veil
+	#Range: 64 ~ 256
+	maximumVeilSize = 64
+
+#Domains
+[domains]
+	#Minimum size for a domain
+	#Range: 0.20000000298023224 ~ 1.0
+	minimumDomainSize = 0.5
+	#Maximum size for a domain
+	#Range: 1.0 ~ 10.0
+	maximumDomainSize = 1.5
+
+#Chants
+[chants]
+	#Maximum count for chants
+	#Range: 1 ~ 16
+	maximumChantCount = 5
+	#Maximum length for a chant
+	#Range: 1 ~ 256
+	maximumChantLength = 24
+	#Minimum difference between chants for them to be valid
+	#Range: 0.0 ~ 1.0
+	chantSimilarityThreshold = 0.25
+
+#Abilities
+[abilities]
+	#The amount of points quick draw costs to unlock
+	#Range: 1 ~ 10000
+	simpleDomainCost = 50
+	#The amount of points falling blossom emotion costs to unlock
+	#Range: 1 ~ 10000
+	fallingBlossomEmotionCost = 50
+	#The amount of points domain expansion costs to unlock
+	#Range: 1 ~ 10000
+	domainExpansionCost = 200
+	#The amount of points domain amplification costs to unlock
+	#Range: 1 ~ 10000
+	domainAmplificationCost = 100
+	#The amount of points 0.2s domain expasnion costs to unlock
+	#Range: 1 ~ 10000
+	zeroPointTwoSecondDomainExpansionCost = 100
+	#The amount of points tier 3 RCT costs to unlock
+	#Range: 1 ~ 10000
+	rct2Cost = 200
+	#The amount of points output RCT costs to unlock
+	#Range: 1 ~ 10000
+	outputRCTCost = 300
+	#The amount of techniques mimicry can copy
+	#Range: 1 ~ 10000
+	maximumCopiedTechniques = 3
+	#Techniques that are unlockable by default
+	unlockableTechniques = ["jujutsu_kaisen:curse_manipulation", "jujutsu_kaisen:limitless", "jujutsu_kaisen:dismantle_and_cleave", "jujutsu_kaisen:cursed_speech", "jujutsu_kaisen:mimicry", "jujutsu_kaisen:disaster_flames", "jujutsu_kaisen:disaster_tides", "jujutsu_kaisen:disaster_plants", "jujutsu_kaisen:idle_transfiguration", "jujutsu_kaisen:ten_shadows", "jujutsu_kaisen:boogie_woogie", "jujutsu_kaisen:projection_sorcery"]
+
+#Rarity
+[rarity]
+	#Rarity of a cursed energy nature other than basic (bigger value = rarer)
+	#Range: 1 ~ 1000000
+	cursedEnergyNatureRarity = 5
+	#Rarity of being a curse (bigger value = rarer)
+	#Range: 1 ~ 1000000
+	curseRarity = 5
+	#Rarity of having six eyes (bigger value = rarer)
+	#Range: 1 ~ 1000000
+	sixEyesRarity = 10
+	#Rarity of heavenly restriction (bigger value = rarer)
+	#Range: 1 ~ 1000000
+	heavenlyRestrictionRarity = 10
+	#Rarity of being a vessel (bigger value = rarer)
+	#Range: 1 ~ 1000000
+	vesselRarity = 10
+

@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.item.Tier;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.SplitSoulKatanaRenderer;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;

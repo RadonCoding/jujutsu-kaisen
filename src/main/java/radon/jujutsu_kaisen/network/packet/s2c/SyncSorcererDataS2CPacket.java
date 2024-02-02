@@ -3,9 +3,8 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
@@ -30,29 +29,29 @@ public class SyncSorcererDataS2CPacket {
         buf.writeNbt(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
+    public void handle(NetworkEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                Player player = ClientWrapper.getPlayer();
 
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Player player = ClientWrapper.getPlayer();
+                assert player != null;
 
-            assert player != null;
+                ISorcererData oldCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-            ISorcererData oldCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData newCap = new SorcererData();
+                newCap.deserializeNBT(this.nbt);
 
-            ISorcererData newCap = new SorcererData();
-            newCap.deserializeNBT(this.nbt);
+                Set<Ability> oldToggled = oldCap.getToggled();
+                Set<Ability> newToggled = newCap.getToggled();
 
-            Set<Ability> oldToggled = oldCap.getToggled();
-            Set<Ability> newToggled = newCap.getToggled();
+                oldToggled.removeAll(newToggled);
 
-            oldToggled.removeAll(newToggled);
-
-            for (Ability ability : oldToggled) {
-                oldCap.toggle(ability);
+                for (Ability ability : oldToggled) {
+                    oldCap.toggle(ability);
+                }
+                oldCap.deserializeNBT(this.nbt);
             }
-            oldCap.deserializeNBT(this.nbt);
-        }));
+        });
         ctx.setPacketHandled(true);
     }
 }

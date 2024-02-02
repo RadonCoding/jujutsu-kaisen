@@ -2,9 +2,9 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.NetworkEvent;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 import java.util.UUID;
@@ -28,11 +28,13 @@ public class SyncVisualDataS2CPacket {
         buf.writeNbt(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = supplier.get();
+    public void handle(NetworkEvent.Context ctx) {
 
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                ClientVisualHandler.receive(this.src, this.nbt)));
+        ctx.enqueueWork(() -> {
+            if (FMLLoader.getDist().isClient()) {
+                ClientVisualHandler.receive(this.src, this.nbt);
+            }
+        });
         ctx.setPacketHandled(true);
     }
 }
