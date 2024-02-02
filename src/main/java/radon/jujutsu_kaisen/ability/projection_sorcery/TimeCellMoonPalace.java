@@ -30,11 +30,7 @@ public class TimeCellMoonPalace extends DomainExpansion implements DomainExpansi
         super.onHitEntity(domain, owner, entity, instant);
 
         if (instant || owner.level().getGameTime() % 40 == 0) {
-            DomainExpansionCenterEntity center = domain.getDomainCenter();
-
-            if (center == null) return;
-
-            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, this.getPower(owner), entity, center));
+            owner.level().addFreshEntity(new FilmGaugeProjectile(owner, this.getPower(owner), entity));
         }
     }
 
