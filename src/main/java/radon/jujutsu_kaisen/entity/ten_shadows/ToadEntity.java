@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -66,8 +67,8 @@ public class ToadEntity extends TenShadowsSummon {
     }
 
     @Override
-    public boolean isInvulnerable() {
-        return this.entityData.get(DATA_RITUAL) > 0 || super.isInvulnerable();
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
+        return this.entityData.get(DATA_RITUAL) == 0 && super.hurt(pSource, pAmount);
     }
 
     @Override
