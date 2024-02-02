@@ -20,7 +20,7 @@ public class ProjectionSorceryTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.PROJECTION_SORCERY.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.PROJECTION_SORCERY.get(),
                 JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(),
                 JJKAbilities.AIR_FRAME.get());
     }

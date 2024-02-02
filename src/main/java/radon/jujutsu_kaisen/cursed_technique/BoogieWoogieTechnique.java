@@ -14,7 +14,7 @@ public class BoogieWoogieTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.SWAP_SELF.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.SWAP_SELF.get(),
                 JJKAbilities.SWAP_OTHERS.get(),
                 JJKAbilities.FEINT.get(),
                 JJKAbilities.CE_THROW.get(),

@@ -20,7 +20,7 @@ public class DisasterPlantsTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.FOREST_PLATFORM.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.FOREST_PLATFORM.get(),
                 JJKAbilities.FOREST_SPIKES.get(),
                 JJKAbilities.WOOD_SHIELD.get(),
                 JJKAbilities.CURSED_BUD.get(),

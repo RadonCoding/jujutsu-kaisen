@@ -14,6 +14,6 @@ public class SkyStrikeTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.SKY_STRIKE.get());
+        return new LinkedHashSet<>(Set.of(JJKAbilities.SKY_STRIKE.get());
     }
 }

@@ -20,7 +20,7 @@ public class LimitlessTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.INFINITY.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.INFINITY.get(),
                 JJKAbilities.RED.get(),
                 JJKAbilities.BLUE_STILL.get(),
                 JJKAbilities.BLUE_MOTION.get(),

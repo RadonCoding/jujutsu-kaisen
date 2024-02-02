@@ -19,7 +19,7 @@ public class DisasterTidesTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.DISASTER_TIDES.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.DISASTER_TIDES.get(),
                 JJKAbilities.WATER_SHIELD.get(),
                 JJKAbilities.DEATH_SWARM.get(),
                 JJKAbilities.FISH_SHIKIGAMI.get(),

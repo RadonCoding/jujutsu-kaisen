@@ -20,7 +20,7 @@ public class DisasterFlamesTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.EMBER_INSECTS.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.EMBER_INSECTS.get(),
                 JJKAbilities.EMBER_INSECT_FLIGHT.get(),
                 JJKAbilities.VOLCANO.get(),
                 JJKAbilities.MAXIMUM_METEOR.get(),

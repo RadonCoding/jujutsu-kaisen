@@ -14,7 +14,7 @@ public class CurseManipulationTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.CURSE_ABSORPTION.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.CURSE_ABSORPTION.get(),
                 JJKAbilities.RELEASE_CURSE.get(),
                 JJKAbilities.RELEASE_CURSES.get(),
                 JJKAbilities.SUMMON_ALL.get(),

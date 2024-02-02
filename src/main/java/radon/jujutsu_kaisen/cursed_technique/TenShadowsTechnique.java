@@ -20,7 +20,7 @@ public class TenShadowsTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return Set.of(JJKAbilities.SWITCH_MODE.get(),
+        return new LinkedHashSet<>(Set.of(JJKAbilities.SWITCH_MODE.get(),
                 JJKAbilities.RELEASE_SHIKIGAMI.get(),
                 JJKAbilities.SHADOW_STORAGE.get(),
                 JJKAbilities.SHADOW_TRAVEL.get(),
