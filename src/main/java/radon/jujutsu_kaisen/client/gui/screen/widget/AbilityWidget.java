@@ -31,7 +31,6 @@ import java.util.List;
 
 public class AbilityWidget {
     private static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/gui/widgets.png");
     private static final int[] TEST_SPLIT_OFFSETS = new int[]{0, 10, -10, 25, -25};
 
     private final AbilityTab tab;
@@ -175,7 +174,8 @@ public class AbilityWidget {
     }
 
     public void draw(GuiGraphics pGuiGraphics, int pX, int pY) {
-        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
+        AdvancementWidgetType type = this.unlocked ? AdvancementWidgetType.OBTAINED : AdvancementWidgetType.UNOBTAINED;
+        pGuiGraphics.blitSprite(type.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
@@ -222,30 +222,13 @@ public class AbilityWidget {
     public void drawHover(GuiGraphics pGuiGraphics, int pX, int pY, float pFade, int pWidth, int pHeight) {
         boolean xOverflow = pWidth + pX + this.x + this.width + 26 >= this.tab.getScreen().width;
         boolean yOverflow = 113 - pY - this.y - 26 <= 6 + this.description.size() * 9;
-        int i = Mth.floor((float)this.width);
-        AdvancementWidgetType advancementwidgettype;
-        AdvancementWidgetType advancementwidgettype1;
-        AdvancementWidgetType advancementwidgettype2;
+        int i = this.width / 2;
+        AdvancementWidgetType type;
 
         if (this.unlocked) {
-            i = this.width / 2;
-            advancementwidgettype = AdvancementWidgetType.OBTAINED;
-            advancementwidgettype1 = AdvancementWidgetType.OBTAINED;
-            advancementwidgettype2 = AdvancementWidgetType.OBTAINED;
-        } else if (i < 2) {
-            i = this.width / 2;
-            advancementwidgettype = AdvancementWidgetType.UNOBTAINED;
-            advancementwidgettype1 = AdvancementWidgetType.UNOBTAINED;
-            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
-        } else if (i > this.width - 2) {
-            i = this.width / 2;
-            advancementwidgettype = AdvancementWidgetType.OBTAINED;
-            advancementwidgettype1 = AdvancementWidgetType.OBTAINED;
-            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
+            type = AdvancementWidgetType.OBTAINED;
         } else {
-            advancementwidgettype = AdvancementWidgetType.OBTAINED;
-            advancementwidgettype1 = AdvancementWidgetType.UNOBTAINED;
-            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
+            type = AdvancementWidgetType.UNOBTAINED;
         }
 
         int j = this.width - i;
@@ -269,9 +252,9 @@ public class AbilityWidget {
             }
         }
 
-        pGuiGraphics.blitSprite(advancementwidgettype.boxSprite(), 200, 26, 0, 0, l, k, i, 26);
-        pGuiGraphics.blitSprite(advancementwidgettype1.boxSprite(), 200, 26, 200 - j, 0, l + i, k, j, 26);
-        pGuiGraphics.blitSprite(advancementwidgettype2.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
+        pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 0, 0, l, k, i, 26);
+        pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 200 - j, 0, l + i, k, j, 26);
+        pGuiGraphics.blitSprite(type.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (xOverflow) {
             pGuiGraphics.drawString(this.minecraft.font, this.title, l + 5, pY + this.y + 9, -1);
