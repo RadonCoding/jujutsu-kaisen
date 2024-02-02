@@ -11,12 +11,14 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.projectile.FilmGaugeProjectile;
+import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/entity/film_gauge.png");
@@ -29,10 +31,9 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
     public void render(@NotNull FilmGaugeProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-
-        Vec3 pos = pEntity.position().add(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-
-        Vec3 relative = pEntity.getStart().subtract(pos);
+        Vec3 startPos = pEntity.getStart();
+        Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
+        Vec3 relative = startPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();
         float f1 = (float) Math.acos(relative.y);
@@ -75,11 +76,6 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
         pPoseStack.popPose();
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull FilmGaugeProjectile pEntity) {
-        return TextureAtlas.LOCATION_BLOCKS;
-    }
-
     private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, float z, int r, int g, int b, float u, float v, int packedLight) {
         consumer.vertex(matrix4f, x, y, z)
                 .color(r, g, b, 255)
@@ -88,5 +84,17 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
                 .uv2(packedLight)
                 .normal(matrix3f, 0.0F, 1.0F, 0.0F)
                 .endVertex();
+    }
+
+    private static Vec3 getPosition(Entity entity, double yOffset, float pPartialTick) {
+        double d0 = entity.xOld + (entity.getX() - entity.xOld) * (double) pPartialTick;
+        double d1 = yOffset + entity.yOld + (entity.getY() - entity.yOld) * (double) pPartialTick;
+        double d2 = entity.zOld + (entity.getZ() - entity.zOld) * (double) pPartialTick;
+        return new Vec3(d0, d1, d2);
+    }
+
+    @Override
+    public @NotNull ResourceLocation getTextureLocation(@NotNull FilmGaugeProjectile pEntity) {
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }
