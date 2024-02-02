@@ -20,6 +20,7 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
+import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -83,7 +84,7 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
 
         if (experience <= ownerCap.getExperience()) return false;
 
-        Cleave.perform(target, owner, null);
+        Cleave.perform(target, owner, null, JJKDamageSources.soulAttack(owner));
 
         return true;
     }

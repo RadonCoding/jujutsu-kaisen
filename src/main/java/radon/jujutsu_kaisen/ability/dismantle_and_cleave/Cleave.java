@@ -95,8 +95,8 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
     public Classification getClassification() {
         return Classification.SLASHING;
     }
-    
-    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+
+    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain, DamageSource source) {
         if (!(owner.level() instanceof ServerLevel level)) return;
 
         owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.SLASH.get(), SoundSource.MASTER,
@@ -131,7 +131,6 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
         cap.delayTickEvent(() -> {
             float power = domain == null ? Ability.getPower(JJKAbilities.CLEAVE.get(), owner) : Ability.getPower(JJKAbilities.CLEAVE.get(), owner) * DomainExpansion.getStrength(owner, false);
 
-            DamageSource source = getSource(owner, domain);
             float damage = calculateDamage(source, owner, target);
             damage = Math.min(MAX_DAMAGE * power, damage);
 
@@ -141,6 +140,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
             owner.level().playSound(null, target.getX(), target.getY(), target.getZ(), JJKSounds.CLEAVE.get(), SoundSource.MASTER, 1.0F, 1.0F);
         }, 20);
+    }
+
+    public static void perform(LivingEntity owner, LivingEntity target, @Nullable DomainExpansionEntity domain) {
+        DamageSource source = getSource(owner, domain);
+        perform(owner, target, domain, source);
     }
 
     @Override
