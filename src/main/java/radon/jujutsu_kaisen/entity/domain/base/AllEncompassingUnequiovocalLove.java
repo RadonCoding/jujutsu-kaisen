@@ -11,11 +11,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -23,17 +21,17 @@ import radon.jujutsu_kaisen.entity.MimicryKatanaEntity;
 
 import java.util.*;
 
-public class GenuineMutualLoveEntity extends ClosedDomainExpansionEntity {
+public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity {
     @Nullable
     private ICursedTechnique technique;
 
     private final Map<BlockPos, ICursedTechnique> offsets = new HashMap<>();
 
-    public GenuineMutualLoveEntity(EntityType<?> pType, Level pLevel) {
+    public AllEncompassingUnequiovocalLove(EntityType<?> pType, Level pLevel) {
         super(pType, pLevel);
     }
 
-    public GenuineMutualLoveEntity(LivingEntity owner, DomainExpansion ability, int radius) {
+    public AllEncompassingUnequiovocalLove(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
 
         ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();

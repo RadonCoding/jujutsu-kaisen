@@ -1,15 +1,7 @@
 package radon.jujutsu_kaisen.ability;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -26,7 +18,6 @@ import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
 import radon.jujutsu_kaisen.ability.shockwave.ShockwaveImbuement;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.*;
 import radon.jujutsu_kaisen.ability.misc.ZeroPointTwoSecondDomainExpansion;
@@ -48,25 +39,14 @@ import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
-import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
-import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -136,7 +116,7 @@ public class JJKAbilities {
     public static RegistryObject<Mimicry> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
     public static RegistryObject<Refill> REFILL = ABILITIES.register("refill", Refill::new);
     public static RegistryObject<CommandPureLove> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
-    public static RegistryObject<GenuineMutualLove> GENUINE_MUTUAL_LOVE = ABILITIES.register("genuine_mutual_love", GenuineMutualLove::new);
+    public static RegistryObject<AllEncompassingUnequivocalLove> ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE = ABILITIES.register("all_encompassing_unequivocal_love", AllEncompassingUnequivocalLove::new);
     public static RegistryObject<MimicryImbuement> MIMICRY_IMBUEMENT = ABILITIES.register("mimicry_imbuement", MimicryImbuement::new);
 
     public static RegistryObject<EmberInsects> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);

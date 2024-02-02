@@ -12,10 +12,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.domain.ChimeraShadowGardenEntity;
+import radon.jujutsu_kaisen.entity.domain.base.AllEncompassingUnequiovocalLove;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.domain.TimeCellMoonPalaceEntity;
-import radon.jujutsu_kaisen.entity.domain.base.GenuineMutualLoveEntity;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.curse.*;
 import radon.jujutsu_kaisen.entity.effect.*;
@@ -37,8 +37,8 @@ public class JJKEntities {
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "closed_domain_expansion")
                             .toString()));
-    public static RegistryObject<EntityType<GenuineMutualLoveEntity>> GENUINE_MUTUAL_LOVE = ENTITIES.register("genuine_mutual_love", () ->
-            EntityType.Builder.<GenuineMutualLoveEntity>of(GenuineMutualLoveEntity::new, MobCategory.MISC)
+    public static RegistryObject<EntityType<AllEncompassingUnequiovocalLove>> GENUINE_MUTUAL_LOVE = ENTITIES.register("genuine_mutual_love", () ->
+            EntityType.Builder.<AllEncompassingUnequiovocalLove>of(AllEncompassingUnequiovocalLove::new, MobCategory.MISC)
                     .fireImmune()
                     .build(new ResourceLocation(JujutsuKaisen.MOD_ID, "genuine_mutual_love")
                             .toString()));

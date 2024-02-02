@@ -10,7 +10,7 @@ import java.util.Set;
 public class MimicryTechnique implements ICursedTechnique {
     @Override
     public @Nullable Ability getDomain() {
-        return JJKAbilities.GENUINE_MUTUAL_LOVE.get();
+        return JJKAbilities.ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE.get();
     }
 
     @Override
