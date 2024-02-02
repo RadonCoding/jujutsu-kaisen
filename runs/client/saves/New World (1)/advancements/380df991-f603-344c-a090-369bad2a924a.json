@@ -120,5 +120,17 @@
     },
     "done": true
   },
+  "minecraft:adventure/kill_all_mobs": {
+    "criteria": {
+      "minecraft:skeleton": "2024-02-02 15:49:54 +0200"
+    },
+    "done": false
+  },
+  "minecraft:adventure/kill_a_mob": {
+    "criteria": {
+      "minecraft:skeleton": "2024-02-02 15:49:54 +0200"
+    },
+    "done": true
+  },
   "DataVersion": 3578
 }
