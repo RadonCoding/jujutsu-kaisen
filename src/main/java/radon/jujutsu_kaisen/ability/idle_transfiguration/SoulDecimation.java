@@ -37,6 +37,8 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
     }
 
     private void run(LivingEntity owner, LivingEntity target) {
+        if (IdleTransfiguration.checkSukuna(owner, target)) return;
+
         MobEffectInstance existing = target.getEffect(JJKEffects.TRANSFIGURED_SOUL.get());
 
         int amplifier = 0;
