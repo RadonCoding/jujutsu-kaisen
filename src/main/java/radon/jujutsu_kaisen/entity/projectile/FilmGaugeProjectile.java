@@ -54,7 +54,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
         this.setTarget(target);
 
-        this.setPos(owner.getX(), owner.getEyeY() - (this.getBbHeight() / 2.0F), owner.getZ());
+        this.setPos(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ());
 
         this.entityData.set(DATA_START, this.position().toVector3f());
     }
