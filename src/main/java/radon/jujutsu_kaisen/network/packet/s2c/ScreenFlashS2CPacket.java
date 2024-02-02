@@ -20,11 +20,7 @@ public class ScreenFlashS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                ScreenFlashOverlay.flash();
-            }
-        });
+        ctx.enqueueWork(ScreenFlashOverlay::flash);
         ctx.setPacketHandled(true);
     }
 }

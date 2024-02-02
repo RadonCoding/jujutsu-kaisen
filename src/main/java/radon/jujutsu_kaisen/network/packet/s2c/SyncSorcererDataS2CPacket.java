@@ -31,26 +31,24 @@ public class SyncSorcererDataS2CPacket {
 
     public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                Player player = ClientWrapper.getPlayer();
+            Player player = ClientWrapper.getPlayer();
 
-                assert player != null;
+            if (player == null) return;
 
-                ISorcererData oldCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData oldCap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-                ISorcererData newCap = new SorcererData();
-                newCap.deserializeNBT(this.nbt);
+            ISorcererData newCap = new SorcererData();
+            newCap.deserializeNBT(this.nbt);
 
-                Set<Ability> oldToggled = oldCap.getToggled();
-                Set<Ability> newToggled = newCap.getToggled();
+            Set<Ability> oldToggled = oldCap.getToggled();
+            Set<Ability> newToggled = newCap.getToggled();
 
-                oldToggled.removeAll(newToggled);
+            oldToggled.removeAll(newToggled);
 
-                for (Ability ability : oldToggled) {
-                    oldCap.toggle(ability);
-                }
-                oldCap.deserializeNBT(this.nbt);
+            for (Ability ability : oldToggled) {
+                oldCap.toggle(ability);
             }
+            oldCap.deserializeNBT(this.nbt);
         });
         ctx.setPacketHandled(true);
     }

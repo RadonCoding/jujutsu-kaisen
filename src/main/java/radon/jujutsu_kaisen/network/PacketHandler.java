@@ -87,11 +87,6 @@ public class PacketHandler {
                 .encoder(SetSizeC2SPacket::encode)
                 .consumerMainThread(SetSizeC2SPacket::handle)
                 .add();
-        INSTANCE.messageBuilder(SetFrequencyS2CPacket.class, id(), PlayNetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SetFrequencyS2CPacket::new)
-                .encoder(SetFrequencyS2CPacket::encode)
-                .consumerMainThread(SetFrequencyS2CPacket::handle)
-                .add();
         INSTANCE.messageBuilder(SetCostS2CPacket.class, id(), PlayNetworkDirection.PLAY_TO_CLIENT)
                 .decoder(SetCostS2CPacket::new)
                 .encoder(SetCostS2CPacket::encode)

@@ -15,15 +15,11 @@ public class ClearChantsC2SPacket {
     public ClearChantsC2SPacket(FriendlyByteBuf ignored) {
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf ignored) {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                ClientChantHandler.remove();
-            }
-        });
+        ctx.enqueueWork(ClientChantHandler::remove);
         ctx.setPacketHandled(true);
     }
 }

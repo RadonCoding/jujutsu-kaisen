@@ -29,12 +29,7 @@ public class SyncVisualDataS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                ClientVisualHandler.receive(this.src, this.nbt);
-            }
-        });
+        ctx.enqueueWork(() -> ClientVisualHandler.receive(this.src, this.nbt));
         ctx.setPacketHandled(true);
     }
 }

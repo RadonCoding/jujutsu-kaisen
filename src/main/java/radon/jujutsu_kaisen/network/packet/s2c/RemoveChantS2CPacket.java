@@ -24,11 +24,7 @@ public class RemoveChantS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                ClientChantHandler.remove(this.chant);
-            }
-        });
+        ctx.enqueueWork(() -> ClientChantHandler.remove(this.chant));
         ctx.setPacketHandled(true);
     }
 }

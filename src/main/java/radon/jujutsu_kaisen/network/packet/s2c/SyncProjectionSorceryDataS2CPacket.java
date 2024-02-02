@@ -28,14 +28,12 @@ public class SyncProjectionSorceryDataS2CPacket {
 
     public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                Player player = ClientWrapper.getPlayer();
+            Player player = ClientWrapper.getPlayer();
 
-                assert player != null;
+            if (player == null) return;
 
-                IProjectionSorceryData cap = player.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
-                cap.deserializeNBT(this.nbt);
-            }
+            IProjectionSorceryData cap = player.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.deserializeNBT(this.nbt);
         });
         ctx.setPacketHandled(true);
     }

@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 
 import java.util.function.Supplier;
 
@@ -27,12 +28,7 @@ public class SetOverlayMessageS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                Minecraft mc = Minecraft.getInstance();
-                mc.gui.setOverlayMessage(this.component, this.animate);
-            }
-        });
+        ctx.enqueueWork(() -> ClientWrapper.setOverlayMessage(this.component, this.animate));
         ctx.setPacketHandled(true);
     }
 }

@@ -28,14 +28,12 @@ public class SyncTenShadowsDataS2CPacket {
 
     public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                Player player = ClientWrapper.getPlayer();
+            Player player = ClientWrapper.getPlayer();
 
-                assert player != null;
+            assert player != null;
 
-                ITenShadowsData cap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-                cap.deserializeNBT(this.nbt);
-            }
+            ITenShadowsData cap = player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+            cap.deserializeNBT(this.nbt);
         });
         ctx.setPacketHandled(true);
     }
