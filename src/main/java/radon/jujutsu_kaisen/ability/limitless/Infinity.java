@@ -194,26 +194,6 @@ public class Infinity extends Ability implements Ability.IToggled {
         }
     }
 
-    private static boolean canBlock(LivingEntity owner, Projectile projectile) {
-        if (projectile.getOwner() == owner) return false;
-
-        if (projectile instanceof ThrownChainProjectile chain) {
-            if (chain.getStack().is(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) return false;
-        }
-
-        for (KuchisakeOnnaEntity curse : owner.level().getEntitiesOfClass(KuchisakeOnnaEntity.class, AABB.ofSize(owner.position(),
-                KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE, KuchisakeOnnaEntity.RANGE))) {
-            Optional<UUID> identifier = curse.getCurrent();
-            if (identifier.isEmpty()) continue;
-            if (identifier.get() == owner.getUUID() && projectile.getOwner() == curse) return false;
-        }
-
-        if (projectile instanceof JujutsuProjectile jujutsu) {
-            return !jujutsu.isDomain();
-        }
-        return true;
-    }
-
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class InfinityForgeEvents {
         @SubscribeEvent
@@ -240,7 +220,7 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             Projectile projectile = event.getProjectile();
 
-            if (!Infinity.canBlock(owner, projectile)) return;
+            if (!HelperMethods.isBlockable(owner, projectile)) return;
 
             data.add(owner, projectile);
 
@@ -249,49 +229,37 @@ public class Infinity extends Ability implements Ability.IToggled {
 
         @SubscribeEvent
         public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity target = event.getEntity();
+            LivingEntity owner = event.getEntity();
 
-            if (!(target.level() instanceof ServerLevel level)) return;
+            if (!(owner.level() instanceof ServerLevel level)) return;
 
             FrozenProjectileData data = level.getDataStorage().computeIfAbsent(FrozenProjectileData::load, FrozenProjectileData::new,
                     FrozenProjectileData.IDENTIFIER);
 
-            if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
+            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
-            for (Projectile projectile : target.level().getEntitiesOfClass(Projectile.class, target.getBoundingBox().inflate(1.0D))) {
-                if (!Infinity.canBlock(target, projectile)) continue;
+            for (Projectile projectile : owner.level().getEntitiesOfClass(Projectile.class, owner.getBoundingBox().inflate(1.0D))) {
+                if (!HelperMethods.isBlockable(owner, projectile)) continue;
 
-                data.add(target, projectile);
+                data.add(owner, projectile);
             }
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingAttack(LivingAttackEvent event) {
-            LivingEntity target = event.getEntity();
+            LivingEntity owner = event.getEntity();
 
-            if (target.level().isClientSide) return;
+            if (owner.level().isClientSide) return;
 
-            if (!JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get())) return;
+            if (!JJKAbilities.hasToggled(owner, JJKAbilities.INFINITY.get())) return;
 
             DamageSource source = event.getSource();
 
-            if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
-
-            if (source.getDirectEntity() instanceof Projectile projectile && !canBlock(target, projectile)) return;
-
-            if (source.getDirectEntity() instanceof DomainExpansionEntity) return;
-
-            if (source.getEntity() == target) return;
-
-            if (source.getEntity() instanceof LivingEntity living && HelperMethods.isMelee(source)) {
-                if (JJKAbilities.hasToggled(living, JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
-                    return;
-                }
-            }
+            if (HelperMethods.isSureHit(owner, source)) return;
 
             // We don't want to play the sound in-case it's a stopped projectile
             if (!(source.getDirectEntity() instanceof Projectile)) {
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
+                owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.AMETHYST_BLOCK_PLACE, SoundSource.MASTER, 1.0F, 1.0F);
             }
             event.setCanceled(true);
         }
