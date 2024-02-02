@@ -4,6 +4,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ShockwaveTechnique implements ICursedTechnique {
@@ -14,6 +15,6 @@ public class ShockwaveTechnique implements ICursedTechnique {
 
     @Override
     public Set<Ability> getAbilities() {
-        return new LinkedHashSet<>(Set.of(JJKAbilities.SHOCKWAVE.get());
+        return new LinkedHashSet<>(Set.of(JJKAbilities.SHOCKWAVE.get()));
     }
 }

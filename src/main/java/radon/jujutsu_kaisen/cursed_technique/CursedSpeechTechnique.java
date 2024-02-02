@@ -4,6 +4,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class CursedSpeechTechnique implements ICursedTechnique {
@@ -18,6 +19,6 @@ public class CursedSpeechTechnique implements ICursedTechnique {
                 JJKAbilities.GET_CRUSHED.get(),
                 JJKAbilities.BLAST_AWAY.get(),
                 JJKAbilities.EXPLODE.get(),
-                JJKAbilities.DIE.get());
+                JJKAbilities.DIE.get()));
     }
 }

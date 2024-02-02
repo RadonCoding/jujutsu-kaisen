@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class MimicryTechnique implements ICursedTechnique {
@@ -23,6 +24,6 @@ public class MimicryTechnique implements ICursedTechnique {
         return new LinkedHashSet<>(Set.of(JJKAbilities.RIKA.get(),
                 JJKAbilities.MIMICRY.get(),
                 JJKAbilities.REFILL.get(),
-                JJKAbilities.COMMAND_PURE_LOVE.get());
+                JJKAbilities.COMMAND_PURE_LOVE.get()));
     }
 }

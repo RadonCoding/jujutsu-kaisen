@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TenShadowsTechnique implements ICursedTechnique {
@@ -41,6 +42,6 @@ public class TenShadowsTechnique implements ICursedTechnique {
                 JJKAbilities.TRANQUIL_DEER.get(),
                 JJKAbilities.PIERCING_BULL.get(),
                 JJKAbilities.AGITO.get(),
-                JJKAbilities.MAHORAGA.get());
+                JJKAbilities.MAHORAGA.get()));
     }
 }

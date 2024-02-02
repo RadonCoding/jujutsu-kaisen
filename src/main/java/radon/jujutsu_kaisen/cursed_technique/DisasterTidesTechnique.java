@@ -4,6 +4,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class DisasterTidesTechnique implements ICursedTechnique {
@@ -24,6 +25,6 @@ public class DisasterTidesTechnique implements ICursedTechnique {
                 JJKAbilities.DEATH_SWARM.get(),
                 JJKAbilities.FISH_SHIKIGAMI.get(),
                 JJKAbilities.WATER_TORRENT.get(),
-                JJKAbilities.EEL_GRAPPLE.get());
+                JJKAbilities.EEL_GRAPPLE.get()));
     }
 }
