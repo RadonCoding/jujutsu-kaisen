@@ -31,8 +31,6 @@ import radon.jujutsu_kaisen.util.RotationUtil;
 import java.util.UUID;
 
 public class FilmGaugeProjectile extends JujutsuProjectile {
-    private static final EntityDataAccessor<Vector3f> DATA_START = SynchedEntityData.defineId(FilmGaugeProjectile.class, EntityDataSerializers.VECTOR3);
-
     private static final float SPEED = 3.0F;
     private static final float DAMAGE = 10.0F;
 
@@ -56,8 +54,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         this.setTarget(target);
 
         this.setPos(owner.getX(), owner.getY() + (owner.getBbHeight() / 2.0F) - (this.getBbHeight() / 2.0F), owner.getZ());
-
-        this.entityData.set(DATA_START, this.position().toVector3f());
     }
 
     public void setTarget(@Nullable LivingEntity target) {
@@ -79,25 +75,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         }
     }
 
-    public Vec3 getStart() {
-        return new Vec3(this.entityData.get(DATA_START));
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-
-        this.entityData.define(DATA_START, Vec3.ZERO.toVector3f());
-    }
-
     @Override
     protected void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-
-        Vector3f start = this.entityData.get(DATA_START);
-        pCompound.putFloat("start_x", start.x);
-        pCompound.putFloat("start_y", start.y);
-        pCompound.putFloat("start_z", start.z);
 
         if (this.targetUUID != null) {
             pCompound.putUUID("target", this.targetUUID);
@@ -107,8 +87,6 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-
-        this.entityData.set(DATA_START, new Vector3f(pCompound.getFloat("start_x"), pCompound.getFloat("start_y"), pCompound.getFloat("start_z")));
 
         if (pCompound.hasUUID("target")) {
             this.targetUUID = pCompound.getUUID("target");
