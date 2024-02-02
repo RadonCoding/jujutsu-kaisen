@@ -150,8 +150,11 @@ public class Cleave extends Ability implements Ability.IDomainAttack, Ability.IA
 
     @Override
     public boolean attack(DamageSource source, LivingEntity owner, LivingEntity target) {
+        if (owner.level().isClientSide) return false;
         if (!HelperMethods.isMelee(source)) return false;
+
         perform(owner, target, null);
+
         return true;
     }
 
