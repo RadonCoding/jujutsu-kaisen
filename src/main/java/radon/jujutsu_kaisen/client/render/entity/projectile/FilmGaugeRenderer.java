@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
@@ -29,11 +30,13 @@ public class FilmGaugeRenderer extends EntityRenderer<FilmGaugeProjectile> {
 
     @Override
     public void render(@NotNull FilmGaugeProjectile pEntity, float pEntityYaw, float pPartialTick, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        if (!(pEntity.getOwner() instanceof LivingEntity owner)) return;
+
         pPoseStack.pushPose();
         pPoseStack.translate(0.0D, pEntity.getBbHeight() / 2.0F, 0.0D);
-        Vec3 startPos = pEntity.getStart();
+        Vec3 ownerPos = getPosition(owner, owner.getBbHeight() / 2.0F, pPartialTick);
         Vec3 projectilePos = getPosition(pEntity, pEntity.getBbHeight() / 2.0F, pPartialTick);
-        Vec3 relative = startPos.subtract(projectilePos);
+        Vec3 relative = ownerPos.subtract(projectilePos);
         float f0 = (float) relative.length();
         relative = relative.normalize();
         float f1 = (float) Math.acos(relative.y);
