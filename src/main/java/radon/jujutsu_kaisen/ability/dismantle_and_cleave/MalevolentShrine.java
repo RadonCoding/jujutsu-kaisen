@@ -34,7 +34,7 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
         if (domain instanceof OpenDomainExpansionEntity open) {
            size = (open.getWidth() + open.getHeight()) / 4;
         } else if (domain instanceof ClosedDomainExpansionEntity closed) {
-            size = closed.getRadius() * 4;
+            size = closed.getRadius() * 8;
         } else {
             return;
         }
