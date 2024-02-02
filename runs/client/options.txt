@@ -130,7 +130,7 @@ key_key.jujutsu_kaisen.dash:key.keyboard.g
 key_key.jujutsu_kaisen.open_jujutsu_menu:key.keyboard.p
 key_key.jujutsu_kaisen.increase_output:key.keyboard.up
 key_key.jujutsu_kaisen.decrease_output:key.keyboard.down
-key_key.curios.open.desc:key.keyboard.g
+key_key.curios.open.desc:key.keyboard.unknown
 soundCategory_master:0.0
 soundCategory_music:0.0
 soundCategory_record:1.0
