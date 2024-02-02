@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class LimitlessTechnique implements ICursedTechnique {
@@ -27,6 +28,6 @@ public class LimitlessTechnique implements ICursedTechnique {
                 JJKAbilities.BLUE_FISTS.get(),
                 JJKAbilities.HOLLOW_PURPLE.get(),
                 JJKAbilities.TELEPORT.get(),
-                JJKAbilities.FLY.get());
+                JJKAbilities.FLY.get()));
     }
 }

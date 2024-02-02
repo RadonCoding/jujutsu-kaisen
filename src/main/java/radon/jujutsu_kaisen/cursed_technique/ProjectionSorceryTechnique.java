@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ProjectionSorceryTechnique implements ICursedTechnique {
@@ -22,6 +23,6 @@ public class ProjectionSorceryTechnique implements ICursedTechnique {
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.PROJECTION_SORCERY.get(),
                 JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(),
-                JJKAbilities.AIR_FRAME.get());
+                JJKAbilities.AIR_FRAME.get()));
     }
 }

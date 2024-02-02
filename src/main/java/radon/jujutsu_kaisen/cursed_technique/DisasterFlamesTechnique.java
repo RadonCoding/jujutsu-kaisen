@@ -5,6 +5,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class DisasterFlamesTechnique implements ICursedTechnique {
@@ -27,6 +28,6 @@ public class DisasterFlamesTechnique implements ICursedTechnique {
                 JJKAbilities.DISASTER_FLAMES.get(),
                 JJKAbilities.FLAMETHROWER.get(),
                 JJKAbilities.FIREBALL.get(),
-                JJKAbilities.FIRE_BEAM.get());
+                JJKAbilities.FIRE_BEAM.get()));
     }
 }

@@ -4,6 +4,7 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class CurseManipulationTechnique implements ICursedTechnique {
@@ -21,6 +22,6 @@ public class CurseManipulationTechnique implements ICursedTechnique {
                 JJKAbilities.ENHANCE_CURSE.get(),
                 JJKAbilities.MAXIMUM_UZUMAKI.get(),
                 JJKAbilities.MINI_UZUMAKI.get(),
-                JJKAbilities.WORM_CURSE_GRAB.get());
+                JJKAbilities.WORM_CURSE_GRAB.get()));
     }
 }
