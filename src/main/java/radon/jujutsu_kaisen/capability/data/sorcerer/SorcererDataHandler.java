@@ -43,10 +43,11 @@ public class SorcererDataHandler {
 
         if (event.isWasDeath()) {
             newCap.setEnergy(newCap.getMaxEnergy());
-            newCap.resetCooldowns();
-            newCap.resetBurnout();
             newCap.clearToggled();
-            
+            newCap.resetCooldowns();
+            newCap.resetBrainDamage();
+            newCap.resetBurnout();
+
             newCap.resetBlackFlash();
             newCap.resetExtraEnergy();
 

@@ -838,6 +838,11 @@ public class SorcererData implements ISorcererData {
     }
 
     @Override
+    public void resetBrainDamage() {
+        this.brainDamage = 0;
+    }
+
+    @Override
     public void setBurnout(int duration) {
         this.burnout = duration;
     }
