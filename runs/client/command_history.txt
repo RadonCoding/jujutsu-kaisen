@@ -1,3 +1,7 @@
 /advancement grant @p everything
 /effect clear
 /settechnique @p jujutsu_kaisen:disaster_flames
+/settechnique @p jujutsu_kaisen:idle_transfiguration
+/settechnique @p jujutsu_kaisen:mimicry
+/settechnique @p jujutsu_kaisen:idle_transfiguration
+/settechnique @p jujutsu_kaisen:mimicry

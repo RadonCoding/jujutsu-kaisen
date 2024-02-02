@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.entity.domain.MalevolentShrineEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
+import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class MalevolentShrine extends DomainExpansion implements DomainExpansion.IOpenDomain {
@@ -27,7 +29,17 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     public void onHitBlock(DomainExpansionEntity domain, LivingEntity owner, BlockPos pos) {
-        if (HelperMethods.RANDOM.nextInt(5) != 0) return;
+        int size;
+
+        if (domain instanceof OpenDomainExpansionEntity open) {
+           size = (open.getWidth() + open.getHeight()) / 4;
+        } else if (domain instanceof ClosedDomainExpansionEntity closed) {
+            size = closed.getRadius() * 4;
+        } else {
+            return;
+        }
+
+        if (HelperMethods.RANDOM.nextInt(size) != 0) return;
 
         Ability dismantle = JJKAbilities.DISMANTLE.get();
         ((IDomainAttack) dismantle).performBlock(owner, domain, pos);
