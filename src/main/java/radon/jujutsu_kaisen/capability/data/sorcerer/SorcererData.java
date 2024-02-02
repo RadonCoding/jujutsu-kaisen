@@ -782,17 +782,17 @@ public class SorcererData implements ISorcererData {
         }
 
         if (this.toggled.contains(ability)) {
-            ((Ability.IToggled) ability).onDisabled(this.owner);
-
             this.toggled.remove(ability);
+
+            ((Ability.IToggled) ability).onDisabled(this.owner);
 
             ((Ability.IToggled) ability).removeModifiers(this.owner);
 
             NeoForge.EVENT_BUS.post(new AbilityStopEvent(this.owner, ability));
         } else {
-            ((Ability.IToggled) ability).onEnabled(this.owner);
-
             this.toggled.add(ability);
+
+            ((Ability.IToggled) ability).onEnabled(this.owner);
         }
         ServerVisualHandler.sync(this.owner);
     }
