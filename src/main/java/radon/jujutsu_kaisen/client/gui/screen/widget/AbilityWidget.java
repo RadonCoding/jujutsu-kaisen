@@ -2,9 +2,11 @@ package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -218,47 +220,72 @@ public class AbilityWidget {
     }
 
     public void drawHover(GuiGraphics pGuiGraphics, int pX, int pY, float pFade, int pWidth, int pHeight) {
-        boolean flag = pWidth + pX + this.x + this.width + 26 >= this.tab.getScreen().width;
-        boolean flag1 = JujutsuScreen.WINDOW_INSIDE_HEIGHT - pY - this.y - 26 <= 6 + this.description.size() * 9;
-        int i = this.width / 2;
+        boolean xOverflow = pWidth + pX + this.x + this.width + 26 >= this.tab.getScreen().width;
+        boolean yOverflow = 113 - pY - this.y - 26 <= 6 + this.description.size() * 9;
+        int i = Mth.floor((float)this.width);
+        AdvancementWidgetType advancementwidgettype;
+        AdvancementWidgetType advancementwidgettype1;
+        AdvancementWidgetType advancementwidgettype2;
+
+        if (this.unlocked) {
+            i = this.width / 2;
+            advancementwidgettype = AdvancementWidgetType.OBTAINED;
+            advancementwidgettype1 = AdvancementWidgetType.OBTAINED;
+            advancementwidgettype2 = AdvancementWidgetType.OBTAINED;
+        } else if (i < 2) {
+            i = this.width / 2;
+            advancementwidgettype = AdvancementWidgetType.UNOBTAINED;
+            advancementwidgettype1 = AdvancementWidgetType.UNOBTAINED;
+            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
+        } else if (i > this.width - 2) {
+            i = this.width / 2;
+            advancementwidgettype = AdvancementWidgetType.OBTAINED;
+            advancementwidgettype1 = AdvancementWidgetType.OBTAINED;
+            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
+        } else {
+            advancementwidgettype = AdvancementWidgetType.OBTAINED;
+            advancementwidgettype1 = AdvancementWidgetType.UNOBTAINED;
+            advancementwidgettype2 = AdvancementWidgetType.UNOBTAINED;
+        }
+
         int j = this.width - i;
         RenderSystem.enableBlend();
-        int l = pY + this.y;
-        int k;
+        int k = pY + this.y;
+        int l;
 
-        if (flag) {
-            k = pX + this.x - this.width + 26 + 6;
+        if (xOverflow) {
+            l = pX + this.x - this.width + 26 + 6;
         } else {
-            k = pX + this.x;
+            l = pX + this.x;
         }
 
         int i1 = 32 + this.description.size() * 9;
 
         if (!this.description.isEmpty()) {
-            if (flag1) {
-                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, k, l + 26 - i1, this.width, i1);
+            if (yOverflow) {
+                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, l, k + 26 - i1, this.width, i1);
             } else {
-                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, k, l, this.width, i1);
+                pGuiGraphics.blitSprite(TITLE_BOX_SPRITE, l, k, this.width, i1);
             }
         }
 
-        pGuiGraphics.blit(WIDGETS_LOCATION, k, l, 0, this.unlocked ? 0 : 26, i, 26);
-        pGuiGraphics.blit(WIDGETS_LOCATION, k + i, l, 200 - j, this.unlocked ? 0 : 26, j, 26);
-        pGuiGraphics.blit(WIDGETS_LOCATION, pX + this.x + 3, pY + this.y, 0, this.unlocked ? 128 : 154, 26, 26);
+        pGuiGraphics.blitSprite(advancementwidgettype.boxSprite(), 200, 26, 0, 0, l, k, i, 26);
+        pGuiGraphics.blitSprite(advancementwidgettype1.boxSprite(), 200, 26, 200 - j, 0, l + i, k, j, 26);
+        pGuiGraphics.blitSprite(advancementwidgettype2.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
-        if (flag) {
-            pGuiGraphics.drawString(this.minecraft.font, this.title, k + 5, pY + this.y + 9, -1);
+        if (xOverflow) {
+            pGuiGraphics.drawString(this.minecraft.font, this.title, l + 5, pY + this.y + 9, -1);
         } else {
             pGuiGraphics.drawString(this.minecraft.font, this.title, pX + this.x + 32, pY + this.y + 9, -1);
         }
 
-        if (flag1) {
-            for (int k1 = 0; k1 < this.description.size(); ++k1) {
-                pGuiGraphics.drawString(this.minecraft.font, this.description.get(k1), k + 5, l + 26 - i1 + 7 + k1 * 9, -5592406, false);
+        if (yOverflow) {
+            for (int j1 = 0; j1 < this.description.size(); ++j1) {
+                pGuiGraphics.drawString(this.minecraft.font, this.description.get(j1), l + 5, k + 26 - i1 + 7 + j1 * 9, -5592406, false);
             }
         } else {
-            for (int l1 = 0; l1 < this.description.size(); ++l1) {
-                pGuiGraphics.drawString(this.minecraft.font, this.description.get(l1), k + 5, pY + this.y + 9 + 17 + l1 * 9, -5592406, false);
+            for (int k1 = 0; k1 < this.description.size(); ++k1) {
+                pGuiGraphics.drawString(this.minecraft.font, this.description.get(k1), l + 5, pY + this.y + 9 + 17 + k1 * 9, -5592406, false);
             }
         }
 

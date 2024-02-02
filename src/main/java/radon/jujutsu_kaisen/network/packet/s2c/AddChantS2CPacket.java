@@ -23,11 +23,7 @@ public class AddChantS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                ClientChantHandler.add(this.chant);
-            }
-        });
+        ctx.enqueueWork(() -> ClientChantHandler.add(this.chant));
         ctx.setPacketHandled(true);
     }
 }

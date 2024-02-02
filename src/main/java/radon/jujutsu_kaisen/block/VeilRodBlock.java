@@ -35,7 +35,6 @@ import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.block.entity.VeilRodBlockEntity;
 import radon.jujutsu_kaisen.menu.VeilRodMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SetFrequencyS2CPacket;
 
 import javax.annotation.Nullable;
 
@@ -63,7 +62,6 @@ public class VeilRodBlock extends RodBlock implements EntityBlock, SimpleWaterlo
             return InteractionResult.SUCCESS;
         } else {
             pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
-            PacketHandler.sendToClient(new SetFrequencyS2CPacket(((VeilRodMenu) pPlayer.containerMenu).getSize()), (ServerPlayer) pPlayer);
             return InteractionResult.CONSUME;
         }
     }

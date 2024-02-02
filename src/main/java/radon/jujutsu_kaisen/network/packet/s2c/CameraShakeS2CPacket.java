@@ -30,11 +30,7 @@ public class CameraShakeS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration);
-            }
-        });
+        ctx.enqueueWork(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
         ctx.setPacketHandled(true);
     }
 }

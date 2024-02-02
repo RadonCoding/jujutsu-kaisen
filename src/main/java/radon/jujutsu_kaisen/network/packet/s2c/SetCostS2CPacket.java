@@ -2,8 +2,10 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.NetworkEvent;
+import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 
 import java.util.function.Supplier;
@@ -25,12 +27,12 @@ public class SetCostS2CPacket {
 
     public void handle(NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                Minecraft mc = Minecraft.getInstance();
+            Player player = ClientWrapper.getPlayer();
 
-                if (mc.player.containerMenu instanceof BountyMenu menu) {
-                    menu.setCost(this.cost);
-                }
+            if (player == null) return;
+
+            if (player.containerMenu instanceof BountyMenu menu) {
+                menu.setCost(this.cost);
             }
         });
         ctx.setPacketHandled(true);

@@ -24,11 +24,7 @@ public class SyncMouthS2CPacket {
     }
 
     public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            if (FMLLoader.getDist().isClient()) {
-                PerfectBodyVisual.onChant(this.src);
-            }
-        });
+        ctx.enqueueWork(() -> PerfectBodyVisual.onChant(this.src));
         ctx.setPacketHandled(true);
     }
 }
