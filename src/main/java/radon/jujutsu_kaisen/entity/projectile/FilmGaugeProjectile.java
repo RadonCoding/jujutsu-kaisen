@@ -146,7 +146,7 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
 
                 DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
 
-                if (domain == null || !domain.checkSureHitEffect() || !JJKAbilities.hasToggled(owner, JJKAbilities.TIME_CELL_MOON_PALACE.get())) {
+                if (domain == null || !domain.checkSureHitEffect()) {
                     this.discard();
                 }
             }
