@@ -28,3 +28,12 @@
 /tp @s -3552 ~ -1856
 /locate structure minecraft:village_taiga
 /tp @s -3024 ~ -2640
+/locate structure minecraft:village_savanna
+/tp @s -1536 ~ -1808
+/locate structure minecraft:village_plains
+/tp @s -1584 ~ -1392
+/locate structure minecraft:village_desert
+/tp @s -4800 ~ -1520
+/locate structure minecraft:village_plains
+/tp @s -6464 ~ 64
+/time set night
