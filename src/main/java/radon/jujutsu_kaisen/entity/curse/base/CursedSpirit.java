@@ -122,6 +122,7 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     protected boolean canFly() { return false; }
 
     protected boolean targetsCurses() { return false; }
+
     protected boolean targetsSorcerers() { return true; }
 
     private void createGoals() {
@@ -243,6 +244,15 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
     @Override
     public boolean fireImmune() {
         return true;
+    }
+
+    @Override
+    public void kill() {
+        super.kill();
+
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            System.out.println(ste);
+        }
     }
 
     @Override

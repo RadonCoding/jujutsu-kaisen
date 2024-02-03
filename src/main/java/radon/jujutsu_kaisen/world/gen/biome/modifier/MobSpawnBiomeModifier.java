@@ -10,8 +10,7 @@ import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 
 import java.util.List;
 
-public record MobSpawnBiomeModifier(BiomeMatcher matcher,
-                                    List<MobSpawnSettings.SpawnerData> spawners) implements BiomeModifier {
+public record MobSpawnBiomeModifier(BiomeMatcher matcher, List<MobSpawnSettings.SpawnerData> spawners) implements BiomeModifier {
     public static final Codec<MobSpawnBiomeModifier> CODEC = RecordCodecBuilder.create(codec -> codec.group(
             BiomeMatcher.CODEC.fieldOf("biomes").forGetter(MobSpawnBiomeModifier::matcher),
             MobSpawnSettings.SpawnerData.CODEC.listOf().fieldOf("spawners").forGetter(MobSpawnBiomeModifier::spawners)
