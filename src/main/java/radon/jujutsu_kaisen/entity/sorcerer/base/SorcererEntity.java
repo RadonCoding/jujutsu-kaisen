@@ -72,6 +72,7 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
     protected boolean canFly() { return false; }
 
     protected boolean targetsCurses() { return true; }
+
     protected boolean targetsSorcerers() { return false; }
 
     private void createGoals() {
@@ -171,14 +172,14 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
                 .add(Attributes.FOLLOW_RANGE, 64.0D);
     }
 
-    @Override
+    /*@Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
         if (!this.isCustom()) this.createGoals();
 
         this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(this::init);
-    }
+    }*/
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
