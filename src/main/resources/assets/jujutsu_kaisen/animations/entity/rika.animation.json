@@ -200,17 +200,17 @@
 			"bones": {
 				"head": {
 					"rotation": {
-						"vector": [-7.5, 0, 0]
+						"vector": [-22.5, 0, 0]
 					}
 				},
 				"jaw": {
 					"rotation": {
-						"vector": [5, 0, 0]
+						"vector": [35, 0, 0]
 					}
 				},
 				"lower_jaw": {
 					"rotation": {
-						"vector": [12.5, 0, 0]
+						"vector": [15, 0, 0]
 					}
 				}
 			}
