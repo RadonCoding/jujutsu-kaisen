@@ -19,7 +19,9 @@ public class ShootPureLove extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return ((RikaEntity) owner).isOpen() || (target != null && owner.hasLineOfSight(target) && HelperMethods.RANDOM.nextInt(10) == 0);
+        if (((RikaEntity) owner).isOpen()) return true;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+        return HelperMethods.RANDOM.nextInt(10) == 0;
     }
 
     @Override
@@ -39,9 +41,7 @@ public class ShootPureLove extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        if (owner instanceof RikaEntity rika) {
-            rika.setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
-        }
+        ((RikaEntity) owner).setShooting(PureLoveBeamEntity.CHARGE + PureLoveBeamEntity.DURATION + PureLoveBeamEntity.FRAMES);
 
         PureLoveBeamEntity beam = new PureLoveBeamEntity(owner, this.getPower(owner));
         owner.level().addFreshEntity(beam);
