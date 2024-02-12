@@ -16,9 +16,9 @@ public class ServerVisualHandler {
 
         IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (cap == null) return;
+        if (cap == null) return;
 
-ISorcererData data = cap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), JJKAbilities.getTechniques(entity), data.getTechnique(), data.getType(),
                 data.getExperience(), data.getCursedEnergyColor());

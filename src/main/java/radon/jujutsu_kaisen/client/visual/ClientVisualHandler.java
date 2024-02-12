@@ -39,6 +39,12 @@ public class ClientVisualHandler {
     private static final Map<UUID, ClientData> synced = new HashMap<>();
 
     public static void receive(UUID identifier, CompoundTag nbt) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null) return;
+
+        if (identifier == mc.player.getUUID()) return;
+
         if (!synced.containsKey(identifier)) {
             synced.put(identifier, new ClientData(nbt));
             return;
@@ -65,16 +71,8 @@ public class ClientVisualHandler {
             if (cap == null) return null;
 
             ISorcererData sorcererData = cap.getSorcererData();
-            ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
-            Set<ICursedTechnique> techniques = new HashSet<>();
-
-            if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
-            if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
-            if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
-            if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
-
-            return new ClientData(sorcererData.getToggled(), sorcererData.getChanneled(), sorcererData.getTraits(), techniques,
+            return new ClientData(sorcererData.getToggled(), sorcererData.getChanneled(), sorcererData.getTraits(), JJKAbilities.getTechniques(mc.player),
                     sorcererData.getTechnique(), sorcererData.getType(), sorcererData.getExperience(), sorcererData.getCursedEnergyColor());
         }
         return null;
@@ -120,6 +118,8 @@ public class ClientVisualHandler {
 
         Entity entity = event.getEntity();
 
+        if (entity == mc.player) return;
+
         PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
     }
 
@@ -153,22 +153,25 @@ public class ClientVisualHandler {
         }
 
         public void deserializeNBT(CompoundTag nbt) {
-            this.toggled = new HashSet<>();
             this.channeled = nbt.contains("channeled") ? JJKAbilities.getValue(new ResourceLocation(nbt.getString("channeled"))) : null;
-            this.traits = new HashSet<>();
-            this.techniques = new HashSet<>();
 
             this.technique = nbt.contains("technique") ? JJKCursedTechniques.getValue(new ResourceLocation(nbt.getString("technique"))) : null;
+
+            this.toggled = new HashSet<>();
 
             for (Tag key : nbt.getList("toggled", Tag.TAG_STRING)) {
                 this.toggled.add(JJKAbilities.getValue(new ResourceLocation(key.getAsString())));
             }
 
+            this.traits = new HashSet<>();
+
             for (Tag key : nbt.getList("traits", Tag.TAG_INT)) {
-                if (key instanceof IntTag tag) {
-                    this.traits.add(Trait.values()[tag.getAsInt()]);
-                }
+                if (!(key instanceof IntTag tag)) continue;
+
+                this.traits.add(Trait.values()[tag.getAsInt()]);
             }
+
+            this.techniques = new HashSet<>();
 
             for (Tag key : nbt.getList("techniques", Tag.TAG_INT)) {
                 this.techniques.add(JJKCursedTechniques.getValue(new ResourceLocation(key.getAsString())));
