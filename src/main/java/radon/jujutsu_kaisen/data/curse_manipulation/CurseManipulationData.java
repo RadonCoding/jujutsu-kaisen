@@ -7,6 +7,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.visual.ServerVisualHandler;
@@ -19,25 +20,21 @@ import java.util.*;
 public class CurseManipulationData implements ICurseManipulationData {
     private final List<AbsorbedCurse> curses;
     private final Set<ICursedTechnique> absorbed;
-    private @Nullable ICursedTechnique currentAbsorbed;
+    @Nullable
+    private ICursedTechnique currentAbsorbed;
 
-    private LivingEntity owner;
+    private final LivingEntity owner;
 
-    public CurseManipulationData() {
+    public CurseManipulationData(LivingEntity owner) {
+        this.owner = owner;
+
         this.curses = new ArrayList<>();
         this.absorbed = new LinkedHashSet<>();
     }
 
     @Override
-    public void init(LivingEntity owner) {
-        this.owner = owner;
-    }
+    public void tick() {
 
-    @Override
-    public void tick(LivingEntity owner) {
-        if (this.owner == null) {
-            this.owner = owner;
-        }
     }
 
     @Override
@@ -58,6 +55,8 @@ public class CurseManipulationData implements ICurseManipulationData {
 
     @Override
     public void setCurrentAbsorbed(@Nullable ICursedTechnique technique) {
+        if (this.owner == null) return;
+
         this.currentAbsorbed = this.currentAbsorbed == technique ? null : technique;
         ServerVisualHandler.sync(this.owner);
     }

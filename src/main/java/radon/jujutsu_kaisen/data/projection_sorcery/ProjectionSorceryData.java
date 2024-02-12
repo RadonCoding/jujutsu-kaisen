@@ -6,35 +6,35 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.util.EntityUtil;
 
+import javax.annotation.Nullable;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ProjectionSorceryData implements IProjectionSorceryData {
-    private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
-    private int speedStacks;
-    private int noMotionTime;
-
-    private LivingEntity owner;
-
     private static final UUID PROJECTION_SORCERY_MOVEMENT_SPEED_UUID = UUID.fromString("23ecaba3-fbe8-44c1-93c4-5291aa9ee777");
     private static final UUID PROJECTION_ATTACK_SPEED_UUID = UUID.fromString("18cd1e25-656d-4172-b9f7-2f1b3daf4b89");
     private static final UUID PROJECTION_STEP_HEIGHT_UUID = UUID.fromString("1dbcbef7-8193-406a-b64d-8766ea505fdb");
 
-    public ProjectionSorceryData() {
+    private final List<AbstractMap.SimpleEntry<Vec3, Float>> frames;
+    private int speedStacks;
+    private int noMotionTime;
+
+    private final LivingEntity owner;
+
+    public ProjectionSorceryData(LivingEntity owner) {
+        this.owner = owner;
+
         this.frames = new ArrayList<>();
     }
 
     @Override
-    public void tick(LivingEntity owner) {
-        if (this.owner == null) {
-            this.owner = owner;
-        }
-
+    public void tick() {
         if (!this.owner.level().isClientSide) {
             if (this.speedStacks > 0) {
                 EntityUtil.applyModifier(this.owner, Attributes.MOVEMENT_SPEED, PROJECTION_SORCERY_MOVEMENT_SPEED_UUID, "Movement speed", this.speedStacks * 2.0D, AttributeModifier.Operation.MULTIPLY_TOTAL);

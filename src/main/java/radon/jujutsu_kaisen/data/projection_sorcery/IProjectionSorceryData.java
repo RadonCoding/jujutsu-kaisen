@@ -4,14 +4,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;
 import java.util.List;
 
 public interface IProjectionSorceryData extends INBTSerializable<CompoundTag> {
-    void tick(LivingEntity owner);
-
-    void init(LivingEntity owner);
+    void tick();
 
     List<AbstractMap.SimpleEntry<Vec3, Float>> getFrames();
     void addFrame(Vec3 frame, float yaw);

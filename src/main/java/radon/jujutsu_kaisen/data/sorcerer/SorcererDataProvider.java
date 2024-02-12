@@ -7,11 +7,18 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.curse_manipulation.CurseManipulationData;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -25,7 +32,7 @@ public class SorcererDataProvider {
         if (!owner.hasData(JJKAttachmentTypes.SORCERER)) return;
 
         ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        data.tick(owner);
+        data.tick();
     }
 
     @SubscribeEvent
@@ -49,14 +56,10 @@ public class SorcererDataProvider {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
-        data.init(player);
-
-        if (player.level().isClientSide) return;
-
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 
     @SubscribeEvent
@@ -69,8 +72,8 @@ public class SorcererDataProvider {
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ISorcererData> {
         @Override
-        public ISorcererData read(CompoundTag tag) {
-            ISorcererData data = new SorcererData();
+        public @NotNull ISorcererData read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag) {
+            ISorcererData data = new SorcererData((LivingEntity) holder);
             data.deserializeNBT(tag);
             return data;
         }

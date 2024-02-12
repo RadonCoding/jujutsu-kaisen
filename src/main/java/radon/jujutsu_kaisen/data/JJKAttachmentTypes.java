@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.data;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -17,17 +18,18 @@ import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsDataProvider;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class JJKAttachmentTypes {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, JujutsuKaisen.MOD_ID);
 
     public static final Supplier<AttachmentType<ISorcererData>> SORCERER = ATTACHMENT_TYPES.register("sorcerer",
-            AttachmentType.<ISorcererData>builder(SorcererData::new).serialize(new SorcererDataProvider.Serializer()).copyOnDeath()::build);
+            AttachmentType.<ISorcererData>builder(holder -> new SorcererData((LivingEntity) holder)).serialize(new SorcererDataProvider.Serializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<ITenShadowsData>> TEN_SHADOWS = ATTACHMENT_TYPES.register("ten_shadows",
-            AttachmentType.<ITenShadowsData>builder(TenShadowsData::new).serialize(new TenShadowsDataProvider.Serializer()).copyOnDeath()::build);
+            AttachmentType.<ITenShadowsData>builder(holder -> new TenShadowsData((LivingEntity) holder)).serialize(new TenShadowsDataProvider.Serializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<IProjectionSorceryData>> PROJECTION_SORCERY = ATTACHMENT_TYPES.register("projection_sorcery",
-            AttachmentType.<IProjectionSorceryData>builder(ProjectionSorceryData::new).serialize(new ProjectionSorcereryDataProvider.Serializer()).copyOnDeath()::build);
+            AttachmentType.<IProjectionSorceryData>builder(holder -> new ProjectionSorceryData((LivingEntity) holder)).serialize(new ProjectionSorcereryDataProvider.Serializer()).copyOnDeath()::build);
     public static final Supplier<AttachmentType<ICurseManipulationData>> CURSE_MANIPULATION = ATTACHMENT_TYPES.register("curse_manipulation",
-            AttachmentType.<ICurseManipulationData>builder(CurseManipulationData::new).serialize(new CurseManipulationDataProvider.Serializer()).copyOnDeath()::build);
+            AttachmentType.<ICurseManipulationData>builder(holder -> new CurseManipulationData((LivingEntity) holder)).serialize(new CurseManipulationDataProvider.Serializer()).copyOnDeath()::build);
 }

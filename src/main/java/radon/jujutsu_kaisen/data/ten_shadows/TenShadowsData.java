@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JJKConstants;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
@@ -32,9 +33,11 @@ public class TenShadowsData implements ITenShadowsData {
     private final Map<Adaptation, Integer> adapting;
     private TenShadowsMode mode;
 
-    private LivingEntity owner;
+    private final LivingEntity owner;
 
-    public TenShadowsData() {
+    public TenShadowsData(LivingEntity owner) {
+        this.owner = owner;
+
         this.mode = TenShadowsMode.SUMMON;
         this.tamed = new HashSet<>();
         this.dead = new HashSet<>();
@@ -76,17 +79,8 @@ public class TenShadowsData implements ITenShadowsData {
     }
 
     @Override
-    public void tick(LivingEntity owner) {
-        if (this.owner == null) {
-            this.owner = owner;
-        }
-
+    public void tick() {
         this.updateAdaptation();
-    }
-
-    @Override
-    public void init(LivingEntity owner) {
-        this.owner = owner;
     }
 
     @Override
