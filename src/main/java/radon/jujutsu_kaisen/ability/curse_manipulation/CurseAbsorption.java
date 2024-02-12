@@ -49,17 +49,19 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        if (target.isRemoved()) return false;
 
-        if (ownercap == null) return false;
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        ISorcererData ownerData = ownercap.getSorcererData();
+        if (ownerCap == null) return false;
 
-        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
-        if (targetcap == null) return false;
+        IJujutsuCapability targetCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        ISorcererData targetData = targetcap.getSorcererData();
+        if (targetCap == null) return false;
+
+        ISorcererData targetData = targetCap.getSorcererData();
 
         if (ownerData == null || targetData == null) return false;
 
