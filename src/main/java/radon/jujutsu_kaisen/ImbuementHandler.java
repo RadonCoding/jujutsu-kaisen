@@ -2,6 +2,8 @@ package radon.jujutsu_kaisen;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -9,10 +11,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
+import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
+import radon.jujutsu_kaisen.item.JJKItems;
+import radon.jujutsu_kaisen.item.cursed_tool.MimicryKatanaItem;
+import radon.jujutsu_kaisen.util.CuriosUtil;
 
 import java.util.*;
 
@@ -123,53 +129,30 @@ public class ImbuementHandler {
             increaseImbuementAmount(stack, technique, amount);
         }
 
-        /*@SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
-            DamageSource source = event.getSource();
+        @SubscribeEvent
+        public static void onAbilityTrigger(AbilityTriggerEvent event) {
+            Ability ability = event.getAbility();
 
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+            ICursedTechnique technique = JJKCursedTechniques.getTechnique(ability);
 
-            ISorcererData data = attacker.getData(SorcererDataHandler.INSTANCE);
+            if (technique == null) return;
 
-            LivingEntity victim = event.getEntity();
-
-            if (victim.level().isClientSide) return;
+            LivingEntity owner = event.getEntity();
 
             List<ItemStack> stacks = new ArrayList<>();
-
-            if (source.getDirectEntity() instanceof ThrownChainProjectile chain) {
-                stacks.add(chain.getStack());
-            } else {
-                stacks.add(attacker.getItemInHand(InteractionHand.MAIN_HAND));
-                stacks.addAll(CuriosUtil.findSlots(attacker, attacker.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
-            }
+            stacks.add(owner.getItemInHand(InteractionHand.MAIN_HAND));
+            stacks.addAll(CuriosUtil.findSlots(owner, owner.getMainArm() == HumanoidArm.RIGHT ? "right_hand" : "left_hand"));
             stacks.removeIf(ItemStack::isEmpty);
 
-            if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
-
             for (ItemStack stack : stacks) {
-                for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
-                    Ability ability = technique.getImbuement();
+                if (!(stack.getItem() instanceof MimicryKatanaItem)) continue;
 
-                    if (!data.isCooldownDone(ability)) continue;
+                Set<ICursedTechnique> imbuements = getFullImbuements(stack);
 
-                    ((IImbuement) ability).hit(attacker, victim);
-
-                    if (attacker instanceof Player player && player.getAbilities().instabuild) continue;
-
-                    if (ability.getRealCooldown(attacker) == 0) continue;
-
-                    data.addCooldown(ability);
-
-                    if (attacker instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
-                    }
-                }
-
-                if (stack.is(JJKItems.MIMICRY_KATANA_BLACK.get()) || stack.is(JJKItems.MIMICRY_KATANA_WHITE.get())) {
+                if (imbuements.contains(technique)) {
                     stack.shrink(1);
                 }
             }
-        }*/
+        }
     }
 }
