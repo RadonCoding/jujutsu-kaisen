@@ -52,22 +52,22 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return;
+        if (ownerCap == null) return;
 
-        ISorcererData ownerSorcererData = ownercap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
         for (Entity entity : ownerSorcererData.getSummons()) {
             if (this.power == MAX_POWER) break;
             if (!(entity instanceof CursedSpirit)) continue;
 
-            IJujutsuCapability cursecap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability curseCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (cursecap == null) return;
+            if (curseCap == null) return;
 
-            ISorcererData curseData = cursecap.getSorcererData();
+            ISorcererData curseData = curseCap.getSorcererData();
 
             if (curseData == null) continue;
 

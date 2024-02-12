@@ -76,11 +76,11 @@ public class Mimicry extends Ability implements Ability.IToggled, Ability.IAttac
         if (owner.level().isClientSide) return false;
         if (!DamageUtil.isMelee(source)) return false;
 
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return false;
+        if (ownerCap == null) return false;
 
-        ISorcererData ownerData = ownercap.getSorcererData();
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
         IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

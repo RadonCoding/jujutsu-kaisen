@@ -152,11 +152,11 @@ public class SimpleDomainEntity extends Entity {
         } else if (owner != null) {
             super.tick();
 
-            IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownercap == null) return;
+            if (ownerCap == null) return;
 
-            ISorcererData ownerData = ownercap.getSorcererData();
+            ISorcererData ownerData = ownerCap.getSorcererData();
 
             this.setPos(owner.position());
 

@@ -224,11 +224,11 @@ public abstract class DomainExpansionEntity extends Entity {
                 SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
 
                 if (simple != null) {
-                    IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (ownercap == null) return false;
+                    if (ownerCap == null) return false;
 
-                    ISorcererData ownerSorcererData = ownercap.getSorcererData();
+                    ISorcererData ownerSorcererData = ownerCap.getSorcererData();
 
                     simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
                 }

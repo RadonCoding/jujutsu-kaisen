@@ -92,11 +92,11 @@ ISorcererData data = cap.getSorcererData();
 
         if (target == null) return;
 
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return;
+        if (ownerCap == null) return;
 
-        ISorcererData ownerData = ownercap.getSorcererData();
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
         for (int i = 0; i < 8; i++) {
             ownerData.delayTickEvent(() -> {
