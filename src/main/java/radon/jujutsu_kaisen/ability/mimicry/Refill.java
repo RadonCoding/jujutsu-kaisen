@@ -29,11 +29,11 @@ public class Refill extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return;
+        if (ownerCap == null) return;
 
-        ISorcererData ownerData = ownercap.getSorcererData();
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
         float amount = ownerData.getMaxEnergy() - ownerData.getEnergy();
 

@@ -39,12 +39,12 @@ public class SorcererGoal extends Goal {
     public void tick() {
         List<Ability> abilities = JJKAbilities.getAbilities(this.mob);
 
-        IJujutsuCapability ownercap = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return;
+        if (ownerCap == null) return;
 
-        ISorcererData ownerSorcererData = ownercap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownerCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerCap.getCurseManipulationData();
 
         if (ownerSorcererData.hasToggled(JJKAbilities.RIKA.get())) {
             if (ownerSorcererData.getCurrentCopied() == null || this.mob.tickCount % CHANGE_COPIED_TECHNIQUE_INTERVAL == 0) {

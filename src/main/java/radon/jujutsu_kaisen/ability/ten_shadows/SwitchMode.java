@@ -27,11 +27,11 @@ public class SwitchMode extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return false;
+        if (ownerCap == null) return false;
 
-        ITenShadowsData ownerData = ownercap.getTenShadowsData();
+        ITenShadowsData ownerData = ownerCap.getTenShadowsData();
 
         IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 

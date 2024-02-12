@@ -38,11 +38,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
 
-            IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownercap == null) return null;
+            if (ownerCap == null) return null;
 
-            ISorcererData ownerData = ownercap.getSorcererData();
+            ISorcererData ownerData = ownerCap.getSorcererData();
 
             float experience;
 
@@ -53,11 +53,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
                 experience = client.experience;
             } else {
-                IJujutsuCapability cursecap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability curseCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (cursecap == null) return null;
+                if (curseCap == null) return null;
 
-                ISorcererData curseData = cursecap.getSorcererData();
+                ISorcererData curseData = curseCap.getSorcererData();
 
                 experience = curseData.getExperience();
             }

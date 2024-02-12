@@ -84,11 +84,11 @@ public class IdleTransfiguration extends Ability implements Ability.IToggled, Ab
     }
 
     public static boolean checkSukuna(LivingEntity owner, LivingEntity target) {
-        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownerCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownercap == null) return false;
+        if (ownerCap == null) return false;
 
-        ISorcererData ownerData = ownercap.getSorcererData();
+        ISorcererData ownerData = ownerCap.getSorcererData();
 
         IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
