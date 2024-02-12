@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
@@ -32,7 +32,7 @@ public class CommandableTargetC2SPacket implements CustomPacketPayload {
         this(buf.readUUID());
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 

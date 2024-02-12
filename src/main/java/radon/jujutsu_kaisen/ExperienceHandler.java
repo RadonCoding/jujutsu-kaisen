@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -159,11 +160,16 @@ public class ExperienceHandler {
 
         private static float calculateStrength(LivingEntity entity) {
             float strength = entity.getMaxHealth() * 0.1F;
-            float armor = (float) entity.getArmorValue();
-            float toughness = (float) entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-            float f = 2.0F + toughness / 4.0F;
-            float f1 = Mth.clamp(armor - strength / f, armor * 0.2F, 20.0F);
-            strength /= 1.0F - f1 / 25.0F;
+
+            AttributeMap attributes = entity.getAttributes();
+
+            if (attributes.hasAttribute(Attributes.ARMOR_TOUGHNESS)) {
+                float armor = (float) entity.getArmorValue();
+                float toughness = (float) entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+                float f = 2.0F + toughness / 4.0F;
+                float f1 = Mth.clamp(armor - strength / f, armor * 0.2F, 20.0F);
+                strength /= 1.0F - f1 / 25.0F;
+            }
 
             MobEffectInstance instance = entity.getEffect(MobEffects.DAMAGE_RESISTANCE);
 
@@ -187,8 +193,12 @@ public class ExperienceHandler {
                 strength /= 1.0F - f2 / 25.0F;
             }
 
-            strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
-            strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            if (attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) {
+                strength += (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            }
+            if (attributes.hasAttribute(Attributes.MOVEMENT_SPEED)) {
+                strength += (float) entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            }
 
             if (entity instanceof PackCursedSpirit pack) {
                 strength += pack.getMinCount() + ((float) (pack.getMaxCount() - pack.getMinCount()) / 2);

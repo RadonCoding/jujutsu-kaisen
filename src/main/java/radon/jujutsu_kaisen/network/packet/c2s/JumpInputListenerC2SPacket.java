@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.entity.base.IJumpInputListener;
@@ -22,7 +22,7 @@ public class JumpInputListenerC2SPacket implements CustomPacketPayload {
         this(buf.readBoolean());
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 

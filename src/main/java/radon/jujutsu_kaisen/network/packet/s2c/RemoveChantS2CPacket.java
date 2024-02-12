@@ -3,7 +3,7 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
@@ -21,7 +21,7 @@ public class RemoveChantS2CPacket implements CustomPacketPayload {
         this(buf.readUtf());
     }
 
-    public void handle(ConfigurationPayloadContext ctx) {
+    public void handle(PlayPayloadContext ctx) {
         ctx.workHandler().submitAsync(() -> ClientChantHandler.remove(this.chant));
     }
 

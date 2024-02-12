@@ -41,3 +41,7 @@
 /settechnique @p jujutsu_kaisen:boogie_woogie
 /trait add @p VESSEL
 /settechnique @p jujutsu_kaisen:curse_manipulation
+/settechnique @p jujutsu_kaisen:boogie_woogie
+/settechnique @s jujutsu_kaisen:boogie_woogie
+/settechnique @p jujutsu_kaisen:curse_manipulation
+/kill @p

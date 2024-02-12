@@ -42,12 +42,24 @@ public class TenShadowsDataProvider {
 
             if (!ConfigHolder.SERVER.realisticShikigami.get()) {
                 data.revive(false);
-
-                if (clone instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
-                }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, ITenShadowsData> {

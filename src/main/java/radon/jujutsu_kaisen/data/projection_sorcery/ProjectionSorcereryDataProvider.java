@@ -16,6 +16,7 @@ import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsData;
 import radon.jujutsu_kaisen.network.PacketHandler;
+import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -39,13 +40,24 @@ public class ProjectionSorcereryDataProvider {
 
         if (event.isWasDeath()) {
             IProjectionSorceryData data = original.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
-
             data.resetSpeedStacks();
-
-            if (clone instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
-            }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), player);
     }
 
     public static class Serializer implements IAttachmentSerializer<CompoundTag, IProjectionSorceryData> {
