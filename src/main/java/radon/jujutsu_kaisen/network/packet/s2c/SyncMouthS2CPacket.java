@@ -26,7 +26,7 @@ public class SyncMouthS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> PerfectBodyVisual.onChant(this.src));
+        ctx.workHandler().execute(() -> PerfectBodyVisual.onChant(this.src));
     }
 
     @Override

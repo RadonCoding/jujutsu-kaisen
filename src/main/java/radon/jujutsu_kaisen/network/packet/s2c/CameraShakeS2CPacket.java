@@ -26,7 +26,7 @@ public class CameraShakeS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
+        ctx.workHandler().execute(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
     }
 
     @Override

@@ -30,7 +30,7 @@ public class AddChantC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             if (this.chant.length() > ConfigHolder.SERVER.maximumChantLength.get()) return;

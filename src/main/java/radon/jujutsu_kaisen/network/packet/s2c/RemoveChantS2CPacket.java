@@ -22,7 +22,7 @@ public class RemoveChantS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> ClientChantHandler.remove(this.chant));
+        ctx.workHandler().execute(() -> ClientChantHandler.remove(this.chant));
     }
 
     @Override

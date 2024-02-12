@@ -27,7 +27,7 @@ public class ShadowInventoryTakeC2SPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> {
+        ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
             ITenShadowsData data = sender.getData(JJKAttachmentTypes.TEN_SHADOWS);

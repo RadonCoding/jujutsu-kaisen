@@ -30,7 +30,7 @@ public class AddChantS2CPacket implements CustomPacketPayload {
     }
 
     public void handle(PlayPayloadContext ctx) {
-        ctx.workHandler().submitAsync(() -> ClientChantHandler.add(this.chant));
+        ctx.workHandler().execute(() -> ClientChantHandler.add(this.chant));
     }
 
     @Override
