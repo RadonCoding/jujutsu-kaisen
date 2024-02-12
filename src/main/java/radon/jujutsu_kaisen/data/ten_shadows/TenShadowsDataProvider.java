@@ -68,7 +68,11 @@ public class TenShadowsDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ITenShadowsData data = playerREPLACEMETEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -76,7 +80,11 @@ public class TenShadowsDataProvider {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ITenShadowsData data = playerREPLACEMETEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
     }
 
