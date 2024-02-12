@@ -15,7 +15,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 import java.util.Iterator;
 import java.util.List;
 
-public class Shuffle extends Ability implements Ability.IChannelened {
+public class Shuffle extends Ability implements Ability.IChannelened, Ability.IDurationable {
     public static final double RANGE = 30.0D;
 
     @Override
@@ -79,6 +79,11 @@ public class Shuffle extends Ability implements Ability.IChannelened {
     @Override
     public float getCost(LivingEntity owner) {
         return 5.0F;
+    }
+
+    @Override
+    public int getDuration() {
+        return 20;
     }
 
     @Override
