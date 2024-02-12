@@ -39,8 +39,6 @@ public class TenShadowsDataProvider {
         Player original = event.getOriginal();
         Player clone = event.getEntity();
 
-        if (!original.hasData(JJKAttachmentTypes.TEN_SHADOWS) || !clone.hasData(JJKAttachmentTypes.TEN_SHADOWS)) return;
-
         if (event.isWasDeath()) {
             ITenShadowsData data = original.getData(JJKAttachmentTypes.TEN_SHADOWS);
 

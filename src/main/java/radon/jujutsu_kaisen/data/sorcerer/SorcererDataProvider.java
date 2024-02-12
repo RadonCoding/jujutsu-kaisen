@@ -40,8 +40,6 @@ public class SorcererDataProvider {
         Player original = event.getOriginal();
         Player clone = event.getEntity();
 
-        if (!original.hasData(JJKAttachmentTypes.SORCERER) || !clone.hasData(JJKAttachmentTypes.SORCERER)) return;
-
         if (event.isWasDeath()) {
             ISorcererData data = original.getData(JJKAttachmentTypes.SORCERER);
             data.setEnergy(data.getMaxEnergy());
