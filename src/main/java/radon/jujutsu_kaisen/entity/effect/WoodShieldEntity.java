@@ -46,11 +46,11 @@ public class WoodShieldEntity extends Mob {
 
         this.setPos(owner.position());
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
         AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
@@ -95,11 +95,11 @@ public class WoodShieldEntity extends Mob {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) {
                 this.discard();

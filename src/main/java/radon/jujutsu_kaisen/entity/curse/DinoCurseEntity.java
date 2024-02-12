@@ -212,11 +212,11 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         this.setShooting(data.isChanneling(JJKAbilities.BLUE_FIRE.get()));
@@ -232,11 +232,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
         if (this.level().isClientSide) return;
         if (this.tickCount - this.riding < 20) return;
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         boolean channelling = data.isChanneling(JJKAbilities.BLUE_FIRE.get());

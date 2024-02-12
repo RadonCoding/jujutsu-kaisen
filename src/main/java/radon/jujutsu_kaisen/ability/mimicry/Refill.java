@@ -29,11 +29,11 @@ public class Refill extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return;
+        if (ownercap == null) return;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
         float amount = ownerData.getMaxEnergy() - ownerData.getEnergy();
 
@@ -41,11 +41,11 @@ public class Refill extends Ability {
 
         if (rika == null) return;
 
-        IJujutsuCapability rikaJujutsuCap = rika.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability rikacap = rika.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (rikaJujutsuCap == null) return;
+        if (rikacap == null) return;
 
-        ISorcererData rikaData = rikaJujutsuCap.getSorcererData();
+        ISorcererData rikaData = rikacap.getSorcererData();
 
         if (rikaData.getEnergy() > amount && ownerData.getEnergy() < ownerData.getMaxEnergy()) {
             ownerData.addEnergy(amount);
@@ -59,11 +59,11 @@ public class Refill extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }

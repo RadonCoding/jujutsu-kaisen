@@ -132,11 +132,11 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         super.onStopUsing(stack, entity, count);
 
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
         BlockHitResult hit = this.getBlockHit(entity);
 

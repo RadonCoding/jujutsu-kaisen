@@ -63,11 +63,11 @@ public class VeilRodBlockEntity extends BlockEntity {
             return false;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return false;
+            if (cap == null) return false;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
             float cost = COST * ((float) this.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
             return data.getEnergy() >= cost;
         }
@@ -87,11 +87,11 @@ public class VeilRodBlockEntity extends BlockEntity {
             return;
 
         if (!(owner instanceof Player player) || !player.getAbilities().instabuild) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             float cost = COST * ((float) pBlockEntity.getSize() / ConfigHolder.SERVER.maximumVeilSize.get()) * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);;
 
@@ -131,17 +131,17 @@ public class VeilRodBlockEntity extends BlockEntity {
 
                             if (opponent == null) continue;
 
-                            IJujutsuCapability veilCasterJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability veilCastercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (veilCasterJujutsuCap == null) continue;
+                            if (veilCastercap == null) continue;
 
-                            ISorcererData veilCasterData = veilCasterJujutsuCap.getSorcererData();
+                            ISorcererData veilCasterData = veilCastercap.getSorcererData();
 
-                            IJujutsuCapability domainCasterJujutsuCap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                            IJujutsuCapability domainCastercap = opponent.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                            if (domainCasterJujutsuCap == null) continue;
+                            if (domainCastercap == null) continue;
 
-                            ISorcererData domainCasterData = domainCasterJujutsuCap.getSorcererData();
+                            ISorcererData domainCasterData = domainCastercap.getSorcererData();
 
                             if (domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
 

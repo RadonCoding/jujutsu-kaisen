@@ -38,11 +38,11 @@ public class RequestVisualDataC2SPacket implements CustomPacketPayload {
 
             if (!(sender.serverLevel().getEntity(this.src) instanceof LivingEntity target)) return;
 
-            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(),
                     JJKAbilities.getTechniques(target), data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());

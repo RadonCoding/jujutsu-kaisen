@@ -32,17 +32,17 @@ public class PactRemovalAcceptCommand {
 
         if (src == null) return 0;
 
-        IJujutsuCapability srcJujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability srccap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (srcJujutsuCap == null) return 0;
+        if (srccap == null) return 0;
 
-        ISorcererData srcData = srcJujutsuCap.getSorcererData();
+        ISorcererData srcData = srccap.getSorcererData();
 
-        IJujutsuCapability dstJujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability dstcap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (dstJujutsuCap == null) return 0;
+        if (dstcap == null) return 0;
 
-        ISorcererData dstData = dstJujutsuCap.getSorcererData();
+        ISorcererData dstData = dstcap.getSorcererData();
 
         if (srcData == null || dstData == null) return 0;
 

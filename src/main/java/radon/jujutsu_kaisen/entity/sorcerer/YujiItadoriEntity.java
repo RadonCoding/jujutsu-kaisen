@@ -36,11 +36,11 @@ public class YujiItadoriEntity extends SorcererEntity {
         ItemStack stack = pPlayer.getItemInHand(pHand);
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return super.mobInteract(pPlayer, pHand);
+            if (cap == null) return super.mobInteract(pPlayer, pHand);
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data == null) return super.mobInteract(pPlayer, pHand);
 

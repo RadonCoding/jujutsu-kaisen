@@ -31,11 +31,11 @@ public class SetDomainSizeC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             data.setDomainSize(Mth.clamp(this.domainSize, ConfigHolder.SERVER.minimumDomainSize.get().floatValue(), ConfigHolder.SERVER.maximumDomainSize.get().floatValue()));
         });

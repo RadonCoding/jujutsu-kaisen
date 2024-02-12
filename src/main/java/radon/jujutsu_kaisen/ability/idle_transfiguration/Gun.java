@@ -26,11 +26,11 @@ public class Gun extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.hasToggled(this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
@@ -70,11 +70,11 @@ public class Gun extends Transformation {
 
     @Override
     public void onRightClick(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
         if (data.getTransfiguredSouls() == 0) return;

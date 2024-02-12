@@ -24,11 +24,11 @@ public class ClientSuggestionProviderMixin {
 
         if (player == null) return;
 
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasTrait(Trait.PERFECT_BODY)) return;
 

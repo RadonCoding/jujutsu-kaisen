@@ -63,11 +63,11 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
 
         if (owner == null) return super.hurt(pSource, pAmount);
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return super.hurt(pSource, pAmount);
+        if (cap == null) return super.hurt(pSource, pAmount);
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return super.hurt(pSource, pAmount);
 
@@ -87,7 +87,7 @@ public abstract class TransfiguredSoulEntity extends SummonEntity implements ISo
         this.goalSelector.addGoal(goal++, new WaterWalkingFloatGoal(this));
         this.goalSelector.addGoal(goal++, new MeleeAttackGoal(this, 1.1D, true));
         this.goalSelector.addGoal(goal++, new SorcererGoal(this));
-        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, false));
+        this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
         this.goalSelector.addGoal(goal, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));

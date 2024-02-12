@@ -25,11 +25,11 @@ public class ForestWave extends Ability implements Ability.IChannelened, Ability
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;

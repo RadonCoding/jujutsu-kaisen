@@ -134,11 +134,11 @@ public abstract class RadialScreen extends Screen {
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.minecraft == null || this.minecraft.player == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
@@ -206,12 +206,12 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData sorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData sorcererData = cap.getSorcererData();
+        ICurseManipulationData curseManipulationData = cap.getCurseManipulationData();
 
         return item.type == DisplayItem.Type.ABILITY && sorcererData.hasToggled(item.ability) ||
                 item.type == DisplayItem.Type.COPIED && sorcererData.getCurrentCopied() == item.copied ||

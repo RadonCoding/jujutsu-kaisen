@@ -52,10 +52,10 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         ItemStack stack = ctx.getItemInHand();
         NyoiStaffEntity staff = new NyoiStaffEntity(player, stack, Vec3.atLowerCornerWithOffset(ctx.getClickedPos(), 0.5D, 0.0D, 0.5D));
 
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             if (data.getNature() == CursedEnergyNature.LIGHTNING) {
                 float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.5F;

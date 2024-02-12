@@ -66,11 +66,11 @@ public class DisasterFlames extends Ability {
                 entity.setSecondsOnFire(5);
             }
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             for (int i = 0; i < 4; i++) {
                 data.delayTickEvent(() -> {

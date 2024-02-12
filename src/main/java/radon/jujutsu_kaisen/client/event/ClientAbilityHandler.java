@@ -70,11 +70,11 @@ public class ClientAbilityHandler {
 
             if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity viewer)) return;
 
-            IJujutsuCapability jujutsuCap = viewer.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = viewer.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
@@ -163,11 +163,11 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
@@ -188,11 +188,11 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
@@ -288,11 +288,11 @@ public class ClientAbilityHandler {
 
         if (owner == null) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         switch (status) {
             case ENERGY ->
@@ -315,11 +315,11 @@ public class ClientAbilityHandler {
 
         if (owner == null) return Ability.Status.FAILURE;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Ability.Status.FAILURE;
+        if (cap == null) return Ability.Status.FAILURE;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         if (data == null) return Ability.Status.FAILURE;
 

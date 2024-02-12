@@ -99,11 +99,11 @@ public class PiercingBullEntity extends TenShadowsSummon {
 
         float distance = this.distanceTo(target);
 
-        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {

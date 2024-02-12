@@ -35,11 +35,11 @@ public class SorcererDataProvider {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         data.tick();
     }
 
@@ -47,12 +47,12 @@ public class SorcererDataProvider {
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Player clone = event.getEntity();
 
-        IJujutsuCapability jujutsuCap = clone.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = clone.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
         if (event.isWasDeath()) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
             data.setEnergy(data.getMaxEnergy());
             data.clearToggled();
             data.resetCooldowns();
@@ -67,11 +67,11 @@ public class SorcererDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -79,11 +79,11 @@ public class SorcererDataProvider {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 

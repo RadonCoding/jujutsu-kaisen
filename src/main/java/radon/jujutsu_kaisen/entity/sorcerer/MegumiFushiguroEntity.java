@@ -79,11 +79,11 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
 
-        IJujutsuCapability jujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return;
+        if (cap == null) return;
 
-        ITenShadowsData data = jujutsu.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
 
         data.tame(JJKEntities.RABBIT_ESCAPE.get());
         data.tame(JJKEntities.TOAD.get());

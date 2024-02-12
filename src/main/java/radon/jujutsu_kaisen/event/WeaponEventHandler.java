@@ -70,10 +70,10 @@ public class WeaponEventHandler {
 
             if (!DamageUtil.isMelee(source) && !(source.getDirectEntity() instanceof ThrownChainProjectile)) return;
 
-            IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackerJujutsuCap != null) {
-                ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+            if (attackercap != null) {
+                ISorcererData attackerData = attackercap.getSorcererData();
 
                 if (attackerData.hasTrait(Trait.HEAVENLY_RESTRICTION) && !source.is(JJKDamageSources.SPLIT_SOUL_KATANA) && stacks.contains(JJKItems.SPLIT_SOUL_KATANA.get())) {
                     if (victim.hurt(JJKDamageSources.splitSoulKatanaAttack(attacker), event.getAmount())) {
@@ -124,10 +124,10 @@ public class WeaponEventHandler {
             }
 
             if (stacks.contains(JJKItems.INVERTED_SPEAR_OF_HEAVEN.get())) {
-                IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (victimJujutsuCap != null) {
-                    ISorcererData victimData = victimJujutsuCap.getSorcererData();
+                if (victimcap != null) {
+                    ISorcererData victimData = victimcap.getSorcererData();
 
                     List<Ability> remove = new ArrayList<>();
 
@@ -155,11 +155,11 @@ public class WeaponEventHandler {
 
             if (victim.level().isClientSide) return;
 
-            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             List<ItemStack> stacks = new ArrayList<>();
 

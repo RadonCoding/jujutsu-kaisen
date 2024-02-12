@@ -178,11 +178,11 @@ public abstract class DomainExpansionEntity extends Entity {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(this.ability)) {
                 this.discard();
@@ -212,26 +212,26 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimJujutsuCap == null) return false;
+        if (victimcap != null) {
+            ISorcererData victimSorcererData = victimcap.getSorcererData();
+            ITenShadowsData victimTenShadowsData = victimcap.getTenShadowsData();
 
-        ISorcererData victimSorcererData = victimJujutsuCap.getSorcererData();
-        ITenShadowsData victimTenShadowsData = victimJujutsuCap.getTenShadowsData();
-        
-        if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
+            if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
 
-        if (victimSorcererData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-            SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
+            if (victimSorcererData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+                SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
 
-            if (simple != null) {
-                IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                if (simple != null) {
+                    IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (ownerJujutsuCap == null) return false;
+                    if (ownercap == null) return false;
 
-                ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
+                    ISorcererData ownerSorcererData = ownercap.getSorcererData();
 
-                simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
+                }
             }
         }
 
@@ -250,11 +250,11 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (owner == null) return 0.0F;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
     }

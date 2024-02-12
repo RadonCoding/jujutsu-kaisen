@@ -64,11 +64,11 @@ public class CursedSpiritOrbItem extends Item {
             return stack;
         }
 
-        IJujutsuCapability jujutsu = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return stack;
+        if (cap == null) return stack;
 
-        ICurseManipulationData data = jujutsu.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
         data.addCurse(getAbsorbed(pStack));
 
         return stack;

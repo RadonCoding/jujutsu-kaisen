@@ -34,11 +34,11 @@ public class WaterWalkingFloatGoal extends Goal {
 
     @Override
     public void tick() {
-        IJujutsuCapability jujutsu = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsu == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsu.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         Ability ability = JJKAbilities.CURSED_ENERGY_FLOW.get();
 

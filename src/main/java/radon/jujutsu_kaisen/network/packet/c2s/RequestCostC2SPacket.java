@@ -44,11 +44,11 @@ public class RequestCostC2SPacket implements CustomPacketPayload {
 
             if (target == null) return;
 
-            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             int cost = (Mth.floor(64 * ((float) (SorcererUtil.getGrade(data.getExperience()).ordinal() + 1) / SorcererGrade.values().length)));
 

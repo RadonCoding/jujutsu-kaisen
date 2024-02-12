@@ -47,11 +47,11 @@ public class SwapSelf extends Ability {
             return true;
         }
 
-        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getEnergy() > 0.0F;
     }

@@ -103,11 +103,11 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         if (!(pResult.getEntity() instanceof LivingEntity entity)) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
@@ -124,11 +124,11 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
     public void tick() {
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
                 DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 

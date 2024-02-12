@@ -243,11 +243,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
 
-                    IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                    if (jujutsuCap == null) return;
+                    if (cap == null) return;
 
-                    ISorcererData data = jujutsuCap.getSorcererData();
+                    ISorcererData data = cap.getSorcererData();
 
                     if (instant) {
                         this.createBlock(radius - delay, pos, radius, distance);
@@ -271,11 +271,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
-            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) continue;
+            if (cap == null) continue;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
@@ -331,11 +331,11 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
         if (owner == null) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         data.setBurnout(DomainExpansion.BURNOUT);
 

@@ -90,11 +90,11 @@ public class EntityUtil {
 
     @Nullable
     public static RCT1 getRCTTier(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return null;
+        if (cap == null) return null;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (data.isUnlocked(JJKAbilities.RCT3.get())) return JJKAbilities.RCT3.get();
         if (data.isUnlocked(JJKAbilities.RCT2.get())) return JJKAbilities.RCT2.get();

@@ -51,11 +51,11 @@ public class MalevolentShrine extends DomainExpansion implements DomainExpansion
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return null;
+        if (cap == null) return null;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         int width = Math.round(this.getWidth() * data.getDomainSize());
         int height = Math.round(this.getHeight() * data.getDomainSize());

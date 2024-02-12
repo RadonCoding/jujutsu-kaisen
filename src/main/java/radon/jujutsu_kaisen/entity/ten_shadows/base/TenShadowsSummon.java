@@ -79,11 +79,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner == null) return true;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return true;
+        if (cap == null) return true;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasToggled(this.getAbility())) {
             return true;
@@ -105,7 +105,7 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         this.targetSelector.addGoal(target++, new HurtByTargetGoal(this));
 
         if (this.isTame()) {
-            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 25.0F, 10.0F, this.canFly()));
+            this.goalSelector.addGoal(goal++, new BetterFollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, this.canFly()));
 
             this.targetSelector.addGoal(target++, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(target, new OwnerHurtTargetGoal(this));
@@ -207,11 +207,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner == null) return;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ITenShadowsData data = jujutsuCap.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
 
         if (!this.isTame()) {
             if (pCause.getEntity() == owner || (pCause.getEntity() instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner)) {
@@ -265,11 +265,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null && this.isClone()) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) {
                 this.discard();
@@ -339,11 +339,11 @@ public abstract class TenShadowsSummon extends SummonEntity implements ICommanda
 
         if (owner == null) return 0.0F;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getExperience();
     }

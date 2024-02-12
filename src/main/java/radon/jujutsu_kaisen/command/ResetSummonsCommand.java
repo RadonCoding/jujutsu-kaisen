@@ -24,11 +24,11 @@ public class ResetSummonsCommand {
     }
 
     public static int reset(ServerPlayer player) {
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0;
+        if (cap == null) return 0;
 
-        ITenShadowsData data = jujutsuCap.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
         data.revive(true);
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), player);
         return 1;

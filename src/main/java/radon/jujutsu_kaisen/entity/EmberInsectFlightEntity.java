@@ -68,11 +68,11 @@ public class EmberInsectFlightEntity extends Entity implements GeoEntity, Player
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.EMBER_INSECT_FLIGHT.get())) {
                 this.discard();

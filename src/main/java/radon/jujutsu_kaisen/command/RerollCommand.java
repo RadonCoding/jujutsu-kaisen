@@ -23,11 +23,11 @@ public class RerollCommand {
     }
 
     public static int reroll(ServerPlayer player) {
-        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0;
+        if (cap == null) return 0;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         PlayerUtil.removeAdvancement(player, "six_eyes");
         PlayerUtil.removeAdvancement(player, "heavenly_restriction");

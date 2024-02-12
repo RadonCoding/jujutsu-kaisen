@@ -34,11 +34,11 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getType() == JujutsuType.CURSE;
     }
@@ -49,17 +49,17 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
     }
 
     private static boolean canAbsorb(LivingEntity owner, LivingEntity target) {
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return false;
+        if (ownercap == null) return false;
 
-        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+        ISorcererData ownerData = ownercap.getSorcererData();
 
-        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability targetcap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (targetJujutsuCap == null) return false;
+        if (targetcap == null) return false;
 
-        ISorcererData targetData = targetJujutsuCap.getSorcererData();
+        ISorcererData targetData = targetcap.getSorcererData();
 
         if (ownerData == null || targetData == null) return false;
 
@@ -94,17 +94,17 @@ public class CurseAbsorption extends Ability implements Ability.IToggled {
 
         if (!canAbsorb(attacker, victim)) return;
 
-        IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (attackerJujutsuCap == null) return;
+        if (attackercap == null) return;
 
-        ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+        ISorcererData attackerData = attackercap.getSorcererData();
 
-        IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (victimJujutsuCap == null) return;
+        if (victimcap == null) return;
 
-        ISorcererData victimData = victimJujutsuCap.getSorcererData();
+        ISorcererData victimData = victimcap.getSorcererData();
 
         if (!attackerData.hasToggled(JJKAbilities.CURSE_ABSORPTION.get())) return;
 

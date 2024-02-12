@@ -35,11 +35,11 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
 
     @Override
     protected DomainExpansionEntity createBarrier(LivingEntity owner) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return null;
+        if (cap == null) return null;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         int width = Math.round(this.getWidth() * data.getDomainSize());
         int height = Math.round(this.getHeight() * data.getDomainSize());
@@ -79,11 +79,11 @@ public class ChimeraShadowGarden extends DomainExpansion implements DomainExpans
         public static void onAbilityTrigger(AbilityTriggerEvent.Pre event) {
             LivingEntity owner = event.getEntity();
 
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsuCap == null) return;
+            if (cap == null) return;
 
-            ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get())) return;
 

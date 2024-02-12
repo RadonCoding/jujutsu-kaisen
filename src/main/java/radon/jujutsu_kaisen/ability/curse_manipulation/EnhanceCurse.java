@@ -38,11 +38,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
         if (RotationUtil.getLookAtHit(owner, RANGE) instanceof EntityHitResult hit && hit.getEntity() instanceof CursedSpirit curse) {
             if (curse.getOwner() != owner) return null;
 
-            IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (ownerJujutsuCap == null) return null;
+            if (ownercap == null) return null;
 
-            ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
+            ISorcererData ownerData = ownercap.getSorcererData();
 
             float experience;
 
@@ -53,11 +53,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
                 experience = client.experience;
             } else {
-                IJujutsuCapability curseJujutsuCap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cursecap = curse.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (curseJujutsuCap == null) return null;
+                if (cursecap == null) return null;
 
-                ISorcererData curseData = curseJujutsuCap.getSorcererData();
+                ISorcererData curseData = cursecap.getSorcererData();
 
                 experience = curseData.getExperience();
             }
@@ -99,11 +99,11 @@ public class EnhanceCurse extends Ability implements Ability.IChannelened {
 
         if (target == null) return;
 
-        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         data.addExperience(20.0F);
 

@@ -30,11 +30,11 @@ public class PactCreationDeclineCommand {
 
         if (src == null) return 0;
 
-        IJujutsuCapability jujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0;
+        if (cap == null) return 0;
 
-        ISorcererData dstData = jujutsuCap.getSorcererData();
+        ISorcererData dstData = cap.getSorcererData();
 
         if (dstData == null) return 0;
 

@@ -39,11 +39,11 @@ public class ParticleColors {
             return Vec3.fromRGB24(client.cursedEnergyColor).toVector3f();
         }
 
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return Vec3.ZERO.toVector3f();
+        if (cap == null) return Vec3.ZERO.toVector3f();
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         return Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
     }
 

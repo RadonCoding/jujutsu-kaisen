@@ -72,11 +72,11 @@ public class DragonBoneItem extends CursedToolItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        IJujutsuCapability jujutsuCap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pPlayer.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return super.use(pLevel, pPlayer, pUsedHand);
+        if (cap == null) return super.use(pLevel, pPlayer, pUsedHand);
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         float charge = getEnergy(stack) / MAX_ENERGY;

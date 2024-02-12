@@ -37,11 +37,11 @@ public class DamageEventHandler {
 
             // Perfect body generic melee increase
             if (source.getEntity() instanceof LivingEntity attacker) {
-                IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 if (data != null && data.hasTrait(Trait.PERFECT_BODY)) {
                     if (DamageUtil.isMelee(source)) {
@@ -52,11 +52,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
             // Lessen damage for sorcerers
             if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 if (data != null) {
                     float armor = data.getExperience() * 0.002F;

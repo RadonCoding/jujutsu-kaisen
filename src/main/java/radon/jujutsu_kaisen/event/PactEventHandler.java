@@ -31,11 +31,11 @@ public class PactEventHandler {
 
             // Check for BindingVow.RECOIL
             if (source.is(JJKDamageSources.JUJUTSU)) {
-                IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (jujutsuCap == null) return;
+                if (cap == null) return;
                 
-                ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 if (data.hasBindingVow(BindingVow.RECOIL)) {
                     attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
@@ -67,17 +67,17 @@ public class PactEventHandler {
             }
 
             // Check for Pact.INVULNERABILITY
-            IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability victimcap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimJujutsuCap == null) return;
+            if (victimcap == null) return;
 
-            ISorcererData victimData = victimJujutsuCap.getSorcererData();
+            ISorcererData victimData = victimcap.getSorcererData();
             
-            IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability attackercap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (attackerJujutsuCap == null) return;
+            if (attackercap == null) return;
 
-            ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
+            ISorcererData attackerData = attackercap.getSorcererData();
 
             if (victimData.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerData.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
                 event.setCanceled(true);

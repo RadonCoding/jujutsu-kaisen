@@ -1176,11 +1176,11 @@ public class SorcererData implements ISorcererData {
                     owner.server.getPlayerList().load(player);
                 }
 
-                IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (jujutsuCap == null) continue;
+                if (cap == null) continue;
 
-                ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
 
                 taken.addAll(JJKAbilities.getTechniques(player));
                 traits.addAll(data.getTraits());

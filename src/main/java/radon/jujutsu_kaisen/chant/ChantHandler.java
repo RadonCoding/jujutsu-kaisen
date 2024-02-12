@@ -18,11 +18,11 @@ public class ChantHandler {
     }
 
     public static float getOutput(LivingEntity owner, Ability ability) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -32,11 +32,11 @@ public class ChantHandler {
     public static float getChant(LivingEntity owner, Ability ability) {
         List<String> messages = owner.level().isClientSide ? ClientChantHandler.getMessages() : ServerChantHandler.getMessages(owner);
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -68,11 +68,11 @@ public class ChantHandler {
 
         if (messages.isEmpty()) return null;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return null;
+        if (cap == null) return null;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         Ability ability = data.getAbility(messages.get(messages.size() - 1));
 

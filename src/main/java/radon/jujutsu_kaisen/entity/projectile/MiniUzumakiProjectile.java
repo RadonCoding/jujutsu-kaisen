@@ -37,12 +37,12 @@ public class MiniUzumakiProjectile extends BeamEntity {
         this.setOwner(owner);
         this.setPower(power);
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData ownerSorcererData = jujutsuCap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = jujutsuCap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = cap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = cap.getCurseManipulationData();
 
         Entity weakest = null;
 
@@ -54,27 +54,27 @@ public class MiniUzumakiProjectile extends BeamEntity {
                 continue;
             }
 
-            IJujutsuCapability weakestJujutsuCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability weakestcap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (weakestJujutsuCap == null) continue;
+            if (weakestcap == null) continue;
 
-            IJujutsuCapability currentJujutsuCap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability currentcap = current.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (currentJujutsuCap == null) continue;
+            if (currentcap == null) continue;
 
-            ISorcererData weakestData = weakestJujutsuCap.getSorcererData();
-            ISorcererData currentData = currentJujutsuCap.getSorcererData();
+            ISorcererData weakestData = weakestcap.getSorcererData();
+            ISorcererData currentData = currentcap.getSorcererData();
 
             if (currentData.getExperience() < weakestData.getExperience()) weakest = current;
         }
 
         if (weakest == null) return;
 
-        IJujutsuCapability weakestJujutsuCap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability weakestcap = weakest.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (weakestJujutsuCap == null) return;
+        if (weakestcap == null) return;
 
-        ISorcererData weakestData = weakestJujutsuCap.getSorcererData();
+        ISorcererData weakestData = weakestcap.getSorcererData();
 
         this.setPower(SorcererUtil.getPower(weakestData.getExperience()));
 

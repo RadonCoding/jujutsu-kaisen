@@ -41,11 +41,11 @@ public class AddChantC2SPacket implements CustomPacketPayload {
 
             if (ability == null || !ability.isScalable(sender) || !ability.isTechnique()) return;
 
-            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             String text = this.chant.toLowerCase();
 

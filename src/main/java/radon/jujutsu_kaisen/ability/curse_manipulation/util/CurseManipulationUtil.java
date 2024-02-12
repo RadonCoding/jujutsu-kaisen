@@ -63,11 +63,11 @@ public class CurseManipulationUtil {
 
     @Nullable
     public static Entity summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return null;
+        if (cap == null) return null;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
 
         List<AbsorbedCurse> curses = data.getCurses();
 
@@ -78,12 +78,12 @@ public class CurseManipulationUtil {
 
     @Nullable
     public static Entity summonCurse(LivingEntity owner, int index, boolean charge) {
-        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability ownercap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerJujutsuCap == null) return null;
+        if (ownercap == null) return null;
 
-        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
-        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
+        ISorcererData ownerSorcererData = ownercap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownercap.getCurseManipulationData();
 
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || ownerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
 
@@ -117,11 +117,11 @@ public class CurseManipulationUtil {
             PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerSorcererData.serializeNBT()), player);
         }
 
-        IJujutsuCapability curseJujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cursecap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (curseJujutsuCap == null) return null;
+        if (cursecap == null) return null;
 
-        ISorcererData curseData = curseJujutsuCap.getSorcererData();
+        ISorcererData curseData = cursecap.getSorcererData();
         curseData.deserializeNBT(curse.getData());
         
         return entity;

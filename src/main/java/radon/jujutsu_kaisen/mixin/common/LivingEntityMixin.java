@@ -46,11 +46,11 @@ public abstract class LivingEntityMixin {
                 cir.setReturnValue(true);
             }
         } else {
-            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
             for (Ability ability : data.getToggled()) {
                 if (!(ability instanceof ITransformation transformation)) continue;
@@ -63,10 +63,10 @@ ISorcererData data = jujutsuCap.getSorcererData();
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"))
     public float travel(BlockState instance, LevelReader levelReader, BlockPos blockPos, Entity entity) {
-        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap != null) {
-            ISorcererData data = jujutsuCap.getSorcererData();
+        if (cap != null) {
+            ISorcererData data = cap.getSorcererData();
 
             if (data.hasToggled(JJKAbilities.DISMANTLE_SKATING.get()) && instance.getFluidState().isEmpty()) {
                 return 1.0989F - 0.02F;

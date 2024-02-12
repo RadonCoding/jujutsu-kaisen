@@ -33,11 +33,11 @@ public class SyncTenShadowsDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (jujutsu == null) return;
+            if (cap == null) return;
 
-            ITenShadowsData data = jujutsu.getTenShadowsData();
+            ITenShadowsData data = cap.getTenShadowsData();
             data.deserializeNBT(this.nbt);
         });
     }

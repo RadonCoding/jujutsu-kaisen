@@ -31,11 +31,11 @@ public class CursedEnergyOverlay {
 
         if (mc.player == null) return;
 
-        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);

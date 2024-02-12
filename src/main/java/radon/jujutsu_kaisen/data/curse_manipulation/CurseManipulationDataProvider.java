@@ -41,11 +41,11 @@ public class CurseManipulationDataProvider {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
+        ICurseManipulationData data = cap.getCurseManipulationData();
         data.tick();
     }
 
@@ -53,11 +53,11 @@ public class CurseManipulationDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsu == null) return;
+if (cap == null) return;
 
-ICurseManipulationData data = jujutsu.getCurseManipulationData();
+ICurseManipulationData data = cap.getCurseManipulationData();
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -65,11 +65,11 @@ ICurseManipulationData data = jujutsu.getCurseManipulationData();
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsu == null) return;
+if (cap == null) return;
 
-ICurseManipulationData data = jujutsu.getCurseManipulationData();
+ICurseManipulationData data = cap.getCurseManipulationData();
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(data.serializeNBT()), player);
     }
 

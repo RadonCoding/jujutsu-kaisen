@@ -182,11 +182,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+            IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.RIKA.get())) {
                 this.discard();
@@ -266,11 +266,11 @@ public class RikaEntity extends SummonEntity implements ICommandable, ISorcerer 
 
         if (owner == null) return 0.0F;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return 0.0F;
+        if (cap == null) return 0.0F;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         return data.getExperience();
     }

@@ -42,11 +42,11 @@ public class CursedEnergyColorTab extends JJKTab {
             if (this.minecraft != null && this.minecraft.player != null) {
                 int color = FastColor.ARGB32.color(255, Math.round(r), Math.round(g), Math.round(b));
 
-                IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
                 PacketHandler.sendToServer(new SetCursedEnergyColorC2SPacket(color));
                 data.setCursedEnergyColor(color);
@@ -78,11 +78,11 @@ ISorcererData data = jujutsuCap.getSorcererData();
     public void addWidgets() {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
-        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+if (cap == null) return;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+ISorcererData data = cap.getSorcererData();
 
 
         Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();

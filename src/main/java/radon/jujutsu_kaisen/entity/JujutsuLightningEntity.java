@@ -105,11 +105,11 @@ public class JujutsuLightningEntity extends LightningBolt {
                 LivingEntity owner = this.getOwner();
 
                 if (owner != null) {
-                    IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                    IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
                     for (Entity entity : entities) {
                         if (entity == owner) continue;

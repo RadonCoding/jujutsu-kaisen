@@ -26,11 +26,11 @@ public class MimicryKatanaItem extends KatanaItem {
     public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 
-        IJujutsuCapability jujutsuCap = pEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = pEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
 
         if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
             pStack.shrink(1);

@@ -62,11 +62,11 @@ public class NearestAttackableHumanGoal extends TargetGoal {
     protected void findTarget() {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             if (!(entity instanceof TamableAnimal tamable && entity instanceof ISorcerer && tamable.isTame())) {
-                IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+                IJujutsuCapability cap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-                if (jujutsuCap == null) return false;
+                if (cap == null) return false;
 
-                ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = cap.getSorcererData();
                 return data.hasTrait(Trait.HEAVENLY_RESTRICTION);
             }
             return false;

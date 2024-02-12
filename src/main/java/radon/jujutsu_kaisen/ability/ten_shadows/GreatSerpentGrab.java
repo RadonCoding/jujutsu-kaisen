@@ -32,11 +32,11 @@ public class GreatSerpentGrab extends Ability {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return false;
+        if (cap == null) return false;
 
-        ITenShadowsData data = jujutsuCap.getTenShadowsData();
+        ITenShadowsData data = cap.getTenShadowsData();
 
         return data.hasTamed(JJKEntities.GREAT_SERPENT.get()) && JJKAbilities.GREAT_SERPENT.get().getStatus(owner) == Status.SUCCESS;
     }
@@ -63,11 +63,11 @@ public class GreatSerpentGrab extends Ability {
 
         AbilityHandler.trigger(owner, JJKAbilities.GREAT_SERPENT.get());
 
-        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+        IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (jujutsuCap == null) return;
+        if (cap == null) return;
 
-        ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = cap.getSorcererData();
         
 
         GreatSerpentEntity serpent = data.getSummonByClass(GreatSerpentEntity.class);
