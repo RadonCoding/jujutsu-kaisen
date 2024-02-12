@@ -119,12 +119,12 @@ public class VeilRodBlockEntity extends BlockEntity {
                         for (DomainExpansionEntity domain : domains) {
                             LivingEntity opponent = domain.getOwner();
 
-                            if (opponent == null || opponent == owner) continue;
+                            if (opponent == null) continue;
 
                             ISorcererData veilCasterData = owner.getData(JJKAttachmentTypes.SORCERER);
                             ISorcererData domainCasterData = opponent.getData(JJKAttachmentTypes.SORCERER);
 
-                            if (domainCasterData.getAbilityPower() < veilCasterData.getAbilityPower()) continue;
+                            if (domainCasterData.getAbilityPower() <= veilCasterData.getAbilityPower()) continue;
 
                             if (domain.isInsideBarrier(pos)) {
                                 if (pLevel.getBlockEntity(pos) instanceof VeilBlockEntity be) {
