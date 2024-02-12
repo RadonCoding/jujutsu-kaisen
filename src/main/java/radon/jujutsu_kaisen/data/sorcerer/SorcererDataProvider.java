@@ -54,7 +54,7 @@ public class SorcererDataProvider {
         ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
         data.init(player);
 
-        if (!player.level().isClientSide) return;
+        if (player.level().isClientSide) return;
 
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
     }

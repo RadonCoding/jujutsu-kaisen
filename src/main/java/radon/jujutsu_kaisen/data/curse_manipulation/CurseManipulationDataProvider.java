@@ -38,7 +38,7 @@ public class CurseManipulationDataProvider {
         ICurseManipulationData data = player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
         data.init(player);
 
-        if (!player.level().isClientSide) return;
+        if (player.level().isClientSide) return;
 
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
     }

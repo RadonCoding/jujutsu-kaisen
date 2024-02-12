@@ -55,7 +55,7 @@ public class TenShadowsDataProvider {
         ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
         data.init(player);
 
-        if (!player.level().isClientSide) return;
+        if (player.level().isClientSide) return;
 
         PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), (ServerPlayer) player);
     }
