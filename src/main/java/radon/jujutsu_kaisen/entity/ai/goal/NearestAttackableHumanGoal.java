@@ -64,9 +64,9 @@ public class NearestAttackableHumanGoal extends TargetGoal {
             if (!(entity instanceof TamableAnimal tamable && entity instanceof ISorcerer && tamable.isTame())) {
                 IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+                if (jujutsuCap == null) return false;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = jujutsuCap.getSorcererData();
                 return data.hasTrait(Trait.HEAVENLY_RESTRICTION);
             }
             return false;

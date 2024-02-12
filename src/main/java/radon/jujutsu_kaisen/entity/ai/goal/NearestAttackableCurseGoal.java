@@ -66,9 +66,9 @@ public class NearestAttackableCurseGoal extends TargetGoal {
             if (!(entity instanceof TamableAnimal tamable) || !tamable.isTame()) {
                 IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+                if (jujutsuCap == null) return false;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+                ISorcererData data = jujutsuCap.getSorcererData();
                 return entity instanceof SukunaEntity || entity instanceof HeianSukunaEntity || data.getType() == JujutsuType.CURSE;
             }
             return false;

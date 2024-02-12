@@ -55,19 +55,20 @@ public class VeilBlock extends Block implements EntityBlock {
 
     @Override
     public @NotNull VoxelShape getCollisionShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
+        VoxelShape shape = super.getCollisionShape(pState, pLevel, pPos, pContext);
+
         if (pContext instanceof EntityCollisionContext ctx) {
-            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be))
-                return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (!(pLevel.getBlockEntity(pPos) instanceof VeilBlockEntity be)) return shape;
 
             Entity entity = ctx.getEntity();
 
-            if (entity == null) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            if (entity == null) return shape;
 
             IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return shape;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data != null && data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
                 return Shapes.empty();
@@ -75,7 +76,7 @@ ISorcererData data = jujutsuCap.getSorcererData();
             if (entity instanceof Projectile projectile) entity = projectile.getOwner();
             return VeilBlockEntity.isAllowed(be.getParent(), entity) && !pContext.isAbove(Shapes.block(), pPos, true) ? Shapes.empty() : Shapes.block();
         }
-        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+        return shape;
     }
 
     @Nullable

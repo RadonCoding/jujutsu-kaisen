@@ -37,7 +37,7 @@ public class DamageUtil {
         }
 
         if (projectile instanceof JujutsuProjectile jujutsu) {
-            return !jujutsuCap.isDomain();
+            return !jujutsu.isDomain();
         }
         return true;
     }
@@ -54,10 +54,10 @@ public class DamageUtil {
         if (source.getEntity() instanceof LivingEntity attacker && isMelee(source)) {
             IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return true;
 
-ISorcererData data = jujutsuCap.getSorcererData();
-            return data == null || !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
+            ISorcererData data = jujutsuCap.getSorcererData();
+            return !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
         return true;
     }

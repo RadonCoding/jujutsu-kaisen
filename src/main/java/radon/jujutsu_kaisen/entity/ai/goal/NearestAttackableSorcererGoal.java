@@ -63,9 +63,9 @@ public class NearestAttackableSorcererGoal extends TargetGoal {
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(LivingEntity.class, this.getTargetSearchArea(this.getFollowDistance()), entity -> {
             IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+            if (jujutsuCap == null) return false;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+            ISorcererData data = jujutsuCap.getSorcererData();
             return data.getType() == JujutsuType.SORCERER;
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }

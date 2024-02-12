@@ -45,9 +45,9 @@ public interface ISorcerer {
 
         IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-if (jujutsuCap == null) return;
+        if (jujutsuCap == null) return SorcererGrade.GRADE_4;
 
-ISorcererData data = jujutsuCap.getSorcererData();
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return SorcererGrade.GRADE_4;
 
