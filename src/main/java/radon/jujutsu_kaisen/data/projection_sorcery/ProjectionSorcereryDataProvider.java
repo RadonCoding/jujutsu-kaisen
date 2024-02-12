@@ -8,16 +8,21 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsData;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncProjectionSorceryDataS2CPacket;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -26,22 +31,34 @@ import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ProjectionSorcereryDataProvider {
     @SubscribeEvent
+    public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
+        if (!(entity instanceof ISorcerer) && !(entity instanceof Player)) return;
+        entity.setData(JJKAttachmentTypes.PROJECTION_SORCERY, new ProjectionSorceryData(entity));
+    }
+
+    @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        if (!owner.hasData(JJKAttachmentTypes.PROJECTION_SORCERY)) return;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        IProjectionSorceryData data = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        if (jujutsuCap == null) return;
+
+        IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
         data.tick();
     }
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
         Player clone = event.getEntity();
 
+        IJujutsuCapability jujutsuCap = clone.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
         if (event.isWasDeath()) {
-            IProjectionSorceryData data = original.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+            IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
             data.resetSpeedStacks();
         }
     }
@@ -50,7 +67,11 @@ public class ProjectionSorcereryDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -58,7 +79,11 @@ public class ProjectionSorcereryDataProvider {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        IProjectionSorceryData data = jujutsuCap.getProjectionSorceryData();
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), player);
     }
 

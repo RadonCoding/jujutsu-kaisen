@@ -15,6 +15,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -50,16 +52,22 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerSorcererData == null || ownerCurseManipulationData == null) return;
+        if (ownerJujutsuCap == null) return;
+
+        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
 
         for (Entity entity : ownerSorcererData.getSummons()) {
             if (this.power == MAX_POWER) break;
             if (!(entity instanceof CursedSpirit)) continue;
 
-            ISorcererData curseData = entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability curseJujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (curseJujutsuCap == null) return;
+
+            ISorcererData curseData = curseJujutsuCap.getSorcererData();
 
             if (curseData == null) continue;
 

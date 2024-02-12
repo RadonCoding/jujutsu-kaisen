@@ -8,6 +8,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
 public class MimicryKatanaItem extends KatanaItem {
@@ -24,7 +26,11 @@ public class MimicryKatanaItem extends KatanaItem {
     public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 
-        ISorcererData data = pEntity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = pEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!data.hasSummonOfClass(DomainExpansionEntity.class)) {
             pStack.shrink(1);

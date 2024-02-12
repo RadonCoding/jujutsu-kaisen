@@ -16,6 +16,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -60,7 +62,11 @@ public class Punch extends Ability {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
 
         Vec3 look = RotationUtil.getTargetAdjustedLookAngle(owner);
@@ -126,7 +132,11 @@ public class Punch extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return 0.0F;
 

@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.config.ConfigHolder;
@@ -51,10 +53,14 @@ public abstract class CursedObjectItem extends Item {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
         ItemStack stack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
 
-        ISorcererData data = pEntityLiving.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = pEntityLiving.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data != null && data.getType() == JujutsuType.CURSE) {
-            data.addExtraEnergy(this.getEnergy());
+        if (jujutsuCap != null) {
+            ISorcererData data = jujutsuCap.getSorcererData();
+
+            if (data.getType() == JujutsuType.CURSE) {
+                data.addExtraEnergy(this.getEnergy());
+            }
         } else {
             pEntityLiving.addEffect(new MobEffectInstance(MobEffects.WITHER, Mth.floor(DURATION * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length)),
                     Mth.floor(AMPLIFIER * ((float) (this.getGrade().ordinal() + 1) / SorcererGrade.values().length))));

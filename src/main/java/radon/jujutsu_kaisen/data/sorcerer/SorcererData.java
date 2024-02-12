@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.ability.AbilityStopEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -1171,7 +1173,11 @@ public class SorcererData implements ISorcererData {
                     owner.server.getPlayerList().load(player);
                 }
 
-                ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (jujutsuCap == null) continue;
+
+                ISorcererData data = jujutsuCap.getSorcererData();
 
                 taken.addAll(JJKAbilities.getTechniques(player));
                 traits.addAll(data.getTraits());

@@ -9,6 +9,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
@@ -31,7 +33,11 @@ public class SyncTenShadowsDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            ITenShadowsData data = player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            ITenShadowsData data = jujutsu.getTenShadowsData();
             data.deserializeNBT(this.nbt);
         });
     }

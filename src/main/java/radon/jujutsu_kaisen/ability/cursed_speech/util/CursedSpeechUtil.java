@@ -9,6 +9,8 @@ import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.client.particle.JJKParticles;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -34,7 +36,11 @@ public class CursedSpeechUtil {
         owner.level().playSound(null, src.x, src.y, src.z, JJKSounds.CURSED_SPEECH.get(), SoundSource.MASTER, 2.0F, 0.8F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
         getTargets(owner).forEach(entity -> {
-            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data.hasToggled(JJKAbilities.INFINITY.get()) || data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get())) return;
 

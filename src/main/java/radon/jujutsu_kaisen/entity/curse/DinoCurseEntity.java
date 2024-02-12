@@ -20,6 +20,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -210,7 +212,11 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         this.setShooting(data.isChanneling(JJKAbilities.BLUE_FIRE.get()));
@@ -226,7 +232,11 @@ public class DinoCurseEntity extends CursedSpirit implements PlayerRideable, IRi
         if (this.level().isClientSide) return;
         if (this.tickCount - this.riding < 20) return;
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         boolean channelling = data.isChanneling(JJKAbilities.BLUE_FIRE.get());

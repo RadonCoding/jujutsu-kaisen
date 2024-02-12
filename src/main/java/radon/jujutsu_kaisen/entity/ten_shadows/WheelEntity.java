@@ -14,8 +14,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -92,7 +96,11 @@ public class WheelEntity extends Entity implements GeoEntity {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) {
                 this.discard();
@@ -144,7 +152,11 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         if (owner == null) return;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
 
         if (data.hasToggled(JJKAbilities.WHEEL.get())) {

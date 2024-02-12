@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -25,12 +27,17 @@ public class SwitchMode extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ITenShadowsData ownerData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
-        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerData == null) return false;
+        if (ownerJujutsuCap == null) return false;
 
-        if (targetData != null) {
+        ITenShadowsData ownerData = ownerJujutsuCap.getTenShadowsData();
+
+        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (targetJujutsuCap != null) {
+            ISorcererData targetData = targetJujutsuCap.getSorcererData();
+
             if (ownerData.hasTamed(JJKEntities.MAHORAGA.get())) {
                 if (ownerData.getMode() == TenShadowsMode.SUMMON) {
                     if (targetData.hasToggled(JJKAbilities.INFINITY.get())) {
@@ -61,7 +68,11 @@ public class SwitchMode extends Ability {
 
     @Override
     public void run(LivingEntity owner) {
-        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ITenShadowsData data = jujutsuCap.getTenShadowsData();
 
 
         data.setMode(data.getMode() == TenShadowsMode.SUMMON ? TenShadowsMode.ABILITY : TenShadowsMode.SUMMON);

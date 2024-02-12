@@ -23,6 +23,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -230,7 +232,11 @@ public class TojiFushiguroEntity extends SorcererEntity {
             result = SPLIT_SOUL_KATANA;
         }
 
-        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return false;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data != null) {
             for (Ability toggled : data.getToggled()) {

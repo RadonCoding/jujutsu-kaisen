@@ -12,8 +12,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 
 import javax.annotation.Nullable;
@@ -42,7 +46,11 @@ public class WoodShieldEntity extends Mob {
 
         this.setPos(owner.position());
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
 
         AttributeInstance attribute = this.getAttribute(Attributes.MAX_HEALTH);
@@ -87,7 +95,11 @@ public class WoodShieldEntity extends Mob {
         LivingEntity owner = this.getOwner();
 
         if (!this.level().isClientSide && owner != null) {
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) {
                 this.discard();

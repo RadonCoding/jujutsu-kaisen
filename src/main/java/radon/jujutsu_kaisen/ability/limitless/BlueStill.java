@@ -9,6 +9,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -37,7 +39,11 @@ public class BlueStill extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return Status.FAILURE;
 

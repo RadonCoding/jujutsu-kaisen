@@ -10,6 +10,8 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -29,7 +31,11 @@ public class PactEventHandler {
 
             // Check for BindingVow.RECOIL
             if (source.is(JJKDamageSources.JUJUTSU)) {
-                ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+                if (jujutsuCap == null) return;
+                
+                ISorcererData data = jujutsuCap.getSorcererData();
 
                 if (data.hasBindingVow(BindingVow.RECOIL)) {
                     attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
@@ -61,10 +67,17 @@ public class PactEventHandler {
             }
 
             // Check for Pact.INVULNERABILITY
-            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
-            ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability victimJujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (victimData == null || attackerData == null) return;
+            if (victimJujutsuCap == null) return;
+
+            ISorcererData victimData = victimJujutsuCap.getSorcererData();
+            
+            IJujutsuCapability attackerJujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (attackerJujutsuCap == null) return;
+
+            ISorcererData attackerData = attackerJujutsuCap.getSorcererData();
 
             if (victimData.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerData.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
                 event.setCanceled(true);

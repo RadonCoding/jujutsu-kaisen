@@ -28,6 +28,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.util.DamageUtil;
 
 import java.util.*;
@@ -128,7 +130,11 @@ public class Infinity extends Ability implements Ability.IToggled {
                     continue;
                 }
 
-                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
                 if (projectile == null) {
                     iter.remove();
@@ -211,7 +217,11 @@ public class Infinity extends Ability implements Ability.IToggled {
             if (!(hit.getEntity() instanceof LivingEntity owner)) return;
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -232,7 +242,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (!(owner.level() instanceof ServerLevel level)) return;
 
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 
@@ -251,7 +265,11 @@ public class Infinity extends Ability implements Ability.IToggled {
 
             if (owner.level().isClientSide) return;
 
-            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data == null || !data.hasToggled(JJKAbilities.INFINITY.get())) return;
 

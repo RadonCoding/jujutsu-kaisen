@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.ReceiveVisualDataS2CPacket;
@@ -36,7 +38,11 @@ public class RequestVisualDataC2SPacket implements CustomPacketPayload {
 
             if (!(sender.serverLevel().getEntity(this.src) instanceof LivingEntity target)) return;
 
-            ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(),
                     JJKAbilities.getTechniques(target), data.getTechnique(), data.getType(), data.getExperience(), data.getCursedEnergyColor());

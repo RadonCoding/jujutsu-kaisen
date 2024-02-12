@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
@@ -16,7 +18,11 @@ public class ChantHandler {
     }
 
     public static float getOutput(LivingEntity owner, Ability ability) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -26,7 +32,11 @@ public class ChantHandler {
     public static float getChant(LivingEntity owner, Ability ability) {
         List<String> messages = owner.level().isClientSide ? ClientChantHandler.getMessages() : ServerChantHandler.getMessages(owner);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return 0.0F;
 
@@ -58,9 +68,11 @@ public class ChantHandler {
 
         if (messages.isEmpty()) return null;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return null;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return null;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         Ability ability = data.getAbility(messages.get(messages.size() - 1));
 

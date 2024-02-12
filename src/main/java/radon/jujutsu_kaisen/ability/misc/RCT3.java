@@ -8,15 +8,19 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public class RCT3 extends RCT2 {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.getBurnout() > 0) {
             return true;
@@ -28,7 +32,11 @@ public class RCT3 extends RCT2 {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
 
         int burnout = data.getBurnout();
@@ -46,7 +54,11 @@ public class RCT3 extends RCT2 {
     public float getCost(LivingEntity owner) {
         float cost = super.getCost(owner);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0.0F;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return 0.0F;
 

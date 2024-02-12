@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
@@ -26,18 +28,22 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerData == null) return false;
+        if (ownerJujutsuCap == null) return false;
+
+        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
 
         if (ownerData.hasToggled(this)) return target != null;
 
         if (target != null) {
             if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
 
-            ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (targetData == null) return false;
+            if (targetJujutsuCap == null) return false;
+
+            ISorcererData targetData = targetJujutsuCap.getSorcererData();
 
             return SorcererUtil.getGrade(targetData.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
         }

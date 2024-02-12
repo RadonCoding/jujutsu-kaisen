@@ -6,6 +6,8 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.effect.base.JJKEffect;
 
 import java.util.HashMap;
@@ -27,7 +29,11 @@ public class CursedBudEffect extends JJKEffect {
     public void onEffectStarted(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
         super.onEffectStarted(pLivingEntity, pAmplifier);
 
-        ISorcererData data = pLivingEntity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsu = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return;
+
+        ISorcererData data = jujutsu.getSorcererData();
 
         AMOUNTS.put(pLivingEntity.getUUID(), data.getEnergy());
     }
@@ -40,7 +46,11 @@ public class CursedBudEffect extends JJKEffect {
 
         if (pLivingEntity.isDeadOrDying()) return;
 
-        ISorcererData data = pLivingEntity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsu = pLivingEntity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return;
+
+        ISorcererData data = jujutsu.getSorcererData();
 
         MobEffectInstance instance = pLivingEntity.getEffect(this);
 

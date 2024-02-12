@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.particle.CursedEnergyParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
@@ -34,9 +36,13 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (target == null || !owner.hasLineOfSight(target)) return false;
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
 
-        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return false;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return false;
 
@@ -86,9 +92,11 @@ public class OutputRCT extends Ability {
 
         if (target == null) return;
 
-        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerData == null) return;
+        if (ownerJujutsuCap == null) return;
+
+        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
 
         for (int i = 0; i < 8; i++) {
             ownerData.delayTickEvent(() -> {
@@ -105,7 +113,11 @@ public class OutputRCT extends Ability {
 
         float amount = ConfigHolder.SERVER.sorcererHealingAmount.get().floatValue() * this.getPower(owner) * 5 * 20.0F;
 
-        ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability targetJujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (targetJujutsuCap == null) return;
+
+        ISorcererData targetData = targetJujutsuCap.getSorcererData();
 
         if (targetData != null && targetData.getType() == JujutsuType.CURSE) {
             target.hurt(JJKDamageSources.jujutsuAttack(owner, this), amount);
@@ -136,7 +148,11 @@ public class OutputRCT extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null || data.getType() == JujutsuType.CURSE) return false;
 

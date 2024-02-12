@@ -10,6 +10,8 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
@@ -29,7 +31,11 @@ public class UnlimitedVoid extends DomainExpansion implements DomainExpansion.IC
                 4, false, false, false));
 
         if (domain.getTime() % 20 == 0) {
-            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data != null) {
                 data.increaseBrainDamage();

@@ -27,6 +27,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.mixin.client.IItemInHandRendererAccessor;
 import radon.jujutsu_kaisen.mixin.client.IPlayerModelAccessor;
@@ -41,8 +43,11 @@ public class TransformationHandler {
 
         if (mc.player == null || !mc.player.getItemInHand(event.getHand()).isEmpty()) return;
 
-        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         boolean translated = false;
 

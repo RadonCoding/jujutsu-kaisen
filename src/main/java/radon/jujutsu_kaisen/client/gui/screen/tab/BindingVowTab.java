@@ -11,6 +11,8 @@ import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.BindingVowListWidget;
@@ -64,7 +66,11 @@ public class BindingVowTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (this.vow != null && data != null && !data.isCooldownDone(this.vow.get())) {
             int seconds = data.getRemainingCooldown(this.vow.get()) / 20;
@@ -88,7 +94,11 @@ public class BindingVowTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         this.add.active = this.vow != null && !data.hasBindingVow(this.vow.get()) && data.isCooldownDone(this.vow.get());
@@ -111,7 +121,11 @@ public class BindingVowTab extends JJKTab {
         this.add = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.add", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.vow == null) return;
 
-            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             PacketHandler.sendToServer(new AddBindingVowC2SPacket(this.vow.get()));
             data.addBindingVow(this.vow.get());
@@ -126,7 +140,11 @@ public class BindingVowTab extends JJKTab {
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.binding_vow.remove", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.vow == null) return;
 
-            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             PacketHandler.sendToServer(new RemoveBindingVowC2SPacket(this.vow.get()));
             data.removeBindingVow(this.vow.get());

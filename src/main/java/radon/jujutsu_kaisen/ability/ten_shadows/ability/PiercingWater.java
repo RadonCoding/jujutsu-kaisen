@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -27,10 +29,12 @@ public class PiercingWater extends Ability {
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || tenShadowsData == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ITenShadowsData tenShadowsData = jujutsuCap.getTenShadowsData();
 
         return !sorcererData.hasToggled(JJKAbilities.MAX_ELEPHANT.get()) &&
                 tenShadowsData.hasTamed(JJKEntities.MAX_ELEPHANT.get()) &&

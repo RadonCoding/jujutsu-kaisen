@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -77,7 +79,11 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
 
-        ITenShadowsData data = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        IJujutsuCapability jujutsu = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return;
+
+        ITenShadowsData data = jujutsu.getTenShadowsData();
 
         data.tame(JJKEntities.RABBIT_ESCAPE.get());
         data.tame(JJKEntities.TOAD.get());

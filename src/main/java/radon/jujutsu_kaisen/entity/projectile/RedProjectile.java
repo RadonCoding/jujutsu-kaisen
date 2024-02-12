@@ -17,6 +17,8 @@ import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.HollowPurpleExplosion;
@@ -130,7 +132,11 @@ public class RedProjectile extends JujutsuProjectile {
                             }
 
                             if (owner instanceof ServerPlayer player) {
-                                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
                                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
                             }
                             HollowPurpleExplosion explosion = new HollowPurpleExplosion(owner, this.getPower(), blue.position().add(0.0D, blue.getBbHeight() / 2.0F, 0.0D));

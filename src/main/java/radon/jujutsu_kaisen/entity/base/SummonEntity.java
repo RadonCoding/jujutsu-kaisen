@@ -19,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -117,7 +121,11 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         super.onAddedToWorld();
 
         if (this instanceof ISorcerer sorcerer) {
-            ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data != null) {
                 sorcerer.init(data);
@@ -197,7 +205,11 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
 
         Ability ability = this.getAbility();
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data.hasToggled(ability)) {
             data.toggle(ability);

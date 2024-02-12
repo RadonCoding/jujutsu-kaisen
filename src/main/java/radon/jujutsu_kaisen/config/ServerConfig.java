@@ -85,7 +85,7 @@ public class ServerConfig {
                 .defineInRange("blackFlashChance", 50, 1, 1000);
         this.realisticShikigami = builder.comment("When enabled Ten Shadows shikigami will die permanently")
                 .define("realisticShikigami", true);
-        this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsu attacks")
+        this.realisticCurses = builder.comment("When enabled curses only take damage from jujutsuCap attacks")
                 .define("realisticCurses", true);
         this.requiredImbuementAmount = builder.comment("Amount of times a technique has to be used to be imbued into a weapon")
                         .defineInRange("requiredImbuementAmount", 1000, 1, 100000);

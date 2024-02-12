@@ -24,6 +24,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -178,7 +180,11 @@ public abstract class SorcererEntity extends PathfinderMob implements GeoEntity,
 
         if (!this.isCustom()) this.createGoals();
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
         this.init(data);
     }
 

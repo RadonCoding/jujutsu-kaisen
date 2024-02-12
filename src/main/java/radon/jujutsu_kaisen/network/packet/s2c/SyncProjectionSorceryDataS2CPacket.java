@@ -9,6 +9,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 
@@ -31,7 +33,11 @@ public class SyncProjectionSorceryDataS2CPacket implements CustomPacketPayload {
 
             if (player == null) return;
 
-            IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
+            IJujutsuCapability jujutsu = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            IProjectionSorceryData data = jujutsu.getProjectionSorceryData();
             data.deserializeNBT(this.nbt);
         });
     }

@@ -6,6 +6,8 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
@@ -37,7 +39,11 @@ public class ParticleColors {
             return Vec3.fromRGB24(client.cursedEnergyColor).toVector3f();
         }
 
-        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return Vec3.ZERO.toVector3f();
 

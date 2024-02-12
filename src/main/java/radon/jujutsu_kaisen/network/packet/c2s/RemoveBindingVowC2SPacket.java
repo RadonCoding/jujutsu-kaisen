@@ -8,6 +8,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 
@@ -28,7 +30,11 @@ public class RemoveBindingVowC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             if (!data.isCooldownDone(this.vow)) return;
 

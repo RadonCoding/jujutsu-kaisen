@@ -14,6 +14,8 @@ import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
@@ -30,7 +32,11 @@ public class ServerChantHandler {
     }
 
     public static void onChant(LivingEntity owner, String word) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         Ability ability = data.getAbility(word);
 
@@ -95,7 +101,11 @@ public class ServerChantHandler {
 
                 if (owner == null) continue;
 
-                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+                IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
 
                 Ability ability = data.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));

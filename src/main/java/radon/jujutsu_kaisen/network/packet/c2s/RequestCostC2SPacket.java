@@ -9,8 +9,12 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -40,7 +44,11 @@ public class RequestCostC2SPacket implements CustomPacketPayload {
 
             if (target == null) return;
 
-            ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             int cost = (Mth.floor(64 * ((float) (SorcererUtil.getGrade(data.getExperience()).ordinal() + 1) / SorcererGrade.values().length)));
 

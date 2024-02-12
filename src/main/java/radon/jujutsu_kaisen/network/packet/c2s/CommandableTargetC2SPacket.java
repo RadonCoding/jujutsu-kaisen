@@ -12,6 +12,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.entity.base.ICommandable;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -36,7 +38,11 @@ public class CommandableTargetC2SPacket implements CustomPacketPayload {
         ctx.workHandler().execute(() -> {
             if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             ServerLevel level = sender.serverLevel();
             LivingEntity target = (LivingEntity) level.getEntity(this.target);

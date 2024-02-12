@@ -8,11 +8,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
@@ -59,7 +63,11 @@ public class CurseManipulationUtil {
 
     @Nullable
     public static Entity summonCurse(LivingEntity owner, AbsorbedCurse curse, boolean charge) {
-        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return null;
+
+        ICurseManipulationData data = jujutsuCap.getCurseManipulationData();
 
         List<AbsorbedCurse> curses = data.getCurses();
 
@@ -70,8 +78,12 @@ public class CurseManipulationUtil {
 
     @Nullable
     public static Entity summonCurse(LivingEntity owner, int index, boolean charge) {
-        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (ownerJujutsuCap == null) return null;
+
+        ISorcererData ownerSorcererData = ownerJujutsuCap.getSorcererData();
+        ICurseManipulationData ownerCurseManipulationData = ownerJujutsuCap.getCurseManipulationData();
 
         if (owner.hasEffect(JJKEffects.UNLIMITED_VOID.get()) || ownerSorcererData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return null;
 
@@ -105,11 +117,13 @@ public class CurseManipulationUtil {
             PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(ownerSorcererData.serializeNBT()), player);
         }
 
-        ISorcererData curseData = entity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability curseJujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (curseData != null) {
-            curseData.deserializeNBT(curse.getData());
-        }
+        if (curseJujutsuCap == null) return null;
+
+        ISorcererData curseData = curseJujutsuCap.getSorcererData();
+        curseData.deserializeNBT(curse.getData());
+        
         return entity;
     }
 }

@@ -11,6 +11,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 public class RemoveChantC2SPacket implements CustomPacketPayload {
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "remove_chant_serverbound");
@@ -35,7 +37,11 @@ public class RemoveChantC2SPacket implements CustomPacketPayload {
 
             if (ability == null) return;
 
-            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = sender.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
             data.removeChant(ability, this.chant);
         });

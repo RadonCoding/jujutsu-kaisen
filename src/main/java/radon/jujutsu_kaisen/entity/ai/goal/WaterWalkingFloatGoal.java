@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 import java.util.EnumSet;
 
@@ -32,7 +34,11 @@ public class WaterWalkingFloatGoal extends Goal {
 
     @Override
     public void tick() {
-        ISorcererData data = this.mob.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsu = this.mob.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsu == null) return;
+
+        ISorcererData data = jujutsu.getSorcererData();
 
         Ability ability = JJKAbilities.CURSED_ENERGY_FLOW.get();
 

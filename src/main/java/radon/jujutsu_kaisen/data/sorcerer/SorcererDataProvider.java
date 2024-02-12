@@ -17,9 +17,15 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.curse_manipulation.CurseManipulationData;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -29,19 +35,24 @@ public class SorcererDataProvider {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
 
-        if (!owner.hasData(JJKAttachmentTypes.SORCERER)) return;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         data.tick();
     }
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
         Player clone = event.getEntity();
 
+        IJujutsuCapability jujutsuCap = clone.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
         if (event.isWasDeath()) {
-            ISorcererData data = original.getData(JJKAttachmentTypes.SORCERER);
+            ISorcererData data = jujutsuCap.getSorcererData();
             data.setEnergy(data.getMaxEnergy());
             data.clearToggled();
             data.resetCooldowns();
@@ -56,7 +67,11 @@ public class SorcererDataProvider {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 
@@ -64,7 +79,11 @@ public class SorcererDataProvider {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
     }
 

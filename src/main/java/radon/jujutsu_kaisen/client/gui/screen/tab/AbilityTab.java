@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityWidget;
 
@@ -69,7 +71,11 @@ public class AbilityTab extends JJKTab {
         int xOffset = i + (JujutsuScreen.WINDOW_WIDTH - JujutsuScreen.WINDOW_INSIDE_WIDTH);
         int yOffset = j + (JujutsuScreen.WINDOW_HEIGHT - JujutsuScreen.WINDOW_INSIDE_HEIGHT);
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
 
         pGuiGraphics.drawString(this.minecraft.font, Component.translatable(String.format("gui.%s.ability.points", JujutsuKaisen.MOD_ID), data.getPoints()),

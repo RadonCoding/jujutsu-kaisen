@@ -5,8 +5,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.entity.effect.CursedEnergyBombEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -21,9 +25,11 @@ public class CursedEnergyBomb extends Ability {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getTechnique() == null && HelperMethods.RANDOM.nextInt(5) == 0 && owner.hasLineOfSight(target) && owner.distanceTo(target) <= CursedEnergyBombEntity.RANGE;
     }
@@ -58,9 +64,11 @@ public class CursedEnergyBomb extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getType() == JujutsuType.CURSE && data.getExtraEnergy() > 0.0F && super.isValid(owner);
     }

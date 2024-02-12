@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.KamutokeDaggerRenderer;
 import radon.jujutsu_kaisen.entity.JujutsuLightningEntity;
@@ -130,7 +132,11 @@ public class KamutokeDaggerItem extends CursedToolItem implements GeoItem {
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         super.onStopUsing(stack, entity, count);
 
-        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         BlockHitResult hit = this.getBlockHit(entity);
 

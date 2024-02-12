@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
@@ -58,10 +60,12 @@ public class ClientVisualHandler {
         if (synced.containsKey(entity.getUUID())) {
             return synced.get(entity.getUUID());
         } else if (entity == mc.player) {
-            ISorcererData sorcererData = mc.player.getData(JJKAttachmentTypes.SORCERER);
-            ICurseManipulationData curseManipulationData = mc.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            if (sorcererData == null || curseManipulationData == null) return null;
+            if (jujutsuCap == null) return null;
+
+            ISorcererData sorcererData = jujutsuCap.getSorcererData();
+            ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
 
             Set<ICursedTechnique> techniques = new HashSet<>();
 
@@ -115,8 +119,6 @@ public class ClientVisualHandler {
         if (mc.getConnection() == null) return;
 
         Entity entity = event.getEntity();
-
-        if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return;
 
         PacketHandler.sendToServer(new RequestVisualDataC2SPacket(entity.getUUID()));
     }

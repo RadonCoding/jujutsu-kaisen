@@ -14,6 +14,8 @@ import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -45,9 +47,11 @@ public class SwapSelf extends Ability {
             return true;
         }
 
-        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = target.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.getEnergy() > 0.0F;
     }

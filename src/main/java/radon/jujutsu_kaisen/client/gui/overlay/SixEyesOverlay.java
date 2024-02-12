@@ -8,6 +8,8 @@ import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.util.RotationUtil;
@@ -21,8 +23,11 @@ public class SixEyesOverlay {
 
         assert mc.level != null && mc.player != null;
 
-        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (!data.hasTrait(Trait.SIX_EYES)) return;
 

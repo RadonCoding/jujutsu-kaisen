@@ -13,6 +13,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -20,9 +22,11 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return target != null && !target.isDeadOrDying() && data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
@@ -70,9 +74,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return null;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return null;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         ICursedTechnique technique = data.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.CURSED_ENERGY_FLOW.get() : technique.getDomain();
@@ -101,7 +107,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
 
             LivingEntity victim = event.getEntity();
 
-            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = victim.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 

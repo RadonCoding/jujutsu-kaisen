@@ -503,7 +503,7 @@
   "chat.jujutsu_kaisen.technique": "You were born with %1$s technique",
   "chat.jujutsu_kaisen.nature": "Your cursed energy has a %1$s nature",
   "chat.jujutsu_kaisen.curse": "You're a cursed spirit",
-  "chat.jujutsu_kaisen.sorcerer": "You're a jujutsu sorcerer",
+  "chat.jujutsu_kaisen.sorcerer": "You're a jujutsuCap sorcerer",
   "chat.jujutsu_kaisen.rank_up": "You've reached %1$s",
   "chat.jujutsu_kaisen.set_target": "Changed %1$s's target",
   "chat.jujutsu_kaisen.set_target_info": "Press shift + right click to set the target",

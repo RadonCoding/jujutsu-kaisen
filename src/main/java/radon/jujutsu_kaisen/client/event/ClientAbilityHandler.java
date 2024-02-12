@@ -26,6 +26,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.ITransformation;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.JJKKeys;
@@ -68,7 +70,11 @@ public class ClientAbilityHandler {
 
             if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity viewer)) return;
 
-            ISorcererData data = viewer.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = viewer.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) return;
 
@@ -157,7 +163,11 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (event.getAction() == InputConstants.PRESS && event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (RotationUtil.getLookAtHit(mc.player, 64.0D, target -> target instanceof NyoiStaffEntity) instanceof EntityHitResult hit) {
@@ -178,7 +188,11 @@ public class ClientAbilityHandler {
 
             if (mc.player == null) return;
 
-            ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = mc.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsuCap == null) return;
+
+            ISorcererData data = jujutsuCap.getSorcererData();
 
             if (event.getAction() == InputConstants.PRESS) {
                 if (JJKKeys.OPEN_JUJUTSU_MENU.isDown()) {
@@ -274,9 +288,11 @@ public class ClientAbilityHandler {
 
         if (owner == null) return false;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
-        
-        if (data == null) return false;
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         switch (status) {
             case ENERGY ->
@@ -299,7 +315,11 @@ public class ClientAbilityHandler {
 
         if (owner == null) return Ability.Status.FAILURE;
 
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Ability.Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
         
         if (data == null) return Ability.Status.FAILURE;
 

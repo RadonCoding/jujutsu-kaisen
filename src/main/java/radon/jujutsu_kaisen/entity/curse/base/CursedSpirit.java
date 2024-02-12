@@ -33,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.ai.goal.*;
@@ -215,7 +217,11 @@ public abstract class CursedSpirit extends TamableAnimal implements GeoEntity, I
 
         if (!this.isCustom()) this.createGoals();
 
-        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
         this.init(data);
 
         if (this.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {

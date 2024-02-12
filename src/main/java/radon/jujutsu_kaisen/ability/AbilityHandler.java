@@ -3,13 +3,21 @@ package radon.jujutsu_kaisen.ability;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.ability.base.Ability;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 
 public class AbilityHandler {
     public static void untrigger(LivingEntity owner,Ability ability) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (data.hasToggled(ability)) {
@@ -23,7 +31,11 @@ public class AbilityHandler {
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return Ability.Status.FAILURE;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         Ability.Status status = ability.isTriggerable(owner);
 

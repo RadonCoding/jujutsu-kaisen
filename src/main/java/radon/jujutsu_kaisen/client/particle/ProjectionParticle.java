@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.MixinData;
 
 import java.util.Locale;
@@ -58,7 +60,11 @@ public class ProjectionParticle<T extends ProjectionParticle.ProjectionParticleO
             this.position = living.walkAnimation.position();
             this.speed = living.walkAnimation.speed();
         } else {
-            ISorcererData data = this.entity.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsu = this.entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+            if (jujutsu == null) return;
+
+            ISorcererData data = jujutsu.getSorcererData();
 
             if (!data.isChanneling(JJKAbilities.PROJECTION_SORCERY.get())) {
                 this.remove();

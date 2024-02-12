@@ -6,6 +6,8 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.JJKKeys;
 import radon.jujutsu_kaisen.client.event.ClientAbilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.base.RadialScreen;
@@ -34,7 +36,11 @@ public class DomainScreen extends RadialScreen {
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         DisplayItem item = this.getCurrent().get(this.hovered);
 

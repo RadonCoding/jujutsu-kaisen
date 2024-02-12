@@ -12,6 +12,8 @@ import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
@@ -85,7 +87,11 @@ public class StatsTab extends JJKTab {
         pGuiGraphics.blit(texture, xOffset, yOffset + 54, 12, 36, 44.0F, 20.0F, 2, 6, 64, 64);
         pGuiGraphics.blit(texture, xOffset + 60, yOffset + 54, 12, 36, 36.0F, 52.0F, 2, 6, 64, 64);
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
         SorcererGrade grade = SorcererUtil.getGrade(data.getExperience());
         SorcererGrade next = SorcererGrade.values()[Math.min(SorcererGrade.values().length - 1, grade.ordinal() + 1)];

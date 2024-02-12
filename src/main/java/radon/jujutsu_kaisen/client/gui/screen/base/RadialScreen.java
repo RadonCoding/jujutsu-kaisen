@@ -24,6 +24,8 @@ import radon.jujutsu_kaisen.ability.base.Summon;
 import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
@@ -130,7 +132,11 @@ public abstract class RadialScreen extends Screen {
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.minecraft == null || this.minecraft.player == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
-        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         if (data == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
@@ -196,10 +202,12 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
-        ISorcererData sorcererData = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
-        ICurseManipulationData curseManipulationData = this.minecraft.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+        IJujutsuCapability jujutsuCap = this.minecraft.player.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (sorcererData == null || curseManipulationData == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData sorcererData = jujutsuCap.getSorcererData();
+        ICurseManipulationData curseManipulationData = jujutsuCap.getCurseManipulationData();
 
         return item.type == DisplayItem.Type.ABILITY && sorcererData.hasToggled(item.ability) ||
                 item.type == DisplayItem.Type.COPIED && sorcererData.getCurrentCopied() == item.copied ||

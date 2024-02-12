@@ -23,6 +23,8 @@ import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.JJKBlockEntities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 
@@ -41,9 +43,11 @@ public class DomainBlock extends Block implements EntityBlock {
 
             if (entity == null) return super.getCollisionShape(pState, pLevel, pPos, pContext);
 
-            if (!entity.hasData(JJKAttachmentTypes.SORCERER)) return super.getCollisionShape(pState, pLevel, pPos, pContext);
+            IJujutsuCapability jujutsuCap = entity.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
 
             if (data.hasTrait(Trait.HEAVENLY_RESTRICTION) && !pContext.isAbove(Shapes.block(), pPos, true)) {
                 return Shapes.empty();

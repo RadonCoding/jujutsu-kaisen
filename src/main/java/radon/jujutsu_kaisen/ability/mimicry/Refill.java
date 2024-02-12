@@ -8,6 +8,8 @@ import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -27,9 +29,11 @@ public class Refill extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability ownerJujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (ownerData == null) return;
+        if (ownerJujutsuCap == null) return;
+
+        ISorcererData ownerData = ownerJujutsuCap.getSorcererData();
 
         float amount = ownerData.getMaxEnergy() - ownerData.getEnergy();
 
@@ -37,11 +41,15 @@ public class Refill extends Ability {
 
         if (rika == null) return;
 
-        ISorcererData summonData = rika.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability rikaJujutsuCap = rika.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (summonData.getEnergy() > amount && ownerData.getEnergy() < ownerData.getMaxEnergy()) {
+        if (rikaJujutsuCap == null) return;
+
+        ISorcererData rikaData = rikaJujutsuCap.getSorcererData();
+
+        if (rikaData.getEnergy() > amount && ownerData.getEnergy() < ownerData.getMaxEnergy()) {
             ownerData.addEnergy(amount);
-            summonData.useEnergy(amount);
+            rikaData.useEnergy(amount);
 
             if (owner instanceof ServerPlayer player) {
                 PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerData.serializeNBT()), player);
@@ -51,9 +59,11 @@ public class Refill extends Ability {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
-        if (data == null) return false;
+        if (jujutsuCap == null) return false;
+
+        ISorcererData data = jujutsuCap.getSorcererData();
 
         return data.hasToggled(JJKAbilities.RIKA.get()) && super.isValid(owner);
     }

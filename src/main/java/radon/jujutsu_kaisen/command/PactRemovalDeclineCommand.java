@@ -12,6 +12,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 
 public class PactRemovalDeclineCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -28,7 +30,11 @@ public class PactRemovalDeclineCommand {
 
         if (src == null) return 0;
 
-        ISorcererData dstData = dst.getData(JJKAttachmentTypes.SORCERER);
+        IJujutsuCapability jujutsuCap = dst.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+        if (jujutsuCap == null) return 0;
+
+        ISorcererData dstData = jujutsuCap.getSorcererData();
 
         if (dstData == null) return 0;
 

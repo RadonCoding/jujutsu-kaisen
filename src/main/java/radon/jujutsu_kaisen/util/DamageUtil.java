@@ -9,6 +9,8 @@ import net.minecraft.world.phys.AABB;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
 import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.capability.IJujutsuCapability;
+import radon.jujutsu_kaisen.data.capability.JujutsuCapabilityHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
@@ -35,7 +37,7 @@ public class DamageUtil {
         }
 
         if (projectile instanceof JujutsuProjectile jujutsu) {
-            return !jujutsu.isDomain();
+            return !jujutsuCap.isDomain();
         }
         return true;
     }
@@ -50,7 +52,11 @@ public class DamageUtil {
         if (source.getEntity() == target) return false;
 
         if (source.getEntity() instanceof LivingEntity attacker && isMelee(source)) {
-            ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
+            IJujutsuCapability jujutsuCap = attacker.getCapability(JujutsuCapabilityHandler.INSTANCE);
+
+if (jujutsuCap == null) return;
+
+ISorcererData data = jujutsuCap.getSorcererData();
             return data == null || !data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get());
         }
         return true;
@@ -58,7 +64,7 @@ public class DamageUtil {
 
     public static boolean isMelee(DamageSource source) {
         return !source.isIndirect() && (source.is(DamageTypes.MOB_ATTACK) || source.is(DamageTypes.PLAYER_ATTACK) || source.is(JJKDamageSources.SPLIT_SOUL_KATANA)) ||
-                source instanceof JJKDamageSources.JujutsuDamageSource jujutsu && jujutsu.getAbility() != null && jujutsu.getAbility().isMelee();
+                source instanceof JJKDamageSources.JujutsuDamageSource jujutsuCap && jujutsuCap.getAbility() != null && jujutsuCap.getAbility().isMelee();
     }
 
 }
