@@ -5,7 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.curse.KuchisakeOnnaEntity;
 import radon.jujutsu_kaisen.entity.effect.ScissorEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -45,13 +46,13 @@ public class Scissors extends Ability {
 
             if (target == null) return;
 
-            owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
-                    ScissorEntity scissor = new ScissorEntity(owner, this.getPower(owner), target);
-                    owner.level().addFreshEntity(scissor);
-                    cap.addSummon(scissor);
-                }
-            });
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            for (int i = 0; i < HelperMethods.RANDOM.nextInt(4, 10); i++) {
+                ScissorEntity scissor = new ScissorEntity(owner, this.getPower(owner), target);
+                owner.level().addFreshEntity(scissor);
+                data.addSummon(scissor);
+            }
         });
     }
 

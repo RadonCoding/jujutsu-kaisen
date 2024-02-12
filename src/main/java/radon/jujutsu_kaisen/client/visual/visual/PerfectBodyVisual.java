@@ -1,11 +1,6 @@
 package radon.jujutsu_kaisen.client.visual.visual;
 
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
-import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.ITransformation;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.client.visual.base.IVisual;
 
@@ -15,20 +10,20 @@ public class PerfectBodyVisual implements IVisual {
     private static final int MAX_MOUTH_FRAMES = 4;
 
     public static void onChant(UUID identifier) {
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(identifier);
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get(identifier);
 
-        if (data == null) return;
+        if (client == null) return;
 
-        data.mouth++;
+        client.mouth++;
     }
 
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return data.mouth > 0 && entity.level().getGameTime() % 5 == 0;
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        return client.mouth > 0 && entity.level().getGameTime() % 5 == 0;
     }
 
     @Override
-    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        if (++data.mouth >= MAX_MOUTH_FRAMES) data.mouth = 0;
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        if (++client.mouth >= MAX_MOUTH_FRAMES) client.mouth = 0;
     }
 }

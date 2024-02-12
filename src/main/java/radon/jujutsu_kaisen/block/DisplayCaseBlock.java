@@ -1,5 +1,6 @@
 package radon.jujutsu_kaisen.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.StructureBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,10 +31,17 @@ import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import java.util.stream.Stream;
 
 public class DisplayCaseBlock extends BaseEntityBlock {
+    private static final MapCodec<DisplayCaseBlock> CODEC = simpleCodec(DisplayCaseBlock::new);
+
     public static final VoxelShape SHAPE = Stream.of(Shapes.join(Block.box(6.875, 14.024999999999988, 8.0, 9.125, 15.524999999999988, 8.0), Shapes.join(Block.box(6.5, 13.424999999999994, 6.5, 9.5, 14.17499999999999, 9.5), Shapes.join(Block.box(6.5625, 12.587499999999991, 6.5625, 9.4375, 13.212499999999988, 9.4375), Block.box(8.0, 14.024999999999988, 6.875, 8.0, 15.524999999999988, 9.125), BooleanOp.AND), BooleanOp.AND), BooleanOp.AND), Block.box(1.875, 1.2249999999999992, 1.875, 14.125, 13.47499999999999, 14.125), Block.box(2.0, 4.163336342344337E-17, 2.0, 14.0, 1.5, 14.0)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public DisplayCaseBlock(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

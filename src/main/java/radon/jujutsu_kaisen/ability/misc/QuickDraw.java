@@ -1,7 +1,6 @@
 package radon.jujutsu_kaisen.ability.misc;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -9,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -17,18 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.effect.JJKEffects;
-import radon.jujutsu_kaisen.effect.base.JJKEffect;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class QuickDraw extends Ability implements Ability.IToggled {
     @Override
@@ -59,10 +50,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
         owner.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 2, 0, false, false, false));
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        if (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get())) {
-            SimpleDomainEntity domain = cap.getSummonByClass(SimpleDomainEntity.class);
+        if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+            SimpleDomainEntity domain = data.getSummonByClass(SimpleDomainEntity.class);
 
             if (domain == null) return;
 
@@ -96,7 +88,11 @@ public class QuickDraw extends Ability implements Ability.IToggled {
 
     @Override
     public boolean isValid(LivingEntity owner) {
-        return (JJKAbilities.hasToggled(owner, JJKAbilities.SIMPLE_DOMAIN.get()) || JJKAbilities.hasToggled(owner, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) && super.isValid(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) && super.isValid(owner);
     }
 
     @Nullable
@@ -121,15 +117,17 @@ public class QuickDraw extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class QuickDrawForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
-            Entity attacker = event.getSource().getDirectEntity();
-
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.QUICK_DRAW.get()) ||
-                    !JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+            if (victim.level().isClientSide || !data.hasToggled(JJKAbilities.QUICK_DRAW.get()) ||
+                    !data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) return;
+
+            Entity attacker = event.getSource().getDirectEntity();
 
             QuickDraw.attack(victim, attacker);
         }

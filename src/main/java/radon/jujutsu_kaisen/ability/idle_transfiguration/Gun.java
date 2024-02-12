@@ -6,10 +6,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Transformation;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.projectile.TransfiguredSoulProjectile;
 import radon.jujutsu_kaisen.item.JJKItems;
 import radon.jujutsu_kaisen.sound.JJKSounds;
@@ -23,7 +22,11 @@ public class Gun extends Transformation {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (JJKAbilities.hasToggled(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        if (data.hasToggled(this)) {
             return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(20) != 0;
         }
         return target != null && !target.isDeadOrDying() && HelperMethods.RANDOM.nextInt(5) == 0;
@@ -61,11 +64,12 @@ public class Gun extends Transformation {
 
     @Override
     public void onRightClick(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        if (cap.getTransfiguredSouls() == 0) return;
+        if (data.getTransfiguredSouls() == 0) return;
 
-        cap.decreaseTransfiguredSouls();
+        data.decreaseTransfiguredSouls();
 
         owner.swing(InteractionHand.MAIN_HAND);
 

@@ -12,11 +12,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ExplosionHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -51,23 +50,27 @@ public class MaximumUzumakiProjectile extends JujutsuProjectile implements GeoEn
                 .add(0.0D, this.getBbHeight(), 0.0D);
         this.moveTo(pos.x, pos.y, pos.z, RotationUtil.getTargetAdjustedYRot(owner), RotationUtil.getTargetAdjustedXRot(owner));
 
-        ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICurseManipulationData ownerCurseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        for (Entity entity : ownerSorcererCap.getSummons()) {
+        if (ownerSorcererData == null || ownerCurseManipulationData == null) return;
+
+        for (Entity entity : ownerSorcererData.getSummons()) {
             if (this.power == MAX_POWER) break;
             if (!(entity instanceof CursedSpirit)) continue;
 
-            ISorcererData curseCap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData curseData = entity.getData(JJKAttachmentTypes.SORCERER);
 
-            if (SorcererUtil.getGrade(curseCap.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curseCap.getTechnique() != null) {
-                ownerCurseManipulationCap.absorb(curseCap.getTechnique());
+            if (curseData == null) continue;
+
+            if (SorcererUtil.getGrade(curseData.getExperience()).ordinal() >= SorcererGrade.SEMI_GRADE_1.ordinal() && curseData.getTechnique() != null) {
+                ownerCurseManipulationData.absorb(curseData.getTechnique());
 
                 if (owner instanceof ServerPlayer player) {
-                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
+                    PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
                 }
             }
-            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curseCap.getExperience()));
+            this.power = Math.min(MAX_POWER, this.power + SorcererUtil.getPower(curseData.getExperience()));
             entity.discard();
         }
     }

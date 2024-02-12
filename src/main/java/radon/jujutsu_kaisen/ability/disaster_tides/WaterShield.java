@@ -17,7 +17,6 @@ import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DurationBlockEntity;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
@@ -38,35 +37,33 @@ public class WaterShield extends Ability implements Ability.IChannelened, Abilit
 
     @Override
     public void run(LivingEntity owner) {
-        owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-            if (!owner.level().isClientSide) {
-                for (double phi = 0.0D; phi < Math.PI * 2.0D; phi += X_STEP) {
-                    for (int i = 0; i < RADIUS; i++) {
-                        double x = owner.getX() + RADIUS * Math.cos(phi);
-                        double y = owner.getY() + i;
-                        double z = owner.getZ() + RADIUS * Math.sin(phi);
+        if (owner.level().isClientSide) return;
 
-                        BlockPos pos = BlockPos.containing(x, y, z);
-                        BlockState state = owner.level().getBlockState(pos);
+        for (double phi = 0.0D; phi < Math.PI * 2.0D; phi += X_STEP) {
+            for (int i = 0; i < RADIUS; i++) {
+                double x = owner.getX() + RADIUS * Math.cos(phi);
+                double y = owner.getY() + i;
+                double z = owner.getZ() + RADIUS * Math.sin(phi);
 
-                        if (!state.isAir() || state.canOcclude()) continue;
+                BlockPos pos = BlockPos.containing(x, y, z);
+                BlockState state = owner.level().getBlockState(pos);
 
-                        owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
+                if (!state.isAir() || state.canOcclude()) continue;
 
-                        if (owner.level().getBlockEntity(pos) instanceof DurationBlockEntity be) {
-                            be.create(1, state);
-                        }
-                    }
-                }
+                owner.level().setBlockAndUpdate(pos, JJKBlocks.FAKE_WATER_DURATION.get().defaultBlockState());
 
-                AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
-
-                for (Entity entity : owner.level().getEntities(owner, bounds)) {
-                    entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
-                    entity.hurtMarked = true;
+                if (owner.level().getBlockEntity(pos) instanceof DurationBlockEntity be) {
+                    be.create(1, state);
                 }
             }
-        });
+        }
+
+        AABB bounds = AABB.ofSize(owner.position(), RADIUS, RADIUS, RADIUS).inflate(1.0D);
+
+        for (Entity entity : owner.level().getEntities(owner, bounds)) {
+            entity.setDeltaMovement(entity.position().subtract(owner.position()).normalize());
+            entity.hurtMarked = true;
+        }
     }
 
     @Override

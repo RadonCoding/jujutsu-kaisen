@@ -9,11 +9,6 @@ import java.util.Set;
 
 public class BoogieWoogieTechnique implements ICursedTechnique {
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.BOOGIE_WOOGIE_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.SWAP_SELF.get(),
                 JJKAbilities.SWAP_OTHERS.get(),

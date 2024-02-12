@@ -14,8 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -91,8 +91,16 @@ public class WheelEntity extends Entity implements GeoEntity {
     public void tick() {
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() ||
-                !JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get()))) {
+        if (!this.level().isClientSide && owner != null) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data == null || !data.hasToggled(JJKAbilities.WHEEL.get())) {
+                this.discard();
+                return;
+            }
+        }
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -134,11 +142,13 @@ public class WheelEntity extends Entity implements GeoEntity {
 
         LivingEntity owner = this.getOwner();
 
-        if (owner != null) {
-            if (JJKAbilities.hasToggled(owner, JJKAbilities.WHEEL.get())) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                cap.toggle(JJKAbilities.WHEEL.get());
-            }
+        if (owner == null) return;
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+
+        if (data.hasToggled(JJKAbilities.WHEEL.get())) {
+            data.toggle(JJKAbilities.WHEEL.get());
         }
     }
 

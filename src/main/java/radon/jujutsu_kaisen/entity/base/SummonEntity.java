@@ -17,11 +17,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SetOverlayMessageS2CPacket;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -118,7 +117,11 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         super.onAddedToWorld();
 
         if (this instanceof ISorcerer sorcerer) {
-            this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(sorcerer::init);
+            ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data != null) {
+                sorcerer.init(data);
+            }
         }
 
         if (this instanceof ICommandable commandable && commandable.canChangeTarget() && this.getOwner() instanceof ServerPlayer player) {
@@ -191,11 +194,13 @@ public abstract class SummonEntity extends TamableAnimal implements GeoEntity {
         LivingEntity owner = this.getOwner();
 
         if (owner == null) return;
+
         Ability ability = this.getAbility();
 
-        if (ability != null && JJKAbilities.hasToggled(owner, ability)) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            cap.toggle(ability);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data.hasToggled(ability)) {
+            data.toggle(ability);
         }
     }
 }

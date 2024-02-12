@@ -49,12 +49,12 @@ public class IdleTransfigurationVisual implements IVisual {
     }
 
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return data.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get());
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        return client.toggled.contains(JJKAbilities.IDLE_TRANSFIGURATION.get());
     }
 
     @Override
-    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
 
         EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();

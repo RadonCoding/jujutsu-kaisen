@@ -14,7 +14,6 @@ import radon.jujutsu_kaisen.ability.ai.max_elephant.Water;
 import radon.jujutsu_kaisen.ability.ai.nue_totality.NueTotalityLightning;
 import radon.jujutsu_kaisen.ability.ai.rika.ShootPureLove;
 import radon.jujutsu_kaisen.ability.ai.scissor.Scissors;
-import radon.jujutsu_kaisen.ability.shockwave.ShockwaveImbuement;
 import radon.jujutsu_kaisen.ability.sky_strike.SkyStrike;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.boogie_woogie.*;
@@ -30,26 +29,21 @@ import radon.jujutsu_kaisen.ability.limitless.*;
 import radon.jujutsu_kaisen.ability.misc.*;
 import radon.jujutsu_kaisen.ability.misc.lightning.Discharge;
 import radon.jujutsu_kaisen.ability.misc.lightning.Lightning;
-import radon.jujutsu_kaisen.ability.sky_strike.SkyStrikeImbuement;
 import radon.jujutsu_kaisen.ability.ten_shadows.*;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.NueLightning;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.PiercingWater;
 import radon.jujutsu_kaisen.ability.ten_shadows.ability.Wheel;
 import radon.jujutsu_kaisen.ability.ten_shadows.summon.*;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
 import radon.jujutsu_kaisen.entity.curse.JogoatEntity;
 
-import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class JJKAbilities {
     public static ResourceKey<Registry<Ability>> ABILITY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(JujutsuKaisen.MOD_ID, "ability"));
@@ -57,10 +51,8 @@ public class JJKAbilities {
     public static DeferredRegister<Ability> ABILITIES = DeferredRegister.create(ABILITY_REGISTRY, JujutsuKaisen.MOD_ID);
 
     public static DeferredHolder<Ability, Shockwave> SHOCKWAVE = ABILITIES.register("shockwave", Shockwave::new);
-    public static DeferredHolder<Ability, ShockwaveImbuement> SHOCKWAVE_IMBUEMENT = ABILITIES.register("shockwave_imbuement", ShockwaveImbuement::new);
 
     public static DeferredHolder<Ability, SkyStrike> SKY_STRIKE = ABILITIES.register("sky_strike", SkyStrike::new);
-    public static DeferredHolder<Ability, SkyStrikeImbuement> SKY_STRIKE_IMBUEMENT = ABILITIES.register("sky_strike_imbuement", SkyStrikeImbuement::new);
 
     public static DeferredHolder<Ability, Dash> DASH = ABILITIES.register("dash", Dash::new);
     public static DeferredHolder<Ability, Punch> PUNCH = ABILITIES.register("punch", Punch::new);
@@ -99,7 +91,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Teleport> TELEPORT = ABILITIES.register("teleport", Teleport::new);
     public static DeferredHolder<Ability, Fly> FLY = ABILITIES.register("fly", Fly::new);
     public static DeferredHolder<Ability, UnlimitedVoid> UNLIMITED_VOID = ABILITIES.register("unlimited_void", UnlimitedVoid::new);
-    public static DeferredHolder<Ability, LimitlessImbuement> LIMITLESS_IMBUEMENT = ABILITIES.register("limitless_imbuement", LimitlessImbuement::new);
 
     public static DeferredHolder<Ability, Dismantle> DISMANTLE = ABILITIES.register("dismantle", Dismantle::new);
     public static DeferredHolder<Ability, DismantleNet> DISMANTLE_NET = ABILITIES.register("dismantle_net", DismantleNet::new);
@@ -108,14 +99,12 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Spiderweb> SPIDERWEB = ABILITIES.register("spiderweb", Spiderweb::new);
     public static DeferredHolder<Ability, FireArrow> FIRE_ARROW = ABILITIES.register("fire_arrow", FireArrow::new);
     public static DeferredHolder<Ability, MalevolentShrine> MALEVOLENT_SHRINE = ABILITIES.register("malevolent_shrine", MalevolentShrine::new);
-    public static DeferredHolder<Ability, DismantleAndCleaveImbuement> DISMANTLE_AND_CLEAVE_IMBUEMENT = ABILITIES.register("dismantle_and_cleave_imbuement", DismantleAndCleaveImbuement::new);
 
     public static DeferredHolder<Ability, Rika> RIKA = ABILITIES.register("rika", Rika::new);
     public static DeferredHolder<Ability, Mimicry> MIMICRY = ABILITIES.register("mimicry", Mimicry::new);
     public static DeferredHolder<Ability, Refill> REFILL = ABILITIES.register("refill", Refill::new);
     public static DeferredHolder<Ability, CommandPureLove> COMMAND_PURE_LOVE = ABILITIES.register("command_pure_love", CommandPureLove::new);
     public static DeferredHolder<Ability, AllEncompassingUnequivocalLove> ALL_ENCOMPASSING_UNEQUIVOCAL_LOVE = ABILITIES.register("all_encompassing_unequivocal_love", AllEncompassingUnequivocalLove::new);
-    public static DeferredHolder<Ability, MimicryImbuement> MIMICRY_IMBUEMENT = ABILITIES.register("mimicry_imbuement", MimicryImbuement::new);
 
     public static DeferredHolder<Ability, EmberInsects> EMBER_INSECTS = ABILITIES.register("ember_insects", EmberInsects::new);
     public static DeferredHolder<Ability, EmberInsectFlight> EMBER_INSECT_FLIGHT = ABILITIES.register("ember_insect_flight", EmberInsectFlight::new);
@@ -126,16 +115,14 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Fireball> FIREBALL = ABILITIES.register("fireball", Fireball::new);
     public static DeferredHolder<Ability, FireBeam> FIRE_BEAM = ABILITIES.register("fire_beam", FireBeam::new);
     public static DeferredHolder<Ability, CoffinOfTheIronMountain> COFFIN_OF_THE_IRON_MOUNTAIN = ABILITIES.register("coffin_of_the_iron_mountain", CoffinOfTheIronMountain::new);
-    public static DeferredHolder<Ability, DisasterFlamesImbuement> DISASTER_FLAMES_IMBUEMENT = ABILITIES.register("disaster_flames_imbuement", DisasterFlamesImbuement::new);
 
-    public static DeferredHolder<Ability, HorizonOfTheCaptivatingSkandha> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_captivating_skandha", HorizonOfTheCaptivatingSkandha::new);
+    public static DeferredHolder<Ability, HorizonOfTheCaptivatingSkandha> HORIZON_OF_THE_CAPTIVATING_SKANDHA = ABILITIES.register("horizon_of_the_datativating_skandha", HorizonOfTheCaptivatingSkandha::new);
     public static DeferredHolder<Ability, DisasterTides> DISASTER_TIDES = ABILITIES.register("disaster_tides", DisasterTides::new);
     public static DeferredHolder<Ability, WaterShield> WATER_SHIELD = ABILITIES.register("water_shield", WaterShield::new);
     public static DeferredHolder<Ability, DeathSwarm> DEATH_SWARM = ABILITIES.register("death_swarm", DeathSwarm::new);
     public static DeferredHolder<Ability, FishShikigami> FISH_SHIKIGAMI = ABILITIES.register("fish_shikigami", FishShikigami::new);
     public static DeferredHolder<Ability, WaterTorrent> WATER_TORRENT = ABILITIES.register("water_torrent", WaterTorrent::new);
     public static DeferredHolder<Ability, EelGrapple> EEL_GRAPPLE = ABILITIES.register("eel_grapple", EelGrapple::new);
-    public static DeferredHolder<Ability, DisasterTidesImbuement> DISASTER_TIDES_IMBUEMENT = ABILITIES.register("disaster_tides_imbuement", DisasterTidesImbuement::new);
 
     public static DeferredHolder<Ability, ForestPlatform> FOREST_PLATFORM = ABILITIES.register("forest_platform", ForestPlatform::new);
     public static DeferredHolder<Ability, ForestSpikes> FOREST_SPIKES = ABILITIES.register("forest_spikes", ForestSpikes::new);
@@ -146,7 +133,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, ForestDash> FOREST_DASH = ABILITIES.register("forest_dash", ForestDash::new);
     public static DeferredHolder<Ability, DisasterPlant> DISASTER_PLANT = ABILITIES.register("disaster_plant", DisasterPlant::new);
     public static DeferredHolder<Ability, ShiningSeaOfFlowers> SHINING_SEA_OF_FLOWERS = ABILITIES.register("shining_sea_of_flowers", ShiningSeaOfFlowers::new);
-    public static DeferredHolder<Ability, DisasterPlantsImbuement> DISASTER_PLANTS_IMBUEMENT = ABILITIES.register("disaster_plants_imbuement", DisasterPlantsImbuement::new);
 
     public static DeferredHolder<Ability, IdleTransfiguration> IDLE_TRANSFIGURATION = ABILITIES.register("idle_transfiguration", IdleTransfiguration::new);
     public static DeferredHolder<Ability, SoulDecimation> SOUL_DECIMATION = ABILITIES.register("soul_decimation", SoulDecimation::new);
@@ -162,7 +148,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, PolymorphicSoulIsomer> POLYMORPHIC_SOUL_ISOMER = ABILITIES.register("polymorphic_soul_isomer", PolymorphicSoulIsomer::new);
     public static DeferredHolder<Ability, InstantSpiritBodyOfDistortedKilling> INSTANT_SPIRIT_BODY_OF_DISTORTED_KILLING = ABILITIES.register("instant_spirit_body_of_distorted_killing", InstantSpiritBodyOfDistortedKilling::new);
     public static DeferredHolder<Ability, SelfEmbodimentOfPerfection> SELF_EMBODIMENT_OF_PERFECTION = ABILITIES.register("self_embodiment_of_perfection", SelfEmbodimentOfPerfection::new);
-    public static DeferredHolder<Ability, IdleTransfigurationImbuement> IDLE_TRANSFIGURATION_IMBUEMENT = ABILITIES.register("idle_transfiguration_imbuement", IdleTransfigurationImbuement::new);
 
     public static DeferredHolder<Ability, SwitchMode> SWITCH_MODE = ABILITIES.register("switch_mode", SwitchMode::new);
     public static DeferredHolder<Ability, ReleaseShikigami> RELEASE_SHIKIGAMI = ABILITIES.register("release_shikigami", ReleaseShikigami::new);
@@ -178,7 +163,7 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, DivineDogTotality> DIVINE_DOG_TOTALITY = ABILITIES.register("divine_dog_totality", DivineDogTotality::new);
     public static DeferredHolder<Ability, Toad> TOAD = ABILITIES.register("toad", Toad::new);
     public static DeferredHolder<Ability, ToadFusion> TOAD_FUSION = ABILITIES.register("toad_fusion", ToadFusion::new);
-    public static DeferredHolder<Ability, RabbitEscape> RABBIT_ESCAPE = ABILITIES.register("rabbit_escape", RabbitEscape::new);
+    public static DeferredHolder<Ability, RabbitEscape> RABBIT_ESCAPE = ABILITIES.register("rabbit_esdatae", RabbitEscape::new);
     public static DeferredHolder<Ability, Nue> NUE = ABILITIES.register("nue", Nue::new);
     public static DeferredHolder<Ability, NueTotality> NUE_TOTALITY = ABILITIES.register("nue_totality", NueTotality::new);
     public static DeferredHolder<Ability, GreatSerpent> GREAT_SERPENT = ABILITIES.register("great_serpent", GreatSerpent::new);
@@ -188,7 +173,6 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, Agito> AGITO = ABILITIES.register("agito", Agito::new);
 
     public static DeferredHolder<Ability, ChimeraShadowGarden> CHIMERA_SHADOW_GARDEN = ABILITIES.register("chimera_shadow_garden", ChimeraShadowGarden::new);
-    public static DeferredHolder<Ability, TenShadowsImbuement> TEN_SHADOWS_IMBUEMENT = ABILITIES.register("ten_shadows_imbuement", TenShadowsImbuement::new);
 
     public static DeferredHolder<Ability, CurseAbsorption> CURSE_ABSORPTION = ABILITIES.register("curse_absorption", CurseAbsorption::new);
     public static DeferredHolder<Ability, ReleaseCurse> RELEASE_CURSE = ABILITIES.register("release_curse", ReleaseCurse::new);
@@ -198,14 +182,12 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, MaximumUzumaki> MAXIMUM_UZUMAKI = ABILITIES.register("maximum_uzumaki", MaximumUzumaki::new);
     public static DeferredHolder<Ability, MiniUzumaki> MINI_UZUMAKI = ABILITIES.register("mini_uzumaki", MiniUzumaki::new);
     public static DeferredHolder<Ability, WormCurseGrab> WORM_CURSE_GRAB = ABILITIES.register("worm_curse_grab", WormCurseGrab::new);
-    public static DeferredHolder<Ability, CurseManipulationImbuement> CURSE_MANIPULATION_IMBUEMENT = ABILITIES.register("curse_manipulation_imbuement", CurseManipulationImbuement::new);
 
     public static DeferredHolder<Ability, DontMove> DONT_MOVE = ABILITIES.register("dont_move", DontMove::new);
     public static DeferredHolder<Ability, GetCrushed> GET_CRUSHED = ABILITIES.register("get_crushed", GetCrushed::new);
     public static DeferredHolder<Ability, BlastAway> BLAST_AWAY = ABILITIES.register("blast_away", BlastAway::new);
     public static DeferredHolder<Ability, Explode> EXPLODE = ABILITIES.register("explode", Explode::new);
     public static DeferredHolder<Ability, Die> DIE = ABILITIES.register("die", Die::new);
-    public static DeferredHolder<Ability, CursedSpeechImbuement> CURSED_SPEECH_IMBUEMENT = ABILITIES.register("cursed_speech_imbuement", CursedSpeechImbuement::new);
 
     public static DeferredHolder<Ability, SwapSelf> SWAP_SELF = ABILITIES.register("swap_self", SwapSelf::new);
     public static DeferredHolder<Ability, SwapOthers> SWAP_OTHERS = ABILITIES.register("swap_others", SwapOthers::new);
@@ -213,13 +195,11 @@ public class JJKAbilities {
     public static DeferredHolder<Ability, CEThrow> CE_THROW = ABILITIES.register("ce_throw", CEThrow::new);
     public static DeferredHolder<Ability, ItemSwap> ITEM_SWAP = ABILITIES.register("item_swap", ItemSwap::new);
     public static DeferredHolder<Ability, Shuffle> SHUFFLE = ABILITIES.register("shuffle", Shuffle::new);
-    public static DeferredHolder<Ability, BoogieWoogieImbuement> BOOGIE_WOOGIE_IMBUEMENT = ABILITIES.register("boogie_woogie_imbuement", BoogieWoogieImbuement::new);
 
     public static DeferredHolder<Ability, ProjectionSorcery> PROJECTION_SORCERY = ABILITIES.register("projection_sorcery", ProjectionSorcery::new);
     public static DeferredHolder<Ability, TwentyFourFrameRule> TWENTY_FOUR_FRAME_RULE = ABILITIES.register("twenty_four_frame_rule", TwentyFourFrameRule::new);
     public static DeferredHolder<Ability, AirFrame> AIR_FRAME = ABILITIES.register("air_frame", AirFrame::new);
     public static DeferredHolder<Ability, TimeCellMoonPalace> TIME_CELL_MOON_PALACE = ABILITIES.register("time_cell_moon_palace", TimeCellMoonPalace::new);
-    public static DeferredHolder<Ability, ProjectionSorceryImbuement> PROJECTION_SORCERY_IMBUEMENT = ABILITIES.register("projection_sorcery_imbuement", ProjectionSorceryImbuement::new);
 
     public static ResourceLocation getKey(Ability ability) {
         return ABILITY_REGISTRY.getKey(ability);
@@ -229,70 +209,51 @@ public class JJKAbilities {
         return ABILITY_REGISTRY.get(key);
     }
 
-    public static boolean hasToggled(LivingEntity owner, Ability ability) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasToggled(ability);
-    }
-
-    @Nullable
-    public static JujutsuType getType(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return null;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getType();
-    }
-
-    public static Set<Ability> getToggled(LivingEntity owner) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return Set.of();
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getToggled();
-    }
-
-    public static boolean isChanneling(LivingEntity owner, Ability ability) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isChanneling(ability);
-    }
-
-    public static boolean hasTrait(LivingEntity owner, Trait trait) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.hasTrait(trait);
-    }
-
     public static Set<ICursedTechnique> getTechniques(LivingEntity owner) {
         Set<ICursedTechnique> techniques = new HashSet<>();
 
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return techniques;
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (!owner.getCapability(CurseManipulationDataHandler.INSTANCE).isPresent()) return techniques;
-        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        if (sorcererData == null) return techniques;
 
-        if (sorcererCap.getTechnique() != null) techniques.add(sorcererCap.getTechnique());
-        if (sorcererCap.getCurrentCopied() != null) techniques.add(sorcererCap.getCurrentCopied());
-        if (curseManipulationCap.getCurrentAbsorbed() != null) techniques.add(curseManipulationCap.getCurrentAbsorbed());
-        if (sorcererCap.getAdditional() != null) techniques.add(sorcererCap.getAdditional());
+        ICurseManipulationData curseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
+        if (curseManipulationData == null) return techniques;
+
+        if (sorcererData.getTechnique() != null) techniques.add(sorcererData.getTechnique());
+        if (sorcererData.getCurrentCopied() != null) techniques.add(sorcererData.getCurrentCopied());
+        if (curseManipulationData.getCurrentAbsorbed() != null) techniques.add(curseManipulationData.getCurrentAbsorbed());
+        if (sorcererData.getAdditional() != null) techniques.add(sorcererData.getAdditional());
 
         return techniques;
     }
 
     public static boolean hasTechnique(LivingEntity owner, ICursedTechnique technique) {
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCopied().contains(technique) ||
-                curseManipulationCap.getAbsorbed().contains(technique);
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData curseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
+        if (sorcererData == null || curseManipulationData == null) return false;
+
+        return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCopied().contains(technique) ||
+                curseManipulationData.getAbsorbed().contains(technique);
     }
 
     public static boolean hasActiveTechnique(LivingEntity owner, ICursedTechnique technique) {
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICurseManipulationData curseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
-        return sorcererCap.getTechnique() == technique || sorcererCap.getAdditional() == technique || sorcererCap.getCurrentCopied() == technique ||
-                curseManipulationCap.getCurrentAbsorbed() == technique;
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData curseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
+
+        if (sorcererData == null || curseManipulationData == null) return false;
+
+        return sorcererData.getTechnique() == technique || sorcererData.getAdditional() == technique || sorcererData.getCurrentCopied() == technique ||
+                curseManipulationData.getCurrentAbsorbed() == technique;
     }
 
     public static List<Ability> getAbilities(LivingEntity owner) {
-        Set<Ability> abilities = new LinkedHashSet<>(List.of(JJKAbilities.HEAL.get(), JJKAbilities.RCT1.get(), JJKAbilities.RCT2.get(), JJKAbilities.RCT3.get()));
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return List.of();
+
+        Set<Ability> abilities = new LinkedHashSet<>();
 
         if (owner instanceof JogoatEntity) {
             for (DeferredHolder<ICursedTechnique, ? extends ICursedTechnique> entry : JJKCursedTechniques.CURSED_TECHNIQUES.getEntries()) {
@@ -309,8 +270,6 @@ public class JJKAbilities {
             return new ArrayList<>(abilities);
         }
 
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
         if (owner instanceof ISorcerer sorcerer) {
             abilities.addAll(sorcerer.getCustom());
         }
@@ -318,17 +277,17 @@ public class JJKAbilities {
         for (DeferredHolder<Ability, ? extends Ability> entry : ABILITIES.getEntries()) {
             Ability ability = entry.get();
 
-            if (!ability.isTechnique() && (!sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
+            if (!ability.isTechnique() && (!data.hasTrait(Trait.HEAVENLY_RESTRICTION) || ability.getCost(owner) == 0)) {
                 abilities.add(ability);
             }
         }
 
-        if (!sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (!data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             for (ICursedTechnique technique : JJKAbilities.getTechniques(owner)) {
                 abilities.addAll(technique.getAbilities());
             }
 
-            ICursedTechnique technique = sorcererCap.getTechnique();
+            ICursedTechnique technique = data.getTechnique();
 
             if (technique != null && technique.getDomain() != null) {
                 abilities.add(technique.getDomain());

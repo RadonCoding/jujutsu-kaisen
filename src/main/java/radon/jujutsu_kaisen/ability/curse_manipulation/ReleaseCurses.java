@@ -8,13 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
 import radon.jujutsu_kaisen.entity.curse.AbsorbedPlayerEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -51,24 +48,26 @@ public class ReleaseCurses extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICurseManipulationData ownerCurseManipulationCap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData ownerCurseManipulationData = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        for (Entity summon : ownerSorcererCap.getSummons()) {
+        for (Entity summon : ownerSorcererData.getSummons()) {
             if (!(summon instanceof CursedSpirit curse)) continue;
 
-            ownerSorcererCap.removeSummon(curse);
+            ownerSorcererData.removeSummon(curse);
 
-            ISorcererData curseCap = curse.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData curseData = curse.getData(JJKAttachmentTypes.SORCERER);
+
+            if (curseData == null) continue;
 
             if (curse instanceof AbsorbedPlayerEntity absorbed) {
-                ownerCurseManipulationCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT(), absorbed.getPlayer()));
+                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT(), absorbed.getPlayer()));
             } else {
-                ownerCurseManipulationCap.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseCap.serializeNBT()));
+                ownerCurseManipulationData.addCurse(new AbsorbedCurse(curse.getName(), curse.getType(), curseData.serializeNBT()));
             }
 
             if (owner instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererCap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(ownerSorcererData.serializeNBT()), player);
             }
 
             if (!owner.level().isClientSide) {

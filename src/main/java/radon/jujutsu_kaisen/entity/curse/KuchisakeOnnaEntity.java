@@ -21,8 +21,9 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.curse.base.CursedSpirit;
@@ -144,7 +145,9 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
         this.entityData.set(DATA_OPEN, false);
         this.entityData.set(DATA_TARGET, Optional.empty());
 
-        if (JJKAbilities.hasToggled(this, JJKAbilities.SCISSORS.get())) {
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data != null && data.hasToggled(JJKAbilities.SCISSORS.get())) {
             AbilityHandler.trigger(this, JJKAbilities.SCISSORS.get());
         }
         this.start = null;
@@ -181,8 +184,9 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
             if (target == null) return;
 
-            this.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap ->
-                    target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * cap.getAbilityPower()));
+            ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+            target.hurt(JJKDamageSources.jujutsuAttack(this, null), DAMAGE * data.getAbilityPower());
         });
         this.reset();
     }
@@ -204,12 +208,15 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
             return;
         }
 
+
         this.getCurrent().ifPresent(identifier -> {
             if (!(((ServerLevel) this.level()).getEntity(identifier) instanceof LivingEntity target)) return;
 
+            ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+
             this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), this.getSpeed());
 
-            if (JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
+            if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get()) || this.distanceTo(target) > RANGE) {
                 this.reset();
             } else if (Math.sqrt(target.distanceToSqr(this.start)) >= 3.0D) {
                 this.attack();
@@ -218,7 +225,13 @@ public class KuchisakeOnnaEntity extends CursedSpirit {
 
         LivingEntity target = this.getTarget();
 
-        if (target == null || target.isRemoved() || !target.isAlive() || JJKAbilities.hasToggled(target, JJKAbilities.SIMPLE_DOMAIN.get())) {
+        if (target != null) {
+            ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) return;
+        }
+
+        if (target == null || target.isRemoved() || !target.isAlive()) {
             return;
         }
 

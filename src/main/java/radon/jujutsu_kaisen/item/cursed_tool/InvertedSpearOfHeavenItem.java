@@ -1,7 +1,7 @@
 package radon.jujutsu_kaisen.item.cursed_tool;
 
 import net.minecraft.world.item.Tier;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
 
 public class InvertedSpearOfHeavenItem extends CursedToolItem {

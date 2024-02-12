@@ -2,8 +2,8 @@ package radon.jujutsu_kaisen.visual;
 
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncVisualDataS2CPacket;
@@ -12,10 +12,11 @@ public class ServerVisualHandler {
     public static void sync(LivingEntity entity) {
         if (entity.level().isClientSide) return;
 
-        ISorcererData cap = entity.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
 
-        ClientVisualHandler.ClientData data = new ClientVisualHandler.ClientData(cap.getToggled(), cap.getChanneled(), cap.getTraits(), JJKAbilities.getTechniques(entity), cap.getTechnique(), cap.getType(),
-                cap.getExperience(), cap.getCursedEnergyColor());
+
+        ClientVisualHandler.ClientData client = new ClientVisualHandler.ClientData(data.getToggled(), data.getChanneled(), data.getTraits(), JJKAbilities.getTechniques(entity), data.getTechnique(), data.getType(),
+                data.getExperience(), data.getCursedEnergyColor());
         PacketHandler.broadcast(new SyncVisualDataS2CPacket(entity.getUUID(), data.serializeNBT()));
     }
 }

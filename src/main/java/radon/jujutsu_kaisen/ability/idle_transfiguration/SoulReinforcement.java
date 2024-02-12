@@ -10,15 +10,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -62,26 +60,26 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class SoulReinforcementForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onLivingDamage(LivingDamageEvent event) {
-            DamageSource source = event.getSource();
-
             LivingEntity victim = event.getEntity();
 
             if (victim.level().isClientSide) return;
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            DamageSource source = event.getSource();
 
-            if (!victimCap.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            if (source.getEntity() instanceof LivingEntity attacker) {
-                if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-                ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (victimData == null) return;
 
-                if (DamageUtil.isMelee(source)) {
-                    if ((attackerCap.hasTrait(Trait.VESSEL) && attackerCap.getFingers() > 0) || attackerCap.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) {
+            if (!victimData.hasToggled(JJKAbilities.SOUL_REINFORCEMENT.get())) return;
+
+            if (DamageUtil.isMelee(source)) {
+                if (source.getEntity() instanceof LivingEntity attacker) {
+                    ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
+
+                    if (attackerData != null && (attackerData.hasTrait(Trait.VESSEL) || attackerData.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get()))) {
                         return;
                     }
                 }
@@ -91,9 +89,9 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
 
             if (source.is(JJKDamageSources.SOUL)) return;
 
-            float cost = event.getAmount() * 2.0F * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-            if (victimCap.getEnergy() < cost) return;
-            victimCap.useEnergy(cost);
+            float cost = event.getAmount() * 2.0F * (victimData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+            if (victimData.getEnergy() < cost) return;
+            victimData.useEnergy(cost);
 
             int count = 8 + (int) (victim.getBbWidth() * victim.getBbHeight()) * 16;
 
@@ -105,7 +103,7 @@ public class SoulReinforcement extends Ability implements Ability.IToggled {
             }
 
             if (victim instanceof ServerPlayer player) {
-                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimData.serializeNBT()), player);
             }
             event.setCanceled(true);
         }

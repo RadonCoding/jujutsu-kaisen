@@ -11,8 +11,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -20,7 +20,11 @@ import radon.jujutsu_kaisen.damage.JJKDamageSources;
 public class DomainAmplification extends Ability implements Ability.IToggled {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        return target != null && !target.isDeadOrDying() && JJKAbilities.hasToggled(target, JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return target != null && !target.isDeadOrDying() && data.hasToggled(JJKAbilities.INFINITY.get()) && owner.distanceTo(target) <= 3.0D;
     }
 
     @Override
@@ -66,8 +70,11 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     @Nullable
     @Override
     public Ability getParent(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICursedTechnique technique = cap.getTechnique();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return null;
+
+        ICursedTechnique technique = data.getTechnique();
         return technique == null || technique.getDomain() == null ? JJKAbilities.CURSED_ENERGY_FLOW.get() : technique.getDomain();
     }
 
@@ -87,14 +94,16 @@ public class DomainAmplification extends Ability implements Ability.IToggled {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class DomainAmplificationForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingHurt(LivingHurtEvent event) {
             if (!(event.getSource() instanceof JJKDamageSources.JujutsuDamageSource source)) return;
 
             LivingEntity victim = event.getEntity();
 
-            if (!JJKAbilities.hasToggled(victim, JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(JJKAbilities.DOMAIN_AMPLIFICATION.get())) return;
 
             Ability ability = source.getAbility();
 

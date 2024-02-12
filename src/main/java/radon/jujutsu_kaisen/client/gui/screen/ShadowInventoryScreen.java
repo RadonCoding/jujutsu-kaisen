@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.ShadowInventoryTakeC2SPacket;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -59,9 +59,9 @@ public class ShadowInventoryScreen extends Screen {
 
     private @Nullable List<ItemStack> getItems() {
         if (this.minecraft == null || this.minecraft.player == null) return null;
-        if (!this.minecraft.player.getCapability(TenShadowsDataHandler.INSTANCE).isPresent()) return null;
-        ITenShadowsData cap = this.minecraft.player.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getShadowInventory();
+
+        ITenShadowsData data = this.minecraft.player.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        return data.getShadowInventory();
     }
 
     private void drawSlot(PoseStack poseStack, BufferBuilder buffer, float centerX, float centerY,

@@ -21,6 +21,8 @@ import radon.jujutsu_kaisen.ability.AbilityHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.Summon;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.IRightClickInputListener;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
@@ -223,7 +225,10 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
     protected void customServerAiStep() {
         super.customServerAiStep();
 
-        this.entityData.set(DATA_SHOOTING, JJKAbilities.isChanneling(this, JJKAbilities.WATER.get()));
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+
+        this.entityData.set(DATA_SHOOTING, data.isChanneling(JJKAbilities.WATER.get()));
     }
 
     @Override
@@ -241,7 +246,10 @@ public class MaxElephantEntity extends TenShadowsSummon implements PlayerRideabl
         if (this.level().isClientSide) return;
         if (this.tickCount - this.riding < 20) return;
 
-        boolean channelling = JJKAbilities.isChanneling(this, JJKAbilities.WATER.get());
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+
+        boolean channelling = data.isChanneling(JJKAbilities.WATER.get());
 
         if (down) {
             if (!channelling) {

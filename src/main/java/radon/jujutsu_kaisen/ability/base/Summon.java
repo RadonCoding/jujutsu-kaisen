@@ -1,17 +1,14 @@
 package radon.jujutsu_kaisen.ability.base;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsMode;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
+import radon.jujutsu_kaisen.data.ten_shadows.TenShadowsMode;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -64,10 +61,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isTamed(LivingEntity owner) {
         if (!this.canTame()) return true;
 
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
         for (EntityType<?> type : this.getTypes()) {
-            if (cap.hasTamed(type)) return true;
+            if (data.hasTamed(type)) return true;
         }
         return false;
     }
@@ -83,12 +80,15 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     public boolean isValid(LivingEntity owner) {
         if (!super.isValid(owner)) return false;
 
-        if (!JJKAbilities.hasToggled(owner, this) && this.isTenShadows()) {
-            ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (cap.getMode() != TenShadowsMode.SUMMON) return false;
+        if (sorcererData == null || tenShadowsData == null) return false;
 
-            for (Ability ability : JJKAbilities.getToggled(owner)) {
+        if (!sorcererData.hasToggled(this) && this.isTenShadows()) {
+            if (tenShadowsData.getMode() != TenShadowsMode.SUMMON) return false;
+
+            for (Ability ability : sorcererData.getToggled()) {
                 if (!(ability instanceof Summon<?> summon)) continue;
 
                 for (EntityType<?> type : this.getTypes()) {
@@ -96,7 +96,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
                     if (summon.getFusions().contains(type)) return false;
                 }
                 for (EntityType<?> fusion : this.getFusions()) {
-                    if (!cap.hasTamed(fusion)) return false;
+                    if (!tenShadowsData.hasTamed(fusion)) return false;
                     if (summon.getTypes().contains(fusion)) return false;
                     if (summon.getFusions().contains(fusion)) return false;
                 }
@@ -108,16 +108,16 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
             for (int i = 0; i < fusions.size(); i++) {
                 if (this.isBottomlessWell()) {
-                    if (cap.isDead(fusions.get(i)) || !cap.hasTamed(fusions.get(i))) {
+                    if (tenShadowsData.isDead(fusions.get(i)) || !tenShadowsData.hasTamed(fusions.get(i))) {
                         return false;
                     }
                 } else {
                     if (this.isSpecificFusion()) {
-                        if ((i == 0) == cap.isDead(fusions.get(i))) {
+                        if ((i == 0) == tenShadowsData.isDead(fusions.get(i))) {
                             return false;
                         }
                     } else {
-                        if (cap.isDead(fusions.get(i))) {
+                        if (tenShadowsData.isDead(fusions.get(i))) {
                             dead++;
                         }
                     }
@@ -133,8 +133,10 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     protected boolean isDead(LivingEntity owner, EntityType<?> type) {
         if (!this.canDie()) return false;
-        ITenShadowsData cap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isDead(type);
+
+        ITenShadowsData data = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        return data.isDead(type);
     }
 
     @Override
@@ -153,9 +155,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if ((this.isTenShadows() || this.getActivationType(owner) == ActivationType.TOGGLED) && cap.hasSummonOfClass(this.clazz)) {
+        if ((this.isTenShadows() || this.getActivationType(owner) == ActivationType.TOGGLED) && data.hasSummonOfClass(this.clazz)) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
@@ -164,9 +166,9 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     @Override
     public Status isStillUsable(LivingEntity owner) {
         if (!owner.level().isClientSide) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            if (!cap.hasSummonOfClass(this.clazz)) {
+            if (!data.hasSummonOfClass(this.clazz)) {
                 return Status.FAILURE;
             }
         }
@@ -176,7 +178,7 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
     protected abstract T summon(LivingEntity owner);
 
     public void spawn(LivingEntity owner, boolean clone) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
         T summon = this.summon(owner);
 
@@ -185,7 +187,11 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         }
         owner.level().addFreshEntity(summon);
 
-        cap.addSummon(summon);
+        data.addSummon(summon);
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+        }
     }
 
     @Override
@@ -193,31 +199,26 @@ public abstract class Summon<T extends Entity> extends Ability implements Abilit
         if (owner.level().isClientSide) return;
 
         this.spawn(owner, false);
-
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-        if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-        }
     }
 
     @Override
     public void onDisabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
         if (this.shouldRemove()) {
-            cap.unsummonByClass(this.clazz);
+            data.unsummonByClass(this.clazz);
         } else {
-            cap.removeSummonByClass(this.clazz);
+            data.removeSummonByClass(this.clazz);
         }
 
         if (owner instanceof ServerPlayer player) {
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
         }
     }
 
     @Override
     public float getRealCost(LivingEntity owner) {
-        return this.isTenShadows() && this.isTamed(owner) && JJKAbilities.hasToggled(owner, JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        return this.isTenShadows() && this.isTamed(owner) && data.hasToggled(JJKAbilities.CHIMERA_SHADOW_GARDEN.get()) ? 0.0F : super.getRealCost(owner);
     }
 }

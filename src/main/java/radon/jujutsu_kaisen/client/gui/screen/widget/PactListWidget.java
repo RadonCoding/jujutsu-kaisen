@@ -7,7 +7,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.client.gui.screen.tab.PactTab;
 
 import java.util.Objects;

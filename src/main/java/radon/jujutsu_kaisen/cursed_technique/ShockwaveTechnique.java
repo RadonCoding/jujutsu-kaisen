@@ -9,11 +9,6 @@ import java.util.Set;
 
 public class ShockwaveTechnique implements ICursedTechnique {
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.SHOCKWAVE_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.SHOCKWAVE.get()));
     }

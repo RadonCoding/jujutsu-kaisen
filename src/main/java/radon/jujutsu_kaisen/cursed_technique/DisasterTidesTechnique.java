@@ -14,11 +14,6 @@ public class DisasterTidesTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.DISASTER_TIDES_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.DISASTER_TIDES.get(),
                 JJKAbilities.WATER_SHIELD.get(),

@@ -15,11 +15,6 @@ public class MimicryTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.MIMICRY_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.RIKA.get(),
                 JJKAbilities.MIMICRY.get(),

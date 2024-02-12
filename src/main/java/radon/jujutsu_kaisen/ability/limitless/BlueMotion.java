@@ -7,8 +7,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.projectile.BlueProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -37,8 +37,11 @@ public class BlueMotion extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.isCooldownDone(JJKAbilities.BLUE_STILL.get()) ? super.isTriggerable(owner) : Status.FAILURE;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return Status.FAILURE;
+
+        return data.isCooldownDone(JJKAbilities.BLUE_STILL.get()) ? super.isTriggerable(owner) : Status.FAILURE;
     }
 
     @Override

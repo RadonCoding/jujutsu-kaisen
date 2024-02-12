@@ -17,12 +17,12 @@ public class CursedSpeechOverlay implements IOverlay {
     private static final RenderType CURSED_SPEECH = RenderType.entityCutoutNoCull(new ResourceLocation(JujutsuKaisen.MOD_ID, "textures/overlay/cursed_speech.png"));
 
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
-        return data.techniques.contains(JJKCursedTechniques.CURSED_SPEECH);
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
+        return client.techniques.contains(JJKCursedTechniques.CURSED_SPEECH.get());
     }
 
     @Override
-    public <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData data, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
+    public <T extends LivingEntity> void render(T entity, ClientVisualHandler.ClientData client, ResourceLocation texture, EntityModel<T> model, PoseStack poseStack, MultiBufferSource buffer, float partialTicks, int packedLight) {
         VertexConsumer consumer = buffer.getBuffer(CURSED_SPEECH);
         model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY,
                 1.0F, 1.0F, 1.0F, 1.0F);

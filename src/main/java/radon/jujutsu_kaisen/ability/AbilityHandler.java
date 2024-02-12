@@ -3,27 +3,27 @@ package radon.jujutsu_kaisen.ability;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
 
 public class AbilityHandler {
     public static void untrigger(LivingEntity owner,Ability ability) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
         if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
-            if (cap.hasToggled(ability)) {
-                cap.toggle(ability);
+            if (data.hasToggled(ability)) {
+                data.toggle(ability);
             }
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
-            if (cap.isChanneling(ability)) {
-                cap.channel(ability);
+            if (data.isChanneling(ability)) {
+                data.channel(ability);
             }
         }
     }
 
     public static Ability.Status trigger(LivingEntity owner, Ability ability) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
         Ability.Status status = ability.isTriggerable(owner);
 
@@ -36,14 +36,14 @@ public class AbilityHandler {
         } else if (ability.getActivationType(owner) == Ability.ActivationType.TOGGLED) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                cap.toggle(ability);
+                data.toggle(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;
         } else if (ability.getActivationType(owner) == Ability.ActivationType.CHANNELED) {
             if (status == Ability.Status.SUCCESS || (status == Ability.Status.ENERGY && ability instanceof Ability.IAttack)) {
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Pre(owner, ability));
-                cap.channel(ability);
+                data.channel(ability);
                 NeoForge.EVENT_BUS.post(new AbilityTriggerEvent.Post(owner, ability));
             }
             return status;

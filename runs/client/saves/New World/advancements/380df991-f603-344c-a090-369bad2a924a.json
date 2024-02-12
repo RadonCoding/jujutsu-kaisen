@@ -1,78 +1,21 @@
 {
   "jujutsu_kaisen:jujutsu_kaisen/root": {
     "criteria": {
-      "tick": "2024-02-03 03:49:56 +0200"
+      "tick": "2024-02-12 04:43:09 +0200"
     },
     "done": true
   },
   "minecraft:recipes/decorations/crafting_table": {
     "criteria": {
-      "unlock_right_away": "2024-02-03 03:49:56 +0200"
+      "unlock_right_away": "2024-02-12 04:43:09 +0200"
     },
     "done": true
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:old_growth_birch_forest": "2024-02-03 03:50:32 +0200",
-      "minecraft:desert": "2024-02-03 03:50:39 +0200",
-      "minecraft:river": "2024-02-03 03:51:12 +0200",
-      "minecraft:plains": "2024-02-03 03:50:57 +0200"
+      "minecraft:snowy_taiga": "2024-02-12 04:43:10 +0200"
     },
     "done": false
   },
-  "minecraft:recipes/transportation/mangrove_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/acacia_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/cherry_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/bamboo_raft": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/spruce_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/birch_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/oak_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/jungle_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "minecraft:recipes/transportation/dark_oak_boat": {
-    "criteria": {
-      "in_water": "2024-02-03 03:51:07 +0200"
-    },
-    "done": true
-  },
-  "DataVersion": 3578
+  "DataVersion": 3700
 }

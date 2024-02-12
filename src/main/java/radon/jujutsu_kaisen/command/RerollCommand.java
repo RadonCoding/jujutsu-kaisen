@@ -6,8 +6,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.util.PlayerUtil;
 
 public class RerollCommand {
@@ -21,13 +21,15 @@ public class RerollCommand {
     }
 
     public static int reroll(ServerPlayer player) {
-        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0;
 
         PlayerUtil.removeAdvancement(player, "six_eyes");
         PlayerUtil.removeAdvancement(player, "heavenly_restriction");
         PlayerUtil.removeAdvancement(player, "vessel");
 
-        cap.generate(player);
+        data.generate(player);
 
         return 1;
     }

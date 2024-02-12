@@ -2,14 +2,18 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
 
-import java.util.function.Supplier;
+public class RemoveBindingVowC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "remove_binding_vow_serverbound");
 
-public class RemoveBindingVowC2SPacket {
     private final BindingVow vow;
 
     public RemoveBindingVowC2SPacket(BindingVow vow) {
@@ -20,23 +24,26 @@ public class RemoveBindingVowC2SPacket {
         this(buf.readEnum(BindingVow.class));
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeEnum(this.vow);
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
+
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.isCooldownDone(this.vow)) return;
+
+            data.removeBindingVow(this.vow);
+            data.addBindingVowCooldown(this.vow);
+        });
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeEnum(this.vow);
+    }
 
-            if (sender == null) return;
-
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            if (!cap.isCooldownDone(this.vow)) return;
-
-            cap.removeBindingVow(this.vow);
-            cap.addBindingVowCooldown(this.vow);
-        });
-        ctx.setPacketHandled(true);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

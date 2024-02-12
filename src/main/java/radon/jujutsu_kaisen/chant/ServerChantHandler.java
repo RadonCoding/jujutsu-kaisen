@@ -12,9 +12,9 @@ import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.*;
 
@@ -30,15 +30,16 @@ public class ServerChantHandler {
     }
 
     public static void onChant(LivingEntity owner, String word) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        Ability ability = cap.getAbility(word);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        Ability ability = data.getAbility(word);
 
         if (ability != null) {
             if (!MESSAGES.containsKey(owner.getUUID())) {
                 MESSAGES.put(owner.getUUID(), new ArrayList<>());
             }
 
-            List<String> chants = new ArrayList<>(cap.getFirstChants(ability));
+            List<String> chants = new ArrayList<>(data.getFirstChants(ability));
 
             List<String> latest = MESSAGES.get(owner.getUUID());
 
@@ -66,14 +67,14 @@ public class ServerChantHandler {
                         ability.getName().copy(), ChantHandler.getOutput(owner, ability) * 100), false), player);
             }
 
-            if (cap.hasTrait(Trait.PERFECT_BODY)) {
+            if (data.hasTrait(Trait.PERFECT_BODY)) {
                 PacketHandler.broadcast(new SyncMouthS2CPacket(owner.getUUID()));
             }
         }
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ChantHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onServerTick(TickEvent.ServerTickEvent event) {
             Iterator<Map.Entry<UUID, Integer>> iter = TIMERS.entrySet().iterator();
@@ -94,11 +95,12 @@ public class ServerChantHandler {
 
                 if (owner == null) continue;
 
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-                Ability ability = cap.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));
+                Ability ability = data.getAbility(new LinkedHashSet<>(MESSAGES.get(entry.getKey())));
 
-                if (cap.isChanneling(ability)) continue;
+                if (data.isChanneling(ability)) continue;
 
                 int remaining = entry.getValue();
 

@@ -1,9 +1,6 @@
 package radon.jujutsu_kaisen.entity.projectile;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -15,18 +12,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
-import radon.jujutsu_kaisen.entity.base.DomainExpansionCenterEntity;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
-import radon.jujutsu_kaisen.util.EntityUtil;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 import java.util.UUID;
 
@@ -109,9 +101,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
         if (!(pResult.getEntity() instanceof LivingEntity entity)) return;
 
         if (this.getOwner() instanceof LivingEntity owner) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-            DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+            DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
             if (domain == null) return;
 
@@ -126,9 +118,9 @@ public class FilmGaugeProjectile extends JujutsuProjectile {
     public void tick() {
         if (!this.level().isClientSide) {
             if (this.getOwner() instanceof LivingEntity owner) {
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
-                DomainExpansionEntity domain = cap.getSummonByClass(DomainExpansionEntity.class);
+                DomainExpansionEntity domain = data.getSummonByClass(DomainExpansionEntity.class);
 
                 if (domain == null || !domain.checkSureHitEffect()) {
                     this.discard();

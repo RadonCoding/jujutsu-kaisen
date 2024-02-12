@@ -15,11 +15,6 @@ public class DismantleAndCleaveTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.DISMANTLE_AND_CLEAVE_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.DISMANTLE.get(),
                 JJKAbilities.DISMANTLE_NET.get(),

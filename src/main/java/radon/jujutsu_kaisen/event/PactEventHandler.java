@@ -8,15 +8,15 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.BindingVow;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 
 public class PactEventHandler {
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class PactEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
@@ -29,13 +29,11 @@ public class PactEventHandler {
 
             // Check for BindingVow.RECOIL
             if (source.is(JJKDamageSources.JUJUTSU)) {
-                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = attacker.getData(JJKAttachmentTypes.SORCERER);
 
-                    if (cap.hasBindingVow(BindingVow.RECOIL)) {
-                        attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
-                        event.setAmount(event.getAmount() * 1.25F);
-                    }
+                if (data.hasBindingVow(BindingVow.RECOIL)) {
+                    attacker.hurt(JJKDamageSources.self(victim), event.getAmount() * 0.25F);
+                    event.setAmount(event.getAmount() * 1.25F);
                 }
             }
         }
@@ -63,13 +61,13 @@ public class PactEventHandler {
             }
 
             // Check for Pact.INVULNERABILITY
-            if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent() && attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData victimData = victim.getData(JJKAttachmentTypes.SORCERER);
+            ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
 
-                if (victimCap.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerCap.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
-                    event.setCanceled(true);
-                }
+            if (victimData == null || attackerData == null) return;
+
+            if (victimData.hasPact(attacker.getUUID(), Pact.INVULNERABILITY) && attackerData.hasPact(victim.getUUID(), Pact.INVULNERABILITY)) {
+                event.setCanceled(true);
             }
         }
     }

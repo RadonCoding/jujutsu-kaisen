@@ -12,8 +12,8 @@ import net.minecraft.world.item.Items;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
 import radon.jujutsu_kaisen.client.gui.screen.widget.AbilityListWidget;
 import radon.jujutsu_kaisen.client.gui.screen.widget.ChantListWidget;
@@ -70,8 +70,10 @@ public class ChantTab extends JJKTab {
     public <T extends ObjectSelectionList.Entry<T>> void buildChantList(Consumer<T> consumer, Function<String, T> result) {
         if (this.ability == null || this.minecraft.player == null) return;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
+
+        data.getFirstChants(this.ability.get()).forEach(chant -> consumer.accept(result.apply(chant)));
     }
 
     @Override
@@ -98,7 +100,8 @@ public class ChantTab extends JJKTab {
 
         if (this.minecraft.player == null) return;
 
-        ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
 
         String text = this.text.getValue().toLowerCase();
 
@@ -113,7 +116,7 @@ public class ChantTab extends JJKTab {
             }
         }
         this.add.active = unique && this.chants.children().size() < ConfigHolder.SERVER.maximumChantCount.get() && !text.isEmpty() && !text.isBlank() &&
-                this.ability != null && !cap.hasChant(this.ability.get(), text);
+                this.ability != null && !data.hasChant(this.ability.get(), text);
         this.remove.active = this.ability != null && this.chant != null;
     }
 
@@ -143,9 +146,10 @@ public class ChantTab extends JJKTab {
 
             if (this.ability == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
             PacketHandler.sendToServer(new AddChantC2SPacket(JJKAbilities.getKey(this.ability.get()), text));
-            cap.addChant(this.ability.get(), text);
+            data.addChant(this.ability.get(), text);
 
             this.chants.refreshList();
         }).size(62, 20).pos(xOffset + 154, yOffset + this.minecraft.font.lineHeight + 40).build();
@@ -154,9 +158,10 @@ public class ChantTab extends JJKTab {
         this.remove = Button.builder(Component.translatable(String.format("gui.%s.chant.remove", JujutsuKaisen.MOD_ID)), pButton -> {
             if (this.ability == null || this.chant == null) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
             PacketHandler.sendToServer(new RemoveChantC2SPacket(JJKAbilities.getKey(this.ability.get()), this.chant.get()));
-            cap.removeChant(this.ability.get(), this.chant.get());
+            data.removeChant(this.ability.get(), this.chant.get());
 
             this.chants.refreshList();
         }).size(62, 20).pos(xOffset + 154, yOffset + this.minecraft.font.lineHeight + 66).build();

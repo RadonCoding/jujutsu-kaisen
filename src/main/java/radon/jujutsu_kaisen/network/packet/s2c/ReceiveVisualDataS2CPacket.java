@@ -2,15 +2,26 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ReceiveVisualDataS2CPacket {
+public class ReceiveVisualDataS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "receive_visual_data_clientbound");
+
     private final UUID src;
     private final CompoundTag nbt;
 
@@ -23,13 +34,18 @@ public class ReceiveVisualDataS2CPacket {
         this(buf.readUUID(), buf.readNbt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUUID(this.src);
-        buf.writeNbt(this.nbt);
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> ClientVisualHandler.receive(this.src, this.nbt));
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> ClientVisualHandler.receive(this.src, this.nbt));
-        ctx.setPacketHandled(true);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUUID(this.src);
+        pBuffer.writeNbt(this.nbt);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

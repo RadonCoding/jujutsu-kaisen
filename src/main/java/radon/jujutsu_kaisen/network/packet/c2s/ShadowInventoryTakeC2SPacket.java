@@ -4,15 +4,18 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncTenShadowsDataS2CPacket;
 
-import java.util.function.Supplier;
+public class ShadowInventoryTakeC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "shadow_inventory_take_serverbound");
 
-public class ShadowInventoryTakeC2SPacket {
     private final int index;
 
     public ShadowInventoryTakeC2SPacket(int index) {
@@ -23,29 +26,32 @@ public class ShadowInventoryTakeC2SPacket {
         this(buf.readInt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.index);
-    }
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
+            ITenShadowsData data = sender.getData(JJKAttachmentTypes.TEN_SHADOWS);
 
-            if (sender == null) return;
-
-            ITenShadowsData cap = sender.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-
-            ItemStack stack = cap.getShadowInventory(this.index);
+            ItemStack stack = data.getShadowInventory(this.index);
 
             if (sender.getMainHandItem().isEmpty()) {
                 sender.setItemSlot(EquipmentSlot.MAINHAND, stack);
             } else {
                 if (!sender.addItem(stack)) return;
             }
-            cap.removeShadowInventory(this.index);
+            data.removeShadowInventory(this.index);
 
-            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(cap.serializeNBT()), sender);
+            PacketHandler.sendToClient(new SyncTenShadowsDataS2CPacket(data.serializeNBT()), sender);
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return null;
     }
 }

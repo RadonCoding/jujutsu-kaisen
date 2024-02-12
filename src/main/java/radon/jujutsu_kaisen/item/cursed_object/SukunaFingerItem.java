@@ -7,11 +7,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.sorcerer.SukunaEntity;
 import radon.jujutsu_kaisen.item.base.CursedObjectItem;
 import radon.jujutsu_kaisen.util.EntityUtil;
@@ -28,16 +28,16 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+        ISorcererData data = pPlayer.getData(JJKAttachmentTypes.SORCERER);
 
-        if (pPlayer.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = pPlayer.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (data != null) {
+            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
 
-            if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 return InteractionResultHolder.fail(stack);
             }
 
-            if (cap.hasTrait(Trait.VESSEL) && cap.getFingers() == 20) {
+            if (data.hasTrait(Trait.VESSEL) && data.getFingers() == 20) {
                 return InteractionResultHolder.fail(stack);
             }
         }
@@ -46,15 +46,15 @@ public class SukunaFingerItem extends CursedObjectItem {
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving) {
-        if (pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ISorcererData cap = pEntityLiving.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = pEntityLiving.getData(JJKAttachmentTypes.SORCERER);
 
-            if (cap.getType() == JujutsuType.CURSE) {
+        if (data != null) {
+            if (data.getType() == JujutsuType.CURSE) {
                 return super.finishUsingItem(pStack, pLevel, pEntityLiving);
             }
 
-            if (cap.hasTrait(Trait.VESSEL)) {
-                pStack.shrink(cap.addFingers(pStack.getCount()));
+            if (data.hasTrait(Trait.VESSEL)) {
+                pStack.shrink(data.addFingers(pStack.getCount()));
                 return pStack;
             }
         }

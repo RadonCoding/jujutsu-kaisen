@@ -2,15 +2,21 @@ package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.ClientWrapper;
 import radon.jujutsu_kaisen.menu.BountyMenu;
 
 import java.util.function.Supplier;
 
-public class SetCostS2CPacket {
+public class SetCostS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "set_cost_clientbound");
+
     private final int cost;
 
     public SetCostS2CPacket(int frequency) {
@@ -21,20 +27,25 @@ public class SetCostS2CPacket {
         this(buf.readInt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.cost);
-    }
-
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
             Player player = ClientWrapper.getPlayer();
 
             if (player == null) return;
 
-            if (player.containerMenu instanceof BountyMenu menu) {
-                menu.setCost(this.cost);
-            }
+            if (!(player.containerMenu instanceof BountyMenu menu)) return;
+
+            menu.setCost(this.cost);
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeInt(this.cost);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

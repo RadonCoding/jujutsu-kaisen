@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.effect.WoodShieldEntity;
 
@@ -68,18 +68,18 @@ public class WoodShield extends Summon<WoodShieldEntity> {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class WoodShieldForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
 
-            if (victim.level().isClientSide || !JJKAbilities.hasToggled(victim, JJKAbilities.WOOD_SHIELD.get()))
-                return;
+            if (victim.level().isClientSide) return;
 
-            if (!victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            WoodShieldEntity shield = cap.getSummonByClass(WoodShieldEntity.class);
+            if (!data.hasToggled(JJKAbilities.WOOD_SHIELD.get())) return;
+
+            WoodShieldEntity shield = data.getSummonByClass(WoodShieldEntity.class);
 
             if (shield != null) {
                 shield.hurt(event.getSource(), event.getAmount());

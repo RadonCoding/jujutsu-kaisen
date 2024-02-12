@@ -6,11 +6,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -31,21 +30,22 @@ public class Mahoraga extends Summon<MahoragaEntity> {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null) return false;
 
-        ITenShadowsData ownerCap = owner.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        ITenShadowsData tenShadowsData = owner.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        if (sorcererData == null || tenShadowsData == null) return false;
 
         if (!this.isTamed(owner)) {
             return target.getHealth() > owner.getHealth() * 4 || owner.getHealth() / owner.getMaxHealth() <= 0.1F;
         }
 
-        if (JJKAbilities.hasToggled(owner, this)) {
+        if (sorcererData.hasToggled(this)) {
             return HelperMethods.RANDOM.nextInt(20) != 0;
         }
 
-        if (target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            for (ICursedTechnique technique : JJKAbilities.getTechniques(target)) {
-                if (ownerCap.isAdaptedTo(technique)) {
-                    return true;
-                }
+        for (ICursedTechnique technique : JJKAbilities.getTechniques(target)) {
+            if (tenShadowsData.isAdaptedTo(technique)) {
+                return true;
             }
         }
         return HelperMethods.RANDOM.nextInt(10) == 0;

@@ -5,13 +5,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.AbsorbedCurse;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.AbsorbedCurse;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 
 import java.util.List;
 
@@ -23,9 +22,12 @@ public class SummonAll extends Ability {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return target != null && !target.isDeadOrDying() && owner.hasLineOfSight(target) &&
-                (cap.getType() == JujutsuType.CURSE || cap.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F : owner.getHealth() / owner.getMaxHealth() < 0.4F);
+        if (target == null || target.isDeadOrDying() || !owner.hasLineOfSight(target)) return false;
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        return (data.getType() == JujutsuType.CURSE || data.isUnlocked(JJKAbilities.RCT1.get()) ? owner.getHealth() / owner.getMaxHealth() < 0.9F :
+                owner.getHealth() / owner.getMaxHealth() < 0.4F);
     }
 
     @Override
@@ -37,9 +39,9 @@ public class SummonAll extends Ability {
     public void run(LivingEntity owner) {
         if (owner.level().isClientSide) return;
 
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        List<AbsorbedCurse> curses = cap.getCurses();
+        List<AbsorbedCurse> curses = data.getCurses();
 
         for (AbsorbedCurse curse : curses) {
             CurseManipulationUtil.summonCurse(owner, curse, false);
@@ -48,9 +50,9 @@ public class SummonAll extends Ability {
 
     @Override
     public Status isTriggerable(LivingEntity owner) {
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        if (cap.getCurses().isEmpty()) {
+        if (data.getCurses().isEmpty()) {
             return Status.FAILURE;
         }
         return super.isTriggerable(owner);
@@ -58,9 +60,9 @@ public class SummonAll extends Ability {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ICurseManipulationData cap = owner.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ICurseManipulationData data = owner.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        List<AbsorbedCurse> curses = cap.getCurses();
+        List<AbsorbedCurse> curses = data.getCurses();
 
         float cost = 0.0F;
 

@@ -10,10 +10,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.projectile.base.JujutsuProjectile;
 import radon.jujutsu_kaisen.entity.projectile.CursedEnergyImbuedItemProjectile;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -21,7 +21,7 @@ import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
 import radon.jujutsu_kaisen.util.RotationUtil;
 
-public class SwapSelf extends Ability implements Ability.IImbued {
+public class SwapSelf extends Ability {
     public static final double RANGE = 30.0D;
 
     @Override
@@ -40,8 +40,16 @@ public class SwapSelf extends Ability implements Ability.IImbued {
     }
 
     public static boolean canSwap(Entity target) {
-        return (target.isPickable() || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem || target instanceof CursedEnergyImbuedItemProjectile
-                || target instanceof JujutsuProjectile) && (!(target instanceof LivingEntity living) || !JJKAbilities.hasTrait(living, Trait.HEAVENLY_RESTRICTION));
+        if (target.isPickable() || target instanceof ItemEntity item && item.getItem().getItem() instanceof CursedToolItem
+                || target instanceof CursedEnergyImbuedItemProjectile || target instanceof JujutsuProjectile) {
+            return true;
+        }
+
+        ISorcererData data = target.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        return data.getEnergy() > 0.0F;
     }
 
     public static void swap(Entity first, Entity second) {
@@ -72,11 +80,6 @@ public class SwapSelf extends Ability implements Ability.IImbued {
     }
 
     @Override
-    public void run(LivingEntity owner, Entity target) {
-        swap(owner, target);
-    }
-
-    @Override
     public void run(LivingEntity owner) {
         owner.swing(InteractionHand.MAIN_HAND);
 
@@ -85,7 +88,7 @@ public class SwapSelf extends Ability implements Ability.IImbued {
         Entity target = this.getTarget(owner);
 
         if (target != null) {
-            this.run(owner, target);
+            swap(owner, target);
         }
     }
 

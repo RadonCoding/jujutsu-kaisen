@@ -13,7 +13,7 @@ import radon.jujutsu_kaisen.util.HelperMethods;
 
 public class TransfiguredSoulVisual implements IVisual {
     @Override
-    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public boolean isValid(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null) return false;
@@ -24,7 +24,7 @@ public class TransfiguredSoulVisual implements IVisual {
     }
 
     @Override
-    public void tick(LivingEntity entity, ClientVisualHandler.ClientData data) {
+    public void tick(LivingEntity entity, ClientVisualHandler.ClientData client) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.level == null || mc.player == null) return;

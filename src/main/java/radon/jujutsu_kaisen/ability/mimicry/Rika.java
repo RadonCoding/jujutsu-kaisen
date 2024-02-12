@@ -1,18 +1,15 @@
 package radon.jujutsu_kaisen.ability.mimicry;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.curse.RikaEntity;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 import radon.jujutsu_kaisen.util.SorcererUtil;
 
 import java.util.List;
@@ -29,16 +26,20 @@ public class Rika extends Summon<RikaEntity> {
 
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        if (!owner.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-        ISorcererData ownerCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData ownerData = owner.getData(JJKAttachmentTypes.SORCERER);
 
-        if (ownerCap.hasToggled(this)) return target != null;
+        if (ownerData == null) return false;
+
+        if (ownerData.hasToggled(this)) return target != null;
 
         if (target != null) {
             if (owner.getHealth() / owner.getMaxHealth() <= 0.5F) return true;
-            if (!target.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return false;
-            ISorcererData targetCap = target.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-            return SorcererUtil.getGrade(targetCap.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
+
+            ISorcererData targetData = target.getData(JJKAttachmentTypes.SORCERER);
+
+            if (targetData == null) return false;
+
+            return SorcererUtil.getGrade(targetData.getExperience()).ordinal() > SorcererGrade.GRADE_1.ordinal();
         }
         return false;
     }

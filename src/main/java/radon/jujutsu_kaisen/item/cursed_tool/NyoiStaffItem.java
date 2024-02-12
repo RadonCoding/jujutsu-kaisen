@@ -11,10 +11,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.client.render.item.NyoiStaffRenderer;
 import radon.jujutsu_kaisen.entity.NyoiStaffEntity;
 import radon.jujutsu_kaisen.item.base.CursedToolItem;
@@ -50,16 +50,16 @@ public class NyoiStaffItem extends CursedToolItem implements GeoItem {
         ItemStack stack = ctx.getItemInHand();
         NyoiStaffEntity staff = new NyoiStaffEntity(player, stack, Vec3.atLowerCornerWithOffset(ctx.getClickedPos(), 0.5D, 0.0D, 0.5D));
 
-        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
 
-        if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
+        if (data != null && data.getNature() == CursedEnergyNature.LIGHTNING) {
             float cost = JJKAbilities.LIGHTNING.get().getRealCost(player) * 0.5F;
 
             boolean success = player.getAbilities().instabuild;
 
             if (!player.getAbilities().instabuild) {
-                if (cap.getEnergy() >= cost) {
-                    cap.useEnergy(cost);
+                if (data.getEnergy() >= cost) {
+                    data.useEnergy(cost);
                     success = true;
                 }
             }

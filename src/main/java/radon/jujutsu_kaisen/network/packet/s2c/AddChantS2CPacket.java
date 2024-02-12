@@ -1,13 +1,24 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 
 import java.util.function.Supplier;
 
-public class AddChantS2CPacket {
+public class AddChantS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "add_chant_clientbound");
+
     private final String chant;
 
     public AddChantS2CPacket(String chant) {
@@ -18,12 +29,17 @@ public class AddChantS2CPacket {
         this(buf.readUtf());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.chant);
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> ClientChantHandler.add(this.chant));
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> ClientChantHandler.add(this.chant));
-        ctx.setPacketHandled(true);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUtf(this.chant);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

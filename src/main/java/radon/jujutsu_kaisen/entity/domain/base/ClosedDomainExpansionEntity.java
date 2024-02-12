@@ -19,15 +19,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.VeilHandler;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.block.domain.DomainBlock;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.base.DomainExpansionEntity;
 import radon.jujutsu_kaisen.network.PacketHandler;
@@ -241,7 +239,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
                     int delay = (int) Math.round(pos.getCenter().distanceTo(behind)) / 2;
 
-                    ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                    ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
 
                     if (instant) {
                         this.createBlock(radius - delay, pos, radius, distance);
@@ -249,7 +247,7 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
                         if (delay == 0) {
                             this.createBlock(radius - delay, pos, radius, distance);
                         } else {
-                            cap.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
+                            data.delayTickEvent(() -> this.createBlock(radius - delay, pos, radius, distance), delay);
                         }
                     }
                 }
@@ -265,7 +263,9 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
 
     protected void doSureHitEffect(@NotNull LivingEntity owner) {
         for (LivingEntity entity : this.getAffected()) {
-            if (JJKAbilities.hasTrait(entity, Trait.HEAVENLY_RESTRICTION)) {
+            ISorcererData data = entity.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
                 this.ability.onHitBlock(this, owner, entity.blockPosition());
             } else {
                 this.ability.onHitEntity(this, owner, entity, false);
@@ -313,18 +313,18 @@ public class ClosedDomainExpansionEntity extends DomainExpansionEntity {
     public void onRemovedFromWorld() {
         super.onRemovedFromWorld();
 
-        if (!this.level().isClientSide) {
-            LivingEntity owner = this.getOwner();
+        if (this.level().isClientSide) return;
 
-            if (owner != null) {
-                owner.getCapability(SorcererDataHandler.INSTANCE).ifPresent(cap -> {
-                    cap.setBurnout(DomainExpansion.BURNOUT);
+        LivingEntity owner = this.getOwner();
 
-                    if (owner instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
-                    }
-                });
-            }
+        if (owner == null) return;
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        data.setBurnout(DomainExpansion.BURNOUT);
+
+        if (owner instanceof ServerPlayer player) {
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
         }
     }
 

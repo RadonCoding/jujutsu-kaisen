@@ -6,17 +6,19 @@ import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.config.ConfigHolder;
 
 
 public class RCT3 extends RCT2 {
     @Override
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return false;
 
-        if (cap.getBurnout() > 0) {
+        if (data.getBurnout() > 0) {
             return true;
         }
         return super.shouldTrigger(owner, target);
@@ -26,15 +28,16 @@ public class RCT3 extends RCT2 {
     public void run(LivingEntity owner) {
         super.run(owner);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        int burnout = cap.getBurnout();
+        int burnout = data.getBurnout();
 
         if (burnout > 0) {
-            cap.setBurnout(Math.max(0, burnout - 5));
+            data.setBurnout(Math.max(0, burnout - 5));
 
             if (this.getCharge(owner) % 20 == 0) {
-                cap.increaseBrainDamage();
+                data.increaseBrainDamage();
             }
         }
     }
@@ -43,9 +46,11 @@ public class RCT3 extends RCT2 {
     public float getCost(LivingEntity owner) {
         float cost = super.getCost(owner);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0.0F;
 
-        if (cap.getBurnout() > 0) {
+        if (data.getBurnout() > 0) {
             cost += 100.0F / 20;
         }
         return cost;

@@ -6,9 +6,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.visual.ClientVisualHandler;
 import radon.jujutsu_kaisen.util.RotationUtil;
 import radon.jujutsu_kaisen.util.SorcererUtil;
@@ -21,30 +21,31 @@ public class SixEyesOverlay {
 
         assert mc.level != null && mc.player != null;
 
-        if (!mc.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
+        ISorcererData data = mc.player.getData(JJKAttachmentTypes.SORCERER);
 
-        ISorcererData cap = mc.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
 
-        if (!cap.hasTrait(Trait.SIX_EYES)) return;
+        if (!data.hasTrait(Trait.SIX_EYES)) return;
+
         if (!(RotationUtil.getLookAtHit(mc.player, 64.0D) instanceof EntityHitResult hit)) return;
+
         if (!(hit.getEntity() instanceof LivingEntity target)) return;
 
-        ClientVisualHandler.ClientData data = ClientVisualHandler.get(target);
+        ClientVisualHandler.ClientData client = ClientVisualHandler.get(target);
 
-        if (data == null) return;
+        if (client == null) return;
 
-        if (data.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
+        if (client.traits.contains(Trait.HEAVENLY_RESTRICTION)) return;
 
         List<Component> lines = new ArrayList<>();
 
-        if (data.technique != null) {
+        if (client.technique != null) {
             Component techniqueText = Component.translatable(String.format("gui.%s.six_eyes_overlay.cursed_technique", JujutsuKaisen.MOD_ID),
-                    data.technique.getName());
+                    client.technique.getName());
             lines.add(techniqueText);
         }
 
         Component gradeText = Component.translatable(String.format("gui.%s.six_eyes_overlay.grade", JujutsuKaisen.MOD_ID),
-                SorcererUtil.getGrade(data.experience).getName());
+                SorcererUtil.getGrade(client.experience).getName());
         lines.add(gradeText);
 
         int offset = 0;

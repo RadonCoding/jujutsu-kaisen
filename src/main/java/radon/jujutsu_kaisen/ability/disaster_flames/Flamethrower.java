@@ -1,8 +1,6 @@
 package radon.jujutsu_kaisen.ability.disaster_flames;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +13,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.particle.FireParticle;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -29,7 +28,9 @@ public class Flamethrower extends Ability implements Ability.IChannelened, Abili
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
 
-        if (JJKAbilities.isChanneling(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(5) != 0;
         }
         return HelperMethods.RANDOM.nextInt(5) == 0 && owner.distanceTo(target) <= RANGE;

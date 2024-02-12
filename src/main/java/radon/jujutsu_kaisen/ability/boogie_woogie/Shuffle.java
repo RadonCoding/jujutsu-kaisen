@@ -1,18 +1,15 @@
 package radon.jujutsu_kaisen.ability.boogie_woogie;
 
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.sound.JJKSounds;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.Iterator;
@@ -30,7 +27,11 @@ public class Shuffle extends Ability implements Ability.IChannelened {
     public boolean shouldTrigger(PathfinderMob owner, @Nullable LivingEntity target) {
         if (target == null || !owner.hasLineOfSight(target)) return false;
 
-        if (JJKAbilities.isChanneling(owner, this)) {
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return false;
+
+        if (data.isChanneling(this)) {
             return HelperMethods.RANDOM.nextInt(3) != 0;
         }
         return this.getTargets(owner).contains(target) && HelperMethods.RANDOM.nextInt(3) == 0;

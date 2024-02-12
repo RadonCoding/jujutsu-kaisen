@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -34,10 +34,12 @@ public class YujiItadoriEntity extends SorcererEntity {
         ItemStack stack = pPlayer.getItemInHand(pHand);
 
         if (stack.is(JJKItems.SUKUNA_FINGER.get())) {
-            ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+            if (data == null) return super.mobInteract(pPlayer, pHand);
 
             int count = stack.getCount();
-            int eaten = cap.addFingers(count);
+            int eaten = data.addFingers(count);
 
             if (eaten > 0) {
                 this.playSound(this.getEatingSound(stack), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
@@ -47,9 +49,8 @@ public class YujiItadoriEntity extends SorcererEntity {
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
             return InteractionResult.FAIL;
-        } else {
-            return super.mobInteract(pPlayer, pHand);
         }
+        return super.mobInteract(pPlayer, pHand);
     }
 
     @Override

@@ -12,6 +12,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -62,7 +64,9 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
             if (victim == owner) return;
 
             if (victim.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, JJKAbilities.CURSED_BUD.get()), DAMAGE * this.getPower())) {
-                if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get()) || JJKAbilities.hasToggled(victim, JJKAbilities.FALLING_BLOSSOM_EMOTION.get())) {
+                ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+                if (data != null && (data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get()) || data.hasToggled(JJKAbilities.FALLING_BLOSSOM_EMOTION.get()))) {
                     victim.addEffect(new MobEffectInstance(JJKEffects.CURSED_BUD.get(), (int) (EFFECT * this.getPower()), 0));
                 }
             }
@@ -83,9 +87,9 @@ public class CursedBudProjectile extends JujutsuProjectile implements GeoEntity 
 
         if (this.level().isClientSide) return;
 
-        if (pResult.getEntity() instanceof LivingEntity living) {
-            this.implant(living);
-        }
+        if (!(pResult.getEntity() instanceof LivingEntity living)) return;
+
+        this.implant(living);
     }
 
     @Override

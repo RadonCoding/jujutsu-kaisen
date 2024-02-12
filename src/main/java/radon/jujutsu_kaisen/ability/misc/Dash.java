@@ -10,24 +10,17 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.IProjectionSorceryData;
-import radon.jujutsu_kaisen.capability.data.projection_sorcery.ProjectionSorceryDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.projection_sorcery.IProjectionSorceryData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.MirageParticle;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.base.ISorcerer;
@@ -101,7 +94,11 @@ public class Dash extends Ability {
     }
 
     private static float getRange(LivingEntity owner) {
-        return (float) (RANGE * (JJKAbilities.hasTrait(owner, Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F));
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0.0F;
+
+        return (float) (RANGE * (data.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 2.0F : 1.0F));
     }
 
     @Override
@@ -110,10 +107,12 @@ public class Dash extends Ability {
 
         if (!canDash(owner)) return;
 
-        ISorcererData sorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        IProjectionSorceryData projectionSorceryCap = owner.getCapability(ProjectionSorceryDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+        IProjectionSorceryData projectionSorceryData = owner.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
 
-        if (projectionSorceryCap.getSpeedStacks() > 0 || sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (sorcererData == null || projectionSorceryData == null) return;
+
+        if (projectionSorceryData.getSpeedStacks() > 0 || sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             owner.level().playSound(null, owner.getX(), owner.getY(), owner.getZ(), JJKSounds.DASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
             owner.addEffect(new MobEffectInstance(JJKEffects.INVISIBILITY.get(), 5, 0, false, false, false));
             level.sendParticles(new MirageParticle.MirageParticleOptions(owner.getId()), owner.getX(), owner.getY(), owner.getZ(),
@@ -124,8 +123,8 @@ public class Dash extends Ability {
 
         HitResult hit = RotationUtil.getLookAtHit(owner, getRange(owner));
 
-        float power = Math.min(MAX_DASH * (sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
-                DASH * (1.0F + this.getPower(owner) * 0.1F) * (sorcererCap.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
+        float power = Math.min(MAX_DASH * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F),
+                DASH * (1.0F + this.getPower(owner) * 0.1F) * (sorcererData.hasTrait(Trait.HEAVENLY_RESTRICTION) ? 1.5F : 1.0F));
 
         if (hit.getType() == HitResult.Type.MISS) {
             float f = owner.getYRot();
@@ -186,9 +185,11 @@ public class Dash extends Ability {
 
     @Override
     public int getRealCooldown(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0;
 
-        if (cap.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
+        if (data.hasTrait(Trait.HEAVENLY_RESTRICTION)) {
             return 0;
         }
         return super.getRealCooldown(owner);

@@ -20,17 +20,13 @@ import net.minecraft.world.item.enchantment.ThornsEnchantment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
-import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.CursedEnergyNature;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Trait;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.CursedEnergyNature;
+import radon.jujutsu_kaisen.data.sorcerer.Trait;
 import radon.jujutsu_kaisen.client.particle.LightningParticle;
 import radon.jujutsu_kaisen.client.particle.ParticleColors;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
@@ -103,11 +99,12 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
         if (!(owner.level() instanceof ServerLevel level)) return;
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        float scale = cap.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
+        float scale = data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 1.5F : 1.0F;
 
-        if (cap.getNature() == CursedEnergyNature.LIGHTNING) {
+        if (data.getNature() == CursedEnergyNature.LIGHTNING) {
             for (int i = 0; i < 4; i++) {
                 double x = owner.getX() + (HelperMethods.RANDOM.nextDouble() - 0.5D) * (owner.getBbWidth() * 2 * scale);
                 double y = owner.getY() + HelperMethods.RANDOM.nextDouble() * (owner.getBbHeight() * 1.25F * scale);
@@ -148,9 +145,11 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public float getCost(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return 0.0F;
 
-        if (owner.isInWater() && cap.getNature() == CursedEnergyNature.LIGHTNING) {
+        if (owner.isInWater() && data.getNature() == CursedEnergyNature.LIGHTNING) {
             return 5.0F;
         }
         return 0.01F;
@@ -181,130 +180,133 @@ public class CursedEnergyFlow extends Ability implements Ability.IToggled {
 
     @Override
     public Status isStillUsable(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
+        if (data == null) return Status.FAILURE;
+
+        return data.getEnergy() == 0.0F ? Status.FAILURE : super.isStillUsable(owner);
     }
 
-    @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class CursedEnergyFlowForgeEvents {
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
-        public static void onLivingHurt(LivingHurtEvent event) {
-            DamageSource source = event.getSource();
-            if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+    public static void attack(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
 
-            if (attacker.level().isClientSide) return;
+        if (victim.level().isClientSide) return;
 
-            LivingEntity victim = event.getEntity();
+        DamageSource source = event.getSource();
+        float amount = event.getAmount();
 
-            if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!DamageUtil.isMelee(source)) return;
 
-                    if (DamageUtil.isMelee(source)) {
-                        float increase = attackerCap.getExperience() * 0.005F;
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-                        switch (attackerCap.getNature()) {
-                            case ROUGH -> increase *= 1.5F;
-                            case LIGHTNING -> increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
-                            case DIVERGENT -> {
-                                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
+        ISorcererData attackerData = attacker.getData(JJKAttachmentTypes.SORCERER);
 
-                                attackerCap.delayTickEvent(() -> {
-                                    victim.invulnerableTime = 0;
+        if (attackerData == null) return;
 
-                                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
+        if (!attackerData.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
 
-                                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), event.getAmount())) {
-                                        ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
-                                        victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+        float increase = attackerData.getExperience() * 0.005F;
 
-                                        victim.setDeltaMovement(look.scale(1.0F + (attackerCap.getAbilityPower() * 0.1F)));
-                                        victim.hurtMarked = true;
-                                    }
-                                }, 5);
-                            }
-                        };
+        switch (attackerData.getNature()) {
+            case ROUGH -> increase *= 1.5F;
+            case LIGHTNING -> {
+                increase *= (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2.0F : 1.0F);
 
-                        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                            float cost = increase * (attackerCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                            if (attackerCap.getEnergy() < cost) return;
-                            attackerCap.useEnergy(cost);
+                victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
+                victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
 
-                            if (attacker instanceof ServerPlayer player) {
-                                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerCap.serializeNBT()), player);
-                            }
-                        }
-                        event.setAmount(event.getAmount() + increase);
-                    }
+                for (int i = 0; i < 8; i++) {
+                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
+                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
+                            victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
+                            0, 0.0D, 0.0D, 0.0D, 0.0D);
                 }
             }
+            case DIVERGENT -> {
+                Vec3 look = RotationUtil.getTargetAdjustedLookAngle(attacker);
 
-            if (DamageUtil.isMelee(source)) {
-                if (attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData attackerCap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                attackerData.delayTickEvent(() -> {
+                    victim.invulnerableTime = 0;
 
-                    if (JJKAbilities.hasToggled(attacker, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                        if (attackerCap.getNature() == CursedEnergyNature.LIGHTNING) {
-                            victim.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20 * (attacker.getItemInHand(InteractionHand.MAIN_HAND).is(JJKItems.NYOI_STAFF.get()) ? 2 : 1), 0, false, false, false));
-                            victim.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 0.5F + HelperMethods.RANDOM.nextFloat() * 0.2F);
+                    Vec3 pos = victim.position().add(0.0D, victim.getBbHeight() / 2.0F, 0.0D);
 
-                            if (!attacker.level().isClientSide) {
-                                for (int i = 0; i < 8; i++) {
-                                    double offsetX = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                    double offsetY = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                    double offsetZ = HelperMethods.RANDOM.nextGaussian() * 1.5D;
-                                    ((ServerLevel) attacker.level()).sendParticles(new LightningParticle.LightningParticleOptions(ParticleColors.getCursedEnergyColor(attacker), 0.5F, 1),
-                                            victim.getX() + offsetX, victim.getY() + offsetY, victim.getZ() + offsetZ,
-                                            0, 0.0D, 0.0D, 0.0D, 0.0D);
-                                }
-                            }
-                        }
+                    if (victim.hurt(JJKDamageSources.jujutsuAttack(attacker, null), amount)) {
+                        ((ServerLevel) victim.level()).sendParticles(ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 0, 1.0D, 0.0D, 0.0D, 1.0D);
+                        victim.level().playSound(null, pos.x, pos.y, pos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.MASTER, 1.0F, 1.0F);
+
+                        victim.setDeltaMovement(look.scale(1.0F + (attackerData.getAbilityPower() * 0.1F)));
+                        victim.hurtMarked = true;
                     }
-                }
+                }, 5);
             }
+        };
 
-            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
+        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+            float cost = increase * (attackerData.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
 
-            // Shield
-            if (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_FLOW.get())) {
-                if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-                    ISorcererData victimCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            if (attackerData.getEnergy() < cost) return;
 
-                    if (victimCap.getNature() == CursedEnergyNature.LIGHTNING) {
-                        if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
-                                jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
-                            event.setCanceled(true);
-                        }
+            attackerData.useEnergy(cost);
+
+            if (attacker instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(attackerData.serializeNBT()), player);
+            }
+        }
+        event.setAmount(amount + increase);
+    }
+
+    public static void shield(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
+
+        if (victim.level().isClientSide) return;
+
+        DamageSource source = event.getSource();
+        float amount = event.getAmount();
+
+        if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
+
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        ISorcererData data = victim.getData(JJKAttachmentTypes.SORCERER);
+
+
+        if (!data.hasToggled(JJKAbilities.CURSED_ENERGY_FLOW.get())) return;
+
+        if (data.getNature() == CursedEnergyNature.LIGHTNING) {
+            if ((source.getDirectEntity() instanceof JujutsuLightningEntity) || (source instanceof JJKDamageSources.JujutsuDamageSource jujutsu &&
+                    jujutsu.getAbility() != null && jujutsu.getAbility().getClassification() == Classification.LIGHTNING)) {
+                event.setCanceled(true);
+            }
+        }
+
+        if (DamageUtil.isMelee(source)) {
+            switch (data.getNature()) {
+                case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
+                        false, false, false));
+                case ROUGH -> {
+                    if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
+                        attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
                     }
-
-                    if (DamageUtil.isMelee(source)) {
-                        switch (victimCap.getNature()) {
-                            case LIGHTNING -> attacker.addEffect(new MobEffectInstance(JJKEffects.STUN.get(), 20, 0,
-                                    false, false, false));
-                            case ROUGH -> {
-                                if (ThornsEnchantment.shouldHit(3, victim.getRandom())) {
-                                    attacker.hurt(JJKDamageSources.jujutsuAttack(victim, null), (float) ThornsEnchantment.getDamage(3, victim.getRandom()));
-                                }
-                            }
-                        }
-                    }
-
-                    float armor = victimCap.getExperience() * (JJKAbilities.hasToggled(victim, JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.1F : 0.025F);
-                    float blocked = CombatRules.getDamageAfterAbsorb(event.getAmount(), armor, armor * 0.1F);
-                    float block = event.getAmount() - blocked;
-
-                    if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
-                        float cost = block * (victimCap.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
-                        if (victimCap.getEnergy() < cost) return;
-                        victimCap.useEnergy(cost);
-
-                        if (victim instanceof ServerPlayer player) {
-                            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(victimCap.serializeNBT()), player);
-                        }
-                    }
-                    event.setAmount(blocked);
                 }
             }
         }
+
+        float armor = data.getExperience() * (data.isChanneling(JJKAbilities.CURSED_ENERGY_SHIELD.get()) ? 0.1F : 0.025F);
+        float blocked = CombatRules.getDamageAfterAbsorb(amount, armor, armor * 0.1F);
+
+        if (!(attacker instanceof Player player) || !player.getAbilities().instabuild) {
+            float cost = blocked * (data.hasTrait(Trait.SIX_EYES) ? 0.5F : 1.0F);
+
+            if (data.getEnergy() < cost) return;
+
+            data.useEnergy(cost);
+
+            if (victim instanceof ServerPlayer player) {
+                PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+            }
+        }
+        event.setAmount(amount - blocked);
     }
 }

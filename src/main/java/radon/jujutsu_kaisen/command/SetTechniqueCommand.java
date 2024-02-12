@@ -6,8 +6,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
@@ -23,10 +23,16 @@ public class SetTechniqueCommand {
     }
 
     public static int setTechnique(ServerPlayer player, ICursedTechnique technique) {
-        ISorcererData cap = player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.setTechnique(technique);
-        cap.clearToggled();
-        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+        ISorcererData data = player.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return 0;
+
+        data.setTechnique(technique);
+        data.clearToggled();
+        data.channel(null);
+
+        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
+
         return 1;
     }
 }

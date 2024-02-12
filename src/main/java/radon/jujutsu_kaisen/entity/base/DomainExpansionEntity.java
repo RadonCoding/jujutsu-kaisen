@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -19,10 +20,9 @@ import radon.jujutsu_kaisen.VeilHandler;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.entity.SimpleDomainEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.MahoragaEntity;
@@ -57,7 +57,7 @@ public abstract class DomainExpansionEntity extends Entity {
     }
 
     @Override
-    public boolean ignoreExplosion() {
+    public boolean ignoreExplosion(@NotNull Explosion pExplosion) {
         return true;
     }
 
@@ -173,7 +173,16 @@ public abstract class DomainExpansionEntity extends Entity {
 
         LivingEntity owner = this.getOwner();
 
-        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive() || !JJKAbilities.hasToggled(owner, this.ability))) {
+        if (!this.level().isClientSide && owner != null) {
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+            if (!data.hasToggled(this.ability)) {
+                this.discard();
+                return;
+            }
+        }
+
+        if (!this.level().isClientSide && (owner == null || owner.isRemoved() || !owner.isAlive())) {
             this.discard();
         } else {
             super.tick();
@@ -193,24 +202,27 @@ public abstract class DomainExpansionEntity extends Entity {
 
         if (victim instanceof TamableAnimal tamable && tamable.isTame() && tamable.getOwner() == owner) return false;
 
-        if (victim.getCapability(SorcererDataHandler.INSTANCE).isPresent()) {
-            ITenShadowsData victimTenShadowsCap = victim.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-            ISorcererData victimSorcererCap = victim.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ITenShadowsData victimTenShadowsData = victim.getData(JJKAttachmentTypes.TEN_SHADOWS);
+        ISorcererData victimSorcererData = victim.getData(JJKAttachmentTypes.SORCERER);
 
-            if ((victim instanceof MahoragaEntity && victimTenShadowsCap.isAdaptedTo(this.ability))) return false;
+        if (victimTenShadowsData == null || victimSorcererData == null) return false;
 
-            if (victimSorcererCap.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
-                SimpleDomainEntity simple = victimSorcererCap.getSummonByClass(SimpleDomainEntity.class);
+        if ((victim instanceof MahoragaEntity && victimTenShadowsData.isAdaptedTo(this.ability))) return false;
 
-                if (simple != null) {
-                    ISorcererData ownerSorcererCap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererCap.getAbilityPower() * 10.0F);
+        if (victimSorcererData.hasToggled(JJKAbilities.SIMPLE_DOMAIN.get())) {
+            SimpleDomainEntity simple = victimSorcererData.getSummonByClass(SimpleDomainEntity.class);
+
+            if (simple != null) {
+                ISorcererData ownerSorcererData = owner.getData(JJKAttachmentTypes.SORCERER);
+
+                if (ownerSorcererData != null) {
+                    simple.hurt(JJKDamageSources.indirectJujutsuAttack(this, owner, this.ability), ownerSorcererData.getAbilityPower() * 10.0F);
                 }
             }
+        }
 
-            for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
-                if (victim.distanceTo(simple) < simple.getRadius()) return false;
-            }
+        for (SimpleDomainEntity simple : this.level().getEntitiesOfClass(SimpleDomainEntity.class, AABB.ofSize(victim.position(), 8.0D, 8.0D, 8.0D))) {
+            if (victim.distanceTo(simple) < simple.getRadius()) return false;
         }
         return this.isAffected(victim.blockPosition());
     }
@@ -221,9 +233,12 @@ public abstract class DomainExpansionEntity extends Entity {
 
     public float getStrength() {
         LivingEntity owner = this.getOwner();
+
         if (owner == null) return 0.0F;
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        return cap.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
+
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        return data.getAbilityPower() * (owner.getHealth() / owner.getMaxHealth());
     }
 
     @Override

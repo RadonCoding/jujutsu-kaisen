@@ -2,7 +2,7 @@ package radon.jujutsu_kaisen.client.gui.screen.widget;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,9 +19,8 @@ import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.AbilityDisplayInfo;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.client.gui.screen.JujutsuScreen;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.gui.screen.tab.AbilityTab;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.UnlockAbilityC2SPacket;
@@ -175,13 +174,16 @@ public class AbilityWidget {
 
     public void draw(GuiGraphics pGuiGraphics, int pX, int pY) {
         AdvancementWidgetType type = this.unlocked ? AdvancementWidgetType.OBTAINED : AdvancementWidgetType.UNOBTAINED;
-        pGuiGraphics.blitSprite(type.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
+        pGuiGraphics.blitSprite(type.frameSprite(AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
-                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                Vector3f color = Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
-                RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+                ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
+                if (data != null) {
+                    Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
+                    RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+                }
             }
         }
         pGuiGraphics.blit(this.display.getIcon(), pX + this.x + 8, pY + this.y + 5, 0, 0, 16, 16, 16, 16);
@@ -203,20 +205,21 @@ public class AbilityWidget {
     public void unlock() {
         if (this.minecraft.player == null) return;
 
-        if (this.unlockable && !this.unlocked) {
-            this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+        if (!this.unlockable || this.unlocked) return;
 
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        this.minecraft.player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
 
-            PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-            if (!this.minecraft.player.getAbilities().instabuild) {
-                cap.usePoints(this.ability.getRealPointsCost(this.minecraft.player));
-            }
-            cap.unlock(this.ability);
 
-            this.update();
+        PacketHandler.sendToServer(new UnlockAbilityC2SPacket(JJKAbilities.getKey(this.ability)));
+
+        if (!this.minecraft.player.getAbilities().instabuild) {
+            data.usePoints(this.ability.getRealPointsCost(this.minecraft.player));
         }
+        data.unlock(this.ability);
+
+        this.update();
     }
 
     public void drawHover(GuiGraphics pGuiGraphics, int pX, int pY, float pFade, int pWidth, int pHeight) {
@@ -254,7 +257,7 @@ public class AbilityWidget {
 
         pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 0, 0, l, k, i, 26);
         pGuiGraphics.blitSprite(type.boxSprite(), 200, 26, 200 - j, 0, l + i, k, j, 26);
-        pGuiGraphics.blitSprite(type.frameSprite(FrameType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
+        pGuiGraphics.blitSprite(type.frameSprite(AdvancementType.TASK), pX + this.x + 3, pY + this.y, 26, 26);
 
         if (xOverflow) {
             pGuiGraphics.drawString(this.minecraft.font, this.title, l + 5, pY + this.y + 9, -1);
@@ -274,9 +277,12 @@ public class AbilityWidget {
 
         if (this.ability.isCursedEnergyColor()) {
             if (this.minecraft.player != null) {
-                ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-                Vector3f color = Vec3.fromRGB24(cap.getCursedEnergyColor()).toVector3f();
-                RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+                ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+
+                if (data != null) {
+                    Vector3f color = Vec3.fromRGB24(data.getCursedEnergyColor()).toVector3f();
+                    RenderSystem.setShaderColor(color.x, color.y, color.z, 1.0F);
+                }
             }
         }
         pGuiGraphics.blit(this.display.getIcon(), pX + this.x + 8, pY + this.y + 5, 0, 0, 16, 16, 16, 16);

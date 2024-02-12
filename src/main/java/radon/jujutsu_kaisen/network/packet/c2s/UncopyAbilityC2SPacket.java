@@ -2,15 +2,19 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 
-import java.util.function.Supplier;
+public class UncopyAbilityC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "uncopy_ability_serverbound");
 
-public class UncopyAbilityC2SPacket {
     private final ICursedTechnique technique;
 
     public UncopyAbilityC2SPacket(ICursedTechnique technique) {
@@ -20,21 +24,24 @@ public class UncopyAbilityC2SPacket {
     public UncopyAbilityC2SPacket(FriendlyByteBuf buf) {
         this(JJKCursedTechniques.getValue(buf.readResourceLocation()));
     }
+    
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(JJKCursedTechniques.getKey(this.technique));
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
+            
+            data.uncopy(this.technique);
+        });
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeResourceLocation(JJKCursedTechniques.getKey(this.technique));
+    }
 
-            if (sender == null) return;
-
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-
-            cap.uncopy(this.technique);
-        });
-        ctx.setPacketHandled(true);
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

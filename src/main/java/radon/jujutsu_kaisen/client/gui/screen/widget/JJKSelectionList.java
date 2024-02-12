@@ -15,8 +15,13 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     protected final PactListWidget.IBuilder<T, E> builder;
     protected final PactListWidget.ICallback<E> callback;
 
+    private final int x0;
+    private final int y0;
+    private final int x1;
+    private final int y1;
+
     public JJKSelectionList(PactListWidget.IBuilder<T, E> builder, PactListWidget.ICallback<E> callback, Minecraft minecraft, int width, int height, int x, int y) {
-        super(minecraft, width, height, x, y, minecraft.font.lineHeight * 2 - 2);
+        super(minecraft, width, height, x, minecraft.font.lineHeight * 2 - 2);
 
         this.x0 = x;
         this.y0 = y;
@@ -59,11 +64,11 @@ public abstract class JJKSelectionList<T, E extends ObjectSelectionList.Entry<E>
     }
 
     @Override
-    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         pGuiGraphics.renderOutline(this.x0, this.y0, this.width, this.height, -16777216);
         pGuiGraphics.fill(this.x0, this.y0, this.x1, this.y1, -1072689136);
 
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override

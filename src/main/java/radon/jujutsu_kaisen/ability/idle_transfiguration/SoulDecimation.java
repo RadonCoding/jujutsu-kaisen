@@ -6,20 +6,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.MenuType;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.damage.JJKDamageSources;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.idle_transfiguration.base.TransfiguredSoulEntity;
 import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
-import radon.jujutsu_kaisen.util.RotationUtil;
 
 public class SoulDecimation extends Ability implements Ability.IToggled, Ability.IAttack {
     @Override
@@ -29,7 +26,11 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
     @Override
     public ActivationType getActivationType(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+
+        if (data == null) return ActivationType.TOGGLED;
+
+        return data.hasToggled(JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? ActivationType.INSTANT : ActivationType.TOGGLED;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
             target.addEffect(instance);
 
             if (!owner.level().isClientSide) {
-                PacketDistributor.TRACKING_ENTITY.with(() -> target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
+                PacketDistributor.TRACKING_ENTITY.with(target).send(new ClientboundUpdateMobEffectPacket(target.getId(), instance));
             }
         }
     }
@@ -99,10 +100,11 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
     @Override
     public void onEnabled(LivingEntity owner) {
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        if (cap.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            cap.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
+        if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            data.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
         }
     }
 
@@ -124,6 +126,6 @@ public class SoulDecimation extends Ability implements Ability.IToggled, Ability
 
     @Override
     public MenuType getMenuType(LivingEntity owner) {
-        return JJKAbilities.hasToggled(owner, JJKAbilities.SELF_EMBODIMENT_OF_PERFECTION.get()) ? MenuType.MELEE : MenuType.RADIAL;
+        return this.getActivationType(owner) == ActivationType.INSTANT ? MenuType.MELEE : MenuType.RADIAL;
     }
 }

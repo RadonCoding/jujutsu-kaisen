@@ -15,11 +15,6 @@ public class TenShadowsTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.TEN_SHADOWS_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.SWITCH_MODE.get(),
                 JJKAbilities.RELEASE_SHIKIGAMI.get(),

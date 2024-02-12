@@ -15,11 +15,6 @@ public class ProjectionSorceryTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.PROJECTION_SORCERY_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.PROJECTION_SORCERY.get(),
                 JJKAbilities.TWENTY_FOUR_FRAME_RULE.get(),

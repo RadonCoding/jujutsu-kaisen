@@ -2,13 +2,17 @@ package radon.jujutsu_kaisen.network.packet.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 
-import java.util.function.Supplier;
+public class ChangeOutputC2SPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "change_output_serverbound");
 
-public class ChangeOutputC2SPacket {
     public static final int INCREASE = 1;
     public static final int DECREASE = -1;
 
@@ -22,24 +26,27 @@ public class ChangeOutputC2SPacket {
         this(buf.readInt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.direction);
-    }
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> {
+            if (!(ctx.player().orElseThrow() instanceof ServerPlayer sender)) return;
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
-            ServerPlayer sender = ctx.getSender();
-
-            if (sender == null) return;
-
-            ISorcererData cap = sender.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = sender.getData(JJKAttachmentTypes.SORCERER);
 
             if (this.direction == INCREASE) {
-                cap.increaseOutput();
+                data.increaseOutput();
             } else {
-                cap.decreaseOutput();
+                data.decreaseOutput();
             }
         });
-        ctx.setPacketHandled(true);
+    }
+
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeInt(this.direction);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

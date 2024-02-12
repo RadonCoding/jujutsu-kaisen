@@ -1,14 +1,16 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.CameraShakeHandler;
 
-import java.util.function.Supplier;
+public class CameraShakeS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "camera_shake_clientbound");
 
-public class CameraShakeS2CPacket {
     private final float intensity;
     private final float speed;
     private final int duration;
@@ -23,14 +25,19 @@ public class CameraShakeS2CPacket {
         this(buf.readFloat(), buf.readFloat(), buf.readInt());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeFloat(this.intensity);
-        buf.writeFloat(this.speed);
-        buf.writeInt(this.duration);
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> CameraShakeHandler.shakeCamera(this.intensity, this.speed, this.duration));
-        ctx.setPacketHandled(true);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeFloat(this.intensity);
+        pBuffer.writeFloat(this.speed);
+        pBuffer.writeInt(this.duration);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

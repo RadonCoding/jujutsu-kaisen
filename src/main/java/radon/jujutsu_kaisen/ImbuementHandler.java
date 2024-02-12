@@ -1,33 +1,18 @@
 package radon.jujutsu_kaisen;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import radon.jujutsu_kaisen.ability.AbilityTriggerEvent;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.ability.base.IImbuement;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.config.ConfigHolder;
-import radon.jujutsu_kaisen.entity.projectile.ThrownChainProjectile;
-import radon.jujutsu_kaisen.item.JJKItems;
-import radon.jujutsu_kaisen.network.PacketHandler;
-import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
-import radon.jujutsu_kaisen.util.CuriosUtil;
-import radon.jujutsu_kaisen.util.DamageUtil;
-import radon.jujutsu_kaisen.util.HelperMethods;
 
 import java.util.*;
 
@@ -114,7 +99,7 @@ public class ImbuementHandler {
     }
 
     @Mod.EventBusSubscriber(modid = JujutsuKaisen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ImbuemenetEventHandlerForgeEvents {
+    public static class ForgeEvents {
         @SubscribeEvent
         public static void onAbilityTrigger(AbilityTriggerEvent.Post event) {
             LivingEntity owner = event.getEntity();
@@ -138,14 +123,13 @@ public class ImbuementHandler {
             increaseImbuementAmount(stack, technique, amount);
         }
 
-        @SubscribeEvent
+        /*@SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
             DamageSource source = event.getSource();
 
             if (!(source.getEntity() instanceof LivingEntity attacker)) return;
 
-            if (!attacker.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
-            ISorcererData cap = attacker.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = attacker.getData(SorcererDataHandler.INSTANCE);
 
             LivingEntity victim = event.getEntity();
 
@@ -167,7 +151,7 @@ public class ImbuementHandler {
                 for (ICursedTechnique technique : ImbuementHandler.getFullImbuements(stack)) {
                     Ability ability = technique.getImbuement();
 
-                    if (!cap.isCooldownDone(ability)) continue;
+                    if (!data.isCooldownDone(ability)) continue;
 
                     ((IImbuement) ability).hit(attacker, victim);
 
@@ -175,10 +159,10 @@ public class ImbuementHandler {
 
                     if (ability.getRealCooldown(attacker) == 0) continue;
 
-                    cap.addCooldown(ability);
+                    data.addCooldown(ability);
 
                     if (attacker instanceof ServerPlayer player) {
-                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(cap.serializeNBT()), player);
+                        PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(data.serializeNBT()), player);
                     }
                 }
 
@@ -186,6 +170,6 @@ public class ImbuementHandler {
                     stack.shrink(1);
                 }
             }
-        }
+        }*/
     }
 }

@@ -18,18 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.idle_transfiguration.base.ITransfiguredSoul;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.CurseManipulationDataHandler;
-import radon.jujutsu_kaisen.capability.data.curse_manipulation.ICurseManipulationData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.curse_manipulation.ICurseManipulationData;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.client.gui.screen.DisplayItem;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.c2s.*;
-import radon.jujutsu_kaisen.util.CurseManipulationUtil;
+import radon.jujutsu_kaisen.ability.curse_manipulation.util.CurseManipulationUtil;
 import radon.jujutsu_kaisen.util.HelperMethods;
 
 import javax.annotation.Nullable;
@@ -130,17 +128,19 @@ public abstract class RadialScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (this.minecraft != null && this.minecraft.player != null) {
-            ISorcererData cap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (this.minecraft == null || this.minecraft.player == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
-            if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
-                DisplayItem item = this.getCurrent().get(this.hovered);
+        ISorcererData data = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
 
-                if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
-                    if (item.type == DisplayItem.Type.COPIED) {
-                        PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
-                        cap.uncopy(item.copied);
-                    }
+        if (data == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
+
+        if (this.hovered >= 0 && this.hovered < this.getCurrent().size()) {
+            DisplayItem item = this.getCurrent().get(this.hovered);
+
+            if (pButton == InputConstants.MOUSE_BUTTON_RIGHT) {
+                if (item.type == DisplayItem.Type.COPIED) {
+                    PacketHandler.sendToServer(new UncopyAbilityC2SPacket(item.copied));
+                    data.uncopy(item.copied);
                 }
             }
         }
@@ -196,12 +196,14 @@ public abstract class RadialScreen extends Screen {
     protected boolean isActive(DisplayItem item) {
         if (this.minecraft == null || this.minecraft.player == null) return false;
 
-        ISorcererData sorcererCap = this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ICurseManipulationData curseManipulationCap = this.minecraft.player.getCapability(CurseManipulationDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData sorcererData = this.minecraft.player.getData(JJKAttachmentTypes.SORCERER);
+        ICurseManipulationData curseManipulationData = this.minecraft.player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
 
-        return item.type == DisplayItem.Type.ABILITY && JJKAbilities.hasToggled(this.minecraft.player, item.ability) ||
-                item.type == DisplayItem.Type.COPIED && sorcererCap.getCurrentCopied() == item.copied ||
-                item.type == DisplayItem.Type.ABSORBED && curseManipulationCap.getCurrentAbsorbed() == item.absorbed;
+        if (sorcererData == null || curseManipulationData == null) return false;
+
+        return item.type == DisplayItem.Type.ABILITY && sorcererData.hasToggled(item.ability) ||
+                item.type == DisplayItem.Type.COPIED && sorcererData.getCurrentCopied() == item.copied ||
+                item.type == DisplayItem.Type.ABSORBED && curseManipulationData.getCurrentAbsorbed() == item.absorbed;
     }
 
     @Override
@@ -209,9 +211,6 @@ public abstract class RadialScreen extends Screen {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         if (this.minecraft == null || this.minecraft.level == null || this.minecraft.player == null) return;
-
-        // DO NOT REMOVE
-        if (!this.minecraft.player.getCapability(SorcererDataHandler.INSTANCE).isPresent()) return;
 
         int centerX = this.width / 2;
         int centerY = this.height / 2;

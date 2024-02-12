@@ -8,11 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.MenuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.projectile.DismantleProjectile;
 import radon.jujutsu_kaisen.sound.JJKSounds;
 import radon.jujutsu_kaisen.util.HelperMethods;
@@ -45,7 +46,7 @@ public class Spiderweb extends Ability {
         } else if (result.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) result).getEntity();
             Vec3 offset = entity.position().subtract(0.0D, 5.0D, 0.0D);
-            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+            return owner.level().clip(new ClipContext(entity.position(), offset, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
         }
         return null;
     }
@@ -59,7 +60,8 @@ public class Spiderweb extends Ability {
         BlockHitResult hit = this.getBlockHit(owner);
 
         if (hit != null) {
-            ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+            ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
             float radius = Math.min(MAX_EXPLOSIVE_POWER, EXPLOSIVE_POWER * this.getPower(owner));
             float real = (radius % 2 == 0) ? radius + 1 : radius;
@@ -69,7 +71,7 @@ public class Spiderweb extends Ability {
             AABB bounds = AABB.ofSize(center, real, real, real);
 
             for (int i = 0; i < HelperMethods.RANDOM.nextInt(DELAY / 4, DELAY / 2); i++) {
-                cap.delayTickEvent(() -> {
+                data.delayTickEvent(() -> {
                     owner.level().playSound(null, center.x, center.y, center.z,
                             JJKSounds.SLASH.get(), SoundSource.MASTER, 1.0F, 1.0F);
 

@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.command.EnumArgument;
 import radon.jujutsu_kaisen.JujutsuKaisen;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
-import radon.jujutsu_kaisen.capability.data.sorcerer.Pact;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.Pact;
 import radon.jujutsu_kaisen.network.PacketHandler;
 import radon.jujutsu_kaisen.network.packet.s2c.SyncSorcererDataS2CPacket;
 
@@ -30,17 +30,19 @@ public class PactCreationAcceptCommand {
 
         if (src == null) return 0;
 
-        ISorcererData dstCap = dst.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
-        ISorcererData srcCap = src.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData srcData = src.getData(JJKAttachmentTypes.SORCERER);
+        ISorcererData dstData = dst.getData(JJKAttachmentTypes.SORCERER);
 
-        if (dstCap.hasRequestedPactCreation(src.getUUID(), pact)) {
-            dstCap.createPact(src.getUUID(), pact);
-            srcCap.createPact(dst.getUUID(), pact);
+        if (srcData == null || dstData == null) return 0;
 
-            dstCap.removePactCreationRequest(src.getUUID(), pact);
+        if (dstData.hasRequestedPactCreation(src.getUUID(), pact)) {
+            dstData.createPact(src.getUUID(), pact);
+            srcData.createPact(dst.getUUID(), pact);
 
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(dstCap.serializeNBT()), dst);
-            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(srcCap.serializeNBT()), src);
+            dstData.removePactCreationRequest(src.getUUID(), pact);
+
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(dstData.serializeNBT()), dst);
+            PacketHandler.sendToClient(new SyncSorcererDataS2CPacket(srcData.serializeNBT()), src);
 
             src.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_creation_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), dst.getName()));
             dst.sendSystemMessage(Component.translatable(String.format("chat.%s.pact_creation_accept", JujutsuKaisen.MOD_ID), pact.getName().getString().toLowerCase(), src.getName()));

@@ -1,14 +1,16 @@
 package radon.jujutsu_kaisen.network.packet.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.ConfigurationPayloadContext;
+import org.jetbrains.annotations.NotNull;
+import radon.jujutsu_kaisen.JujutsuKaisen;
 import radon.jujutsu_kaisen.client.chant.ClientChantHandler;
 
-import java.util.function.Supplier;
+public class RemoveChantS2CPacket implements CustomPacketPayload {
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(JujutsuKaisen.MOD_ID, "remove_chant_clientbound");
 
-public class RemoveChantS2CPacket {
     private final String chant;
 
     public RemoveChantS2CPacket(String chant) {
@@ -19,12 +21,17 @@ public class RemoveChantS2CPacket {
         this(buf.readUtf());
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(this.chant);
+    public void handle(ConfigurationPayloadContext ctx) {
+        ctx.workHandler().submitAsync(() -> ClientChantHandler.remove(this.chant));
     }
 
-    public void handle(NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> ClientChantHandler.remove(this.chant));
-        ctx.setPacketHandled(true);
+    @Override
+    public void write(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUtf(this.chant);
+    }
+
+    @Override
+    public @NotNull ResourceLocation id() {
+        return IDENTIFIER;
     }
 }

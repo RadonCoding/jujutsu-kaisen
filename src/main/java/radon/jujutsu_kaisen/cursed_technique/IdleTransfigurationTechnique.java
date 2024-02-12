@@ -15,11 +15,6 @@ public class IdleTransfigurationTechnique implements ICursedTechnique {
     }
 
     @Override
-    public Ability getImbuement() {
-        return JJKAbilities.IDLE_TRANSFIGURATION_IMBUEMENT.get();
-    }
-
-    @Override
     public Set<Ability> getAbilities() {
         return new LinkedHashSet<>(Set.of(JJKAbilities.IDLE_TRANSFIGURATION.get(),
                 JJKAbilities.SOUL_DECIMATION.get(),

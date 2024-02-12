@@ -9,8 +9,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.Summon;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.entity.ten_shadows.base.TenShadowsSummon;
@@ -85,28 +85,31 @@ public class PiercingBullEntity extends TenShadowsSummon {
     protected void customServerAiStep() {
         LivingEntity target = this.getTarget();
 
-        if (target != null) {
-            this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
+        if (target == null) return;
 
-            if ((this.onGround() || this.isInFluidType()) && (this.isSprinting() || this.getTime() % INTERVAL == 0)) {
-                this.setSprinting(true);
-                this.move(MoverType.SELF, target.position().subtract(this.position()).normalize().scale(this.distanceTo(target)));
-                float distance = this.distanceTo(target);
+        this.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
 
-                ISorcererData cap = this.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        if (!this.onGround() && !this.isInFluidType() && !this.isSprinting() && this.getTime() % INTERVAL != 0) return;
 
-                for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
-                    if (entity == this ||!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * cap.getAbilityPower())) continue;
+        this.setSprinting(true);
 
-                    entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(cap.getAbilityPower()));
-                    entity.hurtMarked = true;
+        this.move(MoverType.SELF, target.position().subtract(this.position()).normalize().scale(this.distanceTo(target)));
 
-                    this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), cap.getAbilityPower(), false, Level.ExplosionInteraction.NONE);
+        float distance = this.distanceTo(target);
 
-                    if (entity == target) {
-                        this.setSprinting(false);
-                    }
-                }
+        ISorcererData data = this.getData(JJKAttachmentTypes.SORCERER);
+
+
+        for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().inflate(1.0D))) {
+            if (entity == this ||!entity.hurt(this.damageSources().mobAttack(this), DAMAGE * distance * data.getAbilityPower())) continue;
+
+            entity.setDeltaMovement(this.position().subtract(entity.position()).normalize().reverse().scale(data.getAbilityPower()));
+            entity.hurtMarked = true;
+
+            this.level().explode(this, entity.getX(), entity.getY() + (entity.getBbHeight() / 2.0F), entity.getZ(), data.getAbilityPower(), false, Level.ExplosionInteraction.NONE);
+
+            if (entity == target) {
+                this.setSprinting(false);
             }
         }
     }

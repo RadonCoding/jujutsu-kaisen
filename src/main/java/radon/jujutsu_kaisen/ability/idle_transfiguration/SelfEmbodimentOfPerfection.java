@@ -10,13 +10,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.effect.JJKEffects;
 import radon.jujutsu_kaisen.entity.domain.base.ClosedDomainExpansionEntity;
 import radon.jujutsu_kaisen.entity.SelfEmbodimentOfPerfectionEntity;
@@ -30,13 +29,14 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
     public void onEnabled(LivingEntity owner) {
         super.onEnabled(owner);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        if (cap.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
-            cap.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
+        if (data.hasToggled(JJKAbilities.IDLE_TRANSFIGURATION.get())) {
+            data.toggle(JJKAbilities.IDLE_TRANSFIGURATION.get());
         }
-        if (cap.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
-            cap.toggle(JJKAbilities.SOUL_DECIMATION.get());
+        if (data.hasToggled(JJKAbilities.SOUL_DECIMATION.get())) {
+            data.toggle(JJKAbilities.SOUL_DECIMATION.get());
         }
     }
 
@@ -61,7 +61,7 @@ public class SelfEmbodimentOfPerfection extends DomainExpansion implements Domai
         entity.addEffect(instance);
 
         if (!owner.level().isClientSide) {
-            PacketDistributor.TRACKING_ENTITY.with(() -> entity).send(new ClientboundUpdateMobEffectPacket(entity.getId(), instance));
+            PacketDistributor.TRACKING_ENTITY.with(entity).send(new ClientboundUpdateMobEffectPacket(entity.getId(), instance));
         }
     }
 

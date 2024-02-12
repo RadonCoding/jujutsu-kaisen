@@ -12,8 +12,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.DomainExpansion;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
 import radon.jujutsu_kaisen.entity.JJKEntities;
@@ -34,15 +34,16 @@ public class AllEncompassingUnequiovocalLove extends ClosedDomainExpansionEntity
     public AllEncompassingUnequiovocalLove(LivingEntity owner, DomainExpansion ability, int radius) {
         super(JJKEntities.GENUINE_MUTUAL_LOVE.get(), owner, ability, radius);
 
-        ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+        ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
-        this.technique = cap.getCurrentCopied();
+        this.technique = data.getCurrentCopied();
 
         List<BlockPos> floor = this.getFloor();
 
         if (floor.isEmpty()) return;
 
-        Set<ICursedTechnique> copied = cap.getCopied();
+        Set<ICursedTechnique> copied = data.getCopied();
 
         if (copied.isEmpty()) return;
 

@@ -16,8 +16,8 @@ import radon.jujutsu_kaisen.ability.base.DomainExpansion;
 import radon.jujutsu_kaisen.block.JJKBlocks;
 import radon.jujutsu_kaisen.block.entity.DomainBlockEntity;
 import radon.jujutsu_kaisen.block.entity.VeilBlockEntity;
-import radon.jujutsu_kaisen.capability.data.sorcerer.ISorcererData;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererDataHandler;
+import radon.jujutsu_kaisen.data.sorcerer.ISorcererData;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.domain.base.OpenDomainExpansionEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -72,11 +72,12 @@ public class ChimeraShadowGardenEntity extends OpenDomainExpansionEntity impleme
                 int horizontal = i;
                 int vertical = j;
 
-                ISorcererData cap = owner.getCapability(SorcererDataHandler.INSTANCE).resolve().orElseThrow();
+                ISorcererData data = owner.getData(JJKAttachmentTypes.SORCERER);
+        
 
                 int death = width - i;
 
-                cap.delayTickEvent(() -> {
+                data.delayTickEvent(() -> {
                     for (int x = -horizontal; x <= horizontal; x++) {
                         for (int z = -horizontal; z <= horizontal; z++) {
                             double distance = Math.sqrt(x * x + vertical * vertical + z * z);

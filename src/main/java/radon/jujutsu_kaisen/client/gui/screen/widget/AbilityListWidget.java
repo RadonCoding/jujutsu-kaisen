@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import org.jetbrains.annotations.NotNull;
 import radon.jujutsu_kaisen.ability.base.Ability;
-import radon.jujutsu_kaisen.capability.data.sorcerer.BindingVow;
 
 public class AbilityListWidget extends JJKSelectionList<Ability, AbilityListWidget.Entry> {
     public AbilityListWidget(IBuilder<Ability, Entry> builder, ICallback<Entry> callback, Minecraft minecraft, int width, int height, int x, int y) {

@@ -1,6 +1,5 @@
 package radon.jujutsu_kaisen.entity.sorcerer;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -13,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import radon.jujutsu_kaisen.ability.base.Ability;
 import radon.jujutsu_kaisen.ability.JJKAbilities;
 import radon.jujutsu_kaisen.cursed_technique.JJKCursedTechniques;
-import radon.jujutsu_kaisen.capability.data.sorcerer.JujutsuType;
-import radon.jujutsu_kaisen.capability.data.sorcerer.SorcererGrade;
+import radon.jujutsu_kaisen.data.JJKAttachmentTypes;
+import radon.jujutsu_kaisen.data.sorcerer.JujutsuType;
+import radon.jujutsu_kaisen.data.sorcerer.SorcererGrade;
 import radon.jujutsu_kaisen.cursed_technique.base.ICursedTechnique;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.ITenShadowsData;
-import radon.jujutsu_kaisen.capability.data.ten_shadows.TenShadowsDataHandler;
+import radon.jujutsu_kaisen.data.ten_shadows.ITenShadowsData;
 import radon.jujutsu_kaisen.entity.JJKEntities;
 import radon.jujutsu_kaisen.entity.sorcerer.base.SorcererEntity;
 import radon.jujutsu_kaisen.item.JJKItems;
@@ -78,11 +77,12 @@ public class MegumiFushiguroEntity extends SorcererEntity {
 
         this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(JJKItems.JET_BLACK_SHADOW_SWORD.get()));
 
-        ITenShadowsData cap = this.getCapability(TenShadowsDataHandler.INSTANCE).resolve().orElseThrow();
-        cap.tame(JJKEntities.RABBIT_ESCAPE.get());
-        cap.tame(JJKEntities.TOAD.get());
-        cap.tame(JJKEntities.NUE.get());
-        cap.tame(JJKEntities.GREAT_SERPENT.get());
-        cap.tame(JJKEntities.MAX_ELEPHANT.get());
+        ITenShadowsData data = this.getData(JJKAttachmentTypes.TEN_SHADOWS);
+
+        data.tame(JJKEntities.RABBIT_ESCAPE.get());
+        data.tame(JJKEntities.TOAD.get());
+        data.tame(JJKEntities.NUE.get());
+        data.tame(JJKEntities.GREAT_SERPENT.get());
+        data.tame(JJKEntities.MAX_ELEPHANT.get());
     }
 }
