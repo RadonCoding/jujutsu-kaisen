@@ -22,14 +22,14 @@ public abstract class TransfiguredSoul<T extends Entity> extends Summon<T> imple
 
     @Override
     public void run(LivingEntity owner) {
-        super.run(owner);
-
         IJujutsuCapability cap = owner.getCapability(JujutsuCapabilityHandler.INSTANCE);
 
         if (cap == null) return;
 
         ISorcererData data = cap.getSorcererData();
         data.useTransfiguredSouls(this.getSoulCost());
+
+        super.run(owner);
     }
 
     @Override
