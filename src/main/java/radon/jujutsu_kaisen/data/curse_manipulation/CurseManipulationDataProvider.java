@@ -36,6 +36,8 @@ public class CurseManipulationDataProvider {
 
         ICurseManipulationData data = player.getData(JJKAttachmentTypes.CURSE_MANIPULATION);
         PacketHandler.sendToClient(new SyncCurseManipulationDataS2CPacket(data.serializeNBT()), player);
+
+        data.init(player);
     }
 
     @SubscribeEvent

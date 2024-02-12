@@ -14,9 +14,89 @@
   "minecraft:adventure/adventuring_time": {
     "criteria": {
       "minecraft:frozen_ocean": "2024-02-12 13:48:50 +0200",
+      "minecraft:frozen_river": "2024-02-12 14:01:33 +0200",
+      "minecraft:snowy_plains": "2024-02-12 14:01:21 +0200",
       "minecraft:snowy_taiga": "2024-02-12 04:43:10 +0200"
     },
     "done": false
+  },
+  "minecraft:recipes/transportation/mangrove_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/acacia_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/cherry_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/bamboo_raft": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/spruce_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/birch_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/oak_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/jungle_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/transportation/dark_oak_boat": {
+    "criteria": {
+      "in_water": "2024-02-12 14:01:48 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/snow": {
+    "criteria": {
+      "has_snowball": "2024-02-12 14:01:49 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/snow_block": {
+    "criteria": {
+      "has_snowball": "2024-02-12 14:01:49 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_something": "2024-02-12 14:01:52 +0200"
+    },
+    "done": true
+  },
+  "jujutsu_kaisen:jujutsu_kaisen/six_eyes": {
+    "criteria": {
+      "impossible": "2024-02-12 14:02:08 +0200"
+    },
+    "done": true
   },
   "DataVersion": 3700
 }

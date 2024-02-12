@@ -50,6 +50,8 @@ public class ProjectionSorcereryDataProvider {
 
         IProjectionSorceryData data = player.getData(JJKAttachmentTypes.PROJECTION_SORCERY);
         PacketHandler.sendToClient(new SyncProjectionSorceryDataS2CPacket(data.serializeNBT()), player);
+
+        data.init(player);
     }
 
     @SubscribeEvent
